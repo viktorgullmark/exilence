@@ -1,0 +1,14 @@
+C:\Projects\exile-party\ExileParty\bin\Debug\netcoreapp2.1\ExileParty.deps.json
+C:\Projects\exile-party\ExileParty\bin\Debug\netcoreapp2.1\ExileParty.runtimeconfig.json
+C:\Projects\exile-party\ExileParty\bin\Debug\netcoreapp2.1\ExileParty.runtimeconfig.dev.json
+C:\Projects\exile-party\ExileParty\bin\Debug\netcoreapp2.1\ExileParty.dll
+C:\Projects\exile-party\ExileParty\obj\Debug\netcoreapp2.1\ExileParty.csprojAssemblyReference.cache
+C:\Projects\exile-party\ExileParty\obj\Debug\netcoreapp2.1\ExileParty.csproj.CoreCompileInputs.cache
+C:\Projects\exile-party\ExileParty\obj\Debug\netcoreapp2.1\ExileParty.RazorAssemblyInfo.cache
+C:\Projects\exile-party\ExileParty\obj\Debug\netcoreapp2.1\ExileParty.RazorAssemblyInfo.cs
+C:\Projects\exile-party\ExileParty\obj\Debug\netcoreapp2.1\ExileParty.AssemblyInfoInputs.cache
+C:\Projects\exile-party\ExileParty\obj\Debug\netcoreapp2.1\ExileParty.AssemblyInfo.cs
+C:\Projects\exile-party\ExileParty\obj\Debug\netcoreapp2.1\ExileParty.RazorTargetAssemblyInfo.cache
+C:\Projects\exile-party\ExileParty\bin\Debug\netcoreapp2.1\ExileParty.pdb
+C:\Projects\exile-party\ExileParty\obj\Debug\netcoreapp2.1\ExileParty.dll
+C:\Projects\exile-party\ExileParty\obj\Debug\netcoreapp2.1\ExileParty.pdb
