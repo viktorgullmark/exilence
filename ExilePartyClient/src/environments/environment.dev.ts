@@ -5,5 +5,6 @@
 
 export const CONF_DEV = {
   production: false,
-  environment: 'DEV'
+  environment: 'DEV',
+  apiUrl: 'http://localhost:61606/'
 };

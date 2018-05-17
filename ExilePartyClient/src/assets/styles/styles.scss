@@ -1,0 +1,10 @@
+@import './_variables.scss';
+@import './_mixins.scss';
+
+html, body {
+  margin: 0;
+  padding: 0;
+
+  background: $bg-color;
+  height: 100%;
+}
