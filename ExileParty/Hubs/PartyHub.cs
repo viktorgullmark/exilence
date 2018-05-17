@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.SignalR;
 namespace ExileParty.Hubs
 {
     [EnableCors("AllowAll")]
-    public class MainHub : Hub<ITypedHubClient>
+    public class PartyHub : Hub<ITypedHubClient>
     {
     }
 }

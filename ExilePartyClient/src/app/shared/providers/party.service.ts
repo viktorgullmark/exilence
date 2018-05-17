@@ -4,7 +4,7 @@ import * as signalR from '@aspnet/signalr';
 import { AppConfig } from './../../app.config';
 
 @Injectable()
-export class SignalRService {
+export class PartyService {
   private _hubConnection: HubConnection | undefined;
   public async: any;
   message = '';
@@ -12,7 +12,7 @@ export class SignalRService {
 
   constructor() {
     this._hubConnection = new signalR.HubConnectionBuilder()
-      .withUrl(AppConfig.apiUrl + 'hubs/main')
+      .withUrl(AppConfig.apiUrl + 'hubs/party')
       .configureLogging(signalR.LogLevel.Information)
       .build();
 

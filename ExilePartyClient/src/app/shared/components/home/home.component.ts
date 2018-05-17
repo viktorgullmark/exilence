@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { SignalRService } from '../../providers/signalr.service';
+import { PartyService } from '../../providers/party.service';
 
 @Component({
   selector: 'app-home-component',
@@ -8,7 +8,7 @@ import { SignalRService } from '../../providers/signalr.service';
 
 export class HomeComponent implements OnInit {
 
-  constructor(private signalR: SignalRService) {
+  constructor(private party: PartyService) {
   }
 
   ngOnInit() {

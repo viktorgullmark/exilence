@@ -27,6 +27,15 @@ namespace ExileParty
         {
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
 
+            //Add services needed for sessions
+            services.AddSession();
+            //Add distributed cache service backed by Redis cache
+            services.AddDistributedRedisCache(options =>
+            {
+                options.Configuration = Configuration.GetConnectionString("Redis");
+                options.InstanceName = "master";
+            });
+
             services.AddCors(options =>
             {
                 options.AddPolicy("AllowAll",
@@ -50,13 +59,16 @@ namespace ExileParty
                 app.UseDeveloperExceptionPage();
             }
 
+            //Enable sessions
+            app.UseSession();
+
             app.UseMvc();
 
             app.UseCors("AllowAll");
-
+ 
             app.UseSignalR(routes =>
             {
-                routes.MapHub<MainHub>("/hubs/main");
+                routes.MapHub<PartyHub>("/hubs/party");
             });
         }
     }
