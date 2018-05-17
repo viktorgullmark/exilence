@@ -27,13 +27,10 @@ namespace SignalRHub.Controllers
         [HttpPost]
         public async Task<string> PostAsync([FromBody]MessageModel msg)
         {
-            string retMessage = _cache.GetString("TestValue");
-            if (retMessage == null)
-            {
-                //No value stored, set one
-                retMessage = "Testing session in Redis. Time of storage: " + DateTime.Now.ToString("s");
-                _cache.SetString("TestValue", retMessage);
-            }
+
+            string retMessage = "Testing session in Redis. Time of storage: " + DateTime.Now.ToString("s");
+            _cache.SetString("TestValue", retMessage);
+            
             try
             {
                 await _hubContext.Clients.All.BroadcastMessage(msg.Type, retMessage);
