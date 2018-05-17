@@ -1,5 +1,10 @@
-﻿################################################################################
-# This .gitignore file was automatically created by Microsoft(R) Visual Studio.
-################################################################################
+﻿.vs/
+packages/
+ExileParty.Backend/obj/
+ExileParty.Backend/bin/
+ExileParty.Api/obj/
+ExileParty.Api/bin/
+ExileParty.Migrations/obj/
+ExileParty.Migrations/bin/
 
-/.vs
+ExileParty.Api/Properties/PublishProfiles/Local.pubxml.user
