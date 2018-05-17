@@ -1,10 +1,6 @@
 ﻿.vs/
 packages/
-ExileParty.Backend/obj/
-ExileParty.Backend/bin/
-ExileParty.Api/obj/
-ExileParty.Api/bin/
-ExileParty.Migrations/obj/
-ExileParty.Migrations/bin/
+ExileParty/obj/
+ExileParty/bin/
 
-ExileParty.Api/Properties/PublishProfiles/Local.pubxml.user
+ExileParty/Properties/PublishProfiles/Local.pubxml.user
