@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { HubConnection } from '@aspnet/signalr';
 import * as signalR from '@aspnet/signalr';
+import { AppConfig } from './../../../app.config';
 
 @Component({
   selector: 'app-home-component',
@@ -27,7 +28,7 @@ export class HomeComponent implements OnInit {
 
   ngOnInit() {
     this._hubConnection = new signalR.HubConnectionBuilder()
-      .withUrl('http://localhost:61606/hubs/main')
+      .withUrl(AppConfig.apiUrl + 'hubs/main')
       .configureLogging(signalR.LogLevel.Information)
       .build();
 
