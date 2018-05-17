@@ -19,7 +19,7 @@ import { WebviewDirective } from './shared/directives/webview.directive';
 
 import { AppComponent } from './app.component';
 import { HomeComponent } from './shared/components/home/home.component';
-import { SignalRService } from './shared/providers/signalr.service';
+import { PartyService } from './shared/providers/party.service';
 
 // AoT requires an exported function for factories
 export function HttpLoaderFactory(http: HttpClient) {
@@ -45,7 +45,7 @@ export function HttpLoaderFactory(http: HttpClient) {
       }
     }),
   ],
-  providers: [ElectronService, SignalRService],
+  providers: [ElectronService, PartyService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
