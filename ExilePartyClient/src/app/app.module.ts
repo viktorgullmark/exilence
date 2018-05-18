@@ -21,6 +21,8 @@ import { ElectronService } from './shared/providers/electron.service';
 import { PartyService } from './shared/providers/party.service';
 import { RouterModule } from '@angular/router';
 import { CanActivateAuthorized } from './shared/guards/authorized.guard';
+import { ExternalService } from './shared/providers/external.service';
+import { PlayerService } from './shared/providers/player.service';
 
 // AoT requires an exported function for factories
 export function HttpLoaderFactory(http: HttpClient) {
@@ -52,7 +54,7 @@ export function HttpLoaderFactory(http: HttpClient) {
       }
     }),
   ],
-  providers: [ElectronService, PartyService, CanActivateAuthorized],
+  providers: [ExternalService, ElectronService, CanActivateAuthorized, PlayerService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

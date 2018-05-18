@@ -13,7 +13,7 @@ const routes: Routes = [
     { path: '', redirectTo: 'login', pathMatch: 'full' },
 
     // authorized
-    { path: 'authorized', component: AuthorizeComponent, canActivate: [CanActivateAuthorized], children: [
+    { path: 'authorized', component: AuthorizeComponent,  canActivate: [CanActivateAuthorized], children: [
         { path: 'profile', component: ProfileComponent },
         { path: 'party', component: PartyComponent },
         { path: '', redirectTo: '/authorized/profile', pathMatch: 'full' }

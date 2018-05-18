@@ -50,7 +50,7 @@
     "@angular/compiler-cli": "5.2.9",
     "@angular/core": "5.2.9",
     "@angular/forms": "5.2.9",
-    "@angular/http": "5.2.9",
+    "@angular/http": "4.4.3",
     "@angular/language-service": "5.2.9",
     "@angular/platform-browser": "5.2.9",
     "@angular/platform-browser-dynamic": "5.2.9",

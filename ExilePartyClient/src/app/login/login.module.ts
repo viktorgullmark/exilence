@@ -1,12 +1,20 @@
-import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { NgModule } from '@angular/core';
+import { MatButtonModule, MatInputModule, MatOptionModule, MatSelectModule } from '@angular/material';
+import { MatFormFieldModule } from '@angular/material/form-field';
+
 import { LoginComponent } from './login.component';
-import { MatButtonModule } from '@angular/material';
+import { SharedModule } from '../shared/shared.module';
 
 @NgModule({
   imports: [
     CommonModule,
-    MatButtonModule
+    SharedModule,
+    MatInputModule,
+    MatButtonModule,
+    MatOptionModule,
+    MatSelectModule,
+    MatFormFieldModule
   ],
   declarations: [LoginComponent]
 })

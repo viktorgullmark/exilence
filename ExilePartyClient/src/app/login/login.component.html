@@ -1,4 +1,20 @@
-<p>
-  login works!
-</p>
-<button mat-button>test</button>
+<div class="container">
+  <div class="form">
+    <h2 class="mat-h2">To begin, provide your account info below:</h2>
+    <mat-form-field>
+      <input matInput placeholder="{{'ACCOUNT.NAME' | translate}}">
+    </mat-form-field>
+
+    <mat-form-field>
+      <input matInput placeholder="{{'ACCOUNT.SESSIONID' | translate}}">
+    </mat-form-field>
+
+    <mat-form-field>
+      <mat-select placeholder="{{'CHARACTER.NAME' | translate}}">
+        <mat-option value="option">Option</mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <button mat-button (click)="login()" color="primary">{{'ACCOUNT.LOGIN' | translate}}</button>
+  </div>
+</div>
