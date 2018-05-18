@@ -1,0 +1,31 @@
+import { Property } from './property.interface';
+import { Requirement } from './requirement.interface';
+export interface Item {
+    id: string;
+    verified: boolean;
+    w: number;
+    h: number;
+    ilvl: number;
+    icon: string;
+    league: string;
+    sockets: Array<any>;
+    name: string;
+    typeLine: string;
+    identified: boolean;
+    corrupted: boolean;
+    lockedToCharacter: boolean;
+    requirements: Array<Requirement>;
+    implicitMods: Array<string>;
+    explicitMods: Array<string>;
+    frameType: number;
+    x: number;
+    y: number;
+    inventoryId: string;
+    socketedItems: Array<any>;
+    properties: Array<Property>;
+    flavourText: Array<string>;
+    craftedMods: Array<string>;
+    enchantMods: Array<string>;
+    utilityMods: Array<string>;
+    descrText: string;
+}
