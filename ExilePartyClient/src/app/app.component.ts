@@ -2,6 +2,8 @@ import { Component } from '@angular/core';
 import { ElectronService } from './shared/providers/electron.service';
 import { TranslateService } from '@ngx-translate/core';
 import { AppConfig } from './app.config';
+import { SessionService } from './shared/providers/session.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-root',
@@ -10,7 +12,9 @@ import { AppConfig } from './app.config';
 })
 export class AppComponent {
   constructor(public electronService: ElectronService,
-    private translate: TranslateService) {
+    private translate: TranslateService,
+    private sessionService: SessionService,
+    private router: Router) {
 
     translate.setDefaultLang('en');
     console.log('AppConfig', AppConfig);
@@ -22,5 +26,10 @@ export class AppComponent {
     } else {
       console.log('Mode web');
     }
+  }
+
+  logout() {
+    this.sessionService.cancelSession();
+    this.router.navigate(['login']);
   }
 }

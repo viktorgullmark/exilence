@@ -14,7 +14,6 @@ export class ElectronService {
   remote: typeof remote;
   childProcess: typeof childProcess;
   fs: typeof fs;
-  cookies: any;
   constructor() {
     // Conditional imports
     if (this.isElectron()) {
@@ -23,7 +22,6 @@ export class ElectronService {
       this.remote = window.require('electron').remote;
       this.childProcess = window.require('child_process');
       this.fs = window.require('fs');
-      this.cookies = window.require('electron-cookies');
     }
   }
 

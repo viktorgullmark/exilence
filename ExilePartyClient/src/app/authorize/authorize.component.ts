@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Inject } from '@angular/core';
+import { FormControl, Validators, FormGroup, FormBuilder } from '@angular/forms';
 
 @Component({
   selector: 'app-authorize',
@@ -6,10 +7,17 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./authorize.component.scss']
 })
 export class AuthorizeComponent implements OnInit {
-
-  constructor() { }
+  form: FormGroup;
+  constructor(@Inject(FormBuilder) fb: FormBuilder) {
+    this.form = fb.group({
+      roomCode: ['', Validators.required]
+    });
+  }
 
   ngOnInit() {
   }
 
+  enterRoom() {
+    console.log('do enter room', this.form.controls.roomCode.value);
+  }
 }

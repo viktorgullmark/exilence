@@ -1,10 +1,11 @@
 import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
+import { SharedModule } from '../../shared/shared.module';
 import { PartyComponent } from './party.component';
 
 @NgModule({
   imports: [
-    CommonModule
+    SharedModule
   ],
   declarations: [PartyComponent]
 })

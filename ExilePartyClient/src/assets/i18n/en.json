@@ -13,9 +13,17 @@
   "ACCOUNT": {
       "NAME": "Account name",
       "LOGIN": "Login",
-      "SESSIONID": "Session ID"
+      "SESSIONID": "Session ID",
+      "PROFILE": "Profile",
+      "LOGOUT": "Logout",
+      "INFORMATION": "Account information"
   },
   "CHARACTER": {
       "NAME": "Character name"
+  },
+  "PARTY": {
+      "ROOMCODE": "Room code",
+      "ENTER": "Enter",
+      "PARTY": "Party"
   }
 }
