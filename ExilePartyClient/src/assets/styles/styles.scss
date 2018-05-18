@@ -1,10 +1,29 @@
-@import './_variables.scss';
-@import './_mixins.scss';
+@import "./_variables.scss";
+@import "./_mixins.scss";
+@import "~@angular/material/prebuilt-themes/pink-bluegrey.css";
 
 html, body {
-  margin: 0;
-  padding: 0;
+    margin: 0;
+    padding: 0;
+    color: $font-color;
+    background: $bg-color;
+    height: 100%;
+    font-family: 'Roboto';
+}
 
-  background: $bg-color;
-  height: 100%;
+.container {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: calc(100% - 64px);
+
+    .sidenav-container {
+        padding: $container-padding;
+    }
+
+    .content-container {
+        padding: $container-padding;
+    }
 }
