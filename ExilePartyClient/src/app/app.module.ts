@@ -1,32 +1,24 @@
-import 'zone.js/dist/zone-mix';
-import 'reflect-metadata';
 import '../polyfills';
-import { BrowserModule } from '@angular/platform-browser';
+import 'reflect-metadata';
+import 'zone.js/dist/zone-mix';
+
+import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-
-import { HttpClientModule, HttpClient } from '@angular/common/http';
-
-import { AppRoutingModule } from './app-routing.module';
-
-// NG Translate
-import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
+import { MatToolbarModule } from '@angular/material/toolbar';
+import { BrowserModule } from '@angular/platform-browser';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 
-import { ElectronService } from './shared/providers/electron.service';
-
-import { WebviewDirective } from './shared/directives/webview.directive';
-
+import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { HomeComponent } from './shared/components/home/home.component';
+import { AuthorizeModule } from './authorize/authorize.module';
+import { LoginModule } from './login/login.module';
+import { NotFoundModule } from './not-found/not-found.module';
+import { WebviewDirective } from './shared/directives/webview.directive';
+import { ElectronService } from './shared/providers/electron.service';
 import { PartyService } from './shared/providers/party.service';
-
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-
-// testing
-import { MatButtonModule } from '@angular/material';
-import { MatSidenavModule } from '@angular/material/sidenav';
-import { MatToolbarModule } from '@angular/material/toolbar';
 
 // AoT requires an exported function for factories
 export function HttpLoaderFactory(http: HttpClient) {
@@ -36,13 +28,14 @@ export function HttpLoaderFactory(http: HttpClient) {
 @NgModule({
   declarations: [
     AppComponent,
-    HomeComponent,
     WebviewDirective
   ],
   imports: [
 
-    MatButtonModule,
-    MatSidenavModule,
+    AuthorizeModule,
+    NotFoundModule,
+    LoginModule,
+
     MatToolbarModule,
 
     BrowserModule,
