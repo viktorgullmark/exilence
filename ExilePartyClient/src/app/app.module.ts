@@ -19,6 +19,8 @@ import { NotFoundModule } from './not-found/not-found.module';
 import { WebviewDirective } from './shared/directives/webview.directive';
 import { ElectronService } from './shared/providers/electron.service';
 import { PartyService } from './shared/providers/party.service';
+import { RouterModule } from '@angular/router';
+import { CanActivateAuthorized } from './shared/guards/authorized.guard';
 
 // AoT requires an exported function for factories
 export function HttpLoaderFactory(http: HttpClient) {
@@ -31,17 +33,16 @@ export function HttpLoaderFactory(http: HttpClient) {
     WebviewDirective
   ],
   imports: [
-
-    AuthorizeModule,
     NotFoundModule,
     LoginModule,
-
+    AuthorizeModule,
     MatToolbarModule,
 
     BrowserModule,
     FormsModule,
     HttpClientModule,
     AppRoutingModule,
+
     BrowserAnimationsModule,
     TranslateModule.forRoot({
       loader: {
@@ -51,7 +52,7 @@ export function HttpLoaderFactory(http: HttpClient) {
       }
     }),
   ],
-  providers: [ElectronService, PartyService],
+  providers: [ElectronService, PartyService, CanActivateAuthorized],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
