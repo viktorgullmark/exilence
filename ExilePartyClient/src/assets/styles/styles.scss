@@ -11,6 +11,10 @@ html, body {
     font-family: $main-font;
 }
 
+a {
+    cursor: pointer;
+}
+
 .container {
     position: absolute;
     top: 0;
@@ -22,14 +26,25 @@ html, body {
     display: flex;
     justify-content: center;
     align-items: center;
+}
 
-    .form {
-        width: 30%;
-        display: flex;
-        flex-direction: column;
-        align-self: center;
-        margin: auto;
+.form {
+    display: flex;
+    flex-direction: column;
+    align-self: center;
+    margin: auto;
+
+    mat-form-field {
+        width: 100%;
     }
+
+    &.login-form {
+        width: 30%;
+    }
+}
+
+.form-title {
+    text-align: right;
 }
 
 .container > * {
@@ -45,10 +60,13 @@ html, body {
     height: calc(100% - 64px); // height of single-row toolbar
 
     .sidenav-container {
+        padding: 0 !important;
+        width: 265px !important;
         padding: $container-padding;
     }
 
     .content-container {
+        margin-left: 265px !important;
         padding: $container-padding;
     }
 }

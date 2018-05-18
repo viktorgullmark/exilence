@@ -1,20 +1,21 @@
 <div class="container">
-  <div class="form">
-    <h2 class="mat-h2">To begin, provide your account info below:</h2>
+  <form class="form login-form" [formGroup]="form" (ngSubmit)="login()">
+    <h1 class="mat-h1 form-title">{{ 'ACCOUNT.INFORMATION' | translate}}</h1>
     <mat-form-field>
-      <input matInput placeholder="{{'ACCOUNT.NAME' | translate}}">
+      <input matInput formControlName="accountName" placeholder="{{'ACCOUNT.NAME' | translate}}" (focusout)="getCharacterList()">
+    </mat-form-field>
+    <mat-form-field>
+      <input matInput formControlName="sessionId" placeholder="{{'ACCOUNT.SESSIONID' | translate}}">
     </mat-form-field>
 
-    <mat-form-field>
-      <input matInput placeholder="{{'ACCOUNT.SESSIONID' | translate}}">
-    </mat-form-field>
+    <div [hidden]="characterList.length == 0">
+      <mat-form-field>
+        <mat-select formControlName="characterName" placeholder="{{'CHARACTER.NAME' | translate}}">
+          <mat-option *ngFor="let item of characterList" [value]="item.name">{{item.name}}</mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
 
-    <mat-form-field>
-      <mat-select placeholder="{{'CHARACTER.NAME' | translate}}">
-        <mat-option value="option">Option</mat-option>
-      </mat-select>
-    </mat-form-field>
-
-    <button mat-button (click)="login()" color="primary">{{'ACCOUNT.LOGIN' | translate}}</button>
-  </div>
+    <button mat-raised-button color="primary" type="submit" [disabled]="!form.valid">{{'ACCOUNT.LOGIN' | translate}}</button>
+  </form>
 </div>

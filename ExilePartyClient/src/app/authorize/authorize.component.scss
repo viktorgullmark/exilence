@@ -1,0 +1,11 @@
+@import "./../../assets/styles/_variables.scss";
+
+.sidenav {
+    .active {
+        background-color: $menu-active-color;
+    }
+}
+
+.sidenav-form {
+    padding: $container-padding;
+}
