@@ -39,6 +39,7 @@
     "@angular/cdk": "^5.2.4",
     "@angular/material": "^5.2.4",
     "@aspnet/signalr": "^1.0.0-rc1-update1",
+    "hammerjs": "^2.0.8",
     "jquery": "^3.3.1",
     "signalr": "^2.2.3"
   },

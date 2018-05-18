@@ -8,7 +8,7 @@ html, body {
     color: $font-color;
     background: $bg-color;
     height: 100%;
-    font-family: 'Roboto';
+    font-family: $main-font;
 }
 
 .container {
@@ -17,7 +17,7 @@ html, body {
     bottom: 0;
     left: 0;
     right: 0;
-    height: calc(100% - 64px);
+    height: calc(100% - 64px); // height of single-row toolbar
 
     .sidenav-container {
         padding: $container-padding;
