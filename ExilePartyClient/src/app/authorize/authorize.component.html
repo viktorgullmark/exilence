@@ -1,18 +1,18 @@
 <mat-sidenav-container class="main-container">
   <mat-sidenav class="sidenav-container" mode="side" opened>
-    <form class="form sidenav-form" [formGroup]="form" (ngSubmit)="enterRoom()">
+    <form class="form sidenav-form" [formGroup]="form" (ngSubmit)="enterParty()">
       <mat-form-field>
-        <input matInput formControlName="roomCode" placeholder="{{'PARTY.ROOMCODE' | translate}}">
+        <input matInput formControlName="partyCode" placeholder="{{'PARTY.CODE' | translate}}">
       </mat-form-field>
-      <button class="form-btn-right" mat-raised-button color="primary" type="submit" [disabled]="!form.valid">{{'PARTY.ENTER' | translate}}</button>
+      <button mat-raised-button color="primary" type="submit" [disabled]="!form.valid || partyService.code == form.controls.partyCode.value">{{'PARTY.ENTER' | translate}}</button>
     </form>
     <mat-nav-list class="sidenav">
       <mat-list-item routerLinkActive="active" [routerLinkActiveOptions]="{exact:true}" routerLink="/authorized/profile">
-         <a matLine>{{'ACCOUNT.PROFILE' | translate}}</a>
+        <a matLine>{{'ACCOUNT.PROFILE' | translate}}</a>
       </mat-list-item>
       <mat-list-item routerLinkActive="active" [routerLinkActiveOptions]="{exact:true}" routerLink="/authorized/party">
         <a matLine>{{'PARTY.PARTY' | translate}}</a>
-     </mat-list-item>
+      </mat-list-item>
     </mat-nav-list>
   </mat-sidenav>
   <mat-sidenav-content class="content-container">

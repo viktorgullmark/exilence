@@ -22,7 +22,7 @@
       "NAME": "Character name"
   },
   "PARTY": {
-      "ROOMCODE": "Room code",
+      "CODE": "Party code",
       "ENTER": "Enter",
       "PARTY": "Party"
   }

@@ -7,6 +7,7 @@ import { AppConfig } from './../../app.config';
 export class PartyService {
   private _hubConnection: HubConnection | undefined;
   public async: any;
+  public code = '';
   message = '';
   messages: any[] = [];
 
