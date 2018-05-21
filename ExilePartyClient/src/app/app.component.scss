@@ -1,4 +1,11 @@
+@import './../assets/styles/_variables.scss';
+
 .logout-link {
     justify-content: end;
     margin-left: auto;
+}
+
+.mat-toolbar {
+    background: $toolbar-bg-color;
+    height: $toolbar-height;
 }

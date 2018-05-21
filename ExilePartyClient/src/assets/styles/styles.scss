@@ -21,7 +21,7 @@ a {
     bottom: 0;
     left: 0;
     right: 0;
-    height: calc(100% - 64px); // height of single-row toolbar
+    height: $content-height;
 
     display: flex;
     justify-content: center;
@@ -57,7 +57,7 @@ a {
     bottom: 0;
     left: 0;
     right: 0;
-    height: calc(100% - 64px); // height of single-row toolbar
+    height: $content-height;
 
     .sidenav-container {
         padding: 0 !important;
