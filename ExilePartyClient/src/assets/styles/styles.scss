@@ -22,14 +22,9 @@ a {
     left: 0;
     right: 0;
     height: $content-height;
-
-    background: linear-gradient(
-        rgba(24, 24, 24, 0.9), 
-        rgba(24, 24, 24, 0.9)
-      ), url("./../img/main-bg.jpg");
+    background: linear-gradient(rgba(24, 24, 24, 0.9), rgba(24, 24, 24, 0.9)), url("./../img/main-bg.jpg");
     background-repeat: no-repeat;
     background-size: cover;
-
     display: flex;
     justify-content: center;
     align-items: center;
@@ -59,7 +54,6 @@ a {
 }
 
 .main-container {
-
     position: absolute;
     top: 0;
     bottom: 0;
@@ -74,7 +68,11 @@ a {
     }
 
     .content-container {
+        padding: 15px 25px 15px 25px;
         margin-left: 265px !important;
-        padding: $container-padding;
+        padding: $content-container-padding;
+        background: linear-gradient(rgba(24, 24, 24, 0.9), rgba(24, 24, 24, 0.9)), url("./../img/secondary-bg.jpg");
+        background-repeat: no-repeat;
+        background-size: cover;
     }
 }
