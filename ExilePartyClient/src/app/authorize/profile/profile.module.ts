@@ -1,10 +1,12 @@
 import { NgModule } from '@angular/core';
 import { ProfileComponent } from './profile.component';
 import { SharedModule } from '../../shared/shared.module';
+import { CharInventoryModule } from '../components/char-inventory/char-inventory.module';
 
 @NgModule({
   imports: [
-    SharedModule
+    SharedModule,
+    CharInventoryModule
   ],
   declarations: [ProfileComponent]
 })

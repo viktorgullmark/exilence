@@ -1,5 +1,6 @@
 import { Property } from './property.interface';
 import { Requirement } from './requirement.interface';
+import { Socket } from './socket.interface';
 export interface Item {
     id: string;
     verified: boolean;
@@ -8,7 +9,7 @@ export interface Item {
     ilvl: number;
     icon: string;
     league: string;
-    sockets: Array<any>;
+    sockets: Array<Socket>;
     name: string;
     typeLine: string;
     identified: boolean;

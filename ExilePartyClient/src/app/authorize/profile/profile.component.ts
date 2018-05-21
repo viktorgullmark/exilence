@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { Character } from '../../shared/interfaces/character.interface';
+import { AccountService } from '../../shared/providers/account.service';
 
 @Component({
   selector: 'app-profile',
@@ -7,9 +9,14 @@ import { Component, OnInit } from '@angular/core';
 })
 export class ProfileComponent implements OnInit {
 
-  constructor() { }
+  private character: Character;
+  constructor(private accountService: AccountService) { }
 
   ngOnInit() {
-  }
 
+    this.accountService.player.subscribe(res => {
+      this.character = res.character;
+      console.log(this.character);
+    });
+  }
 }
