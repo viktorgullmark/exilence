@@ -1,1 +1,3 @@
 <h2 class="mat-h2">{{'PAGES.PROFILE.TITLE' | translate}}</h2>
+
+<app-char-inventory *ngIf="character" [items]="character.items"></app-char-inventory>

@@ -7,6 +7,7 @@ import { ExternalService } from '../shared/providers/external.service';
 import { AccountService } from '../shared/providers/account.service';
 import { SessionService } from '../shared/providers/session.service';
 import { Character } from '../shared/interfaces/character.interface';
+import { Player } from '../shared/interfaces/player.interface';
 
 @Component({
   selector: 'app-login',
@@ -46,9 +47,10 @@ export class LoginComponent implements OnInit {
       this.form.controls.characterName.value,
       this.form.controls.sessionId.value)
       .subscribe((data: EquipmentResponse) => {
-        this.accountService.playerObj.character = data.character;
-        this.accountService.playerObj.character.items = data.items;
-        this.accountService.updatePlayer();
+        const playerObj = {} as Player;
+        playerObj.character = data.character;
+        playerObj.character.items = data.items;
+        this.accountService.player.next(playerObj);
         this.sessionService.initSession(this.form.controls.sessionId.value);
         this.router.navigate(['/authorized/profile']);
       });
