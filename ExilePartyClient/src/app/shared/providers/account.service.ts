@@ -5,12 +5,14 @@ import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 
 import { Player } from '../interfaces/player.interface';
 import { Character } from '../interfaces/character.interface';
-import { Subject } from 'rxjs/Subject';
 
 @Injectable()
 export class AccountService {
-  public player: Subject<Player> = new Subject<Player>();
-  public characterList: Subject<Character[]> = new Subject<Character[]>();
+  public player: BehaviorSubject<Player> = new BehaviorSubject<Player>(undefined);
+  public characterList: BehaviorSubject<Character[]> = new BehaviorSubject<Character[]>(undefined);
   constructor() {
+  }
+  clearCharacterList() {
+    this.characterList.next(undefined);
   }
 }

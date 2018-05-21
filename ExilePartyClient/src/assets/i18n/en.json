@@ -3,8 +3,8 @@
       "TITLE": "ExileParty"
   },
   "PAGES": {
-      "PROFILE": {
-          "TITLE": "Profile"
+      "DASHBOARD": {
+          "TITLE": "Dashboard"
       },
       "PARTY": {
           "TITLE": "Party"
@@ -14,7 +14,6 @@
       "NAME": "Account name",
       "LOGIN": "Login",
       "SESSIONID": "Session ID",
-      "PROFILE": "Profile",
       "LOGOUT": "Logout",
       "INFORMATION": "Account information"
   },

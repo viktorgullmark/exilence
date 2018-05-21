@@ -1,3 +1,24 @@
+@import "./../../../../assets/styles/_variables.scss";
+
 .char-inventory {
-    
+    border: 2px solid $inventory-border-color;
+    background: $inventory-bg-color;
+    position: relative;
+    border-radius: 1px;
+    .inner-container {
+        position: relative;
+        .inventory-item-slot {
+            position:absolute;
+            top: 0;
+            left: 0;
+        }
+        .grid-square {
+            border: 1px solid $primary-dark;
+            float: left;
+            z-index: 3;
+            position: relative;
+            width: 55px;
+            height: 55px;
+        }
+    }
 }

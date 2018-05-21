@@ -1,0 +1,27 @@
+@import "./../../../../assets/styles/_variables.scss";
+
+.item-container {
+    position: relative;
+    min-width: 50px;
+    text-align: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: $item-bg-color;
+
+    .item {
+        z-index: 4;
+        position: relative;
+        text-align: center;
+        align-items: center;
+        justify-content: center;
+    }
+    
+    &.unidentified {
+        background: $unidentified-item-color;
+    }
+
+    &.item-wide {
+        min-width: 100px !important;
+    }
+}

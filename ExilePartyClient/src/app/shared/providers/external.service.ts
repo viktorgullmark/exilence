@@ -7,6 +7,7 @@ import { Observable } from 'rxjs/Observable';
 
 import { ElectronService } from './electron.service';
 import { AccountService } from './account.service';
+import { AccountInfo } from '../interfaces/account-info.interface';
 
 @Injectable()
 export class ExternalService {
@@ -16,10 +17,10 @@ export class ExternalService {
   constructor(private http: HttpClient, private electronService: ElectronService, private accountService: AccountService) {
   }
 
-  getCharacter(account: string, character: string, sessionId?: string): Observable<any> {
-    this.setCookie(sessionId);
+  getCharacter(data: AccountInfo): Observable<any> {
+    this.setCookie(data.sessionId);
 
-    const parameters = `?accountName=${account}&character=${character}`;
+    const parameters = `?accountName=${data.accountName}&character=${data.characterName}`;
     return this.http.get('https://www.pathofexile.com/character-window/get-items' + parameters, { withCredentials: true });
   }
 

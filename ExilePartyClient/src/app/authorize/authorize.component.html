@@ -7,11 +7,11 @@
       <button mat-raised-button color="primary" type="submit" [disabled]="!form.valid || partyService.code == form.controls.partyCode.value">{{'PARTY.ENTER' | translate}}</button>
     </form>
     <mat-nav-list class="sidenav">
-      <mat-list-item routerLinkActive="active" [routerLinkActiveOptions]="{exact:true}" routerLink="/authorized/profile">
-        <a matLine>{{'ACCOUNT.PROFILE' | translate}}</a>
+      <mat-list-item routerLinkActive="active" [routerLinkActiveOptions]="{exact:true}" routerLink="/authorized/dashboard">
+        <a matLine>{{'PAGES.DASHBOARD.TITLE' | translate}}</a>
       </mat-list-item>
       <mat-list-item routerLinkActive="active" [routerLinkActiveOptions]="{exact:true}" routerLink="/authorized/party">
-        <a matLine>{{'PARTY.PARTY' | translate}}</a>
+        <a matLine>{{'PAGES.PARTY.TITLE' | translate}}</a>
       </mat-list-item>
     </mat-nav-list>
   </mat-sidenav>
