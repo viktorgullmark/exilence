@@ -1,18 +1,15 @@
 {
-  "name": "angular-electron",
-  "version": "3.3.0",
-  "description": "Angular 5 with Electron (Typescript + SASS + Hot Reload)",
-  "homepage": "https://github.com/maximegris/angular-electron",
+  "name": "exile-party",
+  "version": "1.0.0",
   "author": {
-    "name": "Maxime GRIS",
-    "email": "maxime.gris@gmail.com"
+    "name": "Viktor Gullmark",
+    "email": "viktor.gullmark@hotmail.com"
   },
   "keywords": [
     "angular",
-    "angular 5",
     "electron",
-    "typescript",
-    "sass"
+    "path of exile",
+    "exileparty"
   ],
   "main": "main.js",
   "private": true,
@@ -22,7 +19,7 @@
     "start": "node hooks/environments/set_profile.js && npm-run-all -p ng:serve electron:serve",
     "build": "node hooks/environments/set_profile.js && ng build && npm run electron:tsc",
     "build:prod": "node hooks/environments/set_profile.js && ng build --prod && npm run electron:tsc",
-    "ng:serve": "ng serve -o",
+    "ng:serve": "ng serve",
     "electron:tsc": "tsc main.ts",
     "electron:serve": "wait-on http-get://localhost:4200/ && npm run electron:tsc && electron . --serve",
     "electron:local": "npm run build:prod && electron .",

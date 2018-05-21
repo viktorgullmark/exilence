@@ -4,6 +4,9 @@
     .active {
         background-color: $primary;
     }
+    mat-list-item {
+        text-transform: uppercase;
+    }
 }
 
 .sidenav-form {

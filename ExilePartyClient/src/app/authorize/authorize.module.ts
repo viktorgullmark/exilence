@@ -8,7 +8,7 @@ import { RouterModule } from '@angular/router';
 import { SharedModule } from '../shared/shared.module';
 import { AuthorizeComponent } from './authorize.component';
 import { PartyModule } from './party/party.module';
-import { ProfileModule } from './profile/profile.module';
+import { DashboardModule } from './dashboard/dashboard.module';
 import { PartyService } from '../shared/providers/party.service';
 
 @NgModule({
@@ -21,7 +21,7 @@ import { PartyService } from '../shared/providers/party.service';
     MatButtonModule,
     MatFormFieldModule,
     MatIconModule,
-    ProfileModule,
+    DashboardModule,
     RouterModule,
     PartyModule,
     MatSidenavModule

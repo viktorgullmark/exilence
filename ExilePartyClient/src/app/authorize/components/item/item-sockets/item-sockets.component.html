@@ -1,3 +1,14 @@
-<div class="socket" *ngFor="let socket of sockets, let index = i">
-    {{socket.sColour}}
+<div class="socket-container">
+    <div [ngClass]="'inner-container-'+columns">
+        <ng-container *ngFor="let socket of sockets, index as i">
+            <!-- classes are formatted as: type-slot-columnwidth -->
+            <div class="{{columns}}-col" [ngClass]="'link-'+i+'-'+columns" *ngIf="sockets[i+1] && socket.group == sockets[i+1].group"></div>
+            <div class="socket-{{socket.attr}} {{columns}}-col" [ngClass]="'socket-'+i+'-'+columns">
+                <div class="gem-container" *ngIf="gems">
+                    <div *ngIf="getGemByIndex(i) != undefined" class="inner-gem {{socket.attr}}-gem {{getGemByIndex(i).sColour}}">
+                    </div>
+                </div>
+            </div>
+        </ng-container>
+    </div>
 </div>

@@ -8,10 +8,16 @@ import { Item } from '../../../shared/interfaces/item.interface';
 })
 export class CharInventoryComponent implements OnInit {
   @Input() items: Item[];
-  constructor() { }
+  // default to main-inventory
+  @Input() inventoryId = 'MainInventory';
+  @Input() width = 12;
+  @Input() height = 5;
+  grid = [];
+  constructor() {
+    this.grid = Array(this.width * this.height).fill(0);
+  }
 
   ngOnInit() {
-    console.log('char-inventory:', this.items);
   }
 
 }

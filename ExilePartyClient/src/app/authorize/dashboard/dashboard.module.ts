@@ -1,5 +1,5 @@
 import { NgModule } from '@angular/core';
-import { ProfileComponent } from './profile.component';
+import { DashboardComponent } from './dashboard.component';
 import { SharedModule } from '../../shared/shared.module';
 import { CharInventoryModule } from '../components/char-inventory/char-inventory.module';
 
@@ -8,6 +8,6 @@ import { CharInventoryModule } from '../components/char-inventory/char-inventory
     SharedModule,
     CharInventoryModule
   ],
-  declarations: [ProfileComponent]
+  declarations: [DashboardComponent]
 })
-export class ProfileModule { }
+export class DashboardModule { }

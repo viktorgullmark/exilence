@@ -29,4 +29,5 @@ export interface Item {
     enchantMods: Array<string>;
     utilityMods: Array<string>;
     descrText: string;
+    socket: number;
 }

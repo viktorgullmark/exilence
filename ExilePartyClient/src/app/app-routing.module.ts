@@ -1,11 +1,12 @@
 import { NgModule } from '@angular/core';
-import { Routes, RouterModule } from '@angular/router';
-import { NotFoundComponent } from './not-found/not-found.component';
-import { LoginComponent } from './login/login.component';
+import { RouterModule, Routes } from '@angular/router';
+
 import { AuthorizeComponent } from './authorize/authorize.component';
-import { CanActivateAuthorized } from './shared/guards/authorized.guard';
-import { ProfileComponent } from './authorize/profile/profile.component';
 import { PartyComponent } from './authorize/party/party.component';
+import { DashboardComponent } from './authorize/dashboard/dashboard.component';
+import { LoginComponent } from './login/login.component';
+import { NotFoundComponent } from './not-found/not-found.component';
+import { CanActivateAuthorized } from './shared/guards/authorized.guard';
 
 const routes: Routes = [
     // login-section
@@ -14,9 +15,9 @@ const routes: Routes = [
 
     // authorized
     { path: 'authorized', component: AuthorizeComponent,  canActivate: [CanActivateAuthorized], children: [
-        { path: 'profile', component: ProfileComponent },
+        { path: 'dashboard', component: DashboardComponent },
         { path: 'party', component: PartyComponent },
-        { path: '', redirectTo: '/authorized/profile', pathMatch: 'full' }
+        { path: '', redirectTo: '/authorized/dashboard', pathMatch: 'full' }
     ]},
 
     // 404-page

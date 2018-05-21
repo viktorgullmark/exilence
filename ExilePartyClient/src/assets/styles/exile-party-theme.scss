@@ -5,11 +5,13 @@
 // https://github.com/angular/material2/blob/master/src/lib/core/theming/_palette.scss
 
 $app-primary: mat-palette($mat-pink, 500);
-$app-accent:  mat-palette($mat-grey);
-$app-warn:    mat-palette($mat-deep-orange);
+$app-primary-dark: mat-palette($mat-pink, 900);
+$app-accent: mat-palette($mat-grey);
+$app-warn: mat-palette($mat-deep-orange);
 
 // Custom Sass colors vars (will be available in all the project)
 $primary: mat-color($app-primary);
+$primary-dark: mat-color($app-primary-dark);
 $accent: mat-color($app-accent);
 $warn: mat-color($app-warn);
 
