@@ -17,11 +17,18 @@ a {
 
 .container {
     position: absolute;
-    top: 0;
+    top: $toolbar-height;
     bottom: 0;
     left: 0;
     right: 0;
     height: $content-height;
+
+    background: linear-gradient(
+        rgba(24, 24, 24, 0.9), 
+        rgba(24, 24, 24, 0.9)
+      ), url("./../img/main-bg.jpg");
+    background-repeat: no-repeat;
+    background-size: cover;
 
     display: flex;
     justify-content: center;
@@ -52,6 +59,7 @@ a {
 }
 
 .main-container {
+
     position: absolute;
     top: 0;
     bottom: 0;
