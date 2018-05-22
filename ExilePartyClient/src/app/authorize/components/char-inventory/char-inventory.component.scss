@@ -5,6 +5,7 @@
     background: $inventory-bg-color;
     position: relative;
     border-radius: 1px;
+    transform-origin: top left;
     .inner-container {
         position: relative;
         .inventory-item-slot {

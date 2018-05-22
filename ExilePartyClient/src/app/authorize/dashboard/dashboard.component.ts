@@ -6,6 +6,7 @@ import { Player } from '../../shared/interfaces/player.interface';
 import { SessionService } from '../../shared/providers/session.service';
 import { ExternalService } from '../../shared/providers/external.service';
 import { Router } from '@angular/router';
+import { Item } from '../../shared/interfaces/item.interface';
 
 @Component({
   selector: 'app-dashboard',
@@ -25,7 +26,7 @@ export class DashboardComponent implements OnInit {
   // TMP
   tmpBypass() {
     this.externalService.getCharacter({
-      accountName: 'cojl', characterName: 'CojL______', sessionId: '9e4ee6258fbd53063c072abcc5337ba6'
+      accountName: 'cojl', characterName: 'Cojl__', sessionId: '9e4ee6258fbd53063c072abcc5337ba6'
     })
       .subscribe((data: EquipmentResponse) => {
         this.setCharacter(data);

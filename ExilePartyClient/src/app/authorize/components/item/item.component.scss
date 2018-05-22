@@ -24,4 +24,9 @@
     &.item-wide {
         min-width: 100px !important;
     }
+
+    &.weapon-swap {
+        background: $item-weaponswap-bg-color;
+        min-height: 150px !important;
+    }
 }
