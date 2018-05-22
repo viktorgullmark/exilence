@@ -8,5 +8,3 @@ Currently runs with:
 - Angular-CLI v1.6.4
 - Electron v1.8.2
 - Electron Builder v20.0.4
-
-## Getting Started
