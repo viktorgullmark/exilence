@@ -11,7 +11,7 @@ export class AuthorizeComponent implements OnInit {
   form: FormGroup;
   constructor(@Inject(FormBuilder) fb: FormBuilder, private partyService: PartyService) {
     this.form = fb.group({
-      partyCode: ['', Validators.required]
+      partyCode: ['my-party-name', Validators.required]
     });
   }
 
