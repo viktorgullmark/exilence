@@ -22,6 +22,7 @@
       "testTsconfig": "tsconfig.spec.json",
       "prefix": "app",
       "styles": [
+        "assets/styles/exile-party-theme.scss",
         "assets/styles/styles.scss"
       ],
       "scripts": [
