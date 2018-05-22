@@ -1,18 +1,15 @@
-// Import all the tools needed to customize the theme and extract parts of it
 @import '~@angular/material/theming';
 
-// Define the palettes for your theme using the Material Design palettes available in palette.scss
-// https://github.com/angular/material2/blob/master/src/lib/core/theming/_palette.scss
+@include mat-core();
+$exileparty-primary: mat-palette($mat-pink, 500);
+$exileparty-secondary: mat-palette($mat-pink, 700);
+$exileparty-darker: mat-palette($mat-pink, 900);
+$exileparty-accent : mat-palette($mat-grey);
+$exileparty-warn : mat-palette($mat-deep-orange);
+$exileparty-theme: mat-dark-theme($exileparty-primary, $exileparty-accent, $exileparty-warn);
 
-$app-primary: mat-palette($mat-pink, 500);
-$app-primary-dark: mat-palette($mat-pink, 900);
-$app-accent: mat-palette($mat-grey);
-$app-warn: mat-palette($mat-deep-orange);
-
-// Custom Sass colors vars (will be available in all the project)
-$primary: mat-color($app-primary);
-$primary-dark: mat-color($app-primary-dark);
-$secondary: #27000d;
-$accent: mat-color($app-accent);
-$warn: mat-color($app-warn);
-
+// global variables
+$primary: mat-color($exileparty-primary);
+$accent: mat-color($exileparty-accent);
+$darker: mat-color($exileparty-darker);
+$secondary: mat-color($exileparty-secondary);
