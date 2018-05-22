@@ -8,6 +8,8 @@ import { Item } from '../../../shared/interfaces/item.interface';
 })
 export class ItemComponent implements OnInit {
   @Input() item: Item;
+  @Input() wide = false;
+  @Input() weaponSwap = false;
   constructor() { }
 
   ngOnInit() {

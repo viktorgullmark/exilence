@@ -1,0 +1,10 @@
+<div class="char-equipment">
+  <!-- 'transform': 'scale('+scale+') -->
+  <div class="inner-container">
+    <app-item *ngFor="let item of equipment" [item]="getItemByType(item.inventoryId)" class="{{item.inventoryId}}" 
+      [wide]="item.inventoryId == 'Weapon' || item.inventoryId == 'Offhand' || item.inventoryId == 'Weapon2' || item.inventoryId == 'Offhand2'"
+      [weaponSwap]="item.inventoryId == 'Weapon2' || item.inventoryId == 'Offhand2'">
+    </app-item>
+    <app-item *ngFor="let item of flasks, let i = index" [item]="getFlaskByIndex(i)" class="{{item.inventoryId}} flask-slot-{{i+1}}"></app-item>
+  </div>
+</div>
