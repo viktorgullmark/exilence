@@ -3,7 +3,7 @@
         <div class="icon-container">
             <img [attr.src]="item.icon" />
         </div>
-        <app-item-sockets [columns]="item?.w" [sockets]="item?.sockets" [gems]="item?.socketedItems"></app-item-sockets>
+        <app-item-sockets [hidden]="weaponSwap" [columns]="item?.w" [sockets]="item?.sockets" [gems]="item?.socketedItems"></app-item-sockets>
     </div>
-    <app-item-tooltip #tooltip [item]="item" class="item-tooltip" [style.top.px]="tooltip.top" [style.left.px]="tooltip.left"></app-item-tooltip>
+    <app-item-tooltip #tooltip [item]="item" class="tooltip item-tooltip" [style.top.px]="tooltip.top" [style.left.px]="tooltip.left"></app-item-tooltip>
 </div>
