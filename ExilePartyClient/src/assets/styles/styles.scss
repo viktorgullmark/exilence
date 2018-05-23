@@ -2,7 +2,7 @@
 @import "./_mixins.scss";
 @import "~@angular/material/prebuilt-themes/pink-bluegrey.css";
 
-@import './exile-party-theme.scss';
+@import "./exile-party-theme.scss";
 
 .exile-party {
     @include angular-material-theme($exileparty-theme);
@@ -15,6 +15,13 @@ html, body {
     background: $bg-color;
     height: 100%;
     font-family: $main-font;
+}
+
+.tooltip {
+    display: none;
+    pointer-events: none;
+    z-index: 9999;
+    position: absolute;
 }
 
 a {

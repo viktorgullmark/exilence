@@ -11,7 +11,7 @@
 
     .inner-container {
         position: relative;
-        margin-left: 50px;
+        margin-left: 65px;
         app-item {
             position: absolute;
             border: 1px solid $equipment-border-color;
@@ -22,17 +22,17 @@
 
     .Weapon {
         top: 35px;
-        left: 25px;
+        left: 10px;
     }
 
     .Offhand {
         top: 35px;
-        left: 445px;
+        left: 430px;
     }
 
     .Weapon2 {
         transform-origin: top left;
-        transform: scale(0.6);
+        transform: scale(0.5);
         top: 35px;
         left: 132px;
         z-index: 5;
@@ -40,9 +40,9 @@
 
     .Offhand2 {
         transform-origin: top left;
-        transform: scale(0.6);
+        transform: scale(0.5);
         top: 35px;
-        left: 370px;
+        left: 365px;
         z-index: 5;
     }
 
