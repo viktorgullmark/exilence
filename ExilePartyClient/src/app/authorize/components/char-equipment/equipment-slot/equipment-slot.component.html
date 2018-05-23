@@ -1,0 +1,5 @@
+<div [ngStyle]="{'width.px': 57*slot.w, 'height.px': 57*slot.h}" class="equipment-slot {{slot.id}}">
+  <app-item *ngIf="item" [extendHeightWith]="slot.h-item.h" [item]="item" [wide]="item.inventoryId == 'Weapon' || item.inventoryId == 'Offhand' || item.inventoryId == 'Weapon2' || item.inventoryId == 'Offhand2'"
+    [weaponSwap]="item.inventoryId == 'Weapon2' || item.inventoryId == 'Offhand2'">
+  </app-item>
+</div>
