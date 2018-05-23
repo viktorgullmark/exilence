@@ -10,7 +10,7 @@ export class ItemTooltipComponent implements OnInit {
   @Input() item: Item;
   nativeElement: HTMLElement;
   top: number;
-  left: number;
+  left = 120;
   constructor(private el: ElementRef) {
     this.nativeElement = el.nativeElement;
   }
@@ -19,13 +19,13 @@ export class ItemTooltipComponent implements OnInit {
   }
 
   reposition(event, host: ElementRef) {
-    const mousePosX = event.clientX;
-    const mousePosY = event.clientY;
+    const mouseLeft = event.clientX;
+    const mouseTop = event.clientY;
     const element = host.nativeElement;
+    const margin = 25;
 
     const rect = this.el.nativeElement.getBoundingClientRect();
     const elementRect = element.getBoundingClientRect();
-    const margin = 25;
 
     const overflowTop = rect.top - (54 + margin);
     const overflowLeft = rect.left - (265 + margin);
@@ -44,5 +44,6 @@ export class ItemTooltipComponent implements OnInit {
     if (overflowRight < 0) {
       this.left = this.el.nativeElement.offsetLeft + overflowRight - margin;
     }
+
   }
 }
