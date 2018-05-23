@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, ElementRef } from '@angular/core';
 import { Item } from '../../../../shared/interfaces/item.interface';
 
 @Component({
@@ -8,7 +8,10 @@ import { Item } from '../../../../shared/interfaces/item.interface';
 })
 export class ItemTooltipComponent implements OnInit {
   @Input() item: Item;
-  constructor() { }
+  nativeElement: HTMLElement;
+  constructor(private el: ElementRef) {
+    this.nativeElement = el.nativeElement;
+  }
 
   ngOnInit() {
   }
