@@ -10,7 +10,7 @@ export class ItemTooltipComponent implements OnInit {
   @Input() item: Item;
   nativeElement: HTMLElement;
   top: number;
-  left: number;
+  left = 100;
   constructor(private el: ElementRef) {
     this.nativeElement = el.nativeElement;
   }
