@@ -19,6 +19,8 @@ export class ItemComponent implements OnInit {
   }
 
   update() {
-    this.tooltip.reposition(this.el);
+    if (!this.weaponSwap) {
+      this.tooltip.reposition(this.el);
+    }
   }
 }

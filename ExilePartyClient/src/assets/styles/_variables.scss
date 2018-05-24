@@ -16,10 +16,35 @@ $equipment-bg-color: #101010;
 // items
 $item-bg-color: rgba(5, 4, 41, 0.52);
 $item-weaponswap-bg-color: #191919;
-$item-tooltip-bg-color: #000;
-$gem-tooltip-bg-color: rgb(83, 0, 0);
 $equipment-slot-bg-color: rgb(19, 19, 19);
 $unidentified-item-color: #410c0c;
+
+// item-tooltip
+$item-tooltip-bg-color: rgba(0, 0, 0, 0.85);
+$gem-tooltip-bg-color: $item-tooltip-bg-color;
+$tooltip-separator-color: #555454;
+$tooltip-header-bg-color: #000;
+$rarity-normal-color: rgb(192, 192, 192);
+$rarity-magic-color: #8888FF;
+$rarity-rare-color: #EBEB57;
+$rarity-unique-color: rgb(218, 122, 54);
+$rarity-gem-color: #1ba29b;
+$rarity-currency-color: #AD904B;
+$rarity-questitem-color: rgb(110, 185, 48);
+$flavour-text-color: #bb9031;
+$corrupted-item-color: #e80000;
+$enchant-mod-color: rgb(212, 224, 255);
+$crafted-mod-color: rgb(207, 218, 247);
+$tag-color: rgb(192, 192, 192);
+$tag-bg-color: #e5e5f5;
+$tag-font-color: #000;
+$mod-life-color: lightcoral;
+$mod-coldres-color: #B4BEDB;
+$mod-fireres-color: #E8C489;
+$mod-lightres-color:#E0E889;
+$mod-mana-color: #7EB2E6;
+$mod-chaosres-color: #D19CF0;
+
 
 // padding
 $container-padding: 15px;
