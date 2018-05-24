@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { PartyService } from '../../shared/providers/party.service';
 
 @Component({
   selector: 'app-party',
@@ -7,7 +8,7 @@ import { Component, OnInit } from '@angular/core';
 })
 export class PartyComponent implements OnInit {
 
-  constructor() { }
+  constructor(private partyService: PartyService) { }
 
   ngOnInit() {
   }
