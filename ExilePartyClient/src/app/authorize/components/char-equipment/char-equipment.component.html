@@ -1,9 +1,8 @@
 <div class="char-equipment">
-  <!-- 'transform': 'scale('+scale+') -->
   <div class="inner-container">
-    <app-equipment-slot *ngFor="let slot of equipmentSlots" [item]="getItemByType(slot.id)" [slot]="slot">
+    <app-equipment-slot *ngFor="let slot of equipment" [item]="getItemByType(slot.id)" [slot]="slot">
     </app-equipment-slot>
-    <app-equipment-slot *ngFor="let slot of flaskSlots, let i = index" [item]="getFlaskByIndex(i)" [slot]="slot">
+    <app-equipment-slot *ngFor="let slot of flasks, let i = index" [item]="getFlaskByIndex(i)" [slot]="slot">
     </app-equipment-slot>
   </div>
 </div>
