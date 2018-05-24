@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, ElementRef, ViewChild } from '@angular/core';
+import { Component, OnInit, Input, ElementRef } from '@angular/core';
 import { Item } from '../../../../shared/interfaces/item.interface';
 import { ItemService } from '../item.service';
 import { ItemTooltipContentComponent } from './item-tooltip-content/item-tooltip-content.component';
@@ -10,13 +10,10 @@ import { ItemTooltipContentComponent } from './item-tooltip-content/item-tooltip
 })
 export class ItemTooltipComponent implements OnInit {
   @Input() item: Item;
-  @ViewChild('gemTooltip') gemTooltip: ItemTooltipContentComponent;
-  nativeElement: HTMLElement;
   top = 0;
   left = 100;
 
   constructor(private el: ElementRef, private itemService: ItemService) {
-    this.nativeElement = el.nativeElement;
   }
 
   ngOnInit() {
@@ -29,7 +26,6 @@ export class ItemTooltipComponent implements OnInit {
     const rect = this.el.nativeElement.getBoundingClientRect();
     const elementRect = element.getBoundingClientRect();
 
-    console.log('repositioning');
     const overflowTop = rect.top - (54 + margin);
     const overflowLeft = rect.left - (265 + margin);
     const overflowRight = window.innerWidth - rect.right;

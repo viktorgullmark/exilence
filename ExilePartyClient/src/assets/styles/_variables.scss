@@ -1,30 +1,34 @@
 @import "./exile-party-theme.scss";
 
-// colors
+// general
 $main-border-color: $primary;
 $bg-color: #303030;
 $toolbar-bg-color: #0a0a0a;
 $drawer-bg-color: #1d1d1d;
 $menu-item-color: #4b4b4b;
-$font-color: #fff;
-$unidentified-item-color: #410c0c;
+
+// character
 $inventory-border-color: $primary;
 $inventory-bg-color: #101010;
 $equipment-border-color: #969696;
 $equipment-bg-color: #101010;
+
+// items
 $item-bg-color: rgba(5, 4, 41, 0.52);
 $item-weaponswap-bg-color: #191919;
 $item-tooltip-bg-color: #000;
 $gem-tooltip-bg-color: rgb(83, 0, 0);
 $equipment-slot-bg-color: rgb(19, 19, 19);
+$unidentified-item-color: #410c0c;
 
-// margin & padding
+// padding
 $container-padding: 15px;
 $content-container-padding: 15px 25px 15px 25px;
 
 // fonts
 $main-font: 'Roboto';
+$font-color: #fff;
 
-// width & height
+// width / height
 $toolbar-height: 54px;
 $content-height: calc(100% - 54px);

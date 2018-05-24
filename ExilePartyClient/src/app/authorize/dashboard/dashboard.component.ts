@@ -14,7 +14,7 @@ import { Item } from '../../shared/interfaces/item.interface';
   styleUrls: ['./dashboard.component.scss']
 })
 export class DashboardComponent implements OnInit {
-  // tmp
+  // tmp   <!-- 'transform': 'scale('+scale+') -->
   player = {} as Player;
   constructor(private accountService: AccountService, private sessionService: SessionService,
     private externalService: ExternalService, private router: Router) { }
