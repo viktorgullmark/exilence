@@ -1,0 +1,21 @@
+@import "./../../../../../assets/styles/_variables.scss";
+
+.gem-content {
+    display: inline-block;
+    min-height: 150px;
+    width: 200px;
+    margin: 10px;
+    background: $gem-tooltip-bg-color;
+}
+
+.item-content {
+    display: inline-block;
+    min-height: 250px;
+    width: 200px;
+    margin: 10px;
+    background: $item-tooltip-bg-color;
+}
+
+.hidden {
+    opacity: 0;
+}
