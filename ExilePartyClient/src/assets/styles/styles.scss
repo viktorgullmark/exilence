@@ -17,11 +17,23 @@ html, body {
     font-family: $main-font;
 }
 
+.fade {
+    -webkit-transition: all 0.3s ease-in-out;
+    -moz-transition: all 0.3s ease-in-out;
+    -ms-transition: all 0.3s ease-in-out;
+    -o-transition: all 0.3s ease-in-out;
+    transition: all 0.3s ease-in-out;
+}
+
 .tooltip {
     display: none;
     pointer-events: none;
     z-index: 9999;
     position: absolute;
+}
+
+.no-margin {
+    margin: 0 !important;
 }
 
 a {

@@ -1,2 +1,115 @@
-item-tooltip-content works!
-
+<ng-container *ngIf="item != undefined">
+    <div class="tooltip-header">
+        <h3 class="mat-h3 rarity-{{item.frameType}}">
+            <ng-container [ngSwitch]="item.frameType">
+                <ng-container *ngSwitchCase="3">
+                    <!-- unique item -->
+                    <div>{{item.name.substring(28)}}
+                        <br/>
+                    </div>
+                    <span>{{item.typeLine}}</span>
+                </ng-container>
+                <ng-container *ngSwitchCase="2">
+                    <!-- rare item -->
+                    <div *ngIf="item.identified">{{item.name.substring(28)}}
+                        <br/>
+                    </div>
+                    <span>{{item.typeLine}}</span>
+                </ng-container>
+                <!-- magic item -->
+                <span *ngSwitchCase="1">{{item.typeLine.substring(28)}}</span>
+                <!-- normal item -->
+                <span *ngSwitchCase="0">{{item.typeLine}}</span>
+                <span *ngSwitchCase="4">{{item.typeLine}}</span>
+                <span *ngSwitchCase="5">{{item.typeLine}}</span>
+                <span *ngSwitchCase="7">{{item.typeLine}}</span>
+            </ng-container>
+        </h3>
+    </div>
+    <div class="tooltip-body mat-body-1">
+        <div class="properties">
+            <!-- properties -->
+            <ng-container *ngFor="let prop of item.properties">
+                <ng-container *ngIf="item.inventoryId != 'Flask'">
+                    <span class="property">
+                        <span class="property-tag">
+                            {{prop.name}}
+                        </span>
+                        <ng-container *ngIf="prop.values[0] != undefined">
+                            :&nbsp;{{prop.values[0][0]}}</ng-container>
+                    </span>
+                    <br/>
+                </ng-container>
+                <ng-container *ngIf="item.inventoryId == 'Flask' && prop.values[0] != undefined">
+                    <span class="property">
+                        <span class="property-tag flask-property" *ngIf="prop.name != 'Quality'">
+                            {{formatFlaskProperties(prop.name, prop.values[0][0], prop.values[1])}}
+                        </span>
+                        <ng-container *ngIf="prop.name == 'Quality'">
+                            <span class="property-tag">
+                                {{prop.name}}
+                            </span>
+                            <ng-container *ngIf="prop.values[0] != undefined">
+                                :&nbsp;{{prop.values[0][0]}}</ng-container>
+                        </ng-container>
+                    </span>
+                    <br/>
+                </ng-container>
+            </ng-container>
+            <ng-container *ngFor="let mod of item.utilityMods">
+                <span class="enchant-mod">{{mod}}
+                    <br/>
+                </span>
+            </ng-container>
+            <hr *ngIf="item.properties != undefined">
+            <div class="requirements" *ngIf="item.requirements">
+                <span class="requirement">Requires </span>
+                <ng-container *ngFor="let req of item.requirements, let i = index">
+                    <span class="requirement">{{req.name}} </span>
+                    <span class="requiremnet-value" *ngIf="req.values[0] != undefined">{{req.values[0][0]}}</span>
+                    <ng-container *ngIf="item.requirements[i+1] != undefined">, </ng-container>
+                </ng-container>
+            </div>
+            <hr *ngIf="item.requirements != undefined && (item.implicitMods != undefined || item.enchantMods != undefined || item.explicitMods != undefined || item.craftedMods != undefined || !item.identified)">
+        </div>
+        <div class="mods">
+            <ng-container *ngFor="let mod of item.implicitMods">
+                <span>{{mod}}
+                    <br/>
+                </span>
+            </ng-container>
+            <ng-container *ngFor="let mod of item.enchantMods">
+                <span class="enchant-mod">
+                    <span class="enchant-mod-tag">
+                        enchanted
+                    </span>
+                    &nbsp;{{mod}}
+                </span>
+                <br/>
+            </ng-container>
+            <hr *ngIf="(item.implicitMods != undefined || item.enchantMods != undefined) && item.explicitMods != undefined">
+            <ng-container *ngFor="let mod of item.explicitMods">
+                <span class="{{getExplicitModClass(mod)}}">{{mod}}
+                    <br/>
+                </span>
+            </ng-container>
+            <ng-container *ngFor="let mod of item.craftedMods">
+                <span class="crafted-mod">
+                    <span class="crafted-mod-tag">
+                        crafted
+                    </span>
+                    &nbsp;{{mod}}
+                </span>
+                <br/>
+            </ng-container>
+        </div>
+        <ng-container *ngFor="let flav of item.flavourText">
+            <span class="flavour-text mat-caption">
+                {{flav}}
+            </span>
+            <br/>
+        </ng-container>
+        <span *ngIf="item.corrupted" class="corrupted">Corrupted</span>
+        <span *ngIf="!item.identified" class="corrupted">Unidentified</span>
+    </div>
+</ng-container>

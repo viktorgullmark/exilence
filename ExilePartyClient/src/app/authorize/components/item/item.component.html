@@ -1,9 +1,9 @@
-<div class="item-container" (mouseenter)="tooltip.reposition(el)" *ngIf="item" [ngStyle]="{'width.px': 57*item.w, 'height.px': 57*(item.h+extendHeightWith)}" [ngClass]="{'unidentified': item != undefined && !item.identified, 'item-wide': wide, 'weapon-swap': weaponSwap }">
+<div class="item-container" (mouseenter)="update()" *ngIf="item" [ngStyle]="{'width.px': 57*item.w, 'height.px': 57*(item.h+extendHeightWith)}" [ngClass]="{'unidentified': item != undefined && !item.identified, 'item-wide': wide, 'weapon-swap': weaponSwap }">
     <div class="item">
         <div class="icon-container">
             <img [attr.src]="item.icon" />
         </div>
         <app-item-sockets (updated)="update()" [hidden]="weaponSwap" [columns]="item?.w" [sockets]="item?.sockets" [gems]="item?.socketedItems"></app-item-sockets>
     </div>
-    <app-item-tooltip #tooltip [item]="item" class="tooltip item-tooltip" [style.top.px]="tooltip.top" [style.left.px]="tooltip.left"></app-item-tooltip>
+    <app-item-tooltip *ngIf="!weaponSwap" #tooltip [item]="item" class="tooltip item-tooltip" [style.top.px]="tooltip.top" [style.left.px]="tooltip.left"></app-item-tooltip>
 </div>

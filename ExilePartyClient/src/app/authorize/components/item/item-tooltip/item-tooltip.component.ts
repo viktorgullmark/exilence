@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, ElementRef } from '@angular/core';
+import { Component, OnInit, Input, ElementRef, ViewChild } from '@angular/core';
 import { Item } from '../../../../shared/interfaces/item.interface';
 import { ItemService } from '../item.service';
 import { ItemTooltipContentComponent } from './item-tooltip-content/item-tooltip-content.component';
@@ -12,7 +12,7 @@ export class ItemTooltipComponent implements OnInit {
   @Input() item: Item;
   top = 0;
   left = 100;
-
+  @ViewChild('gemTooltip') gemTooltip: ItemTooltipContentComponent;
   constructor(private el: ElementRef, private itemService: ItemService) {
   }
 
