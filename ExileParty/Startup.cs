@@ -10,6 +10,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using Newtonsoft.Json.Serialization;
 
 namespace ExileParty
 {
@@ -25,7 +26,8 @@ namespace ExileParty
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
+            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1).
+                AddJsonOptions(opts => { opts.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver(); });
 
             //Add services needed for sessions
             services.AddSession();
@@ -68,7 +70,11 @@ namespace ExileParty
  
             app.UseSignalR(routes =>
             {
-                routes.MapHub<PartyHub>("/hubs/party");
+                routes.MapHub<PartyHub>("/hubs/party", options =>
+                {
+                    // 30Kb message buffer
+                    options.ApplicationMaxBufferSize = 30 * 1024 * 1024;
+                });
             });
         }
     }

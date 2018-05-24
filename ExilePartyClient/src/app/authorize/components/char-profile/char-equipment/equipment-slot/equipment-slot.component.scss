@@ -1,0 +1,99 @@
+@import "./../../../../../../assets/styles/_variables.scss";
+
+.equipment-slot {
+    position: absolute;
+    min-width: 50px;
+    min-height: 50px;
+    text-align: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: $equipment-slot-bg-color;
+    border: 1px solid $equipment-border-color;
+    &.Weapon {
+        top: 35px;
+        left: 36px;
+    }
+
+    &.Offhand {
+        top: 35px;
+        left: 404px;
+    }
+
+    &.Weapon2 {
+        transform-origin: top left;
+        transform: scale(0.5);
+        top: 35px;
+        left: 157px;
+        z-index: 5;
+    }
+
+    &.Offhand2 {
+        transform-origin: top left;
+        transform: scale(0.5);
+        top: 35px;
+        left: 340px;
+        z-index: 5;
+    }
+
+    &.Helm {
+        top: 30px;
+        left: 220px;
+    }
+
+    &.BodyArmour {
+        top: 150px;
+        left: 220px;
+    }
+
+    &.Amulet {
+        top: 143px;
+        left: 340px;
+    }
+
+    &.Ring {
+        top: 206px;
+        left: 157px;
+    }
+
+    &.Ring2 {
+        top: 206px;
+        left: 340px;
+    }
+
+    &.Boots {
+        top: 270px;
+        left: 340px;
+    }
+
+    &.Gloves {
+        top: 270px;
+        left: 100px;
+    }
+
+    &.Belt {
+        top: 327px;
+        left: 220px;
+    }
+
+    &.flask-slot-1{
+        top: 391px;
+        left: 135px;
+    }
+    &.flask-slot-2{
+        top: 391px;
+        left: 192px;
+    }
+    &.flask-slot-3{
+        top: 391px;
+        left: 249px;
+    }
+    &.flask-slot-4{
+        top: 391px;
+        left: 306px;
+    }
+    &.flask-slot-5{
+        top: 391px;
+        left: 363px;
+    }
+}

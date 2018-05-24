@@ -1,0 +1,22 @@
+@import "./../../../../../../assets/styles/_variables.scss";
+
+.tooltip-content {
+    // min-width: 400px;
+    display: inline-block;
+    margin: 5px;
+    white-space: nowrap;
+    border: 1px solid $tooltip-separator-color;
+
+    &.gem-content {
+        background: $gem-tooltip-bg-color;
+    }
+
+    &.item-content {
+        float: left;
+        background: $item-tooltip-bg-color;
+    }
+
+    &.hidden {
+        opacity: 0;
+    }
+}

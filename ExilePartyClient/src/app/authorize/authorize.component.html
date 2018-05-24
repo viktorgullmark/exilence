@@ -10,7 +10,7 @@
       <mat-list-item routerLinkActive="active" [routerLinkActiveOptions]="{exact:true}" routerLink="/authorized/dashboard">
         <mat-icon>home</mat-icon><a matLine>{{'PAGES.DASHBOARD.TITLE' | translate}}</a>
       </mat-list-item>
-      <mat-list-item routerLinkActive="active" [routerLinkActiveOptions]="{exact:true}" routerLink="/authorized/party">
+      <mat-list-item routerLinkActive="active" [routerLinkActiveOptions]="{exact:true}" routerLink="/authorized/party" *ngIf="partyService.code != ''">
         <mat-icon>group</mat-icon><a matLine>{{'PAGES.PARTY.TITLE' | translate}}</a>
       </mat-list-item>
     </mat-nav-list>
