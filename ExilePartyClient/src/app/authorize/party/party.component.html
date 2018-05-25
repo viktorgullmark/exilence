@@ -1,4 +1,2 @@
 <h2 class="mat-h2">{{'PAGES.PARTY.TITLE' | translate}}</h2>
-<h1 *ngFor="let player of partyService.players">
-    {{player.character.name}}
-</h1>
+<app-player-list></app-player-list>
