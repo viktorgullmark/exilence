@@ -13,7 +13,7 @@ export class DashboardComponent implements OnInit {
     // give the profile time to render
     setTimeout(() => {
       this.isLoading = false;
-    }, 500);
+    }, 10000);
   }
 
 }
