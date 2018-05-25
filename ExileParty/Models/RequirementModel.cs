@@ -5,10 +5,11 @@ using System.Threading.Tasks;
 
 namespace ExileParty.Models
 {
+    [Serializable]
     public class RequirementModel
     {
         public string Name { get; set; }
-        public List<List<object>> Values { get; set; }
+        public List<KeyValuePair<string, int>> Values { get; set; }
         public int DisplayMode { get; set; }
     }
 }

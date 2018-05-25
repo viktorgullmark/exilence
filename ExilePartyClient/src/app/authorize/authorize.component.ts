@@ -3,6 +3,7 @@ import { FormControl, Validators, FormGroup, FormBuilder } from '@angular/forms'
 import { PartyService } from '../shared/providers/party.service';
 import { AccountService } from '../shared/providers/account.service';
 import { Player } from '../shared/interfaces/player.interface';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-authorize',
@@ -12,7 +13,8 @@ import { Player } from '../shared/interfaces/player.interface';
 export class AuthorizeComponent implements OnInit {
   form: FormGroup;
   player: Player;
-  constructor(@Inject(FormBuilder) fb: FormBuilder, private partyService: PartyService, private accountService: AccountService) {
+  constructor(@Inject(FormBuilder) fb: FormBuilder, private partyService: PartyService, private accountService: AccountService,
+    private router: Router) {
     this.form = fb.group({
       partyCode: ['my-party-name', Validators.required]
     });
@@ -25,7 +27,8 @@ export class AuthorizeComponent implements OnInit {
   }
 
   enterParty() {
-    this.partyService.code = this.form.controls.partyCode.value;
-    this.partyService.joinParty(this.partyService.code, this.player);
+    this.partyService.leaveParty(this.partyService.party.name, this.player);
+    this.partyService.joinParty(this.form.controls.partyCode.value, this.player);
+    this.router.navigate(['/authorized/party']);
   }
 }
