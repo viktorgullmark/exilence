@@ -63,9 +63,6 @@ function createWindow() {
     win = null;
   });
   win2.on('closed', () => {
-    // Dereference the window object, usually you would store window
-    // in an array if your app supports multi windows, this is the time
-    // when you should delete the corresponding element.
     win2 = null;
   });
 }
@@ -89,7 +86,7 @@ try {
   app.on('activate', () => {
     // On OS X it's common to re-create a window in the app when the
     // dock icon is clicked and there are no other windows open.
-    if (win === null || win2 === null) {
+    if (win === null && win2 === null) {
       createWindow();
     }
   });
