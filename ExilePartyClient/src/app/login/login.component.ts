@@ -8,6 +8,7 @@ import { AccountService } from '../shared/providers/account.service';
 import { SessionService } from '../shared/providers/session.service';
 import { Character } from '../shared/interfaces/character.interface';
 import { Player } from '../shared/interfaces/player.interface';
+import { PartyService } from '../shared/providers/party.service';
 
 @Component({
     selector: 'app-login',
@@ -22,7 +23,8 @@ export class LoginComponent implements OnInit {
         private router: Router,
         private externalService: ExternalService,
         private accountService: AccountService,
-        private sessionService: SessionService) {
+        private sessionService: SessionService,
+        private partyService: PartyService) {
         this.form = fb.group({
             accountName: ['', Validators.required],
             sessionId: ['', Validators.required],

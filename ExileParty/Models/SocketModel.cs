@@ -6,9 +6,10 @@ using System.Threading.Tasks;
 namespace ExileParty.Models
 {
     [Serializable]
-    public class PartyModel
+    public class SocketModel
     {
-        public string Name { get; set; }
-        public List<PlayerModel> Players { get; set; }
+        public int Group { get; set; }
+        public string Attr { get; set; }
+        public string SColour { get; set; }
     }
 }

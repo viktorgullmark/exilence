@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 namespace ExileParty.Models
 {
     [Serializable]
-    public class ItemModel
+    public class SocketedItemModel
     {
         public bool Verified { get; set; }
         public int W { get; set; }

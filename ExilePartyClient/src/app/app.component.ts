@@ -1,9 +1,12 @@
 import { Component } from '@angular/core';
-import { ElectronService } from './shared/providers/electron.service';
-import { TranslateService } from '@ngx-translate/core';
-import { AppConfig } from './app.config';
-import { SessionService } from './shared/providers/session.service';
 import { Router } from '@angular/router';
+import { TranslateService } from '@ngx-translate/core';
+
+import { AppConfig } from './app.config';
+import { Player } from './shared/interfaces/player.interface';
+import { AccountService } from './shared/providers/account.service';
+import { ElectronService } from './shared/providers/electron.service';
+import { SessionService } from './shared/providers/session.service';
 
 @Component({
   selector: 'app-root',
@@ -11,6 +14,7 @@ import { Router } from '@angular/router';
   styleUrls: ['./app.component.scss']
 })
 export class AppComponent {
+  player: Player;
   constructor(public electronService: ElectronService,
     private translate: TranslateService,
     private sessionService: SessionService,

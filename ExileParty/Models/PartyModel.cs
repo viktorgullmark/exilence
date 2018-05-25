@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace ExileParty.Models
 {
-
+    [Serializable]
     public class PlayerModel
     {
         public string ConnectionID { get; set; }

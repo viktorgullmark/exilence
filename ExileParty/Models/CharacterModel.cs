@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 
 namespace ExileParty.Models
 {
+    [Serializable]
     public class CharacterModel
     {
         public string Name { get; set; }
