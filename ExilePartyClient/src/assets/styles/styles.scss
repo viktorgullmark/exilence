@@ -70,6 +70,14 @@ a {
     }
 }
 
+.progress-spinner{
+    position: relative !important;
+    display: flex !important;
+    flex-direction: column !important;
+    align-self: center !important;
+    margin: auto !important;
+}
+
 .form-title {
     text-align: right;
     text-transform: uppercase;
@@ -100,5 +108,18 @@ a {
         background: linear-gradient(rgba(24, 24, 24, 0.9), rgba(24, 24, 24, 0.9)), url("./../img/secondary-bg.jpg");
         background-repeat: no-repeat;
         background-size: cover;
+        display: flex;
+        justify-content: flex-start;
+        align-items: flex-start;
+        > *:not(router-outlet) {
+            width: 100%;
+            height: $content-height;
+        }   
+
     }
+}
+
+.inner-content-container {
+    height: $content-height;
+    display: flex;
 }
