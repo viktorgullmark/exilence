@@ -28,7 +28,7 @@ namespace ExileParty.Models
         public int X { get; set; }
         public int Y { get; set; }
         public string InventoryId { get; set; }
-        public List<ItemModel> SocketedItems { get; set; }
+        public List<SocketedItemModel> SocketedItems { get; set; }
         public List<PropertyModel> Properties { get; set; }
         public List<string> FlavourText { get; set; }
         public List<string> CraftedMods { get; set; }
