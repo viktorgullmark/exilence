@@ -1,6 +1,6 @@
 export interface Property {
     name: string;
-    values: Array<any>;
+    values: Array<Array<string>>;
     displayMode: number;
     type: number;
 }

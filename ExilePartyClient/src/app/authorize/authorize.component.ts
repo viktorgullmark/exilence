@@ -23,6 +23,7 @@ export class AuthorizeComponent implements OnInit {
   ngOnInit() {
     this.accountService.player.subscribe(res => {
       this.player = res;
+      console.log(this.player);
     });
   }
 
