@@ -60,8 +60,12 @@ export class LoginComponent implements OnInit {
     }
 
     setCharacter(data: EquipmentResponse) {
+        this.player.character = data.character;
+        this.player.character.items = this.mapItems(data.items);
+    }
 
-        const items = data.items.map((item: Item) => {
+    mapItems(items: Item[]): Item[] {
+        return items.map((item: Item) => {
             if (item.requirements !== undefined) {
                 item.requirements = item.requirements.map((req: Requirement) => {
                     if (req.values !== undefined) {
@@ -87,7 +91,7 @@ export class LoginComponent implements OnInit {
             if (item.socketedItems !== undefined) {
                 item.socketedItems = item.socketedItems.map((socketed: any) => {
                     if (socketed.requirements !== undefined) {
-                         socketed.requirements = socketed.requirements.map(req => {
+                        socketed.requirements = socketed.requirements.map(req => {
                             if (req.values !== undefined) {
                                 req.values = req.values.map((val: any) => {
                                     val = val.map(String);
@@ -113,7 +117,5 @@ export class LoginComponent implements OnInit {
             }
             return item;
         });
-        this.player.character = data.character;
-        this.player.character.items = items;
     }
 }

@@ -31,16 +31,18 @@ namespace ExileParty.Hubs
             player.ConnectionID = Context.ConnectionId;
 
             // look for party
-            var foundParty = await _cache.GetAsync<PartyModel>(partyName);
-            if (foundParty == null)
+            var party = await _cache.GetAsync<PartyModel>(partyName);
+            if (party == null)
             {
-                var party = new PartyModel() { Name = partyName, Players = new List<PlayerModel> { player } };
+                party = new PartyModel() { Name = partyName, Players = new List<PlayerModel> { player } };
                 await _cache.SetAsync<PartyModel>(partyName, party);
                 await Clients.Caller.SendAsync("EnteredParty", party, player);
             } else {
-                foundParty.Players.Add(player);
-                await _cache.SetAsync<PartyModel>(partyName, foundParty);
-                await Clients.Caller.SendAsync("EnteredParty", foundParty, player);
+                if (party.Players.FirstOrDefault(x => x.ConnectionID == player.ConnectionID) == null) { 
+                    party.Players.Insert(0, player);
+                }
+                await _cache.SetAsync<PartyModel>(partyName, party);
+                await Clients.Caller.SendAsync("EnteredParty", party, player);
             }
 
             await Groups.AddToGroupAsync(Context.ConnectionId, partyName);
@@ -53,8 +55,8 @@ namespace ExileParty.Hubs
             var foundParty = await _cache.GetAsync<PartyModel>(partyName);
             if (foundParty != null)
             {
-                //var foundPlayer = foundParty.Players.FirstOrDefault(x => x.ConnectionID == player.ConnectionID);
-                foundParty.Players.Remove(player);
+                var foundPlayer = foundParty.Players.FirstOrDefault(x => x.ConnectionID == player.ConnectionID);
+                foundParty.Players.Remove(foundPlayer);
                 await _cache.SetAsync<PartyModel>(partyName, foundParty);
             }
 

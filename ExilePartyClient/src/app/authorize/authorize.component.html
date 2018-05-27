@@ -4,7 +4,7 @@
       <mat-form-field>
         <input matInput formControlName="partyCode" placeholder="{{'PARTY.CODE' | translate}}">
       </mat-form-field>
-      <button mat-raised-button color="primary" type="submit" [disabled]="!form.valid || partyService.code == form.controls.partyCode.value">{{'PARTY.ENTER' | translate}}</button>
+      <button mat-raised-button color="primary" type="submit" [disabled]="!form.valid || partyService.party.name == form.controls.partyCode.value">{{'PARTY.ENTER' | translate}}</button>
     </form>
     <mat-nav-list class="sidenav">
       <mat-list-item routerLinkActive="active" [routerLinkActiveOptions]="{exact:true}" routerLink="/authorized/dashboard">

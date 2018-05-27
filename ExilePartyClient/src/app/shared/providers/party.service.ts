@@ -31,6 +31,7 @@ export class PartyService {
     this._hubConnection.on('EnteredParty', (party: Party, player: Player) => {
       this.party = party;
       this.accountService.player.next(player);
+      this.selectedPlayer.next(player);
       console.log('entered party:', party);
     });
 

@@ -1,4 +1,2 @@
-<ng-container>
-    <app-char-equipment *ngIf="player?.character?.items" [items]="player?.character?.items"></app-char-equipment>
-    <app-char-inventory [topMargin]="10" [items]="player?.character?.items"></app-char-inventory>
-</ng-container>
+<app-char-equipment *ngIf="player?.character?.items" [items]="player?.character?.items"></app-char-equipment>
+<app-char-inventory [topMargin]="10" [items]="player?.character?.items"></app-char-inventory>

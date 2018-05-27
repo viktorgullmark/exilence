@@ -1,11 +1,11 @@
 import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
 import { PlayerListComponent } from './player-list.component';
 import { PlayerBadgeModule } from './player-badge/player-badge.module';
+import { SharedModule } from '../../../shared/shared.module';
 
 @NgModule({
   imports: [
-    CommonModule,
+    SharedModule,
     PlayerBadgeModule
   ],
   declarations: [PlayerListComponent],
