@@ -3,6 +3,7 @@
 <mat-progress-bar *ngIf="isLoading" class="progress-bar" color="primary" mode="indeterminate">
 </mat-progress-bar>
 <div [hidden]="isLoading">
+    <mat-divider class="divider"></mat-divider>
     <div class="inner-content-container">
         <div class="player-list-container">
             <app-player-list></app-player-list>

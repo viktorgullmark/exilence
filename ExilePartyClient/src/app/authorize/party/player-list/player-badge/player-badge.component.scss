@@ -4,10 +4,11 @@
     height: 80px;
     display: flex;
     margin-bottom: 15px;
+    background: linear-gradient(to bottom right, #525252, #232323);
     cursor: pointer;
 
     &.selected-player {
-        background: #797979;
+        background: linear-gradient(to bottom right, #656565, #797979);
     }
 
     .player-badge-content {
