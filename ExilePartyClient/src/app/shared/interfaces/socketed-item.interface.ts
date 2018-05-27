@@ -1,34 +1,28 @@
 import { Property } from './property.interface';
 import { Requirement } from './requirement.interface';
 import { Socket } from './socket.interface';
-import { SocketedItem } from './socketed-item.interface';
-export interface Item {
+import { Category } from './category.interface';
+export interface SocketedItem {
     id: string;
     verified: boolean;
     w: number;
     h: number;
     ilvl: number;
     icon: string;
-    league: string;
-    sockets: Array<Socket>;
     name: string;
     typeLine: string;
-    identified: boolean;
     corrupted: boolean;
     lockedToCharacter: boolean;
+    category: Category;
     requirements: Array<Requirement>;
-    implicitMods: Array<string>;
+    nextLevelRequirements: Array<Requirement>;
     explicitMods: Array<string>;
     frameType: number;
     x: number;
     y: number;
-    inventoryId: string;
-    socketedItems: Array<SocketedItem>;
     properties: Array<Property>;
-    flavourText: Array<string>;
-    craftedMods: Array<string>;
-    enchantMods: Array<string>;
-    utilityMods: Array<string>;
+    additionalProperties: Array<Property>;
     descrText: string;
+    secDescrText: string;
     socket: number;
 }

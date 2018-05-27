@@ -5,8 +5,7 @@ import { CharProfileModule } from '../components/char-profile/char-profile.modul
 
 @NgModule({
   imports: [
-    SharedModule,
-    CharProfileModule
+    SharedModule
   ],
   declarations: [DashboardComponent]
 })

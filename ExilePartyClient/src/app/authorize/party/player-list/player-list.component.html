@@ -1,3 +1,1 @@
-<h1 *ngFor="let player of partyService.party.players">
-  <app-player-badge [player]="player"></app-player-badge>
-</h1>
+<app-player-badge *ngFor="let player of partyService.party.players" [player]="player"></app-player-badge>

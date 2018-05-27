@@ -1,7 +1,7 @@
 <div class="item-container" (mouseenter)="update()" *ngIf="item" [ngStyle]="{'width.px': 57*item.w, 'height.px': 57*(item.h+extendHeightWith)}" [ngClass]="{'unidentified': item != undefined && !item.identified, 'item-wide': wide, 'weapon-swap': weaponSwap }">
     <div class="item">
         <div class="icon-container">
-            <img [attr.src]="item.icon" />
+            <img [attr.src]="item.icon" [ngStyle]="{'max-height.px': 57*(item.h+extendHeightWith), 'max-width.px': 57*item.w}" />
         </div>
         <app-item-sockets (updated)="update()" [hidden]="weaponSwap" [columns]="item?.w" [sockets]="item?.sockets" [gems]="item?.socketedItems"></app-item-sockets>
     </div>

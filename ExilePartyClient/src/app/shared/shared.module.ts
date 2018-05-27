@@ -1,18 +1,18 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { TranslateModule } from '@ngx-translate/core';
-import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatProgressBarModule } from '@angular/material';
 
 @NgModule({
   imports: [
     CommonModule,
     TranslateModule,
-    MatProgressSpinnerModule
+    MatProgressBarModule
   ],
   exports: [
     CommonModule,
     TranslateModule,
-    MatProgressSpinnerModule
+    MatProgressBarModule
   ]
 })
 

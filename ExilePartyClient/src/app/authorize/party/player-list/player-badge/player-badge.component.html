@@ -1,3 +1,9 @@
-<mat-card> 
-  {{player.character.name}}
+<mat-card class="player-badge" *ngIf="player && selectedPlayer" (click)="selectPlayer()" [ngClass]="{'selected-player': player?.connectionID == selectedPlayer?.connectionID}"> 
+  <div class="char-icon {{player.character?.class}}">
+    
+  </div>
+  <div class="player-badge-content">
+      <span class="mat-subheading-2">{{player.character.name}}</span><br/>
+      <span class="mat-subheading-2">Level {{player.character.level}} {{player.character.class}}</span>
+  </div>
 </mat-card>

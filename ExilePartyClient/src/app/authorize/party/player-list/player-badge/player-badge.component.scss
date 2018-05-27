@@ -1,0 +1,151 @@
+.player-badge {
+    position: relative;
+    padding: 0;
+    height: 80px;
+    display: flex;
+    margin-bottom: 15px;
+    cursor: pointer;
+
+    &.selected-player {
+        background: #797979;
+    }
+
+    .player-badge-content {
+        padding: 10px;
+    }
+
+    .char-icon {
+        width: 110px;
+        height: 80px;
+    }
+
+    .Marauder {
+        background: url("../../../../../assets/img/inventory-sprite.png") no-repeat no-repeat;
+        background-position: -548px -320px;
+    }
+
+    .Juggernaut {
+        background: url("../../../../../assets/img/inventory-sprite.png") no-repeat no-repeat;
+        background-position: -548px -240px;
+    }
+
+    .Berserker {
+        background: url("../../../../../assets/img/inventory-sprite.png") no-repeat no-repeat;
+        background-position: -438px 0px;
+    }
+
+    .Chieftain {
+        background: url("../../../../../assets/img/inventory-sprite.png") no-repeat no-repeat;
+        background-position: -548px -400px;
+    }
+
+    .Shadow {
+        background: url("../../../../../assets/img/inventory-sprite.png") no-repeat no-repeat;
+        background-position: -328px -80px;
+    }
+
+    .Assassin {
+        background: url("../../../../../assets/img/inventory-sprite.png") no-repeat no-repeat;
+        background-position: -110px -180px;
+    }
+
+    .Saboteur {
+        background: url("../../../../../assets/img/inventory-sprite.png") no-repeat no-repeat;
+        background-position: -438px -160px;
+    }
+
+    .Trickster {
+        background: url("../../../../../assets/img/inventory-sprite.png") no-repeat no-repeat;
+        background-position: -328px 0px;
+    }
+
+    .Witch {
+        background: url("../../../../../assets/img/inventory-sprite.png") no-repeat no-repeat;
+        background-position: -220px -340px;
+    }
+
+    .Occultist {
+        background: url("../../../../../assets/img/inventory-sprite.png") no-repeat no-repeat;
+        background-position: -110px -340px;
+    }
+
+    .Elementalist {
+        background: url("../../../../../assets/img/inventory-sprite.png") no-repeat no-repeat;
+        background-position: -220px -260px;
+    }
+
+    .Necromancer {
+        background: url("../../../../../assets/img/inventory-sprite.png") no-repeat no-repeat;
+        background-position: 0px -340px;
+    }
+
+    .Templar {
+        background: url("../../../../../assets/img/inventory-sprite.png") no-repeat no-repeat;
+        background-position: -548px -160px;
+    }
+
+    .Inquisitor {
+        background: url("../../../../../assets/img/inventory-sprite.png") no-repeat no-repeat;
+        background-position: -548px -80px;
+    }
+
+    .Hierophant {
+        background: url("../../../../../assets/img/inventory-sprite.png") no-repeat no-repeat;
+        background-position: -548px 0px;
+    }
+
+    .Guardian {
+        background: url("../../../../../assets/img/inventory-sprite.png") no-repeat no-repeat;
+        background-position: -330px -420px;
+    }
+
+    .Duelist {
+        background: url("../../../../../assets/img/inventory-sprite.png") no-repeat no-repeat;
+        background-position: -220px -420px;
+    }
+
+    .Slayer {
+        background: url("../../../../../assets/img/inventory-sprite.png") no-repeat no-repeat;
+        background-position: -110px -420px;
+    }
+
+    .Gladiator {
+        background: url("../../../../../assets/img/inventory-sprite.png") no-repeat no-repeat;
+        background-position: -438px -240px;
+    }
+
+    .Champion {
+        background: url("../../../../../assets/img/inventory-sprite.png") no-repeat no-repeat;
+        background-position: 0px -180px;
+    }
+
+    .Ranger {
+        background: url("../../../../../assets/img/inventory-sprite.png") no-repeat no-repeat;
+        background-position: -110px -260px;
+    }
+
+    .Deadeye {
+        background: url("../../../../../assets/img/inventory-sprite.png") no-repeat no-repeat;
+        background-position: -438px -80px;
+    }
+
+    .Raider {
+        background: url("../../../../../assets/img/inventory-sprite.png") no-repeat no-repeat;
+        background-position: 0px -260px;
+    }
+
+    .Pathfinder {
+        background: url("../../../../../assets/img/inventory-sprite.png") no-repeat no-repeat;
+        background-position: -328px -160px;
+    }
+
+    .Scion {
+        background: url("../../../../../assets/img/inventory-sprite.png") no-repeat no-repeat;
+        background-position: 0px -420px;
+    }
+
+    .Ascendant {
+        background: url("../../../../../assets/img/inventory-sprite.png") no-repeat no-repeat;
+        background-position: -438px -320px;
+    }
+}

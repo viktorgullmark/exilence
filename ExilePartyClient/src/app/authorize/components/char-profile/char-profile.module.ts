@@ -1,12 +1,12 @@
 import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
 import { CharProfileComponent } from './char-profile.component';
 import { CharInventoryModule } from './char-inventory/char-inventory.module';
 import { CharEquipmentModule } from './char-equipment/char-equipment.module';
+import { SharedModule } from '../../../shared/shared.module';
 
 @NgModule({
   imports: [
-    CommonModule,
+    SharedModule,
     CharInventoryModule,
     CharEquipmentModule
   ],

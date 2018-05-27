@@ -16,20 +16,21 @@ export class AuthorizeComponent implements OnInit {
   constructor(@Inject(FormBuilder) fb: FormBuilder, private partyService: PartyService, private accountService: AccountService,
     private router: Router) {
     this.form = fb.group({
-      partyCode: ['my-party-name', Validators.required]
+      partyCode: [this.partyService.party.name !== '' ? this.partyService.party.name : 'my-party-name', Validators.required]
     });
   }
 
   ngOnInit() {
     this.accountService.player.subscribe(res => {
       this.player = res;
-      console.log(this.player);
     });
   }
 
   enterParty() {
     this.partyService.leaveParty(this.partyService.party.name, this.player);
     this.partyService.joinParty(this.form.controls.partyCode.value, this.player);
-    this.router.navigate(['/authorized/party']);
+
+    this.router.navigateByUrl('/404', { skipLocationChange: true }).then(() =>
+      this.router.navigate(['/authorized/party']));
   }
 }
