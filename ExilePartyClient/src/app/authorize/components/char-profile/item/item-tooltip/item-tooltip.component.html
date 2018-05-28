@@ -1,3 +1,4 @@
-<app-item-tooltip-content [style.left.px]="gemTooltip.left" class="tooltip-content item-content" [item]="item"></app-item-tooltip-content>
+<app-item-tooltip-content #gemTooltip class="tooltip-content fade gem-content" [item]="itemService.selectedGem" [ngClass]="{'hidden': itemService.selectedGem == undefined}">
+</app-item-tooltip-content>
 
-<app-item-tooltip-content #gemTooltip class="tooltip-content fade gem-content" [item]="itemService.selectedGem" [ngClass]="{'hidden': itemService.selectedGem == undefined}"></app-item-tooltip-content>
+<app-item-tooltip-content [style.left.px]="gemTooltip.left" class="tooltip-content item-content" [item]="item"></app-item-tooltip-content>
