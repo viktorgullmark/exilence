@@ -51,7 +51,7 @@ export class PartyService {
       const index = this.party.players.indexOf(this.party.players.find(x => x.connectionID === player.connectionID));
       this.party.players[index] = player;
 
-      if(this.selectedPlayerObj.connectionID === player.connectionID){
+      if (this.selectedPlayerObj.connectionID === player.connectionID) {
         this.selectedPlayer.next(player);
       }
       console.log('player updated:', player);
