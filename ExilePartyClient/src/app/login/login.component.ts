@@ -12,6 +12,7 @@ import { PartyService } from '../shared/providers/party.service';
 import { Item } from '../shared/interfaces/item.interface';
 import { Requirement } from '../shared/interfaces/requirement.interface';
 import { Property } from '../shared/interfaces/property.interface';
+import { SettingsService } from '../shared/providers/settings.service';
 
 @Component({
     selector: 'app-login',
@@ -27,12 +28,19 @@ export class LoginComponent implements OnInit {
         private externalService: ExternalService,
         private accountService: AccountService,
         private sessionService: SessionService,
+        private settingsService: SettingsService,
         private partyService: PartyService) {
+        const accName = this.settingsService.get('account.accountName');
+        const sessId = this.settingsService.get('account.sessionId');
+        const charName = this.settingsService.get('account.characterName');
         this.form = fb.group({
-            accountName: ['', Validators.required],
-            sessionId: ['', Validators.required],
-            characterName: ['', Validators.required]
+            accountName: [accName !== undefined ? accName : '', Validators.required],
+            sessionId: [sessId !== undefined ? sessId : '', Validators.required],
+            characterName: [charName !== undefined ? charName : '', Validators.required]
         });
+        if (charName !== undefined) {
+            this.getCharacterList(accName);
+        }
     }
 
     ngOnInit() {
@@ -43,10 +51,11 @@ export class LoginComponent implements OnInit {
         });
     }
 
-    getCharacterList() {
-        this.externalService.getCharacterList(this.form.controls.accountName.value).subscribe((res: Character[]) => {
-            this.accountService.characterList.next(res);
-        });
+    getCharacterList(accountName?: string) {
+        this.externalService.getCharacterList(accountName !== undefined ? accountName : this.form.controls.accountName.value)
+            .subscribe((res: Character[]) => {
+                this.accountService.characterList.next(res);
+            });
     }
 
     login() {
@@ -55,6 +64,7 @@ export class LoginComponent implements OnInit {
                 this.player = this.externalService.setCharacter(data, this.player);
                 this.accountService.player.next(this.player);
                 this.accountService.accountInfo.next(this.form.value);
+                this.settingsService.set('account', this.form.value);
                 this.sessionService.initSession(this.form.controls.sessionId.value);
                 this.router.navigate(['/authorized/dashboard']);
             });

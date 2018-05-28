@@ -32,6 +32,7 @@
     "e2e": "ng e2e"
   },
   "dependencies": {
+    "electron-settings": "^3.2.0",
     "poe-log-monitor": "^1.2.1",
     "rxjs-compat": "^6.2.0",
     "tail": "^1.2.3"
