@@ -12,10 +12,10 @@ Path of Exile party-app used to track gear / inventory of partymembers
 Currently runs with:
 
 - .NET Core 2.1.0-rc1-final
-- SignalR (.NET Core) 1.0.0-rc1-final
-- Angular v5.2.5
-- Angular-CLI v1.6.4
-- Electron v1.8.2
-- Electron Builder v20.0.4
+- SignalR (.NET Core) 1.0.0-rc1-final w/ Redis caching
+- Angular v6.0.3
+- Angular-CLI v6.0.3
+- Electron v2.0.1
+- Electron Builder v20.13.4
 
 
