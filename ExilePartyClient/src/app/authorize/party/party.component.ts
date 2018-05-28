@@ -14,7 +14,7 @@ export class PartyComponent implements OnInit {
     // give the profile time to render
     setTimeout(() => {
       this.isLoading = false;
-    }, 2000);
+    }, 1000);
   }
 
 }
