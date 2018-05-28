@@ -1,12 +1,12 @@
 import { Injectable } from '@angular/core';
 import { HubConnection } from '@aspnet/signalr';
 import * as signalR from '@aspnet/signalr';
-import { AppConfig } from './../../app.config';
 import { Player } from '../interfaces/player.interface';
 import { Router } from '@angular/router';
-import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Party } from '../interfaces/party.interface';
 import { AccountService } from './account.service';
+import { AppConfig } from '../../../environments/environment';
+import { BehaviorSubject } from 'rxjs/internal/BehaviorSubject';
 
 @Injectable()
 export class PartyService {

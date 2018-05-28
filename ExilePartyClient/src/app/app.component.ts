@@ -2,11 +2,11 @@ import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 
-import { AppConfig } from './app.config';
 import { Player } from './shared/interfaces/player.interface';
 import { AccountService } from './shared/providers/account.service';
 import { ElectronService } from './shared/providers/electron.service';
 import { SessionService } from './shared/providers/session.service';
+import { AppConfig } from '../environments/environment';
 
 @Component({
   selector: 'app-root',

@@ -5,7 +5,6 @@ import 'rxjs/add/operator/map';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { ActivatedRouteSnapshot, Router, RouterStateSnapshot } from '@angular/router';
-import { Observable } from 'rxjs/Observable';
 
 @Injectable()
 export class CanActivateAuthorized {
