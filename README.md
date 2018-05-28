@@ -1,6 +1,13 @@
-# Introduction
+# ExileParty
 
 Path of Exile party-app used to track gear / inventory of partymembers
+
+## Contents
+
+- [Changelog](https://github.com/viktorgullmark/exile-party/blob/master/CHANGELOG.md)
+- [Platform](#platform)
+
+## Platform
 
 Currently runs with:
 
@@ -11,9 +18,4 @@ Currently runs with:
 - Electron v1.8.2
 - Electron Builder v20.0.4
 
-# Changelog
-All notable changes to this project will be documented in this file.
 
-## [Unreleased]
-
-## [1.0.0] - 2018-xx-xx
