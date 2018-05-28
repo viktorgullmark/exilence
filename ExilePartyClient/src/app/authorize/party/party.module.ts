@@ -5,6 +5,7 @@ import { PartyComponent } from './party.component';
 import { PlayerListModule } from './player-list/player-list.module';
 import { CharProfileModule } from '../components/char-profile/char-profile.module';
 import {MatDividerModule} from '@angular/material/divider';
+import { LogMonitorService } from '../../shared/providers/log-monitor.service';
 @NgModule({
   imports: [
     SharedModule,
@@ -12,6 +13,7 @@ import {MatDividerModule} from '@angular/material/divider';
     PlayerListModule,
     CharProfileModule
   ],
-  declarations: [PartyComponent]
+  declarations: [PartyComponent],
+  providers: [LogMonitorService]
 })
 export class PartyModule { }

@@ -52,70 +52,11 @@ export class LoginComponent implements OnInit {
     login() {
         this.externalService.getCharacter(this.form.value)
             .subscribe((data: EquipmentResponse) => {
-                this.setCharacter(data);
+                this.player = this.externalService.setCharacter(data, this.player);
                 this.accountService.player.next(this.player);
+                this.accountService.accountInfo.next(this.form.value);
                 this.sessionService.initSession(this.form.controls.sessionId.value);
                 this.router.navigate(['/authorized/dashboard']);
             });
-    }
-
-    setCharacter(data: EquipmentResponse) {
-        this.player.character = data.character;
-        this.player.character.items = this.mapItems(data.items);
-    }
-
-    mapItems(items: Item[]): Item[] {
-        return items.map((item: Item) => {
-            if (item.requirements !== undefined) {
-                item.requirements = item.requirements.map((req: Requirement) => {
-                    if (req.values !== undefined) {
-                        req.values = req.values.map((val: any) => {
-                            val = val.map(String);
-                            return val;
-                        });
-                    }
-                    return req;
-                });
-            }
-            if (item.properties !== undefined) {
-                item.properties = item.properties.map((req: Property) => {
-                    if (req.values !== undefined) {
-                        req.values = req.values.map((val: any) => {
-                            val = val.map(String);
-                            return val;
-                        });
-                    }
-                    return req;
-                });
-            }
-            if (item.socketedItems !== undefined) {
-                item.socketedItems = item.socketedItems.map((socketed: any) => {
-                    if (socketed.requirements !== undefined) {
-                        socketed.requirements = socketed.requirements.map(req => {
-                            if (req.values !== undefined) {
-                                req.values = req.values.map((val: any) => {
-                                    val = val.map(String);
-                                    return val;
-                                });
-                            }
-                            return req;
-                        });
-                    }
-                    if (socketed.properties !== undefined) {
-                        socketed.properties = socketed.properties.map((req: Property) => {
-                            if (req.values !== undefined) {
-                                req.values = req.values.map((val: any) => {
-                                    val = val.map(String);
-                                    return val;
-                                });
-                            }
-                            return req;
-                        });
-                    }
-                    return socketed;
-                });
-            }
-            return item;
-        });
     }
 }
