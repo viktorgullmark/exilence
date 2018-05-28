@@ -20,6 +20,8 @@ export class AppComponent {
     public sessionService: SessionService,
     private router: Router) {
 
+    this.logout();
+
     translate.setDefaultLang('en');
     console.log('AppConfig', AppConfig);
 
