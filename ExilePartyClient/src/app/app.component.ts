@@ -17,7 +17,7 @@ export class AppComponent {
   player: Player;
   constructor(public electronService: ElectronService,
     private translate: TranslateService,
-    private sessionService: SessionService,
+    public sessionService: SessionService,
     private router: Router) {
 
     translate.setDefaultLang('en');

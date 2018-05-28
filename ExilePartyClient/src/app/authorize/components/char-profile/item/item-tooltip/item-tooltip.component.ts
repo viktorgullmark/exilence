@@ -13,7 +13,7 @@ export class ItemTooltipComponent implements OnInit {
   top = 0;
   left = 100;
   @ViewChild('gemTooltip') gemTooltip: ItemTooltipContentComponent;
-  constructor(private el: ElementRef, private itemService: ItemService) {
+  constructor(private el: ElementRef, public itemService: ItemService) {
   }
 
   ngOnInit() {
