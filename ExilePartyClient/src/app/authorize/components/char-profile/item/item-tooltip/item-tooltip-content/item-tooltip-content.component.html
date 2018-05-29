@@ -74,7 +74,7 @@
                 </ng-container>
             </div>
             <hr *ngIf="item.requirements != undefined && (item.implicitMods != undefined || item.enchantMods != undefined || item.explicitMods != undefined || item.craftedMods != undefined || !item.identified)">
-            <span *ngIf="!item.identified" class="unidentified">Unidentified</span>
+            <span *ngIf="item.identified != undefined && !item.identified" class="unidentified">Unidentified</span>
         </div>
         <div class="mods">
             <ng-container *ngFor="let mod of item.implicitMods">
