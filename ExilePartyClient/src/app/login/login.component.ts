@@ -36,7 +36,8 @@ export class LoginComponent implements OnInit {
         this.form = fb.group({
             accountName: [this.accName !== undefined ? this.accName : '', Validators.required],
             sessionId: [this.sessId !== undefined ? this.sessId : '', Validators.required],
-            characterName: [this.charName !== undefined ? this.charName : '', Validators.required]
+            characterName: [this.charName !== undefined ? this.charName : '', Validators.required],
+            filePath: ['C:/Program Files (x86)/Steam/steamapps/common/Path of Exile/logs/Client.txt', Validators.required]
         });
         if (this.charName !== undefined) {
             this.getCharacterList(this.accName);
@@ -59,6 +60,7 @@ export class LoginComponent implements OnInit {
     }
 
     login() {
+        console.log(this.form.value);
         this.externalService.getCharacter(this.form.value)
             .subscribe((data: EquipmentResponse) => {
                 this.player = this.externalService.setCharacter(data, this.player);
