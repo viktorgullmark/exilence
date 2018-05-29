@@ -1,29 +1,30 @@
 {
-    "INFO": {
-        "TITLE": "ExileParty"
-    },
-    "PAGES": {
-        "DASHBOARD": {
-            "TITLE": "Dashboard"
-        },
-        "PARTY": {
-            "TITLE": "Party"
-        }
-    },
-    "ACCOUNT": {
-        "NAME": "Account name",
-        "LOGIN": "Login",
-        "SESSIONID": "Session ID",
-        "LOGOUT": "Logout",
-        "CLOSE": "Close",
-        "INFORMATION": "Account information"
-    },
-    "CHARACTER": {
-        "NAME": "Character name"
-    },
-    "PARTY": {
-        "CODE": "Party code",
-        "ENTER": "Enter",
-        "PARTY": "Party"
-    }
+  "INFO": {
+      "TITLE": "ExileParty"
+  },
+  "PAGES": {
+      "DASHBOARD": {
+          "TITLE": "Dashboard"
+      },
+      "PARTY": {
+          "TITLE": "Party"
+      }
+  },
+  "ACCOUNT": {
+      "NAME": "Account name",
+      "LOGIN": "Login",
+      "SESSIONID": "Session ID",
+      "FILEPATH": "Path to Client.txt",
+      "LOGOUT": "Logout",
+      "CLOSE": "Close",
+      "INFORMATION": "Account information"
+  },
+  "CHARACTER": {
+      "NAME": "Character name"
+  },
+  "PARTY": {
+      "CODE": "Party code",
+      "ENTER": "Enter",
+      "PARTY": "Party"
+  }
 }

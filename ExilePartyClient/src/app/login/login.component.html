@@ -15,7 +15,9 @@
         </mat-select>
       </mat-form-field>
     </div>
-
+    <mat-form-field>
+      <input matInput formControlName="filePath" placeholder="{{'ACCOUNT.FILEPATH' | translate}}">
+    </mat-form-field>
     <button mat-raised-button color="primary" type="submit" [disabled]="!form.valid">{{'ACCOUNT.LOGIN' | translate}}</button>
   </form>
 </div>
