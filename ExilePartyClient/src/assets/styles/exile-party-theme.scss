@@ -4,12 +4,14 @@
 $exileparty-primary: mat-palette($mat-pink, 500);
 $exileparty-secondary: mat-palette($mat-pink, 700);
 $exileparty-darker: mat-palette($mat-pink, 900);
-$exileparty-accent : mat-palette($mat-grey);
-$exileparty-warn : mat-palette($mat-deep-orange);
+$exileparty-accent: mat-palette($mat-grey, 600);
+$exileparty-accent-dark: mat-palette($mat-grey, 800);
+$exileparty-warn: mat-palette($mat-deep-orange);
 $exileparty-theme: mat-dark-theme($exileparty-primary, $exileparty-accent, $exileparty-warn);
 
 // global variables
 $primary: mat-color($exileparty-primary);
 $accent: mat-color($exileparty-accent);
+$accent-dark: mat-color($exileparty-accent-dark);
 $darker: mat-color($exileparty-darker);
 $secondary: mat-color($exileparty-secondary);
