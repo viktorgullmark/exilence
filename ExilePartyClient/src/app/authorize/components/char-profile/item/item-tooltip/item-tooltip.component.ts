@@ -1,4 +1,5 @@
-import { Component, OnInit, Input, ElementRef, ViewChild } from '@angular/core';
+import { Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
+
 import { Item } from '../../../../../shared/interfaces/item.interface';
 import { ItemService } from '../item.service';
 import { ItemTooltipContentComponent } from './item-tooltip-content/item-tooltip-content.component';
@@ -20,29 +21,33 @@ export class ItemTooltipComponent implements OnInit {
   }
 
   reposition(host: ElementRef) {
-    const element = host.nativeElement;
-    const margin = 25;
 
-    const rect = this.el.nativeElement.getBoundingClientRect();
-    const elementRect = element.getBoundingClientRect();
+    setTimeout(() => {
+      const element = host.nativeElement;
+      const margin = 25;
 
-    const overflowTop = rect.top - (54 + margin);
-    const overflowLeft = rect.left - (265 + margin);
-    const overflowRight = window.innerWidth - rect.right;
-    const overflowBottom = window.innerHeight - rect.bottom;
+      const rect = this.el.nativeElement.getBoundingClientRect();
+      const elementRect = element.getBoundingClientRect();
 
-    if (overflowTop < 0) {
-      this.top = this.el.nativeElement.offsetTop - overflowTop;
-    }
-    if (overflowLeft < 0) {
-      this.left = this.el.nativeElement.offsetLeft - overflowLeft;
-    }
-    if (overflowBottom < 0) {
-      this.top = this.el.nativeElement.offsetTop + overflowBottom - margin;
-    }
-    if (overflowRight < 0) {
-      this.left = this.el.nativeElement.offsetLeft + overflowRight - margin;
-    }
+      const overflowTop = rect.top - (54 + margin);
+      const overflowLeft = rect.left - (265 + margin);
+      // const overflowRight = window.innerWidth - (rect.right + 210);
+      const overflowRight = window.innerWidth - rect.right;
+      const overflowBottom = window.innerHeight - rect.bottom;
+
+      if (overflowTop < 0) {
+        this.top = this.el.nativeElement.offsetTop - overflowTop;
+      }
+      if (overflowLeft < 0) {
+        this.left = this.el.nativeElement.offsetLeft - overflowLeft;
+      }
+      if (overflowBottom < 0) {
+        this.top = this.el.nativeElement.offsetTop + overflowBottom - margin;
+      }
+      if (overflowRight < 0) {
+        this.left = this.el.nativeElement.offsetLeft + overflowRight - margin;
+      }
+    }, 1);
 
   }
 }
