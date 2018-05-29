@@ -38,4 +38,8 @@ export class AppComponent {
     this.sessionService.cancelSession();
     this.router.navigate(['login']);
   }
+
+  close() {
+    this.electronService.remote.getCurrentWindow().close();
+  }
 }

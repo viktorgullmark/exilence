@@ -1,5 +1,8 @@
 <mat-toolbar class="toolbar">
     <span>{{ 'INFO.TITLE' | translate }}</span>
-    <a (click)="logout()" class="logout-link" *ngIf="sessionService.getSession() != null">{{ 'ACCOUNT.LOGOUT' | translate}}</a>
+    <a (click)="logout()" class="right-link" *ngIf="sessionService.getSession() != null">
+        {{ 'ACCOUNT.LOGOUT' | translate}}</a>
+    <a (click)="close()" class="right-link" *ngIf="sessionService.getSession() == null">
+        {{ 'ACCOUNT.CLOSE' | translate}}</a>
 </mat-toolbar>
 <router-outlet></router-outlet>
