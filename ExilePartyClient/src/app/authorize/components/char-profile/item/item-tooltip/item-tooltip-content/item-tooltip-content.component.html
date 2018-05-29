@@ -17,7 +17,10 @@
                     <span>{{item.typeLine}}</span>
                 </ng-container>
                 <!-- magic item -->
-                <span *ngSwitchCase="1">{{item.typeLine.substring(28)}}</span>
+                <span *ngSwitchCase="1">
+                    <ng-container *ngIf="item.identified">{{item.typeLine.substring(28)}}</ng-container>
+                    <ng-container *ngIf="!item.identified">{{item.typeLine}}</ng-container>
+                </span>
                 <!-- normal item -->
                 <span *ngSwitchCase="0">{{item.typeLine}}</span>
                 <span *ngSwitchCase="4">{{item.typeLine}}</span>
@@ -71,6 +74,7 @@
                 </ng-container>
             </div>
             <hr *ngIf="item.requirements != undefined && (item.implicitMods != undefined || item.enchantMods != undefined || item.explicitMods != undefined || item.craftedMods != undefined || !item.identified)">
+            <span *ngIf="!item.identified" class="unidentified">Unidentified</span>
         </div>
         <div class="mods">
             <ng-container *ngFor="let mod of item.implicitMods">
@@ -109,6 +113,19 @@
             </span>
             <br/>
         </ng-container>
+        <ng-container *ngIf="item.descrText != undefined">
+            <hr *ngIf="item.implicitMods != undefined || item.enchantMods != undefined || item.explicitMods != undefined || item.craftedMods != undefined || !item.identified">
+            <span class="descr-text mat-caption">{{item.descrText}}</span>
+        </ng-container>
+        <ng-container *ngIf="item.secDescrText != undefined">
+            <br/>
+            <hr *ngIf="item.implicitMods != undefined || item.enchantMods != undefined || item.explicitMods != undefined || item.craftedMods != undefined || !item.identified">
+            <span class="descr-text mat-caption">{{item.secDescrText}}</span>
+        </ng-container>
+        <ng-container *ngIf="item.corrupted && (item.secDescrText != undefined || item.descrText != undefined)">
+            <br/>
+        </ng-container>
         <span *ngIf="item.corrupted" class="corrupted">Corrupted</span>
+
     </div>
 </ng-container>

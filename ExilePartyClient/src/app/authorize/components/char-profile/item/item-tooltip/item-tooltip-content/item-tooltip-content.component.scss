@@ -59,9 +59,19 @@ hr {
     color: $flavour-text-color !important;
 }
 
+.descr-text {
+    white-space: pre-wrap; 
+    display: inline-block; 
+    max-width: 400px;
+    color: $tag-color;
+}
+
 .corrupted {
     color: $corrupted-item-color !important;
-    font-weight: bold;
+}
+
+.corrupted {
+    color: $unidentified-item-font-color !important;
 }
 
 .enchant-mod {
