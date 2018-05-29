@@ -19,8 +19,8 @@ function createWindow() {
     height: 1000,
     webPreferences: { webSecurity: false },
     frame: false,
-    resizable: true,
-    icon: path.join(__dirname, 'dist/assets/img/favicon.png'),
+    resizable: false,
+    icon: path.join(__dirname, 'dist/assets/img/app-icon.png'),
   });
 
   if (serve) {
@@ -36,7 +36,7 @@ function createWindow() {
     }));
   }
 
-  win.webContents.openDevTools();
+  // win.webContents.openDevTools();
 
   // Emitted when the window is closed.
   win.on('closed', () => {
