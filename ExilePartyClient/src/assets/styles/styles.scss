@@ -38,6 +38,10 @@ html, body {
 
 a {
     cursor: pointer;
+    &.inline-link{
+        color: $primary;
+        text-decoration: none;
+    }
 }
 
 .container {
@@ -127,4 +131,9 @@ a {
 .inner-content-container {
     height: $content-height;
     display: flex;
+}
+
+.dashboard-content-container {
+    height: $content-height;
+    max-width: 1000px;
 }
