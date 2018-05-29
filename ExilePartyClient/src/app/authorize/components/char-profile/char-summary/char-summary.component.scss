@@ -1,0 +1,27 @@
+@import "./../../../../../assets/styles/_variables.scss";
+
+.cold-resistance {
+    color: $mod-coldres-color;
+    padding-right: 5px;
+}
+
+.fire-resistance {
+    color: $mod-fireres-color;
+    padding-right: 5px;
+}
+
+.lightning-resistance {
+    color: $mod-lightres-color;
+    padding-right: 5px;
+}
+
+.chaos-resistance {
+    color: $mod-chaosres-color;
+    padding-right: 5px;
+}
+
+.summary-container {
+    margin-left: 5px;
+    margin-top: 10px;
+    font-size: 15px;
+}
