@@ -30,36 +30,40 @@ export class CharSummaryComponent implements OnChanges {
 
   calculateResistances() {
 
-    this.items.forEach(item => {
+    this.items.filter(t =>
+      t.inventoryId !== 'MainInventory' &&
+      t.inventoryId !== 'Flask' &&
+      t.inventoryId !== 'Weapon2' &&
+      t.inventoryId !== 'Offhand2').forEach(item => {
 
-      let mods = [];
-      if (item.craftedMods) {
-        mods = mods.concat(item.craftedMods);
-      }
-      if (item.explicitMods) {
-        mods = mods.concat(item.explicitMods);
-      }
-      if (item.implicitMods) {
-        mods = mods.concat(item.implicitMods);
-      }
-      if (item.enchantMods) {
-        mods = mods.concat(item.enchantMods);
-      }
-
-      mods.forEach((mod: string) => {
-
-        const singleMatch = mod.match(new RegExp(this.singleRegex));
-        if (singleMatch) {
-          this.modifyValues(singleMatch[1], singleMatch[2]);
+        let mods = [];
+        if (item.craftedMods) {
+          mods = mods.concat(item.craftedMods);
+        }
+        if (item.explicitMods) {
+          mods = mods.concat(item.explicitMods);
+        }
+        if (item.implicitMods) {
+          mods = mods.concat(item.implicitMods);
+        }
+        if (item.enchantMods) {
+          mods = mods.concat(item.enchantMods);
         }
 
-        const twoStoneMatch = mod.match(new RegExp(this.twoStoneRegex));
-        if (twoStoneMatch) {
-          this.modifyValues(twoStoneMatch[1], twoStoneMatch[2] + ' Resistance');
-          this.modifyValues(twoStoneMatch[1], twoStoneMatch[3] + ' Resistance');
-        }
+        mods.forEach((mod: string) => {
+
+          const singleMatch = mod.match(new RegExp(this.singleRegex));
+          if (singleMatch) {
+            this.modifyValues(singleMatch[1], singleMatch[2]);
+          }
+
+          const twoStoneMatch = mod.match(new RegExp(this.twoStoneRegex));
+          if (twoStoneMatch) {
+            this.modifyValues(twoStoneMatch[1], twoStoneMatch[2] + ' Resistance');
+            this.modifyValues(twoStoneMatch[1], twoStoneMatch[3] + ' Resistance');
+          }
+        });
       });
-    });
   }
 
   modifyValues(value, res) {
