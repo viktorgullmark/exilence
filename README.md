@@ -6,6 +6,7 @@ Path of Exile party-app used to track gear / inventory of partymembers
 
 - [Changelog](https://github.com/viktorgullmark/exile-party/blob/master/CHANGELOG.md)
 - [Platform](#platform)
+- [Upcoming](#upcoming)
 
 ## Platform
 
@@ -17,5 +18,17 @@ Currently runs with:
 - Angular-CLI v6.0.3
 - Electron v2.0.1
 - Electron Builder v20.13.4
+
+## Upcoming changes
+
+- Storing filepath for Client.txt as a setting
+- Improve positioning of item-tooltips
+- Support for unidentified items (visual change)
+- List of recent rooms on dashboard
+- Show progress-spinner when swapping character (to render sockets)
+- Support for abyssal sockets
+
+
+
 
 
