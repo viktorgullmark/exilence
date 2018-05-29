@@ -5,7 +5,7 @@
             <div class="{{columns}}-col" [ngClass]="'link-'+i+'-'+columns" *ngIf="sockets[i+1] && socket.group == sockets[i+1].group"></div>
             <div class="socket-{{socket.attr}} {{columns}}-col" [ngClass]="'socket-'+i+'-'+columns">
                 <div class="gem-container" *ngIf="gems">
-                    <div *ngIf="getGemByIndex(i) != undefined" class="inner-gem {{socket.attr}}-gem {{getGemByIndex(i).sColour}}" (mouseenter)="selectGem(getGemByIndex(i))" (mouseleave)="deselectGem()">
+                    <div *ngIf="getGemByIndex(i) != undefined" class="inner-gem {{socket.attr}}-gem {{getGemByIndex(i).colour}}" (mouseenter)="selectGem(getGemByIndex(i))" (mouseleave)="deselectGem()">
                     </div>
                 </div>
             </div>

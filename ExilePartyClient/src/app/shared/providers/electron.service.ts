@@ -13,6 +13,7 @@ export class ElectronService {
   webFrame: typeof webFrame;
   remote: typeof remote;
   childProcess: typeof childProcess;
+  settings: any;
   fs: typeof fs;
   constructor() {
     // Conditional imports
@@ -22,6 +23,7 @@ export class ElectronService {
       this.remote = window.require('electron').remote;
       this.childProcess = window.require('child_process');
       this.fs = window.require('fs');
+      this.settings = window.require('electron-settings');
     }
   }
 

@@ -63,5 +63,16 @@ namespace ExileParty.Hubs
             await Clients.OthersInGroup(partyName).SendAsync("PlayerLeft", player);
             await Groups.RemoveFromGroupAsync(Context.ConnectionId, partyName);
         }
+
+        public async Task UpdatePlayer(PlayerModel player, string partyName)
+        {
+            var party = await _cache.GetAsync<PartyModel>(partyName);
+            if(party != null) {
+                var index = party.Players.IndexOf(party.Players.FirstOrDefault(x => x.ConnectionID == player.ConnectionID));
+                party.Players[index] = player;
+                await _cache.SetAsync<PartyModel>(partyName, party);
+                await Clients.Group(partyName).SendAsync("PlayerUpdated", player);
+            }
+        }
     }
 }

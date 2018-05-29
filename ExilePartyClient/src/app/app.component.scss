@@ -1,11 +1,13 @@
-@import './../assets/styles/_variables.scss';
+@import "./../assets/styles/_variables.scss";
 
 .logout-link {
     justify-content: end;
     margin-left: auto;
+    -webkit-app-region: no-drag;
 }
 
 .mat-toolbar {
     background: $toolbar-bg-color;
     height: $toolbar-height;
+    -webkit-app-region: drag;
 }
