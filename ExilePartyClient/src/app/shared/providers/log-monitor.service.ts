@@ -1,19 +1,24 @@
 import { Injectable, EventEmitter } from '@angular/core';
+import { AccountService } from './account.service';
 
 @Injectable()
 export class LogMonitorService {
   private PathOfExileLog = window.require('poe-log-monitor');
 
-  filePath = 'C:/Program Files (x86)/Steam/steamapps/common/Path of Exile/logs/Client.txt';
-  private poeLog = new this.PathOfExileLog({
-    logfile: this.filePath
-  });
+  poeLog: any;
 
   areaEvent: EventEmitter<any> = new EventEmitter();
 
-  constructor() {
-    this.poeLog.on('area', (data) => {
-      this.areaEvent.emit(data);
+  constructor(private accountService: AccountService) {
+    this.accountService.accountInfo.subscribe(res => {
+      if (res !== undefined) {
+        this.poeLog = new this.PathOfExileLog({
+          logfile: res.filePath
+        });
+        this.poeLog.on('area', (data) => {
+          this.areaEvent.emit(data);
+        });
+      }
     });
   }
 }
