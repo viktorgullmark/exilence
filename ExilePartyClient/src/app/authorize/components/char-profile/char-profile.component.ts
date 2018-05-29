@@ -13,6 +13,7 @@ import { SessionService } from '../../../shared/providers/session.service';
 })
 export class CharProfileComponent implements OnInit {
   player: Player;
+
   constructor(private partyService: PartyService, private sessionService: SessionService,
     private externalService: ExternalService, private router: Router) { }
 
@@ -21,4 +22,5 @@ export class CharProfileComponent implements OnInit {
       this.player = res;
     });
   }
+
 }
