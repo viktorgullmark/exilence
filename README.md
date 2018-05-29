@@ -27,6 +27,8 @@ Currently runs with:
 - List of recent rooms on dashboard
 - Show progress-spinner when swapping character (to render sockets)
 - Support for abyssal sockets
+- Displaying DPS on item-tooltips
+- If an item is an upgrade, highlight the players it's an upgrade for
 
 
 
