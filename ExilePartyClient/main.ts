@@ -19,7 +19,8 @@ function createWindow() {
     height: 1000,
     webPreferences: { webSecurity: false },
     frame: false,
-    resizable: true
+    resizable: true,
+    icon: path.join(__dirname, 'dist/assets/img/favicon.png'),
   });
 
   if (serve) {
