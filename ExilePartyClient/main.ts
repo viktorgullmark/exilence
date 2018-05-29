@@ -1,7 +1,6 @@
 import { app, BrowserWindow, screen } from 'electron';
 import * as path from 'path';
 import * as url from 'url';
-import { AppConfig } from './src/environments/environment';
 
 let win, serve;
 const args = process.argv.slice(1);
@@ -16,11 +15,11 @@ function createWindow() {
   win = new BrowserWindow({
     x: 100,
     y: 100,
-    width: AppConfig.production ? 1375 : 2090,
+    width: 1375,
     height: 1000,
     webPreferences: { webSecurity: false },
     frame: false,
-    resizable: !AppConfig.production
+    resizable: true
   });
 
   if (serve) {
