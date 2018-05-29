@@ -22,7 +22,7 @@ namespace ExileParty.Helper
 
         public static Task SetAsync<T>(this IDistributedCache cache, string key, T value)
         {
-            return SetAsync(cache, key, value, new DistributedCacheEntryOptions());
+            return SetAsync(cache, key, value, new DistributedCacheEntryOptions() { SlidingExpiration = TimeSpan.FromHours(3) });
         }
 
         public static Task SetAsync<T>(this IDistributedCache cache, string key, T value, DistributedCacheEntryOptions options)

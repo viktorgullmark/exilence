@@ -1,6 +1,7 @@
 import { app, BrowserWindow, screen } from 'electron';
 import * as path from 'path';
 import * as url from 'url';
+import { AppConfig } from './src/environments/environment';
 
 let win, serve;
 const args = process.argv.slice(1);
@@ -13,16 +14,19 @@ function createWindow() {
 
   // Create the browser window.
   win = new BrowserWindow({
-    x: 0,
-    y: 0,
-    width: size.width,
-    height: size.height,
-    webPreferences: {webSecurity: false}
+    x: 100,
+    y: 100,
+    width: AppConfig.production ? 1375 : 2090,
+    height: 1000,
+    webPreferences: { webSecurity: false },
+    frame: false,
+    resizable: !AppConfig.production
   });
 
   if (serve) {
     require('electron-reload')(__dirname, {
-     electron: require(`${__dirname}/node_modules/electron`)});
+      electron: require(`${__dirname}/node_modules/electron`)
+    });
     win.loadURL('http://localhost:4200');
   } else {
     win.loadURL(url.format({
@@ -32,7 +36,10 @@ function createWindow() {
     }));
   }
 
-  win.webContents.openDevTools();
+  if (!AppConfig.production) {
+    win.webContents.openDevTools();
+    console.log('Set window with to 1375px to mimic size without devtools!');
+  }
 
   // Emitted when the window is closed.
   win.on('closed', () => {
