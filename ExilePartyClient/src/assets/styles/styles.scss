@@ -102,6 +102,7 @@ a {
     }
 
     .content-container {
+        overflow: hidden;
         padding: 15px 25px 15px 25px;
         margin-left: 265px !important;
         padding: $content-container-padding;
