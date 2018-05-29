@@ -31,7 +31,10 @@
     "test": "ng test",
     "e2e": "ng e2e"
   },
-  "dependencies": {},
+  "dependencies": {
+    "electron-settings": "^3.2.0",
+    "poe-log-monitor": "^1.2.2"
+  },
   "devDependencies": {
     "@angular-devkit/build-angular": "0.6.3",
     "@angular/animations": "6.0.3",
