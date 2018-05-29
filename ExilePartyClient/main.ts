@@ -35,10 +35,7 @@ function createWindow() {
     }));
   }
 
-  if (!AppConfig.production) {
-    win.webContents.openDevTools();
-    console.log('Set window with to 1375px to mimic size without devtools!');
-  }
+  win.webContents.openDevTools();
 
   // Emitted when the window is closed.
   win.on('closed', () => {
