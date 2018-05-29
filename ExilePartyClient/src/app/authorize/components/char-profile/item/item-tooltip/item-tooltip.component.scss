@@ -8,6 +8,7 @@
     border: 1px solid $tooltip-separator-color;
 
     &.gem-content {
+        float: left;
         background: $gem-tooltip-bg-color;
     }
 
