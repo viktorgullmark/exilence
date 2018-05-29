@@ -26,6 +26,7 @@ export class LoginComponent implements OnInit {
     charName = this.settingsService.get('account.characterName');
     sessId = this.settingsService.get('account.sessionId');
     accName = this.settingsService.get('account.accountName');
+    filePath = this.settingsService.get('account.filePath');
     constructor(@Inject(FormBuilder) fb: FormBuilder,
         private router: Router,
         private externalService: ExternalService,
@@ -37,7 +38,8 @@ export class LoginComponent implements OnInit {
             accountName: [this.accName !== undefined ? this.accName : '', Validators.required],
             sessionId: [this.sessId !== undefined ? this.sessId : '', Validators.required],
             characterName: [this.charName !== undefined ? this.charName : '', Validators.required],
-            filePath: ['C:/Program Files (x86)/Steam/steamapps/common/Path of Exile/logs/Client.txt', Validators.required]
+            filePath: [this.filePath !== undefined ? this.filePath :
+                'C:/Program Files (x86)/Steam/steamapps/common/Path of Exile/logs/Client.txt', Validators.required]
         });
         if (this.charName !== undefined) {
             this.getCharacterList(this.accName);
