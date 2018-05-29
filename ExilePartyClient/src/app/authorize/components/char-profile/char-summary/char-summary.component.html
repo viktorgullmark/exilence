@@ -1,0 +1,3 @@
+<div class="summary-container">
+  <span class="mod caption" *ngFor="let res of objectKeys(resistances)" [ngClass]="toClass(res)">{{res + ' +' + resistances[res]}}%</span>
+</div>
