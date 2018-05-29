@@ -23,6 +23,9 @@ export class LoginComponent implements OnInit {
     form: FormGroup;
     characterList: Character[] = [];
     player = {} as Player;
+    charName = this.settingsService.get('account.characterName');
+    sessId = this.settingsService.get('account.sessionId');
+    accName = this.settingsService.get('account.accountName');
     constructor(@Inject(FormBuilder) fb: FormBuilder,
         private router: Router,
         private externalService: ExternalService,
@@ -30,16 +33,13 @@ export class LoginComponent implements OnInit {
         private sessionService: SessionService,
         private settingsService: SettingsService,
         private partyService: PartyService) {
-        const accName = this.settingsService.get('account.accountName');
-        const sessId = this.settingsService.get('account.sessionId');
-        const charName = this.settingsService.get('account.characterName');
         this.form = fb.group({
-            accountName: [accName !== undefined ? accName : '', Validators.required],
-            sessionId: [sessId !== undefined ? sessId : '', Validators.required],
-            characterName: [charName !== undefined ? charName : '', Validators.required]
+            accountName: [this.accName !== undefined ? this.accName : '', Validators.required],
+            sessionId: [this.sessId !== undefined ? this.sessId : '', Validators.required],
+            characterName: [this.charName !== undefined ? this.charName : '', Validators.required]
         });
-        if (charName !== undefined) {
-            this.getCharacterList(accName);
+        if (this.charName !== undefined) {
+            this.getCharacterList(this.accName);
         }
     }
 
