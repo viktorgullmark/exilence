@@ -4,7 +4,7 @@
 // The list of which env maps to which file can be found in `.angular-cli.json`.
 
 export const AppConfig = {
-  production: false,
-  environment: 'DEV',
-  url: 'http://localhost:61606/'
+    production: false,
+    environment: 'DEV',
+    url: 'http://exileparty20180528090748.azurewebsites.net/'
 };

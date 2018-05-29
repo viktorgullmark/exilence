@@ -1,7 +1,6 @@
 import { app, BrowserWindow, screen } from 'electron';
 import * as path from 'path';
 import * as url from 'url';
-import { AppConfig } from './src/environments/environment';
 
 let win, serve;
 const args = process.argv.slice(1);
@@ -16,11 +15,12 @@ function createWindow() {
   win = new BrowserWindow({
     x: 100,
     y: 100,
-    width: AppConfig.production ? 1375 : 2090,
+    width: 1375,
     height: 1000,
     webPreferences: { webSecurity: false },
     frame: false,
-    resizable: !AppConfig.production
+    resizable: true,
+    icon: path.join(__dirname, 'dist/assets/img/favicon.png'),
   });
 
   if (serve) {
@@ -36,10 +36,7 @@ function createWindow() {
     }));
   }
 
-  if (!AppConfig.production) {
-    win.webContents.openDevTools();
-    console.log('Set window with to 1375px to mimic size without devtools!');
-  }
+  win.webContents.openDevTools();
 
   // Emitted when the window is closed.
   win.on('closed', () => {
