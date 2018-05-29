@@ -15,7 +15,7 @@
   "main": "main.js",
   "private": true,
   "scripts": {
-    "postinstall": "node patch.js npx electron-builder install-app-deps",
+    "postinstall": "node patch.js && npx electron-builder install-app-deps",
     "ng": "ng",
     "start": "npm-run-all -p ng:serve electron:serve",
     "build": "npm run electron:tsc && ng build",
@@ -79,8 +79,6 @@
     "wait-on": "2.1.0",
     "webdriver-manager": "12.0.6",
     "zone.js": "0.8.26",
-    "electron-settings": "^3.2.0",
-    "poe-log-monitor": "^1.2.1",
     "rxjs-compat": "^6.2.0"
   }
 }
