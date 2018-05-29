@@ -30,7 +30,8 @@ Currently runs with:
 - Displaying DPS on item-tooltips
 - If an item is an upgrade, highlight the players it's an upgrade for
 
-
+## Preview Images
+https://imgur.com/a/czESKmz
 
 
 

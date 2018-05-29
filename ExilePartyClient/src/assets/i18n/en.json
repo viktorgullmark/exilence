@@ -16,6 +16,7 @@
       "SESSIONID": "Session ID",
       "FILEPATH": "Path to Client.txt",
       "LOGOUT": "Logout",
+      "CLOSE": "Close",
       "INFORMATION": "Account information"
   },
   "CHARACTER": {
