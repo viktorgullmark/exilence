@@ -6,6 +6,8 @@
     margin: 5px;
     white-space: nowrap;
     border: 1px solid $tooltip-separator-color;
+    
+    min-width: 200px;
 
     &.gem-content {
         float: left;
