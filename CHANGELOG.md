@@ -1,6 +1,10 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [0.1.4] - 2018-05-30
+- Added level to character-list when logging in
+- Minor visual adjustments
+
 ## [0.1.3] - 2018-05-30
 - Added list of recent parties
 - Fixed a bug related to entering parties
