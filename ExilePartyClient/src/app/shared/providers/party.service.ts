@@ -24,6 +24,10 @@ export class PartyService {
   public accountInfo: AccountInfo;
   public selectedPlayer: BehaviorSubject<Player> = new BehaviorSubject<Player>(undefined);
   public selectedPlayerObj: Player;
+
+  private localPartyPlayers: string[] = [];
+  private localPartyPlayersPromise: any;
+
   constructor(
     private router: Router,
     private accountService: AccountService,
@@ -32,6 +36,7 @@ export class PartyService {
     private settingService: SettingsService,
   ) {
     this.recentParties.next(this.settingService.get('recentParties') || []);
+    this.startLocalPartyPlayerPolling();
 
     this.accountService.player.subscribe(res => {
       this.player = res;
@@ -93,6 +98,10 @@ export class PartyService {
       });
   }
 
+  public updateGenericPlayer(player: Player) {
+
+  }
+
   public joinParty(partyName: string, player: Player) {
     this.initParty();
     this.party.players.push(player);
@@ -124,4 +133,25 @@ export class PartyService {
     this.settingService.set('recentParties', recent);
     this.recentParties.next(recent);
   }
+
+  public invitePlayerToLocalParty(playerName: string) {
+    if (this.localPartyPlayers.indexOf(playerName) === -1) {
+      this.localPartyPlayers.unshift(playerName);
+    }
+  }
+
+  public removePlayerFromLocalParty(playerName: string) {
+    this.localPartyPlayers = this.localPartyPlayers.filter((player) => {
+      return playerName !== player;
+    });
+  }
+
+  public startLocalPartyPlayerPolling() {
+    this.localPartyPlayersPromise = setInterval(() => {
+      this.localPartyPlayers.forEach((playerName) => {
+        console.log('Updating player: ', playerName);
+      });
+    }, (1000 * 10));
+  }
+
 }

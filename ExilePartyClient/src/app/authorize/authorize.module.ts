@@ -10,6 +10,7 @@ import { AuthorizeComponent } from './authorize.component';
 import { PartyModule } from './party/party.module';
 import { DashboardModule } from './dashboard/dashboard.module';
 import { PartyService } from '../shared/providers/party.service';
+import { RecentPlayersModule } from './components/recent-players/recent-players.module';
 
 @NgModule({
   imports: [
