@@ -39,6 +39,7 @@ Currently runs with:
 - [ ] Optional setting for password on parties
 
 ## Preview Images from 0.1.0a
+
 https://imgur.com/a/czESKmz
 
 
