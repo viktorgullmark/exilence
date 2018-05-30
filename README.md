@@ -35,6 +35,7 @@ Currently runs with:
 - [X] Full support for unidentified items
 - [ ] Full support for divination cards
 - [ ] List of recent rooms on dashboard
+- [ ] Fix for overflowing item-tooltips when large
 - [ ] Support for abyssal sockets
 - [ ] Summary of character-stats
 - [ ] Displaying DPS on item-tooltips
