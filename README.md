@@ -21,14 +21,18 @@ Currently runs with:
 
 ## Upcoming changes
 
-- Storing filepath for Client.txt as a setting
-- Improve positioning of item-tooltips
-- Support for unidentified items (visual change)
-- List of recent rooms on dashboard
-- Show progress-spinner when swapping character (to render sockets)
-- Support for abyssal sockets
-- Displaying DPS on item-tooltips
-- If an item is an upgrade, highlight the players it's an upgrade for
+- [X] Storing filepath for Client.txt as a setting
+- [X] Improve positioning of item-tooltips
+- [ ] Support for unidentified items (visual change)
+- [ ] List of recent rooms on dashboard
+- [ ] Show progress-spinner when swapping character (to render sockets)
+- [ ] Support for abyssal sockets
+- [ ] Displaying DPS on item-tooltips
+- [ ] If an item is an upgrade, highlight the players it's an upgrade for
+
+
+
+
 
 ## Preview Images
 https://imgur.com/a/czESKmz
