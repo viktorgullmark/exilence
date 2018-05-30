@@ -14,4 +14,10 @@
         <a class="inline-link" (click)="openLink('https://www.reddit.com/user/cojl_')">/u/cojl_</a><br/>
         <a class="inline-link" (click)="openLink('https://www.reddit.com/user/umocrajen')">/u/umocrajen</a><br/>
     </p>
+
+    <h3 class="mat-headline party-headline">Recent parties</h3><span> (click to join)</span>
+    <ul>
+        <li *ngFor="let party of recentParties"><a class="inline-link" (click)="joinParty(party)">{{party}}</a></li>
+    </ul>
+
 </div>
