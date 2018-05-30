@@ -3,6 +3,9 @@ All notable changes to this project will be documented in this file.
 
 ## [0.1.3] - 2018-05-30
 - Added list of recent parties
+- Fixed a bug related to entering parties
+- Increased rendering time-frame for party-view
+- Added additional styling to main-toolbar
 - Widened login-form
 - Updated readme
 
