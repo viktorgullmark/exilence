@@ -2,13 +2,16 @@
 
 Path of Exile party-app used to track gear / inventory of partymembers
 
+## Preview Images from 0.1.0a
+
+https://imgur.com/a/czESKmz
+
 ## Contents
 
 - [Changelog](https://github.com/viktorgullmark/exile-party/blob/master/CHANGELOG.md)
 - [Important](#important)
 - [Platform](#platform)
 - [Upcoming](#upcoming)
-- [Preview Images](#preview-images)
 
 ## Important
 
@@ -37,10 +40,6 @@ Currently runs with:
 - [ ] Displaying DPS on item-tooltips
 - [ ] If an item is an upgrade, highlight the players it's an upgrade for
 - [ ] Optional setting for password on parties
-
-## Preview Images from 0.1.0a
-
-https://imgur.com/a/czESKmz
 
 
 
