@@ -1,9 +1,10 @@
-import { Component, OnInit, Inject } from '@angular/core';
-import { FormControl, Validators, FormGroup, FormBuilder } from '@angular/forms';
-import { PartyService } from '../shared/providers/party.service';
-import { AccountService } from '../shared/providers/account.service';
-import { Player } from '../shared/interfaces/player.interface';
+import { Component, Inject, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
+
+import { Player } from '../shared/interfaces/player.interface';
+import { AccountService } from '../shared/providers/account.service';
+import { PartyService } from '../shared/providers/party.service';
 
 @Component({
   selector: 'app-authorize',
@@ -38,7 +39,7 @@ export class AuthorizeComponent implements OnInit {
   enterParty() {
     this.partyService.leaveParty(this.partyService.party.name, this.player);
     this.partyService.joinParty(this.form.controls.partyCode.value, this.player);
-
+    this.partyService.addPartyToRecent(this.form.controls.partyCode.value);
     this.router.navigateByUrl('/404', { skipLocationChange: true }).then(() =>
       this.router.navigate(['/authorized/party']));
   }

@@ -1,28 +1,38 @@
 import { Injectable } from '@angular/core';
-import { HubConnection } from '@aspnet/signalr';
-import * as signalR from '@aspnet/signalr';
-import { Player } from '../interfaces/player.interface';
 import { Router } from '@angular/router';
-import { Party } from '../interfaces/party.interface';
-import { AccountService } from './account.service';
-import { AppConfig } from '../../../environments/environment';
+import * as signalR from '@aspnet/signalr';
+import { HubConnection } from '@aspnet/signalr';
 import { BehaviorSubject } from 'rxjs/internal/BehaviorSubject';
-import { LogMonitorService } from './log-monitor.service';
-import { ExternalService } from './external.service';
-import { EquipmentResponse } from '../interfaces/equipment-response.interface';
+
+import { AppConfig } from '../../../environments/environment';
 import { AccountInfo } from '../interfaces/account-info.interface';
+import { EquipmentResponse } from '../interfaces/equipment-response.interface';
+import { Party } from '../interfaces/party.interface';
+import { Player } from '../interfaces/player.interface';
+import { AccountService } from './account.service';
+import { ExternalService } from './external.service';
+import { LogMonitorService } from './log-monitor.service';
+import { SettingsService } from './settings.service';
 
 @Injectable()
 export class PartyService {
   private _hubConnection: HubConnection | undefined;
   public async: any;
   public party: Party;
+  public recentParties: BehaviorSubject<string[]> = new BehaviorSubject<string[]>(undefined);
   public player: Player;
   public accountInfo: AccountInfo;
   public selectedPlayer: BehaviorSubject<Player> = new BehaviorSubject<Player>(undefined);
   public selectedPlayerObj: Player;
-  constructor(private router: Router, private accountService: AccountService, private logMonitorService: LogMonitorService,
-    private externalService: ExternalService) {
+  constructor(
+    private router: Router,
+    private accountService: AccountService,
+    private logMonitorService: LogMonitorService,
+    private externalService: ExternalService,
+    private settingService: SettingsService,
+  ) {
+    this.recentParties.next(this.settingService.get('recentParties') || []);
+
     this.accountService.player.subscribe(res => {
       this.player = res;
     });
@@ -103,5 +113,15 @@ export class PartyService {
 
   public initParty() {
     this.party = { name: '', players: [] };
+  }
+
+  public addPartyToRecent(partyName: string) {
+    const recent: string[] = this.settingService.get('recentParties') || [];
+    recent.unshift(partyName);
+    if (recent.length > 10) {
+      recent.splice(-1, 1);
+    }
+    this.settingService.set('recentParties', recent);
+    this.recentParties.next(recent);
   }
 }
