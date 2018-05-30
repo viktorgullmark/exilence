@@ -11,7 +11,7 @@ https://imgur.com/a/czESKmz
 - [Changelog](https://github.com/viktorgullmark/exile-party/blob/master/CHANGELOG.md)
 - [Important](#important)
 - [Platform](#platform)
-- [Upcoming](#upcoming)
+- [Upcoming changes](#upcoming-changes)
 
 ## Important
 
