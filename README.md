@@ -11,7 +11,7 @@ https://imgur.com/a/czESKmz
 - [Changelog](https://github.com/viktorgullmark/exile-party/blob/master/CHANGELOG.md)
 - [Important](#important)
 - [Platform](#platform)
-- [Upcoming](#upcoming)
+- [Upcoming changes](#upcoming-changes)
 
 ## Important
 
@@ -34,6 +34,7 @@ Currently runs with:
 - [X] Repositioning of item-tooltips
 - [X] Full support for unidentified items
 - [ ] Full support for divination cards
+- [ ] Maximum player-count in parties
 - [ ] List of recent rooms on dashboard
 - [ ] Fix for overflowing item-tooltips when large
 - [ ] Support for abyssal sockets
