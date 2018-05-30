@@ -141,3 +141,18 @@ a {
     height: $content-height;
     max-width: 1000px;
 }
+
+.loading-container{
+    color: $font-color;
+    background: $bg-color;
+    width: 100%;
+    height: 100%;
+
+    .loading-content{
+        position: relative;
+        float: left;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);   
+    }
+}
