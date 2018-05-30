@@ -25,6 +25,7 @@ import { ExternalService } from './shared/providers/external.service';
 import { AccountService } from './shared/providers/account.service';
 import { SessionService } from './shared/providers/session.service';
 import { SettingsService } from './shared/providers/settings.service';
+import { MatIconModule } from '@angular/material/icon';
 
 // AoT requires an exported function for factories
 export function HttpLoaderFactory(http: HttpClient) {
@@ -41,7 +42,7 @@ export function HttpLoaderFactory(http: HttpClient) {
     LoginModule,
     AuthorizeModule,
     MatToolbarModule,
-
+    MatIconModule,
     BrowserModule,
     FormsModule,
     HttpClientModule,

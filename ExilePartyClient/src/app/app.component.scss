@@ -1,9 +1,18 @@
 @import "./../assets/styles/_variables.scss";
 
-.right-link {
+.right-area {
     justify-content: end;
     margin-left: auto;
+    display: flex;
+    align-items: center;
     -webkit-app-region: no-drag;
+    .right-link{
+        justify-content: end;
+    }
+    .left-link{
+        justify-content: start;
+        margin-right: 15px;
+    }
 }
 
 .mat-toolbar {

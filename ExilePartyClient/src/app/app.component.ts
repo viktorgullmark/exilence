@@ -40,6 +40,7 @@ export class AppComponent {
   }
 
   close() {
+    this.sessionService.cancelSession();
     this.electronService.remote.getCurrentWindow().close();
   }
 }
