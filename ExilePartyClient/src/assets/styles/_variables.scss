@@ -12,6 +12,9 @@ $inventory-border-color: $accent;
 $inventory-bg-color: #1d1d1d;
 $equipment-border-color: #969696;
 $equipment-bg-color: #1d1d1d;
+$player-badge-bg-color: linear-gradient(to bottom right, #525252, #232323);
+$player-badge-selected-bg-color: linear-gradient(to bottom right, #656565, #797979);
+$recent-party-badge-bg-color: $player-badge-bg-color;
 
 // items
 $item-bg-color: rgba(5, 4, 41, 0.52);

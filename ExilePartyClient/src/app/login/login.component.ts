@@ -62,7 +62,6 @@ export class LoginComponent implements OnInit {
     }
 
     login() {
-        console.log(this.form.value);
         this.externalService.getCharacter(this.form.value)
             .subscribe((data: EquipmentResponse) => {
                 this.player = this.externalService.setCharacter(data, this.player);

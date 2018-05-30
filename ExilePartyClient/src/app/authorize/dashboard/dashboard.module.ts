@@ -1,5 +1,5 @@
 import { NgModule } from '@angular/core';
-import { MatDividerModule } from '@angular/material';
+import { MatDividerModule, MatCardModule } from '@angular/material';
 
 import { SharedModule } from '../../shared/shared.module';
 import { DashboardComponent } from './dashboard.component';
@@ -7,7 +7,8 @@ import { DashboardComponent } from './dashboard.component';
 @NgModule({
   imports: [
     SharedModule,
-    MatDividerModule
+    MatDividerModule,
+    MatCardModule
   ],
   declarations: [DashboardComponent]
 })

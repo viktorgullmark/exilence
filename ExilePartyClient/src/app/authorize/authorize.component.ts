@@ -17,7 +17,8 @@ export class AuthorizeComponent implements OnInit {
   constructor(@Inject(FormBuilder) fb: FormBuilder, public partyService: PartyService, private accountService: AccountService,
     private router: Router) {
     this.form = fb.group({
-      partyCode: [this.partyService.party.name !== '' ? this.partyService.party.name : this.generatePartyName(), Validators.required]
+      partyCode: [this.partyService.party.name !== '' ? this.partyService.party.name : this.generatePartyName(),
+      [Validators.maxLength(25), Validators.required]]
     });
   }
 
@@ -31,7 +32,7 @@ export class AuthorizeComponent implements OnInit {
     let partyName = '';
     const possible = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
     for (let i = 0; i < 5; i++) {
-        partyName += possible.charAt(Math.floor(Math.random() * possible.length));
+      partyName += possible.charAt(Math.floor(Math.random() * possible.length));
     }
     return partyName;
   }

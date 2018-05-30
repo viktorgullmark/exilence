@@ -118,7 +118,7 @@ export class PartyService {
   public addPartyToRecent(partyName: string) {
     const recent: string[] = this.settingService.get('recentParties') || [];
     recent.unshift(partyName);
-    if (recent.length > 10) {
+    if (recent.length > 6) {
       recent.splice(-1, 1);
     }
     this.settingService.set('recentParties', recent);
