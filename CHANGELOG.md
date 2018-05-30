@@ -1,6 +1,11 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [0.1.3] - 2018-05-30
+- Added list of recent parties
+- Widened login-form
+- Updated readme
+
 ## [0.1.2] - 2018-05-30
 - Added icon for closing the app
 - Updated readme
