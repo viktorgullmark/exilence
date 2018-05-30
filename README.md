@@ -40,6 +40,7 @@ Currently runs with:
 - [ ] Displaying DPS on item-tooltips
 - [ ] If an item is an upgrade, highlight the players it's an upgrade for
 - [ ] Optional setting for password on parties
+- [ ] Player area information
 
 
 
