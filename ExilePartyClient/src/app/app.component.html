@@ -1,7 +1,7 @@
 <mat-toolbar class="toolbar">
-    <span>{{ 'INFO.TITLE' | translate }}</span>
+    <span class="toolbar-text title">{{ 'INFO.TITLE' | translate }}</span>
     <div class="right-area">
-        <a (click)="logout()" class="left-link" *ngIf="sessionService.getSession() != null">
+        <a (click)="logout()" class="left-link toolbar-text" *ngIf="sessionService.getSession() != null">
             {{ 'ACCOUNT.LOGOUT' | translate}} </a>
         <mat-icon (click)="close()" class="icon-link">close</mat-icon>
     </div>

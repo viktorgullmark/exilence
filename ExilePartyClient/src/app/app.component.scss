@@ -19,4 +19,12 @@
     background: $toolbar-bg-color;
     height: $toolbar-height;
     -webkit-app-region: drag;
+    .toolbar-text {
+        font-size: 18px;     
+        text-transform: uppercase;
+        &.title{
+            letter-spacing: 6px;
+            color: $primary;
+        }
+    }
 }

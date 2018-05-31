@@ -6,9 +6,14 @@ using System.Threading.Tasks;
 namespace ExileParty.Models
 {
     [Serializable]
-    public class PartyModel
+    public class PlayerModel
     {
-        public string Name { get; set; }
-        public List<PlayerModel> Players { get; set; }
+        public string ConnectionID { get; set; }
+        public string Channel { get; set; }
+        public string Account { get; set; }
+        public CharacterModel Character { get; set; }
+        public string Area { get; set; }
+        public string Guild { get; set; }
+        public List<string> InArea { get; set; }
     }
 }

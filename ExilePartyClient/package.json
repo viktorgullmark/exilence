@@ -1,6 +1,6 @@
 {
   "name": "exile-party",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "author": {
     "name": "Viktor Gullmark",
     "email": "viktor.gullmark@hotmail.com"
@@ -10,7 +10,11 @@
     "angular 6",
     "electron",
     "path of exile",
-    "exileparty"
+    "exileparty",
+    "exile party",
+    "poe dev",
+    "signalr",
+    ".net core"
   ],
   "main": "main.js",
   "private": true,

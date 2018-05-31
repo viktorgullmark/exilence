@@ -2,5 +2,6 @@
 packages/
 ExileParty/obj/
 ExileParty/bin/
+ExileParty/appsettings.json
 
 ExileParty/Properties/PublishProfiles/Local.pubxml.user

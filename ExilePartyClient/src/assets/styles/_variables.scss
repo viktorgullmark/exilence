@@ -4,17 +4,19 @@
 $main-border-color: $accent;
 $bg-color: #303030;
 $toolbar-bg-color: #0a0a0a;
-$drawer-bg-color: #1d1d1d;
+$drawer-bg-color: #151515;
+$background-overlay: linear-gradient(rgba(16, 16, 16, 0.9), rgba(16, 16, 16, 0.92));
 $menu-item-color: #4b4b4b;
 
 // character
 $inventory-border-color: $accent;
-$inventory-bg-color: #1d1d1d;
+$inventory-bg-color: #151515;
 $equipment-border-color: #969696;
-$equipment-bg-color: #1d1d1d;
+$equipment-bg-color: #151515;
 $player-badge-bg-color: linear-gradient(to bottom right, #525252, #232323);
 $player-badge-selected-bg-color: linear-gradient(to bottom right, #656565, #797979);
 $recent-party-badge-bg-color: $player-badge-bg-color;
+$recent-party-badge-hover-bg-color: $player-badge-selected-bg-color;
 
 // items
 $item-bg-color: rgba(5, 4, 41, 0.52);
