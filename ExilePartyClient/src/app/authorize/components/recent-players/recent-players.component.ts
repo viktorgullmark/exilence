@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { PartyService } from '../../../shared/providers/party.service';
-import { LogMonitorService } from '../../../shared/providers/log-monitor.service';
+
 import { LogMessage, LogMessageChat } from '../../../shared/interfaces/log-message.interface';
+import { LogMonitorService } from '../../../shared/providers/log-monitor.service';
+import { PartyService } from '../../../shared/providers/party.service';
 
 interface RecentPlayer {
   name: string;
@@ -26,6 +27,14 @@ export class RecentPlayersComponent implements OnInit {
     private partyService: PartyService,
     private logMonitorService: LogMonitorService
   ) {
+
+    const demoPlayer: RecentPlayer = {
+      name: 'CojL_',
+      invited: false
+    };
+
+    this.recentPlayers.unshift(demoPlayer);
+
     this.logMonitorService.messageEvent.subscribe((msg: LogMessage) => {
       console.log(msg);
       if (msg.chat === LogMessageChat.PARTY_CHAT || msg.chat === LogMessageChat.LOCAL_CHAT) {

@@ -15,5 +15,6 @@ namespace ExileParty.Models
         public string Area { get; set; }
         public string Guild { get; set; }
         public List<string> InArea { get; set; }
+        public bool Generic { get; set; }
     }
 }

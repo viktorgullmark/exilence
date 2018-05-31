@@ -24,7 +24,7 @@ namespace ExileParty.Hubs
         {
             _cache = cache;
         }
-
+        
         public async Task JoinParty(string partyName, PlayerModel player)
         {
             // set initial id of player
@@ -74,5 +74,26 @@ namespace ExileParty.Hubs
                 await Clients.Group(partyName).SendAsync("PlayerUpdated", player);
             }
         }
+        public async Task GenericUpdatePlayer(PlayerModel player, string partyName)
+        {
+            var party = await _cache.GetAsync<PartyModel>(partyName);
+            if (party != null)
+            {
+                var index = party.Players.IndexOf(party.Players.FirstOrDefault(x => x.Character.Name == player.Character.Name));
+
+                if (index == -1)
+                {
+                    party.Players.Insert(0, player);
+                }
+                else
+                {
+                    party.Players[index] = player;
+                }
+
+                await _cache.SetAsync<PartyModel>(partyName, party);
+                await Clients.Group(partyName).SendAsync("PlayerUpdated", player);
+            }
+        }
+
     }
 }

@@ -13,6 +13,7 @@ import { AccountService } from './account.service';
 import { ExternalService } from './external.service';
 import { LogMonitorService } from './log-monitor.service';
 import { SettingsService } from './settings.service';
+import { areAllEquivalent } from '@angular/compiler/src/output/output_ast';
 
 @Injectable()
 export class PartyService {
@@ -25,7 +26,7 @@ export class PartyService {
   public selectedPlayer: BehaviorSubject<Player> = new BehaviorSubject<Player>(undefined);
   public selectedPlayerObj: Player;
 
-  private localPartyPlayers: string[] = [];
+  private localPartyPlayers: Player[] = [];
   private localPartyPlayersPromise: any;
 
   constructor(
@@ -98,9 +99,16 @@ export class PartyService {
       });
   }
 
-  public updateGenericPlayer(player: Player) {
-
+  public genericUpdatePlayer(player: Player) {
+    this.externalService.getCharacter(this.accountInfo)
+      .subscribe((data: EquipmentResponse) => {
+        player = this.externalService.setCharacter(data, player);
+        if (this._hubConnection) {
+          // this._hubConnection.invoke('GenericUpdatePlayer', player, this.party.name);
+        }
+      });
   }
+
 
   public joinParty(partyName: string, player: Player) {
     this.initParty();
@@ -127,7 +135,7 @@ export class PartyService {
   public addPartyToRecent(partyName: string) {
     const recent: string[] = this.settingService.get('recentParties') || [];
     recent.unshift(partyName);
-    if (recent.length > 6) {
+    while (recent.length > 6) {
       recent.splice(-1, 1);
     }
     this.settingService.set('recentParties', recent);
@@ -135,16 +143,39 @@ export class PartyService {
   }
 
   public invitePlayerToLocalParty(playerName: string) {
-    if (this.localPartyPlayers.indexOf(playerName) === -1) {
-      this.localPartyPlayers.unshift(playerName);
+
+    const exists = this.localPartyPlayers.filter(player => player.character.name === playerName).length !== -1;
+
+    if (!exists) {
+
+      const genericPlayer: Player = {
+        connectionID: null,
+        channel: this.player.channel,
+        account: null,
+        character: {
+          name: playerName,
+          league: this.player.character.league,
+          classId: null,
+          ascendancyClass: null,
+          class: null,
+          level: null,
+          items: []
+        },
+        area: null,
+        guild: null,
+        sessionId: null,
+        inArea: [],
+        generic: true
+      };
+      this.localPartyPlayers.unshift(genericPlayer);
     }
   }
 
-  public removePlayerFromLocalParty(playerName: string) {
-    this.localPartyPlayers = this.localPartyPlayers.filter((player) => {
-      return playerName !== player;
-    });
-  }
+  // public removePlayerFromLocalParty(playerName: string) {
+  //   this.localPartyPlayers = this.localPartyPlayers.filter((player) => {
+  //     return playerName !== player;
+  //   });
+  // }
 
   public startLocalPartyPlayerPolling() {
     this.localPartyPlayersPromise = setInterval(() => {
