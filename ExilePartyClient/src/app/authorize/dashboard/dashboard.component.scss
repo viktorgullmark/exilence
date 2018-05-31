@@ -1,0 +1,17 @@
+@import "./../../../assets/styles/_variables.scss";
+
+.party-headline {
+    display: inline;
+}
+
+.recent-party-badge-container {
+    .recent-party-badge {
+        cursor: pointer;
+        background: $recent-party-badge-bg-color;
+        margin-top: 15px;
+        max-width: 230px;
+    }
+    :hover {
+        background: $recent-party-badge-hover-bg-color !important;
+    }
+}

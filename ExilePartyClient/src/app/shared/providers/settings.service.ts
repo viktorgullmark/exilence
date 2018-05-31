@@ -15,4 +15,7 @@ export class SettingsService {
   get(key: string) {
     return this.electronService.settings.get(key);
   }
+  deleteAll() {
+    this.electronService.settings.deleteAll();
+  }
 }

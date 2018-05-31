@@ -1,14 +1,16 @@
+@import "./../../../../../assets/styles/_variables.scss";
+
 .player-badge {
     position: relative;
     padding: 0;
     height: 80px;
     display: flex;
     margin-bottom: 15px;
-    background: linear-gradient(to bottom right, #525252, #232323);
+    background: $player-badge-bg-color;
     cursor: pointer;
 
     &.selected-player {
-        background: linear-gradient(to bottom right, #656565, #797979);
+        background: $player-badge-selected-bg-color;
     }
 
     .player-badge-content {

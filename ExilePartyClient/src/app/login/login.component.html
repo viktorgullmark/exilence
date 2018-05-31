@@ -11,7 +11,7 @@
     <div [hidden]="characterList.length == 0 && charName != undefined">
       <mat-form-field>
         <mat-select formControlName="characterName" placeholder="{{'CHARACTER.NAME' | translate}}">
-          <mat-option *ngFor="let item of characterList" [value]="item.name">{{item.name}}</mat-option>
+          <mat-option *ngFor="let item of characterList" [value]="item.name">{{item.level}} - {{item.name}}</mat-option>
         </mat-select>
       </mat-form-field>
     </div>

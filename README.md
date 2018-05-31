@@ -2,7 +2,7 @@
 
 Path of Exile party-app used to track gear / inventory of partymembers
 
-## Preview Images from 0.1.0a
+## Preview Images from 0.1.3a
 
 https://imgur.com/a/czESKmz
 
@@ -33,9 +33,9 @@ Currently runs with:
 - [X] Support for setting Client.txt-path
 - [X] Repositioning of item-tooltips
 - [X] Full support for unidentified items
+- [X] List of recent rooms on dashboard
 - [ ] Full support for divination cards
 - [ ] Maximum player-count in parties
-- [ ] List of recent rooms on dashboard
 - [ ] Fix for overflowing item-tooltips when large
 - [ ] Support for abyssal sockets
 - [ ] Summary of character-stats
