@@ -12,6 +12,7 @@ https://imgur.com/a/czESKmz
 - [Important](#important)
 - [Platform](#platform)
 - [Upcoming changes](#upcoming-changes)
+- [Help with development](#help-with-development)
 
 ## Important
 
@@ -30,19 +31,25 @@ Currently runs with:
 
 ## Upcoming changes
 
-- [X] Support for setting Client.txt-path
-- [X] Repositioning of item-tooltips
-- [X] Full support for unidentified items
-- [X] List of recent rooms on dashboard
-- [ ] Full support for divination cards
-- [ ] Maximum player-count in parties
-- [ ] Fix for overflowing item-tooltips when large
-- [ ] Support for abyssal sockets
-- [ ] Summary of character-stats
-- [ ] Displaying DPS on item-tooltips
-- [ ] If an item is an upgrade, highlight the players it's an upgrade for
-- [ ] Optional setting for password on parties
-- [ ] Player area information
+- Full support for divination cards
+- Support for abyssal sockets
+- Summary of character-stats
+- Displaying DPS on item-tooltips
+- Optional setting for password on parties
+- Area-information on player-badges
 
+## Help with development
 
+If you want to help with development we gladly accept pull-requests. To set up the project, install the latest angular-cli version globally. The following commands will help in setting up the client:
+
+```
+npm install -g @angular/cli
+npm install
+npm start
+npm run electron:windows (to build the project)
+```
+
+See https://github.com/maximegris/angular-electron for additional commands.
+
+To run the API you'll need a local redis-server. If requested I can set up an additional redis-cache in azure for developing against.
 
