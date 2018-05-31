@@ -51,5 +51,6 @@ npm run electron:windows (to build the project)
 
 See https://github.com/maximegris/angular-electron for additional commands.
 
-To run the API you'll need a local redis-server. If requested I can set up an additional redis-cache in azure for developing against.
+To run the API you'll need a local redis-server. 
+If requested I can set up an additional redis-cache in azure for developing against.
 
