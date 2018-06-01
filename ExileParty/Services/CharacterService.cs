@@ -17,6 +17,7 @@ namespace ExileParty.Handlers
     {
         private readonly string _ladderUrl = "http://api.pathofexile.com/ladders/";
         private readonly string _leagesUrl = "http://api.pathofexile.com/leagues?type=main&compact=1";
+        private readonly string _poeNinjaStatsUrl = "http://poe.ninja/api/Data/GetStats";
 
         private IDistributedCache _cache;
 
@@ -25,56 +26,64 @@ namespace ExileParty.Handlers
             _cache = cache;
         }
 
-        public string something()
+
+
+
+
+
+        #region Trade
+        public async Task IndexCharactersFromTradeRiver()
         {
-            return "sdf";
-        }
-
-        public async Task IndexLadderCharacters()
-        {
-            var LeagueApiModels = await FetchLeaguesAsync();
-            var entryList = new List<LadderApiEntry>();
-
-            var throttle = new Throttle(5, new TimeSpan(0, 0, 10));
-            Func<string, string, Task> FetchLadderAsyncFunc = async (league, url) => await FetchLadderAsync(league, url);
-
-            foreach (LeagueApiModel league in LeagueApiModels)
-            {
-                var urls = new List<string>();
-                for (int i = 0; i < 15000; i = i + 200)
-                {
-                    var url = $"{_ladderUrl}{league.Id}?offset={i}&limit=200";
-                    await throttle.Enqueue<Task>(FetchLadderAsyncFunc, league.Id, url);                    
-                }
-            }
-
-
-            var Standard = await _cache.GetAsync<Dictionary<string, string>>("Standard");
-            var Hardcore = await _cache.GetAsync<Dictionary<string, string>>("Hardcore");
-            var SSFStandard = await _cache.GetAsync<Dictionary<string, string>>("SSF Standard");
-            var SSFHardcore = await _cache.GetAsync<Dictionary<string, string>>("SSF Hardcore");
+            var nextChangeId = await _cache.GetAsync<string>("next_change_id");
 
         }
+        public async Task GetNextChangeId()
+        {
+            var json = await ExecuteGetAsync(_poeNinjaStatsUrl);
+            var stats = JsonConvert.DeserializeObject<PoeNinjaModel>(json);
+            await _cache.SetAsync<string>("next_change_id", stats.next_change_id);
+        }
 
+        #endregion
+
+        #region Leagues
         private async Task<List<LeagueApiModel>> FetchLeaguesAsync()
         {
             var json = await ExecuteGetAsync(_leagesUrl);
             return JsonConvert.DeserializeObject<List<LeagueApiModel>>(json);
         }
 
-        private async Task FetchLadderAsync(string league, string url)
+        #endregion
+
+        #region Ladder
+        public void IndexCharactersFromLadder(string league)
         {
-            string json = await ExecuteGetAsync(url);
-            var entries = JsonConvert.DeserializeObject<LadderApiRootObject>(json).Entries;
-            if (entries != null)
+            var entryList = new List<LadderApiEntry>();
+
+            var pages = Enumerable.Range(0, 75);
+            foreach (int page in pages.LimitRate(2, TimeSpan.FromSeconds(4)))
             {
-                await UpdateCharacterDictionaryAsync(entries, league);
-            }
-            else
-            {
-                throw new Exception("Going to fast");
+                FetchLadderApiPage(league, page);
             }
         }
+
+        public async void FetchLadderApiPage(string league, int page)
+        {
+            //var offset = page * 200;
+            //var url = $"{_ladderUrl}{league}?offset={offset}&limit=200";
+            //var apiResponse = await HandleLadderRequest(url);
+            //UpdateCharacterDictionaryAsync(league, apiResponse.Entries);
+        }
+
+        private async Task<LadderApiResponse> HandleLadderRequest(string url)
+        {
+            string json = await ExecuteGetAsync(url);
+            return JsonConvert.DeserializeObject<LadderApiResponse>(json);
+        }
+
+        #endregion
+
+        #region External
 
         private async Task<string> ExecuteGetAsync(string url)
         {
@@ -89,7 +98,7 @@ namespace ExileParty.Handlers
             }
         }
 
-        private async Task UpdateCharacterDictionaryAsync(List<LadderApiEntry> entries, string league)
+        private async void UpdateCharacterDictionaryAsync(string league, List<LadderApiEntry> entries)
         {
             var ladder = await _cache.GetAsync<Dictionary<string, string>>(league);
             if (ladder == null)
@@ -102,6 +111,9 @@ namespace ExileParty.Handlers
             }
             await _cache.SetAsync(league, ladder);
         }
+        #endregion
+
+
 
     }
 }

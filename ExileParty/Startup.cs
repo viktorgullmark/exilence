@@ -42,7 +42,7 @@ namespace ExileParty
             services.AddDistributedRedisCache(options =>
             {
                 options.Configuration = Configuration.GetConnectionString("Redis");
-                options.InstanceName = "master";
+                options.InstanceName = "ExileParty:";
             });
 
             services.AddCors(options =>
@@ -80,7 +80,10 @@ namespace ExileParty
             app.UseHangfireServer();
             app.UseHangfireDashboard();
 
-            //RecurringJob.AddOrUpdate<ICharacterService>(cs => cs.IndexLadderCharacters(),Cron.Hourly);
+            //RecurringJob.AddOrUpdate<ICharacterService>(cs => cs.IndexCharactersFromLadder(),Cron.Hourly);
+            BackgroundJob.Enqueue<ICharacterService>(cs => cs.IndexCharactersFromLadder("Incursion"));
+            var id = BackgroundJob.Enqueue<ICharacterService>(cs => cs.GetNextChangeId());
+            BackgroundJob.ContinueWith<ICharacterService>(id, cs => cs.IndexCharactersFromTradeRiver());
 
             app.UseSignalR(routes =>
             {

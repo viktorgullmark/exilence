@@ -50,7 +50,7 @@ namespace ExileParty.Models
         public LadderApiAccount Account { get; set; }
     }
 
-    public class LadderApiRootObject
+    public class LadderApiResponse
     {
         public int Total { get; set; }
         public DateTime Cached_since { get; set; }

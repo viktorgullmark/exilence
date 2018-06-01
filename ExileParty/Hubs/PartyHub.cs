@@ -74,6 +74,19 @@ namespace ExileParty.Hubs
                 await Clients.Group(partyName).SendAsync("PlayerUpdated", player);
             }
         }
+
+        public async Task<string> GetAccountForCharacter(string league, string character)
+        {
+            var leagueData = await _cache.GetAsync<Dictionary<string, string>>(league);
+            if (leagueData != null)
+            {
+                string account;
+                leagueData.TryGetValue(character, out account);
+                return account;
+            }
+            return null;
+        }
+        
         public async Task GenericUpdatePlayer(PlayerModel player, string partyName)
         {
             var party = await _cache.GetAsync<PartyModel>(partyName);
