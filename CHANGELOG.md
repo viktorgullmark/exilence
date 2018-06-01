@@ -2,6 +2,7 @@
 All notable changes to this project will be documented in this file.
 
 ## [0.1.4] - 2018-05-30
+- Streamlined the login-process with steps and descriptions
 - Added level to character-list when logging in
 - Minor visual adjustments
 
