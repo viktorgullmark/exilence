@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace ExileParty.Models
 {
-    public class LadderCharacter
+    public class LadderApiCharacter
     {
         public string Name { get; set; }
         public int Level { get; set; }
@@ -14,7 +14,7 @@ namespace ExileParty.Models
         public object Experience { get; set; }
     }
 
-    public class LadderGuild
+    public class LadderApiGuild
     {
         public string Id { get; set; }
         public string Name { get; set; }
@@ -23,38 +23,38 @@ namespace ExileParty.Models
         public string StatusMessage { get; set; }
     }
 
-    public class LadderChallenges
+    public class LadderApiChallenges
     {
         public int Total { get; set; }
     }
 
-    public class LadderTwitch
+    public class LadderApiTwitch
     {
         public string Name { get; set; }
     }
 
-    public class LadderAccount
+    public class LadderApiAccount
     {
         public string Name { get; set; }
-        public LadderGuild Guild { get; set; }
-        public LadderChallenges Challenges { get; set; }
-        public LadderTwitch Twitch { get; set; }
+        public LadderApiGuild Guild { get; set; }
+        public LadderApiChallenges Challenges { get; set; }
+        public LadderApiTwitch Twitch { get; set; }
     }
 
-    public class LadderEntry
+    public class LadderApiEntry
     {
         public int Rank { get; set; }
         public bool Dead { get; set; }
         public bool Online { get; set; }
-        public LadderCharacter Character { get; set; }
-        public LadderAccount Account { get; set; }
+        public LadderApiCharacter Character { get; set; }
+        public LadderApiAccount Account { get; set; }
     }
 
-    public class LadderRootObject
+    public class LadderApiRootObject
     {
         public int Total { get; set; }
         public DateTime Cached_since { get; set; }
-        public List<LadderEntry> Entries { get; set; }
+        public List<LadderApiEntry> Entries { get; set; }
     }
 
 }

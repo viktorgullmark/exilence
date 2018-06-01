@@ -72,9 +72,7 @@ namespace ExileParty
 
             //Enable sessions
             app.UseSession();
-
             app.UseMvc();
-
             app.UseCors("AllowAll");
 
             GlobalConfiguration.Configuration.UseActivator(new HangfireActivator(serviceProvider));
@@ -82,9 +80,8 @@ namespace ExileParty
             app.UseHangfireServer();
             app.UseHangfireDashboard();
 
+            //RecurringJob.AddOrUpdate<ICharacterService>(cs => cs.IndexLadderCharacters(),Cron.Hourly);
 
-            //RecurringJob.AddOrUpdate(() => new CharacterHandler().FetchLadderAsync(), Cron.Minutely);
-            RecurringJob.AddOrUpdate<ICharacterService>(cs => cs.FetchLadderAsync(),Cron.Minutely);
             app.UseSignalR(routes =>
             {
                 routes.MapHub<PartyHub>("/hubs/party", options =>

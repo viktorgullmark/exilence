@@ -7,6 +7,6 @@ namespace ExileParty.Interfaces
 {
     interface ICharacterService
     {
-        Task FetchLadderAsync();
+        Task IndexLadderCharacters();
     }
 }
