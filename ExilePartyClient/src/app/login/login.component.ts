@@ -63,8 +63,10 @@ export class LoginComponent implements OnInit {
     }
 
     alreadySignedIn() {
-        if (this.charName && this.sessId && this.accName && this.filePath) {
+        // todo: exception for sessid optional
+        if (this.charName && this.accName && this.filePath) {
             this.stepper.selectedIndex = 4;
+            console.log(this.stepper);
         }
     }
 
@@ -74,6 +76,7 @@ export class LoginComponent implements OnInit {
 
 
     ngOnInit() {
+        this.settingsService.deleteAll();
         this.accountService.characterList.subscribe(res => {
             if (res !== undefined) {
                 this.characterList = res;

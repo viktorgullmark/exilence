@@ -1,6 +1,6 @@
 <div class="container">
   <mat-vertical-stepper linear="true" #stepper class="form login-form">
-    <mat-step [stepControl]="accFormGroup" [completed]="accName != undefined">
+    <mat-step [stepControl]="accFormGroup">
       <form [formGroup]="accFormGroup">
         <ng-template matStepLabel>{{'ACCOUNT.NAME_INFO' | translate}}</ng-template>
         <mat-form-field>
@@ -10,8 +10,9 @@
           <button mat-raised-button color="primary" matStepperNext [disabled]="characterList.length == 0 && charName != undefined">Continue</button>
         </div>
       </form>
+      
     </mat-step>
-    <mat-step [stepControl]="charFormGroup" [completed]="charName != undefined">
+    <mat-step [stepControl]="charFormGroup">
       <form [formGroup]="charFormGroup">
         <ng-template matStepLabel>{{'CHARACTER.NAME_INFO' | translate}}</ng-template>
         <mat-form-field>
@@ -25,7 +26,7 @@
         </div>
       </form>
     </mat-step>
-    <mat-step [stepControl]="sessFormGroup" optional="true" [completed]="sessId != undefined">
+    <mat-step [stepControl]="sessFormGroup" optional="true">
       <form [formGroup]="sessFormGroup">
         <ng-template matStepLabel>{{'ACCOUNT.SESSIONID_INFO' | translate}}</ng-template>
         <mat-form-field>
@@ -37,7 +38,7 @@
         </div>
       </form>
     </mat-step>
-    <mat-step [stepControl]="pathFormGroup" [completed]="filePath != undefined">
+    <mat-step [stepControl]="pathFormGroup">
       <form [formGroup]="pathFormGroup">
         <ng-template matStepLabel>{{'ACCOUNT.FILEPATH_INFO' | translate}}</ng-template>
         <mat-form-field>
