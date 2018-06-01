@@ -31,12 +31,13 @@ Currently runs with:
 
 ## Upcoming changes
 
-- Full support for divination cards
+- Simplified login-process
+- Extended player-badges (league & area-information)
+- Support for divination cards
 - Support for abyssal sockets
 - Summary of character-stats
 - Displaying DPS on item-tooltips
 - Optional setting for password on parties
-- Area-information on player-badges
 
 ## Help with development
 
