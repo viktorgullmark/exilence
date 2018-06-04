@@ -7,7 +7,7 @@ import { PartyService } from '../../shared/providers/party.service';
   styleUrls: ['./party.component.scss']
 })
 export class PartyComponent implements OnInit {
-  constructor(private partyService: PartyService) { }
+  constructor(public partyService: PartyService) { }
 
   ngOnInit() {
   }

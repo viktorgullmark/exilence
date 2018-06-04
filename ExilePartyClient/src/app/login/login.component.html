@@ -19,7 +19,7 @@
         <ng-template matStepLabel>{{'CHARACTER.NAME_INFO' | translate}}</ng-template>
         <mat-form-field>
           <mat-select formControlName="characterName" placeholder="{{'CHARACTER.NAME' | translate}}">
-            <mat-option *ngFor="let item of characterList" [value]="item.name">{{item.level}} - {{item.name}}</mat-option>
+            <mat-option *ngFor="let item of characterList" [value]="item.name">{{item.level}} - {{item.name}} <span class="league-label mat-caption"> {{item.league}}</span></mat-option>
           </mat-select>
         </mat-form-field>
         <div class="btn-grp">
