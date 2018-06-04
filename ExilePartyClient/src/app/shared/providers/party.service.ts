@@ -70,7 +70,9 @@ export class PartyService {
     });
 
     this._hubConnection.on('PlayerJoined', (player: Player) => {
-      this.party.players.push(player);
+      if (this.party.players.find(x => x.character.name === player.character.name) === undefined) {
+        this.party.players.push(player);
+      }
       console.log('player joined:', player);
     });
 
@@ -84,6 +86,7 @@ export class PartyService {
 
     // subscribe to log-events
     this.logMonitorService.areaEvent.subscribe(res => {
+      this.player.area = res.name;
       this.updatePlayer(this.player);
     });
   }
