@@ -40,6 +40,11 @@ namespace ExileParty.Hubs
             } else {
                 if (party.Players.FirstOrDefault(x => x.ConnectionID == player.ConnectionID) == null) { 
                     party.Players.Insert(0, player);
+                } else
+                {
+                    // rejoin party if disconnected but remained in party
+                    var index = party.Players.IndexOf(party.Players.FirstOrDefault(x => x.ConnectionID == player.ConnectionID));
+                    party.Players[index] = player;
                 }
                 await _cache.SetAsync<PartyModel>(partyName, party);
                 await Clients.Caller.SendAsync("EnteredParty", party, player);
