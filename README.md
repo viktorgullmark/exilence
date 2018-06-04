@@ -38,8 +38,9 @@ Currently runs with:
 ## Upcoming changes
 
 - Auto-updater
-- Proper support for divination cards
-- Support for abyssal sockets with jewels
+- Support for elder-items
+- Support for divination cards
+- Support for abyssal sockets w/ jewels
 - Displaying DPS on item-tooltips
 - Optional setting for password on parties
 
