@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
-import { MatButtonModule, MatInputModule, MatOptionModule, MatSelectModule, MatIconModule, MatStepperModule } from '@angular/material';
+import { MatButtonModule, MatInputModule, MatOptionModule, MatSelectModule, MatIconModule,
+  MatStepperModule, MatProgressBarModule } from '@angular/material';
 import { MatFormFieldModule } from '@angular/material/form-field';
 
 import { LoginComponent } from './login.component';
@@ -18,7 +19,8 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
     MatButtonModule,
     MatOptionModule,
     MatSelectModule,
-    MatFormFieldModule
+    MatFormFieldModule,
+    MatProgressBarModule
   ],
   declarations: [LoginComponent]
 })

@@ -7,7 +7,7 @@ $toolbar-bg-color: #0a0a0a;
 $drawer-bg-color: #151515;
 $background-overlay: linear-gradient(rgba(16, 16, 16, 0.9), rgba(16, 16, 16, 0.92));
 $menu-item-color: #4b4b4b;
-$error-color: #ff0000;
+$error-color: $primary;
 
 // character
 $inventory-border-color: $accent;
@@ -18,6 +18,7 @@ $player-badge-bg-color: linear-gradient(to bottom right, #525252, #232323);
 $player-badge-selected-bg-color: linear-gradient(to bottom right, #656565, #797979);
 $recent-party-badge-bg-color: $player-badge-bg-color;
 $recent-party-badge-hover-bg-color: $player-badge-selected-bg-color;
+$player-area-font-color: rgb(245, 146, 146);
 
 // items
 $item-bg-color: rgba(5, 4, 41, 0.52);

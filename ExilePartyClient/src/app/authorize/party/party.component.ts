@@ -7,14 +7,9 @@ import { PartyService } from '../../shared/providers/party.service';
   styleUrls: ['./party.component.scss']
 })
 export class PartyComponent implements OnInit {
-  isLoading = true;
-  constructor() { }
+  constructor(private partyService: PartyService) { }
 
   ngOnInit() {
-    // give the profile time to render
-    setTimeout(() => {
-      this.isLoading = false;
-    }, 2000);
   }
 
 }

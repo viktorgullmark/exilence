@@ -1,1 +1,4 @@
-<app-player-badge *ngFor="let player of partyService.party.players" [player]="player"></app-player-badge>
+<div *ngFor="let league of partyService.party.players | groupByLeague">
+    <h3 class="mat-h3">{{league.key}}</h3>
+    <app-player-badge *ngFor="let player of league.value" [player]="player"></app-player-badge>
+</div>

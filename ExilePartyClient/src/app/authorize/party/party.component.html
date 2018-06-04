@@ -1,8 +1,8 @@
 <h2 class="mat-h2">
     {{'PAGES.PARTY.TITLE' | translate}}</h2>
-<mat-progress-bar *ngIf="isLoading" class="progress-bar" color="primary" mode="indeterminate">
+<mat-progress-bar *ngIf="partyService.isEntering" class="progress-bar" color="primary" mode="indeterminate">
 </mat-progress-bar>
-<div [hidden]="isLoading">
+<div [hidden]="partyService.isEntering">
     <mat-divider class="divider"></mat-divider>
     <div class="inner-content-container">
         <div class="player-list-container">

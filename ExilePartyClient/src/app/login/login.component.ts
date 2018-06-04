@@ -24,15 +24,17 @@ export class LoginComponent implements OnInit {
     sessFormGroup: FormGroup;
     charFormGroup: FormGroup;
     pathFormGroup: FormGroup;
-
     pathValid = false;
-
+    isLoading = false;
+    isFetching = false;
+    fetched = false;
     characterList: Character[] = [];
     player = {} as Player;
-    charName = this.settingsService.get('account.characterName');
-    sessId = this.settingsService.get('account.sessionId');
-    accName = this.settingsService.get('account.accountName');
-    filePath = this.settingsService.get('account.filePath');
+    charName: string;
+    accName: string;
+    sessId: string;
+    filePath: string;
+
     @ViewChild('stepper') stepper: MatStepper;
     @ViewChild('lastStep') lastStep: MatStep;
 
@@ -44,6 +46,9 @@ export class LoginComponent implements OnInit {
         private sessionService: SessionService,
         private settingsService: SettingsService,
         private partyService: PartyService) {
+
+        this.fetchSettings();
+
         this.accFormGroup = fb.group({
             accountName: [this.accName !== undefined ? this.accName : '', Validators.required]
         });
@@ -62,18 +67,16 @@ export class LoginComponent implements OnInit {
         }
     }
 
-    alreadySignedIn() {
-        // todo: exception for sessid optional
-        if (this.charName && this.accName && this.filePath) {
-            this.stepper.selectedIndex = 4;
-            console.log(this.stepper);
-        }
-    }
-
     checkPath() {
         this.pathValid = this.electronService.fs.existsSync(this.pathFormGroup.controls.filePath.value);
     }
 
+    fetchSettings() {
+        this.charName = this.settingsService.get('account.characterName');
+        this.sessId = this.settingsService.get('account.sessionId');
+        this.accName = this.settingsService.get('account.accountName');
+        this.filePath = this.settingsService.get('account.filePath');
+    }
 
     ngOnInit() {
         this.settingsService.deleteAll();
@@ -83,14 +86,25 @@ export class LoginComponent implements OnInit {
             }
         });
         this.checkPath();
-        this.alreadySignedIn();
     }
 
     getCharacterList(accountName?: string) {
+        this.isFetching = true;
         this.externalService.getCharacterList(accountName !== undefined ? accountName : this.accFormGroup.controls.accountName.value)
             .subscribe((res: Character[]) => {
                 this.accountService.characterList.next(res);
-            });
+                this.fetched = true;
+                this.stepper.selectedIndex = 1;
+                // set delay to avoid flickering when animating
+                setTimeout(() => {
+                    this.isFetching = false;
+                }, 500);
+            },
+            error => {
+                this.accountService.characterList.next([]);
+                this.isFetching = false;
+            }
+        );
     }
 
     getFormObj() {
@@ -103,6 +117,7 @@ export class LoginComponent implements OnInit {
     }
 
     login() {
+        this.isLoading = true;
         const form = this.getFormObj();
         this.externalService.getCharacter(form)
             .subscribe((data: EquipmentResponse) => {
@@ -111,6 +126,7 @@ export class LoginComponent implements OnInit {
                 this.accountService.accountInfo.next(form);
                 this.settingsService.set('account', form);
                 this.sessionService.initSession(form.sessionId);
+                this.isLoading = false;
                 this.router.navigate(['/authorized/dashboard']);
             });
     }

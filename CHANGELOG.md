@@ -1,6 +1,16 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [0.1.5] - 2018-06-04
+- Added option to scale the window-size upwards
+- Now groups players by league in the current party
+- Added display of current area for each player
+- Progress-bars now synchronize correctly with calls to the official API
+- Fixed party-name input to match uppercase
+- Fixed a bug where the selected player didn't change from a player who just left
+- User-experience tweaks to login-process
+- Updated readme
+
 ## [0.1.4] - 2018-05-30
 - Streamlined the login-process with steps and descriptions
 - Added level to character-list when logging in

@@ -17,9 +17,11 @@ function createWindow() {
     y: 100,
     width: 1341,
     height: 987,
+    minHeight: 987,
+    minWidth: 1341,
     webPreferences: { webSecurity: false },
     frame: false,
-    resizable: false,
+    resizable: true,
     icon: path.join(__dirname, 'dist/assets/img/app-icon.png'),
   });
 

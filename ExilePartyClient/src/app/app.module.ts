@@ -26,6 +26,7 @@ import { AccountService } from './shared/providers/account.service';
 import { SessionService } from './shared/providers/session.service';
 import { SettingsService } from './shared/providers/settings.service';
 import { MatIconModule } from '@angular/material/icon';
+import { UpperCasePipe } from '@angular/common';
 
 // AoT requires an exported function for factories
 export function HttpLoaderFactory(http: HttpClient) {
@@ -57,7 +58,7 @@ export function HttpLoaderFactory(http: HttpClient) {
       }
     }),
   ],
-  providers: [ExternalService, ElectronService, CanActivateAuthorized, AccountService, SessionService, SettingsService],
+  providers: [ExternalService, ElectronService, CanActivateAuthorized, AccountService, SessionService, SettingsService, UpperCasePipe],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

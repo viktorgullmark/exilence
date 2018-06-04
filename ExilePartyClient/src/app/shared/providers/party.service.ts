@@ -19,6 +19,7 @@ export class PartyService {
   private _hubConnection: HubConnection | undefined;
   public async: any;
   public party: Party;
+  public isEntering = false;
   public recentParties: BehaviorSubject<string[]> = new BehaviorSubject<string[]>(undefined);
   public player: Player;
   public accountInfo: AccountInfo;
@@ -54,6 +55,7 @@ export class PartyService {
       this.party = party;
       this.accountService.player.next(player);
       this.selectedPlayer.next(player);
+      this.isEntering = false;
       console.log('entered party:', party);
     });
 
@@ -74,6 +76,9 @@ export class PartyService {
 
     this._hubConnection.on('PlayerLeft', (player: Player) => {
       this.party.players = this.party.players.filter(x => x.connectionID !== player.connectionID);
+      if (this.selectedPlayerObj.connectionID === player.connectionID) {
+        this.selectedPlayer.next(this.player);
+      }
       console.log('player left:', player);
     });
 
@@ -94,6 +99,7 @@ export class PartyService {
   }
 
   public joinParty(partyName: string, player: Player) {
+    this.isEntering = true;
     this.initParty();
     this.party.players.push(player);
     this.party.name = partyName;

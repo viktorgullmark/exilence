@@ -4,13 +4,15 @@
       <form [formGroup]="accFormGroup">
         <ng-template matStepLabel>{{'ACCOUNT.NAME_INFO' | translate}}</ng-template>
         <mat-form-field>
-          <input matInput formControlName="accountName" placeholder="{{'ACCOUNT.NAME' | translate}}" (focusout)="getCharacterList()">
+          <input matInput formControlName="accountName" placeholder="{{'ACCOUNT.NAME' | translate}}" (change)="fetched = false">
         </mat-form-field>
         <div class="btn-grp">
-          <button mat-raised-button color="primary" matStepperNext [disabled]="characterList.length == 0 && charName != undefined">Continue</button>
+          <button mat-raised-button color="primary" *ngIf="!isFetching" (click)="getCharacterList()">Fetch characters</button>
+          <mat-progress-bar *ngIf="isFetching" class="progress-bar" color="primary" mode="indeterminate">
+          </mat-progress-bar>
         </div>
       </form>
-      
+
     </mat-step>
     <mat-step [stepControl]="charFormGroup">
       <form [formGroup]="charFormGroup">
@@ -54,7 +56,9 @@
     <mat-step #lastStep>
       <ng-template matStepLabel>Complete</ng-template>
       <div class="btn-grp">
-        <button mat-raised-button color="primary" (click)="login()">Proceed to start partying</button>
+        <button mat-raised-button color="primary" *ngIf="!isLoading" (click)="login()">Proceed to start partying</button>
+        <mat-progress-bar *ngIf="isLoading" class="progress-bar" color="primary" mode="indeterminate">
+        </mat-progress-bar>
       </div>
     </mat-step>
   </mat-vertical-stepper>
