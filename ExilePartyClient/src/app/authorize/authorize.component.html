@@ -3,9 +3,10 @@
     <form class="form sidenav-form" [formGroup]="form" (ngSubmit)="enterParty()">
       <mat-form-field>
         <input matInput formControlName="partyCode" placeholder="{{'PARTY.CODE' | translate}}" class="party-name-input">
+        <mat-hint>{{'PARTY.NAME_HINT' | translate}}</mat-hint>
       </mat-form-field>
-      <button *ngIf="!form.valid || partyService.party.name == form.controls.partyCode.value" mat-raised-button color="primary" type="submit" disabled>{{'PARTY.ENTER' | translate}}</button>
-      <button *ngIf="form.valid && partyService.party.name != form.controls.partyCode.value" mat-raised-button color="primary" type="submit">{{'PARTY.ENTER' | translate}}</button>
+      <button class="top-margin" *ngIf="!form.valid || partyService.party.name == form.controls.partyCode.value" mat-raised-button color="primary" type="submit" disabled>{{'PARTY.ENTER' | translate}}</button>
+      <button class="top-margin" *ngIf="form.valid && partyService.party.name != form.controls.partyCode.value" mat-raised-button color="primary" type="submit">{{'PARTY.ENTER' | translate}}</button>
     </form>
     <mat-nav-list class="sidenav">
       <mat-list-item routerLinkActive="active" [routerLinkActiveOptions]="{exact:true}" routerLink="/authorized/dashboard">

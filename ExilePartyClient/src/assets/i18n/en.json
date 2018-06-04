@@ -7,7 +7,7 @@
           "TITLE": "Dashboard"
       },
       "PARTY": {
-          "TITLE": "Party"
+          "TITLE": "Current party"
       }
   },
   "ACCOUNT": {
@@ -27,7 +27,8 @@
       "NAME_INFO": "Select your current character"
   },
   "PARTY": {
-      "CODE": "Party code",
+      "CODE": "Party name",
+      "NAME_HINT": "Enter name of your choice here",
       "ENTER": "Enter",
       "PARTY": "Party"
   },
