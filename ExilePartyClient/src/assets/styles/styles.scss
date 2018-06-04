@@ -32,6 +32,10 @@ html, body {
     position: absolute;
 }
 
+mat-vertical-stepper {
+    background-color: $stepper-bg-color !important;
+}
+
 .no-margin {
     margin: 0 !important;
 }
