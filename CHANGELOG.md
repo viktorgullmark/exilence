@@ -11,6 +11,7 @@ All notable changes to this project will be documented in this file.
 - User-experience tweaks to login-process
 - Fixed a bug where settings were not saved correctly
 - Fixed a bug where characters with the same name could enter the same party
+- Now displays league when selecting character
 - Updated readme
 
 ## [0.1.4] - 2018-05-30
