@@ -79,7 +79,6 @@ export class LoginComponent implements OnInit {
     }
 
     ngOnInit() {
-        this.settingsService.deleteAll();
         this.accountService.characterList.subscribe(res => {
             if (res !== undefined) {
                 this.characterList = res;

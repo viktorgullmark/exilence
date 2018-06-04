@@ -1,4 +1,21 @@
-<div *ngFor="let league of partyService.party.players | groupByLeague">
-    <h3 class="mat-h3">{{league.key}}</h3>
-    <app-player-badge *ngFor="let player of league.value" [player]="player"></app-player-badge>
-</div>
+<h3 class="mat-h3" *ngIf="incursion.length > 0">Incursion</h3>
+<app-player-badge *ngFor="let player of incursion" [player]="player">
+</app-player-badge>
+<h3 class="mat-h3" *ngIf="incursionSsf.length > 0">SSF Incursion</h3>
+<app-player-badge *ngFor="let player of incursionSsf" [player]="player">
+</app-player-badge>
+<h3 class="mat-h3" *ngIf="incursionHc.length > 0">Incursion HC</h3>
+<app-player-badge *ngFor="let player of incursionHc" [player]="player">
+</app-player-badge>
+<h3 class="mat-h3" *ngIf="incursionSsfHc.length > 0">SSF Incursion HC</h3>
+<app-player-badge *ngFor="let player of incursionSsfHc" [player]="player">
+</app-player-badge>
+<h3 class="mat-h3" *ngIf="std.length > 0">Standard</h3>
+<app-player-badge *ngFor="let player of std" [player]="player">
+</app-player-badge>
+<h3 class="mat-h3" *ngIf="hc.length > 0">Hardcore</h3>
+<app-player-badge *ngFor="let player of hc" [player]="player">
+</app-player-badge>
+
+
+

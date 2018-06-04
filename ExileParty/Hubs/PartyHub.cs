@@ -38,9 +38,19 @@ namespace ExileParty.Hubs
                 await _cache.SetAsync<PartyModel>(partyName, party);
                 await Clients.Caller.SendAsync("EnteredParty", party, player);
             } else {
-                if (party.Players.FirstOrDefault(x => x.ConnectionID == player.ConnectionID) == null) { 
-                    party.Players.Insert(0, player);
-                }            
+                var oldPlayer = party.Players.FirstOrDefault(x => x.Character.Name == player.Character.Name || x.ConnectionID == player.ConnectionID);
+                
+                if (oldPlayer == null)
+                {
+                    party.Players.Insert(0, player);     
+                } else
+                {
+                    // index of old player
+                    var index = party.Players.IndexOf(oldPlayer);
+                    await Groups.RemoveFromGroupAsync(oldPlayer.ConnectionID, partyName);
+                    party.Players[index] = player;       
+                }
+
                 await _cache.SetAsync<PartyModel>(partyName, party);
                 await Clients.Caller.SendAsync("EnteredParty", party, player);
             }

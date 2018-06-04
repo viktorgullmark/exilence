@@ -9,6 +9,8 @@ All notable changes to this project will be documented in this file.
 - Fixed party-name input to match uppercase
 - Fixed a bug where the selected player didn't change from a player who just left
 - User-experience tweaks to login-process
+- Fixed a bug where settings were not saved correctly
+- Fixed a bug where characters with the same name could enter the same party
 - Updated readme
 
 ## [0.1.4] - 2018-05-30

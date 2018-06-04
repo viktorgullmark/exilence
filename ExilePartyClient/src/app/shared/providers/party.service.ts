@@ -13,6 +13,10 @@ import { AccountService } from './account.service';
 import { ExternalService } from './external.service';
 import { LogMonitorService } from './log-monitor.service';
 import { SettingsService } from './settings.service';
+import { interval } from 'rxjs/observable/interval';
+import { Observable } from 'rxjs/Observable';
+import { from } from 'rxjs';
+import { map } from 'rxjs/operators';
 
 @Injectable()
 export class PartyService {
@@ -25,6 +29,15 @@ export class PartyService {
   public accountInfo: AccountInfo;
   public selectedPlayer: BehaviorSubject<Player> = new BehaviorSubject<Player>(undefined);
   public selectedPlayerObj: Player;
+
+  // player-lists
+  public incursionStd: BehaviorSubject<Player[]> = new BehaviorSubject<Player[]>([]);
+  public incursionSsfStd: BehaviorSubject<Player[]> = new BehaviorSubject<Player[]>([]);
+  public incursionHc: BehaviorSubject<Player[]> = new BehaviorSubject<Player[]>([]);
+  public incursionSsfHc: BehaviorSubject<Player[]> = new BehaviorSubject<Player[]>([]);
+  public std: BehaviorSubject<Player[]> = new BehaviorSubject<Player[]>([]);
+  public hc: BehaviorSubject<Player[]> = new BehaviorSubject<Player[]>([]);
+
   constructor(
     private router: Router,
     private accountService: AccountService,
@@ -53,6 +66,7 @@ export class PartyService {
 
     this._hubConnection.on('EnteredParty', (party: Party, player: Player) => {
       this.party = party;
+      this.updatePlayerLists(this.party);
       this.accountService.player.next(player);
       this.selectedPlayer.next(player);
       this.isEntering = false;
@@ -62,7 +76,7 @@ export class PartyService {
     this._hubConnection.on('PlayerUpdated', (player: Player) => {
       const index = this.party.players.indexOf(this.party.players.find(x => x.connectionID === player.connectionID));
       this.party.players[index] = player;
-
+      this.updatePlayerLists(this.party);
       if (this.selectedPlayerObj.connectionID === player.connectionID) {
         this.selectedPlayer.next(player);
       }
@@ -70,14 +84,15 @@ export class PartyService {
     });
 
     this._hubConnection.on('PlayerJoined', (player: Player) => {
-      if (this.party.players.find(x => x.character.name === player.character.name) === undefined) {
-        this.party.players.push(player);
-      }
+      this.party.players = this.party.players.filter(x => x.character.name !== player.character.name);
+      this.party.players.push(player);
+      this.updatePlayerLists(this.party);
       console.log('player joined:', player);
     });
 
     this._hubConnection.on('PlayerLeft', (player: Player) => {
       this.party.players = this.party.players.filter(x => x.connectionID !== player.connectionID);
+      this.updatePlayerLists(this.party);
       if (this.selectedPlayerObj.connectionID === player.connectionID) {
         this.selectedPlayer.next(this.player);
       }
@@ -89,6 +104,15 @@ export class PartyService {
       this.player.area = res.name;
       this.updatePlayer(this.player);
     });
+  }
+
+  updatePlayerLists(party: Party) {
+   this.incursionStd.next(party.players.filter(x => x.character.league === 'Incursion'));
+   this.incursionSsfStd.next(party.players.filter(x => x.character.league === 'SSF Incursion'));
+   this.incursionHc.next(party.players.filter(x => x.character.league === 'Hardcore Incursion'));
+   this.incursionSsfHc.next(party.players.filter(x => x.character.league === 'SSF Incursion HC'));
+   this.std.next(party.players.filter(x => x.character.league === 'Standard'));
+   this.hc.next(party.players.filter(x => x.character.league === 'Hardcore'));
   }
 
   public updatePlayer(player: Player) {
