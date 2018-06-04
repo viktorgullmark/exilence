@@ -39,8 +39,8 @@ export class AuthorizeComponent implements OnInit {
 
   enterParty() {
     this.partyService.leaveParty(this.partyService.party.name, this.player);
-    this.partyService.joinParty(this.form.controls.partyCode.value, this.player);
-    this.partyService.addPartyToRecent(this.form.controls.partyCode.value);
+    this.partyService.joinParty(this.form.controls.partyCode.value.toUpperCase(), this.player);
+    this.partyService.addPartyToRecent(this.form.controls.partyCode.value.toUpperCase());
     this.router.navigateByUrl('/404', { skipLocationChange: true }).then(() =>
       this.router.navigate(['/authorized/party']));
   }

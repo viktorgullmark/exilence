@@ -1,6 +1,9 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [0.1.6] - 2018-06-05
+- Fixed a bug where parties could be lowercase but displayed as uppercase
+
 ## [0.1.5] - 2018-06-04
 - Added option to scale the window-size upwards
 - Now groups players by league in the current party
