@@ -16,9 +16,9 @@ $inventory-bg-color: rgba(21, 21, 21, 0.5);;
 $equipment-border-color: #969696;
 $equipment-bg-color: rgba(21, 21, 21, 0.5);;
 $player-badge-bg-color: linear-gradient(to bottom right, #525252, #232323);
-$player-badge-selected-bg-color: linear-gradient(to bottom right, #656565, #797979);
+$player-badge-selected-bg-color: linear-gradient(to bottom right, #353535, #6d6d6d);
 $recent-party-badge-bg-color: $player-badge-bg-color;
-$recent-party-badge-hover-bg-color: $player-badge-selected-bg-color;
+$recent-party-badge-hover-bg-color: linear-gradient(to bottom right, #5c5c5c, #6d6d6d);
 $player-area-font-color: rgb(245, 146, 146);
 $player-league-font-color: rgb(209, 243, 164);
 
