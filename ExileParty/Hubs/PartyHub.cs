@@ -124,7 +124,10 @@ namespace ExileParty.Hubs
         {
             var index = await GetIndex();
             var success = index.Remove(ConnectionId);
-            await _cache.SetAsync("Index", index);
+
+            if(success)
+                await _cache.SetAsync("Index", index);
+
             return success;
         }
 
@@ -132,7 +135,10 @@ namespace ExileParty.Hubs
         {
             var index = await GetIndex();
             var success = index.TryAdd(ConnectionId, partyName);
-            await _cache.SetAsync("Index", index);
+
+            if (success)
+                await _cache.SetAsync("Index", index);
+
             return success;
         }
     }
