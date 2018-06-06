@@ -1,15 +1,10 @@
 ﻿using System;
 using System.Threading.Tasks;
 using ExileParty.Models;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.Caching.Distributed;
 using System.Collections.Generic;
-using System.Text;
-using System.Runtime.Serialization.Formatters.Binary;
-using System.IO;
 using ExileParty.Helper;
 using System.Linq;
 
@@ -20,6 +15,8 @@ namespace ExileParty.Hubs
     {
         private IDistributedCache _cache;
 
+        private string ConnectionId => Context.ConnectionId;
+        
         public PartyHub(IDistributedCache cache)
         {
             _cache = cache;
@@ -32,10 +29,7 @@ namespace ExileParty.Hubs
             player.ConnectionID = Context.ConnectionId;
 
             //update ConnectionId:Partyname index
-            var partyIndex = await _cache.GetAsync<Dictionary<string, string>>("Index") ?? new Dictionary<string, string>();
-            partyIndex[player.ConnectionID] = partyName;
-            await _cache.SetAsync<Dictionary<string, string>>("Index", partyIndex);
-
+            var success = await AddToIndex(partyName);
 
             // look for party
             var party = await _cache.GetAsync<PartyModel>(partyName);
@@ -98,22 +92,48 @@ namespace ExileParty.Hubs
 
         public override async Task OnDisconnectedAsync(Exception exception)
         {
-            var partyIndex = await _cache.GetAsync<Dictionary<string, string>>("Index");
-            if (partyIndex != null)
+            var partyName = await GetPartynameFromIndex();
+
+            if (partyName != null)
             {
-                var partyName = partyIndex[Context.ConnectionId];
-                var party = await _cache.GetAsync<PartyModel>(partyName);
-                var player = party.Players.FirstOrDefault(x => x.ConnectionID == Context.ConnectionId);
-                if (player != null)
+                var foundParty = await _cache.GetAsync<PartyModel>(partyName);
+                var foundPlayer = foundParty.Players.FirstOrDefault(x => x.ConnectionID == Context.ConnectionId);
+                if (foundPlayer != null)
                 {
-                    await LeaveParty(partyName, player);
-                    partyIndex.Remove(Context.ConnectionId);
-                    await _cache.SetAsync("index", partyIndex);
+                    await LeaveParty(partyName, foundPlayer);
+                    var success = await RemoveFromIndex();
                 }
             }
-
             await base.OnDisconnectedAsync(exception);
+        }
 
+
+        private async Task<Dictionary<string, string>> GetIndex()
+        {
+            return await _cache.GetAsync<Dictionary<string, string>>("Index") ?? new Dictionary<string, string>();
+        }
+
+        private async Task<string> GetPartynameFromIndex()
+        {
+            var index = await GetIndex();
+            index.TryGetValue(ConnectionId, out var partyName);
+            return partyName;
+        }
+        
+        private async Task<bool> RemoveFromIndex()
+        {
+            var index = await GetIndex();
+            var success = index.Remove(ConnectionId);
+            await _cache.SetAsync("Index", index);
+            return success;
+        }
+
+        private async Task<bool> AddToIndex(string partyName)
+        {
+            var index = await GetIndex();
+            var success = index.TryAdd(ConnectionId, partyName);
+            await _cache.SetAsync("Index", index);
+            return success;
         }
     }
 }
