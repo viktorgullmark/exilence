@@ -1,6 +1,9 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [0.1.7] - 2018-06-XX
+- Now removes players correctly when unexpected disconnects occur
+
 ## [0.1.6] - 2018-06-05
 - Fixed a bug where parties could be lowercase but displayed as uppercase
 - Minor style-tweaks
