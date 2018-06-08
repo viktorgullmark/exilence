@@ -1,4 +1,5 @@
 import { app, BrowserWindow, screen } from 'electron';
+const { autoUpdater } = require('electron-updater');
 import * as path from 'path';
 import * as url from 'url';
 
@@ -47,7 +48,32 @@ function createWindow() {
   });
 }
 
+function sendStatusToWindow(text) {
+  win.webContents.send('message', text);
+}
+
 try {
+  autoUpdater.on('checking-for-update', () => {
+    sendStatusToWindow('Checking for update...');
+  });
+  autoUpdater.on('update-available', (info) => {
+    sendStatusToWindow('Update available.');
+  });
+  autoUpdater.on('update-not-available', (info) => {
+    sendStatusToWindow('Update not available.');
+  });
+  autoUpdater.on('error', (err) => {
+    sendStatusToWindow('Error in auto-updater. ' + err);
+  });
+  autoUpdater.on('download-progress', (progressObj) => {
+    let log_message = 'Download speed: ' + progressObj.bytesPerSecond;
+    log_message = log_message + ' - Downloaded ' + progressObj.percent + '%';
+    log_message = log_message + ' (' + progressObj.transferred + '/' + progressObj.total + ')';
+    sendStatusToWindow(log_message);
+  });
+  autoUpdater.on('update-downloaded', (info) => {
+    sendStatusToWindow('Update downloaded');
+  });
 
   // This method will be called when Electron has finished
   // initialization and is ready to create browser windows.
@@ -63,6 +89,10 @@ try {
     }
   });
 
+  app.on('ready', () => {
+    autoUpdater.checkForUpdatesAndNotify();
+  });
+
   app.on('activate', () => {
     // On OS X it's common to re-create a window in the app when the
     // dock icon is clicked and there are no other windows open.
@@ -75,3 +105,5 @@ try {
   // Catch Error
   // throw e;
 }
+
+
