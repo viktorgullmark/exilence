@@ -1,5 +1,5 @@
 <mat-toolbar class="toolbar">
-    <span class="toolbar-text title">{{ 'INFO.TITLE' | translate }} hej martin</span>
+    <span class="toolbar-text title">{{ 'INFO.TITLE' | translate }}</span>
     <div class="right-area">
         <a (click)="logout()" class="left-link toolbar-text" *ngIf="sessionService.getSession() != null">
             {{ 'ACCOUNT.LOGOUT' | translate}} </a>
