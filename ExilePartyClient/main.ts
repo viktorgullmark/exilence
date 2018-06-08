@@ -49,8 +49,6 @@ function createWindow() {
     }));
   }
 
-  win.webContents.openDevTools();
-
   // Emitted when the window is closed.
   win.on('closed', () => {
     // Dereference the window object, usually you would store window
@@ -79,8 +77,11 @@ try {
     log_message = log_message + ' (' + progressObj.transferred + '/' + progressObj.total + ')';
     sendStatusToWindow(log_message);
   });
+
+
   autoUpdater.on('update-downloaded', (info) => {
     sendStatusToWindow('Update downloaded');
+    autoUpdater.quitAndInstall();
   });
 
   // This method will be called when Electron has finished
@@ -88,7 +89,7 @@ try {
   // Some APIs can only be used after this event occurs.
   app.on('ready', () => {
     createWindow();
-    autoUpdater.checkForUpdatesAndNotify();
+    autoUpdater.checkForUpdates();
   });
 
   // Quit when all windows are closed.
