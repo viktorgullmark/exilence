@@ -1,10 +1,15 @@
 import { app, BrowserWindow, screen } from 'electron';
 import * as path from 'path';
 import * as url from 'url';
+const log = require('electron-log');
 const {autoUpdater} = require("electron-updater");
 let win, serve;
 const args = process.argv.slice(1);
 serve = args.some(val => val === '--serve');
+
+autoUpdater.logger = log;
+autoUpdater.logger.transports.file.level = 'info';
+log.info('App starting...');
 
 function createWindow() {
 
@@ -48,6 +53,7 @@ function createWindow() {
 }
 
 function sendStatusToWindow(text) {
+  log.info(text);
   win.webContents.send('message', text);
 }
 
