@@ -2,7 +2,7 @@ import { app, BrowserWindow, screen } from 'electron';
 import * as path from 'path';
 import * as url from 'url';
 const log = require('electron-log');
-const {autoUpdater} = require("electron-updater");
+export const {autoUpdater} = require("electron-updater");
 let win, serve;
 const args = process.argv.slice(1);
 serve = args.some(val => val === '--serve');
@@ -63,6 +63,7 @@ try {
     sendStatusToWindow('Checking for update...');
   });
   autoUpdater.on('update-available', (info) => {
+    alert('Update available, please wait while we restart for you...');
     sendStatusToWindow('Update available.');
   });
   autoUpdater.on('update-not-available', (info) => {

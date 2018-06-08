@@ -25,6 +25,10 @@
         &.title{
             letter-spacing: 6px;
             color: $primary;
+            .version {
+                color: $version-font-color;
+                letter-spacing: 3px;
+            }
         }
     }
 }

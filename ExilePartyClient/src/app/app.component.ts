@@ -8,6 +8,8 @@ import { ElectronService } from './shared/providers/electron.service';
 import { SessionService } from './shared/providers/session.service';
 import { AppConfig } from '../environments/environment';
 
+import * as pkg from '../../package.json';
+
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
@@ -15,10 +17,13 @@ import { AppConfig } from '../environments/environment';
 })
 export class AppComponent {
   player: Player;
+  public appVersion;
   constructor(public electronService: ElectronService,
     private translate: TranslateService,
     public sessionService: SessionService,
     private router: Router) {
+
+    this.appVersion = pkg['version'];
 
     this.logout();
 
