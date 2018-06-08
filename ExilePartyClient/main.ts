@@ -1,8 +1,8 @@
-import { app, BrowserWindow, screen } from 'electron';
+import { app, BrowserWindow, screen, dialog } from 'electron';
 import * as path from 'path';
 import * as url from 'url';
 const log = require('electron-log');
-export const {autoUpdater} = require("electron-updater");
+const {autoUpdater} = require("electron-updater");
 let win, serve;
 const args = process.argv.slice(1);
 serve = args.some(val => val === '--serve');
@@ -63,7 +63,6 @@ try {
     sendStatusToWindow('Checking for update...');
   });
   autoUpdater.on('update-available', (info) => {
-    alert('Update available, please wait while we restart for you...');
     sendStatusToWindow('Update available.');
   });
   autoUpdater.on('update-not-available', (info) => {
@@ -73,6 +72,7 @@ try {
     sendStatusToWindow('Error in auto-updater. ' + err);
   });
   autoUpdater.on('download-progress', (progressObj) => {
+    dialog.showMessageBox({ title: 'Update available', message: 'Please wait while we restart and apply it for you.'});
     let log_message = 'Download speed: ' + progressObj.bytesPerSecond;
     log_message = log_message + ' - Downloaded ' + progressObj.percent + '%';
     log_message = log_message + ' (' + progressObj.transferred + '/' + progressObj.total + ')';
