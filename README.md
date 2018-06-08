@@ -4,7 +4,7 @@ Path of Exile party-app used to track gear, inventory and stats of partymembers 
 
 You could use this app to either improve the party-experience with your current party, or group up with your friends from different leagues while in discord with each other to show off your character.
 
-Download latest release at https://github.com/viktorgullmark/exile-party/releases
+Download latest release at https://github.com/viktorgullmark/exile-party/releases/latest
 
 Report bugs at https://github.com/viktorgullmark/exile-party/issues
 
@@ -22,7 +22,7 @@ https://imgur.com/a/czESKmz
 
 ## Important
 
-We do not yet have a code-signing certificate for the application, which means you will receive a warning the first time you launch the .exe. To get around this, just press "More info" -> "Run anyway" when it pops up, and the warning won't be shown again. We're looking at options to obtain a certificate for the app.
+We do not own a code-signing certificate for the application, which means you will receive a warning the first time you launch the .exe. To get around this, just press "More info" -> "Run anyway" when it pops up, and the warning won't be displayed for you again.
 
 ## Platform
 
@@ -37,12 +37,10 @@ Currently runs with:
 
 ## Upcoming changes
 
-- Auto-updater
-- Support for elder-items
+- Auto-updater (expected for v.0.2.0)
 - Support for divination cards
 - Support for abyssal sockets w/ jewels
 - Displaying DPS on item-tooltips
-- Optional setting for password on parties
 
 ## Help with development
 
