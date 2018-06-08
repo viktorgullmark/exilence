@@ -21,6 +21,7 @@
     ],
   "win": {
     "icon": "dist/assets/img/icon.ico",
+    "publish": ["github"],
     "target": [
       "portable"
     ]
