@@ -1,9 +1,6 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
-## [0.2.1] - 2018-06-08
-- Changed text of update-dialog
-
 ## [0.2.0] - 2018-06-08
 - Added functional version of auto-updater
 - Replaced default icon
