@@ -1,6 +1,10 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [0.2.16] - 2018-06-08
+- Added version-number to toolbar
+- Added alert for notifying when an update is available
+
 ## [0.2.15] - 2018-06-08
 - Added fully functional version of auto-updater
 
