@@ -1,10 +1,10 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
-## [0.2.11] - 2018-06-08
-- Added functional version of auto-updater
+## [0.2.15] - 2018-06-08
+- Added fully functional version of auto-updater
 
-## [0.1.7-0.2.1] - 2018-06-08
+## [0.1.7-0.2.14] - 2018-06-08
 - Test-phase of auto-updater
 
 ## [0.1.6] - 2018-06-05
