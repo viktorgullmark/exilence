@@ -1,13 +1,10 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
-## [0.2.2] - 2018-06-08
+## [0.2.0] - 2018-06-08
 - Added functional version of auto-updater
 - Replaced default icon
 - Added working dialog when update is available
-
-## [0.1.7-0.2.19] - 2018-06-08
-- Test-phase of auto-updater
 
 ## [0.1.6] - 2018-06-05
 - Fixed a bug where parties could be lowercase but displayed as uppercase

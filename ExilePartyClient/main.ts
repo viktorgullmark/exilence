@@ -63,6 +63,7 @@ try {
     sendStatusToWindow('Checking for update...');
   });
   autoUpdater.on('update-available', (info) => {
+    dialog.showMessageBox({ title: 'Update available', message: 'Please wait while we apply the update for you.'});
     sendStatusToWindow('Update available.');
   });
   autoUpdater.on('update-not-available', (info) => {
@@ -72,7 +73,6 @@ try {
     sendStatusToWindow('Error in auto-updater. ' + err);
   });
   autoUpdater.on('download-progress', (progressObj) => {
-    dialog.showMessageBox({ title: 'Update available', message: 'Please wait while we restart and apply it for you.'});
     let log_message = 'Download speed: ' + progressObj.bytesPerSecond;
     log_message = log_message + ' - Downloaded ' + progressObj.percent + '%';
     log_message = log_message + ' (' + progressObj.transferred + '/' + progressObj.total + ')';
