@@ -37,7 +37,6 @@ Currently runs with:
 
 ## Upcoming changes
 
-- Auto-updater (expected for v.0.2.0)
 - Support for divination cards
 - Support for abyssal sockets w/ jewels
 - Displaying DPS on item-tooltips
