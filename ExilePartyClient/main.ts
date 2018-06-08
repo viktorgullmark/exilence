@@ -63,7 +63,7 @@ try {
     sendStatusToWindow('Checking for update...');
   });
   autoUpdater.on('update-available', (info) => {
-    dialog.showMessageBox({ title: 'Update available', message: 'Please wait while we apply the update for you.'});
+    dialog.showMessageBox({ title: 'Update available', message: 'We will restart the app to apply the update for you.'});
     sendStatusToWindow('Update available.');
   });
   autoUpdater.on('update-not-available', (info) => {
