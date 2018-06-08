@@ -1,8 +1,7 @@
 import { app, BrowserWindow, screen } from 'electron';
-const { autoUpdater } = require('electron-updater');
 import * as path from 'path';
 import * as url from 'url';
-
+const {autoUpdater} = require("electron-updater");
 let win, serve;
 const args = process.argv.slice(1);
 serve = args.some(val => val === '--serve');
