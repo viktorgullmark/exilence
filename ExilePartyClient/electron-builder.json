@@ -20,7 +20,7 @@
         "!tslint.json"
     ],
   "win": {
-    "icon": "dist/assets/img/icon.ico",
+    "icon": "dist/assets/img/app-icon.png",
     "publish": ["github"],
     "target": [
       "nsis"

@@ -1,6 +1,10 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [0.2.19] - 2018-06-08
+- Replaced default icon
+- Added working dialog when update is available
+
 ## [0.2.18] - 2018-06-08
 - Improvements to auto-updater
 
