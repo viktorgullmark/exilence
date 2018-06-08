@@ -1,24 +1,12 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
-## [0.2.19] - 2018-06-08
+## [0.2.2] - 2018-06-08
+- Added functional version of auto-updater
 - Replaced default icon
 - Added working dialog when update is available
 
-## [0.2.18] - 2018-06-08
-- Improvements to auto-updater
-
-## [0.2.17] - 2018-06-08
-- Improvements to auto-updater
-
-## [0.2.16] - 2018-06-08
-- Added version-number to toolbar
-- Added alert for notifying when an update is available
-
-## [0.2.15] - 2018-06-08
-- Added fully functional version of auto-updater
-
-## [0.1.7-0.2.14] - 2018-06-08
+## [0.1.7-0.2.19] - 2018-06-08
 - Test-phase of auto-updater
 
 ## [0.1.6] - 2018-06-05
