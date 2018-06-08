@@ -11,6 +11,12 @@ autoUpdater.logger = log;
 autoUpdater.logger.transports.file.level = 'info';
 log.info('App starting...');
 
+
+function sendStatusToWindow(text) {
+  log.info(text);
+  win.webContents.send('message', text);
+}
+
 function createWindow() {
 
   const electronScreen = screen;
@@ -43,6 +49,8 @@ function createWindow() {
     }));
   }
 
+  win.webContents.openDevTools();
+
   // Emitted when the window is closed.
   win.on('closed', () => {
     // Dereference the window object, usually you would store window
@@ -50,11 +58,6 @@ function createWindow() {
     // when you should delete the corresponding element.
     win = null;
   });
-}
-
-function sendStatusToWindow(text) {
-  log.info(text);
-  win.webContents.send('message', text);
 }
 
 try {
@@ -83,7 +86,10 @@ try {
   // This method will be called when Electron has finished
   // initialization and is ready to create browser windows.
   // Some APIs can only be used after this event occurs.
-  app.on('ready', createWindow);
+  app.on('ready', () => {
+    createWindow();
+    autoUpdater.checkForUpdatesAndNotify();
+  });
 
   // Quit when all windows are closed.
   app.on('window-all-closed', () => {
@@ -92,10 +98,6 @@ try {
     if (process.platform !== 'darwin') {
       app.quit();
     }
-  });
-
-  app.on('ready', () => {
-    autoUpdater.checkForUpdatesAndNotify();
   });
 
   app.on('activate', () => {
