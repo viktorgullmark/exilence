@@ -21,9 +21,7 @@ namespace ExileParty.Hubs
         {
             _cache = cache;
         }
-
-
-        
+                
         public async Task JoinParty(string partyName, PlayerModel player)
         {
             // set initial id of player

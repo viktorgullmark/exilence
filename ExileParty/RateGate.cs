@@ -117,7 +117,7 @@ namespace ExileParty
         /// </summary>
         /// <param name="millisecondsTimeout">Number of milliseconds to wait, or -1 to wait indefinitely.</param>
         /// <returns>true if the thread is allowed to proceed, or false if timed out</returns>
-        public bool WaitToProceed(int millisecondsTimeout)
+        public async Task<bool> WaitToProceed(int millisecondsTimeout)
         {
             // Check the arguments.
             if (millisecondsTimeout < -1)
@@ -126,7 +126,7 @@ namespace ExileParty
             CheckDisposed();
 
             // Block until we can enter the semaphore or until the timeout expires.
-            var entered = _semaphore.Wait(millisecondsTimeout);
+            var entered = await _semaphore.WaitAsync(millisecondsTimeout);
 
             // If we entered the semaphore, compute the corresponding exit time 
             // and add it to the queue.
@@ -145,17 +145,17 @@ namespace ExileParty
         /// </summary>
         /// <param name="timeout"></param>
         /// <returns>true if the thread is allowed to proceed, or false if timed out</returns>
-        public bool WaitToProceed(TimeSpan timeout)
+        public async Task<bool> WaitToProceed(TimeSpan timeout)
         {
-            return WaitToProceed((int)timeout.TotalMilliseconds);
+            return await WaitToProceed((int)timeout.TotalMilliseconds);
         }
 
         /// <summary>
         /// Blocks the current thread indefinitely until allowed to proceed.
         /// </summary>
-        public void WaitToProceed()
+        public async Task WaitToProceed()
         {
-            WaitToProceed(Timeout.Infinite);
+            await WaitToProceed(Timeout.Infinite);
         }
 
         // Throws an ObjectDisposedException if this object is disposed.
@@ -201,6 +201,6 @@ namespace ExileParty
         /// <summary>
         /// Blocks the current thread indefinitely until allowed to proceed.
         /// </summary>
-        void WaitToProceed();
+        Task WaitToProceed();
     }
 }

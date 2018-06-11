@@ -81,9 +81,8 @@ namespace ExileParty
             app.UseHangfireDashboard();
 
             //RecurringJob.AddOrUpdate<ICharacterService>(cs => cs.IndexCharactersFromLadder(),Cron.Hourly);
-            BackgroundJob.Enqueue<ICharacterService>(cs => cs.IndexCharactersFromLadder("Incursion"));
-            var id = BackgroundJob.Enqueue<ICharacterService>(cs => cs.GetNextChangeId());
-            BackgroundJob.ContinueWith<ICharacterService>(id, cs => cs.IndexCharactersFromTradeRiver());
+            //BackgroundJob.Enqueue<ICharacterService>(cs => cs.IndexCharactersFromLadder("Incursion"));
+            BackgroundJob.Enqueue<ICharacterService>(cs => cs.GetNextChangeId());
 
             app.UseSignalR(routes =>
             {

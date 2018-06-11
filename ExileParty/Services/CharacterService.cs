@@ -18,6 +18,7 @@ namespace ExileParty.Handlers
         private readonly string _ladderUrl = "http://api.pathofexile.com/ladders/";
         private readonly string _leagesUrl = "http://api.pathofexile.com/leagues?type=main&compact=1";
         private readonly string _poeNinjaStatsUrl = "http://poe.ninja/api/Data/GetStats";
+        private readonly string _tradeUrl = "http://api.pathofexile.com/public-stash-tabs";
 
         private IDistributedCache _cache;
 
@@ -27,21 +28,44 @@ namespace ExileParty.Handlers
         }
 
 
-
-
-
-
         #region Trade
-        public async Task IndexCharactersFromTradeRiver()
+        public async Task IndexCharactersFromTradeRiver(string nextChangeId)
         {
-            var nextChangeId = await _cache.GetAsync<string>("next_change_id");
+            using (var rateGate = new RateGate(1, TimeSpan.FromSeconds(30)))
+            {
+                // Run loop one time per x seconds declared above
+                while (true)
+                {
+                    await rateGate.WaitToProceed();
 
+                    var tradeUrl = $"{_tradeUrl}/?id={nextChangeId}";
+                    var response = await ExecuteGetAsync(tradeUrl);
+                    var trade = JsonConvert.DeserializeObject<TradeApiModel>(response);
+
+                    var size = System.Text.ASCIIEncoding.Unicode.GetByteCount(response);
+
+                    // If change id's differ we got a new batch that we haven't processed.
+                    if (nextChangeId != trade.next_change_id)
+                    {
+                        //Update change id
+                        nextChangeId = trade.next_change_id;
+
+                        //Save characters for all stashes
+                        foreach (var stash in trade.stashes)
+                        {
+                            UpdateCharacterAsync(stash.lastCharacterName, stash.accountName);
+                        }
+                    }
+                }
+            }
+            
         }
+
         public async Task GetNextChangeId()
         {
             var json = await ExecuteGetAsync(_poeNinjaStatsUrl);
             var stats = JsonConvert.DeserializeObject<PoeNinjaModel>(json);
-            await _cache.SetAsync<string>("next_change_id", stats.next_change_id);
+            IndexCharactersFromTradeRiver(stats.next_change_id);
         }
 
         #endregion
@@ -61,7 +85,7 @@ namespace ExileParty.Handlers
             var entryList = new List<LadderApiEntry>();
 
             var pages = Enumerable.Range(0, 75);
-            foreach (int page in pages.LimitRate(2, TimeSpan.FromSeconds(4)))
+            foreach (int page in pages.LimitRate(2, TimeSpan.FromSeconds(5)))
             {
                 FetchLadderApiPage(league, page);
             }
@@ -69,10 +93,14 @@ namespace ExileParty.Handlers
 
         public async void FetchLadderApiPage(string league, int page)
         {
-            //var offset = page * 200;
-            //var url = $"{_ladderUrl}{league}?offset={offset}&limit=200";
-            //var apiResponse = await HandleLadderRequest(url);
-            //UpdateCharacterDictionaryAsync(league, apiResponse.Entries);
+            var offset = page * 200;
+            var url = $"{_ladderUrl}{league}?offset={offset}&limit=200";
+            var apiResponse = await HandleLadderRequest(url);
+
+            foreach (var entry in apiResponse.Entries)
+            {
+                UpdateCharacterAsync(entry.Character.Name, entry.Account.Name);
+            }
         }
 
         private async Task<LadderApiResponse> HandleLadderRequest(string url)
@@ -93,24 +121,34 @@ namespace ExileParty.Handlers
                 using (HttpResponseMessage res = await client.GetAsync(url))
                 using (HttpContent content = res.Content)
                 {
+                    if (res.Content != null)
+                    {
+                        await res.Content.LoadIntoBufferAsync();
+                        var bodylength = res.Content.Headers.ContentLength;
+                        var headerlength = res.Headers.ToString().Length;
+                    }
+
                     return await content.ReadAsStringAsync();
                 }
             }
         }
 
-        private async void UpdateCharacterDictionaryAsync(string league, List<LadderApiEntry> entries)
+        private async void UpdateCharacterAsync(string character, string account)
         {
-            var ladder = await _cache.GetAsync<Dictionary<string, string>>(league);
-            if (ladder == null)
+            if (!String.IsNullOrEmpty(character) && !String.IsNullOrEmpty(account))
             {
-                ladder = new Dictionary<string, string>();
+                var key = $"character:{character}";
+                await _cache.SetAsync(key, account, new DistributedCacheEntryOptions {});
             }
-            foreach (var entry in entries)
-            {
-                ladder[entry.Character.Name] = entry.Account.Name;
-            }
-            await _cache.SetAsync(league, ladder);
         }
+
+        private async Task<string> GetCharacterAsync(string character)
+        {
+            var key = $"character:{character}";
+            var account = await _cache.GetAsync<string>(key);
+            return account;
+        }
+
         #endregion
 
 
