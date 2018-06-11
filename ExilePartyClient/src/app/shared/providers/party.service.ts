@@ -139,6 +139,12 @@ export class PartyService {
       });
   }
 
+  public getAccountForCharacter(character: string): Promise<any> {
+    return this._hubConnection.invoke('GetAccountForCharacter', character).then((response) => {
+      return response;
+    });
+  }
+
 
   public joinParty(partyName: string, player: Player) {
     this.isEntering = true;

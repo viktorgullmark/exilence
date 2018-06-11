@@ -7,6 +7,8 @@ using Microsoft.Extensions.Caching.Distributed;
 using System.Collections.Generic;
 using ExileParty.Helper;
 using System.Linq;
+using ExileParty.Handlers;
+using ExileParty.Interfaces;
 
 namespace ExileParty.Hubs
 {
@@ -14,12 +16,14 @@ namespace ExileParty.Hubs
     public class PartyHub : Hub
     {
         private IDistributedCache _cache;
+        private ICharacterService _characterService;
 
         private string ConnectionId => Context.ConnectionId;
         
-        public PartyHub(IDistributedCache cache)
+        public PartyHub(IDistributedCache cache, ICharacterService characterService)
         {
             _cache = cache;
+            _characterService = characterService;
         }
                 
         public async Task JoinParty(string partyName, PlayerModel player)
@@ -141,16 +145,10 @@ namespace ExileParty.Hubs
             return success;
         }
 
-        public async Task<string> GetAccountForCharacter(string league, string character)
+        public async Task<string> GetAccountForCharacter(string character)
         {
-            var leagueData = await _cache.GetAsync<Dictionary<string, string>>(league);
-            if (leagueData != null)
-            {
-                string account;
-                leagueData.TryGetValue(character, out account);
-                return account;
-            }
-            return null;
+            var account = await _characterService.GetCharacterAsync(character);
+            return account;
         }
         
         public async Task GenericUpdatePlayer(PlayerModel player, string partyName)

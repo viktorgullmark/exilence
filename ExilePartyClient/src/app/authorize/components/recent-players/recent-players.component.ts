@@ -28,30 +28,31 @@ export class RecentPlayersComponent implements OnInit {
     private logMonitorService: LogMonitorService
   ) {
 
-    const demoPlayer: RecentPlayer = {
-      name: 'CojL_',
-      invited: false
-    };
+    this.logMonitorService.areaJoin.subscribe((msg: LogMessage) => {
+      this.handleAreaEvent(msg);
+    });
 
-    this.recentPlayers.unshift(demoPlayer);
+    this.logMonitorService.areaLeft.subscribe((msg: LogMessage) => {
+      this.handleAreaEvent(msg);
+    });
 
-    this.logMonitorService.messageEvent.subscribe((msg: LogMessage) => {
-      console.log(msg);
-      if (msg.chat === LogMessageChat.PARTY_CHAT || msg.chat === LogMessageChat.LOCAL_CHAT) {
-        if (!this.playerExists(msg.player.name)) {
+  }
 
-          const newPlayer: RecentPlayer = {
-            name: msg.player.name,
-            invited: false
-          };
+  handleAreaEvent(event) {
+    this.partyService.getAccountForCharacter(event.player.name).then((account: string) => {
+      if (account !== null) {
+        const newPlayer: RecentPlayer = {
+          name: event.player.name,
+          invited: false
+        };
 
-          this.recentPlayers.unshift(newPlayer);
-          if (this.recentPlayers.length > 6) {
-            this.recentPlayers.splice(-1, 1);
-          }
+        this.recentPlayers.unshift(newPlayer);
+        if (this.recentPlayers.length > 6) {
+          this.recentPlayers.splice(-1, 1);
         }
       }
     });
+
   }
 
   playerExists(name) {
@@ -69,7 +70,8 @@ export class RecentPlayersComponent implements OnInit {
 
   inviteToParty(player: RecentPlayer) {
     player.invited = true;
-    this.partyService.invitePlayerToLocalParty(player.name);
+    // this.partyService.invitePlayerToLocalParty(player.name);
+    this.partyService.getAccountForCharacter(player.name);
   }
 
 }

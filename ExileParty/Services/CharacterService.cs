@@ -31,34 +31,38 @@ namespace ExileParty.Handlers
         #region Trade
         public async Task IndexCharactersFromTradeRiver(string nextChangeId)
         {
-            using (var rateGate = new RateGate(1, TimeSpan.FromSeconds(30)))
+            using (var rateGate = new RateGate(2, TimeSpan.FromSeconds(8)))
             {
                 // Run loop one time per x seconds declared above
                 while (true)
                 {
-                    await rateGate.WaitToProceed();
-
-                    var tradeUrl = $"{_tradeUrl}/?id={nextChangeId}";
-                    var response = await ExecuteGetAsync(tradeUrl);
-                    var trade = JsonConvert.DeserializeObject<TradeApiModel>(response);
-
-                    var size = System.Text.ASCIIEncoding.Unicode.GetByteCount(response);
-
-                    // If change id's differ we got a new batch that we haven't processed.
-                    if (nextChangeId != trade.next_change_id)
+                    try
                     {
-                        //Update change id
-                        nextChangeId = trade.next_change_id;
+                        var tradeUrl = $"{_tradeUrl}/?id={nextChangeId}";
+                        var response = await ExecuteGetAsync(tradeUrl);
+                        var trade = JsonConvert.DeserializeObject<TradeApiModel>(response);
 
-                        //Save characters for all stashes
-                        foreach (var stash in trade.stashes)
+                        // If change id's differ we got a new batch that we haven't processed.
+                        if (nextChangeId != trade.next_change_id)
                         {
-                            UpdateCharacterAsync(stash.lastCharacterName, stash.accountName);
+                            //Update change id
+                            nextChangeId = trade.next_change_id;
+
+                            //Save characters for all stashes
+                            foreach (var stash in trade.stashes)
+                            {
+                                await UpdateCharacterAsync(stash.lastCharacterName, stash.accountName);
+                            }
                         }
+
+                        await rateGate.WaitToProceed();
+                    }
+                    catch (Exception e)
+                    {
+                        await rateGate.WaitToProceed(TimeSpan.FromMinutes(10));                        
                     }
                 }
-            }
-            
+            }            
         }
 
         public async Task GetNextChangeId()
@@ -99,7 +103,7 @@ namespace ExileParty.Handlers
 
             foreach (var entry in apiResponse.Entries)
             {
-                UpdateCharacterAsync(entry.Character.Name, entry.Account.Name);
+                await UpdateCharacterAsync(entry.Character.Name, entry.Account.Name);
             }
         }
 
@@ -133,7 +137,7 @@ namespace ExileParty.Handlers
             }
         }
 
-        private async void UpdateCharacterAsync(string character, string account)
+        private async Task UpdateCharacterAsync(string character, string account)
         {
             if (!String.IsNullOrEmpty(character) && !String.IsNullOrEmpty(account))
             {
@@ -142,7 +146,7 @@ namespace ExileParty.Handlers
             }
         }
 
-        private async Task<string> GetCharacterAsync(string character)
+        public async Task<string> GetCharacterAsync(string character)
         {
             var key = $"character:{character}";
             var account = await _cache.GetAsync<string>(key);
