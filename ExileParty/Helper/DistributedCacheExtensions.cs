@@ -40,9 +40,45 @@ namespace ExileParty.Helper
             return cache.SetAsync(key, bytes, options);
         }
 
+        public static void Set<T>(this IDistributedCache cache, string key, T value, DistributedCacheEntryOptions options)
+        {
+            byte[] bytes;
+            using (var memoryStream = new MemoryStream())
+            {
+                var binaryFormatter = new BinaryFormatter();
+                binaryFormatter.Serialize(memoryStream, value);
+                bytes = memoryStream.ToArray();
+            }
+
+            cache.Set(key, bytes, options);
+        }
+
+        public static void Set<T>(this IDistributedCache cache, string key, T value)
+        {
+            Set(cache, key, value, new DistributedCacheEntryOptions() { SlidingExpiration = TimeSpan.FromMinutes(15) });
+        }
+
+
         public static async Task<T> GetAsync<T>(this IDistributedCache cache, string key)
         {
             var val = await cache.GetAsync(key);
+            var result = default(T);
+
+            if (val == null) return result;
+
+            using (var memoryStream = new MemoryStream(val))
+            {
+                var binaryFormatter = new BinaryFormatter();
+                result = (T)binaryFormatter.Deserialize(memoryStream);
+            }
+
+            return result;
+        }
+
+
+        public static T Get<T>(this IDistributedCache cache, string key)
+        {
+            var val = cache.Get(key);
             var result = default(T);
 
             if (val == null) return result;

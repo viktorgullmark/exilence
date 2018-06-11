@@ -1,24 +1,27 @@
 import 'rxjs/add/operator/map';
 
-import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { RequestOptions, Headers } from '@angular/http';
+import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 
-import { ElectronService } from './electron.service';
-import { AccountService } from './account.service';
 import { AccountInfo } from '../interfaces/account-info.interface';
-import { Item } from '../interfaces/item.interface';
 import { EquipmentResponse } from '../interfaces/equipment-response.interface';
+import { Item } from '../interfaces/item.interface';
 import { Player } from '../interfaces/player.interface';
-import { Requirement } from '../interfaces/requirement.interface';
 import { Property } from '../interfaces/property.interface';
+import { Requirement } from '../interfaces/requirement.interface';
+import { AccountService } from './account.service';
+import { ElectronService } from './electron.service';
 
 @Injectable()
 export class ExternalService {
   public url: 'https://www.pathofexile.com/character-window/get-items';
 
   constructor(private http: HttpClient, private electronService: ElectronService, private accountService: AccountService) {
+  }
+
+  getLatestRelease(): Observable<any> {
+    return this.http.get('https://api.github.com/repos/viktorgullmark/exile-party/releases/latest');
   }
 
   getCharacter(data: AccountInfo): Observable<any> {

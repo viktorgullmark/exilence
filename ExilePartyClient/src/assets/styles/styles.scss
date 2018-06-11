@@ -32,8 +32,16 @@ html, body {
     position: absolute;
 }
 
+mat-vertical-stepper {
+    background-color: $stepper-bg-color !important;
+}
+
 .no-margin {
     margin: 0 !important;
+}
+
+.top-margin {
+    margin-top: 15px !important;
 }
 
 a {
@@ -59,6 +67,10 @@ a {
     align-items: center;
 }
 
+.btn-grp {
+    margin-bottom: 15px;
+}
+
 .form {
     display: flex;
     flex-direction: column;
@@ -69,8 +81,16 @@ a {
         width: 100%;
     }
 
+    button {
+        margin-right: 15px;
+    }
+
     &.login-form {
         width: 45%;
+    }
+
+    .form-error {
+        color: $error-color;
     }
 }
 

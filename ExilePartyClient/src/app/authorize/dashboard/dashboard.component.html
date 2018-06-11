@@ -1,28 +1,37 @@
 <h2 class="mat-h2">{{'PAGES.DASHBOARD.TITLE' | translate}}</h2>
 <mat-divider class="divider"></mat-divider>
-<div class="dashboard-content-container">
-    <h3 class="mat-headline">Welcome to ExileParty alpha</h3>
+<div class="dashboard-content-container"> 
+    <h2 class="mat-h2">Getting started</h2>
+    <p class="mat-body-1">
+        To start using the app, enter a party-name of your choice in the top-left corner and press 'Enter'.
+    </p>
+    <h2 class="mat-h2">Important information</h2>
     <p class="mat-body-1">
         This version is an alpha release, which means it's still in a very early stage. Bug reports and feature-requests are greatly
         appreciated as it will help us develop the app further, and are preferrebly posted at
         <a class="inline-link" (click)="openLink('https://github.com/viktorgullmark/exile-party/issues')">https://github.com/viktorgullmark/exile-party/issues</a>.
     </p>
+    <p>
+        Updates will be applied automatically when you restart the program. Please be patient as it will download the new version and apply it before you can start using the application.
+    </p>
     <p class="mat-body-1">
         To see what's next, make sure to check out the readme file
-        <a class="inline-link" (click)="openLink('https://github.com/viktorgullmark/exile-party/blob/master/README.md')">here</a>. Feel free to contact us on github or reddit directly for any questions/input.
+        <a class="inline-link" (click)="openLink('https://github.com/viktorgullmark/exile-party/blob/master/README.md')">here</a>.
     </p>
     <p class="mat-body-1">
-        <a class="inline-link" (click)="openLink('https://www.reddit.com/user/cojl_')">/u/cojl_</a>
+        Feel free to contact us on github or directly in-game for any questions/input.
+    </p>
+    <p class="mat-body-1">
+        <a class="inline-link" (click)="openLink('https://github.com/viktorgullmark')">github.com/viktorgullmark</a> ign: CojL
         <br/>
-        <a class="inline-link" (click)="openLink('https://www.reddit.com/user/umocrajen')">/u/umocrajen</a>
-        <br/>
+        <a class="inline-link" (click)="openLink('https://github.com/petterannerwall')">github.com/petterannerwall</a> ign: Umaycry
     </p>
     <ng-container *ngIf="recentParties.length > 0">
-        <h3 class="mat-headline party-headline">Recent parties</h3>
+        <h2 class="mat-h2 party-headline">Recent parties</h2>
         <span> (click to join)</span>
     </ng-container>
-    <div class="recent-party-badge-container" *ngFor="let party of recentParties">
-        <mat-card class="recent-party-badge" (click)="joinParty(party)">
+    <div class="recent-party-badge-container" *ngFor="let party of recentParties, let i = index">
+        <mat-card class="recent-party-badge" (click)="joinParty(party)" *ngIf="i < 4">
             {{party}}
         </mat-card>
     </div>

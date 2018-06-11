@@ -1,31 +1,41 @@
 {
-    "INFO": {
-        "TITLE": "ExileParty"
-    },
-    "PAGES": {
-        "DASHBOARD": {
-            "TITLE": "Dashboard"
-        },
-        "PARTY": {
-            "TITLE": "Party"
-        }
-    },
-    "ACCOUNT": {
-        "NAME": "Account name",
-        "LOGIN": "Login",
-        "SESSIONID": "Session ID",
-        "FILEPATH": "Path to Client.txt",
-        "LOGOUT": "Logout",
-        "CLOSE": "Close",
-        "INFORMATION": "Account information"
-    },
-    "CHARACTER": {
-        "NAME": "Character name"
-    },
-    "PARTY": {
-        "CODE": "Party code",
-        "ENTER": "Enter",
-        "PARTY": "Party",
-        "INVITE": "Invite"
-    }
+  "INFO": {
+      "TITLE": "ExileParty"
+  },
+  "PAGES": {
+      "DASHBOARD": {
+          "TITLE": "Dashboard"
+      },
+      "PARTY": {
+          "TITLE": "Current party"
+      }
+  },
+  "NOTIFICATION" : {
+      "UPDATE_AVAILABLE" : "There is a new version of ExileParty available. Please exit and restart the application to update."
+  },
+  "ACCOUNT": {
+      "NAME": "Account name",
+      "NAME_INFO": "Enter your account-name here",
+      "LOGIN": "Login",
+      "SESSIONID": "Session ID",
+      "SESSIONID_INFO": "Enter a valid SessionId here",
+      "FILEPATH": "Path to Client.txt",
+      "FILEPATH_INFO": "Enter the full path to your Client.txt",
+      "LOGOUT": "Logout",
+      "CLOSE": "Close",
+      "INFORMATION": "Account information"
+  },
+  "CHARACTER": {
+      "NAME": "Character name",
+      "NAME_INFO": "Select your current character"
+  },
+  "PARTY": {
+      "CODE": "Party name",
+      "NAME_HINT": "Enter name of your choice here",
+      "ENTER": "Enter",
+      "PARTY": "Party"
+  },
+  "ERROR": {
+      "PATH_NOT_VALID": "The filepath is not valid"
+  }
 }

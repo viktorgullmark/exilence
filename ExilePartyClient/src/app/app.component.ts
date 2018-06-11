@@ -2,11 +2,11 @@ import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 
+import * as pkg from '../../package.json';
+import { AppConfig } from '../environments/environment';
 import { Player } from './shared/interfaces/player.interface';
-import { AccountService } from './shared/providers/account.service';
 import { ElectronService } from './shared/providers/electron.service';
 import { SessionService } from './shared/providers/session.service';
-import { AppConfig } from '../environments/environment';
 
 @Component({
   selector: 'app-root',
@@ -15,10 +15,14 @@ import { AppConfig } from '../environments/environment';
 })
 export class AppComponent {
   player: Player;
+  public appVersion;
   constructor(public electronService: ElectronService,
     private translate: TranslateService,
     public sessionService: SessionService,
-    private router: Router) {
+    private router: Router,
+  ) {
+
+    this.appVersion = pkg['version'];
 
     this.logout();
 

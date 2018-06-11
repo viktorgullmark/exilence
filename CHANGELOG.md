@@ -1,7 +1,31 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [0.2.0] - 2018-06-08
+- Added functional version of auto-updater
+- Replaced default icon
+- Added working dialog when update is available
+
+## [0.1.6] - 2018-06-05
+- Fixed a bug where parties could be lowercase but displayed as uppercase
+- Minor style-tweaks
+- Minor UX improvements
+
+## [0.1.5] - 2018-06-04
+- Added option to scale the window-size upwards
+- Now groups players by league in the current party
+- Added display of current area for each player
+- Progress-bars now synchronize correctly with calls to the official API
+- Fixed party-name input to match uppercase
+- Fixed a bug where the selected player didn't change from a player who just left
+- User-experience tweaks to login-process
+- Fixed a bug where settings were not saved correctly
+- Fixed a bug where characters with the same name could enter the same party
+- Now displays league when selecting character
+- Updated readme
+
 ## [0.1.4] - 2018-05-30
+- Streamlined the login-process with steps and descriptions
 - Added level to character-list when logging in
 - Minor visual adjustments
 

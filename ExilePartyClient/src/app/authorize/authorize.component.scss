@@ -13,6 +13,10 @@
     padding: $container-padding;
 }
 
+.party-name-input {
+    text-transform: uppercase;
+}
+
 .mat-drawer {
     background: $drawer-bg-color;
 }

@@ -14,20 +14,30 @@ import { ExternalService } from './external.service';
 import { LogMonitorService } from './log-monitor.service';
 import { SettingsService } from './settings.service';
 import { areAllEquivalent } from '@angular/compiler/src/output/output_ast';
+import { interval } from 'rxjs/observable/interval';
+import { Observable } from 'rxjs/Observable';
+import { from } from 'rxjs';
+import { map } from 'rxjs/operators';
 
 @Injectable()
 export class PartyService {
   private _hubConnection: HubConnection | undefined;
   public async: any;
   public party: Party;
+  public isEntering = false;
   public recentParties: BehaviorSubject<string[]> = new BehaviorSubject<string[]>(undefined);
   public player: Player;
   public accountInfo: AccountInfo;
   public selectedPlayer: BehaviorSubject<Player> = new BehaviorSubject<Player>(undefined);
   public selectedPlayerObj: Player;
 
-  private localPartyPlayers: Player[] = [];
-  private localPartyPlayersPromise: any;
+  // player-lists
+  public incursionStd: BehaviorSubject<Player[]> = new BehaviorSubject<Player[]>([]);
+  public incursionSsfStd: BehaviorSubject<Player[]> = new BehaviorSubject<Player[]>([]);
+  public incursionHc: BehaviorSubject<Player[]> = new BehaviorSubject<Player[]>([]);
+  public incursionSsfHc: BehaviorSubject<Player[]> = new BehaviorSubject<Player[]>([]);
+  public std: BehaviorSubject<Player[]> = new BehaviorSubject<Player[]>([]);
+  public hc: BehaviorSubject<Player[]> = new BehaviorSubject<Player[]>([]);
 
   constructor(
     private router: Router,
@@ -58,15 +68,17 @@ export class PartyService {
 
     this._hubConnection.on('EnteredParty', (party: Party, player: Player) => {
       this.party = party;
+      this.updatePlayerLists(this.party);
       this.accountService.player.next(player);
       this.selectedPlayer.next(player);
+      this.isEntering = false;
       console.log('entered party:', party);
     });
 
     this._hubConnection.on('PlayerUpdated', (player: Player) => {
       const index = this.party.players.indexOf(this.party.players.find(x => x.connectionID === player.connectionID));
       this.party.players[index] = player;
-
+      this.updatePlayerLists(this.party);
       if (this.selectedPlayerObj.connectionID === player.connectionID) {
         this.selectedPlayer.next(player);
       }
@@ -74,19 +86,35 @@ export class PartyService {
     });
 
     this._hubConnection.on('PlayerJoined', (player: Player) => {
+      this.party.players = this.party.players.filter(x => x.character.name !== player.character.name);
       this.party.players.push(player);
+      this.updatePlayerLists(this.party);
       console.log('player joined:', player);
     });
 
     this._hubConnection.on('PlayerLeft', (player: Player) => {
       this.party.players = this.party.players.filter(x => x.connectionID !== player.connectionID);
+      this.updatePlayerLists(this.party);
+      if (this.selectedPlayerObj.connectionID === player.connectionID) {
+        this.selectedPlayer.next(this.player);
+      }
       console.log('player left:', player);
     });
 
     // subscribe to log-events
     this.logMonitorService.areaEvent.subscribe(res => {
+      this.player.area = res.name;
       this.updatePlayer(this.player);
     });
+  }
+
+  updatePlayerLists(party: Party) {
+   this.incursionStd.next(party.players.filter(x => x.character.league === 'Incursion'));
+   this.incursionSsfStd.next(party.players.filter(x => x.character.league === 'SSF Incursion'));
+   this.incursionHc.next(party.players.filter(x => x.character.league === 'Hardcore Incursion'));
+   this.incursionSsfHc.next(party.players.filter(x => x.character.league === 'SSF Incursion HC'));
+   this.std.next(party.players.filter(x => x.character.league === 'Standard'));
+   this.hc.next(party.players.filter(x => x.character.league === 'Hardcore'));
   }
 
   public updatePlayer(player: Player) {
@@ -111,6 +139,7 @@ export class PartyService {
 
 
   public joinParty(partyName: string, player: Player) {
+    this.isEntering = true;
     this.initParty();
     this.party.players.push(player);
     this.party.name = partyName;
@@ -135,7 +164,7 @@ export class PartyService {
   public addPartyToRecent(partyName: string) {
     const recent: string[] = this.settingService.get('recentParties') || [];
     recent.unshift(partyName);
-    while (recent.length > 6) {
+    if (recent.length > 4) {
       recent.splice(-1, 1);
     }
     this.settingService.set('recentParties', recent);

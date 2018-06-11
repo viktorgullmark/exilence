@@ -14,7 +14,16 @@
     }
 
     .player-badge-content {
-        padding: 10px;
+        padding: 5px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        .player-area {
+            color: $player-area-font-color;
+        }
+        .player-league {
+            color: $player-league-font-color;
+        }
     }
 
     .char-icon {

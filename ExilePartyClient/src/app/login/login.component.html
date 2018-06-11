@@ -1,23 +1,65 @@
 <div class="container">
-  <form class="form login-form" [formGroup]="form" (ngSubmit)="login()">
-    <h1 class="mat-h1 form-title">{{ 'ACCOUNT.INFORMATION' | translate}}</h1>
-    <mat-form-field>
-      <input matInput formControlName="accountName" placeholder="{{'ACCOUNT.NAME' | translate}}" (focusout)="getCharacterList()">
-    </mat-form-field>
-    <mat-form-field>
-      <input matInput formControlName="sessionId" placeholder="{{'ACCOUNT.SESSIONID' | translate}}">
-    </mat-form-field>
+  <mat-vertical-stepper linear="true" #stepper class="form login-form">
+    <mat-step [stepControl]="accFormGroup">
+      <form [formGroup]="accFormGroup">
+        <ng-template matStepLabel>{{'ACCOUNT.NAME_INFO' | translate}}</ng-template>
+        <mat-form-field>
+          <input matInput formControlName="accountName" placeholder="{{'ACCOUNT.NAME' | translate}}" (change)="fetched = false">
+        </mat-form-field>
+        <div class="btn-grp">
+          <button mat-raised-button color="primary" *ngIf="!isFetching" (click)="getCharacterList()">Fetch characters</button>
+          <mat-progress-bar *ngIf="isFetching" class="progress-bar" color="primary" mode="indeterminate">
+          </mat-progress-bar>
+        </div>
+      </form>
 
-    <div [hidden]="characterList.length == 0 && charName != undefined">
-      <mat-form-field>
-        <mat-select formControlName="characterName" placeholder="{{'CHARACTER.NAME' | translate}}">
-          <mat-option *ngFor="let item of characterList" [value]="item.name">{{item.level}} - {{item.name}}</mat-option>
-        </mat-select>
-      </mat-form-field>
-    </div>
-    <mat-form-field>
-      <input matInput formControlName="filePath" placeholder="{{'ACCOUNT.FILEPATH' | translate}}">
-    </mat-form-field>
-    <button mat-raised-button color="primary" type="submit" [disabled]="!form.valid">{{'ACCOUNT.LOGIN' | translate}}</button>
-  </form>
+    </mat-step>
+    <mat-step [stepControl]="charFormGroup">
+      <form [formGroup]="charFormGroup">
+        <ng-template matStepLabel>{{'CHARACTER.NAME_INFO' | translate}}</ng-template>
+        <mat-form-field>
+          <mat-select formControlName="characterName" placeholder="{{'CHARACTER.NAME' | translate}}">
+            <mat-option *ngFor="let item of characterList" [value]="item.name">{{item.level}} - {{item.name}} <span class="league-label mat-caption"> {{item.league}}</span></mat-option>
+          </mat-select>
+        </mat-form-field>
+        <div class="btn-grp">
+          <button mat-raised-button class="btn-back" matStepperPrevious>Back</button>
+          <button mat-raised-button color="primary" matStepperNext>Continue</button>
+        </div>
+      </form>
+    </mat-step>
+    <mat-step [stepControl]="sessFormGroup" optional="true">
+      <form [formGroup]="sessFormGroup">
+        <ng-template matStepLabel>{{'ACCOUNT.SESSIONID_INFO' | translate}}</ng-template>
+        <mat-form-field>
+          <input matInput formControlName="sessionId" placeholder="{{'ACCOUNT.SESSIONID' | translate}}">
+        </mat-form-field>
+        <div class="btn-grp">
+          <button mat-raised-button class="btn-back" matStepperPrevious>Back</button>
+          <button mat-raised-button color="primary" matStepperNext>Continue</button>
+        </div>
+      </form>
+    </mat-step>
+    <mat-step [stepControl]="pathFormGroup">
+      <form [formGroup]="pathFormGroup">
+        <ng-template matStepLabel>{{'ACCOUNT.FILEPATH_INFO' | translate}}</ng-template>
+        <mat-form-field>
+          <input matInput formControlName="filePath" placeholder="{{'ACCOUNT.FILEPATH' | translate}}" (focusout)="checkPath()" required>
+        </mat-form-field>
+        <div class="btn-grp">
+          <button mat-raised-button class="btn-back" matStepperPrevious>Back</button>
+          <button mat-raised-button color="primary" matStepperNext [disabled]="!pathValid">Continue</button>
+        </div>
+        <span class="form-error" *ngIf="!pathValid">{{'ERROR.PATH_NOT_VALID' | translate}}</span>
+      </form>
+    </mat-step>
+    <mat-step #lastStep>
+      <ng-template matStepLabel>Complete</ng-template>
+      <div class="btn-grp">
+        <button mat-raised-button color="primary" *ngIf="!isLoading" (click)="login()">Proceed to start partying</button>
+        <mat-progress-bar *ngIf="isLoading" class="progress-bar" color="primary" mode="indeterminate">
+        </mat-progress-bar>
+      </div>
+    </mat-step>
+  </mat-vertical-stepper>
 </div>
