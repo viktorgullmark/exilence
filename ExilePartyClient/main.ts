@@ -1,8 +1,9 @@
-import { app, BrowserWindow, screen, dialog } from 'electron';
+import { app, BrowserWindow, dialog, screen } from 'electron';
 import * as path from 'path';
 import * as url from 'url';
+
 const log = require('electron-log');
-const {autoUpdater} = require("electron-updater");
+const { autoUpdater } = require('electron-updater');
 let win, serve;
 const args = process.argv.slice(1);
 serve = args.some(val => val === '--serve');
@@ -63,7 +64,7 @@ try {
     sendStatusToWindow('Checking for update...');
   });
   autoUpdater.on('update-available', (info) => {
-    dialog.showMessageBox({ title: 'Update available!', message: 'Press OK to download and apply the update.'});
+    dialog.showMessageBox({ title: 'Update available!', message: 'Press OK to download and apply the update.' });
     sendStatusToWindow('Update available.');
   });
   autoUpdater.on('update-not-available', (info) => {

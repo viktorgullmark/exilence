@@ -10,6 +10,9 @@
           "TITLE": "Current party"
       }
   },
+  "NOTIFICATION" : {
+      "UPDATE_AVAILABLE" : "There is a new version of ExileParty available. Please exit and restart the application to update."
+  },
   "ACCOUNT": {
       "NAME": "Account name",
       "NAME_INFO": "Enter your account-name here",
