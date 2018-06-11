@@ -30,6 +30,8 @@ export class PartyService {
   public accountInfo: AccountInfo;
   public selectedPlayer: BehaviorSubject<Player> = new BehaviorSubject<Player>(undefined);
   public selectedPlayerObj: Player;
+  public localPartyPlayers: Player[] = [];
+  public localPartyPlayersPromise: any;
 
   // player-lists
   public incursionStd: BehaviorSubject<Player[]> = new BehaviorSubject<Player[]>([]);
@@ -109,12 +111,12 @@ export class PartyService {
   }
 
   updatePlayerLists(party: Party) {
-   this.incursionStd.next(party.players.filter(x => x.character.league === 'Incursion'));
-   this.incursionSsfStd.next(party.players.filter(x => x.character.league === 'SSF Incursion'));
-   this.incursionHc.next(party.players.filter(x => x.character.league === 'Hardcore Incursion'));
-   this.incursionSsfHc.next(party.players.filter(x => x.character.league === 'SSF Incursion HC'));
-   this.std.next(party.players.filter(x => x.character.league === 'Standard'));
-   this.hc.next(party.players.filter(x => x.character.league === 'Hardcore'));
+    this.incursionStd.next(party.players.filter(x => x.character.league === 'Incursion'));
+    this.incursionSsfStd.next(party.players.filter(x => x.character.league === 'SSF Incursion'));
+    this.incursionHc.next(party.players.filter(x => x.character.league === 'Hardcore Incursion'));
+    this.incursionSsfHc.next(party.players.filter(x => x.character.league === 'SSF Incursion HC'));
+    this.std.next(party.players.filter(x => x.character.league === 'Standard'));
+    this.hc.next(party.players.filter(x => x.character.league === 'Hardcore'));
   }
 
   public updatePlayer(player: Player) {
