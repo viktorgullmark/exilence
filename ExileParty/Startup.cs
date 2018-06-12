@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using ExileParty.Handlers;
 using ExileParty.Hubs;
 using ExileParty.Interfaces;
+using ExileParty.Services;
 using Hangfire;
 using Hangfire.MemoryStorage;
 using Microsoft.AspNetCore.Builder;
@@ -80,9 +80,7 @@ namespace ExileParty
             app.UseHangfireServer();
             app.UseHangfireDashboard();
 
-            //RecurringJob.AddOrUpdate<ICharacterService>(cs => cs.IndexCharactersFromLadder(),Cron.Hourly);
-            //BackgroundJob.Enqueue<ICharacterService>(cs => cs.IndexCharactersFromLadder("Incursion"));
-            BackgroundJob.Enqueue<ICharacterService>(cs => cs.GetNextChangeId());
+            BackgroundJob.Enqueue<ICharacterService>(cs => cs.StartTradeIndexing());
 
             app.UseSignalR(routes =>
             {

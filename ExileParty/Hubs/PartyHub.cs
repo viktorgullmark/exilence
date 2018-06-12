@@ -7,7 +7,6 @@ using Microsoft.Extensions.Caching.Distributed;
 using System.Collections.Generic;
 using ExileParty.Helper;
 using System.Linq;
-using ExileParty.Handlers;
 using ExileParty.Interfaces;
 
 namespace ExileParty.Hubs
@@ -147,7 +146,7 @@ namespace ExileParty.Hubs
 
         public async Task<string> GetAccountForCharacter(string character)
         {
-            var account = await _characterService.GetCharacterAsync(character);
+            var account = await _characterService.GetAccountFromCharacterAsync(character);
             return account;
         }
         
