@@ -34,11 +34,11 @@ namespace ExileParty.Hubs
             var success = await AddToIndex(partyName);
 
             // look for party
-            var party = await _cache.GetAsync<PartyModel>(partyName);
+            var party = await _cache.GetAsync<PartyModel>($"party:{partyName}");
             if (party == null)
             {
                 party = new PartyModel() { Name = partyName, Players = new List<PlayerModel> { player } };
-                await _cache.SetAsync<PartyModel>(partyName, party);
+                await _cache.SetAsync<PartyModel>($"party:{partyName}", party);
                 await Clients.Caller.SendAsync("EnteredParty", party, player);
             }
             else
@@ -57,7 +57,7 @@ namespace ExileParty.Hubs
                     party.Players[index] = player;
                 }
 
-                await _cache.SetAsync<PartyModel>(partyName, party);
+                await _cache.SetAsync<PartyModel>($"party:{partyName}", party);
                 await Clients.Caller.SendAsync("EnteredParty", party, player);
             }
 
@@ -68,12 +68,12 @@ namespace ExileParty.Hubs
 
         public async Task LeaveParty(string partyName, PlayerModel player)
         {
-            var foundParty = await _cache.GetAsync<PartyModel>(partyName);
+            var foundParty = await _cache.GetAsync<PartyModel>($"party:{partyName}");
             if (foundParty != null)
             {
                 var foundPlayer = foundParty.Players.FirstOrDefault(x => x.ConnectionID == player.ConnectionID);
                 foundParty.Players.Remove(foundPlayer);
-                await _cache.SetAsync<PartyModel>(partyName, foundParty);
+                await _cache.SetAsync<PartyModel>($"party:{partyName}", foundParty);
             }
 
             await Clients.OthersInGroup(partyName).SendAsync("PlayerLeft", player);
@@ -82,12 +82,12 @@ namespace ExileParty.Hubs
 
         public async Task UpdatePlayer(PlayerModel player, string partyName)
         {
-            var party = await _cache.GetAsync<PartyModel>(partyName);
+            var party = await _cache.GetAsync<PartyModel>($"party:{partyName}");
             if (party != null)
             {
                 var index = party.Players.IndexOf(party.Players.FirstOrDefault(x => x.ConnectionID == player.ConnectionID));
                 party.Players[index] = player;
-                await _cache.SetAsync<PartyModel>(partyName, party);
+                await _cache.SetAsync<PartyModel>($"party:{partyName}", party);
                 await Clients.Group(partyName).SendAsync("PlayerUpdated", player);
             }
         }
@@ -98,7 +98,7 @@ namespace ExileParty.Hubs
 
             if (partyName != null)
             {
-                var foundParty = await _cache.GetAsync<PartyModel>(partyName);
+                var foundParty = await _cache.GetAsync<PartyModel>($"party:{partyName}");
                 var foundPlayer = foundParty.Players.FirstOrDefault(x => x.ConnectionID == Context.ConnectionId);
                 if (foundPlayer != null)
                 {
@@ -128,7 +128,7 @@ namespace ExileParty.Hubs
             var success = index.Remove(ConnectionId);
 
             if(success)
-                await _cache.SetAsync("Index", index);
+                await _cache.SetAsync("ConnectionIndex", index);
 
             return success;
         }
@@ -139,7 +139,7 @@ namespace ExileParty.Hubs
             var success = index.TryAdd(ConnectionId, partyName);
 
             if (success)
-                await _cache.SetAsync("Index", index);
+                await _cache.SetAsync("ConnectionIndex", index);
 
             return success;
         }
@@ -152,7 +152,7 @@ namespace ExileParty.Hubs
         
         public async Task GenericUpdatePlayer(PlayerModel player, string partyName)
         {
-            var party = await _cache.GetAsync<PartyModel>(partyName);
+            var party = await _cache.GetAsync<PartyModel>($"party:{partyName}");
             if (party != null)
             {
                 var index = party.Players.IndexOf(party.Players.FirstOrDefault(x => x.Character.Name == player.Character.Name));
@@ -166,7 +166,7 @@ namespace ExileParty.Hubs
                     party.Players[index] = player;
                 }
 
-                await _cache.SetAsync<PartyModel>(partyName, party);
+                await _cache.SetAsync<PartyModel>($"party:{partyName}", party);
                 await Clients.Group(partyName).SendAsync("PlayerUpdated", player);
             }
         }
