@@ -7,7 +7,7 @@ namespace ExileParty.Interfaces
 {
     public interface ICharacterService
     {
-        void IndexCharactersFromLadder(string league);
+        Task IndexCharactersFromLadder(string league);
         Task StartTradeIndexing();
         Task<string> GetAccountFromCharacterAsync(string character);
     }

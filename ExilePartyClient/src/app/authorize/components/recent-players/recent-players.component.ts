@@ -15,11 +15,7 @@ interface RecentPlayer {
   styleUrls: ['./recent-players.component.scss']
 })
 
-
-
 export class RecentPlayersComponent implements OnInit {
-
-
 
   recentPlayers: RecentPlayer[] = [];
 
@@ -27,15 +23,12 @@ export class RecentPlayersComponent implements OnInit {
     private partyService: PartyService,
     private logMonitorService: LogMonitorService
   ) {
-
     this.logMonitorService.areaJoin.subscribe((msg: LogMessage) => {
       this.handleAreaEvent(msg);
     });
-
     this.logMonitorService.areaLeft.subscribe((msg: LogMessage) => {
       this.handleAreaEvent(msg);
     });
-
   }
 
   handleAreaEvent(event) {
@@ -52,17 +45,6 @@ export class RecentPlayersComponent implements OnInit {
         }
       }
     });
-
-  }
-
-  playerExists(name) {
-    let found = false;
-    for (let i = 0; i < this.recentPlayers.length; i++) {
-      if (this.recentPlayers[i].name === name) {
-        found = true;
-        break;
-      }
-    }
   }
 
   ngOnInit() {

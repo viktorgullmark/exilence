@@ -80,10 +80,11 @@ namespace ExileParty.Services
             _pendingRequests--;
 
             var requestTime = performanceWatch.ElapsedMilliseconds;
-            performanceWatch.Restart();
 
             if (response != null)
             {
+                performanceWatch.Restart();
+
                 var trade = JsonConvert.DeserializeObject<TradeApiModel>(response);
                 var deserializeTime = performanceWatch.ElapsedMilliseconds;
 
@@ -119,13 +120,13 @@ namespace ExileParty.Services
             Console.WriteLine($"Average update Redis time: { Math.Round(_updateTimes.Average())} ms.");
             Console.WriteLine("---------------------------------------------------------------------");
 
-            if (_requestTimes.Count > 50)
+            if (_requestTimes.Count > 100)
                 _requestTimes.RemoveRange(0, 1);
 
-            if (_updateTimes.Count > 50)
+            if (_updateTimes.Count > 100)
                 _updateTimes.RemoveRange(0, 1);
 
-            if (_deseralizeTimes.Count > 50)
+            if (_deseralizeTimes.Count > 100)
                 _deseralizeTimes.RemoveRange(0, 1);
         }
 
@@ -154,18 +155,18 @@ namespace ExileParty.Services
         #endregion
 
         #region Ladder
-        public void IndexCharactersFromLadder(string league)
+        public async Task IndexCharactersFromLadder(string league)
         {
             var entryList = new List<LadderApiEntry>();
 
             var pages = Enumerable.Range(0, 75);
             foreach (int page in pages.LimitRate(2, TimeSpan.FromSeconds(5)))
             {
-                FetchLadderApiPage(league, page);
+                await FetchLadderApiPage(league, page);
             }
         }
 
-        public async void FetchLadderApiPage(string league, int page)
+        public async Task FetchLadderApiPage(string league, int page)
         {
             var offset = page * 200;
             var url = $"{LadderUrl}{league}?offset={offset}&limit=200";
@@ -173,7 +174,7 @@ namespace ExileParty.Services
 
             foreach (var entry in apiResponse.Entries)
             {
-                UpdateCharacterAsync(entry.Character.Name, entry.Account.Name);
+                await UpdateCharacterAsync(entry.Character.Name, entry.Account.Name);
             }
         }
 
