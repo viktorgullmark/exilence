@@ -50,6 +50,7 @@ namespace ExileParty.Services
                 {
                     if (_rateLimited) // Wait for one minute if we are rate limited or if the API is down.
                     {
+                        Console.WriteLine("Ratelimited or other error, waiting one minute.");
                         var task = Task.Delay(60000);
                         task.Wait();
                         _rateLimited = false;
