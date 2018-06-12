@@ -23,6 +23,7 @@ namespace ExileParty.Services
 
         private readonly IDistributedCache _cache;
 
+        private bool _rateLimited;
         private string _nextChangeId;
         private int _pendingRequests;
         private readonly List<long> _saveTimes;
@@ -36,6 +37,7 @@ namespace ExileParty.Services
             _cache = cache;
 
             _pendingRequests = 0;
+            _rateLimited = true;
             _saveTimes = new List<long>();
             _updateTimes = new List<long>();
             _requestTimes = new List<long>();
@@ -48,11 +50,18 @@ namespace ExileParty.Services
         #region Trade
         public async void IndexCharactersFromTradeApi()
         {
-            using (var rateGate = new RateGate(1, TimeSpan.FromSeconds(3)))
+            using (var rateGate = new RateGate(1, TimeSpan.FromSeconds(30)))
             {
                 // Run loop one time per x seconds declared above but we if the api is slow we don't need to spam.
                 while (true)
                 {
+                    if (_rateLimited)
+                    {
+                        var task = Task.Delay(30000);
+                        task.Wait();
+                        _rateLimited = false;
+                    }
+
                     if (_pendingRequests < 6)
                     {
                         var tradeUrl = $"{TradeUrl}/?id={_nextChangeId}";
@@ -148,7 +157,7 @@ namespace ExileParty.Services
 
         public async Task StartTradeIndexing()
         {
-            await LoadIndexFromStorage();
+            //await LoadIndexFromStorage();
             await GetNextChangeId();
             IndexCharactersFromTradeApi();
         }
@@ -209,21 +218,24 @@ namespace ExileParty.Services
 
         private async Task<string> ExecuteGetAsync(string url)
         {
-            try
+            var handler = new HttpClientHandler() { AutomaticDecompression = DecompressionMethods.GZip | DecompressionMethods.Deflate, UseCookies = false, UseDefaultCredentials = false };
+            using (var client = new HttpClient(handler))
             {
-                var handler = new HttpClientHandler() { AutomaticDecompression = DecompressionMethods.GZip | DecompressionMethods.Deflate, UseCookies = false, UseDefaultCredentials = false };
-                using (var client = new HttpClient(handler))
+                using (HttpResponseMessage res = await client.GetAsync(url))
                 {
-                    using (HttpResponseMessage res = await client.GetAsync(url))
-                    using (HttpContent content = res.Content)
+                    if (res.IsSuccessStatusCode)
                     {
-                        return await content.ReadAsStringAsync();
+                        using (HttpContent content = res.Content)
+                        {
+                            return await content.ReadAsStringAsync();
+                        }
+                    }
+                    else
+                    {
+                        _rateLimited = true;
+                        return null;
                     }
                 }
-            }
-            catch (Exception e)
-            {
-                return null;
             }
         }
 
@@ -233,9 +245,9 @@ namespace ExileParty.Services
             {
                 var redisKey = $"character:{character}";
 
-                _characterDictionary.AddOrUpdate(character, account, (key, oldValue) => account);
+                //_characterDictionary.AddOrUpdate(character, account, (key, oldValue) => account);
 
-                //await _cache.SetAsync(key, account, new DistributedCacheEntryOptions { });
+                await _cache.SetAsync(redisKey, account, new DistributedCacheEntryOptions { });
             }
         }
 
