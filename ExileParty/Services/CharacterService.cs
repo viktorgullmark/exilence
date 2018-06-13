@@ -23,26 +23,21 @@ namespace ExileParty.Services
 
         private readonly IDistributedCache _cache;
 
+        private bool _rateLimited;
         private string _nextChangeId;
         private int _pendingRequests;
-        private readonly List<long> _saveTimes;
         private readonly List<long> _updateTimes;
         private readonly List<long> _requestTimes;
         private readonly List<long> _deseralizeTimes;
-        private readonly ConcurrentDictionary<string, string> _characterDictionary;
 
         public CharacterService(IDistributedCache cache)
         {
             _cache = cache;
-
             _pendingRequests = 0;
-            _saveTimes = new List<long>();
+            _rateLimited = false;
             _updateTimes = new List<long>();
             _requestTimes = new List<long>();
             _deseralizeTimes = new List<long>();
-            _characterDictionary = new ConcurrentDictionary<string, string>();
-
-            Console.WriteLine("Character Service loaded!");
         }
 
         #region Trade
@@ -50,9 +45,17 @@ namespace ExileParty.Services
         {
             using (var rateGate = new RateGate(1, TimeSpan.FromSeconds(3)))
             {
-                // Run loop one time per x seconds declared above but we if the api is slow we don't need to spam.
+                // Run loop one time per x seconds declared above.
                 while (true)
                 {
+                    if (_rateLimited) // Wait for one minute if we are rate limited or if the API is down.
+                    {
+                        Console.WriteLine("Ratelimited or other error, waiting one minute.");
+                        var task = Task.Delay(60000);
+                        task.Wait();
+                        _rateLimited = false;
+                    }
+
                     if (_pendingRequests < 6)
                     {
                         var tradeUrl = $"{TradeUrl}/?id={_nextChangeId}";
@@ -63,7 +66,6 @@ namespace ExileParty.Services
                     {
                         Console.WriteLine("We already have 5 pending requests. Skipping this one.");
                     }
-
                     await rateGate.WaitToProceed();
                 }
             }
@@ -78,10 +80,11 @@ namespace ExileParty.Services
             _pendingRequests--;
 
             var requestTime = performanceWatch.ElapsedMilliseconds;
-            performanceWatch.Restart();
 
             if (response != null)
             {
+                performanceWatch.Restart();
+
                 var trade = JsonConvert.DeserializeObject<TradeApiModel>(response);
                 var deserializeTime = performanceWatch.ElapsedMilliseconds;
 
@@ -90,52 +93,41 @@ namespace ExileParty.Services
                 {
                     //Update change id
                     _nextChangeId = trade.next_change_id;
-
                     performanceWatch.Restart();
                     //Save characters for all stashes
                     foreach (var stash in trade.stashes)
                     {
-                        await UpdateCharacterAsync(stash.lastCharacterName, stash.accountName);
+                        //Don't await this one, we don't get any success response from redis anyway.
+                        UpdateCharacterAsync(stash.lastCharacterName, stash.accountName);
                     }
 
                     var updateTime = performanceWatch.ElapsedMilliseconds;
-                    performanceWatch.Restart();
-
-                    await _cache.SetAsync("testPerformanceIndex", _characterDictionary.ToArray());
-
-                    var saveTime = performanceWatch.ElapsedMilliseconds;
-
-                    UpdateAndLogTime(requestTime, updateTime, deserializeTime, saveTime, trade.stashes.Count);
+                    UpdateAndLogTime(requestTime, deserializeTime, updateTime, trade.stashes.Count);
                 }
             }
         }
 
-        private void UpdateAndLogTime(long requestTime, long updateTime, long deserializeTime, long saveTime, int posts)
+        private void UpdateAndLogTime(long requestTime, long deserializeTime, long updateTime, int posts)
         {
             _updateTimes.Add(updateTime);
             _requestTimes.Add(requestTime);
-            _saveTimes.Add(saveTime);
             _deseralizeTimes.Add(deserializeTime);
 
-            Console.WriteLine("--------------------------------------");
-            Console.WriteLine($"Pending requests: {_pendingRequests}, Dictionary length: {_characterDictionary.Count}");
+            Console.WriteLine("---------------------------------------------------------------------");
+            Console.WriteLine($"Pending requests: {_pendingRequests}");
             Console.WriteLine($"Average GET request time: {Math.Round(_requestTimes.Average())} ms");
-            Console.WriteLine($"Average deserialize response time: {Math.Round(_deseralizeTimes.Average())} ms");
-            Console.WriteLine($"Average add to dictionary time: { Math.Round(_updateTimes.Average())} ms. Posts: {posts}");
-            Console.WriteLine($"Average save to Redis time: { Math.Round(_saveTimes.Average())} ms.");
+            Console.WriteLine($"Average deserialize time: {Math.Round(_deseralizeTimes.Average())} ms");
+            Console.WriteLine($"Average update Redis time: { Math.Round(_updateTimes.Average())} ms.");
+            Console.WriteLine("---------------------------------------------------------------------");
 
-
-            if (_requestTimes.Count > 50)
+            if (_requestTimes.Count > 100)
                 _requestTimes.RemoveRange(0, 1);
 
-            if (_updateTimes.Count > 50)
+            if (_updateTimes.Count > 100)
                 _updateTimes.RemoveRange(0, 1);
 
-            if (_deseralizeTimes.Count > 50)
+            if (_deseralizeTimes.Count > 100)
                 _deseralizeTimes.RemoveRange(0, 1);
-
-            if (_saveTimes.Count > 50)
-                _saveTimes.RemoveRange(0, 1);
         }
 
 
@@ -148,20 +140,9 @@ namespace ExileParty.Services
 
         public async Task StartTradeIndexing()
         {
-            await LoadIndexFromStorage();
             await GetNextChangeId();
             IndexCharactersFromTradeApi();
-        }
-
-        private async Task LoadIndexFromStorage()
-        {
-            var index = await _cache.GetAsync<KeyValuePair<string, string>[]>("testPerformanceIndex");
-            foreach (var pair in index)
-            {
-                _characterDictionary.TryAdd(pair.Key, pair.Value);
-            }
-        }
-
+        }        
         #endregion
 
         #region Leagues
@@ -174,18 +155,18 @@ namespace ExileParty.Services
         #endregion
 
         #region Ladder
-        public void IndexCharactersFromLadder(string league)
+        public async Task IndexCharactersFromLadder(string league)
         {
             var entryList = new List<LadderApiEntry>();
 
             var pages = Enumerable.Range(0, 75);
             foreach (int page in pages.LimitRate(2, TimeSpan.FromSeconds(5)))
             {
-                FetchLadderApiPage(league, page);
+                await FetchLadderApiPage(league, page);
             }
         }
 
-        public async void FetchLadderApiPage(string league, int page)
+        public async Task FetchLadderApiPage(string league, int page)
         {
             var offset = page * 200;
             var url = $"{LadderUrl}{league}?offset={offset}&limit=200";
@@ -209,21 +190,24 @@ namespace ExileParty.Services
 
         private async Task<string> ExecuteGetAsync(string url)
         {
-            try
+            var handler = new HttpClientHandler() { AutomaticDecompression = DecompressionMethods.GZip | DecompressionMethods.Deflate, UseCookies = false, UseDefaultCredentials = false };
+            using (var client = new HttpClient(handler))
             {
-                var handler = new HttpClientHandler() { AutomaticDecompression = DecompressionMethods.GZip | DecompressionMethods.Deflate, UseCookies = false, UseDefaultCredentials = false };
-                using (var client = new HttpClient(handler))
+                using (HttpResponseMessage res = await client.GetAsync(url))
                 {
-                    using (HttpResponseMessage res = await client.GetAsync(url))
-                    using (HttpContent content = res.Content)
+                    if (res.IsSuccessStatusCode)
                     {
-                        return await content.ReadAsStringAsync();
+                        using (HttpContent content = res.Content)
+                        {
+                            return await content.ReadAsStringAsync();
+                        }
+                    }
+                    else
+                    {
+                        _rateLimited = true;
+                        return null;
                     }
                 }
-            }
-            catch (Exception e)
-            {
-                return null;
             }
         }
 
@@ -231,11 +215,8 @@ namespace ExileParty.Services
         {
             if (!String.IsNullOrEmpty(character) && !String.IsNullOrEmpty(account))
             {
-                var redisKey = $"character:{character}";
-
-                _characterDictionary.AddOrUpdate(character, account, (key, oldValue) => account);
-
-                //await _cache.SetAsync(key, account, new DistributedCacheEntryOptions { });
+                var redisKey = $"character:{character}";                
+                await _cache.SetAsync(redisKey, account, new DistributedCacheEntryOptions { });
             }
         }
 
