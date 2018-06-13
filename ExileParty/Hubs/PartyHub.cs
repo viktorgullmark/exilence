@@ -91,6 +91,27 @@ namespace ExileParty.Hubs
                 await Clients.Group(partyName).SendAsync("PlayerUpdated", player);
             }
         }
+        public async Task GenericUpdatePlayer(PlayerModel player, string partyName)
+        {
+            var party = await _cache.GetAsync<PartyModel>($"party:{partyName}");
+            if (party != null)
+            {
+                var index = party.Players.IndexOf(party.Players.FirstOrDefault(x => x.Character.Name == player.Character.Name));
+
+                if (index == -1)
+                {
+                    party.Players.Insert(0, player);
+                    await Clients.Caller.SendAsync("EnteredParty", party, player);
+                }
+                else
+                {
+                    party.Players[index] = player;
+                }
+
+                await _cache.SetAsync<PartyModel>($"party:{partyName}", party);
+                await Clients.Group(partyName).SendAsync("GenericPlayerUpdated", player);
+            }
+        }
 
         public override async Task OnDisconnectedAsync(Exception exception)
         {
@@ -150,26 +171,6 @@ namespace ExileParty.Hubs
             return account;
         }
         
-        public async Task GenericUpdatePlayer(PlayerModel player, string partyName)
-        {
-            var party = await _cache.GetAsync<PartyModel>($"party:{partyName}");
-            if (party != null)
-            {
-                var index = party.Players.IndexOf(party.Players.FirstOrDefault(x => x.Character.Name == player.Character.Name));
-
-                if (index == -1)
-                {
-                    party.Players.Insert(0, player);
-                }
-                else
-                {
-                    party.Players[index] = player;
-                }
-
-                await _cache.SetAsync<PartyModel>($"party:{partyName}", party);
-                await Clients.Group(partyName).SendAsync("PlayerUpdated", player);
-            }
-        }
 
     }
 }

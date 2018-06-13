@@ -74,8 +74,10 @@ export class RecentPlayersComponent implements OnInit {
 
         this.externalService.getCharacter(info).subscribe((response: EquipmentResponse) => {
           let newPlayer = {} as Player;
+          newPlayer.account = account,
+          newPlayer.generic = true;
           newPlayer = this.externalService.setCharacter(response, newPlayer);
-          console.log('GenericPlayer: ', newPlayer );
+          this.partyService.invitePlayerToLocalParty(newPlayer);
         });
       }
     });

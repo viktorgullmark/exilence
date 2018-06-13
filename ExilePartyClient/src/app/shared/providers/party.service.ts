@@ -87,6 +87,16 @@ export class PartyService {
       console.log('player updated:', player);
     });
 
+    this._hubConnection.on('GenericPlayerUpdated', (player: Player) => {
+      const index = this.party.players.indexOf(this.party.players.find(x => x.character.name === player.character.name));
+      this.party.players[index] = player;
+      this.updatePlayerLists(this.party);
+      if (this.selectedPlayerObj.character.name === player.character.name) {
+        this.selectedPlayer.next(player);
+      }
+      console.log('generic player updated:', player);
+    });
+
     this._hubConnection.on('PlayerJoined', (player: Player) => {
       this.party.players = this.party.players.filter(x => x.character.name !== player.character.name);
       this.party.players.push(player);
@@ -130,7 +140,8 @@ export class PartyService {
   }
 
   public genericUpdatePlayer(player: Player) {
-    this.externalService.getCharacter(this.accountInfo)
+    const info: AccountInfo = { accountName: player.account, characterName: player.character.name, filePath: '', sessionId: '' };
+    this.externalService.getCharacter(info)
       .subscribe((data: EquipmentResponse) => {
         player = this.externalService.setCharacter(data, player);
         if (this._hubConnection) {
@@ -180,7 +191,7 @@ export class PartyService {
   }
 
   public invitePlayerToLocalParty(player: Player) {
-    const exists = this.localPartyPlayers.filter(p => p.character.name === p.character.name).length !== -1;
+    const exists = this.localPartyPlayers.filter(p => p.character.name === p.character.name).length === -1;
     if (!exists) {
       this.localPartyPlayers.unshift(player);
     }
@@ -194,10 +205,10 @@ export class PartyService {
 
   public startLocalPartyPlayerPolling() {
     this.localPartyPlayersPromise = setInterval(() => {
-      this.localPartyPlayers.forEach((player) => {
+      this.localPartyPlayers.forEach((player: Player) => {
         this.genericUpdatePlayer(player);
       });
-    }, (1000 * 10));
+    }, (1000 * 60));
   }
 
 }

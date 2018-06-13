@@ -80,7 +80,7 @@ namespace ExileParty
             app.UseHangfireServer();
             app.UseHangfireDashboard();
 
-            BackgroundJob.Enqueue<ICharacterService>(cs => cs.StartTradeIndexing());
+            //BackgroundJob.Enqueue<ICharacterService>(cs => cs.StartTradeIndexing());
 
             app.UseSignalR(routes =>
             {

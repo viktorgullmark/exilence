@@ -157,13 +157,13 @@ namespace ExileParty.Services
         #region Ladder
         public async Task IndexCharactersFromLadder(string league)
         {
-            var entryList = new List<LadderApiEntry>();
+            //var entryList = new List<LadderApiEntry>();
 
-            var pages = Enumerable.Range(0, 75);
-            foreach (int page in pages.LimitRate(2, TimeSpan.FromSeconds(5)))
-            {
-                await FetchLadderApiPage(league, page);
-            }
+            //var pages = Enumerable.Range(0, 75);
+            //foreach (int page in pages.LimitRate(2, TimeSpan.FromSeconds(5)))
+            //{
+            //    await FetchLadderApiPage(league, page);
+            //}
         }
 
         public async Task FetchLadderApiPage(string league, int page)
