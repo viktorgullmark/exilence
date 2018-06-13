@@ -61,26 +61,23 @@ export class RecentPlayersComponent implements OnInit {
 
   inviteToParty(player: RecentPlayer) {
     player.invited = true;
-    // this.partyService.invitePlayerToLocalParty(player.name);
     this.partyService.getAccountForCharacter(player.name).then((account) => {
       if (account !== null) {
-
         const info: AccountInfo = {
           accountName: account,
           characterName: player.name,
           sessionId: '',
           filePath: ''
         };
-
         this.externalService.getCharacter(info).subscribe((response: EquipmentResponse) => {
           let newPlayer = {} as Player;
           newPlayer.account = account,
           newPlayer.generic = true;
+          newPlayer.genericHost = this.partyService.player.character.name;
           newPlayer = this.externalService.setCharacter(response, newPlayer);
-          this.partyService.invitePlayerToLocalParty(newPlayer);
+          this.partyService.invitePlayerToGenericParty(newPlayer);
         });
       }
     });
   }
-
 }

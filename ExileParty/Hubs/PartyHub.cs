@@ -71,8 +71,17 @@ namespace ExileParty.Hubs
             var foundParty = await _cache.GetAsync<PartyModel>($"party:{partyName}");
             if (foundParty != null)
             {
+                //Handle generic players if "host" left
+                var genericPlayers = foundParty.Players.Where(t => t.GenericHost == player.Character.Name);
+                foreach (var genericPlayer in genericPlayers)
+                {
+                    foundParty.Players.Remove(genericPlayer);
+                    await Clients.Group(partyName).SendAsync("PlayerLeft", genericPlayer);
+                }
+
                 var foundPlayer = foundParty.Players.FirstOrDefault(x => x.ConnectionID == player.ConnectionID);
                 foundParty.Players.Remove(foundPlayer);
+
                 await _cache.SetAsync<PartyModel>($"party:{partyName}", foundParty);
             }
 
@@ -101,7 +110,7 @@ namespace ExileParty.Hubs
                 if (index == -1)
                 {
                     party.Players.Insert(0, player);
-                    await Clients.Caller.SendAsync("EnteredParty", party, player);
+                    await Clients.Group(partyName).SendAsync("PlayerJoined", player);
                 }
                 else
                 {

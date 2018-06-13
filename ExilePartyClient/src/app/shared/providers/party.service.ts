@@ -30,8 +30,8 @@ export class PartyService {
   public accountInfo: AccountInfo;
   public selectedPlayer: BehaviorSubject<Player> = new BehaviorSubject<Player>(undefined);
   public selectedPlayerObj: Player;
-  public localPartyPlayers: Player[] = [];
-  public localPartyPlayersPromise: any;
+  public genericPartyPlayers: Player[] = [];
+  public genericPartyPlayersPromise: any;
 
   // player-lists
   public incursionStd: BehaviorSubject<Player[]> = new BehaviorSubject<Player[]>([]);
@@ -49,7 +49,7 @@ export class PartyService {
     private settingService: SettingsService,
   ) {
     this.recentParties.next(this.settingService.get('recentParties') || []);
-    this.startLocalPartyPlayerPolling();
+    this.startGenericPartyPlayerPolling();
 
     this.accountService.player.subscribe(res => {
       this.player = res;
@@ -156,7 +156,6 @@ export class PartyService {
     });
   }
 
-
   public joinParty(partyName: string, player: Player) {
     this.isEntering = true;
     this.initParty();
@@ -178,6 +177,7 @@ export class PartyService {
 
   public initParty() {
     this.party = { name: '', players: [] };
+    this.genericPartyPlayers = [];
   }
 
   public addPartyToRecent(partyName: string) {
@@ -190,25 +190,28 @@ export class PartyService {
     this.recentParties.next(recent);
   }
 
-  public invitePlayerToLocalParty(player: Player) {
-    const exists = this.localPartyPlayers.filter(p => p.character.name === p.character.name).length === -1;
+  public invitePlayerToGenericParty(player: Player) {
+    const exists = this.genericPartyPlayers.filter(p => p.character.name === p.character.name).length === -1;
     if (!exists) {
-      this.localPartyPlayers.unshift(player);
+      this.genericPartyPlayers.unshift(player);
+      this.genericUpdatePlayer(player);
     }
   }
 
-  // public removePlayerFromLocalParty(playerName: string) {
-  //   this.localPartyPlayers = this.localPartyPlayers.filter((player) => {
-  //     return playerName !== player;
-  //   });
-  // }
-
-  public startLocalPartyPlayerPolling() {
-    this.localPartyPlayersPromise = setInterval(() => {
-      this.localPartyPlayers.forEach((player: Player) => {
-        this.genericUpdatePlayer(player);
+  public removePlayerFromGenericParty(player: Player) {
+    if (this._hubConnection) {
+      this._hubConnection.invoke('LeaveParty', this.party.name, player).then(() => {
+        const index = this.genericPartyPlayers.indexOf(player);
+        this.genericPartyPlayers.splice(index, 1);
       });
-    }, (1000 * 60));
+    }
   }
 
+  public startGenericPartyPlayerPolling() {
+    this.genericPartyPlayersPromise = setInterval(() => {
+      this.genericPartyPlayers.forEach((player: Player) => {
+        this.genericUpdatePlayer(player);
+      });
+    }, (1000 * 20));
+  }
 }

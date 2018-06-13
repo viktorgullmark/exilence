@@ -10,4 +10,5 @@ export interface Player {
     sessionId: string;
     inArea: Array<string>;
     generic: boolean;
+    genericHost: string;
 }
