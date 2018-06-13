@@ -1,6 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 
-import { LogMessage, LogMessageChat } from '../../../shared/interfaces/log-message.interface';
+import { AccountInfo } from '../../../shared/interfaces/account-info.interface';
+import { EquipmentResponse } from '../../../shared/interfaces/equipment-response.interface';
+import { LogMessage } from '../../../shared/interfaces/log-message.interface';
+import { Player } from '../../../shared/interfaces/player.interface';
+import { ExternalService } from '../../../shared/providers/external.service';
 import { LogMonitorService } from '../../../shared/providers/log-monitor.service';
 import { PartyService } from '../../../shared/providers/party.service';
 
@@ -21,11 +25,14 @@ export class RecentPlayersComponent implements OnInit {
 
 
 
-  recentPlayers: RecentPlayer[] = [];
+  recentPlayers: RecentPlayer[] = [
+    { name: 'KraniumISC', invited: false}
+  ];
 
   constructor(
     private partyService: PartyService,
-    private logMonitorService: LogMonitorService
+    private logMonitorService: LogMonitorService,
+    private externalService: ExternalService
   ) {
 
     this.logMonitorService.areaJoin.subscribe((msg: LogMessage) => {
@@ -71,7 +78,23 @@ export class RecentPlayersComponent implements OnInit {
   inviteToParty(player: RecentPlayer) {
     player.invited = true;
     // this.partyService.invitePlayerToLocalParty(player.name);
-    this.partyService.getAccountForCharacter(player.name);
+    this.partyService.getAccountForCharacter(player.name).then((account) => {
+      if (account !== null) {
+
+        const info: AccountInfo = {
+          accountName: account,
+          characterName: player.name,
+          sessionId: '',
+          filePath: ''
+        };
+
+        this.externalService.getCharacter(info).subscribe((response: EquipmentResponse) => {
+          let newPlayer = {} as Player;
+          newPlayer = this.externalService.setCharacter(response, newPlayer);
+          console.log('GenericPlayer: ', newPlayer );
+        });
+      }
+    });
   }
 
 }

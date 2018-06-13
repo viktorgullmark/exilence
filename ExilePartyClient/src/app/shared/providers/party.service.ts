@@ -134,7 +134,7 @@ export class PartyService {
       .subscribe((data: EquipmentResponse) => {
         player = this.externalService.setCharacter(data, player);
         if (this._hubConnection) {
-          // this._hubConnection.invoke('GenericUpdatePlayer', player, this.party.name);
+          this._hubConnection.invoke('GenericUpdatePlayer', player, this.party.name);
         }
       });
   }
@@ -179,32 +179,10 @@ export class PartyService {
     this.recentParties.next(recent);
   }
 
-  public invitePlayerToLocalParty(playerName: string) {
-
-    const exists = this.localPartyPlayers.filter(player => player.character.name === playerName).length !== -1;
-
+  public invitePlayerToLocalParty(player: Player) {
+    const exists = this.localPartyPlayers.filter(p => p.character.name === p.character.name).length !== -1;
     if (!exists) {
-
-      const genericPlayer: Player = {
-        connectionID: null,
-        channel: this.player.channel,
-        account: null,
-        character: {
-          name: playerName,
-          league: this.player.character.league,
-          classId: null,
-          ascendancyClass: null,
-          class: null,
-          level: null,
-          items: []
-        },
-        area: null,
-        guild: null,
-        sessionId: null,
-        inArea: [],
-        generic: true
-      };
-      this.localPartyPlayers.unshift(genericPlayer);
+      this.localPartyPlayers.unshift(player);
     }
   }
 
@@ -216,8 +194,8 @@ export class PartyService {
 
   public startLocalPartyPlayerPolling() {
     this.localPartyPlayersPromise = setInterval(() => {
-      this.localPartyPlayers.forEach((playerName) => {
-        console.log('Updating player: ', playerName);
+      this.localPartyPlayers.forEach((player) => {
+        this.genericUpdatePlayer(player);
       });
     }, (1000 * 10));
   }
