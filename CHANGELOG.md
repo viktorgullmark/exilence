@@ -1,6 +1,9 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [0.2.2] - 2018-06-14
+- Fix for wrong connection settings
+
 ## [0.2.1] - 2018-06-14
 - Prerelease adding support for recent-players (hiddden, will come later)
 - Notification bar when new version is available
