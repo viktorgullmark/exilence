@@ -1,6 +1,11 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [0.2.1] - 2018-06-14
+- Prerelease adding support for recent-players (hiddden, will come later)
+- Notification bar when new version is available
+- Connections settings, moved API to a new host
+
 ## [0.2.0] - 2018-06-08
 - Added functional version of auto-updater
 - Replaced default icon
