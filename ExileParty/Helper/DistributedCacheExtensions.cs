@@ -35,6 +35,8 @@ namespace ExileParty.Helper
                 bytes = memoryStream.ToArray();
             }
 
+            key.Replace(" ", string.Empty);
+
             return cache.SetAsync(key, bytes, options);
         }
 
