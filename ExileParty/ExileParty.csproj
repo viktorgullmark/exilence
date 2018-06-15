@@ -5,19 +5,13 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="Controllers\**" />
-    <Content Remove="Controllers\**" />
-    <EmbeddedResource Remove="Controllers\**" />
-    <None Remove="Controllers\**" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <PackageReference Include="Hangfire.AspNetCore" Version="1.6.19" />
+    <PackageReference Include="Hangfire.AspNetCore" Version="1.7.0-beta1" />
     <PackageReference Include="Hangfire.MemoryStorage.Core" Version="1.4.0" />
     <PackageReference Include="Microsoft.AspNetCore.App" />
-    <PackageReference Include="Microsoft.AspNetCore.SignalR" Version="1.0.0-rc1-final" />
-    <PackageReference Include="Microsoft.Extensions.Caching.Redis" Version="2.1.0-rc1-final" />
-    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="2.1.0-rc1-final" />
+    <PackageReference Include="Microsoft.AspNetCore.SignalR" Version="1.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Caching.Redis" Version="2.1.0" />
+    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="2.1.0" />
+    <PackageReference Include="Serilog.Extensions.Logging.File" Version="2.0.0-dev-00024" />
   </ItemGroup>
 
 </Project>

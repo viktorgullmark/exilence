@@ -55,7 +55,7 @@ namespace ExileParty.Helper
 
         public static void Set<T>(this IDistributedCache cache, string key, T value)
         {
-            Set(cache, key, value, new DistributedCacheEntryOptions() { SlidingExpiration = TimeSpan.FromMinutes(15) });
+            Set(cache, key, value, new DistributedCacheEntryOptions() { SlidingExpiration = TimeSpan.FromMinutes(60) });
         }
 
 

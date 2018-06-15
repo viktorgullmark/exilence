@@ -80,7 +80,9 @@ namespace ExileParty.Hubs
                 }
 
                 var foundPlayer = foundParty.Players.FirstOrDefault(x => x.ConnectionID == player.ConnectionID);
-                foundParty.Players.Remove(foundPlayer);
+
+                foundParty.Players.Remove(foundPlayer);                
+                var success = await RemoveFromIndex();
 
                 await _cache.SetAsync<PartyModel>($"party:{partyName}", foundParty);
             }
@@ -142,7 +144,7 @@ namespace ExileParty.Hubs
 
         private async Task<Dictionary<string, string>> GetIndex()
         {
-            return await _cache.GetAsync<Dictionary<string, string>>("Index") ?? new Dictionary<string, string>();
+            return await _cache.GetAsync<Dictionary<string, string>>("ConnectionIndex") ?? new Dictionary<string, string>();
         }
 
         private async Task<string> GetPartynameFromIndex()
