@@ -27,7 +27,6 @@ namespace ExileParty.Services
 
         private bool _rateLimited;
         private string _nextChangeId;
-        private int _pendingRequests;
         private readonly List<long> _updateTimes;
         private readonly List<string> _errorList;
         private readonly List<long> _requestTimes;
@@ -37,7 +36,6 @@ namespace ExileParty.Services
         {
             _log = log;
             _cache = cache;
-            _pendingRequests = 0;
             _rateLimited = false;
             _updateTimes = new List<long>();
             _errorList = new List<string>();
@@ -48,7 +46,7 @@ namespace ExileParty.Services
         #region Trade
         public async void IndexCharactersFromTradeApi()
         {
-            using (var rateGate = new RateGate(1, TimeSpan.FromSeconds(3)))
+            using (var rateGate = new RateGate(1, TimeSpan.FromSeconds(2.5)))
             {
                 // Run loop one time per x seconds declared above.
                 while (true)
@@ -61,16 +59,10 @@ namespace ExileParty.Services
                         _rateLimited = false;
                     }
 
-                    if (_pendingRequests < 6)
-                    {
                         var tradeUrl = $"{TradeUrl}/?id={_nextChangeId}";
                         //Don't make this one async, we want to send multiple requests and handle the response when we get it. 
                         GetAndIndexTradeRequest(tradeUrl);
-                    }
-                    else
-                    {
-                        _log.LogError("We already have 5 pending requests. Skipping this one.");
-                    }
+
                     await rateGate.WaitToProceed();
                 }
             }
@@ -80,9 +72,9 @@ namespace ExileParty.Services
         {
             var performanceWatch = Stopwatch.StartNew();
 
-            _pendingRequests++;
+            //_pendingRequests++;
             var response = await ExecuteGetAsync(tradeUrl);
-            _pendingRequests--;
+            //_pendingRequests--;
 
             var requestTime = performanceWatch.ElapsedMilliseconds;
 
@@ -142,7 +134,6 @@ namespace ExileParty.Services
                 AvgGET = avgGet,
                 AvgDeserialize = avgDeszerialize,
                 AvgUpdateRedis = avgUpdate,
-                PendingRequests = _pendingRequests,
                 StashesInLastResponse = stashes,
                 RateLimitedOrDown = _rateLimited,
                 Timestamp = DateTime.Now
@@ -155,7 +146,6 @@ namespace ExileParty.Services
                 $"AvgDeserialize: {avgDeszerialize}ms, " +
                 $"AvgUpdate: { avgUpdate}ms, " +
                 $"StashesInLastResponse: {stashes}, " +
-                $"PendingRequests: {_pendingRequests}, " +
                 $"RateLimited: {_rateLimited}");
 
         }
@@ -224,6 +214,8 @@ namespace ExileParty.Services
             {
                 using (var client = new HttpClient(handler))
                 {
+                    client.Timeout = TimeSpan.FromSeconds(15);
+
                     using (HttpResponseMessage res = await client.GetAsync(url))
                     {
                         if (res.IsSuccessStatusCode)
@@ -236,7 +228,10 @@ namespace ExileParty.Services
                         else
                         {
                             _log.LogError($"Response Error: {res.ToString()}");
-                            _rateLimited = true;
+                            if (res.StatusCode == HttpStatusCode.TooManyRequests)
+                            {
+                                _rateLimited = true;
+                            }
                             return null;
                         }
                     }
@@ -244,7 +239,15 @@ namespace ExileParty.Services
             }
             catch (Exception e)
             {
-                _log.LogCritical($"Exception: {e.Message}");
+                if (e is TaskCanceledException)
+                {
+                    _log.LogCritical($"Request timed out after 12 seconds.");
+                }
+                else
+                {
+                    _log.LogCritical($"Exception: {e.Message}");
+                }
+
                 return null;
             }
         }
