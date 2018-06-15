@@ -6,3 +6,5 @@ ExileParty/appsettings.json
 
 ExileParty/Properties/PublishProfiles/Local.pubxml.user
 ExileParty/appsettings.Development.json
+ExileParty/Properties/PublishProfiles/
+ExileParty/Logs/
