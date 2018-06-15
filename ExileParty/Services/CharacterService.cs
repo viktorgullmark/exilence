@@ -227,7 +227,7 @@ namespace ExileParty.Services
                         }
                         else
                         {
-                            _log.LogError($"Response Error: {res.ToString()}");
+                            _log.LogError($"Response Error: {res.ReasonPhrase}");
                             if (res.StatusCode == HttpStatusCode.TooManyRequests)
                             {
                                 _rateLimited = true;

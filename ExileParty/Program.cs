@@ -21,10 +21,12 @@ namespace ExileParty
             WebHost.CreateDefaultBuilder(args)
                 .ConfigureLogging((hostingContext, builder) =>
                 {
-                    builder.SetMinimumLevel(LogLevel.Warning);
                     builder.AddFilter((provider, category, logLevel) =>
                     {
-                        if (category == "Hangfire.BackgroundJobServer" || category == " Hangfire.Processing.BackgroundExecution" || category == "Hangfire.Server.BackgroundServerProcess")
+                        if (
+                        category == "Hangfire.BackgroundJobServer" ||
+                        category == " Hangfire.Processing.BackgroundExecution" || 
+                        category == "Hangfire.Server.BackgroundServerProcess")
                         {
                             return false;
                         }
