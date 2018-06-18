@@ -8,7 +8,7 @@ import { AppConfig } from '../../../environments/environment';
 import { AccountInfo } from '../interfaces/account-info.interface';
 import { EquipmentResponse } from '../interfaces/equipment-response.interface';
 import { Party } from '../interfaces/party.interface';
-import { Player } from '../interfaces/player.interface';
+import { Player, RecentPlayer } from '../interfaces/player.interface';
 import { AccountService } from './account.service';
 import { ExternalService } from './external.service';
 import { LogMonitorService } from './log-monitor.service';
@@ -21,7 +21,7 @@ import { map } from 'rxjs/operators';
 
 @Injectable()
 export class PartyService {
-  private _hubConnection: HubConnection | undefined;
+  public _hubConnection: HubConnection | undefined;
   public async: any;
   public party: Party;
   public isEntering = false;
@@ -32,6 +32,9 @@ export class PartyService {
   public selectedPlayerObj: Player;
   public genericPartyPlayers: Player[] = [];
   public genericPartyPlayersPromise: any;
+
+  public recentPlayers: RecentPlayer[] = [
+  ];
 
   // player-lists
   public incursionStd: BehaviorSubject<Player[]> = new BehaviorSubject<Player[]>([]);
@@ -110,6 +113,13 @@ export class PartyService {
       if (this.selectedPlayerObj.connectionID === player.connectionID) {
         this.selectedPlayer.next(this.player);
       }
+
+      this.recentPlayers.forEach((p) => {
+        if (p.name === player.character.name && p.invited) {
+          p.invited = false;
+        }
+      });
+
       console.log('player left:', player);
     });
 
@@ -182,8 +192,15 @@ export class PartyService {
 
   public addPartyToRecent(partyName: string) {
     const recent: string[] = this.settingService.get('recentParties') || [];
+
+    // Remove party from list if we already have it. Add new one on top
+    const index = recent.indexOf(partyName);
+    if (index !== -1) {
+      recent.splice(index, 1);
+    }
+
     recent.unshift(partyName);
-    if (recent.length > 4) {
+    if (recent.length > 5) {
       recent.splice(-1, 1);
     }
     this.settingService.set('recentParties', recent);
@@ -191,7 +208,7 @@ export class PartyService {
   }
 
   public invitePlayerToGenericParty(player: Player) {
-    const exists = this.genericPartyPlayers.filter(p => p.character.name === p.character.name).length === -1;
+    const exists = this.genericPartyPlayers.filter(p => p.account === player.account).length > 0;
     if (!exists) {
       this.genericPartyPlayers.unshift(player);
       this.genericUpdatePlayer(player);
@@ -212,6 +229,6 @@ export class PartyService {
       this.genericPartyPlayers.forEach((player: Player) => {
         this.genericUpdatePlayer(player);
       });
-    }, (1000 * 20));
+    }, (1000 * 60));
   }
 }

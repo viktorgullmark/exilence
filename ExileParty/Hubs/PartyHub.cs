@@ -72,7 +72,7 @@ namespace ExileParty.Hubs
             if (foundParty != null)
             {
                 //Handle generic players if "host" left
-                var genericPlayers = foundParty.Players.Where(t => t.GenericHost == player.Character.Name);
+                var genericPlayers = foundParty.Players.Where(t => t.GenericHost == player.Character.Name).ToList();
                 foreach (var genericPlayer in genericPlayers)
                 {
                     foundParty.Players.Remove(genericPlayer);

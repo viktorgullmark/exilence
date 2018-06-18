@@ -1,1 +1,30 @@
+@import "./../../../../assets/styles/_variables.scss";
 
+.player-headline {
+    display: inline;
+}
+
+.recent-player-container {
+    margin-left: 15px;
+
+    .recent-player-badge-container {
+        .recent-player-badge {
+            cursor: pointer;
+            background: $recent-party-badge-bg-color;
+            margin-top: 15px;
+            max-width: 230px;
+
+            .invited {
+                color: gray;
+            }
+
+            .private {
+                color: red;
+            }
+        }
+
+        :hover {
+            background: $recent-party-badge-hover-bg-color !important;
+        }
+    }
+}

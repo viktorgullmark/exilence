@@ -1,7 +1,14 @@
-<ng-container *ngIf="recentPlayers.length > 0">
-  <h3 class="mat-headline">Recent players</h3>
+<ng-container *ngIf="partyService.party.name !== ''">
+  <div class="recent-player-container">
+    <ng-container *ngIf="partyService.recentPlayers.length > 0">
+      <h2 class="mat-h2 player-headline">Recent players</h2>
+      <span> (click to invite)</span>
+    </ng-container>
+
+    <div class="recent-player-badge-container">
+      <mat-card (click)="inviteToParty(player)" *ngFor="let player of partyService.recentPlayers" class="recent-player-badge">
+        <span [ngClass]="{'invited': player.invited, 'private': player.private}">{{player.name}}</span>
+      </mat-card>
+    </div>
+  </div>
 </ng-container>
-<mat-card (click)="inviteToParty(player)" *ngFor="let player of recentPlayers" class="recent-party-badge">
-  {{player.name}}
-  <button mat-raised-button color="primary" [disabled]="player.invited">{{'PARTY.INVITE' | translate}}</button>
-</mat-card>

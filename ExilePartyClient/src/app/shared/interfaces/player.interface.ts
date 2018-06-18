@@ -12,3 +12,9 @@ export interface Player {
     generic: boolean;
     genericHost: string;
 }
+
+export interface RecentPlayer {
+    name: string;
+    invited: boolean;
+    private: boolean;
+}

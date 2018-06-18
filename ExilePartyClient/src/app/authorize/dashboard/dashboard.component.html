@@ -1,9 +1,7 @@
 <h2 class="mat-h2">{{'PAGES.DASHBOARD.TITLE' | translate}}</h2>
 <mat-divider class="divider"></mat-divider>
 <div class="dashboard-content-container">
-    <ng-container>
-        <!-- <app-recent-players></app-recent-players> -->
-    </ng-container>
+
     <h2 class="mat-h2">Getting started</h2>
     <p class="mat-body-1">
         To start using the app, enter a party-name of your choice in the top-left corner and press 'Enter'.
@@ -30,15 +28,24 @@
         <br/>
         <a class="inline-link" (click)="openLink('https://github.com/petterannerwall')">github.com/petterannerwall</a> ign: Umaycry
     </p>
-    <ng-container *ngIf="recentParties.length > 0">
-        <h2 class="mat-h2 party-headline">Recent parties</h2>
-        <span> (click to join)</span>
-    </ng-container>
-    <div class="recent-party-badge-container" *ngFor="let party of recentParties, let i = index">
-        <mat-card class="recent-party-badge" (click)="joinParty(party)" *ngIf="i < 4">
-            {{party}}
-        </mat-card>
+    <div class="recent-container">
+        <div class="recent-party-container">
+            <ng-container *ngIf="recentParties.length > 0">
+                <h2 class="mat-h2 party-headline">Recent parties</h2>
+                <span> (click to join)</span>
+            </ng-container>
+            <div class="recent-party-badge-container" *ngFor="let party of recentParties, let i = index">
+                <mat-card class="recent-party-badge" (click)="joinParty(party)" *ngIf="i < 4">
+                    {{party}}
+                </mat-card>
+            </div>
+        </div>
+
+        <ng-container>
+            <app-recent-players></app-recent-players>
+        </ng-container>
     </div>
+
 
 
 </div>
