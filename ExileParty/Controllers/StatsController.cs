@@ -35,8 +35,11 @@ namespace ExileParty
             foreach (var partyName in parties.Select(t => t.Value).Distinct().ToList())
             {
                 var party = await _cache.GetAsync<PartyModel>($"party:{partyName}");
-                party.Players.Select(t => { t.Character.Items = null; return t; }).ToList();
-                partyList.Add(party);
+                if (party != null)
+                {
+                    party.Players.Select(t => { t.Character.Items = null; return t; }).ToList();
+                    partyList.Add(party);
+                }
             }
 
             StatisticsModel stats = await _cache.GetAsync<StatisticsModel>("Statistics");
@@ -44,7 +47,7 @@ namespace ExileParty
             var response = new
             {
                 Statistics = stats,
-                Parties = parties
+                Parties = partyList
             };
 
             return Ok(response);
