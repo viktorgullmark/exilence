@@ -4,7 +4,7 @@ export enum NinjaTypes {
     ESSENCE = 'Essence',
     DIVINATION_CARD = 'DivinationCard',
     PROPHECY = 'Prophecy',
-    SKILL_GEM = 'SkillGem',
+    // SKILL_GEM = 'SkillGem',
     HELMET_ENCHANT = 'HelmetEnchant',
     UNIQUE_MAP = 'UniqueMap',
     MAP = 'Map',
@@ -60,14 +60,12 @@ export interface NinjaLowConfidenceReceiveSparkLine {
 }
 
 export interface NinjaLine {
-    currencyTypeName: string;
-    pay: NinjaPay;
-    receive: NinjaReceive;
-    paySparkLine: NinjaPaySparkLine;
-    receiveSparkLine: NinjaReceiveSparkLine;
-    chaosEquivalent: number;
-    lowConfidencePaySparkLine: NinjaLowConfidencePaySparkLine;
-    lowConfidenceReceiveSparkLine: NinjaLowConfidenceReceiveSparkLine;
+    currencyTypeName?: string;
+    name?: string;
+    chaosEquivalent?: number;
+    chaosValue?: number;
+    exaltedValue?: number;
+    links?: number;
 }
 
 export interface NinjaCurrencyDetail {
