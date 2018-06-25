@@ -1,6 +1,6 @@
 import { Component, Inject, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { MatStepper, MatStep } from '@angular/material';
+import { MatStep, MatStepper } from '@angular/material';
 import { Router } from '@angular/router';
 
 import { AccountInfo } from '../shared/interfaces/account-info.interface';

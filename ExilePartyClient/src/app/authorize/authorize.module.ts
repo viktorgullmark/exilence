@@ -8,9 +8,8 @@ import { RouterModule } from '@angular/router';
 import { PartyService } from '../shared/providers/party.service';
 import { SharedModule } from '../shared/shared.module';
 import { AuthorizeComponent } from './authorize.component';
-import { PartyModule } from './party/party.module';
 import { DashboardModule } from './dashboard/dashboard.module';
-import { RecentPlayersModule } from './components/recent-players/recent-players.module';
+import { PartyModule } from './party/party.module';
 
 @NgModule({
   imports: [

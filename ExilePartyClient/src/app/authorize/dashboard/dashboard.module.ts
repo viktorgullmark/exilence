@@ -1,15 +1,17 @@
 import { NgModule } from '@angular/core';
-import { MatDividerModule, MatCardModule } from '@angular/material';
+import { MatCardModule, MatDividerModule } from '@angular/material';
 
 import { SharedModule } from '../../shared/shared.module';
-import { DashboardComponent } from './dashboard.component';
+import { IncomeModule } from '../components/income/income.module';
 import { RecentPlayersModule } from '../components/recent-players/recent-players.module';
+import { DashboardComponent } from './dashboard.component';
 
 @NgModule({
   imports: [
     SharedModule,
     MatDividerModule,
     MatCardModule,
+    IncomeModule,
     RecentPlayersModule
   ],
   declarations: [DashboardComponent]
