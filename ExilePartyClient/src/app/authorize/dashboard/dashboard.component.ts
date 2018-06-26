@@ -12,6 +12,7 @@ import { Router } from '@angular/router';
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.scss']
 })
+
 export class DashboardComponent implements OnInit {
 
   isLoading = true;
@@ -23,11 +24,14 @@ export class DashboardComponent implements OnInit {
     private partyService: PartyService,
     private accountService: AccountService,
     private router: Router
-
   ) {
+
     this.partyService.recentParties.subscribe(parties => {
       this.recentParties = parties;
     });
+
+
+
   }
 
   ngOnInit() {

@@ -8,11 +8,12 @@ import { AppConfig } from '../../../environments/environment';
 import { AccountInfo } from '../interfaces/account-info.interface';
 import { EquipmentResponse } from '../interfaces/equipment-response.interface';
 import { Party } from '../interfaces/party.interface';
-import { Player } from '../interfaces/player.interface';
+import { Player, RecentPlayer } from '../interfaces/player.interface';
 import { AccountService } from './account.service';
 import { ExternalService } from './external.service';
 import { LogMonitorService } from './log-monitor.service';
 import { SettingsService } from './settings.service';
+import { areAllEquivalent } from '@angular/compiler/src/output/output_ast';
 import { interval } from 'rxjs/observable/interval';
 import { Observable } from 'rxjs/Observable';
 import { from } from 'rxjs';
@@ -20,7 +21,7 @@ import { map } from 'rxjs/operators';
 
 @Injectable()
 export class PartyService {
-  private _hubConnection: HubConnection | undefined;
+  public _hubConnection: HubConnection | undefined;
   public async: any;
   public party: Party;
   public isEntering = false;
@@ -29,6 +30,11 @@ export class PartyService {
   public accountInfo: AccountInfo;
   public selectedPlayer: BehaviorSubject<Player> = new BehaviorSubject<Player>(undefined);
   public selectedPlayerObj: Player;
+  public genericPartyPlayers: Player[] = [];
+  public genericPartyPlayersPromise: any;
+
+  public recentPlayers: RecentPlayer[] = [
+  ];
 
   // player-lists
   public incursionStd: BehaviorSubject<Player[]> = new BehaviorSubject<Player[]>([]);
@@ -46,6 +52,7 @@ export class PartyService {
     private settingService: SettingsService,
   ) {
     this.recentParties.next(this.settingService.get('recentParties') || []);
+    this.startGenericPartyPlayerPolling();
 
     this.accountService.player.subscribe(res => {
       this.player = res;
@@ -83,6 +90,16 @@ export class PartyService {
       console.log('player updated:', player);
     });
 
+    this._hubConnection.on('GenericPlayerUpdated', (player: Player) => {
+      const index = this.party.players.indexOf(this.party.players.find(x => x.character.name === player.character.name));
+      this.party.players[index] = player;
+      this.updatePlayerLists(this.party);
+      if (this.selectedPlayerObj.character.name === player.character.name) {
+        this.selectedPlayer.next(player);
+      }
+      console.log('generic player updated:', player);
+    });
+
     this._hubConnection.on('PlayerJoined', (player: Player) => {
       this.party.players = this.party.players.filter(x => x.character.name !== player.character.name);
       this.party.players.push(player);
@@ -96,6 +113,13 @@ export class PartyService {
       if (this.selectedPlayerObj.connectionID === player.connectionID) {
         this.selectedPlayer.next(this.player);
       }
+
+      this.recentPlayers.forEach((p) => {
+        if (p.name === player.character.name && p.invited) {
+          p.invited = false;
+        }
+      });
+
       console.log('player left:', player);
     });
 
@@ -107,12 +131,12 @@ export class PartyService {
   }
 
   updatePlayerLists(party: Party) {
-   this.incursionStd.next(party.players.filter(x => x.character.league === 'Incursion'));
-   this.incursionSsfStd.next(party.players.filter(x => x.character.league === 'SSF Incursion'));
-   this.incursionHc.next(party.players.filter(x => x.character.league === 'Hardcore Incursion'));
-   this.incursionSsfHc.next(party.players.filter(x => x.character.league === 'SSF Incursion HC'));
-   this.std.next(party.players.filter(x => x.character.league === 'Standard'));
-   this.hc.next(party.players.filter(x => x.character.league === 'Hardcore'));
+    this.incursionStd.next(party.players.filter(x => x.character.league === 'Incursion'));
+    this.incursionSsfStd.next(party.players.filter(x => x.character.league === 'SSF Incursion'));
+    this.incursionHc.next(party.players.filter(x => x.character.league === 'Hardcore Incursion'));
+    this.incursionSsfHc.next(party.players.filter(x => x.character.league === 'SSF Incursion HC'));
+    this.std.next(party.players.filter(x => x.character.league === 'Standard'));
+    this.hc.next(party.players.filter(x => x.character.league === 'Hardcore'));
   }
 
   public updatePlayer(player: Player) {
@@ -123,6 +147,23 @@ export class PartyService {
           this._hubConnection.invoke('UpdatePlayer', player, this.party.name);
         }
       });
+  }
+
+  public genericUpdatePlayer(player: Player) {
+    const info: AccountInfo = { accountName: player.account, characterName: player.character.name, filePath: '', sessionId: '' };
+    this.externalService.getCharacter(info)
+      .subscribe((data: EquipmentResponse) => {
+        player = this.externalService.setCharacter(data, player);
+        if (this._hubConnection) {
+          this._hubConnection.invoke('GenericUpdatePlayer', player, this.party.name);
+        }
+      });
+  }
+
+  public getAccountForCharacter(character: string): Promise<any> {
+    return this._hubConnection.invoke('GetAccountForCharacter', character).then((response) => {
+      return response;
+    });
   }
 
   public joinParty(partyName: string, player: Player) {
@@ -146,15 +187,48 @@ export class PartyService {
 
   public initParty() {
     this.party = { name: '', players: [] };
+    this.genericPartyPlayers = [];
   }
 
   public addPartyToRecent(partyName: string) {
     const recent: string[] = this.settingService.get('recentParties') || [];
+
+    // Remove party from list if we already have it. Add new one on top
+    const index = recent.indexOf(partyName);
+    if (index !== -1) {
+      recent.splice(index, 1);
+    }
+
     recent.unshift(partyName);
-    if (recent.length > 4) {
+    if (recent.length > 5) {
       recent.splice(-1, 1);
     }
     this.settingService.set('recentParties', recent);
     this.recentParties.next(recent);
+  }
+
+  public invitePlayerToGenericParty(player: Player) {
+    const exists = this.genericPartyPlayers.filter(p => p.account === player.account).length > 0;
+    if (!exists) {
+      this.genericPartyPlayers.unshift(player);
+      this.genericUpdatePlayer(player);
+    }
+  }
+
+  public removePlayerFromGenericParty(player: Player) {
+    if (this._hubConnection) {
+      this._hubConnection.invoke('LeaveParty', this.party.name, player).then(() => {
+        const index = this.genericPartyPlayers.indexOf(player);
+        this.genericPartyPlayers.splice(index, 1);
+      });
+    }
+  }
+
+  public startGenericPartyPlayerPolling() {
+    this.genericPartyPlayersPromise = setInterval(() => {
+      this.genericPartyPlayers.forEach((player: Player) => {
+        this.genericUpdatePlayer(player);
+      });
+    }, (1000 * 60));
   }
 }

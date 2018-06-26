@@ -1,4 +1,5 @@
 import { Character } from './character.interface';
+
 export interface Player {
     connectionID: string;
     channel: string;
@@ -8,4 +9,12 @@ export interface Player {
     guild: string;
     sessionId: string;
     inArea: Array<string>;
+    generic: boolean;
+    genericHost: string;
+}
+
+export interface RecentPlayer {
+    name: string;
+    invited: boolean;
+    private: boolean;
 }

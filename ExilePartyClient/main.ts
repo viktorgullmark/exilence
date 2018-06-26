@@ -1,8 +1,9 @@
-import { app, BrowserWindow, screen, dialog } from 'electron';
+import { app, BrowserWindow, dialog, screen } from 'electron';
 import * as path from 'path';
 import * as url from 'url';
+
 const log = require('electron-log');
-const {autoUpdater} = require("electron-updater");
+const { autoUpdater } = require('electron-updater');
 let win, serve;
 const args = process.argv.slice(1);
 serve = args.some(val => val === '--serve');

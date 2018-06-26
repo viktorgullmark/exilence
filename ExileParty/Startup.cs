@@ -3,6 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using ExileParty.Hubs;
+using ExileParty.Interfaces;
+using ExileParty.Services;
+using Hangfire;
+using Hangfire.MemoryStorage;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
@@ -26,8 +30,11 @@ namespace ExileParty
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+
+            services.AddHangfire(c => c.UseMemoryStorage());
+
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
-                //.AddJsonOptions(opts => { opts.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver(); });
+            //.AddJsonOptions(opts => { opts.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver(); });
 
             //Add services needed for sessions
             services.AddSession();
@@ -35,7 +42,7 @@ namespace ExileParty
             services.AddDistributedRedisCache(options =>
             {
                 options.Configuration = Configuration.GetConnectionString("Redis");
-                options.InstanceName = "master";
+                options.InstanceName = "ExileParty:";
             });
 
             services.AddCors(options =>
@@ -51,10 +58,12 @@ namespace ExileParty
             });
 
             services.AddSignalR();
+
+            services.AddScoped<ICharacterService, CharacterService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory, IServiceProvider serviceProvider)
         {
             if (env.IsDevelopment())
             {
@@ -63,11 +72,19 @@ namespace ExileParty
 
             //Enable sessions
             app.UseSession();
-
             app.UseMvc();
-
             app.UseCors("AllowAll");
- 
+
+            GlobalConfiguration.Configuration.UseActivator(new HangfireActivator(serviceProvider));
+
+            app.UseHangfireServer();
+            app.UseHangfireDashboard();
+
+            //if (env.IsProduction())
+            //{
+                BackgroundJob.Enqueue<ICharacterService>(cs => cs.StartTradeIndexing());
+            //}
+
             app.UseSignalR(routes =>
             {
                 routes.MapHub<PartyHub>("/hubs/party", options =>

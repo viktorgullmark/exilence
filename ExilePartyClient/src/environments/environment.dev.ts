@@ -6,5 +6,5 @@
 export const AppConfig = {
     production: false,
     environment: 'DEV',
-    url: 'http://exileparty20180528090748.azurewebsites.net/'
+    url: 'https://exileparty.azurewebsites.net/'
 };

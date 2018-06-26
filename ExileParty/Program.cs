@@ -19,6 +19,22 @@ namespace ExileParty
 
         public static IWebHostBuilder CreateWebHostBuilder(string[] args) =>
             WebHost.CreateDefaultBuilder(args)
+                .ConfigureLogging((hostingContext, builder) =>
+                {
+                    builder.AddFilter((provider, category, logLevel) =>
+                    {
+                        if (
+                        category == "Hangfire.BackgroundJobServer" ||
+                        category == " Hangfire.Processing.BackgroundExecution" || 
+                        category == "Hangfire.Server.BackgroundServerProcess")
+                        {
+                            return false;
+                        }
+
+                        return true;
+                    });
+                    builder.AddFile("Logs/ExileParty-{Date}.txt");
+                })
                 .UseStartup<Startup>();
     }
 }
