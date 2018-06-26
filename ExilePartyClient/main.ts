@@ -78,8 +78,23 @@ try {
     log_message = log_message + ' (' + progressObj.transferred + '/' + progressObj.total + ')';
     sendStatusToWindow(log_message);
   });
-  autoUpdater.on('update-downloaded', (info) => {
+
+
+  autoUpdater.on('update-downloaded', (event, releaseNotes, releaseName) => {
     sendStatusToWindow('Update downloaded');
+
+    const dialogOpts = {
+      type: 'info',
+      buttons: ['Restart', 'Later'],
+      title: 'Application Update',
+      message: process.platform === 'win32' ? releaseNotes : releaseName,
+      detail: 'A new version has been downloaded. Restart the application to apply the updates.'
+    };
+
+    dialog.showMessageBox(dialogOpts, (response) => {
+      if (response === 0) { autoUpdater.quitAndInstall(); }
+    });
+
   });
 
   // This method will be called when Electron has finished
@@ -87,7 +102,7 @@ try {
   // Some APIs can only be used after this event occurs.
   app.on('ready', () => {
     createWindow();
-    autoUpdater.checkForUpdatesAndNotify();
+    autoUpdater.checkForUpdates();
   });
 
   // Quit when all windows are closed.
@@ -98,6 +113,7 @@ try {
       app.quit();
     }
   });
+
   app.on('activate', () => {
     // On OS X it's common to re-create a window in the app when the
     // dock icon is clicked and there are no other windows open.
