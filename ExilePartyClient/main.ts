@@ -63,7 +63,6 @@ try {
     sendStatusToWindow('Checking for update...');
   });
   autoUpdater.on('update-available', (info) => {
-    dialog.showMessageBox({ title: 'Update available!', message: 'Press OK to download and apply the update.'});
     sendStatusToWindow('Update available.');
   });
   autoUpdater.on('update-not-available', (info) => {
@@ -78,11 +77,8 @@ try {
     log_message = log_message + ' (' + progressObj.transferred + '/' + progressObj.total + ')';
     sendStatusToWindow(log_message);
   });
-
-
   autoUpdater.on('update-downloaded', (info) => {
     sendStatusToWindow('Update downloaded');
-    autoUpdater.quitAndInstall();
   });
 
   // This method will be called when Electron has finished
@@ -90,7 +86,7 @@ try {
   // Some APIs can only be used after this event occurs.
   app.on('ready', () => {
     createWindow();
-    autoUpdater.checkForUpdates();
+    autoUpdater.checkForUpdatesAndNotify();
   });
 
   // Quit when all windows are closed.
@@ -101,7 +97,6 @@ try {
       app.quit();
     }
   });
-
   app.on('activate', () => {
     // On OS X it's common to re-create a window in the app when the
     // dock icon is clicked and there are no other windows open.
