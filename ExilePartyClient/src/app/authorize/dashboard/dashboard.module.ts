@@ -3,7 +3,6 @@ import { MatCardModule, MatDividerModule } from '@angular/material';
 
 import { SharedModule } from '../../shared/shared.module';
 import { IncomeModule } from '../components/income/income.module';
-import { RecentPlayersModule } from '../components/recent-players/recent-players.module';
 import { DashboardComponent } from './dashboard.component';
 
 @NgModule({
@@ -12,7 +11,6 @@ import { DashboardComponent } from './dashboard.component';
     MatDividerModule,
     MatCardModule,
     IncomeModule,
-    RecentPlayersModule
   ],
   declarations: [DashboardComponent]
 })
