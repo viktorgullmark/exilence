@@ -15,6 +15,7 @@ html, body {
     background: $bg-color;
     height: 100%;
     font-family: $main-font;
+    font-size: 15px;
 }
 
 .fade {
@@ -36,6 +37,18 @@ mat-vertical-stepper {
     background-color: $stepper-bg-color !important;
 }
 
+.mat-tab-label, .mat-tab-link {
+    font-size: 14px !important;
+}
+
+.mat-toolbar-single-row {
+    padding: 0 10px !important;
+}
+
+.mat-h3 {
+    font-weight: 500 !important;
+}
+
 .no-margin {
     margin: 0 !important;
 }
@@ -46,7 +59,8 @@ mat-vertical-stepper {
 
 a {
     cursor: pointer;
-    &.inline-link{
+
+    &.inline-link {
         color: $primary;
         text-decoration: none;
     }
@@ -94,7 +108,7 @@ a {
     }
 }
 
-.progress-spinner{
+.progress-spinner {
     position: relative !important;
     display: flex !important;
     flex-direction: column !important;
@@ -140,11 +154,11 @@ a {
         display: flex;
         justify-content: flex-start;
         align-items: flex-start;
+
         > *:not(router-outlet) {
             width: 100%;
             height: $content-height;
-        }   
-
+        }
     }
 }
 
@@ -162,17 +176,17 @@ a {
     max-width: 1000px;
 }
 
-.loading-container{
+.loading-container {
     color: $font-color;
     background: $bg-color;
     width: 100%;
     height: 100%;
 
-    .loading-content{
+    .loading-content {
         position: relative;
         float: left;
         top: 50%;
         left: 50%;
-        transform: translate(-50%, -50%);   
+        transform: translate(-50%, -50%);
     }
 }
