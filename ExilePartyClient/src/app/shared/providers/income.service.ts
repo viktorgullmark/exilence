@@ -60,13 +60,16 @@ export class IncomeService {
     if (this.netWorthHistory === undefined) {
       this.netWorthHistory = {
         lastSnapshot: (Date.now() - this.fiveMinutes),
-        history: []
+        history: [{
+          timestamp: Date.now(),
+          value: 0
+        }]
       };
-    } else {
-      this.netWorthSnapshotList.next(this.netWorthHistory.history);
     }
 
-    this.StartSnapshotting();
+    this.netWorthSnapshotList.next(this.netWorthHistory.history);
+
+    // this.StartSnapshotting();
 
   }
 
@@ -208,8 +211,12 @@ export class IncomeService {
     return this.externalService.getStashTabs(sessionId, accountName, league)
       .concatMap((response) => {
         return Observable.from(response.tabs)
-          .concatMap(tab => this.externalService.getStashTab(sessionId, accountName, league, tab.i)
-            .delay(750))
+          .concatMap((tab) => {
+            if (tab.i < 20) {
+              return this.externalService.getStashTab(sessionId, accountName, league, tab.i)
+                .delay(750);
+            }
+          })
           .do(stashTab => {
             this.playerStashTabs.push(stashTab);
           });
