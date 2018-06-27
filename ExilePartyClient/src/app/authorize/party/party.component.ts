@@ -10,6 +10,7 @@ export class PartyComponent implements OnInit {
   constructor(public partyService: PartyService) { }
 
   ngOnInit() {
+    this.partyService.selectedPlayer.next(this.partyService.party.players[0]);
   }
 
 }

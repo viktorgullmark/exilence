@@ -33,7 +33,7 @@ export class NotficationBarComponent implements OnInit {
       console.log('[INFO] Current Version: ', this.appVersion);
       console.log('[INFO] Latest Version: ', release.name);
 
-      if (this.appVersion < release.name) {
+      if (this.appVersion !== release.name) {
         if (this.notifications.indexOf('NEW_VERSION') === -1) {
           this.notifications.push('NEW_VERSION');
         }

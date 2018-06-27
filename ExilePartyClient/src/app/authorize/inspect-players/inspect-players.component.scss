@@ -1,0 +1,11 @@
+@import "./../../../assets/styles/_variables.scss";
+
+.player-list-container {
+    width: 400px;
+    margin-right: 15px;
+}
+.char-profile-container {
+    width: 850px;
+    height: $content-height;
+    display: flex;
+}

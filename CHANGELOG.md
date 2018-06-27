@@ -1,6 +1,13 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [0.2.4] - 2018-06-26
+- Fixes to notification-bar
+- Added minimize-button to window
+
+## [0.2.3] - 2018-06-26
+- Tweaks to auto-updater
+
 ## [0.2.2] - 2018-06-14
 - Fix for wrong connection settings
 

@@ -6,21 +6,32 @@
     display: flex;
     align-items: center;
     -webkit-app-region: no-drag;
+    .window-icon {
+        margin-left: 3px;
+    }
     .right-link{
         justify-content: end;
     }
     .left-link{
         justify-content: start;
         margin-right: 15px;
+        color: $link-font-color;
     }
 }
 
 .mat-toolbar {
     background: $toolbar-bg-color;
     height: $toolbar-height;
-    -webkit-app-region: drag;
+    -webkit-app-region: drag; 
+    .mat-icon {
+        width: 17px !important;
+        height: 17px !important;
+    }
+    .material-icons {
+        font-size: 17px;
+    }
     .toolbar-text {
-        font-size: 18px;     
+        font-size: 15px;     
         text-transform: uppercase;
         &.title{
             letter-spacing: 6px;

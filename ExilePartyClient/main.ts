@@ -28,8 +28,8 @@ function createWindow() {
     x: 100,
     y: 100,
     width: 1341,
-    height: 987,
-    minHeight: 987,
+    height: 1030,
+    minHeight: 1030,
     minWidth: 1341,
     webPreferences: { webSecurity: false },
     frame: false,
@@ -64,7 +64,6 @@ try {
     sendStatusToWindow('Checking for update...');
   });
   autoUpdater.on('update-available', (info) => {
-    dialog.showMessageBox({ title: 'Update available!', message: 'Press OK to download and apply the update.' });
     sendStatusToWindow('Update available.');
   });
   autoUpdater.on('update-not-available', (info) => {
@@ -81,9 +80,21 @@ try {
   });
 
 
-  autoUpdater.on('update-downloaded', (info) => {
+  autoUpdater.on('update-downloaded', (event, releaseNotes, releaseName) => {
     sendStatusToWindow('Update downloaded');
-    autoUpdater.quitAndInstall();
+
+    const dialogOpts = {
+      type: 'info',
+      buttons: ['Restart', 'Later'],
+      title: 'Application Update',
+      message: process.platform === 'win32' ? releaseNotes : releaseName,
+      detail: 'A new version has been downloaded. Restart the application to apply the updates.'
+    };
+
+    dialog.showMessageBox(dialogOpts, (response) => {
+      if (response === 0) { autoUpdater.quitAndInstall(); }
+    });
+
   });
 
   // This method will be called when Electron has finished

@@ -30,9 +30,11 @@ export class PartyService {
   public accountInfo: AccountInfo;
   public selectedPlayer: BehaviorSubject<Player> = new BehaviorSubject<Player>(undefined);
   public selectedPlayerObj: Player;
+  public selectedGenericPlayer: BehaviorSubject<Player> = new BehaviorSubject<Player>(undefined);
+  public selectedGenericPlayerObj: Player;
   public genericPartyPlayers: Player[] = [];
   public genericPartyPlayersPromise: any;
-
+  public genericPartyName: string;
   public recentPlayers: RecentPlayer[] = [
   ];
 
@@ -44,6 +46,8 @@ export class PartyService {
   public std: BehaviorSubject<Player[]> = new BehaviorSubject<Player[]>([]);
   public hc: BehaviorSubject<Player[]> = new BehaviorSubject<Player[]>([]);
 
+  public genericPlayers: BehaviorSubject<Player[]> = new BehaviorSubject<Player[]>([]);
+
   constructor(
     private router: Router,
     private accountService: AccountService,
@@ -52,7 +56,6 @@ export class PartyService {
     private settingService: SettingsService,
   ) {
     this.recentParties.next(this.settingService.get('recentParties') || []);
-    this.startGenericPartyPlayerPolling();
 
     this.accountService.player.subscribe(res => {
       this.player = res;
@@ -91,11 +94,11 @@ export class PartyService {
     });
 
     this._hubConnection.on('GenericPlayerUpdated', (player: Player) => {
-      const index = this.party.players.indexOf(this.party.players.find(x => x.character.name === player.character.name));
-      this.party.players[index] = player;
-      this.updatePlayerLists(this.party);
-      if (this.selectedPlayerObj.character.name === player.character.name) {
-        this.selectedPlayer.next(player);
+      const index = this.genericPartyPlayers.indexOf(this.genericPartyPlayers.find(x => x.character.name === player.character.name));
+      this.genericPartyPlayers[index] = player;
+      this.updateGenericPlayerList(this.genericPartyPlayers);
+      if (this.selectedGenericPlayerObj.character.name === player.character.name) {
+        this.selectedGenericPlayer.next(player);
       }
       console.log('generic player updated:', player);
     });
@@ -139,6 +142,10 @@ export class PartyService {
     this.hc.next(party.players.filter(x => x.character.league === 'Hardcore'));
   }
 
+  updateGenericPlayerList(list: Player[]) {
+    this.genericPlayers.next(list);
+  }
+
   public updatePlayer(player: Player) {
     this.externalService.getCharacter(this.accountInfo)
       .subscribe((data: EquipmentResponse) => {
@@ -149,19 +156,10 @@ export class PartyService {
       });
   }
 
-  public genericUpdatePlayer(player: Player) {
-    const info: AccountInfo = { accountName: player.account, characterName: player.character.name, filePath: '', sessionId: '' };
-    this.externalService.getCharacter(info)
-      .subscribe((data: EquipmentResponse) => {
-        player = this.externalService.setCharacter(data, player);
-        if (this._hubConnection) {
-          this._hubConnection.invoke('GenericUpdatePlayer', player, this.party.name);
-        }
-      });
-  }
-
   public getAccountForCharacter(character: string): Promise<any> {
+    console.log('starting get');
     return this._hubConnection.invoke('GetAccountForCharacter', character).then((response) => {
+      console.log('got response', response);
       return response;
     });
   }
@@ -187,7 +185,6 @@ export class PartyService {
 
   public initParty() {
     this.party = { name: '', players: [] };
-    this.genericPartyPlayers = [];
   }
 
   public addPartyToRecent(partyName: string) {
@@ -207,28 +204,11 @@ export class PartyService {
     this.recentParties.next(recent);
   }
 
-  public invitePlayerToGenericParty(player: Player) {
+  public addGenericPlayer(player: Player) {
     const exists = this.genericPartyPlayers.filter(p => p.account === player.account).length > 0;
     if (!exists) {
       this.genericPartyPlayers.unshift(player);
-      this.genericUpdatePlayer(player);
+      this.updateGenericPlayerList(this.genericPartyPlayers);
     }
-  }
-
-  public removePlayerFromGenericParty(player: Player) {
-    if (this._hubConnection) {
-      this._hubConnection.invoke('LeaveParty', this.party.name, player).then(() => {
-        const index = this.genericPartyPlayers.indexOf(player);
-        this.genericPartyPlayers.splice(index, 1);
-      });
-    }
-  }
-
-  public startGenericPartyPlayerPolling() {
-    this.genericPartyPlayersPromise = setInterval(() => {
-      this.genericPartyPlayers.forEach((player: Player) => {
-        this.genericUpdatePlayer(player);
-      });
-    }, (1000 * 60));
   }
 }

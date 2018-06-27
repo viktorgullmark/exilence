@@ -10,6 +10,7 @@ $menu-item-color: #4b4b4b;
 $error-color: $primary;
 $stepper-bg-color: rgba(66, 66, 66, 0.67);
 $version-font-color: rgb(206, 206, 206);
+$link-font-color: rgb(206, 206, 206);
 
 // character
 $inventory-border-color: $accent;
@@ -66,5 +67,5 @@ $main-font: 'Roboto';
 $font-color: #fff;
 
 // width / height
-$toolbar-height: 54px;
-$content-height: calc(100% - 54px);
+$toolbar-height: 40px;
+$content-height: calc(100% - 40px);

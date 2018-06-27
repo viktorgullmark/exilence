@@ -47,4 +47,12 @@ export class AppComponent {
     this.sessionService.cancelSession();
     this.electronService.remote.getCurrentWindow().close();
   }
+
+  minimize() {
+    this.electronService.remote.getCurrentWindow().minimize();
+  }
+
+  maximize() {
+    this.electronService.remote.getCurrentWindow().maximize();
+  }
 }

@@ -10,6 +10,7 @@ import { SharedModule } from '../shared/shared.module';
 import { AuthorizeComponent } from './authorize.component';
 import { DashboardModule } from './dashboard/dashboard.module';
 import { PartyModule } from './party/party.module';
+import { InspectPlayersModule } from './inspect-players/inspect-players.module';
 
 @NgModule({
   imports: [
@@ -24,6 +25,7 @@ import { PartyModule } from './party/party.module';
     DashboardModule,
     RouterModule,
     PartyModule,
+    InspectPlayersModule,
     MatSidenavModule
   ],
   declarations: [AuthorizeComponent],
