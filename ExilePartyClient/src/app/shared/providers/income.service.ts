@@ -1,19 +1,15 @@
 import 'rxjs/add/observable/empty';
 import 'rxjs/add/observable/forkJoin';
 import 'rxjs/add/observable/from';
-import 'rxjs/add/observable/interval';
-import 'rxjs/add/observable/range';
 import 'rxjs/add/operator/concatMap';
 import 'rxjs/add/operator/delay';
 import 'rxjs/add/operator/do';
-import 'rxjs/add/operator/mergeMap';
 import 'rxjs/add/operator/take';
-import 'rxjs/add/operator/timeInterval';
 
 import { Injectable } from '@angular/core';
-import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Observable } from 'rxjs/Observable';
 
+import { NetWorthHistory, NetWorthItem, NetWorthSnapshot } from '../interfaces/income.interface';
 import { Item } from '../interfaces/item.interface';
 import { NinjaLine, NinjaTypes } from '../interfaces/poe-ninja.interface';
 import { Stash } from '../interfaces/stash.interface';
@@ -23,15 +19,7 @@ import { PartyService } from './party.service';
 import { SessionService } from './session.service';
 import { SettingsService } from './settings.service';
 
-interface NetWorthSnapshot {
-  timestamp: number;
-  value: number;
-}
 
-interface NetWorthHistory {
-  lastSnapshot: number;
-  history: NetWorthSnapshot[];
-}
 
 @Injectable()
 export class IncomeService {
@@ -41,11 +29,10 @@ export class IncomeService {
   private snapshotInterval: any;
   private netWorthHistory: NetWorthHistory;
 
-  public totalNetWorthItems: any[] = [];
+
+  private totalNetWorthItems: NetWorthItem[] = [];
   public totalNetWorth = 0;
   private fiveMinutes = 5 * 60 * 1000;
-
-  public netWorthSnapshotList: BehaviorSubject<NetWorthSnapshot[]> = new BehaviorSubject<NetWorthSnapshot[]>([]);
 
   constructor(
     private ninjaService: NinjaService,
@@ -55,7 +42,7 @@ export class IncomeService {
     private settingsService: SettingsService
   ) {
 
-    // this.netWorthHistory = this.settingsService.get('networth');
+    this.netWorthHistory = this.settingsService.get('networth');
 
     // Set up history if we don't have any
     if (this.netWorthHistory === undefined) {
@@ -63,12 +50,13 @@ export class IncomeService {
         lastSnapshot: (Date.now() - this.fiveMinutes),
         history: [{
           timestamp: Date.now() - this.fiveMinutes,
-          value: 0
+          value: 0,
+          items: []
         }]
       };
     }
 
-    this.netWorthSnapshotList.next(this.netWorthHistory.history);
+    this.partyService.currentPlayer.netWorthSnapshots = this.netWorthHistory.history;
 
     this.StartSnapshotting();
 
@@ -84,12 +72,13 @@ export class IncomeService {
 
           const snapShot: NetWorthSnapshot = {
             timestamp: Date.now(),
-            value: this.totalNetWorth
+            value: this.totalNetWorth,
+            items: this.totalNetWorthItems
           };
 
           this.netWorthHistory.history.unshift(snapShot);
           this.settingsService.set('networth', this.netWorthHistory);
-          this.netWorthSnapshotList.next(this.netWorthHistory.history);
+          this.partyService.currentPlayer.netWorthSnapshots = this.netWorthHistory.history;
 
           console.log('[INFO] Finished Snapshotting player net worth');
         });
@@ -102,7 +91,7 @@ export class IncomeService {
 
     const sessionId = this.sessionService.getSession();
     const accountName = this.partyService.accountInfo.accountName;
-    const league = this.partyService.player.character.league;
+    const league = this.partyService.currentPlayer.character.league;
 
     this.ninjaPrices = [];
     this.playerStashTabs = [];
@@ -124,19 +113,17 @@ export class IncomeService {
           }
           if (typeof this.ninjaPrices[itemName] !== 'undefined') {
 
-            let valueForItem = this.ninjaPrices[itemName];
+            const valueForItem = this.ninjaPrices[itemName];
+            let stacksize = 1;
             if (item.stackSize) {
-              valueForItem = 0;
-              for (let i = 0; i < item.stackSize; i++) {
-                valueForItem += this.ninjaPrices[itemName];
-              }
+              stacksize = item.stackSize;
             }
 
             this.totalNetWorthItems.push({
               name: itemName,
               value: valueForItem,
               icon: item.icon,
-              // tab: tab.tabs[tabIndex].n
+              stacksize
             });
 
           }

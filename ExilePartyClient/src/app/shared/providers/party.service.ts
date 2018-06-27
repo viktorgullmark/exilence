@@ -19,6 +19,8 @@ import { Observable } from 'rxjs/Observable';
 import { from } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { LogMessage } from '../interfaces/log-message.interface';
+import { IncomeService } from './income.service';
+import { NetWorthSnapshot } from './../interfaces/income.interface';
 
 @Injectable()
 export class PartyService {
@@ -27,7 +29,7 @@ export class PartyService {
   public party: Party;
   public isEntering = false;
   public recentParties: BehaviorSubject<string[]> = new BehaviorSubject<string[]>(undefined);
-  public player: Player;
+  public currentPlayer: Player;
   public accountInfo: AccountInfo;
   public selectedPlayer: BehaviorSubject<Player> = new BehaviorSubject<Player>(undefined);
   public selectedPlayerObj: Player;
@@ -54,12 +56,12 @@ export class PartyService {
     private accountService: AccountService,
     private logMonitorService: LogMonitorService,
     private externalService: ExternalService,
-    private settingService: SettingsService,
+    private settingService: SettingsService
   ) {
     this.recentParties.next(this.settingService.get('recentParties') || []);
 
     this.accountService.player.subscribe(res => {
-      this.player = res;
+      this.currentPlayer = res;
     });
     this.selectedPlayer.subscribe(res => {
       this.selectedPlayerObj = res;
@@ -115,7 +117,7 @@ export class PartyService {
       this.party.players = this.party.players.filter(x => x.connectionID !== player.connectionID);
       this.updatePlayerLists(this.party);
       if (this.selectedPlayerObj.connectionID === player.connectionID) {
-        this.selectedPlayer.next(this.player);
+        this.selectedPlayer.next(this.currentPlayer);
       }
 
       console.log('[INFO] player left:', player);
@@ -123,8 +125,8 @@ export class PartyService {
 
     // subscribe to log-events
     this.logMonitorService.areaEvent.subscribe(res => {
-      this.player.area = res.name;
-      this.updatePlayer(this.player);
+      this.currentPlayer.area = res.name;
+      this.updatePlayer(this.currentPlayer);
     });
 
     this.logMonitorService.areaJoin.subscribe((msg: LogMessage) => {
@@ -265,7 +267,7 @@ export class PartyService {
           let newPlayer = {} as Player;
           newPlayer.account = account,
             newPlayer.generic = true;
-          newPlayer.genericHost = this.player.character.name;
+          newPlayer.genericHost = this.currentPlayer.character.name;
           newPlayer = this.externalService.setCharacter(response, newPlayer);
           this.addGenericPlayer(newPlayer);
         },
