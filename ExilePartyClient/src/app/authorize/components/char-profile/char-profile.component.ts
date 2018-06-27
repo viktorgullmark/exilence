@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild, Input } from '@angular/core';
 import { Router } from '@angular/router';
 
 import { Player } from '../../../shared/interfaces/player.interface';
@@ -15,6 +15,7 @@ import { MatTab, MatTabGroup } from '@angular/material';
 export class CharProfileComponent implements OnInit {
   player: Player;
 
+  @Input() localProfile = false;
   @ViewChild('tabGroup') tabGroup: MatTabGroup;
   @ViewChild('equipmentTab') equipmentTab: MatTab;
 
@@ -24,17 +25,32 @@ export class CharProfileComponent implements OnInit {
     private externalService: ExternalService, private router: Router) { }
 
   ngOnInit() {
-    this.partyService.selectedPlayer.subscribe(res => {
-      this.player = res;
-    });
+    if (!this.localProfile) {
+      this.partyService.selectedPlayer.subscribe(res => {
+        setTimeout(() => {
+          window.dispatchEvent(new Event('resize'));
+        }, 1000);
+        this.player = res;
+      });
+    } else {
+      this.partyService.selectedGenericPlayer.subscribe(res => {
+        setTimeout(() => {
+          window.dispatchEvent(new Event('resize'));
+        }, 1000);
+        this.player = res;
+      });
+    }
+
 
     // select first tab
     this.equipmentTab.isActive = true;
+    this.tabGroup.selectedIndex = this.selectedIndex;
 
     // update local index when tab is changed
     this.tabGroup.selectedIndexChange.subscribe(res => {
       this.selectedIndex = res;
     });
+
   }
 
 }
