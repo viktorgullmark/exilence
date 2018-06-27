@@ -2,9 +2,10 @@ import { Component, OnInit, Input } from '@angular/core';
 import { colorSets as ngxChartsColorsets } from '@swimlane/ngx-charts/release/utils/color-sets';
 import * as d3 from 'd3';
 
-import { ChartSeries } from '../../../shared/interfaces/chart.interface';
+import { ChartSeries, ChartSeriesEntry } from '../../../shared/interfaces/chart.interface';
 import { IncomeService } from '../../../shared/providers/income.service';
 import { PartyService } from '../../../shared/providers/party.service';
+import { Player } from '../../../shared/interfaces/player.interface';
 
 
 @Component({
@@ -16,7 +17,7 @@ import { PartyService } from '../../../shared/providers/party.service';
 
 export class IncomeComponent implements OnInit {
   dateData: ChartSeries[] = [];
-
+  @Input() player: Player;
   @Input() view = [1000, 500];
 
   public visible = true;
@@ -34,12 +35,25 @@ export class IncomeComponent implements OnInit {
     private incomeService: IncomeService,
     private partyService: PartyService
   ) {
-
     this.setColorScheme('cool');
-
   }
 
   ngOnInit() {
+    this.partyService.selectedPlayer.subscribe(res => {
+      const entry: ChartSeries = {
+        name: res.account,
+        series: res.netWorthSnapshots.slice(0, 20).map(snapshot => {
+          const seriesEntry: ChartSeriesEntry = {
+            name: new Date(snapshot.timestamp),
+            value: snapshot.value
+          };
+          return seriesEntry;
+        })
+      };
+      const data = [... this.dateData];
+      data[0] = entry;
+      this.dateData = data;
+    });
   }
 
   axisFormat(val) {

@@ -79,7 +79,7 @@ export class IncomeService {
           this.netWorthHistory.history.unshift(snapShot);
           this.settingsService.set('networth', this.netWorthHistory);
           this.partyService.currentPlayer.netWorthSnapshots = this.netWorthHistory.history;
-
+          this.partyService.updatePlayer(this.partyService.currentPlayer);
           console.log('[INFO] Finished Snapshotting player net worth');
         });
       }

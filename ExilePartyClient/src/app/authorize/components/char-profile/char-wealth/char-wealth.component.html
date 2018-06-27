@@ -1,8 +1,8 @@
 <div class="char-wealth">
     <div class="income-graph-wrapper">
-        <app-income [view]="graphDimensions"></app-income>
+        <app-income [player]="player" [view]="graphDimensions"></app-income>
     </div>
     <div class="networth-table-wrapper">
-        <app-networth-table></app-networth-table>
+        <app-networth-table [player]="player"></app-networth-table>
     </div>
 </div>
