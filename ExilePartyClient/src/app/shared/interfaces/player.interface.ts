@@ -1,4 +1,5 @@
 import { Character } from './character.interface';
+import { NetWorthSnapshot } from './income.interface';
 
 export interface Player {
     connectionID: string;
@@ -11,6 +12,7 @@ export interface Player {
     inArea: Array<string>;
     generic: boolean;
     genericHost: string;
+    netWorthSnapshots: NetWorthSnapshot[];
 }
 
 export interface RecentPlayer {
