@@ -15,6 +15,4 @@ export interface Player {
 
 export interface RecentPlayer {
     name: string;
-    invited: boolean;
-    private: boolean;
 }
