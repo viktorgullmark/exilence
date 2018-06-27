@@ -62,6 +62,7 @@ export interface NinjaLowConfidenceReceiveSparkLine {
 export interface NinjaLine {
     currencyTypeName?: string;
     name?: string;
+    baseType?: string;
     chaosEquivalent?: number;
     chaosValue?: number;
     exaltedValue?: number;

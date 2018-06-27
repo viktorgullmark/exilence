@@ -2,6 +2,7 @@ import { Property } from './property.interface';
 import { Requirement } from './requirement.interface';
 import { Socket } from './socket.interface';
 import { SocketedItem } from './socketed-item.interface';
+
 export interface Item {
     id: string;
     verified: boolean;
@@ -31,4 +32,5 @@ export interface Item {
     utilityMods: Array<string>;
     descrText: string;
     socket: number;
+    stackSize?: number;
 }

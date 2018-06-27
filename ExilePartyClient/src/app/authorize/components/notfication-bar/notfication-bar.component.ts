@@ -21,7 +21,6 @@ export class NotficationBarComponent implements OnInit {
   constructor(
     private externalService: ExternalService
   ) {
-    this.checkForNewRelease();
     setInterval(this.checkForNewRelease(), 1000 * 60 * 10); // Check every 10 minutes.
   }
 
@@ -31,8 +30,8 @@ export class NotficationBarComponent implements OnInit {
 
   checkForNewRelease() {
     this.externalService.getLatestRelease().subscribe((release: GithubRelease) => {
-      console.log('Current Version: ', this.appVersion);
-      console.log('Latest Version: ', release.name);
+      console.log('[INFO] Current Version: ', this.appVersion);
+      console.log('[INFO] Latest Version: ', release.name);
 
       if (this.appVersion < release.name) {
         if (this.notifications.indexOf('NEW_VERSION') === -1) {
