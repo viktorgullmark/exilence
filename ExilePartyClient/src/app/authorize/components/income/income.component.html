@@ -1,5 +1,5 @@
 <h3 class="mat-h3">Net worth graph</h3>
-<div class=chart-container>
+<div class="chart-container">
   <ngx-charts-line-chart *ngIf="visible" [view]="view" class="chart-container" [scheme]="colorScheme" schemeType="linear" [results]="dateData"
     legendTitle="Players" (legendLabelClick)="onLegendLabelClick($event)" gradient="false" xAxis="true" yAxis="true" showXAxisLabel="true"
     showYAxisLabel="true" xAxisLabel="Time" [xAxisTickFormatting]="axisFormat" animations="true" yAxisLabel="Net worth in Chaos"

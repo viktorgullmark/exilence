@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
 import { colorSets as ngxChartsColorsets } from '@swimlane/ngx-charts/release/utils/color-sets';
 import * as d3 from 'd3';
 
@@ -15,10 +15,9 @@ import { PartyService } from '../../../shared/providers/party.service';
 
 
 export class IncomeComponent implements OnInit {
-
   dateData: ChartSeries[] = [];
 
-  view = [1000, 500];
+  @Input() view = [1000, 500];
 
   public visible = true;
 

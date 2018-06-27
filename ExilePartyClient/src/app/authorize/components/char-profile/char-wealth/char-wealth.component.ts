@@ -7,6 +7,7 @@ import { Component, OnInit } from '@angular/core';
 })
 export class CharWealthComponent implements OnInit {
 
+  graphDimensions = [640, 300];
   constructor() { }
 
   ngOnInit() {
