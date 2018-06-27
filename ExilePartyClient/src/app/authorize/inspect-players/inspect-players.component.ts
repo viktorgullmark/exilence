@@ -1,23 +1,19 @@
 import { Component, OnInit } from '@angular/core';
-
-import { AccountInfo } from '../../../shared/interfaces/account-info.interface';
-import { EquipmentResponse } from '../../../shared/interfaces/equipment-response.interface';
-import { LogMessage } from '../../../shared/interfaces/log-message.interface';
-import { Player, RecentPlayer } from '../../../shared/interfaces/player.interface';
-import { ExternalService } from '../../../shared/providers/external.service';
-import { LogMonitorService } from '../../../shared/providers/log-monitor.service';
-import { PartyService } from '../../../shared/providers/party.service';
-
-
+import { PartyService } from '../../shared/providers/party.service';
+import { RecentPlayer, Player } from '../../shared/interfaces/player.interface';
+import { LogMonitorService } from '../../shared/providers/log-monitor.service';
+import { ExternalService } from '../../shared/providers/external.service';
+import { LogMessage } from '../../shared/interfaces/log-message.interface';
+import { AccountInfo } from '../../shared/interfaces/account-info.interface';
+import { EquipmentResponse } from '../../shared/interfaces/equipment-response.interface';
 
 @Component({
-  selector: 'app-recent-players',
-  templateUrl: './recent-players.component.html',
-  styleUrls: ['./recent-players.component.scss']
+  selector: 'app-inspect-players',
+  templateUrl: './inspect-players.component.html',
+  styleUrls: ['./inspect-players.component.scss']
 })
-
-export class RecentPlayersComponent implements OnInit {
-
+export class InspectPlayersComponent implements OnInit {
+  genericPlayers: Player[] = [];
   constructor(
     public partyService: PartyService,
     private logMonitorService: LogMonitorService,
@@ -30,6 +26,12 @@ export class RecentPlayersComponent implements OnInit {
       this.handleAreaEvent(msg);
     });
 
+  }
+  ngOnInit() {
+    this.partyService.genericPlayers.subscribe(res => {
+      this.genericPlayers = res;
+    });
+    this.partyService.selectedGenericPlayer.next(this.partyService.genericPartyPlayers[0]);
   }
 
   handleAreaEvent(event) {
@@ -66,14 +68,13 @@ export class RecentPlayersComponent implements OnInit {
         if (this.partyService.recentPlayers.length > 5) {
           this.partyService.recentPlayers.splice(-1, 1);
         }
+
+        this.addRecentPlayer(newPlayer);
       }
     });
   }
 
-  ngOnInit() {
-  }
-
-  inviteToParty(player: RecentPlayer) {
+  addRecentPlayer(player: RecentPlayer) {
     player.invited = true;
     this.partyService.getAccountForCharacter(player.name).then((account) => {
       if (account !== null) {
@@ -89,7 +90,7 @@ export class RecentPlayersComponent implements OnInit {
             newPlayer.generic = true;
           newPlayer.genericHost = this.partyService.player.character.name;
           newPlayer = this.externalService.setCharacter(response, newPlayer);
-          this.partyService.invitePlayerToGenericParty(newPlayer);
+          this.partyService.addGenericPlayer(newPlayer);
         },
           (error) => {
             this.partyService.recentPlayers.forEach(p => {
@@ -102,4 +103,5 @@ export class RecentPlayersComponent implements OnInit {
       }
     });
   }
+
 }

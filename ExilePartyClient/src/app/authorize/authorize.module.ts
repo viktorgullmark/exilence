@@ -10,7 +10,7 @@ import { SharedModule } from '../shared/shared.module';
 import { AuthorizeComponent } from './authorize.component';
 import { PartyModule } from './party/party.module';
 import { DashboardModule } from './dashboard/dashboard.module';
-import { RecentPlayersModule } from './components/recent-players/recent-players.module';
+import { InspectPlayersModule } from './inspect-players/inspect-players.module';
 
 @NgModule({
   imports: [
@@ -25,6 +25,7 @@ import { RecentPlayersModule } from './components/recent-players/recent-players.
     DashboardModule,
     RouterModule,
     PartyModule,
+    InspectPlayersModule,
     MatSidenavModule
   ],
   declarations: [AuthorizeComponent],

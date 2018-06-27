@@ -7,6 +7,7 @@ import { DashboardComponent } from './authorize/dashboard/dashboard.component';
 import { LoginComponent } from './login/login.component';
 import { NotFoundComponent } from './not-found/not-found.component';
 import { CanActivateAuthorized } from './shared/guards/authorized.guard';
+import { InspectPlayersComponent } from './authorize/inspect-players/inspect-players.component';
 
 const routes: Routes = [
     // login-section
@@ -17,6 +18,7 @@ const routes: Routes = [
     { path: 'authorized', component: AuthorizeComponent,  canActivate: [CanActivateAuthorized], children: [
         { path: 'dashboard', component: DashboardComponent },
         { path: 'party', component: PartyComponent },
+        { path: 'inspect-players', component: InspectPlayersComponent },
         { path: '', redirectTo: '/authorized/dashboard', pathMatch: 'full' }
     ]},
 

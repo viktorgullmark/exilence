@@ -9,17 +9,23 @@ import { PartyService } from '../../../../shared/providers/party.service';
 })
 export class PlayerBadgeComponent implements OnInit {
   @Input() player: Player;
+  @Input() localPlayer = false;
   selectedPlayer: Player;
+  selectedGenericPlayer: Player;
   constructor(private partyService: PartyService) { }
 
   ngOnInit() {
     this.partyService.selectedPlayer.subscribe(res => {
       this.selectedPlayer = res;
     });
+    this.partyService.selectedGenericPlayer.subscribe(res => {
+      this.selectedGenericPlayer = res;
+    });
   }
 
   selectPlayer() {
     this.partyService.selectedPlayer.next(this.player);
+    this.partyService.selectedGenericPlayer.next(this.player);
   }
 
 }

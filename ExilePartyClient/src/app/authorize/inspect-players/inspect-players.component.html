@@ -1,0 +1,16 @@
+<h3 class="mat-h3">
+    {{'PAGES.RECENT_PLAYERS.TITLE' | translate}}</h3>
+<div>
+    <mat-divider class="divider"></mat-divider>
+    <p class="mat-body-1" *ngIf="genericPlayers.length == 0">
+        Players you encounter or trade with in-game will be listed here. If their profile is not set to private, you will be able to inspect their currently equipped gear. Note that all players won't show up here, only players who have traded or interacted recently will be listed, since we fetch data from the public stash tab API.
+    </p>
+    <div class="inner-content-container">
+        <div class="player-list-container">
+            <app-player-list localList="true"></app-player-list>
+        </div>
+        <div class="char-profile-container">
+            <app-char-profile localProfile="true"></app-char-profile>
+        </div>
+    </div>
+</div>
