@@ -55,7 +55,7 @@ export class IncomeService {
     private settingsService: SettingsService
   ) {
 
-    // this.netWorthHistory = this.settingsService.get('networth');
+    this.netWorthHistory = this.settingsService.get('networth');
 
     // Set up history if we don't have any
     if (this.netWorthHistory === undefined) {
