@@ -40,20 +40,23 @@ export class IncomeComponent implements OnInit {
 
   ngOnInit() {
     this.partyService.selectedPlayer.subscribe(res => {
-      const entry: ChartSeries = {
-        name: res.account,
-        series: res.netWorthSnapshots.slice(0, 20).map(snapshot => {
-          const seriesEntry: ChartSeriesEntry = {
-            name: new Date(snapshot.timestamp),
-            value: snapshot.value
-          };
-          return seriesEntry;
-        })
-      };
-      const data = [... this.dateData];
-      data[0] = entry;
-      this.dateData = data;
+      if (res.netWorthSnapshots !== null) {
+        const entry: ChartSeries = {
+          name: res.character.name,
+          series: res.netWorthSnapshots.slice(0, 20).map(snapshot => {
+            const seriesEntry: ChartSeriesEntry = {
+              name: new Date(snapshot.timestamp),
+              value: snapshot.value
+            };
+            return seriesEntry;
+          })
+        };
+        const data = [... this.dateData];
+        data[0] = entry;
+        this.dateData = data;
+      }
     });
+
   }
 
   axisFormat(val) {
