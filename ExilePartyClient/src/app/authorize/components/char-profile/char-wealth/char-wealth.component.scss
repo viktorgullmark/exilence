@@ -2,10 +2,19 @@
 
 .char-wealth {
     width: 684px;
-    height: 819px;
+    height: $content-height;
     border: 2px solid $main-border-color;
     background: $equipment-bg-color;
     position: relative;
     border-radius: 1px;
     transform-origin: top left;
+    .income-graph-wrapper {
+        padding: 25px;
+    }
+    .networth-table-wrapper {
+        padding: 25px;
+        height: 400px;
+        overflow-y: scroll;
+    }
 }
+

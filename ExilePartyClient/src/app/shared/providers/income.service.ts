@@ -41,7 +41,7 @@ export class IncomeService {
   private snapshotInterval: any;
   private netWorthHistory: NetWorthHistory;
 
-  private totalNetWorthItems: any[] = [];
+  public totalNetWorthItems: any[] = [];
   public totalNetWorth = 0;
   private fiveMinutes = 5 * 60 * 1000;
 
