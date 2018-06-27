@@ -129,11 +129,6 @@ export class IncomeService {
         });
       });
 
-
-      for (let i = 0, _len = this.totalNetWorthItems; i < this.totalNetWorthItems.length; i++) {
-        this.totalNetWorth += this.totalNetWorthItems[i].value;
-      }
-
       this.totalNetWorthItems.sort((a: any, b: any) => {
         if (a.value < b.value) {
           return 1;
@@ -143,9 +138,6 @@ export class IncomeService {
         }
         return 0;
       });
-
-      console.log('[INFO] Total player valuables worth: ', this.totalNetWorth);
-      // console.log('[INFO] Player valuables ', this.totalNetWorthItems);
 
     });
 
