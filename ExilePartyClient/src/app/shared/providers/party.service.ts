@@ -225,8 +225,8 @@ export class PartyService {
           name: event.player.name
         };
 
+        // Find and remove player if already in list.
         let index = -1;
-
         for (let i = 0; i < this.recentPlayers.length; i++) {
           const player = this.recentPlayers[i];
           if (player.name === event.player.name) {
@@ -234,19 +234,14 @@ export class PartyService {
             break;
           }
         }
-
         if (index !== -1) {
           this.recentPlayers.splice(index, 1);
         }
 
-        this.recentPlayers.forEach((p, i) => {
-          if (p.name === event.player.name) {
-            this.recentPlayers.splice(1, i);
-          }
-        });
-
+        // Add new player to top of list
         this.recentPlayers.unshift(newPlayer);
-        if (this.recentPlayers.length > 5) {
+        // Prune list if we got over 9 entries
+        if (this.recentPlayers.length > 9) {
           this.recentPlayers.splice(-1, 1);
         }
 

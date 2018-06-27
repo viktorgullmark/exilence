@@ -10,6 +10,7 @@ import 'rxjs/add/operator/take';
 import 'rxjs/add/operator/timeInterval';
 
 import { Injectable } from '@angular/core';
+import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Observable } from 'rxjs/Observable';
 
 import { Item } from '../interfaces/item.interface';
@@ -19,31 +20,90 @@ import { ExternalService } from './external.service';
 import { NinjaService } from './ninja.service';
 import { PartyService } from './party.service';
 import { SessionService } from './session.service';
+import { SettingsService } from './settings.service';
+
+interface NetWorthSnapshot {
+  timestamp: number;
+  value: number;
+}
+
+interface NetWorthHistory {
+  lastSnapshot: number;
+  history: NetWorthSnapshot[];
+}
 
 @Injectable()
 export class IncomeService {
 
   private ninjaPrices: any[] = [];
   private playerStashTabs: any[] = [];
+  private snapshotInterval: any;
+  private netWorthHistory: NetWorthHistory;
 
-  public totalNetWorthItems: any[] = [];
+  private totalNetWorthItems: any[] = [];
   public totalNetWorth = 0;
+  private fiveMinutes = 5 * 60 * 1000;
+
+  public netWorthSnapshotList: BehaviorSubject<NetWorthSnapshot[]> = new BehaviorSubject<NetWorthSnapshot[]>([]);
 
   constructor(
     private ninjaService: NinjaService,
     private partyService: PartyService,
     private externalService: ExternalService,
-    private sessionService: SessionService
+    private sessionService: SessionService,
+    private settingsService: SettingsService
   ) {
 
+    this.netWorthHistory = this.settingsService.get('networth');
+
+    // Set up history if we don't have any
+    if (this.netWorthHistory === undefined) {
+      this.netWorthHistory = {
+        lastSnapshot: (Date.now() - this.fiveMinutes),
+        history: []
+      };
+    } else {
+      this.netWorthSnapshotList.next(this.netWorthHistory.history);
+    }
+
+    this.StartSnapshotting();
 
   }
+
+  StartSnapshotting() {
+    this.snapshotInterval = setInterval(() => {
+
+      if (this.netWorthHistory.lastSnapshot < (Date.now() - this.fiveMinutes)) {
+        this.netWorthHistory.lastSnapshot = Date.now();
+        console.log('[INFO] Snapshotting player net worth');
+        this.SnapshotPlayerNetWorth().subscribe(() => {
+
+          const snapShot: NetWorthSnapshot = {
+            timestamp: Date.now(),
+            value: this.totalNetWorth
+          };
+
+          this.netWorthHistory.history.unshift(snapShot);
+          this.settingsService.set('networth', this.netWorthHistory);
+          this.netWorthSnapshotList.next(this.netWorthHistory.history);
+
+          console.log('[INFO] Finished Snapshotting player net worth');
+        });
+      }
+    }, 30 * 1000);
+  }
+
 
   SnapshotPlayerNetWorth() {
 
     const sessionId = this.sessionService.getSession();
     const accountName = this.partyService.accountInfo.accountName;
     const league = this.partyService.player.character.league;
+
+    this.ninjaPrices = [];
+    this.playerStashTabs = [];
+    this.totalNetWorthItems = [];
+    this.totalNetWorth = 0;
 
     return Observable.forkJoin(
       this.getPlayerStashTabs(sessionId, accountName, league),
@@ -72,7 +132,7 @@ export class IncomeService {
               name: itemName,
               value: valueForItem,
               icon: item.icon,
-              tab: tab.tabs[tabIndex].n
+              // tab: tab.tabs[tabIndex].n
             });
 
           }
@@ -95,7 +155,7 @@ export class IncomeService {
       });
 
       console.log('[INFO] Total player valuables worth: ', this.totalNetWorth);
-      console.log('[INFO] Player valuables ', this.totalNetWorthItems);
+      // console.log('[INFO] Player valuables ', this.totalNetWorthItems);
 
     });
 
