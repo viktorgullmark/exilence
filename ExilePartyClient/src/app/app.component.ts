@@ -51,4 +51,8 @@ export class AppComponent {
   minimize() {
     this.electronService.remote.getCurrentWindow().minimize();
   }
+
+  maximize() {
+    this.electronService.remote.getCurrentWindow().maximize();
+  }
 }

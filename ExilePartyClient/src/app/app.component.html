@@ -4,6 +4,7 @@
         <a (click)="logout()" class="left-link toolbar-text" *ngIf="sessionService.getSession() != null">
             {{ 'ACCOUNT.LOGOUT' | translate}} </a>
         <mat-icon (click)="minimize()" class="icon-link window-icon">minimize</mat-icon>
+        <mat-icon (click)="maximize()" class="icon-link window-icon">crop_square</mat-icon>
         <mat-icon (click)="close()" class="icon-link window-icon">close</mat-icon>
     </div>
 </mat-toolbar>
