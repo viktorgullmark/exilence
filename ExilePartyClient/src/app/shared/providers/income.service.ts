@@ -1,3 +1,4 @@
+import 'rxjs/add/observable/empty';
 import 'rxjs/add/observable/forkJoin';
 import 'rxjs/add/observable/from';
 import 'rxjs/add/observable/interval';
@@ -54,14 +55,14 @@ export class IncomeService {
     private settingsService: SettingsService
   ) {
 
-    this.netWorthHistory = this.settingsService.get('networth');
+    // this.netWorthHistory = this.settingsService.get('networth');
 
     // Set up history if we don't have any
     if (this.netWorthHistory === undefined) {
       this.netWorthHistory = {
         lastSnapshot: (Date.now() - this.fiveMinutes),
         history: [{
-          timestamp: Date.now(),
+          timestamp: Date.now() - this.fiveMinutes,
           value: 0
         }]
       };
@@ -69,7 +70,7 @@ export class IncomeService {
 
     this.netWorthSnapshotList.next(this.netWorthHistory.history);
 
-    // this.StartSnapshotting();
+    this.StartSnapshotting();
 
   }
 
@@ -215,6 +216,8 @@ export class IncomeService {
             if (tab.i < 20) {
               return this.externalService.getStashTab(sessionId, accountName, league, tab.i)
                 .delay(750);
+            } else {
+              return Observable.empty();
             }
           })
           .do(stashTab => {
