@@ -1,8 +1,14 @@
-
-.notification{
-    display: flex;
-    justify-content: center;
-    align-content: center;
-    background-color: #94123e;
-    padding: 10px;
+.notification-bar-wrapper {
+    position: absolute;
+    bottom: 0px;
+    width: 100%;
+    z-index: 5;
+    left: 0px;
+    .notification{
+        display: flex;
+        justify-content: center;
+        align-content: center;
+        background-color: rgba(255, 41, 113, 0.55);
+        padding: 10px;
+    }
 }
