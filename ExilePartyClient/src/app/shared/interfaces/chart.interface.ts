@@ -6,4 +6,5 @@ export interface ChartSeries {
 export interface ChartSeriesEntry {
   name: string | Date;
   value: number;
+  items: any[];
 }

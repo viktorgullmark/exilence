@@ -4,5 +4,13 @@
     legendTitle="Players" (legendLabelClick)="onLegendLabelClick($event)" gradient="false" xAxis="true" yAxis="true" showXAxisLabel="true"
     showYAxisLabel="true" xAxisLabel="Time" [xAxisTickFormatting]="axisFormat" animations="true" yAxisLabel="Net worth in Chaos"
     autoScale="true" timeline="true" showGridLines="true" [curve]="curve" (select)="select($event)">
+    <ng-template #tooltipTemplate let-model="model">
+      Value: {{ model.value }}
+      <br> Time: {{ axisFormat(model.name) }}
+    </ng-template>
+    <ng-template #seriesTooltipTemplate let-model="model">
+      Value: {{ model[0].value }}
+      <br> Time: {{ axisFormat(model[0].name) }}
+    </ng-template>
   </ngx-charts-line-chart>
 </div>

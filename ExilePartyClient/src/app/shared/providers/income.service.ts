@@ -141,8 +141,8 @@ export class IncomeService {
             if (valueForItem > 1) {
               this.totalNetWorthItems.push({
                 name: itemName,
-                value: valueForItem,
-                icon: item.icon,
+                value: Math.floor(valueForItem),
+                icon: item.icon.substring(0, item.icon.indexOf('?')) + '?scale=1&scaleIndex=3&w=1&h=1',
                 stacksize
               });
             }

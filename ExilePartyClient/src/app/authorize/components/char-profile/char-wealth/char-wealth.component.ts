@@ -1,5 +1,7 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
+
 import { Player } from '../../../../shared/interfaces/player.interface';
+import { ElectronService } from '../../../../shared/providers/electron.service';
 
 @Component({
   selector: 'app-char-wealth',
@@ -9,10 +11,16 @@ import { Player } from '../../../../shared/interfaces/player.interface';
 export class CharWealthComponent implements OnInit {
   @Input() player: Player;
   graphDimensions = [640, 300];
-  constructor() {
+  constructor(
+    private electronService: ElectronService
+  ) {
   }
 
   ngOnInit() {
+  }
+
+  openLink(link: string) {
+    this.electronService.shell.openExternal(link);
   }
 
 }

@@ -1,11 +1,11 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { colorSets as ngxChartsColorsets } from '@swimlane/ngx-charts/release/utils/color-sets';
 import * as d3 from 'd3';
 
 import { ChartSeries, ChartSeriesEntry } from '../../../shared/interfaces/chart.interface';
+import { Player } from '../../../shared/interfaces/player.interface';
 import { IncomeService } from '../../../shared/providers/income.service';
 import { PartyService } from '../../../shared/providers/party.service';
-import { Player } from '../../../shared/interfaces/player.interface';
 
 
 @Component({
@@ -47,7 +47,8 @@ export class IncomeComponent implements OnInit {
           series: res.netWorthSnapshots.slice(0, 20).map(snapshot => {
             const seriesEntry: ChartSeriesEntry = {
               name: new Date(snapshot.timestamp),
-              value: snapshot.value
+              value: snapshot.value,
+              items: snapshot.items
             };
             return seriesEntry;
           })
