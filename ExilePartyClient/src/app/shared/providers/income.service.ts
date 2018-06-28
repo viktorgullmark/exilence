@@ -131,18 +131,22 @@ export class IncomeService {
           }
           if (typeof this.ninjaPrices[itemName] !== 'undefined') {
 
-            const valueForItem = this.ninjaPrices[itemName];
+            let valueForItem = this.ninjaPrices[itemName];
             let stacksize = 1;
             if (item.stackSize) {
               stacksize = item.stackSize;
+              valueForItem = (valueForItem * stacksize);
             }
 
-            this.totalNetWorthItems.push({
-              name: itemName,
-              value: valueForItem * stacksize,
-              icon: item.icon,
-              stacksize
-            });
+            // Hide items with a total value under 1 chaos
+            if (valueForItem > 1) {
+              this.totalNetWorthItems.push({
+                name: itemName,
+                value: valueForItem,
+                icon: item.icon,
+                stacksize
+              });
+            }
 
           }
         });
