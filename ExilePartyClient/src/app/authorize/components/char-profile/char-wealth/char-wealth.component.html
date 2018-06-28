@@ -1,4 +1,20 @@
 <div class="char-wealth">
+    <div class="income-summary-wrapper">
+        <div class="networth-wrapper">
+            <span class="title">Current networth</span>
+            <br/>
+            <div class="networth-inner-wrapper">
+                <span class="networth">{{player.netWorthSnapshots[0].value}}c</span>
+            </div>
+        </div>
+        <div class="networth-wrapper">
+            <span class="title">Gain / hour</span>
+            <br/>
+            <div class="networth-inner-wrapper">
+                <span class="networth">0c</span>
+            </div>
+        </div>
+    </div>
     <div class="income-graph-wrapper">
         <app-income [player]="player" [view]="graphDimensions"></app-income>
     </div>
