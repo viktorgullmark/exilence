@@ -11,15 +11,15 @@ import { Observable } from 'rxjs/Observable';
 
 import { NetWorthHistory, NetWorthItem, NetWorthSnapshot } from '../interfaces/income.interface';
 import { Item } from '../interfaces/item.interface';
+import { Player } from '../interfaces/player.interface';
 import { NinjaLine, NinjaTypes } from '../interfaces/poe-ninja.interface';
 import { Stash } from '../interfaces/stash.interface';
+import { AccountService } from './account.service';
 import { ExternalService } from './external.service';
 import { NinjaService } from './ninja.service';
 import { PartyService } from './party.service';
 import { SessionService } from './session.service';
 import { SettingsService } from './settings.service';
-import { AccountService } from './account.service';
-import { Player } from '../interfaces/player.interface';
 
 
 
@@ -141,6 +141,12 @@ export class IncomeService {
           }
         });
       });
+
+
+      for (let i = 0, _len = this.totalNetWorthItems; i < this.totalNetWorthItems.length; i++) {
+        this.totalNetWorth += (this.totalNetWorthItems[i].value * this.totalNetWorthItems[i].stacksize);
+      }
+
 
       this.totalNetWorthItems.sort((a: any, b: any) => {
         if (a.value < b.value) {
