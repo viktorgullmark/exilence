@@ -29,10 +29,10 @@
 
 <!-- tab CURRENCY -->
 <div class="tab-content" [hidden]="selectedIndex != 1 || localProfile">
-    <app-char-wealth [player]="player"></app-char-wealth>
+    <app-char-wealth *ngIf="!localProfile" [player]="player"></app-char-wealth>
 </div>
 
 <!-- tab MAPS -->
 <div class="tab-content" [hidden]="selectedIndex != 2 || localProfile">
-    <app-char-maps></app-char-maps>
+    <app-char-maps *ngIf="!localProfile"></app-char-maps>
 </div>
