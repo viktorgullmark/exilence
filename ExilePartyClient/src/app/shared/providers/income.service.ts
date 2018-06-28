@@ -37,6 +37,7 @@ export class IncomeService {
   private totalNetWorthItems: NetWorthItem[] = [];
   public totalNetWorth = 0;
   private fiveMinutes = 5 * 60 * 1000;
+  private oneHourAgo = (Date.now() - (60 * 60 * 1000));
 
   constructor(
     private ninjaService: NinjaService,
@@ -73,11 +74,8 @@ export class IncomeService {
         console.log('[INFO] Snapshotting player net worth');
         this.SnapshotPlayerNetWorth(sessionId).subscribe(() => {
 
-          const snapShot: NetWorthSnapshot = {
-            timestamp: Date.now(),
-            value: this.totalNetWorth,
-            items: this.totalNetWorthItems
-          };
+          this.netWorthHistory.history = this.netWorthHistory.history
+            .filter((snaphot: NetWorthSnapshot) => snaphot.timestamp > this.oneHourAgo);
 
           // We are a new player that have not parsed income before
           // Remove the placeholder element
@@ -88,11 +86,13 @@ export class IncomeService {
             this.netWorthHistory.history.pop();
           }
 
-          this.netWorthHistory.history.unshift(snapShot);
+          const snapShot: NetWorthSnapshot = {
+            timestamp: Date.now(),
+            value: this.totalNetWorth,
+            items: this.totalNetWorthItems,
+          };
 
-          if (this.netWorthHistory.history.length > 288) {
-            this.netWorthHistory.history.pop();
-          }
+          this.netWorthHistory.history.unshift(snapShot);
 
           this.settingsService.set('networth', this.netWorthHistory);
           this.localPlayer.netWorthSnapshots = this.netWorthHistory.history;
@@ -139,12 +139,13 @@ export class IncomeService {
 
             // Hide items with a total value under 1 chaos
             if (valueForItem > 1) {
-              this.totalNetWorthItems.push({
+              const netWorthItem: NetWorthItem = {
                 name: itemName,
                 value: Math.floor(valueForItem),
                 icon: item.icon.substring(0, item.icon.indexOf('?')) + '?scale=1&scaleIndex=3&w=1&h=1',
                 stacksize
-              });
+              };
+              this.totalNetWorthItems.push(netWorthItem);
             }
 
           }

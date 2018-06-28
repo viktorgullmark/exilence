@@ -42,9 +42,10 @@ export class IncomeComponent implements OnInit {
     this.partyService.selectedPlayer.subscribe(res => {
       this.dateData = [];
       if (res.netWorthSnapshots !== null) {
+
         const entry: ChartSeries = {
           name: res.character.name,
-          series: res.netWorthSnapshots.slice(0, 20).map(snapshot => {
+          series: res.netWorthSnapshots.map(snapshot => {
             const seriesEntry: ChartSeriesEntry = {
               name: new Date(snapshot.timestamp),
               value: snapshot.value,

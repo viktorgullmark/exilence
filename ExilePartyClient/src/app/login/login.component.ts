@@ -6,7 +6,7 @@ import { Router } from '@angular/router';
 import { AccountInfo } from '../shared/interfaces/account-info.interface';
 import { Character } from '../shared/interfaces/character.interface';
 import { EquipmentResponse } from '../shared/interfaces/equipment-response.interface';
-import { NetWorthHistory } from '../shared/interfaces/income.interface';
+import { NetWorthHistory, NetWorthSnapshot } from '../shared/interfaces/income.interface';
 import { Player } from '../shared/interfaces/player.interface';
 import { AccountService } from '../shared/providers/account.service';
 import { ElectronService } from '../shared/providers/electron.service';
@@ -36,6 +36,8 @@ export class LoginComponent implements OnInit {
     sessionId: string;
     filePath: string;
     netWorthHistory: NetWorthHistory;
+
+    private oneHourAgo = (Date.now() - (60 * 60 * 1000));
 
     @ViewChild('stepper') stepper: MatStepper;
     @ViewChild('lastStep') lastStep: MatStep;
@@ -82,18 +84,22 @@ export class LoginComponent implements OnInit {
         this.filePath = this.settingsService.get('account.filePath');
         this.netWorthHistory = this.settingsService.get('networth');
 
-        // Set up history if we don't have any
-        if (!this.netWorthHistory) {
-            if (this.netWorthHistory === undefined) {
-                this.netWorthHistory = {
-                    lastSnapshot: (Date.now() - (5 * 60 * 1000)), // Five Minutes
-                    history: [{
-                        timestamp: (Date.now() - (5 * 60 * 1000)), // Five minutes
-                        value: 0,
-                        items: []
-                    }]
-                };
-            }
+        // Filter snapshots to only include last hour
+        if (this.netWorthHistory && this.netWorthHistory.history) {
+            this.netWorthHistory.history = this.netWorthHistory.history
+                .filter((snaphot: NetWorthSnapshot) => snaphot.timestamp > this.oneHourAgo);
+        }
+
+        // Set up placeholder history if we don't have any
+        if (!this.netWorthHistory || this.netWorthHistory.history.length === 0) {
+            this.netWorthHistory = {
+                lastSnapshot: 0,
+                history: [{
+                    timestamp: 0,
+                    value: 0,
+                    items: []
+                }]
+            };
             this.settingsService.set('networth', this.netWorthHistory);
         }
 
