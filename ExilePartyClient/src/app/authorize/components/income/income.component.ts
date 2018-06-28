@@ -72,7 +72,13 @@ export class IncomeComponent implements OnInit {
   }
 
   select(data): void {
-    console.log('Item clicked', data);
+    const items = this.dateData[0].series.filter(t => {
+      if (t.name === data.name) {
+        return true;
+      }
+      return false;
+    })[0].items;
+    console.log('Clicked item items: ', items);
   }
 
   onLegendLabelClick(entry) {
