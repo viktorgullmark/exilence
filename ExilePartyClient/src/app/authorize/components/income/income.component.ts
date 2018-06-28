@@ -40,6 +40,7 @@ export class IncomeComponent implements OnInit {
 
   ngOnInit() {
     this.partyService.selectedPlayer.subscribe(res => {
+      this.dateData = [];
       if (res.netWorthSnapshots !== null) {
         const entry: ChartSeries = {
           name: res.character.name,

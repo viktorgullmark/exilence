@@ -17,6 +17,7 @@ export class NetworthTableComponent implements OnInit {
   ngOnInit() {
     this.updateTable(this.player);
     this.partyService.selectedPlayer.subscribe(res => {
+      this.dataSource = [];
       if (res.netWorthSnapshots !== null) {
         this.updateTable(res);
       }
@@ -24,7 +25,6 @@ export class NetworthTableComponent implements OnInit {
   }
 
   updateTable(player: Player) {
-    this.dataSource = [];
     player.netWorthSnapshots[0].items.forEach(snapshot => {
 
       this.dataSource.push({
