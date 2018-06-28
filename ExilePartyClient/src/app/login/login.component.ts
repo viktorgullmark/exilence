@@ -70,7 +70,8 @@ export class LoginComponent implements OnInit {
     }
 
     checkPath() {
-        this.pathValid = this.electronService.fs.existsSync(this.pathFormGroup.controls.filePath.value);
+        this.pathValid = this.electronService.fs.existsSync(this.pathFormGroup.controls.filePath.value)
+            && this.pathFormGroup.controls.filePath.value.endsWith('Client.txt');
     }
 
     fetchSettings() {
@@ -101,11 +102,11 @@ export class LoginComponent implements OnInit {
                     this.isFetching = false;
                 }, 500);
             },
-            error => {
-                this.accountService.characterList.next([]);
-                this.isFetching = false;
-            }
-        );
+                error => {
+                    this.accountService.characterList.next([]);
+                    this.isFetching = false;
+                }
+            );
     }
 
     getFormObj() {
@@ -115,6 +116,18 @@ export class LoginComponent implements OnInit {
             sessionId: this.sessFormGroup.controls.sessionId.value,
             filePath: this.pathFormGroup.controls.filePath.value
         } as AccountInfo;
+    }
+
+    browse() {
+        this.electronService.remote.dialog.showOpenDialog({ properties: ['openFile', 'multiSelections'] },
+            selectedFiles => this.directorySelectorCallback(selectedFiles));
+    }
+
+    directorySelectorCallback(filePath) {
+        this.pathFormGroup.controls.filePath.setValue(filePath[0]);
+        setTimeout(() => {
+            this.checkPath();
+        }, 500);
     }
 
     login() {

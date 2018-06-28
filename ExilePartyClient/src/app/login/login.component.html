@@ -48,6 +48,8 @@
         </mat-form-field>
         <div class="btn-grp">
           <button mat-raised-button class="btn-back" matStepperPrevious>Back</button>
+          <button mat-raised-button color="primary" (click)="browse()" type="button">Browse file</button>
+          <button mat-raised-button color="primary" type="button">Validate</button>
           <button mat-raised-button color="primary" matStepperNext [disabled]="!pathValid">Continue</button>
         </div>
         <span class="form-error" *ngIf="!pathValid">{{'ERROR.PATH_NOT_VALID' | translate}}</span>
