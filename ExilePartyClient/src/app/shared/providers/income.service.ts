@@ -133,7 +133,7 @@ export class IncomeService {
 
             this.totalNetWorthItems.push({
               name: itemName,
-              value: valueForItem,
+              value: valueForItem * stacksize,
               icon: item.icon,
               stacksize
             });
@@ -149,10 +149,10 @@ export class IncomeService {
 
 
       this.totalNetWorthItems.sort((a: any, b: any) => {
-        if (a.value < b.value) {
+        if ((a.value * a.stackSize) < (b.value * b.stackSize)) {
           return 1;
         }
-        if (a.value > b.value) {
+        if ((a.value * a.stackSize) > (b.value * b.stackSize)) {
           return -1;
         }
         return 0;
