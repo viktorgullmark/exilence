@@ -48,6 +48,13 @@ export class IncomeService {
     private settingsService: SettingsService
   ) {
 
+    this.accountService.player.subscribe(res => {
+      if (res !== undefined) {
+        this.localPlayer = res;
+        this.localPlayer.netWorthSnapshots = this.networthSnapshots;
+      }
+    });
+
     this.netWorthHistory = this.settingsService.get('networth');
 
     // Set up history if we don't have any
@@ -64,14 +71,9 @@ export class IncomeService {
 
     this.networthSnapshots = this.netWorthHistory.history;
 
-    this.StartSnapshotting();
-
-    this.accountService.player.subscribe(res => {
-      if (res !== undefined) {
-        this.localPlayer = res;
-        this.localPlayer.netWorthSnapshots = this.networthSnapshots;
-      }
-    });
+    if (this.sessionService.getSession()) {
+      this.StartSnapshotting();
+    }
   }
 
   StartSnapshotting() {
