@@ -47,6 +47,7 @@ export class IncomeService {
     private sessionService: SessionService,
     private settingsService: SettingsService
   ) {
+
     this.netWorthHistory = this.settingsService.get('networth');
 
     // Set up history if we don't have any
@@ -88,6 +89,11 @@ export class IncomeService {
           };
 
           this.netWorthHistory.history.unshift(snapShot);
+
+          if (this.netWorthHistory.history.length > 288) {
+            this.netWorthHistory.history.pop();
+          }
+
           this.settingsService.set('networth', this.netWorthHistory);
           this.networthSnapshots = this.netWorthHistory.history;
           this.localPlayer.netWorthSnapshots = this.networthSnapshots;
