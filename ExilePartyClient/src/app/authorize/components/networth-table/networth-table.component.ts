@@ -31,7 +31,8 @@ export class NetworthTableComponent implements OnInit {
         position: player.netWorthSnapshots[0].items.indexOf(snapshot) + 1,
         name: snapshot.name,
         stacksize: snapshot.stacksize,
-        value: snapshot.value
+        value: snapshot.value,
+        icon: snapshot.icon
       });
     });
 

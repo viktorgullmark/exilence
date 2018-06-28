@@ -123,7 +123,7 @@ export class LoginComponent implements OnInit {
         this.externalService.getCharacter(form)
             .subscribe((data: EquipmentResponse) => {
                 const player = this.externalService.setCharacter(data, this.player);
-                player.netWorthSnapshots = this.incomeService.netWorthSnapshots;
+                player.netWorthSnapshots = this.incomeService.networthSnapshots;
                 this.player = player;
                 this.accountService.player.next(this.player);
                 this.accountService.accountInfo.next(form);

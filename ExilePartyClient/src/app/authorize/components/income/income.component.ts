@@ -35,7 +35,7 @@ export class IncomeComponent implements OnInit {
     private incomeService: IncomeService,
     private partyService: PartyService
   ) {
-    this.setColorScheme('cool');
+    this.setColorScheme('fire');
   }
 
   ngOnInit() {
