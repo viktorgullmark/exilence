@@ -18,6 +18,8 @@ import { NinjaService } from './ninja.service';
 import { PartyService } from './party.service';
 import { SessionService } from './session.service';
 import { SettingsService } from './settings.service';
+import { AccountService } from './account.service';
+import { Player } from '../interfaces/player.interface';
 
 
 
@@ -29,6 +31,9 @@ export class IncomeService {
   private snapshotInterval: any;
   private netWorthHistory: NetWorthHistory;
 
+  public networthSnapshots: NetWorthSnapshot[] = [];
+
+  public localPlayer: Player;
 
   private totalNetWorthItems: NetWorthItem[] = [];
   public totalNetWorth = 0;
@@ -36,12 +41,12 @@ export class IncomeService {
 
   constructor(
     private ninjaService: NinjaService,
+    private accountService: AccountService,
     private partyService: PartyService,
     private externalService: ExternalService,
     private sessionService: SessionService,
     private settingsService: SettingsService
   ) {
-
     this.netWorthHistory = this.settingsService.get('networth');
 
     // Set up history if we don't have any
@@ -56,16 +61,22 @@ export class IncomeService {
       };
     }
 
-    this.partyService.currentPlayer.netWorthSnapshots = this.netWorthHistory.history;
+    this.networthSnapshots = this.netWorthHistory.history;
 
     this.StartSnapshotting();
 
+    this.accountService.player.subscribe(res => {
+      if (res !== undefined) {
+        this.localPlayer = res;
+        this.localPlayer.netWorthSnapshots = this.networthSnapshots;
+      }
+    });
   }
 
   StartSnapshotting() {
     this.snapshotInterval = setInterval(() => {
 
-      if (this.netWorthHistory.lastSnapshot < (Date.now() - this.fiveMinutes)) {
+      if (this.netWorthHistory.lastSnapshot < (Date.now() - this.fiveMinutes) && this.localPlayer !== undefined) {
         this.netWorthHistory.lastSnapshot = Date.now();
         console.log('[INFO] Snapshotting player net worth');
         this.SnapshotPlayerNetWorth().subscribe(() => {
@@ -78,8 +89,9 @@ export class IncomeService {
 
           this.netWorthHistory.history.unshift(snapShot);
           this.settingsService.set('networth', this.netWorthHistory);
-          this.partyService.currentPlayer.netWorthSnapshots = this.netWorthHistory.history;
-          this.partyService.updatePlayer(this.partyService.currentPlayer);
+          this.networthSnapshots = this.netWorthHistory.history;
+          this.localPlayer.netWorthSnapshots = this.networthSnapshots;
+          this.partyService.updatePlayer(this.localPlayer);
           console.log('[INFO] Finished Snapshotting player net worth');
         });
       }

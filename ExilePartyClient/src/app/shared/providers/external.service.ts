@@ -13,6 +13,7 @@ import { Requirement } from '../interfaces/requirement.interface';
 import { Stash } from '../interfaces/stash.interface';
 import { AccountService } from './account.service';
 import { ElectronService } from './electron.service';
+import { IncomeService } from './income.service';
 
 @Injectable()
 export class ExternalService {

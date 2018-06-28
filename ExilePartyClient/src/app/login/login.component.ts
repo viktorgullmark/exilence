@@ -13,6 +13,7 @@ import { ExternalService } from '../shared/providers/external.service';
 import { PartyService } from '../shared/providers/party.service';
 import { SessionService } from '../shared/providers/session.service';
 import { SettingsService } from '../shared/providers/settings.service';
+import { IncomeService } from '../shared/providers/income.service';
 
 @Component({
     selector: 'app-login',
@@ -45,6 +46,7 @@ export class LoginComponent implements OnInit {
         private accountService: AccountService,
         private sessionService: SessionService,
         private settingsService: SettingsService,
+        private incomeService: IncomeService,
         private partyService: PartyService) {
 
         this.fetchSettings();
@@ -120,7 +122,9 @@ export class LoginComponent implements OnInit {
         const form = this.getFormObj();
         this.externalService.getCharacter(form)
             .subscribe((data: EquipmentResponse) => {
-                this.player = this.externalService.setCharacter(data, this.player);
+                const player = this.externalService.setCharacter(data, this.player);
+                player.netWorthSnapshots = this.incomeService.netWorthSnapshots;
+                this.player = player;
                 this.accountService.player.next(this.player);
                 this.accountService.accountInfo.next(form);
                 this.settingsService.set('account', form);
