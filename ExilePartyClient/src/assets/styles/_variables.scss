@@ -32,6 +32,7 @@ $unidentified-item-color: #410c0c;
 $unidentified-item-font-color: #e80000;
 
 // item-tooltip
+$mod-generic-color: #9a9aff;
 $item-tooltip-bg-color: rgba(0, 0, 0, 0.85);
 $gem-tooltip-bg-color: $item-tooltip-bg-color;
 $tooltip-separator-color: #555454;
@@ -50,12 +51,12 @@ $crafted-mod-color: rgb(207, 218, 247);
 $tag-color: rgb(192, 192, 192);
 $tag-bg-color: #e5e5f5;
 $tag-font-color: #000;
-$mod-life-color: lightcoral;
-$mod-coldres-color: #B4BEDB;
-$mod-fireres-color: #E8C489;
-$mod-lightres-color:#E0E889;
-$mod-mana-color: #7EB2E6;
-$mod-chaosres-color: #D19CF0;
+$mod-life-color: $mod-generic-color;
+$mod-coldres-color: $mod-generic-color;
+$mod-fireres-color: $mod-generic-color;
+$mod-lightres-color:$mod-generic-color;
+$mod-mana-color: $mod-generic-color;
+$mod-chaosres-color: $mod-generic-color;
 
 
 // padding
