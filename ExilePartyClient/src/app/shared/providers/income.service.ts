@@ -18,7 +18,6 @@ import { AccountService } from './account.service';
 import { ExternalService } from './external.service';
 import { NinjaService } from './ninja.service';
 import { PartyService } from './party.service';
-import { SessionService } from './session.service';
 import { SettingsService } from './settings.service';
 
 
@@ -44,51 +43,50 @@ export class IncomeService {
     private accountService: AccountService,
     private partyService: PartyService,
     private externalService: ExternalService,
-    private sessionService: SessionService,
     private settingsService: SettingsService
   ) {
+
+
+  }
+
+  StopSnapshotting() {
+    if (this.snapshotInterval) {
+      clearInterval(this.snapshotInterval);
+    }
+  }
+
+  StartSnapshotting(sessionId: string) {
+
+    this.netWorthHistory = this.settingsService.get('networth');
 
     this.accountService.player.subscribe(res => {
       if (res !== undefined) {
         this.localPlayer = res;
-        this.localPlayer.netWorthSnapshots = this.networthSnapshots;
+        this.localPlayer.netWorthSnapshots = this.netWorthHistory.history;
       }
     });
 
-    this.netWorthHistory = this.settingsService.get('networth');
-
-    // Set up history if we don't have any
-    if (this.netWorthHistory === undefined) {
-      this.netWorthHistory = {
-        lastSnapshot: (Date.now() - this.fiveMinutes),
-        history: [{
-          timestamp: Date.now() - this.fiveMinutes,
-          value: 0,
-          items: []
-        }]
-      };
-    }
-
-    this.networthSnapshots = this.netWorthHistory.history;
-
-    if (this.sessionService.getSession()) {
-      this.StartSnapshotting();
-    }
-  }
-
-  StartSnapshotting() {
     this.snapshotInterval = setInterval(() => {
 
       if (this.netWorthHistory.lastSnapshot < (Date.now() - this.fiveMinutes) && this.localPlayer !== undefined) {
         this.netWorthHistory.lastSnapshot = Date.now();
         console.log('[INFO] Snapshotting player net worth');
-        this.SnapshotPlayerNetWorth().subscribe(() => {
+        this.SnapshotPlayerNetWorth(sessionId).subscribe(() => {
 
           const snapShot: NetWorthSnapshot = {
             timestamp: Date.now(),
             value: this.totalNetWorth,
             items: this.totalNetWorthItems
           };
+
+          // We are a new player that have not parsed income before
+          // Remove the placeholder element
+          if (
+            this.netWorthHistory.history.length === 1 &&
+            this.netWorthHistory.history[0].value === 0
+          ) {
+            this.netWorthHistory.history.pop();
+          }
 
           this.netWorthHistory.history.unshift(snapShot);
 
@@ -97,19 +95,18 @@ export class IncomeService {
           }
 
           this.settingsService.set('networth', this.netWorthHistory);
-          this.networthSnapshots = this.netWorthHistory.history;
-          this.localPlayer.netWorthSnapshots = this.networthSnapshots;
+          this.localPlayer.netWorthSnapshots = this.netWorthHistory.history;
           this.partyService.updatePlayer(this.localPlayer);
           console.log('[INFO] Finished Snapshotting player net worth');
         });
       }
     }, 30 * 1000);
+
   }
 
 
-  SnapshotPlayerNetWorth() {
+  SnapshotPlayerNetWorth(sessionId: string) {
 
-    const sessionId = this.sessionService.getSession();
     const accountName = this.partyService.accountInfo.accountName;
     const league = this.partyService.currentPlayer.character.league;
 

@@ -6,14 +6,14 @@ import { Router } from '@angular/router';
 import { AccountInfo } from '../shared/interfaces/account-info.interface';
 import { Character } from '../shared/interfaces/character.interface';
 import { EquipmentResponse } from '../shared/interfaces/equipment-response.interface';
+import { NetWorthHistory } from '../shared/interfaces/income.interface';
 import { Player } from '../shared/interfaces/player.interface';
 import { AccountService } from '../shared/providers/account.service';
 import { ElectronService } from '../shared/providers/electron.service';
 import { ExternalService } from '../shared/providers/external.service';
-import { PartyService } from '../shared/providers/party.service';
+import { IncomeService } from '../shared/providers/income.service';
 import { SessionService } from '../shared/providers/session.service';
 import { SettingsService } from '../shared/providers/settings.service';
-import { IncomeService } from '../shared/providers/income.service';
 
 @Component({
     selector: 'app-login',
@@ -31,10 +31,11 @@ export class LoginComponent implements OnInit {
     fetched = false;
     characterList: Character[] = [];
     player = {} as Player;
-    charName: string;
-    accName: string;
-    sessId: string;
+    characterName: string;
+    accountName: string;
+    sessionId: string;
     filePath: string;
+    netWorthHistory: NetWorthHistory;
 
     @ViewChild('stepper') stepper: MatStepper;
     @ViewChild('lastStep') lastStep: MatStep;
@@ -46,26 +47,26 @@ export class LoginComponent implements OnInit {
         private accountService: AccountService,
         private sessionService: SessionService,
         private settingsService: SettingsService,
-        private incomeService: IncomeService,
-        private partyService: PartyService) {
+        private incomeService: IncomeService
+    ) {
 
         this.fetchSettings();
 
         this.accFormGroup = fb.group({
-            accountName: [this.accName !== undefined ? this.accName : '', Validators.required]
+            accountName: [this.accountName !== undefined ? this.accountName : '', Validators.required]
         });
         this.sessFormGroup = fb.group({
-            sessionId: [this.sessId !== undefined ? this.sessId : '']
+            sessionId: [this.sessionId !== undefined ? this.sessionId : '']
         });
         this.charFormGroup = fb.group({
-            characterName: [this.charName !== undefined ? this.charName : '', Validators.required]
+            characterName: [this.characterName !== undefined ? this.characterName : '', Validators.required]
         });
         this.pathFormGroup = fb.group({
             filePath: [this.filePath !== undefined ? this.filePath :
                 'C:/Program Files (x86)/Steam/steamapps/common/Path of Exile/logs/Client.txt', Validators.required]
         });
-        if (this.charName !== undefined) {
-            this.getCharacterList(this.accName);
+        if (this.characterName !== undefined) {
+            this.getCharacterList(this.accountName);
         }
     }
 
@@ -75,10 +76,27 @@ export class LoginComponent implements OnInit {
     }
 
     fetchSettings() {
-        this.charName = this.settingsService.get('account.characterName');
-        this.sessId = this.settingsService.get('account.sessionId');
-        this.accName = this.settingsService.get('account.accountName');
+        this.characterName = this.settingsService.get('account.characterName');
+        this.sessionId = this.settingsService.get('account.sessionId');
+        this.accountName = this.settingsService.get('account.accountName');
         this.filePath = this.settingsService.get('account.filePath');
+        this.netWorthHistory = this.settingsService.get('networth');
+
+        // Set up history if we don't have any
+        if (!this.netWorthHistory) {
+            if (this.netWorthHistory === undefined) {
+                this.netWorthHistory = {
+                    lastSnapshot: (Date.now() - (5 * 60 * 1000)), // Five Minutes
+                    history: [{
+                        timestamp: (Date.now() - (5 * 60 * 1000)), // Five minutes
+                        value: 0,
+                        items: []
+                    }]
+                };
+            }
+            this.settingsService.set('networth', this.netWorthHistory);
+        }
+
     }
 
     ngOnInit() {
@@ -136,8 +154,8 @@ export class LoginComponent implements OnInit {
         this.externalService.getCharacter(form)
             .subscribe((data: EquipmentResponse) => {
                 const player = this.externalService.setCharacter(data, this.player);
-                player.netWorthSnapshots = this.incomeService.networthSnapshots;
                 this.player = player;
+                this.player.netWorthSnapshots = this.netWorthHistory.history;
                 this.accountService.player.next(this.player);
                 this.accountService.accountInfo.next(form);
                 this.settingsService.set('account', form);

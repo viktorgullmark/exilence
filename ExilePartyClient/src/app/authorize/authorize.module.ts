@@ -5,6 +5,7 @@ import { MatListModule } from '@angular/material/list';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { RouterModule } from '@angular/router';
 
+import { IncomeService } from '../shared/providers/income.service';
 import { PartyService } from '../shared/providers/party.service';
 import { SharedModule } from '../shared/shared.module';
 import { AuthorizeComponent } from './authorize.component';
@@ -29,6 +30,9 @@ import { PartyModule } from './party/party.module';
     MatSidenavModule
   ],
   declarations: [AuthorizeComponent],
-  providers: [PartyService]
+  providers: [
+    PartyService,
+    IncomeService
+  ]
 })
 export class AuthorizeModule { }
