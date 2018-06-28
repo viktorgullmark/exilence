@@ -142,17 +142,15 @@ export class IncomeService {
         });
       });
 
-
       for (let i = 0, _len = this.totalNetWorthItems; i < this.totalNetWorthItems.length; i++) {
-        this.totalNetWorth += (this.totalNetWorthItems[i].value * this.totalNetWorthItems[i].stacksize);
+        this.totalNetWorth += this.totalNetWorthItems[i].value;
       }
 
-
       this.totalNetWorthItems.sort((a: any, b: any) => {
-        if ((a.value * a.stackSize) < (b.value * b.stackSize)) {
+        if (a.value < b.value) {
           return 1;
         }
-        if ((a.value * a.stackSize) > (b.value * b.stackSize)) {
+        if (a.value > b.value) {
           return -1;
         }
         return 0;
