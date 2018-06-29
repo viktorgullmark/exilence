@@ -37,7 +37,7 @@ export class IncomeService {
   private totalNetWorthItems: NetWorthItem[] = [];
   public totalNetWorth = 0;
   private fiveMinutes = 5 * 60 * 1000;
-  private oneHourAgo = (Date.now() - (60 * 60 * 1000));
+  private twelveHoursAgo = (Date.now() - (12 * 60 * 60 * 1000));
 
   constructor(
     private ninjaService: NinjaService,
@@ -75,7 +75,7 @@ export class IncomeService {
         this.SnapshotPlayerNetWorth(sessionId).subscribe(() => {
 
           this.netWorthHistory.history = this.netWorthHistory.history
-            .filter((snaphot: NetWorthSnapshot) => snaphot.timestamp > this.oneHourAgo);
+            .filter((snaphot: NetWorthSnapshot) => snaphot.timestamp > this.twelveHoursAgo);
 
           // We are a new player that have not parsed income before
           // Remove the placeholder element
