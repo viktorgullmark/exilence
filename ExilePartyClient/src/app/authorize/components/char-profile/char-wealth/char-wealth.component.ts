@@ -34,9 +34,11 @@ export class CharWealthComponent implements OnInit {
     const pastHoursSnapshots = player.netWorthSnapshots
       .filter((snaphot: NetWorthSnapshot) => snaphot.timestamp > this.oneHourAgo);
 
-    const lastValue = pastHoursSnapshots[0].value;
-    const firstValue = pastHoursSnapshots[pastHoursSnapshots.length - 1].value;
-    this.gain = lastValue - firstValue;
+    if (pastHoursSnapshots[0] !== undefined) {
+      const lastValue = pastHoursSnapshots[0].value;
+      const firstValue = pastHoursSnapshots[pastHoursSnapshots.length - 1].value;
+      this.gain = lastValue - firstValue;
+    }
   }
 
   openLink(link: string) {

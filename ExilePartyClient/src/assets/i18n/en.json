@@ -33,10 +33,10 @@
         "NAME_INFO": "Select your current character"
     },
     "PARTY": {
-        "CODE": "Party name",
+        "CODE": "Group name",
         "NAME_HINT": "Enter name of your choice here",
         "ENTER": "Enter",
-        "PARTY": "Party"
+        "PARTY": "Group"
     },
     "ERROR": {
         "PATH_NOT_VALID": "The filepath is not valid"
