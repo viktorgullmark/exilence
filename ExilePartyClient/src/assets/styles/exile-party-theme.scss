@@ -3,6 +3,7 @@
 @include mat-core();
 $exileparty-primary: mat-palette($mat-pink, 500);
 $exileparty-secondary: mat-palette($mat-pink, 700);
+$exileparty-dark: mat-palette($mat-pink, 900);
 $exileparty-darker: mat-palette($mat-pink, 900);
 $exileparty-accent: mat-palette($mat-grey, 600);
 $exileparty-accent-dark: mat-palette($mat-grey, 800);
@@ -14,4 +15,5 @@ $primary: mat-color($exileparty-primary);
 $accent: mat-color($exileparty-accent);
 $accent-dark: mat-color($exileparty-accent-dark);
 $darker: mat-color($exileparty-darker);
+$dark: mat-color($exileparty-dark);
 $secondary: mat-color($exileparty-secondary);

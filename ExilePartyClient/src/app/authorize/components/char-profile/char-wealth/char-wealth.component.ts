@@ -38,6 +38,8 @@ export class CharWealthComponent implements OnInit {
       const lastValue = pastHoursSnapshots[0].value;
       const firstValue = pastHoursSnapshots[pastHoursSnapshots.length - 1].value;
       this.gain = lastValue - firstValue;
+    } else {
+      this.gain = 0;
     }
   }
 

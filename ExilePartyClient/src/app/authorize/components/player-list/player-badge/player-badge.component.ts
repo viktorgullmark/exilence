@@ -24,8 +24,12 @@ export class PlayerBadgeComponent implements OnInit {
   }
 
   selectPlayer() {
-    this.partyService.selectedPlayer.next(this.player);
-    this.partyService.selectedGenericPlayer.next(this.player);
+    if (!this.localPlayer) {
+      this.partyService.selectedPlayer.next(this.player);
+    }
+    if (this.localPlayer) {
+      this.partyService.selectedGenericPlayer.next(this.player);
+    }
   }
 
 }

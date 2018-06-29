@@ -66,6 +66,9 @@ export class PartyService {
     this.selectedPlayer.subscribe(res => {
       this.selectedPlayerObj = res;
     });
+    this.selectedGenericPlayer.subscribe(res => {
+      this.selectedGenericPlayerObj = res;
+    });
     this.accountService.accountInfo.subscribe(res => {
       this.accountInfo = res;
     });
