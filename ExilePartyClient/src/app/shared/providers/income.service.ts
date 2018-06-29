@@ -142,12 +142,13 @@ export class IncomeService {
               const netWorthItem: NetWorthItem = {
                 name: itemName,
                 value: Math.floor(valueForItem),
-                icon: item.icon.substring(0, item.icon.indexOf('?')) + '?scale=1&scaleIndex=3&w=1&h=1',
+                icon: item.icon.indexOf('?') >= 0
+                  ? item.icon.substring(0, item.icon.indexOf('?')) + '?scale=1&scaleIndex=3&w=1&h=1'
+                  : item.icon + '?scale=1&scaleIndex=3&w=1&h=1',
                 stacksize
               };
               this.totalNetWorthItems.push(netWorthItem);
             }
-
           }
         });
       });
