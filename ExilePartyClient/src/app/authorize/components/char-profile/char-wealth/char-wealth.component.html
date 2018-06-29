@@ -4,7 +4,12 @@
             <span class="title">Current net worth</span>
             <br/>
             <div class="networth-inner-wrapper">
-                <span class="networth">{{player.netWorthSnapshots[0].value}}c</span>
+                <span class="networth" *ngIf="player.netWorthSnapshots[0].value > 0">
+                    {{player.netWorthSnapshots[0].value}}c
+                </span>
+                <span class="networth-placeholder" *ngIf="player.netWorthSnapshots[0].value == 0">
+                    Fetching data ...
+                </span>
             </div>
         </div>
         <div class="networth-wrapper">

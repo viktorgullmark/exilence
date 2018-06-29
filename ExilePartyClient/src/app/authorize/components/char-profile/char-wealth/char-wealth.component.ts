@@ -2,6 +2,7 @@ import { Component, Input, OnInit } from '@angular/core';
 
 import { Player } from '../../../../shared/interfaces/player.interface';
 import { ElectronService } from '../../../../shared/providers/electron.service';
+import { PartyService } from '../../../../shared/providers/party.service';
 
 @Component({
   selector: 'app-char-wealth',
@@ -15,21 +16,24 @@ export class CharWealthComponent implements OnInit {
   public gain = 0;
 
   constructor(
-    private electronService: ElectronService
+    private electronService: ElectronService,
+    private partyService: PartyService
   ) {
-
-
-
+    this.partyService.selectedPlayer.subscribe(res => {
+      this.updateGain(res);
+    });
   }
 
   ngOnInit() {
-    const lastValue = this.player.netWorthSnapshots[0].value;
-    const firstValue = this.player.netWorthSnapshots[this.player.netWorthSnapshots.length - 1].value;
+  }
+
+  updateGain(player: Player) {
+    const lastValue = player.netWorthSnapshots[0].value;
+    const firstValue = player.netWorthSnapshots[player.netWorthSnapshots.length - 1].value;
     this.gain = lastValue - firstValue;
   }
 
   openLink(link: string) {
     this.electronService.shell.openExternal(link);
   }
-
 }
