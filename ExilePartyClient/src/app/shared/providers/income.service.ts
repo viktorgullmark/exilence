@@ -128,9 +128,13 @@ export class IncomeService {
           } else {
             itemName = itemName.trim();
           }
-          if (typeof this.ninjaPrices[itemName] !== 'undefined') {
+          if (typeof this.ninjaPrices[itemName] !== 'undefined' || itemName === 'Chaos Orb') {
 
             let valueForItem = this.ninjaPrices[itemName];
+            if (itemName === 'Chaos Orb') {
+              valueForItem = 1;
+            }
+
             let stacksize = 1;
             if (item.stackSize) {
               stacksize = item.stackSize;
@@ -138,7 +142,7 @@ export class IncomeService {
             }
 
             // Hide items with a total value under 1 chaos
-            if (valueForItem > 1) {
+            if (valueForItem >= 1) {
               const netWorthItem: NetWorthItem = {
                 name: itemName,
                 value: Math.floor(valueForItem),
