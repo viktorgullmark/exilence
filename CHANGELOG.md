@@ -1,6 +1,9 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [0.3.1] - 2018-06-XX
+- Made item-tooltips more similar to how they look in-game
+
 ## [0.3.0] - 2018-06-29
 - Fixes to notification-bar
 - Added minimize-button to window
