@@ -18,6 +18,25 @@ html, body {
     font-size: 15px;
 }
 
+::-webkit-scrollbar {
+    width: 25px;
+    background: #333333;
+}
+
+::-webkit-scrollbar-track {
+    border-radius: 0px;
+}
+
+::-webkit-scrollbar-thumb {
+    border-radius: 0px;
+    -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.5);
+    background: #e4e4e4;
+} 
+
+.mat-table {
+    background: #272727 !important;
+}
+
 .fade {
     -webkit-transition: all 0.3s ease-in-out;
     -moz-transition: all 0.3s ease-in-out;
@@ -100,7 +119,7 @@ a {
     }
 
     &.login-form {
-        width: 45%;
+        width: 60%;
     }
 
     .form-error {

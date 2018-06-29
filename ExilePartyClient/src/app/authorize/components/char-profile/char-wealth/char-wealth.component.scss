@@ -2,10 +2,63 @@
 
 .char-wealth {
     width: 684px;
-    height: 819px;
+    height: $content-height;
     border: 2px solid $main-border-color;
     background: $equipment-bg-color;
     position: relative;
     border-radius: 1px;
     transform-origin: top left;
+
+    .income-graph-wrapper {
+        padding: 25px;
+    }
+
+    .income-summary-wrapper {
+        padding: 25px;
+        width: 100%;
+        margin-bottom: 25px;
+        .networth-wrapper {
+            float: left;
+            width: 33.333%;
+            .title {
+                font-size: 14px;
+                .ninja-link {
+                    color: white;
+                    font-weight: 500;
+                    text-decoration: underline;
+                }
+            }
+
+            .networth-inner-wrapper {
+                margin-top: 10px;
+
+                .networth {
+                    color: $currency-chaos-color;
+                }
+
+                .networth-placeholder {
+                    color: $networth-placeholder-color;
+                }
+            }
+        }
+    }
+
+    .networth-table-wrapper {
+        padding-left: 25px;
+        margin-right: 25px;
+        margin-top: 25px;
+        height: 40%;
+        overflow-y: scroll;
+        position: absolute;
+        bottom: 25px;
+        width: calc(100% - 50px);
+
+        @media screen and (min-height: 1200px) {
+            height: 50%;
+        }
+
+        @media screen and (min-height: 1300px) {
+            height: 55%;
+        }
+    }
 }

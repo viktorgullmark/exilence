@@ -1,16 +1,17 @@
 import { Component, Inject, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { MatStepper, MatStep } from '@angular/material';
+import { MatStep, MatStepper } from '@angular/material';
 import { Router } from '@angular/router';
 
 import { AccountInfo } from '../shared/interfaces/account-info.interface';
 import { Character } from '../shared/interfaces/character.interface';
 import { EquipmentResponse } from '../shared/interfaces/equipment-response.interface';
+import { NetWorthHistory, NetWorthSnapshot } from '../shared/interfaces/income.interface';
 import { Player } from '../shared/interfaces/player.interface';
 import { AccountService } from '../shared/providers/account.service';
 import { ElectronService } from '../shared/providers/electron.service';
 import { ExternalService } from '../shared/providers/external.service';
-import { PartyService } from '../shared/providers/party.service';
+import { IncomeService } from '../shared/providers/income.service';
 import { SessionService } from '../shared/providers/session.service';
 import { SettingsService } from '../shared/providers/settings.service';
 
@@ -30,10 +31,13 @@ export class LoginComponent implements OnInit {
     fetched = false;
     characterList: Character[] = [];
     player = {} as Player;
-    charName: string;
-    accName: string;
-    sessId: string;
+    characterName: string;
+    accountName: string;
+    sessionId: string;
     filePath: string;
+    netWorthHistory: NetWorthHistory;
+
+    private twelveHoursAgo = (Date.now() - (12 * 60 * 60 * 1000));
 
     @ViewChild('stepper') stepper: MatStepper;
     @ViewChild('lastStep') lastStep: MatStep;
@@ -45,37 +49,60 @@ export class LoginComponent implements OnInit {
         private accountService: AccountService,
         private sessionService: SessionService,
         private settingsService: SettingsService,
-        private partyService: PartyService) {
+        private incomeService: IncomeService
+    ) {
 
         this.fetchSettings();
 
         this.accFormGroup = fb.group({
-            accountName: [this.accName !== undefined ? this.accName : '', Validators.required]
+            accountName: [this.accountName !== undefined ? this.accountName : '', Validators.required]
         });
         this.sessFormGroup = fb.group({
-            sessionId: [this.sessId !== undefined ? this.sessId : '']
+            sessionId: [this.sessionId !== undefined ? this.sessionId : '']
         });
         this.charFormGroup = fb.group({
-            characterName: [this.charName !== undefined ? this.charName : '', Validators.required]
+            characterName: [this.characterName !== undefined ? this.characterName : '', Validators.required]
         });
         this.pathFormGroup = fb.group({
             filePath: [this.filePath !== undefined ? this.filePath :
                 'C:/Program Files (x86)/Steam/steamapps/common/Path of Exile/logs/Client.txt', Validators.required]
         });
-        if (this.charName !== undefined) {
-            this.getCharacterList(this.accName);
+        if (this.characterName !== undefined) {
+            this.getCharacterList(this.accountName);
         }
     }
 
     checkPath() {
-        this.pathValid = this.electronService.fs.existsSync(this.pathFormGroup.controls.filePath.value);
+        this.pathValid = this.electronService.fs.existsSync(this.pathFormGroup.controls.filePath.value)
+            && this.pathFormGroup.controls.filePath.value.endsWith('Client.txt');
     }
 
     fetchSettings() {
-        this.charName = this.settingsService.get('account.characterName');
-        this.sessId = this.settingsService.get('account.sessionId');
-        this.accName = this.settingsService.get('account.accountName');
+        this.characterName = this.settingsService.get('account.characterName');
+        this.sessionId = this.settingsService.get('account.sessionId');
+        this.accountName = this.settingsService.get('account.accountName');
         this.filePath = this.settingsService.get('account.filePath');
+        this.netWorthHistory = this.settingsService.get('networth');
+
+        // Filter snapshots to only include last hour
+        if (this.netWorthHistory && this.netWorthHistory.history) {
+            this.netWorthHistory.history = this.netWorthHistory.history
+                .filter((snaphot: NetWorthSnapshot) => snaphot.timestamp > this.twelveHoursAgo);
+        }
+
+        // Set up placeholder history if we don't have any
+        if (!this.netWorthHistory || this.netWorthHistory.history.length === 0) {
+            this.netWorthHistory = {
+                lastSnapshot: 0,
+                history: [{
+                    timestamp: 0,
+                    value: 0,
+                    items: []
+                }]
+            };
+            this.settingsService.set('networth', this.netWorthHistory);
+        }
+
     }
 
     ngOnInit() {
@@ -99,11 +126,11 @@ export class LoginComponent implements OnInit {
                     this.isFetching = false;
                 }, 500);
             },
-            error => {
-                this.accountService.characterList.next([]);
-                this.isFetching = false;
-            }
-        );
+                error => {
+                    this.accountService.characterList.next([]);
+                    this.isFetching = false;
+                }
+            );
     }
 
     getFormObj() {
@@ -115,12 +142,26 @@ export class LoginComponent implements OnInit {
         } as AccountInfo;
     }
 
+    browse() {
+        this.electronService.remote.dialog.showOpenDialog({ properties: ['openFile', 'multiSelections'] },
+            selectedFiles => this.directorySelectorCallback(selectedFiles));
+    }
+
+    directorySelectorCallback(filePath) {
+        this.pathFormGroup.controls.filePath.setValue(filePath[0]);
+        setTimeout(() => {
+            this.checkPath();
+        }, 500);
+    }
+
     login() {
         this.isLoading = true;
         const form = this.getFormObj();
         this.externalService.getCharacter(form)
             .subscribe((data: EquipmentResponse) => {
-                this.player = this.externalService.setCharacter(data, this.player);
+                const player = this.externalService.setCharacter(data, this.player);
+                this.player = player;
+                this.player.netWorthSnapshots = this.netWorthHistory.history;
                 this.accountService.player.next(this.player);
                 this.accountService.accountInfo.next(form);
                 this.settingsService.set('account', form);

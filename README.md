@@ -1,6 +1,6 @@
 # ExileParty
 
-Path of Exile party-app used to track gear, inventory and stats of partymembers with cross-league support.
+Path of Exile party-app used to track gear, inventory, currency and more of partymembers with cross-league support.
 
 You could use this app to either improve the party-experience with your current party, or group up with your friends from different leagues while in discord with each other to show off your character.
 
@@ -8,16 +8,11 @@ Download latest release at https://github.com/viktorgullmark/exile-party/release
 
 Report bugs at https://github.com/viktorgullmark/exile-party/issues
 
-## Preview Images from 0.1.3a
-
-https://imgur.com/a/czESKmz
-
 ## Contents
 
 - [Changelog](https://github.com/viktorgullmark/exile-party/blob/master/CHANGELOG.md)
 - [Important](#important)
 - [Platform](#platform)
-- [Upcoming changes](#upcoming-changes)
 - [Help with development](#help-with-development)
 
 ## Important
@@ -28,18 +23,12 @@ We do not own a code-signing certificate for the application, which means you wi
 
 Currently runs with:
 
-- .NET Core 2.1.0-rc1-final
-- SignalR (.NET Core) 1.0.0-rc1-final w/ Redis caching
+- .NET Core 2.1.0
+- SignalR (.NET Core) 1.0.0 w/ Redis caching
 - Angular v6.0.3
 - Angular-CLI v6.0.3
 - Electron v2.0.1
 - Electron Builder v20.13.4
-
-## Upcoming changes
-
-- Support for divination cards
-- Support for abyssal sockets w/ jewels
-- Displaying DPS on item-tooltips
 
 ## Help with development
 

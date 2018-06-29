@@ -1,0 +1,23 @@
+@import "./../../../../assets/styles/_variables.scss";
+
+table {
+    width: 100%;
+}
+
+.icon-cell {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 10px;
+    .networth-icon {
+        max-height: 75px;
+    }
+}
+
+td {
+    min-height: 48px;
+}
+
+.networth-value {
+    color: $currency-chaos-color;
+}

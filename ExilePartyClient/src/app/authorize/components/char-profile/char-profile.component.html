@@ -12,12 +12,12 @@
                 Currency
             </ng-template>
         </mat-tab>
-        <mat-tab #mapTab id="mapTab" [disabled]="localProfile">
+        <!-- <mat-tab #mapTab id="mapTab" [disabled]="localProfile">
             <ng-template mat-tab-label>
                 <mat-icon class="tab-icon">map</mat-icon>
                 Maps
             </ng-template>
-        </mat-tab>
+        </mat-tab> -->
     </mat-tab-group>
 </div>
 
@@ -29,10 +29,10 @@
 
 <!-- tab CURRENCY -->
 <div class="tab-content" [hidden]="selectedIndex != 1 || localProfile">
-    <app-char-wealth></app-char-wealth>
+    <app-char-wealth *ngIf="!localProfile && selectedIndex == 1" [player]="player"></app-char-wealth>
 </div>
 
 <!-- tab MAPS -->
 <div class="tab-content" [hidden]="selectedIndex != 2 || localProfile">
-    <app-char-maps></app-char-maps>
+    <app-char-maps *ngIf="!localProfile && selectedIndex == 2"></app-char-maps>
 </div>

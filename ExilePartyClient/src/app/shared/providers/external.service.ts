@@ -10,15 +10,20 @@ import { Item } from '../interfaces/item.interface';
 import { Player } from '../interfaces/player.interface';
 import { Property } from '../interfaces/property.interface';
 import { Requirement } from '../interfaces/requirement.interface';
+import { Stash } from '../interfaces/stash.interface';
 import { AccountService } from './account.service';
 import { ElectronService } from './electron.service';
+import { IncomeService } from './income.service';
 
 @Injectable()
 export class ExternalService {
   public url: 'https://www.pathofexile.com/character-window/get-items';
 
-  constructor(private http: HttpClient, private electronService: ElectronService, private accountService: AccountService) {
-  }
+  constructor(
+    private http: HttpClient,
+    private electronService: ElectronService,
+    private accountService: AccountService
+  ) { }
 
   getLatestRelease(): Observable<any> {
     return this.http.get('https://api.github.com/repos/viktorgullmark/exile-party/releases/latest');
@@ -34,6 +39,18 @@ export class ExternalService {
   getCharacterList(account: string) {
     const parameters = `?accountName=${account}`;
     return this.http.get('https://www.pathofexile.com/character-window/get-characters' + parameters);
+  }
+
+  getStashTabs(sessionId: string, account: string, league: string) {
+    this.setCookie(sessionId);
+    const parameters = `?league=${league}&accountName=${account}&tabs=1`;
+    return this.http.get<Stash>('https://www.pathofexile.com/character-window/get-stash-items' + parameters);
+  }
+
+  getStashTab(sessionId: string, account: string, league: string, index: number): Observable<Stash> {
+    this.setCookie(sessionId);
+    const parameters = `?league=${league}&accountName=${account}&tabIndex=${index}&tabs=1`;
+    return this.http.get<Stash>('https://www.pathofexile.com/character-window/get-stash-items' + parameters);
   }
 
   setCookie(sessionId: string) {

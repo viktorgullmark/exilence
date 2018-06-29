@@ -1,11 +1,13 @@
 import { NgModule } from '@angular/core';
+import { MatDividerModule } from '@angular/material/divider';
 
-import { SharedModule } from '../../shared/shared.module';
-import { PartyComponent } from './party.component';
-import { PlayerListModule } from './../components/player-list/player-list.module';
-import { CharProfileModule } from '../components/char-profile/char-profile.module';
-import {MatDividerModule} from '@angular/material/divider';
 import { LogMonitorService } from '../../shared/providers/log-monitor.service';
+import { SharedModule } from '../../shared/shared.module';
+import { CharProfileModule } from '../components/char-profile/char-profile.module';
+import { PlayerListModule } from './../components/player-list/player-list.module';
+import { PartyComponent } from './party.component';
+
+
 @NgModule({
   imports: [
     SharedModule,
@@ -14,6 +16,8 @@ import { LogMonitorService } from '../../shared/providers/log-monitor.service';
     CharProfileModule
   ],
   declarations: [PartyComponent],
-  providers: [LogMonitorService]
+  providers: [
+    LogMonitorService
+  ]
 })
 export class PartyModule { }

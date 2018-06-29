@@ -2,7 +2,7 @@ import '../polyfills';
 import 'reflect-metadata';
 import 'zone.js/dist/zone-mix';
 
-import { UpperCasePipe } from '@angular/common';
+import { DatePipe, UpperCasePipe } from '@angular/common';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
@@ -24,6 +24,7 @@ import { CanActivateAuthorized } from './shared/guards/authorized.guard';
 import { AccountService } from './shared/providers/account.service';
 import { ElectronService } from './shared/providers/electron.service';
 import { ExternalService } from './shared/providers/external.service';
+import { NinjaService } from './shared/providers/ninja.service';
 import { SessionService } from './shared/providers/session.service';
 import { SettingsService } from './shared/providers/settings.service';
 
@@ -58,7 +59,17 @@ export function HttpLoaderFactory(http: HttpClient) {
       }
     }),
   ],
-  providers: [ExternalService, ElectronService, CanActivateAuthorized, AccountService, SessionService, SettingsService, UpperCasePipe],
+  providers: [
+    ExternalService,
+    ElectronService,
+    CanActivateAuthorized,
+    AccountService,
+    SessionService,
+    SettingsService,
+    UpperCasePipe,
+    DatePipe,
+    NinjaService,
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

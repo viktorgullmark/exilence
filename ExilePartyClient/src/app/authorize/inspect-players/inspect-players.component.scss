@@ -1,5 +1,9 @@
 @import "./../../../assets/styles/_variables.scss";
 
+.text-wrap {
+    max-width: 1000px;
+}
+
 .player-list-container {
     width: 400px;
     margin-right: 15px;
@@ -8,4 +12,7 @@
     width: 850px;
     height: $content-height;
     display: flex;
+}
+.group-wrapper {
+    height: $content-height;
 }

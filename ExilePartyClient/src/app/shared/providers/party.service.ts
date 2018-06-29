@@ -18,6 +18,9 @@ import { interval } from 'rxjs/observable/interval';
 import { Observable } from 'rxjs/Observable';
 import { from } from 'rxjs';
 import { map } from 'rxjs/operators';
+import { LogMessage } from '../interfaces/log-message.interface';
+import { IncomeService } from './income.service';
+import { NetWorthSnapshot } from './../interfaces/income.interface';
 
 @Injectable()
 export class PartyService {
@@ -26,7 +29,7 @@ export class PartyService {
   public party: Party;
   public isEntering = false;
   public recentParties: BehaviorSubject<string[]> = new BehaviorSubject<string[]>(undefined);
-  public player: Player;
+  public currentPlayer: Player;
   public accountInfo: AccountInfo;
   public selectedPlayer: BehaviorSubject<Player> = new BehaviorSubject<Player>(undefined);
   public selectedPlayerObj: Player;
@@ -53,12 +56,12 @@ export class PartyService {
     private accountService: AccountService,
     private logMonitorService: LogMonitorService,
     private externalService: ExternalService,
-    private settingService: SettingsService,
+    private settingService: SettingsService
   ) {
     this.recentParties.next(this.settingService.get('recentParties') || []);
 
     this.accountService.player.subscribe(res => {
-      this.player = res;
+      this.currentPlayer = res;
     });
     this.selectedPlayer.subscribe(res => {
       this.selectedPlayerObj = res;
@@ -80,7 +83,7 @@ export class PartyService {
       this.accountService.player.next(player);
       this.selectedPlayer.next(player);
       this.isEntering = false;
-      console.log('entered party:', party);
+      console.log('[INFO] entered party:', party);
     });
 
     this._hubConnection.on('PlayerUpdated', (player: Player) => {
@@ -90,7 +93,7 @@ export class PartyService {
       if (this.selectedPlayerObj.connectionID === player.connectionID) {
         this.selectedPlayer.next(player);
       }
-      console.log('player updated:', player);
+      console.log('[INFO] player updated:', player);
     });
 
     this._hubConnection.on('GenericPlayerUpdated', (player: Player) => {
@@ -100,37 +103,41 @@ export class PartyService {
       if (this.selectedGenericPlayerObj.character.name === player.character.name) {
         this.selectedGenericPlayer.next(player);
       }
-      console.log('generic player updated:', player);
+      console.log('[INFO] generic player updated:', player);
     });
 
     this._hubConnection.on('PlayerJoined', (player: Player) => {
       this.party.players = this.party.players.filter(x => x.character.name !== player.character.name);
       this.party.players.push(player);
       this.updatePlayerLists(this.party);
-      console.log('player joined:', player);
+      console.log('[INFO] player joined:', player);
     });
 
     this._hubConnection.on('PlayerLeft', (player: Player) => {
       this.party.players = this.party.players.filter(x => x.connectionID !== player.connectionID);
       this.updatePlayerLists(this.party);
       if (this.selectedPlayerObj.connectionID === player.connectionID) {
-        this.selectedPlayer.next(this.player);
+        this.selectedPlayer.next(this.currentPlayer);
       }
 
-      this.recentPlayers.forEach((p) => {
-        if (p.name === player.character.name && p.invited) {
-          p.invited = false;
-        }
-      });
-
-      console.log('player left:', player);
+      console.log('[INFO] player left:', player);
     });
 
     // subscribe to log-events
     this.logMonitorService.areaEvent.subscribe(res => {
-      this.player.area = res.name;
-      this.updatePlayer(this.player);
+      this.currentPlayer.area = res.name;
+      this.updatePlayer(this.currentPlayer);
     });
+
+    this.logMonitorService.areaJoin.subscribe((msg: LogMessage) => {
+      console.log('[INFO] Player joined area: ', msg.player.name);
+      this.handleAreaEvent(msg);
+    });
+    this.logMonitorService.areaLeft.subscribe((msg: LogMessage) => {
+      console.log('[INFO] Player left area: ', msg.player.name);
+      this.handleAreaEvent(msg);
+    });
+
   }
 
   updatePlayerLists(party: Party) {
@@ -140,10 +147,6 @@ export class PartyService {
     this.incursionSsfHc.next(party.players.filter(x => x.character.league === 'SSF Incursion HC'));
     this.std.next(party.players.filter(x => x.character.league === 'Standard'));
     this.hc.next(party.players.filter(x => x.character.league === 'Hardcore'));
-  }
-
-  updateGenericPlayerList(list: Player[]) {
-    this.genericPlayers.next(list);
   }
 
   public updatePlayer(player: Player) {
@@ -157,9 +160,7 @@ export class PartyService {
   }
 
   public getAccountForCharacter(character: string): Promise<any> {
-    console.log('starting get');
     return this._hubConnection.invoke('GetAccountForCharacter', character).then((response) => {
-      console.log('got response', response);
       return response;
     });
   }
@@ -204,6 +205,8 @@ export class PartyService {
     this.recentParties.next(recent);
   }
 
+  //#region genericPlayers
+
   public addGenericPlayer(player: Player) {
     const exists = this.genericPartyPlayers.filter(p => p.account === player.account).length > 0;
     if (!exists) {
@@ -211,4 +214,71 @@ export class PartyService {
       this.updateGenericPlayerList(this.genericPartyPlayers);
     }
   }
+
+  updateGenericPlayerList(list: Player[]) {
+    this.genericPlayers.next(list);
+  }
+
+  handleAreaEvent(event: LogMessage) {
+    this.getAccountForCharacter(event.player.name).then((account: string) => {
+      if (account !== null) {
+
+        const newPlayer: RecentPlayer = {
+          name: event.player.name
+        };
+
+        // Find and remove player if already in list.
+        let index = -1;
+        for (let i = 0; i < this.recentPlayers.length; i++) {
+          const player = this.recentPlayers[i];
+          if (player.name === event.player.name) {
+            index = i;
+            break;
+          }
+        }
+        if (index !== -1) {
+          this.recentPlayers.splice(index, 1);
+        }
+
+        // Add new player to top of list
+        this.recentPlayers.unshift(newPlayer);
+        // Prune list if we got over 9 entries
+        if (this.recentPlayers.length > 9) {
+          this.recentPlayers.splice(-1, 1);
+        }
+
+        this.addRecentPlayer(newPlayer);
+      } else {
+        console.log('[WARN] Account lookup failed for: ', event.player.name);
+      }
+    });
+  }
+
+  addRecentPlayer(player: RecentPlayer) {
+    this.getAccountForCharacter(player.name).then((account) => {
+      if (account !== null) {
+        const info: AccountInfo = {
+          accountName: account,
+          characterName: player.name,
+          sessionId: '',
+          filePath: ''
+        };
+        return this.externalService.getCharacter(info).subscribe((response: EquipmentResponse) => {
+          let newPlayer = {} as Player;
+          newPlayer.account = account,
+            newPlayer.generic = true;
+          newPlayer.genericHost = this.currentPlayer.character.name;
+          newPlayer = this.externalService.setCharacter(response, newPlayer);
+          this.addGenericPlayer(newPlayer);
+        },
+          (error) => {
+            console.log(`[WARN] getCharacter failed for player: ${player.name}, account: ${account} (profile probaly private)`);
+          }
+        );
+      }
+    });
+  }
+
+  //#endregion
+
 }

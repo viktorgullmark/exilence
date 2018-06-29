@@ -1,9 +1,14 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
-## [0.2.4] - 2018-06-26
+## [0.3.0] - 2018-06-26
 - Fixes to notification-bar
 - Added minimize-button to window
+- Added maximize-button to window
+- New page: "Inspect players". Lets you inspect players you've encountered recently in public parties, trades etc
+- New tab: "Currency" (Next to equipment when a player is selected). Scans the first 20 tabs of a players stash and calculates the total networth with a graph to track history, powered by https://poe.ninja
+- Minor style-changes across the app to make it more slim
+- Added a browse-dialog to select Client.txt, with improved validation to avoid confusion
 
 ## [0.2.3] - 2018-06-26
 - Tweaks to auto-updater

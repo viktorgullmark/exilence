@@ -1,12 +1,18 @@
 import { Injectable } from '@angular/core';
-import { AccountService } from './account.service';
-import { PartyService } from './party.service';
+
 import { Player } from '../interfaces/player.interface';
+import { AccountService } from './account.service';
+import { IncomeService } from './income.service';
+import { PartyService } from './party.service';
 
 @Injectable()
 export class SessionService {
   player: Player;
-  constructor(private accountService: AccountService, private partyService: PartyService) {
+  constructor(
+    private accountService: AccountService,
+    private partyService: PartyService,
+    private incomeService: IncomeService
+  ) {
     this.accountService.player.subscribe(res => {
       this.player = res;
     });
@@ -16,8 +22,12 @@ export class SessionService {
   }
   initSession(sessionId: string) {
     localStorage.setItem('sessionId', sessionId);
+    if (sessionId) {
+      this.incomeService.StartSnapshotting(sessionId);
+    }
   }
   cancelSession() {
+    this.incomeService.StopSnapshotting();
     this.accountService.clearCharacterList();
     this.partyService.leaveParty(this.partyService.party.name, this.player);
     localStorage.removeItem('sessionId');

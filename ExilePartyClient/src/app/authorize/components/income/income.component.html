@@ -1,0 +1,16 @@
+<h3 class="mat-h3">Net worth graph</h3>
+<div class="chart-container">
+  <ngx-charts-line-chart *ngIf="visible" [view]="view" class="chart-container" [scheme]="colorScheme" schemeType="linear" [results]="dateData"
+    legendTitle="Players" (legendLabelClick)="onLegendLabelClick($event)" gradient="false" xAxis="true" yAxis="true" showXAxisLabel="true"
+    showYAxisLabel="true" xAxisLabel="Time" [xAxisTickFormatting]="axisFormat" animations="true" yAxisLabel="Net worth in Chaos"
+    autoScale="true" timeline="true" showGridLines="true" [curve]="curve" (select)="select($event)">
+    <ng-template #tooltipTemplate let-model="model">
+      Net worth: {{ model.value }} chaos
+      <br> Time: {{ axisFormat(model.name) }}
+    </ng-template>
+    <ng-template #seriesTooltipTemplate let-model="model">
+      Net worth: {{ model[0].value }} chaos
+      <br> Time: {{ axisFormat(model[0].name) }}
+    </ng-template>
+  </ngx-charts-line-chart>
+</div>

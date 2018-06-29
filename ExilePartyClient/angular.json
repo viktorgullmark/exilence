@@ -22,12 +22,11 @@
               "src/favicon.png"
             ],
             "styles": [
+              "node_modules/@swimlane/ngx-charts/release/index.css",
               "src/assets/styles/exile-party-theme.scss",
               "src/assets/styles/styles.scss"
             ],
-            "scripts": [
-           
-            ]
+            "scripts": []
           },
           "configurations": {
             "dev": {
@@ -93,9 +92,7 @@
             "polyfills": "src/polyfills-test.ts",
             "tsConfig": "src/tsconfig.spec.json",
             "karmaConfig": "src/karma.conf.js",
-            "scripts": [
-
-            ],
+            "scripts": [],
             "styles": [
               "src/assets/styles/exile-party-theme.scss",
               "src/assets/styles/styles.scss"
