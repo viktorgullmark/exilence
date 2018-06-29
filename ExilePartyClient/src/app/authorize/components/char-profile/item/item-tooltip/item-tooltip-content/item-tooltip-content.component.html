@@ -39,7 +39,7 @@
                             {{prop.name}}
                         </span>
                         <ng-container *ngIf="prop.values[0] != undefined">
-                            :&nbsp;{{prop.values[0][0]}}</ng-container>
+                            :&nbsp;<span [ngClass]="{'generic-mod': prop.name == 'Quality' || prop.name == 'Energy Shield' || prop.name == 'Armour' || prop.name == 'Evasion'}">{{prop.values[0][0]}}</span></ng-container>
                     </span>
                     <br/>
                 </ng-container>
@@ -53,7 +53,7 @@
                                 {{prop.name}}
                             </span>
                             <ng-container *ngIf="prop.values[0] != undefined">
-                                :&nbsp;{{prop.values[0][0]}}</ng-container>
+                                :&nbsp;<span class="item-quality">{{prop.values[0][0]}}</span></ng-container>
                         </ng-container>
                     </span>
                     <br/>
@@ -76,6 +76,10 @@
             <hr *ngIf="item.requirements != undefined && (item.implicitMods != undefined || item.enchantMods != undefined || item.explicitMods != undefined || item.craftedMods != undefined || !item.identified)">
             <span *ngIf="item.identified != undefined && !item.identified" class="unidentified">Unidentified</span>
         </div>
+        <ng-container *ngIf="item.secDescrText != undefined">
+                <span class="descr-text descr-text-secondary mat-caption">{{item.secDescrText}}</span>
+                <hr *ngIf="item.implicitMods != undefined || item.enchantMods != undefined || item.explicitMods != undefined || item.craftedMods != undefined || !item.identified">
+            </ng-container>
         <div class="mods">
             <ng-container *ngFor="let mod of item.implicitMods">
                 <span>{{mod}}
@@ -111,11 +115,7 @@
             <hr *ngIf="item.implicitMods != undefined || item.enchantMods != undefined || item.explicitMods != undefined || item.craftedMods != undefined || !item.identified">
             <span class="descr-text mat-caption">{{item.descrText}}</span>
         </ng-container>
-        <ng-container *ngIf="item.secDescrText != undefined">
-            <br/>
-            <hr *ngIf="item.implicitMods != undefined || item.enchantMods != undefined || item.explicitMods != undefined || item.craftedMods != undefined || !item.identified">
-            <span class="descr-text mat-caption">{{item.secDescrText}}</span>
-        </ng-container>
+        
         <ng-container *ngIf="item.corrupted && (item.secDescrText != undefined || item.descrText != undefined)">
             <br/>
         </ng-container>

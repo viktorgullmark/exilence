@@ -66,12 +66,17 @@ hr {
     color: $tag-color;
 }
 
-.corrupted {
-    color: $corrupted-item-color !important;
+.descr-text-secondary {
+    color: $descr-text-secondary-color;
 }
 
 .corrupted {
-    color: $unidentified-item-font-color !important;
+    color: $corrupted-item-color !important;
+    font-size: 13px;
+}
+
+.generic-mod {
+    color: $mod-generic-color;
 }
 
 .enchant-mod {
@@ -79,7 +84,8 @@ hr {
 }
 
 .tooltip-body {
-    padding: 10px;
+    padding: 5px;
+    font-size: 12px;
 
     .properties {
         .property {
