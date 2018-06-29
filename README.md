@@ -14,6 +14,7 @@ Report bugs at https://github.com/viktorgullmark/exile-party/issues
 - [Important](#important)
 - [Platform](#platform)
 - [Help with development](#help-with-development)
+- [Acknowledgements](#acknowledgements)
 
 ## Important
 
@@ -46,4 +47,12 @@ See https://github.com/maximegris/angular-electron for additional commands.
 To run the API you'll need a local redis-server. 
 
 If requested I can set up an additional redis-cache in azure for developing against.
+
+## Acknowledgements
+
+Huge thanks to https://poe.ninja for providing a great API, which lets us calculate net worth of players.
+
+Thanks to https://github.com/klayveR for providing a great log-monitor to track the Client.txt.
+
+And a thank you to GGG for creating this game!
 
