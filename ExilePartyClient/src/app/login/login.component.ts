@@ -37,7 +37,7 @@ export class LoginComponent implements OnInit {
     filePath: string;
     netWorthHistory: NetWorthHistory;
 
-    private oneHourAgo = (Date.now() - (60 * 60 * 1000));
+    private twelveHoursAgo = (Date.now() - (12 * 60 * 60 * 1000));
 
     @ViewChild('stepper') stepper: MatStepper;
     @ViewChild('lastStep') lastStep: MatStep;
@@ -87,7 +87,7 @@ export class LoginComponent implements OnInit {
         // Filter snapshots to only include last hour
         if (this.netWorthHistory && this.netWorthHistory.history) {
             this.netWorthHistory.history = this.netWorthHistory.history
-                .filter((snaphot: NetWorthSnapshot) => snaphot.timestamp > this.oneHourAgo);
+                .filter((snaphot: NetWorthSnapshot) => snaphot.timestamp > this.twelveHoursAgo);
         }
 
         // Set up placeholder history if we don't have any
