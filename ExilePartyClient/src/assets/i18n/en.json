@@ -21,9 +21,9 @@
         "NAME_INFO": "Enter your account-name here",
         "LOGIN": "Login",
         "SESSIONID": "Session ID",
-        "SESSIONID_INFO": "Enter a valid SessionId here",
+        "SESSIONID_INFO": "Enter a valid SessionId here (to retrieve inventory & stash)",
         "FILEPATH": "Path to Client.txt",
-        "FILEPATH_INFO": "Enter the full path to your Client.txt",
+        "FILEPATH_INFO": "Enter the full path to your Client.txt (to enable live-data)",
         "LOGOUT": "Logout",
         "CLOSE": "Close",
         "INFORMATION": "Account information"
