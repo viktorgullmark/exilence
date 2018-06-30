@@ -2,6 +2,7 @@ import { Component, OnInit, Input, Inject } from '@angular/core';
 import { Player } from '../../../shared/interfaces/player.interface';
 import { PartyService } from '../../../shared/providers/party.service';
 import { Validators, FormBuilder, FormGroup } from '@angular/forms';
+import { ExtendedAreaInfo } from '../../../shared/interfaces/area.interface';
 
 @Component({
   selector: 'app-map-table',
@@ -22,9 +23,9 @@ export class MapTableComponent implements OnInit {
     this.updateTable(this.player);
     this.partyService.selectedPlayer.subscribe(res => {
       this.dataSource = [];
-      // if (res.areas !== null) {
-      //   this.updateTable(res);
-      // }
+      if (res.pastAreas !== null) {
+        this.updateTable(res);
+      }
     });
   }
 
@@ -44,13 +45,19 @@ export class MapTableComponent implements OnInit {
   }
 
   updateTable(player: Player) {
-    // player.areas.forEach(area => {
-    //   this.dataSource.push({
-    //     name: area.name,
-    //     tier: area.tier,
-    //     time: area.time
-    //   });
-    // });
+    if (player.pastAreas !== null) {
+      player.pastAreas.forEach((area: ExtendedAreaInfo) => {
+        const minute = Math.floor(area.duration / 60);
+        const seconds = area.duration % 60;
+        const newAreaObj = {
+          name: area.eventArea.name,
+          tier: area.eventArea.info[0].level,
+          time: minute + ':' + seconds
+        };
+
+        this.dataSource.push(newAreaObj);
+      });
+    }
     this.filter();
   }
 

@@ -34,5 +34,5 @@
 
 <!-- tab MAPS -->
 <div class="tab-content" [hidden]="selectedIndex != 2 || localProfile">
-    <app-char-maps *ngIf="!localProfile && selectedIndex == 2"></app-char-maps>
+    <app-char-maps *ngIf="!localProfile && selectedIndex == 2" [player]="player"></app-char-maps>
 </div>
