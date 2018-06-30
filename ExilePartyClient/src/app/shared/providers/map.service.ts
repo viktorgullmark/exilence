@@ -32,22 +32,15 @@ export class MapService {
 
       clearInterval(this.durationInterval);
 
-      const extendedJoinInfo: ExtendedAreaInfo = {
+      const extendedInfo: ExtendedAreaInfo = {
         eventArea: e,
         type: AreaEventType.Join,
         timestamp: Date.now(),
         duration: 0
       };
 
-      const extendedLeaveInfo: ExtendedAreaInfo = {
-        eventArea: e,
-        type: AreaEventType.Leave,
-        timestamp: Date.now(),
-        duration: this.durationSeconds
-      };
-
-      this.currentArea = extendedJoinInfo;
-      this.pastAreaList.unshift(extendedLeaveInfo);
+      this.currentArea.duration = this.durationSeconds;
+      this.pastAreaList.unshift(this.currentArea);
 
       if (this.pastAreaList.length > 50) {
         this.pastAreaList.pop();
@@ -58,11 +51,10 @@ export class MapService {
         this.durationSeconds++;
       }, 1000);
 
+      this.currentArea = extendedInfo;
+
       this.localPlayer.pastAreas = this.pastAreaList;
       this.localPlayer.areaInfo = this.currentArea;
-
-      const tempPlayer: Player = this.localPlayer;
-      tempPlayer.netWorthSnapshots = [];
 
       this.partyService.updatePlayer(this.localPlayer);
 
