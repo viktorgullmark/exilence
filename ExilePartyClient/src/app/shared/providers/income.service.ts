@@ -122,12 +122,15 @@ export class IncomeService {
       console.log('[INFO]: Finished retriving stashtabs and value information.');
       this.playerStashTabs.forEach((tab: Stash, tabIndex: number) => {
         tab.items.forEach((item: Item) => {
-          let itemName = item.name + ' ' + item.typeLine;
-          if (itemName.indexOf('<<') !== -1) {
-            itemName = itemName.substring(28);
-          } else {
-            itemName = itemName.trim();
+
+          let itemName = item.name;
+
+          if (item.typeLine) {
+            itemName += ' ' + item.typeLine;
           }
+
+          itemName = itemName.replace('<<set:MS>><<set:M>><<set:S>>', '').trim();
+
           if (typeof this.ninjaPrices[itemName] !== 'undefined' || itemName === 'Chaos Orb') {
 
             let valueForItem = this.ninjaPrices[itemName];
@@ -206,7 +209,16 @@ export class IncomeService {
             name = line.currencyTypeName;
           }
           if ('name' in line) {
-            name = line.name + ' ' + line.baseType;
+
+            if (line.name.indexOf('Remnant') > -1) {
+              const debug = -1;
+            }
+
+            name = line.name;
+            if (line.baseType && (line.name.indexOf(line.baseType) === -1)) {
+              name += ' ' + line.baseType;
+            }
+            name.trim();
           }
           if ('links' in line) {
             links = line.links;
