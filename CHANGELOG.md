@@ -3,7 +3,11 @@ All notable changes to this project will be documented in this file.
 
 ## [0.3.1] - 2018-06-XX
 - Made item-tooltips more similar to how they look in-game
+- Added new tab: "Maps" that tracks history of zones entered
 - Added filter-functionality to income-table
+- Added filter-functionality to map-table
+- Added sorting by columns to income-table
+- Added sorting by columns to map-table
 - Added helpful link on how to find sessionId
 - Added more descriptive text to login-flow
 - Minor style-changes across the app (header-sizes etc)
