@@ -13,6 +13,7 @@ import { AuthorizeComponent } from './authorize.component';
 import { DashboardModule } from './dashboard/dashboard.module';
 import { InspectPlayersModule } from './inspect-players/inspect-players.module';
 import { PartyModule } from './party/party.module';
+import { SettingsModule } from './settings/settings.module';
 
 @NgModule({
   imports: [
@@ -28,7 +29,8 @@ import { PartyModule } from './party/party.module';
     RouterModule,
     PartyModule,
     InspectPlayersModule,
-    MatSidenavModule
+    MatSidenavModule,
+    SettingsModule
   ],
   declarations: [AuthorizeComponent],
   providers: [

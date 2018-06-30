@@ -9,6 +9,9 @@
         "PARTY": {
             "TITLE": "Current group"
         },
+        "SETTINGS": {
+            "TITLE": "Settings"
+        },
         "RECENT_PLAYERS": {
             "TITLE": "Inspect players"
         }
