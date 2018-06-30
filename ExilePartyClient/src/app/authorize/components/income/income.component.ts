@@ -36,11 +36,10 @@ export class IncomeComponent implements OnInit {
     private partyService: PartyService
   ) {
     this.setColorScheme('fire');
-
-    this.updateGraph(this.player);
   }
 
   ngOnInit() {
+    this.updateGraph(this.player);
     this.partyService.selectedPlayer.subscribe(res => {
       this.dateData = [];
       if (res.netWorthSnapshots !== null) {
