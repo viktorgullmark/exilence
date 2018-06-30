@@ -1,6 +1,7 @@
-import { Component, OnInit, Inject, ViewChild } from '@angular/core';
+import { Component, OnInit, Inject, ViewChild, Input } from '@angular/core';
 import { FormGroup, FormBuilder } from '@angular/forms';
 import { MapTableComponent } from '../../map-table/map-table.component';
+import { Player } from '../../../../shared/interfaces/player.interface';
 
 @Component({
   selector: 'app-char-maps',
@@ -9,6 +10,7 @@ import { MapTableComponent } from '../../map-table/map-table.component';
 })
 export class CharMapsComponent implements OnInit {
   form: FormGroup;
+  @Input() player: Player;
 
   @ViewChild('table') table: MapTableComponent;
 
