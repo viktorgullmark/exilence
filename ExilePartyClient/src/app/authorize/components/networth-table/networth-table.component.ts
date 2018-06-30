@@ -1,6 +1,7 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, ViewChild } from '@angular/core';
 import { Player } from '../../../shared/interfaces/player.interface';
 import { PartyService } from '../../../shared/providers/party.service';
+import { MatSort, MatTableDataSource } from '@angular/material';
 
 @Component({
   selector: 'app-networth-table',
@@ -13,7 +14,8 @@ export class NetworthTableComponent implements OnInit {
   dataSource = [];
   searchText = '';
   filteredArr = [];
-
+  source: any;
+  @ViewChild(MatSort) sort: MatSort;
   constructor(private partyService: PartyService) { }
 
   ngOnInit() {
@@ -39,6 +41,9 @@ export class NetworthTableComponent implements OnInit {
         item[k].toString().toLowerCase()
           .includes(this.searchText.toLowerCase()))
     );
+
+    this.source = new MatTableDataSource(this.filteredArr);
+    this.source.sort = this.sort;
   }
 
   updateTable(player: Player) {
