@@ -9,15 +9,11 @@ import { Validators, FormBuilder, FormGroup } from '@angular/forms';
   styleUrls: ['./map-table.component.scss']
 })
 export class MapTableComponent implements OnInit {
-  form: FormGroup;
   @Input() player: Player;
   displayedColumns: string[] = ['name', 'tier', 'time'];
   dataSource = [];
 
-  constructor(@Inject(FormBuilder) fb: FormBuilder, private partyService: PartyService) {
-    this.form = fb.group({
-      searchText: ['']
-    });
+  constructor(private partyService: PartyService) {
   }
 
   ngOnInit() {
@@ -30,8 +26,8 @@ export class MapTableComponent implements OnInit {
     });
   }
 
-  search() {
-    console.log(this.form.controls.searchText.value);
+  doSearch(text: string) {
+    console.log(text);
   }
 
   updateTable(player: Player) {

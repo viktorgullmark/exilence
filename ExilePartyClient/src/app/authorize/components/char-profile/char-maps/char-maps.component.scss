@@ -19,9 +19,11 @@
         padding: 25px;
         width: 100%;
         margin-bottom: 25px;
+
         .stat-wrapper {
             float: left;
             width: 33.333%;
+
             .title {
                 font-size: 14px;
             }
@@ -41,15 +43,14 @@
     }
 }
 
-.map-table-wrapper {
+.table-outer-wrapper {
+    height: 70%;
+    bottom: 25px;
+    width: calc(100% - 50px);
     padding-left: 25px;
     margin-right: 25px;
     margin-top: 25px;
-    height: 70%;
-    overflow-y: scroll;
     position: absolute;
-    bottom: 25px;
-    width: calc(100% - 50px);
 
     @media screen and (min-height: 1200px) {
         height: 75%;
@@ -57,5 +58,10 @@
 
     @media screen and (min-height: 1300px) {
         height: 80%;
+    }
+
+    .map-table-wrapper {
+        height: calc(100% - 60px);
+        overflow-y: scroll;
     }
 }

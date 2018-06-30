@@ -17,7 +17,16 @@
             </div>
         </div>
     </div>
-    <div class="map-table-wrapper">
-        <app-map-table [player]="player"></app-map-table>
+    <div class="table-outer-wrapper">
+        <div class="search-form-wrapper">
+            <form class="form search-form" [formGroup]="form">
+                <mat-form-field>
+                    <input matInput formControlName="searchText" placeholder="{{'MAPS.SEARCH' | translate}}" class="search-text-input" (ngModelChange)="search()">
+                </mat-form-field>
+            </form>
+        </div>
+        <div class="map-table-wrapper">
+            <app-map-table [player]="player"></app-map-table>
+        </div>
     </div>
 </div>

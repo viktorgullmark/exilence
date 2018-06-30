@@ -28,7 +28,16 @@
     <div class="income-graph-wrapper">
         <app-income [player]="player" [view]="graphDimensions"></app-income>
     </div>
-    <div class="networth-table-wrapper">
-        <app-networth-table [player]="player"></app-networth-table>
+    <div class="table-outer-wrapper">
+        <div class="search-form-wrapper">
+            <form class="form search-form" [formGroup]="form">
+                <mat-form-field>
+                    <input matInput formControlName="searchText" placeholder="{{'CURRENCY.SEARCH' | translate}}" class="search-text-input" (ngModelChange)="search()">
+                </mat-form-field>
+            </form>
+        </div>
+        <div class="networth-table-wrapper">
+            <app-networth-table #table [player]="player"></app-networth-table>
+        </div>
     </div>
 </div>

@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Inject } from '@angular/core';
+import { FormGroup, FormBuilder } from '@angular/forms';
 
 @Component({
   selector: 'app-char-maps',
@@ -6,8 +7,12 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./char-maps.component.scss']
 })
 export class CharMapsComponent implements OnInit {
-
-  constructor() { }
+  form: FormGroup;
+  constructor(@Inject(FormBuilder) fb: FormBuilder) {
+    this.form = fb.group({
+      searchText: ['']
+    });
+   }
 
   ngOnInit() {
   }

@@ -11,6 +11,8 @@ export class NetworthTableComponent implements OnInit {
   @Input() player: Player;
   displayedColumns: string[] = ['position', 'name', 'stacksize', 'value'];
   dataSource = [];
+  searchText = '';
+  filteredArr = [];
 
   constructor(private partyService: PartyService) { }
 
@@ -24,6 +26,22 @@ export class NetworthTableComponent implements OnInit {
     });
   }
 
+  doSearch(text: string) {
+    this.searchText = text;
+    console.log(text);
+
+    this.filter();
+  }
+
+  filter() {
+    this.filteredArr = [...this.dataSource];
+    this.filteredArr = this.filteredArr.filter(item =>
+      Object.keys(item).some(k => item[k] != null && item[k] !== '' &&
+        item[k].toString().toLowerCase()
+          .includes(this.searchText.toLowerCase()))
+    );
+  }
+
   updateTable(player: Player) {
     player.netWorthSnapshots[0].items.forEach(snapshot => {
 
@@ -35,6 +53,8 @@ export class NetworthTableComponent implements OnInit {
         icon: snapshot.icon
       });
     });
+
+    this.filter();
 
   }
 

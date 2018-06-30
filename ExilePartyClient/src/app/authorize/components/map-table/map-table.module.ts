@@ -9,10 +9,7 @@ import { SharedModule } from '../../../shared/shared.module';
 @NgModule({
   imports: [
     SharedModule,
-    FormsModule,
-    ReactiveFormsModule,
-    MatTableModule,
-    MatInputModule
+    MatTableModule
   ],
   declarations: [MapTableComponent],
   exports: [MapTableComponent]

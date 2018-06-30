@@ -41,6 +41,9 @@
     "MAPS": {
         "SEARCH": "Filter areas"
     },
+    "CURRENCY": {
+        "SEARCH": "Filter currency"
+    },
     "ERROR": {
         "PATH_NOT_VALID": "The filepath is not valid"
     }

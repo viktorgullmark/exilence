@@ -1,9 +1,11 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, Inject, ViewChild } from '@angular/core';
 
 import { NetWorthSnapshot } from '../../../../shared/interfaces/income.interface';
 import { Player } from '../../../../shared/interfaces/player.interface';
 import { ElectronService } from '../../../../shared/providers/electron.service';
 import { PartyService } from '../../../../shared/providers/party.service';
+import { FormBuilder, FormGroup } from '@angular/forms';
+import { NetworthTableComponent } from '../../networth-table/networth-table.component';
 
 @Component({
   selector: 'app-char-wealth',
@@ -11,22 +13,33 @@ import { PartyService } from '../../../../shared/providers/party.service';
   styleUrls: ['./char-wealth.component.scss']
 })
 export class CharWealthComponent implements OnInit {
+  form: FormGroup;
+
   @Input() player: Player;
+  @ViewChild('table') table: NetworthTableComponent;
 
   private oneHourAgo = (Date.now() - (1 * 60 * 60 * 1000));
   public graphDimensions = [640, 300];
   public gain = 0;
 
   constructor(
+    @Inject(FormBuilder) fb: FormBuilder,
     private electronService: ElectronService,
     private partyService: PartyService
   ) {
+    this.form = fb.group({
+      searchText: ['']
+    });
     this.partyService.selectedPlayer.subscribe(res => {
       this.updateGain(res);
     });
   }
 
   ngOnInit() {
+  }
+
+  search() {
+    this.table.doSearch(this.form.controls.searchText.value);
   }
 
   updateGain(player: Player) {
