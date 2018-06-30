@@ -3,6 +3,10 @@ All notable changes to this project will be documented in this file.
 
 ## [0.3.1] - 2018-06-XX
 - Made item-tooltips more similar to how they look in-game
+- Added filter-functionality to income-table
+- Added helpful link on how to find sessionId
+- Added more descriptive text to login-flow
+- Minor style-changes across the app (header-sizes etc)
 
 ## [0.3.0] - 2018-06-29
 - Fixes to notification-bar
