@@ -38,6 +38,9 @@
         "ENTER": "Enter",
         "PARTY": "Group"
     },
+    "MAPS": {
+        "SEARCH": "Filter areas"
+    },
     "ERROR": {
         "PATH_NOT_VALID": "The filepath is not valid"
     }
