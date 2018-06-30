@@ -1,5 +1,6 @@
-# ExileParty
-
+ExileParty
+[![Github All Releases](https://img.shields.io/github/downloads/viktorgullmark/exile-party/total.svg)](https://github.com/viktorgullmark/exile-party/releases)
+===
 Path of Exile party-app used to track gear, inventory, currency and more of partymembers with cross-league support.
 
 You could use this app to either improve the party-experience with your current party, or group up with your friends from different leagues while in discord with each other to show off your character.
