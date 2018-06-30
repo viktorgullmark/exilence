@@ -12,6 +12,8 @@ export class MapTableComponent implements OnInit {
   @Input() player: Player;
   displayedColumns: string[] = ['name', 'tier', 'time'];
   dataSource = [];
+  searchText = '';
+  filteredArr = [];
 
   constructor(private partyService: PartyService) {
   }
@@ -27,7 +29,18 @@ export class MapTableComponent implements OnInit {
   }
 
   doSearch(text: string) {
-    console.log(text);
+    this.searchText = text;
+
+    this.filter();
+  }
+
+  filter() {
+    this.filteredArr = [...this.dataSource];
+    this.filteredArr = this.filteredArr.filter(item =>
+      Object.keys(item).some(k => item[k] != null && item[k] !== '' &&
+        item[k].toString().toLowerCase()
+          .includes(this.searchText.toLowerCase()))
+    );
   }
 
   updateTable(player: Player) {
@@ -38,6 +51,7 @@ export class MapTableComponent implements OnInit {
     //     time: area.time
     //   });
     // });
+    this.filter();
   }
 
 }

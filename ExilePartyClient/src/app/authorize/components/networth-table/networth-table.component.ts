@@ -28,7 +28,6 @@ export class NetworthTableComponent implements OnInit {
 
   doSearch(text: string) {
     this.searchText = text;
-    console.log(text);
 
     this.filter();
   }
