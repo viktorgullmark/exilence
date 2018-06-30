@@ -1,8 +1,9 @@
-import { Component, OnInit, Input, Inject } from '@angular/core';
+import { Component, OnInit, Input, Inject, ViewChild } from '@angular/core';
 import { Player } from '../../../shared/interfaces/player.interface';
 import { PartyService } from '../../../shared/providers/party.service';
 import { Validators, FormBuilder, FormGroup } from '@angular/forms';
 import { ExtendedAreaInfo } from '../../../shared/interfaces/area.interface';
+import { MatSort, MatTableDataSource } from '@angular/material';
 
 @Component({
   selector: 'app-map-table',
@@ -11,11 +12,12 @@ import { ExtendedAreaInfo } from '../../../shared/interfaces/area.interface';
 })
 export class MapTableComponent implements OnInit {
   @Input() player: Player;
-  displayedColumns: string[] = ['name', 'tier', 'time'];
+  displayedColumns: string[] = ['timestamp', 'name', 'tier', 'time'];
   dataSource = [];
   searchText = '';
   filteredArr = [];
-
+  source: any;
+  @ViewChild(MatSort) sort: MatSort;
   constructor(private partyService: PartyService) {
   }
 
@@ -42,6 +44,9 @@ export class MapTableComponent implements OnInit {
         item[k].toString().toLowerCase()
           .includes(this.searchText.toLowerCase()))
     );
+
+    this.source = new MatTableDataSource(this.filteredArr);
+    this.source.sort = this.sort;
   }
 
   updateTable(player: Player) {
@@ -52,7 +57,8 @@ export class MapTableComponent implements OnInit {
         const newAreaObj = {
           name: area.eventArea.name,
           tier: area.eventArea.info[0].level,
-          time: minute + ':' + seconds
+          time: minute + ':' + seconds,
+          timestamp: area.timestamp
         };
 
         this.dataSource.push(newAreaObj);
