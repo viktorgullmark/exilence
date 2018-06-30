@@ -165,6 +165,7 @@ export class LoginComponent implements OnInit {
             .subscribe((data: EquipmentResponse) => {
                 const player = this.externalService.setCharacter(data, this.player);
                 this.player = player;
+                this.player.account = form.accountName;
                 this.player.netWorthSnapshots = this.netWorthHistory.history;
                 this.accountService.player.next(this.player);
                 this.accountService.accountInfo.next(form);
