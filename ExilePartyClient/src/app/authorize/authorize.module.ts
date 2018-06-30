@@ -6,6 +6,7 @@ import { MatSidenavModule } from '@angular/material/sidenav';
 import { RouterModule } from '@angular/router';
 
 import { IncomeService } from '../shared/providers/income.service';
+import { MapService } from '../shared/providers/map.service';
 import { PartyService } from '../shared/providers/party.service';
 import { SharedModule } from '../shared/shared.module';
 import { AuthorizeComponent } from './authorize.component';
@@ -32,7 +33,8 @@ import { PartyModule } from './party/party.module';
   declarations: [AuthorizeComponent],
   providers: [
     PartyService,
-    IncomeService
+    IncomeService,
+    MapService
   ]
 })
 export class AuthorizeModule { }

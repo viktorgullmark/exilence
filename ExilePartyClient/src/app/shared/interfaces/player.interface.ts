@@ -1,3 +1,4 @@
+import { ExtendedAreaInfo } from './area.interface';
 import { Character } from './character.interface';
 import { NetWorthSnapshot } from './income.interface';
 
@@ -13,6 +14,8 @@ export interface Player {
     generic: boolean;
     genericHost: string;
     netWorthSnapshots: NetWorthSnapshot[];
+    areaInfo: ExtendedAreaInfo;
+    pastAreas: ExtendedAreaInfo[];
 }
 
 export interface RecentPlayer {
