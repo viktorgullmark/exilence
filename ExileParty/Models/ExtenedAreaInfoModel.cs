@@ -9,7 +9,7 @@ namespace ExileParty.Models
     public class ExtenedAreaInfoModel
     {
         public EventArea EventArea { get; set; }
-        public int Type { get; set; }
+        public AreaEventType Type { get; set; }
         public long Timestamp { get; set; }
         public int Duration { get; set; }
     }
@@ -29,7 +29,13 @@ namespace ExileParty.Models
         public int Level { get; set; }
         public bool Town { get; set; }
         public bool Waypoint { get; set; }
-        public List<string> Bosses { get; set; }
+        public List<AreaBoss> Bosses { get; set; }
+    }
+
+    [Serializable]
+    public class AreaBoss
+    {
+        public string Name { get; set; }
     }
 
     [Serializable]
