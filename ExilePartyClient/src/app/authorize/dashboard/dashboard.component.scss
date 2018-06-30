@@ -5,15 +5,18 @@
 }
 
 .recent-container {
-    display: flex;
-
+    height: 125px;
+    .party-headline-container {
+        width: 100%;
+        margin-bottom: 15px;
+    }
     .recent-party-badge-container {
-        flex-direction: column;
+        float: left;
 
         .recent-party-badge {
             cursor: pointer;
             background: $recent-party-badge-bg-color;
-            margin-top: 15px;
+            margin-right: 15px;
             max-width: 230px;
         }
 
