@@ -1,6 +1,7 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, Inject } from '@angular/core';
 import { Player } from '../../../shared/interfaces/player.interface';
 import { PartyService } from '../../../shared/providers/party.service';
+import { Validators, FormBuilder, FormGroup } from '@angular/forms';
 
 @Component({
   selector: 'app-map-table',
@@ -8,11 +9,16 @@ import { PartyService } from '../../../shared/providers/party.service';
   styleUrls: ['./map-table.component.scss']
 })
 export class MapTableComponent implements OnInit {
+  form: FormGroup;
   @Input() player: Player;
   displayedColumns: string[] = ['name', 'tier', 'time'];
   dataSource = [];
 
-  constructor(private partyService: PartyService) { }
+  constructor(@Inject(FormBuilder) fb: FormBuilder, private partyService: PartyService) {
+    this.form = fb.group({
+      searchText: ['']
+    });
+  }
 
   ngOnInit() {
     this.updateTable(this.player);
@@ -22,6 +28,10 @@ export class MapTableComponent implements OnInit {
       //   this.updateTable(res);
       // }
     });
+  }
+
+  search() {
+    console.log(this.form.controls.searchText.value);
   }
 
   updateTable(player: Player) {

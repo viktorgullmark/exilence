@@ -1,3 +1,9 @@
+<form class="form search-form" [formGroup]="form">
+  <mat-form-field>
+    <input matInput formControlName="searchText" placeholder="{{'MAPS.SEARCH' | translate}}" class="search-text-input" (ngModelChange)="search()">
+  </mat-form-field>
+</form>
+
 <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
 
   <!--- Note that these columns can be defined in any order.
