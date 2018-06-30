@@ -39,8 +39,10 @@ export class MapService {
         duration: 0
       };
 
-      this.currentArea.duration = this.durationSeconds;
-      this.pastAreaList.unshift(this.currentArea);
+      if (this.currentArea !== undefined) {
+        this.currentArea.duration = this.durationSeconds;
+        this.pastAreaList.unshift(this.currentArea);
+      }
 
       if (this.pastAreaList.length > 50) {
         this.pastAreaList.pop();
