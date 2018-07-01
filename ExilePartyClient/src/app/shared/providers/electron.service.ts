@@ -4,6 +4,7 @@ import { Injectable } from '@angular/core';
 import { ipcRenderer, webFrame, remote, shell } from 'electron';
 import * as childProcess from 'child_process';
 import * as fs from 'fs';
+import ua from 'universal-analytics';
 
 @Injectable()
 export class ElectronService {
@@ -18,20 +19,23 @@ export class ElectronService {
   constructor() {
     // Conditional imports
     if (this.isElectron()) {
+
+      const visitor = ua('UA-121704803-1');
+
+      visitor.pageview('/').send();
+
       this.ipcRenderer = window.require('electron').ipcRenderer;
       this.webFrame = window.require('electron').webFrame;
       this.remote = window.require('electron').remote;
       this.childProcess = window.require('child_process');
       this.fs = window.require('fs');
       this.shell = window.require('electron').shell;
-
-
       this.settings = window.require('electron-settings');
-
     }
   }
 
   isElectron = () => {
+    console.log(window);
     return window && window.process && window.process.type;
   }
 
