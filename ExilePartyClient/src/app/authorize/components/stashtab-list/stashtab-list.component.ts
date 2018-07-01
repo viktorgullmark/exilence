@@ -1,6 +1,11 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
-import { MatTableDataSource, MatSort } from '@angular/material';
 import { SelectionModel } from '@angular/cdk/collections';
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { MatSort, MatTableDataSource } from '@angular/material';
+
+import { Stash, Tab } from '../../../shared/interfaces/stash.interface';
+import { ExternalService } from '../../../shared/providers/external.service';
+import { PartyService } from '../../../shared/providers/party.service';
+import { SettingsService } from '../../../shared/providers/settings.service';
 
 @Component({
   selector: 'app-stashtab-list',
@@ -17,34 +22,39 @@ export class StashtabListComponent implements OnInit {
 
   selection = new SelectionModel<any>(true, []);
 
-  dataSource = [
-    { position: 1, name: '1' },
-    { position: 2, name: '2' },
-    { position: 3, name: '3' },
-    { position: 4, name: '4' },
-    { position: 5, name: '5' },
-    { position: 6, name: '6' },
-    { position: 7, name: '7' },
-    { position: 8, name: '8' },
-    { position: 9, name: '9' },
-    { position: 10, name: '10' },
-  ];
-
-  constructor() { }
+  constructor(
+    private settingsService: SettingsService,
+    private externalService: ExternalService,
+    private partyService: PartyService
+  ) { }
 
   ngOnInit() {
     // temporarily until implemented
-    this.filter();
+    this.init();
+  }
+
+  init() {
+    const sessionId = this.settingsService.get('account.sessionId');
+    const accountName = this.settingsService.get('account.accountName');
+    const league = this.partyService.currentPlayer.character.league;
+    const selectedStashTabs = this.settingsService.get('account.selectedStashTabs');
+
+    this.externalService.getStashTabs(sessionId, accountName, league)
+      .subscribe((res: Stash) => {
+        this.source = res.tabs.map((tab: Tab) => {
+          return { position: tab.i, name: tab.n };
+        });
+        this.filter();
+      });
   }
 
   doSearch(text: string) {
     this.searchText = text;
-
     this.filter();
   }
 
   filter() {
-    this.filteredArr = [...this.dataSource];
+    this.filteredArr = [...this.source];
     this.filteredArr = this.filteredArr.filter(item =>
       Object.keys(item).some(k => item[k] != null && item[k] !== '' &&
         item[k].toString().toLowerCase()
@@ -58,8 +68,7 @@ export class StashtabListComponent implements OnInit {
   toggle(selection, row) {
     this.selection.toggle(row);
 
-    // array of selected items
-    console.log(selection.selected);
+    this.settingsService.set('account.selectedStashTabs', selection.selected);
   }
 
   /** Whether the number of selected elements matches the total number of rows. */
