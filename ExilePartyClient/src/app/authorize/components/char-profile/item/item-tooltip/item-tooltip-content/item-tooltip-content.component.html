@@ -39,7 +39,7 @@
                             {{prop.name}}
                         </span>
                         <ng-container *ngIf="prop.values[0] != undefined">
-                            :&nbsp;<span [ngClass]="{'generic-mod': prop.name == 'Quality' || prop.name == 'Energy Shield' || prop.name == 'Armour' || prop.name == 'Evasion'}">{{prop.values[0][0]}}</span></ng-container>
+                            :&nbsp;<span [ngClass]="{'generic-mod': prop.name == 'Quality' || prop.name == 'Energy Shield' || prop.name == 'Armour' || prop.name == 'Evasion Rating'}">{{prop.values[0][0]}}</span></ng-container>
                     </span>
                     <br/>
                 </ng-container>
