@@ -236,7 +236,7 @@ export class IncomeService {
 
     if (selectedStashTabs === undefined || selectedStashTabs.length === 0) {
       selectedStashTabs = [];
-      for (let i = 0; i < 11; i++) {
+      for (let i = 0; i < 6; i++) {
         selectedStashTabs.push({ name: '', position: i });
       }
     }
