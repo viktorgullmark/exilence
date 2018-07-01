@@ -21,7 +21,9 @@ export class NotficationBarComponent implements OnInit {
   constructor(
     private externalService: ExternalService
   ) {
-    setInterval(this.checkForNewRelease(), 1000 * 60 * 10); // Check every 10 minutes.
+    setTimeout(res => {
+      setInterval(this.checkForNewRelease(), 1000 * 60 * 10); // Check every 10 minutes.
+    }, 60 * 1000);
   }
 
   ngOnInit() {
