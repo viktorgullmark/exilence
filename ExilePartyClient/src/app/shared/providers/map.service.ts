@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 
-import { AreaEventType, EventArea, ExtendedAreaInfo, AreaInfo } from '../interfaces/area.interface';
+import { AreaEventType, AreaInfo, EventArea, ExtendedAreaInfo } from '../interfaces/area.interface';
 import { Player } from '../interfaces/player.interface';
 import { AccountService } from './account.service';
 import { LogMonitorService } from './log-monitor.service';
@@ -30,6 +30,7 @@ export class MapService {
 
     this.logMonitorService.areaEvent.subscribe((e: EventArea) => {
 
+
       clearInterval(this.durationInterval);
 
       const extendedInfo: ExtendedAreaInfo = {
@@ -52,6 +53,10 @@ export class MapService {
       this.durationInterval = setInterval(() => {
         this.durationSeconds++;
       }, 1000);
+
+      if (extendedInfo.eventArea.info.length === undefined) {
+        extendedInfo.eventArea.info = [];
+      }
 
       if (extendedInfo.eventArea.info.length === 0) {
         extendedInfo.eventArea.info.push({
