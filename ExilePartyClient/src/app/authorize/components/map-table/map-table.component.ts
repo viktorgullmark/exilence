@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, Inject, ViewChild } from '@angular/core';
+import { Component, OnInit, Input, Inject, ViewChild, Output, EventEmitter } from '@angular/core';
 import { Player } from '../../../shared/interfaces/player.interface';
 import { PartyService } from '../../../shared/providers/party.service';
 import { Validators, FormBuilder, FormGroup } from '@angular/forms';
@@ -12,6 +12,7 @@ import { MatSort, MatTableDataSource } from '@angular/material';
 })
 export class MapTableComponent implements OnInit {
   @Input() player: Player;
+  @Output() filtered: EventEmitter<any> = new EventEmitter;
   displayedColumns: string[] = ['timestamp', 'name', 'tier', 'time'];
   dataSource = [];
   searchText = '';
@@ -24,10 +25,12 @@ export class MapTableComponent implements OnInit {
   ngOnInit() {
     this.updateTable(this.player);
     this.partyService.selectedPlayer.subscribe(res => {
+      this.player = res;
       this.dataSource = [];
       if (res.pastAreas !== null) {
         this.updateTable(res);
       }
+      this.filter();
     });
   }
 
@@ -38,15 +41,19 @@ export class MapTableComponent implements OnInit {
   }
 
   filter() {
-    this.filteredArr = [...this.dataSource];
-    this.filteredArr = this.filteredArr.filter(item =>
-      Object.keys(item).some(k => item[k] != null && item[k] !== '' &&
-        item[k].toString().toLowerCase()
-          .includes(this.searchText.toLowerCase()))
-    );
+    setTimeout(res => {
+      this.filteredArr = [...this.dataSource];
+      this.filteredArr = this.filteredArr.filter(item =>
+        Object.keys(item).some(k => item[k] != null && item[k] !== '' &&
+          item[k].toString().toLowerCase()
+            .includes(this.searchText.toLowerCase()))
+      );
 
-    this.source = new MatTableDataSource(this.filteredArr);
-    this.source.sort = this.sort;
+      this.source = new MatTableDataSource(this.filteredArr);
+      this.source.sort = this.sort;
+      this.filtered.emit(this.filteredArr);
+    }, 0);
+
   }
 
   updateTable(player: Player) {
@@ -57,14 +64,14 @@ export class MapTableComponent implements OnInit {
         const newAreaObj = {
           name: area.eventArea.name,
           tier: area.eventArea.info[0].level,
-          time: minute.toString() + ':' + ((seconds < 10) ? '0' + seconds.toString() : seconds.toString()),
+          time: ((minute < 10) ? '0' + minute.toString() : seconds.toString())
+            + ':' + ((seconds < 10) ? '0' + seconds.toString() : seconds.toString()),
           timestamp: area.timestamp
         };
 
         this.dataSource.push(newAreaObj);
       });
     }
-    this.filter();
   }
 
 }

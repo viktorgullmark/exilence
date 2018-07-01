@@ -31,6 +31,7 @@ export class CharWealthComponent implements OnInit {
       searchText: ['']
     });
     this.partyService.selectedPlayer.subscribe(res => {
+      this.player = res;
       this.updateGain(res);
     });
   }

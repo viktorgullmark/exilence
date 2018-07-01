@@ -4,16 +4,16 @@
             <span class="title">Average time per area</span>
             <br/>
             <div class="stat-inner-wrapper">
-                <span class="stat-placeholder" *ngIf="player.pastAreas == null || player.pastAreas.length == 0">No data</span>
-                <span class="stat" *ngIf="player.pastAreas != null && player.pastAreas.length > 0">{{averageTimeSpent}}</span>
+                <span class="stat-placeholder" *ngIf="filteredArr == null || filteredArr.length == 0">No data</span>
+                <span class="stat" *ngIf="filteredArr != null && filteredArr.length > 0">{{averageTimeSpent}}</span>
             </div>
         </div>
         <div class="stat-wrapper">
             <span class="title">Areas entered past hour</span>
             <br/>
             <div class="stat-inner-wrapper">
-                <span class="stat-placeholder" *ngIf="player.pastAreas == null || player.pastAreas.length == 0">No data</span>
-                <span class="stat" *ngIf="player.pastAreas != null && player.pastAreas.length > 0">{{player.pastAreas.length}}</span>
+                <span class="stat-placeholder" *ngIf="filteredArr == null || filteredArr.length == 0">No data</span>
+                <span class="stat" *ngIf="filteredArr != null && filteredArr.length > 0">{{filteredArr.length}}</span>
             </div>
         </div>
     </div>
@@ -26,7 +26,7 @@
             </form>
         </div>
         <div class="map-table-wrapper">
-            <app-map-table #table [player]="player"></app-map-table>
+            <app-map-table #table [player]="player" (filtered)="updateSummary($event)"></app-map-table>
         </div>
     </div>
 </div>

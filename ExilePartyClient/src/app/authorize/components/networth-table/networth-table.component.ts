@@ -21,10 +21,12 @@ export class NetworthTableComponent implements OnInit {
   ngOnInit() {
     this.updateTable(this.player);
     this.partyService.selectedPlayer.subscribe(res => {
+      this.player = res;
       this.dataSource = [];
       if (res.netWorthSnapshots !== null) {
         this.updateTable(res);
       }
+      this.filter();
     });
   }
 
@@ -57,8 +59,6 @@ export class NetworthTableComponent implements OnInit {
         icon: snapshot.icon
       });
     });
-
-    this.filter();
 
   }
 

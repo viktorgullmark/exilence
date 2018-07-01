@@ -15,6 +15,7 @@ export class CharMapsComponent implements OnInit {
   @Input() player: Player;
 
   averageTimeSpent = '';
+  filteredArr = [];
 
   private oneHourAgo = (Date.now() - (1 * 60 * 60 * 1000));
 
@@ -25,16 +26,27 @@ export class CharMapsComponent implements OnInit {
       searchText: ['']
     });
     this.partyService.selectedPlayer.subscribe(res => {
-      this.updateAvgTimeSpent(res);
+      this.player = res;
     });
   }
 
   ngOnInit() {
   }
 
-  updateAvgTimeSpent(player: Player) {
-    if (player.pastAreas !== null) {
-      const pastHourAreas = player.pastAreas
+  updateSummary(filteredArr) {
+    this.filteredArr = [];
+    if (this.player.pastAreas !== null) {
+      this.filteredArr = this.player.pastAreas.filter(res => {
+        return filteredArr.some(x => x.timestamp === res.timestamp);
+      });
+    }
+    this.updateAvgTimeSpent(this.filteredArr);
+  }
+
+  updateAvgTimeSpent(pastAreas) {
+    console.log('updating avg',pastAreas);
+    if (pastAreas !== null) {
+      const pastHourAreas = pastAreas
         .filter((area: ExtendedAreaInfo) => area.timestamp > this.oneHourAgo);
 
       if (pastHourAreas[0] !== undefined) {
@@ -48,10 +60,13 @@ export class CharMapsComponent implements OnInit {
         const minute = Math.floor(average / 60);
         let seconds = average % 60;
         seconds = Math.floor(seconds);
-        this.averageTimeSpent = minute.toString() + ':' + ((seconds < 10) ? '0' + seconds.toString() : seconds.toString());
+        this.averageTimeSpent = ((minute < 10) ? '0' + minute.toString() : seconds.toString())
+        + ':' + ((seconds < 10) ? '0' + seconds.toString() : seconds.toString());
       } else {
         this.averageTimeSpent = '';
       }
+    } else {
+      this.averageTimeSpent = '';
     }
   }
 
