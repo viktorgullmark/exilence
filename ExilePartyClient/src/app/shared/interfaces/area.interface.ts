@@ -13,6 +13,7 @@ export interface AreaInfo {
   level: number;
   town: boolean;
   waypoint: boolean;
+  trial: boolean;
   bosses: string[];
 }
 
