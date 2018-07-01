@@ -37,7 +37,12 @@ namespace ExileParty
                 var party = await _cache.GetAsync<PartyModel>($"party:{partyName}");
                 if (party != null)
                 {
-                    party.Players.Select(t => { t.Character.Items = null; return t; }).ToList();
+                    party.Players.Select(t => {
+                        t.Character.Items = null;
+                        t.NetWorthSnapshots = null;
+                        t.PastAreas = null;
+                        return t;
+                    }).ToList();
                     partyList.Add(party);
                 }
             }

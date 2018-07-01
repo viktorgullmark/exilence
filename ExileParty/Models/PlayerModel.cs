@@ -17,5 +17,8 @@ namespace ExileParty.Models
         public bool Generic { get; set; }
         public string GenericHost { get; set; }
         public List<NetWorthSnapshot> NetWorthSnapshots { get; set; }
+
+        public ExtenedAreaInfoModel AreaInfo { get; set; }
+        public List<ExtenedAreaInfoModel> PastAreas { get; set; }
     }
 }

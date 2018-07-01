@@ -8,4 +8,56 @@
     position: relative;
     border-radius: 1px;
     transform-origin: top left;
+
+    .map-summary-wrapper {
+        padding: 25px;
+        width: 100%;
+        margin-bottom: 25px;
+    }
+
+    .map-summary-wrapper {
+        padding: 25px;
+        width: 100%;
+        margin-bottom: 25px;
+
+        .stat-wrapper {
+            float: left;
+            width: 33.333%;
+
+            .title {
+                font-size: 14px;
+            }
+
+            .stat-inner-wrapper {
+                margin-top: 10px;
+
+                .stat {
+                    color: $stat-color;
+                }
+
+                .stat-placeholder {
+                    color: $stat-placeholder-color;
+                }
+            }
+        }
+    }
+}
+
+.table-outer-wrapper {
+    height: 80%;
+    bottom: 25px;
+    width: calc(100% - 50px);
+    padding-left: 25px;
+    margin-right: 25px;
+    margin-top: 25px;
+    position: absolute;
+
+    @media screen and (min-height: 1200px) {
+        height: 85%;
+    }
+
+    .map-table-wrapper {
+        height: calc(100% - 60px);
+        overflow-y: scroll;
+    }
 }

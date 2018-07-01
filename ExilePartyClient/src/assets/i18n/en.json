@@ -9,6 +9,10 @@
         "PARTY": {
             "TITLE": "Current group"
         },
+        "SETTINGS": {
+            "TITLE": "Settings",
+            "STASHTAB_LIST_HEADER": "Select which stash-tabs to include"
+        },
         "RECENT_PLAYERS": {
             "TITLE": "Inspect players"
         }
@@ -21,9 +25,9 @@
         "NAME_INFO": "Enter your account-name here",
         "LOGIN": "Login",
         "SESSIONID": "Session ID",
-        "SESSIONID_INFO": "Enter a valid SessionId here",
+        "SESSIONID_INFO": "Enter a valid SessionId here (to retrieve inventory & stash)",
         "FILEPATH": "Path to Client.txt",
-        "FILEPATH_INFO": "Enter the full path to your Client.txt",
+        "FILEPATH_INFO": "Enter the full path to your Client.txt (to enable live-data)",
         "LOGOUT": "Logout",
         "CLOSE": "Close",
         "INFORMATION": "Account information"
@@ -38,7 +42,16 @@
         "ENTER": "Enter",
         "PARTY": "Group"
     },
+    "MAPS": {
+        "SEARCH": "Filter areas"
+    },
+    "CURRENCY": {
+        "SEARCH": "Filter currency"
+    },
     "ERROR": {
         "PATH_NOT_VALID": "The filepath is not valid"
+    },
+    "STASH": {
+        "SEARCH": "Filter tabs"
     }
 }

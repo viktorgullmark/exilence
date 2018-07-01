@@ -1,0 +1,9 @@
+@import "./../../../assets/styles/_variables.scss";
+
+
+.table-outer-wrapper {
+    .stash-table-wrapper {
+        height: 600px;
+        overflow-y: scroll;
+    }
+}

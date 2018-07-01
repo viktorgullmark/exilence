@@ -231,20 +231,27 @@ export class IncomeService {
   }
 
   getPlayerStashTabs(sessionId: string, accountName: string, league: string) {
-    return this.externalService.getStashTabs(sessionId, accountName, league)
-      .concatMap((response) => {
-        return Observable.from(response.tabs)
-          .concatMap((tab) => {
-            if (tab.i < 20) {
-              return this.externalService.getStashTab(sessionId, accountName, league, tab.i)
-                .delay(750);
-            } else {
-              return Observable.empty();
-            }
-          })
-          .do(stashTab => {
-            this.playerStashTabs.push(stashTab);
-          });
+
+    let selectedStashTabs: any[] = this.settingsService.get('selectedStashTabs');
+
+    if (selectedStashTabs === undefined || selectedStashTabs.length === 0) {
+      selectedStashTabs = [];
+      for (let i = 0; i < 6; i++) {
+        selectedStashTabs.push({ name: '', position: i });
+      }
+    }
+
+    if (selectedStashTabs.length > 20) {
+      selectedStashTabs = selectedStashTabs.slice(0, 19);
+    }
+
+    return Observable.from(selectedStashTabs)
+      .concatMap((tab: any) => {
+        return this.externalService.getStashTab(sessionId, accountName, league, tab.position)
+          .delay(750);
+      })
+      .do(stashTab => {
+        this.playerStashTabs.push(stashTab);
       });
   }
 

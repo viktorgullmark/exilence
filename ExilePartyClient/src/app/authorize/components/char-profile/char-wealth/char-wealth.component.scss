@@ -43,22 +43,26 @@
         }
     }
 
-    .networth-table-wrapper {
+    .table-outer-wrapper {
+        height: 40%;
+        bottom: 25px;
+        width: calc(100% - 50px);
         padding-left: 25px;
         margin-right: 25px;
         margin-top: 25px;
-        height: 40%;
-        overflow-y: scroll;
         position: absolute;
-        bottom: 25px;
-        width: calc(100% - 50px);
-
+    
         @media screen and (min-height: 1200px) {
             height: 50%;
         }
-
+    
         @media screen and (min-height: 1300px) {
             height: 55%;
+        }
+    
+        .networth-table-wrapper {
+            height: calc(100% - 60px);
+            overflow-y: scroll;
         }
     }
 }

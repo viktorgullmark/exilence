@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 
 import { Player } from '../shared/interfaces/player.interface';
 import { AccountService } from '../shared/providers/account.service';
+import { MapService } from '../shared/providers/map.service';
 import { PartyService } from '../shared/providers/party.service';
 
 @Component({
@@ -14,7 +15,10 @@ import { PartyService } from '../shared/providers/party.service';
 export class AuthorizeComponent implements OnInit {
   form: FormGroup;
   player: Player;
-  constructor(@Inject(FormBuilder) fb: FormBuilder, public partyService: PartyService, private accountService: AccountService,
+  constructor(@Inject(FormBuilder) fb: FormBuilder,
+    public partyService: PartyService,
+    private mapService: MapService,
+    private accountService: AccountService,
     private router: Router) {
     this.form = fb.group({
       partyCode: [this.partyService.party.name !== '' ? this.partyService.party.name : this.generatePartyName(),

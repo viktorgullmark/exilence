@@ -77,6 +77,10 @@ export class LoginComponent implements OnInit {
             && this.pathFormGroup.controls.filePath.value.endsWith('Client.txt');
     }
 
+    openLink(link: string) {
+        this.electronService.shell.openExternal(link);
+    }
+
     fetchSettings() {
         this.characterName = this.settingsService.get('account.characterName');
         this.sessionId = this.settingsService.get('account.sessionId');
@@ -161,6 +165,7 @@ export class LoginComponent implements OnInit {
             .subscribe((data: EquipmentResponse) => {
                 const player = this.externalService.setCharacter(data, this.player);
                 this.player = player;
+                this.player.account = form.accountName;
                 this.player.netWorthSnapshots = this.netWorthHistory.history;
                 this.accountService.player.next(this.player);
                 this.accountService.accountInfo.next(form);

@@ -1,0 +1,22 @@
+<h3 class="mat-h3">
+  {{'PAGES.SETTINGS.TITLE' | translate}}</h3>
+<div>
+  <mat-divider class="divider"></mat-divider>
+
+  <h3 class="mat-h3">
+    {{'PAGES.SETTINGS.STASHTAB_LIST_HEADER' | translate}}</h3>
+
+  <div class="table-outer-wrapper">
+    <div class="search-form-wrapper">
+      <form class="form search-form" [formGroup]="form">
+        <mat-form-field>
+          <input matInput formControlName="searchText" placeholder="{{'STASH.SEARCH' | translate}}" class="search-text-input" (ngModelChange)="search()">
+        </mat-form-field>
+      </form>
+    </div>
+    <div class="stash-table-wrapper">
+      <app-stashtab-list #table></app-stashtab-list>
+    </div>
+  </div>
+
+</div>
