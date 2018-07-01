@@ -44,7 +44,7 @@
 }
 
 .table-outer-wrapper {
-    height: 70%;
+    height: 80%;
     bottom: 25px;
     width: calc(100% - 50px);
     padding-left: 25px;
@@ -53,11 +53,7 @@
     position: absolute;
 
     @media screen and (min-height: 1200px) {
-        height: 75%;
-    }
-
-    @media screen and (min-height: 1300px) {
-        height: 80%;
+        height: 85%;
     }
 
     .map-table-wrapper {
