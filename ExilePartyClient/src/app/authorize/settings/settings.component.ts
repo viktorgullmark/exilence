@@ -1,6 +1,7 @@
-import { Component, OnInit, ViewChild, Inject } from '@angular/core';
-import { StashtabListComponent } from '../components/stashtab-list/stashtab-list.component';
+import { Component, Inject, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
+
+import { StashtabListComponent } from '../components/stashtab-list/stashtab-list.component';
 
 @Component({
   selector: 'app-settings',
