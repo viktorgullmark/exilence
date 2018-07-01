@@ -2,12 +2,18 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { SettingsComponent } from './settings.component';
 import { SharedModule } from '../../shared/shared.module';
-import { MatDividerModule } from '@angular/material';
+import { MatDividerModule, MatInputModule } from '@angular/material';
+import { StashtabListModule } from '../components/stashtab-list/stashtab-list.module';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 @NgModule({
   imports: [
     SharedModule,
-    MatDividerModule
+    MatDividerModule,
+    StashtabListModule,
+    FormsModule,
+    ReactiveFormsModule,
+    MatInputModule
   ],
   declarations: [SettingsComponent]
 })

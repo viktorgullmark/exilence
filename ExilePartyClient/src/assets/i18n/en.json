@@ -10,7 +10,8 @@
             "TITLE": "Current group"
         },
         "SETTINGS": {
-            "TITLE": "Settings"
+            "TITLE": "Settings",
+            "STASHTAB_LIST_HEADER": "Select which stash-tabs to include"
         },
         "RECENT_PLAYERS": {
             "TITLE": "Inspect players"
@@ -49,5 +50,8 @@
     },
     "ERROR": {
         "PATH_NOT_VALID": "The filepath is not valid"
+    },
+    "STASH": {
+        "SEARCH": "Filter tabs"
     }
 }
