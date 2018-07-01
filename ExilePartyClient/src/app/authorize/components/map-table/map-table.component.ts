@@ -57,7 +57,7 @@ export class MapTableComponent implements OnInit {
         const newAreaObj = {
           name: area.eventArea.name,
           tier: area.eventArea.info[0].level,
-          time: minute + ':' + seconds,
+          time: minute.toString() + ':' + ((seconds < 10) ? '0' + seconds.toString() : seconds.toString()),
           timestamp: area.timestamp
         };
 

@@ -1,19 +1,19 @@
 <div class="char-maps">
     <div class="map-summary-wrapper">
         <div class="stat-wrapper">
-            <span class="title">Average time per map</span>
+            <span class="title">Average time per area</span>
             <br/>
             <div class="stat-inner-wrapper">
-                <span class="stat-placeholder">
-                    Fetching data ...
-                </span>
+                <span class="stat-placeholder" *ngIf="player.pastAreas == null || player.pastAreas.length == 0">No data</span>
+                <span class="stat" *ngIf="player.pastAreas != null && player.pastAreas.length > 0">{{averageTimeSpent}}</span>
             </div>
         </div>
         <div class="stat-wrapper">
-            <span class="title">Maps ran past hour</span>
+            <span class="title">Areas entered past hour</span>
             <br/>
             <div class="stat-inner-wrapper">
-                <span class="stat-placeholder">Fetching data ...</span>
+                <span class="stat-placeholder" *ngIf="player.pastAreas == null || player.pastAreas.length == 0">No data</span>
+                <span class="stat" *ngIf="player.pastAreas != null && player.pastAreas.length > 0">{{player.pastAreas.length}}</span>
             </div>
         </div>
     </div>
