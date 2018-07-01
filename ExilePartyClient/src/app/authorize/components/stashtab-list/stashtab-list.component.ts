@@ -18,6 +18,7 @@ export class StashtabListComponent implements OnInit {
   searchText = '';
   filteredArr = [];
   source: any;
+  dataSource: any;
   @ViewChild(MatSort) sort: MatSort;
 
   selection = new SelectionModel<any>(true, []);
@@ -45,17 +46,17 @@ export class StashtabListComponent implements OnInit {
 
     this.externalService.getStashTabs(sessionId, accountName, league)
       .subscribe((res: Stash) => {
-        this.source = res.tabs.map((tab: Tab) => {
+        this.dataSource = res.tabs.map((tab: Tab) => {
           return { position: tab.i, name: tab.n };
         });
 
-        // this.source.forEach(r => {
-        //   selectedStashTabs.forEach(t => {
-        //     if (r.position === t.position) {
-        //       this.toggle(this.selection, r);
-        //     }
-        //   });
-        // });
+        this.dataSource.forEach(r => {
+          selectedStashTabs.forEach(t => {
+            if (r.position === t.position) {
+              this.toggle(this.selection, r);
+            }
+          });
+        });
 
         this.filter();
       });
@@ -67,7 +68,7 @@ export class StashtabListComponent implements OnInit {
   }
 
   filter() {
-    this.filteredArr = [...this.source];
+    this.filteredArr = [...this.dataSource];
     this.filteredArr = this.filteredArr.filter(item =>
       Object.keys(item).some(k => item[k] != null && item[k] !== '' &&
         item[k].toString().toLowerCase()
