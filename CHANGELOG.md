@@ -1,15 +1,16 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
-## [0.3.1] - 2018-06-XX
+## [0.3.1] - 2018-07-01
 - Made item-tooltips more similar to how they look in-game
-- Added new tab: "Maps" that tracks history of zones entered
+- Added new tab: "Areas" that tracks history of zones entered
 - Added filter-functionality to income-table
-- Added filter-functionality to map-table
+- Added filter-functionality to area-table
 - Added sorting by columns to income-table
-- Added sorting by columns to map-table
+- Added sorting by columns to area-table
 - Added helpful link on how to find sessionId
 - Added more descriptive text to login-flow
+- Added settings-page to select which stash-tabs to include
 - Minor style-changes across the app (header-sizes etc)
 
 ## [0.3.0] - 2018-06-29
