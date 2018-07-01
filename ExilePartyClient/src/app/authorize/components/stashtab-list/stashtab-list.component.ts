@@ -37,13 +37,26 @@ export class StashtabListComponent implements OnInit {
     const sessionId = this.settingsService.get('account.sessionId');
     const accountName = this.settingsService.get('account.accountName');
     const league = this.partyService.currentPlayer.character.league;
-    const selectedStashTabs = this.settingsService.get('account.selectedStashTabs');
+    let selectedStashTabs: any[] = this.settingsService.get('selectedStashTabs');
+
+    if (selectedStashTabs === undefined) {
+      selectedStashTabs = [];
+    }
 
     this.externalService.getStashTabs(sessionId, accountName, league)
       .subscribe((res: Stash) => {
         this.source = res.tabs.map((tab: Tab) => {
           return { position: tab.i, name: tab.n };
         });
+
+        // this.source.forEach(r => {
+        //   selectedStashTabs.forEach(t => {
+        //     if (r.position === t.position) {
+        //       this.toggle(this.selection, r);
+        //     }
+        //   });
+        // });
+
         this.filter();
       });
   }
@@ -68,7 +81,7 @@ export class StashtabListComponent implements OnInit {
   toggle(selection, row) {
     this.selection.toggle(row);
 
-    this.settingsService.set('account.selectedStashTabs', selection.selected);
+    this.settingsService.set('selectedStashTabs', selection.selected);
   }
 
   /** Whether the number of selected elements matches the total number of rows. */

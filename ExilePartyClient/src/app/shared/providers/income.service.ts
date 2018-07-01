@@ -232,7 +232,7 @@ export class IncomeService {
 
   getPlayerStashTabs(sessionId: string, accountName: string, league: string) {
 
-    let selectedStashTabs: any[] = this.settingsService.get('account.selectedStashTabs');
+    let selectedStashTabs: any[] = this.settingsService.get('selectedStashTabs');
 
     if (selectedStashTabs === undefined || selectedStashTabs.length === 0) {
       selectedStashTabs = [];
