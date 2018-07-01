@@ -1,6 +1,9 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [0.3.2] - 2018-07-01
+- Added google analytics
+
 ## [0.3.1] - 2018-07-01
 - Made item-tooltips more similar to how they look in-game
 - Added new tab: "Areas" that tracks history of zones entered
