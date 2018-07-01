@@ -23,7 +23,7 @@ export class NotficationBarComponent implements OnInit {
   ) {
     setTimeout(res => {
       setInterval(this.checkForNewRelease(), 1000 * 60 * 10); // Check every 10 minutes.
-    }, 60 * 1000);
+    }, 60 * 2 * 1000);
   }
 
   ngOnInit() {
