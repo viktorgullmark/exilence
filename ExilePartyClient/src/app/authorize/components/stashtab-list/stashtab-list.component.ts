@@ -18,16 +18,16 @@ export class StashtabListComponent implements OnInit {
   selection = new SelectionModel<any>(true, []);
 
   dataSource = [
-    {position: 1, name: '1'},
-    {position: 2, name: '2'},
-    {position: 3, name: '3'},
-    {position: 4, name: '4'},
-    {position: 5, name: '5'},
-    {position: 6, name: '6'},
-    {position: 7, name: '7'},
-    {position: 8, name: '8'},
-    {position: 9, name: '9'},
-    {position: 10, name: '10'},
+    { position: 1, name: '1' },
+    { position: 2, name: '2' },
+    { position: 3, name: '3' },
+    { position: 4, name: '4' },
+    { position: 5, name: '5' },
+    { position: 6, name: '6' },
+    { position: 7, name: '7' },
+    { position: 8, name: '8' },
+    { position: 9, name: '9' },
+    { position: 10, name: '10' },
   ];
 
   constructor() { }
@@ -55,6 +55,13 @@ export class StashtabListComponent implements OnInit {
     this.source.sort = this.sort;
   }
 
+  toggle(selection, row) {
+    this.selection.toggle(row);
+
+    // array of selected items
+    console.log(selection.selected);
+  }
+
   /** Whether the number of selected elements matches the total number of rows. */
   isAllSelected() {
     const numSelected = this.selection.selected.length;
@@ -65,8 +72,8 @@ export class StashtabListComponent implements OnInit {
   /** Selects all rows if they are not all selected; otherwise clear selection. */
   masterToggle() {
     this.isAllSelected() ?
-        this.selection.clear() :
-        this.source.data.forEach(row => this.selection.select(row));
+      this.selection.clear() :
+      this.source.data.forEach(row => this.selection.select(row));
   }
 
 }
