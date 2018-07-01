@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 
-import { AreaEventType, EventArea, ExtendedAreaInfo } from '../interfaces/area.interface';
+import { AreaEventType, EventArea, ExtendedAreaInfo, AreaInfo } from '../interfaces/area.interface';
 import { Player } from '../interfaces/player.interface';
 import { AccountService } from './account.service';
 import { LogMonitorService } from './log-monitor.service';
@@ -53,12 +53,21 @@ export class MapService {
         this.durationSeconds++;
       }, 1000);
 
+      if (extendedInfo.eventArea.info.length === 0) {
+        extendedInfo.eventArea.info.push({
+          act: 0,
+          bosses: [],
+          town: false,
+          waypoint: false
+        } as AreaInfo);
+      }
       this.currentArea = extendedInfo;
 
       this.localPlayer.pastAreas = this.pastAreaList;
       this.localPlayer.areaInfo = this.currentArea;
 
       this.partyService.updatePlayer(this.localPlayer);
+
 
     });
 
