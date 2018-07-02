@@ -1,11 +1,12 @@
-import { Component, OnInit, ViewChild, Input } from '@angular/core';
+import { Component, Input, OnInit, ViewChild } from '@angular/core';
+import { MatTab, MatTabGroup } from '@angular/material';
 import { Router } from '@angular/router';
 
 import { Player } from '../../../shared/interfaces/player.interface';
+import { AnalyticsService } from '../../../shared/providers/analytics.service';
 import { ExternalService } from '../../../shared/providers/external.service';
 import { PartyService } from '../../../shared/providers/party.service';
 import { SessionService } from '../../../shared/providers/session.service';
-import { MatTab, MatTabGroup } from '@angular/material';
 
 @Component({
   selector: 'app-char-profile',
@@ -21,8 +22,13 @@ export class CharProfileComponent implements OnInit {
 
   selectedIndex = 0;
 
-  constructor(private partyService: PartyService, private sessionService: SessionService,
-    private externalService: ExternalService, private router: Router) { }
+  constructor(
+    private partyService: PartyService,
+    private sessionService: SessionService,
+    private externalService: ExternalService,
+    private router: Router,
+    private analyticsService: AnalyticsService
+  ) { }
 
   ngOnInit() {
     if (!this.localProfile) {
@@ -48,9 +54,13 @@ export class CharProfileComponent implements OnInit {
 
     // update local index when tab is changed
     this.tabGroup.selectedIndexChange.subscribe(res => {
+      if (res === 0) {
+        this.analyticsService.sendScreenview('/authorized/party/player/profile');
+      }
       this.selectedIndex = res;
     });
 
   }
+
 
 }

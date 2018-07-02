@@ -9,9 +9,9 @@ import { EquipmentResponse } from '../shared/interfaces/equipment-response.inter
 import { NetWorthHistory, NetWorthSnapshot } from '../shared/interfaces/income.interface';
 import { Player } from '../shared/interfaces/player.interface';
 import { AccountService } from '../shared/providers/account.service';
+import { AnalyticsService } from '../shared/providers/analytics.service';
 import { ElectronService } from '../shared/providers/electron.service';
 import { ExternalService } from '../shared/providers/external.service';
-import { IncomeService } from '../shared/providers/income.service';
 import { SessionService } from '../shared/providers/session.service';
 import { SettingsService } from '../shared/providers/settings.service';
 
@@ -49,7 +49,7 @@ export class LoginComponent implements OnInit {
         private accountService: AccountService,
         private sessionService: SessionService,
         private settingsService: SettingsService,
-        private incomeService: IncomeService
+        private analyticsService: AnalyticsService
     ) {
 
         this.fetchSettings();
@@ -172,6 +172,7 @@ export class LoginComponent implements OnInit {
                 this.settingsService.set('account', form);
                 this.sessionService.initSession(form.sessionId);
                 this.isLoading = false;
+                this.analyticsService.startTracking(form.accountName);
                 this.router.navigate(['/authorized/dashboard']);
             });
     }

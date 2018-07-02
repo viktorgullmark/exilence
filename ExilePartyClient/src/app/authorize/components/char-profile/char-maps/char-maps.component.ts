@@ -1,9 +1,11 @@
-import { Component, OnInit, Inject, ViewChild, Input } from '@angular/core';
-import { FormGroup, FormBuilder } from '@angular/forms';
-import { MapTableComponent } from '../../map-table/map-table.component';
-import { Player } from '../../../../shared/interfaces/player.interface';
-import { PartyService } from '../../../../shared/providers/party.service';
+import { Component, Inject, Input, OnInit, ViewChild } from '@angular/core';
+import { FormBuilder, FormGroup } from '@angular/forms';
+
 import { ExtendedAreaInfo } from '../../../../shared/interfaces/area.interface';
+import { Player } from '../../../../shared/interfaces/player.interface';
+import { AnalyticsService } from '../../../../shared/providers/analytics.service';
+import { PartyService } from '../../../../shared/providers/party.service';
+import { MapTableComponent } from '../../map-table/map-table.component';
 
 @Component({
   selector: 'app-char-maps',
@@ -21,7 +23,11 @@ export class CharMapsComponent implements OnInit {
 
   @ViewChild('table') table: MapTableComponent;
 
-  constructor(@Inject(FormBuilder) fb: FormBuilder, private partyService: PartyService) {
+  constructor(@Inject(FormBuilder)
+  fb: FormBuilder,
+    private partyService: PartyService,
+    private analyticsService: AnalyticsService
+  ) {
     this.form = fb.group({
       searchText: ['']
     });
@@ -31,6 +37,7 @@ export class CharMapsComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.analyticsService.sendScreenview('/authorized/party/player/maps');
   }
 
   updateSummary(filteredArr) {
@@ -44,7 +51,7 @@ export class CharMapsComponent implements OnInit {
   }
 
   updateAvgTimeSpent(pastAreas) {
-    console.log('updating avg',pastAreas);
+    console.log('updating avg', pastAreas);
     if (pastAreas !== null) {
       const pastHourAreas = pastAreas
         .filter((area: ExtendedAreaInfo) => area.timestamp > this.oneHourAgo);
@@ -61,7 +68,7 @@ export class CharMapsComponent implements OnInit {
         let seconds = average % 60;
         seconds = Math.floor(seconds);
         this.averageTimeSpent = ((minute < 10) ? '0' + minute.toString() : seconds.toString())
-        + ':' + ((seconds < 10) ? '0' + seconds.toString() : seconds.toString());
+          + ':' + ((seconds < 10) ? '0' + seconds.toString() : seconds.toString());
       } else {
         this.averageTimeSpent = '';
       }
