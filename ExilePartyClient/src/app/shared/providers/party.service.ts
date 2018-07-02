@@ -78,7 +78,14 @@ export class PartyService {
       .configureLogging(signalR.LogLevel.Information)
       .build();
 
-    this._hubConnection.start().catch(err => console.error(err.toString()));
+    this.initHubConnection();
+
+    this._hubConnection.onclose(() => {
+      console.log('[ERROR] Signalr connection closed, reconnecting in 5000 ms');
+      setTimeout(() => {
+        this.initHubConnection();
+      }, 5000);
+    });
 
     this._hubConnection.on('EnteredParty', (party: Party, player: Player) => {
       this.party = party;
@@ -141,6 +148,15 @@ export class PartyService {
       this.handleAreaEvent(msg);
     });
 
+  }
+
+  initHubConnection() {
+    console.log('[INFO] Starting signalr connection');
+    this._hubConnection.start().catch((err) => {
+      console.error(err.toString());
+      console.log('[ERROR] Could not connect to signalr, trying again in 5000 ms');
+      setTimeout(() => this.initHubConnection(), 5000);
+    });
   }
 
   updatePlayerLists(party: Party) {
