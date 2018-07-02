@@ -146,7 +146,7 @@ export class IncomeService {
             }
 
             // Hide items with a total value under 1 chaos
-            if (valueForItem >= 1) {
+            if (totalValueForItem >= 1) {
               // If item already exists in array, update existing
               const existingItem = this.totalNetWorthItems.find(x => x.name === itemName);
               if (existingItem !== undefined) {
