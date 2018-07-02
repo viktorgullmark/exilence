@@ -34,7 +34,6 @@ export class ElectronService {
   }
 
   isElectron = () => {
-    console.log(window);
     return window && window.process && window.process.type;
   }
 

@@ -154,7 +154,7 @@ export class IncomeService {
                 // update existing item with new data
                 existingItem.stacksize = existingItem.stacksize + stacksize;
                 existingItem.value = existingItem.value + Math.floor(valueForItem);
-                this.totalNetWorth[indexOfItem] = existingItem;
+                this.totalNetWorthItems[indexOfItem] = existingItem;
               } else {
                 // Add new item
                 const netWorthItem: NetWorthItem = {

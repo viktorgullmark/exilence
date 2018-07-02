@@ -50,7 +50,6 @@ export class NetworthTableComponent implements OnInit {
 
   updateTable(player: Player) {
     player.netWorthSnapshots[0].items.forEach(snapshot => {
-
       this.dataSource.push({
         position: player.netWorthSnapshots[0].items.indexOf(snapshot) + 1,
         name: snapshot.name,
