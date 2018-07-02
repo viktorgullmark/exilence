@@ -1,9 +1,24 @@
-<h3 class="mat-h3">
-    {{'PAGES.PARTY.TITLE' | translate}}</h3>
-<mat-progress-bar *ngIf="partyService.isEntering" class="progress-bar" color="primary" mode="indeterminate">
+<div class="tab-group-header">
+    <mat-tab-group #tabGroup id="tabGroup" [(selectedIndex)]="selectedIndex">
+        <mat-tab #currentGrpTab id="currentGrpTab" class="active">
+            <ng-template mat-tab-label>
+                <mat-icon class="tab-icon">group</mat-icon>
+                &nbsp;Overview
+            </ng-template>
+        </mat-tab>
+        <mat-tab #summaryTab id="summaryTab">
+            <ng-template mat-tab-label>
+                <mat-icon class="tab-icon">bar_chart</mat-icon>
+                &nbsp;Summary
+            </ng-template>
+        </mat-tab>
+    </mat-tab-group>
+</div>
+
+<mat-progress-bar *ngIf="partyService.isEntering" class="progress-bar top-margin" color="primary" mode="indeterminate">
 </mat-progress-bar>
-<div [hidden]="partyService.isEntering" class="group-wrapper">
-    <mat-divider class="divider"></mat-divider>
+
+<div [hidden]="partyService.isEntering || selectedIndex != 0" class="group-wrapper">
     <div class="inner-content-container">
         <div class="player-list-container">
             <app-player-list></app-player-list>
@@ -12,4 +27,8 @@
             <app-char-profile></app-char-profile>
         </div>
     </div>
+</div>
+
+<div [hidden]="partyService.isEntering || selectedIndex != 1">
+
 </div>

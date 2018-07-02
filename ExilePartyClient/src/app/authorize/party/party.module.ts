@@ -6,6 +6,7 @@ import { SharedModule } from '../../shared/shared.module';
 import { CharProfileModule } from '../components/char-profile/char-profile.module';
 import { PlayerListModule } from './../components/player-list/player-list.module';
 import { PartyComponent } from './party.component';
+import { MatTabsModule, MatIconModule } from '@angular/material';
 
 
 @NgModule({
@@ -13,7 +14,9 @@ import { PartyComponent } from './party.component';
     SharedModule,
     MatDividerModule,
     PlayerListModule,
-    CharProfileModule
+    CharProfileModule,
+    MatTabsModule,
+    MatIconModule
   ],
   declarations: [PartyComponent],
   providers: [

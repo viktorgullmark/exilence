@@ -7,6 +7,7 @@ import { PartyService } from '../../shared/providers/party.service';
   styleUrls: ['./party.component.scss']
 })
 export class PartyComponent implements OnInit {
+  selectedIndex = 0;
   constructor(public partyService: PartyService) { }
 
   ngOnInit() {
