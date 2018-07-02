@@ -11,6 +11,7 @@ import { StashtabListComponent } from '../components/stashtab-list/stashtab-list
 })
 export class SettingsComponent implements OnInit {
   form: FormGroup;
+  selectedIndex = 0;
 
   @ViewChild('table') table: StashtabListComponent;
 
