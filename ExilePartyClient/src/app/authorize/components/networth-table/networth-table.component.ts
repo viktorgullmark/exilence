@@ -10,7 +10,7 @@ import { MatSort, MatTableDataSource } from '@angular/material';
 })
 export class NetworthTableComponent implements OnInit {
   @Input() player: Player;
-  displayedColumns: string[] = ['position', 'name', 'stacksize', 'value'];
+  displayedColumns: string[] = ['position', 'name', 'stacksize', 'valuePerUnit', 'value'];
   dataSource = [];
   searchText = '';
   filteredArr = [];
@@ -56,6 +56,7 @@ export class NetworthTableComponent implements OnInit {
         name: snapshot.name,
         stacksize: snapshot.stacksize,
         value: snapshot.value,
+        valuePerUnit: snapshot.valuePerUnit,
         icon: snapshot.icon
       });
     });

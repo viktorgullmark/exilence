@@ -10,6 +10,7 @@ namespace ExileParty.Models
     {
         public string Icon { get; set; }
         public long Value { get; set; }
+        public long ValuePerUnit { get; set; }
         public string Name { get; set; }
         public int Stacksize { get; set; }
     }

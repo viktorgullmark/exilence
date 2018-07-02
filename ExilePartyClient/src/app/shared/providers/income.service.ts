@@ -139,22 +139,35 @@ export class IncomeService {
             }
 
             let stacksize = 1;
+            let totalValueForItem = valueForItem;
             if (item.stackSize) {
               stacksize = item.stackSize;
-              valueForItem = (valueForItem * stacksize);
+              totalValueForItem = (valueForItem * stacksize);
             }
 
             // Hide items with a total value under 1 chaos
             if (valueForItem >= 1) {
-              const netWorthItem: NetWorthItem = {
-                name: itemName,
-                value: Math.floor(valueForItem),
-                icon: item.icon.indexOf('?') >= 0
-                  ? item.icon.substring(0, item.icon.indexOf('?')) + '?scale=1&scaleIndex=3&w=1&h=1'
-                  : item.icon + '?scale=1&scaleIndex=3&w=1&h=1',
-                stacksize
-              };
-              this.totalNetWorthItems.push(netWorthItem);
+              // If item already exists in array, update existing
+              const existingItem = this.totalNetWorthItems.find(x => x.name === itemName);
+              if (existingItem !== undefined) {
+                const indexOfItem = this.totalNetWorthItems.indexOf(existingItem);
+                // update existing item with new data
+                existingItem.stacksize = existingItem.stacksize + stacksize;
+                existingItem.value = existingItem.value + Math.floor(valueForItem);
+                this.totalNetWorth[indexOfItem] = existingItem;
+              } else {
+                // Add new item
+                const netWorthItem: NetWorthItem = {
+                  name: itemName,
+                  value: Math.floor(totalValueForItem),
+                  valuePerUnit: Math.floor(valueForItem),
+                  icon: item.icon.indexOf('?') >= 0
+                    ? item.icon.substring(0, item.icon.indexOf('?')) + '?scale=1&scaleIndex=3&w=1&h=1'
+                    : item.icon + '?scale=1&scaleIndex=3&w=1&h=1',
+                  stacksize
+                };
+                this.totalNetWorthItems.push(netWorthItem);
+              }
             }
           }
         });

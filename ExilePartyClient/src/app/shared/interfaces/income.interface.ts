@@ -12,6 +12,7 @@ export interface NetWorthHistory {
 export interface NetWorthItem {
   icon: string;
   value: number;
+  valuePerUnit: number;
   name: string;
   stacksize: number;
 }
