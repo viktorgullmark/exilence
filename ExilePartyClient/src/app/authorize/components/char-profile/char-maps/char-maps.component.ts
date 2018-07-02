@@ -51,7 +51,6 @@ export class CharMapsComponent implements OnInit {
   }
 
   updateAvgTimeSpent(pastAreas) {
-    console.log('updating avg', pastAreas);
     if (pastAreas !== null) {
       const pastHourAreas = pastAreas
         .filter((area: ExtendedAreaInfo) => area.timestamp > this.oneHourAgo);
