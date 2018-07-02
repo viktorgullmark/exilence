@@ -5,7 +5,7 @@
             <br/>
             <div class="networth-inner-wrapper">
                 <span class="networth" *ngIf="player.netWorthSnapshots[0].value > 0">
-                    {{player.netWorthSnapshots[0].value}}c
+                    {{player.netWorthSnapshots[0].value.toFixed(1)}}c
                 </span>
                 <span class="networth-placeholder" *ngIf="player.netWorthSnapshots[0].value == 0">
                     Fetching data ...
@@ -16,7 +16,7 @@
             <span class="title">Gain past hour</span>
             <br/>
             <div class="networth-inner-wrapper">
-                <span class="networth">{{gain}}c</span>
+                <span class="networth">{{gain.toFixed(1)}}c</span>
             </div>
         </div>
         <div class="networth-wrapper">
