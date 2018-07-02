@@ -15,7 +15,7 @@ export class AnalyticsService {
   }
 
   startTracking(account: string) {
-    this.visitor = ua('UA-121704803-1', account, {strictCidFormat: false});
+    this.visitor = ua('UA-121704803-1', account.toLowerCase(), {strictCidFormat: false});
     this.visitor.set('uid', account);
     this.visitor.set('ds', 'app');
     this.visitor.set('an', this.appName);
