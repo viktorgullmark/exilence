@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, Output, EventEmitter } from '@angular/core';
 import { colorSets as ngxChartsColorsets } from '@swimlane/ngx-charts/release/utils/color-sets';
 import * as d3 from 'd3';
 
@@ -20,6 +20,9 @@ export class IncomeComponent implements OnInit {
   @Input() player: Player;
   @Input() view = [1000, 500];
 
+  @Output() hidden: EventEmitter<any> = new EventEmitter;
+
+  public isHidden = false;
   public visible = true;
 
   // line interpolation
@@ -46,6 +49,16 @@ export class IncomeComponent implements OnInit {
         this.updateGraph(res);
       }
     });
+  }
+
+  hideGraph() {
+    this.isHidden = true;
+    this.hidden.emit(this.isHidden);
+  }
+
+  showGraph() {
+    this.isHidden = false;
+    this.hidden.emit(this.isHidden);
   }
 
   updateGraph(player: Player) {

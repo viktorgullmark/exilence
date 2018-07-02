@@ -17,6 +17,10 @@
             "TITLE": "Inspect players"
         }
     },
+    "GRAPH": {
+        "SHOW": "Show graph",
+        "HIDE": "Hide graph"
+    },
     "NOTIFICATION": {
         "UPDATE_AVAILABLE": "There is a new version of ExileParty available. Please exit and restart the application to update."
     },

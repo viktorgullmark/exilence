@@ -13,6 +13,16 @@
         padding: 25px;
     }
 
+    .toggle-area {
+        display: flex;
+        align-items: flex-end;
+        justify-content: end;
+        .right-aligned {
+            margin-left: auto;
+            margin-right: 25px;
+        }
+    }
+
     .income-summary-wrapper {
         padding: 25px;
         width: 100%;
@@ -64,5 +74,9 @@
             height: calc(100% - 60px);
             overflow-y: scroll;
         }
+    }
+
+    .full-height-table {
+        height: 80%;
     }
 }

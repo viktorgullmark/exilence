@@ -25,10 +25,14 @@
             </span>
         </div>
     </div>
-    <div class="income-graph-wrapper">
-        <app-income [player]="player" [view]="graphDimensions"></app-income>
+    <div class="toggle-area">
+        <button mat-raised-button color="primary" *ngIf="!isGraphHidden" (click)="hideGraph()" type="button" class="right-aligned">{{'GRAPH.HIDE' | translate}}</button>
+        <button mat-raised-button color="primary" *ngIf="isGraphHidden" (click)="showGraph()" type="button" class="right-aligned">{{'GRAPH.SHOW' | translate}}</button>
     </div>
-    <div class="table-outer-wrapper">
+    <div class="income-graph-wrapper" [hidden]="isGraphHidden">
+        <app-income (hidden)="toggleGraph($event)" [player]="player" [view]="graphDimensions"></app-income>
+    </div>
+    <div class="table-outer-wrapper" [ngClass]="{'full-height-table': isGraphHidden }">
         <div class="search-form-wrapper">
             <form class="form search-form" [formGroup]="form">
                 <mat-form-field>

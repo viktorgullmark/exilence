@@ -1,4 +1,6 @@
-<h3 class="mat-h3">Net worth graph based on selected tabs <span class="mat-caption">(updates every 5 minutes)</span></h3>
+<h3 class="mat-h3">Net worth graph based on selected tabs
+  <span class="mat-caption">(updates every 5 minutes)</span>
+</h3>
 <div class="chart-container">
   <ngx-charts-line-chart *ngIf="visible" [view]="view" class="chart-container" [scheme]="colorScheme" schemeType="linear" [results]="dateData"
     legendTitle="Players" (legendLabelClick)="onLegendLabelClick($event)" gradient="false" xAxis="true" yAxis="true" showXAxisLabel="true"

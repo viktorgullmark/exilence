@@ -4,7 +4,7 @@ import { SharedModule } from '../../../../shared/shared.module';
 import { IncomeModule } from '../../income/income.module';
 import { NetworthTableModule } from '../../networth-table/networth-table.module';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { MatInputModule } from '@angular/material';
+import { MatInputModule, MatButtonModule } from '@angular/material';
 
 @NgModule({
   imports: [
@@ -13,7 +13,8 @@ import { MatInputModule } from '@angular/material';
     NetworthTableModule,
     FormsModule,
     ReactiveFormsModule,
-    MatInputModule
+    MatInputModule,
+    MatButtonModule
   ],
   declarations: [CharWealthComponent],
   exports: [CharWealthComponent]

@@ -18,6 +18,8 @@ export class CharWealthComponent implements OnInit {
   @Input() player: Player;
   @ViewChild('table') table: NetworthTableComponent;
 
+  isGraphHidden = false;
+
   private oneHourAgo = (Date.now() - (1 * 60 * 60 * 1000));
   public graphDimensions = [640, 300];
   public gain = 0;
@@ -37,6 +39,18 @@ export class CharWealthComponent implements OnInit {
   }
 
   ngOnInit() {
+  }
+
+  toggleGraph(event: boolean) {
+    this.isGraphHidden = true;
+  }
+
+  hideGraph() {
+    this.isGraphHidden = true;
+  }
+
+  showGraph() {
+    this.isGraphHidden = false;
   }
 
   search() {

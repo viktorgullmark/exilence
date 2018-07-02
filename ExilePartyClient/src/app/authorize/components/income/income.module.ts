@@ -4,12 +4,15 @@ import { BrowserModule } from '@angular/platform-browser';
 import { NgxChartsModule } from '@swimlane/ngx-charts';
 
 import { IncomeComponent } from './income.component';
+import { SharedModule } from '../../../shared/shared.module';
+import { MatButtonModule } from '@angular/material';
 
 @NgModule({
   imports: [
-    CommonModule,
+    SharedModule,
     BrowserModule,
-    NgxChartsModule
+    NgxChartsModule,
+    MatButtonModule
   ],
   declarations: [
     IncomeComponent
