@@ -5,6 +5,7 @@ import { MatListModule } from '@angular/material/list';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { RouterModule } from '@angular/router';
 
+import { AnalyticsService } from '../shared/providers/analytics.service';
 import { IncomeService } from '../shared/providers/income.service';
 import { MapService } from '../shared/providers/map.service';
 import { PartyService } from '../shared/providers/party.service';
@@ -36,7 +37,8 @@ import { SettingsModule } from './settings/settings.module';
   providers: [
     PartyService,
     IncomeService,
-    MapService
+    MapService,
+    AnalyticsService
   ]
 })
 export class AuthorizeModule { }

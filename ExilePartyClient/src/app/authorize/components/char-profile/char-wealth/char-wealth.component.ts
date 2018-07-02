@@ -1,10 +1,11 @@
-import { Component, Input, OnInit, Inject, ViewChild } from '@angular/core';
+import { Component, Inject, Input, OnInit, ViewChild } from '@angular/core';
+import { FormBuilder, FormGroup } from '@angular/forms';
 
 import { NetWorthSnapshot } from '../../../../shared/interfaces/income.interface';
 import { Player } from '../../../../shared/interfaces/player.interface';
+import { AnalyticsService } from '../../../../shared/providers/analytics.service';
 import { ElectronService } from '../../../../shared/providers/electron.service';
 import { PartyService } from '../../../../shared/providers/party.service';
-import { FormBuilder, FormGroup } from '@angular/forms';
 import { NetworthTableComponent } from '../../networth-table/networth-table.component';
 
 @Component({
@@ -25,7 +26,8 @@ export class CharWealthComponent implements OnInit {
   constructor(
     @Inject(FormBuilder) fb: FormBuilder,
     private electronService: ElectronService,
-    private partyService: PartyService
+    private partyService: PartyService,
+    private analyticsService: AnalyticsService
   ) {
     this.form = fb.group({
       searchText: ['']
@@ -37,6 +39,7 @@ export class CharWealthComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.analyticsService.sendScreenview('/authorized/party/player/wealth');
   }
 
   search() {

@@ -1,11 +1,11 @@
 import { Component, OnInit } from '@angular/core';
-
-import { ElectronService } from '../../shared/providers/electron.service';
-import { SettingsService } from '../../shared/providers/settings.service';
-import { Player } from '../../shared/interfaces/player.interface';
-import { PartyService } from '../../shared/providers/party.service';
-import { AccountService } from '../../shared/providers/account.service';
 import { Router } from '@angular/router';
+
+import { Player } from '../../shared/interfaces/player.interface';
+import { AccountService } from '../../shared/providers/account.service';
+import { AnalyticsService } from '../../shared/providers/analytics.service';
+import { ElectronService } from '../../shared/providers/electron.service';
+import { PartyService } from '../../shared/providers/party.service';
 
 @Component({
   selector: 'app-dashboard',
@@ -23,18 +23,17 @@ export class DashboardComponent implements OnInit {
     private electronService: ElectronService,
     private partyService: PartyService,
     private accountService: AccountService,
+    private analyticsService: AnalyticsService,
     private router: Router
   ) {
 
     this.partyService.recentParties.subscribe(parties => {
       this.recentParties = parties;
     });
-
-
-
   }
 
   ngOnInit() {
+    this.analyticsService.sendScreenview('/authorized/dashboard');
     // give the profile time to render
     this.accountService.player.subscribe(res => {
       this.player = res;
