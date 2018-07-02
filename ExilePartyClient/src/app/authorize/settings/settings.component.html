@@ -1,8 +1,15 @@
-<h3 class="mat-h3">
-  {{'PAGES.SETTINGS.TITLE' | translate}}</h3>
-<div>
-  <mat-divider class="divider"></mat-divider>
+<div class="tab-group-header">
+  <mat-tab-group #tabGroup id="tabGroup" [(selectedIndex)]="selectedIndex">
+    <mat-tab #currentGrpTab id="currentGrpTab" class="active">
+      <ng-template mat-tab-label>
+        <mat-icon class="tab-icon">format_list_numbered</mat-icon>
+        &nbsp;Stashtabs
+      </ng-template>
+    </mat-tab>
+  </mat-tab-group>
+</div>
 
+<div [hidden]="selectedIndex != 0">
   <h3 class="mat-h3">
     {{'PAGES.SETTINGS.STASHTAB_LIST_HEADER' | translate}}</h3>
 
@@ -18,5 +25,4 @@
       <app-stashtab-list #table></app-stashtab-list>
     </div>
   </div>
-
 </div>
