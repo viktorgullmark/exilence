@@ -25,14 +25,17 @@
             </span>
         </div>
     </div>
-    <div class="toggle-area">
-        <button mat-raised-button color="primary" *ngIf="!isGraphHidden" (click)="hideGraph()" type="button" class="right-aligned">{{'GRAPH.HIDE' | translate}}</button>
-        <button mat-raised-button color="primary" *ngIf="isGraphHidden" (click)="showGraph()" type="button" class="right-aligned">{{'GRAPH.SHOW' | translate}}</button>
+    <div class="flex-area">
+        <button mat-raised-button color="primary" *ngIf="!isGraphHidden" (click)="hideGraph()" type="button" class="right-aligned extra-margin">{{'GRAPH.HIDE' | translate}}</button>
+        <button mat-raised-button color="primary" *ngIf="isGraphHidden" (click)="showGraph()" type="button" class="right-aligned extra-margin">{{'GRAPH.SHOW' | translate}}</button>
     </div>
     <div class="income-graph-wrapper" [hidden]="isGraphHidden">
         <app-income (hidden)="toggleGraph($event)" [player]="player" [view]="graphDimensions"></app-income>
     </div>
     <div class="table-outer-wrapper" [ngClass]="{'full-height-table': isGraphHidden }">
+        <div class="flex-area">
+            <button mat-raised-button color="primary" (click)="goToSettings()" type="button" class="right-aligned">{{'STASH.SELECT_TABS' | translate}}</button>
+        </div>
         <div class="search-form-wrapper">
             <form class="form search-form" [formGroup]="form">
                 <mat-form-field>

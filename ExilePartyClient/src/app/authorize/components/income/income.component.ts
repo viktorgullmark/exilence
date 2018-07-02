@@ -18,7 +18,7 @@ import { PartyService } from '../../../shared/providers/party.service';
 export class IncomeComponent implements OnInit {
   dateData: ChartSeries[] = [];
   @Input() player: Player;
-  @Input() view = [1000, 500];
+  @Input() view = [1000, 400];
 
   @Output() hidden: EventEmitter<any> = new EventEmitter;
 

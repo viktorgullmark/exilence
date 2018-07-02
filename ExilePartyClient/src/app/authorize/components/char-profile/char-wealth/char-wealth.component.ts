@@ -7,6 +7,7 @@ import { AnalyticsService } from '../../../../shared/providers/analytics.service
 import { ElectronService } from '../../../../shared/providers/electron.service';
 import { PartyService } from '../../../../shared/providers/party.service';
 import { NetworthTableComponent } from '../../networth-table/networth-table.component';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-char-wealth',
@@ -22,11 +23,12 @@ export class CharWealthComponent implements OnInit {
   isGraphHidden = false;
 
   private oneHourAgo = (Date.now() - (1 * 60 * 60 * 1000));
-  public graphDimensions = [640, 300];
+  public graphDimensions = [640, 250];
   public gain = 0;
 
   constructor(
     @Inject(FormBuilder) fb: FormBuilder,
+    private router: Router,
     private electronService: ElectronService,
     private partyService: PartyService,
     private analyticsService: AnalyticsService
@@ -42,6 +44,10 @@ export class CharWealthComponent implements OnInit {
 
   ngOnInit() {
     this.analyticsService.sendScreenview('/authorized/party/player/wealth');
+  }
+
+  goToSettings() {
+    this.router.navigate(['/authorized/settings']);
   }
 
   toggleGraph(event: boolean) {

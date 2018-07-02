@@ -13,12 +13,16 @@
         padding: 25px;
     }
 
-    .toggle-area {
+    .flex-area {
         display: flex;
         align-items: flex-end;
         justify-content: end;
+
         .right-aligned {
             margin-left: auto;
+        }
+
+        .extra-margin {
             margin-right: 25px;
         }
     }
@@ -27,11 +31,14 @@
         padding: 25px;
         width: 100%;
         margin-bottom: 25px;
+
         .networth-wrapper {
             float: left;
             width: 33.333%;
+
             .title {
                 font-size: 14px;
+
                 .ninja-link {
                     color: $primary;
                     font-weight: 500;
@@ -54,25 +61,25 @@
     }
 
     .table-outer-wrapper {
-        height: 40%;
+        height: 45%;
         bottom: 25px;
         width: calc(100% - 50px);
         padding-left: 25px;
         margin-right: 25px;
         margin-top: 25px;
         position: absolute;
-    
+
         @media screen and (min-height: 1200px) {
-            height: 50%;
-        }
-    
-        @media screen and (min-height: 1300px) {
             height: 55%;
         }
-    
+
         .networth-table-wrapper {
-            height: calc(100% - 60px);
+            height: calc(100% - 95px);
             overflow-y: scroll;
+        }
+
+        .search-form-wrapper {
+            margin-top: 5px;
         }
     }
 
