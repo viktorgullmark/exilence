@@ -1,6 +1,11 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [0.3.6] - 2018-07-02
+- Included items worth less than 1 chaos in income-table
+- Style-changes to currency-tab
+- Added decimals to item-values and networth
+
 ## [0.3.5] - 2018-07-02
 - Added price per unit to income-table
 - Added button to toggle graph
