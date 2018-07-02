@@ -9,8 +9,8 @@ namespace ExileParty.Models
     public class NetWorthItem
     {
         public string Icon { get; set; }
-        public long Value { get; set; }
-        public long ValuePerUnit { get; set; }
+        public decimal Value { get; set; }
+        public decimal ValuePerUnit { get; set; }
         public string Name { get; set; }
         public int Stacksize { get; set; }
     }

@@ -86,6 +86,7 @@ export class IncomeService {
             this.netWorthHistory.history.pop();
           }
 
+          console.log(this.totalNetWorthItems);
           const snapShot: NetWorthSnapshot = {
             timestamp: Date.now(),
             value: this.totalNetWorth,
@@ -153,14 +154,14 @@ export class IncomeService {
                 const indexOfItem = this.totalNetWorthItems.indexOf(existingItem);
                 // update existing item with new data
                 existingItem.stacksize = existingItem.stacksize + stacksize;
-                existingItem.value = existingItem.value + Math.floor(valueForItem);
+                existingItem.value = existingItem.value + totalValueForItem;
                 this.totalNetWorthItems[indexOfItem] = existingItem;
               } else {
                 // Add new item
                 const netWorthItem: NetWorthItem = {
                   name: itemName,
-                  value: Math.floor(totalValueForItem),
-                  valuePerUnit: Math.floor(valueForItem),
+                  value: totalValueForItem,
+                  valuePerUnit: valueForItem,
                   icon: item.icon.indexOf('?') >= 0
                     ? item.icon.substring(0, item.icon.indexOf('?')) + '?scale=1&scaleIndex=3&w=1&h=1'
                     : item.icon + '?scale=1&scaleIndex=3&w=1&h=1',
