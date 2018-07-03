@@ -1,7 +1,7 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
-## [0.3.6] - 2018-07-03
+## [0.3.7] - 2018-07-03
 - Added summary-page for current group: displays summarized networth and gain
 - Added tier to maps, to be able to filter them out
 - Added events to track instance-server, to be able to track portals to the same map
