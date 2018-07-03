@@ -1,6 +1,12 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [0.3.6] - 2018-07-03
+- Added summary-page for current group: displays summarized networth and gain
+- Added tier to maps, to be able to filter them out
+- Added events to track instance-server, to be able to track portals to the same map
+- Added tabs to settings-page
+
 ## [0.3.6] - 2018-07-02
 - Included items worth less than 1 chaos in income-table
 - Style-changes to currency-tab
