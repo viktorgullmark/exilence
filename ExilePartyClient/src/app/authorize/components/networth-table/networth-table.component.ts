@@ -1,7 +1,8 @@
-import { Component, OnInit, Input, ViewChild } from '@angular/core';
+import { Component, Input, OnInit, ViewChild } from '@angular/core';
+import { MatSort, MatTableDataSource } from '@angular/material';
+
 import { Player } from '../../../shared/interfaces/player.interface';
 import { PartyService } from '../../../shared/providers/party.service';
-import { MatSort, MatTableDataSource } from '@angular/material';
 
 @Component({
   selector: 'app-networth-table',
@@ -39,7 +40,6 @@ export class NetworthTableComponent implements OnInit {
       this.partyService.partyUpdated.subscribe(party => {
         if (party !== undefined) {
           this.dataSource = [];
-          console.log('party was updated');
           party.players.forEach(p => {
             if (p.netWorthSnapshots !== null) {
               this.updateTable(p);
