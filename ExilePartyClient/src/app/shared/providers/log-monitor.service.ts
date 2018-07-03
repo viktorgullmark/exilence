@@ -1,4 +1,5 @@
-import { Injectable, EventEmitter } from '@angular/core';
+import { EventEmitter, Injectable } from '@angular/core';
+
 import { AccountService } from './account.service';
 
 @Injectable()
@@ -7,6 +8,7 @@ export class LogMonitorService {
 
   poeLog: any;
 
+  instanceServerEvent: EventEmitter<any> = new EventEmitter();
   areaEvent: EventEmitter<any> = new EventEmitter();
   areaJoin: EventEmitter<any> = new EventEmitter();
   areaLeft: EventEmitter<any> = new EventEmitter();
@@ -30,6 +32,9 @@ export class LogMonitorService {
         });
         this.poeLog.on('message', (data) => {
           this.messageEvent.emit(data);
+        });
+        this.poeLog.on('instanceServer', (data) => {
+          this.instanceServerEvent.emit(data);
         });
       }
     });

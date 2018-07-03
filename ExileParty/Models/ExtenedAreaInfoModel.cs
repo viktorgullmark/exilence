@@ -12,6 +12,7 @@ namespace ExileParty.Models
         public AreaEventType Type { get; set; }
         public long Timestamp { get; set; }
         public int Duration { get; set; }
+        public string InstanceServer { get; set; }
     }
 
     [Serializable]

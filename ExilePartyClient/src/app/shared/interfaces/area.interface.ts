@@ -11,6 +11,7 @@ export enum AreaType {
 export interface AreaInfo {
   act: number;
   level: number;
+  tier: number;
   town: boolean;
   waypoint: boolean;
   trial: boolean;
@@ -33,4 +34,5 @@ export interface ExtendedAreaInfo {
   type: AreaEventType;
   timestamp: number;
   duration: number;
+  instanceServer: string;
 }
