@@ -19,15 +19,36 @@ export class NetworthTableComponent implements OnInit {
   constructor(private partyService: PartyService) { }
 
   ngOnInit() {
-    this.updateTable(this.player);
-    this.partyService.selectedPlayer.subscribe(res => {
-      this.player = res;
-      this.dataSource = [];
-      if (res.netWorthSnapshots !== null) {
-        this.updateTable(res);
-      }
+    if (this.player !== undefined) {
+      this.updateTable(this.player);
+      this.partyService.selectedPlayer.subscribe(res => {
+        this.player = res;
+        this.dataSource = [];
+        if (res.netWorthSnapshots !== null) {
+          this.updateTable(res);
+        }
+        this.filter();
+      });
+    } else {
+      // party logic
+      this.partyService.party.players.forEach(p => {
+        this.updateTable(p);
+      });
       this.filter();
-    });
+
+      this.partyService.partyUpdated.subscribe(party => {
+        if (party !== undefined) {
+          this.dataSource = [];
+          console.log('party was updated');
+          party.players.forEach(p => {
+            if (p.netWorthSnapshots !== null) {
+              this.updateTable(p);
+            }
+          });
+          this.filter();
+        }
+      });
+    }
   }
 
   doSearch(text: string) {
@@ -50,14 +71,24 @@ export class NetworthTableComponent implements OnInit {
 
   updateTable(player: Player) {
     player.netWorthSnapshots[0].items.forEach(snapshot => {
-      this.dataSource.push({
-        position: player.netWorthSnapshots[0].items.indexOf(snapshot) + 1,
-        name: snapshot.name,
-        stacksize: snapshot.stacksize,
-        value: snapshot.value,
-        valuePerUnit: snapshot.valuePerUnit,
-        icon: snapshot.icon
-      });
+      const existingItem = this.dataSource.find(x => x.name === snapshot.name);
+      if (existingItem !== undefined) {
+        const indexOfItem = this.dataSource.indexOf(existingItem);
+        // update existing item with new data
+        existingItem.stacksize = existingItem.stacksize + snapshot.stacksize;
+        existingItem.value = existingItem.value + snapshot.value;
+        this.dataSource[indexOfItem] = existingItem;
+      } else {
+        const newObj = {
+          position: player.netWorthSnapshots[0].items.indexOf(snapshot) + 1,
+          name: snapshot.name,
+          stacksize: snapshot.stacksize,
+          value: snapshot.value,
+          valuePerUnit: snapshot.valuePerUnit,
+          icon: snapshot.icon
+        };
+        this.dataSource.push(newObj);
+      }
     });
 
   }
