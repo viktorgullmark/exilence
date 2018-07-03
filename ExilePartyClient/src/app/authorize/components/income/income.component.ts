@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, Output, EventEmitter } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { colorSets as ngxChartsColorsets } from '@swimlane/ngx-charts/release/utils/color-sets';
 import * as d3 from 'd3';
 
@@ -115,11 +115,11 @@ export class IncomeComponent implements OnInit {
       }
       return false;
     })[0].items;
-    console.log('Clicked item items: ', items);
+    console.log('[INFO] Clicked item items: ', items);
   }
 
   onLegendLabelClick(entry) {
-    console.log('Legend clicked', entry);
+    console.log('[INFO] Legend clicked', entry);
   }
 
 }
