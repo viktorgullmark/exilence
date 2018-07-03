@@ -69,6 +69,8 @@ export class IncomeService {
 
     this.snapshotInterval = setInterval(() => {
 
+      this.netWorthHistory = this.settingsService.get('networth');
+
       if (this.netWorthHistory.lastSnapshot < (Date.now() - this.fiveMinutes) && this.localPlayer !== undefined) {
         this.netWorthHistory.lastSnapshot = Date.now();
         console.log('[INFO] Snapshotting player net worth');
