@@ -42,13 +42,33 @@ export class IncomeComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.updateGraph(this.player);
-    this.partyService.selectedPlayer.subscribe(res => {
-      this.dateData = [];
-      if (res.netWorthSnapshots !== null) {
-        this.updateGraph(res);
-      }
-    });
+    if (this.player !== undefined) {
+      this.updateGraph(this.player);
+      this.partyService.selectedPlayer.subscribe(res => {
+        this.dateData = [];
+        if (res.netWorthSnapshots !== null) {
+          this.updateGraph(res);
+        }
+      });
+    } else {
+      // party logic
+      this.partyService.party.players.forEach(p => {
+        if (p.netWorthSnapshots !== null) {
+          this.updateGraph(p);
+        }
+      });
+      this.partyService.partyUpdated.subscribe(party => {
+        if (party !== undefined) {
+          console.log('party was updated');
+          this.dateData = [];
+          party.players.forEach(p => {
+            if (p.netWorthSnapshots !== null) {
+              this.updateGraph(p);
+            }
+          });
+        }
+      });
+    }
   }
 
   hideGraph() {

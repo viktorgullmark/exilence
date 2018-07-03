@@ -1,0 +1,81 @@
+@import "./../../../../assets/styles/_variables.scss";
+
+.party-summary {
+    height: $content-height;
+
+    .income-graph-wrapper {
+        padding-top: 25px;
+        padding-bottom: 25px;
+    }
+
+    .flex-area {
+        display: flex;
+        align-items: flex-end;
+        justify-content: end;
+
+        .right-aligned {
+            margin-left: auto;
+        }
+
+        .extra-margin {
+            margin-right: 25px;
+        }
+    }
+
+    .income-summary-wrapper {
+        width: 100%;
+        margin-bottom: 25px;
+
+        .networth-wrapper {
+            float: left;
+            width: 33.333%;
+
+            .title {
+                font-size: 14px;
+
+                .ninja-link {
+                    color: $primary;
+                    font-weight: 500;
+                    text-decoration: underline;
+                }
+            }
+
+            .networth-inner-wrapper {
+                margin-top: 10px;
+
+                .networth {
+                    color: $currency-chaos-color;
+                }
+
+                .networth-placeholder {
+                    color: $networth-placeholder-color;
+                }
+            }
+        }
+    }
+
+    .table-outer-wrapper {
+        height: 45%;
+        bottom: 25px;
+        width: calc(100% - 50px);
+        margin-top: 25px;
+        position: absolute;
+
+        @media screen and (min-height: 1200px) {
+            height: 55%;
+        }
+
+        .networth-table-wrapper {
+            height: calc(100% - 95px);
+            overflow-y: scroll;
+        }
+
+        .search-form-wrapper {
+            margin-top: 5px;
+        }
+    }
+
+    .full-height-table {
+        height: 80%;
+    }
+}

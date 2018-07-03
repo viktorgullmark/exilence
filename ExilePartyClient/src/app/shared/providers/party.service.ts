@@ -33,6 +33,8 @@ export class PartyService {
   public accountInfo: AccountInfo;
   public selectedPlayer: BehaviorSubject<Player> = new BehaviorSubject<Player>(undefined);
   public selectedPlayerObj: Player;
+  public partyUpdated: BehaviorSubject<Party> = new BehaviorSubject<Party>(undefined);
+  public partyUpdatedObj: Party;
   public selectedGenericPlayer: BehaviorSubject<Player> = new BehaviorSubject<Player>(undefined);
   public selectedGenericPlayerObj: Player;
   public genericPartyPlayers: Player[] = [];
@@ -100,6 +102,7 @@ export class PartyService {
       const index = this.party.players.indexOf(this.party.players.find(x => x.connectionID === player.connectionID));
       this.party.players[index] = player;
       this.updatePlayerLists(this.party);
+      this.partyUpdated.next(this.party);
       if (this.selectedPlayerObj.connectionID === player.connectionID) {
         this.selectedPlayer.next(player);
       }
