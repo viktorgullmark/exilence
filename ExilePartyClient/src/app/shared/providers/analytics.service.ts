@@ -15,7 +15,7 @@ export class AnalyticsService {
   }
 
   startTracking(account: string) {
-    this.visitor = ua('UA-121704803-1', account.toLowerCase(), {strictCidFormat: false});
+    this.visitor = ua('UA-121704803-1', account.toLowerCase(), { strictCidFormat: false });
     this.visitor.set('uid', account);
     this.visitor.set('ds', 'app');
     this.visitor.set('an', this.appName);
@@ -26,7 +26,7 @@ export class AnalyticsService {
   sendPageview(page: string) {
     this.visitor.pageview(page).send((err) => {
       if (err) {
-        console.log('Error sending pageview: ', err);
+        console.log('[ERROR] Sending pageview: ', err);
       }
     });
   }
@@ -34,7 +34,7 @@ export class AnalyticsService {
   sendScreenview(screenName: string) {
     this.visitor.screenview(screenName, this.appName, this.version, (err) => {
       if (err) {
-        console.log('Error sending screenview: ', err);
+        console.log('[ERROR] Sending screenview: ', err);
       }
     }).send();
   }
