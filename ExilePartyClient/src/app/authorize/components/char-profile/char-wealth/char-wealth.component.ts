@@ -1,13 +1,14 @@
 import { Component, Inject, Input, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
+import { Router } from '@angular/router';
 
 import { NetWorthSnapshot } from '../../../../shared/interfaces/income.interface';
 import { Player } from '../../../../shared/interfaces/player.interface';
 import { AnalyticsService } from '../../../../shared/providers/analytics.service';
 import { ElectronService } from '../../../../shared/providers/electron.service';
 import { PartyService } from '../../../../shared/providers/party.service';
+import { SettingsService } from '../../../../shared/providers/settings.service';
 import { NetworthTableComponent } from '../../networth-table/networth-table.component';
-import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-char-wealth',
@@ -31,7 +32,8 @@ export class CharWealthComponent implements OnInit {
     private router: Router,
     private electronService: ElectronService,
     private partyService: PartyService,
-    private analyticsService: AnalyticsService
+    private analyticsService: AnalyticsService,
+    private settingService: SettingsService
   ) {
     this.form = fb.group({
       searchText: ['']
@@ -54,7 +56,14 @@ export class CharWealthComponent implements OnInit {
     this.isGraphHidden = true;
   }
 
+  resetNetWorth() {
+    const emptyHistory = this.settingService.deleteNetWorth();
+    this.player.netWorthSnapshots = emptyHistory.history;
+    this.partyService.updatePlayer(this.player);
+  }
+
   hideGraph() {
+    this.resetNetWorth();
     this.isGraphHidden = true;
   }
 

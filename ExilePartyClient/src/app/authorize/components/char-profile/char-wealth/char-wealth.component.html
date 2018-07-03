@@ -26,8 +26,9 @@
         </div>
     </div>
     <div class="flex-area">
-        <button mat-raised-button color="primary" *ngIf="!isGraphHidden" (click)="hideGraph()" type="button" class="right-aligned extra-margin">{{'GRAPH.HIDE' | translate}}</button>
-        <button mat-raised-button color="primary" *ngIf="isGraphHidden" (click)="showGraph()" type="button" class="right-aligned extra-margin">{{'GRAPH.SHOW' | translate}}</button>
+        <button mat-raised-button color="primary" (click)="resetNetWorth()" type="button" class="right-aligned extra-margin">{{'GRAPH.RESET' | translate}}</button>
+        <button mat-raised-button color="primary" *ngIf="!isGraphHidden" (click)="hideGraph()" type="button" class="extra-margin">{{'GRAPH.HIDE' | translate}}</button>
+        <button mat-raised-button color="primary" *ngIf="isGraphHidden" (click)="showGraph()" type="button" class="extra-margin">{{'GRAPH.SHOW' | translate}}</button>
     </div>
     <div class="income-graph-wrapper" [hidden]="isGraphHidden">
         <app-income (hidden)="toggleGraph($event)" [player]="player" [view]="graphDimensions"></app-income>

@@ -18,4 +18,16 @@ export class SettingsService {
   deleteAll() {
     this.electronService.settings.deleteAll();
   }
+  deleteNetWorth() {
+    const netWorthHistory = {
+      lastSnapshot: 0,
+      history: [{
+        timestamp: 0,
+        value: 0,
+        items: []
+      }]
+    };
+    this.electronService.settings.set('networth', netWorthHistory);
+    return netWorthHistory;
+  }
 }
