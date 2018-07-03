@@ -1,6 +1,9 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [0.3.8] - 2018-07-03
+- Added check for undefined in map-table
+
 ## [0.3.7] - 2018-07-03
 - Added summary-page for current group: displays summarized networth and gain
 - Added tier to maps, to be able to filter them out

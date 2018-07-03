@@ -25,12 +25,14 @@ export class MapTableComponent implements OnInit {
   ngOnInit() {
     this.updateTable(this.player);
     this.partyService.selectedPlayer.subscribe(res => {
-      this.player = res;
-      this.dataSource = [];
-      if (res.pastAreas !== null) {
-        this.updateTable(res);
+      if (res !== undefined) {
+        this.player = res;
+        this.dataSource = [];
+        if (res.pastAreas !== null) {
+          this.updateTable(res);
+        }
+        this.filter();
       }
-      this.filter();
     });
   }
 
@@ -57,7 +59,7 @@ export class MapTableComponent implements OnInit {
   }
 
   updateTable(player: Player) {
-    if (player.pastAreas !== null) {
+    if (player.pastAreas !== null && player.pastAreas !== undefined) {
       player.pastAreas.forEach((area: ExtendedAreaInfo) => {
         const minute = Math.floor(area.duration / 60);
         const seconds = area.duration % 60;
