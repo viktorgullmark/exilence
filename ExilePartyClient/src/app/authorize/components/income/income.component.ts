@@ -59,7 +59,6 @@ export class IncomeComponent implements OnInit {
       });
       this.partyService.partyUpdated.subscribe(party => {
         if (party !== undefined) {
-          console.log('party was updated');
           this.dateData = [];
           party.players.forEach(p => {
             if (p.netWorthSnapshots !== null) {
