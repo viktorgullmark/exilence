@@ -1,10 +1,12 @@
-<mat-card class="player-badge" *ngIf="player && (selectedPlayer || selectedGenericPlayer)" (click)="selectPlayer()" [ngClass]="{'selected-player': player?.connectionID == selectedPlayer?.connectionID || player?.character?.name == selectedGenericPlayer?.character?.name }"> 
+<mat-card class="player-badge" *ngIf="player && (selectedPlayer || selectedGenericPlayer)" (click)="selectPlayer()" [ngClass]="{'selected-player': player?.connectionID == selectedPlayer?.connectionID || player?.character?.name == selectedGenericPlayer?.character?.name }">
   <div class="char-icon {{player.character?.class}}">
-    
+
   </div>
   <div class="player-badge-content">
-      <span class="mat-subheading-1">{{player.character.name}}</span><br/>
-      <span class="mat-subheading-1">Level {{player.character.level}} {{player.character.class}}</span><br/>
-      <span class="player-area mat-caption">{{player.area}}</span>
+    <span class="mat-subheading-1">{{player.character.name}}</span>
+    <br/>
+    <span class="mat-subheading-1">Level {{player.character.level}} {{player.character.class}}</span>
+    <br/>
+    <span class="player-area mat-caption">{{player.area}}</span>
   </div>
 </mat-card>

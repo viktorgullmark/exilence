@@ -96,6 +96,7 @@ export class MapService {
 
         this.localPlayer.pastAreas = this.pastAreaList;
         this.localPlayer.areaInfo = this.currentArea;
+        this.localPlayer.area = this.currentArea.eventArea.name;
 
         this.partyService.updatePlayer(this.localPlayer);
       }

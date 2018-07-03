@@ -136,12 +136,6 @@ export class PartyService {
       console.log('[INFO] player left:', player);
     });
 
-    // subscribe to log-events
-    this.logMonitorService.areaEvent.subscribe(res => {
-      this.currentPlayer.area = res.name;
-      this.updatePlayer(this.currentPlayer);
-    });
-
     this.logMonitorService.areaJoin.subscribe((msg: LogMessage) => {
       console.log('[INFO] Player joined area: ', msg.player.name);
       this.handleAreaEvent(msg);
