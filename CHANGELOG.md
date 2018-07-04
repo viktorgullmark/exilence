@@ -2,6 +2,7 @@
 All notable changes to this project will be documented in this file.
 
 ## [0.3.9] - 2018-07-04
+- Added graph to group-summary
 - Fixed calculation for average time spent per area
 - Minor optimizations throughout the app
 
