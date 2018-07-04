@@ -9,6 +9,7 @@ import { ElectronService } from '../../../../shared/providers/electron.service';
 import { PartyService } from '../../../../shared/providers/party.service';
 import { SettingsService } from '../../../../shared/providers/settings.service';
 import { NetworthTableComponent } from '../../networth-table/networth-table.component';
+import { AccountService } from '../../../../shared/providers/account.service';
 
 @Component({
   selector: 'app-char-wealth',
@@ -26,6 +27,7 @@ export class CharWealthComponent implements OnInit {
   private oneHourAgo = (Date.now() - (1 * 60 * 60 * 1000));
   public graphDimensions = [640, 250];
   public gain = 0;
+  public showReset = false;
 
   constructor(
     @Inject(FormBuilder) fb: FormBuilder,
@@ -33,12 +35,17 @@ export class CharWealthComponent implements OnInit {
     private electronService: ElectronService,
     private partyService: PartyService,
     private analyticsService: AnalyticsService,
-    private settingService: SettingsService
+    private settingService: SettingsService,
   ) {
     this.form = fb.group({
       searchText: ['']
     });
     this.partyService.selectedPlayer.subscribe(res => {
+      if (res.account === this.partyService.currentPlayer.account) {
+        this.showReset = true;
+      } else {
+        this.showReset = false;
+      }
       this.player = res;
       this.updateGain(res);
     });
@@ -57,9 +64,11 @@ export class CharWealthComponent implements OnInit {
   }
 
   resetNetWorth() {
-    const emptyHistory = this.settingService.deleteNetWorth();
-    this.player.netWorthSnapshots = emptyHistory.history;
-    this.partyService.updatePlayer(this.player);
+    if (this.player.account === this.partyService.currentPlayer.account) {
+      const emptyHistory = this.settingService.deleteNetWorth();
+      this.player.netWorthSnapshots = emptyHistory.history;
+      this.partyService.updatePlayer(this.player);
+    }
   }
 
   hideGraph() {
