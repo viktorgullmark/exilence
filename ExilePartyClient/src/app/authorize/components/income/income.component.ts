@@ -37,7 +37,7 @@ export class IncomeComponent implements OnInit {
 
   constructor(
     private incomeService: IncomeService,
-    private partyService: PartyService
+    private partyService: PartyService,
   ) {
     this.setColorScheme('fire');
   }

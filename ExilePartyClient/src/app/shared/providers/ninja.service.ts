@@ -5,9 +5,7 @@ import { Observable } from 'rxjs';
 
 import { NinjaResponse, NinjaTypes } from '../interfaces/poe-ninja.interface';
 
-@Injectable({
-  providedIn: 'root'
-})
+@Injectable()
 
 export class NinjaService {
 

@@ -16,6 +16,7 @@ import { NinjaLine, NinjaTypes } from '../interfaces/poe-ninja.interface';
 import { Stash } from '../interfaces/stash.interface';
 import { AccountService } from './account.service';
 import { ExternalService } from './external.service';
+import { LogService } from './log.service';
 import { NinjaService } from './ninja.service';
 import { PartyService } from './party.service';
 import { SettingsService } from './settings.service';
@@ -44,7 +45,8 @@ export class IncomeService {
     private accountService: AccountService,
     private partyService: PartyService,
     private externalService: ExternalService,
-    private settingsService: SettingsService
+    private settingsService: SettingsService,
+    private logService: LogService
   ) {
 
 
@@ -73,7 +75,7 @@ export class IncomeService {
 
       if (this.netWorthHistory.lastSnapshot < (Date.now() - this.fiveMinutes) && this.localPlayer !== undefined) {
         this.netWorthHistory.lastSnapshot = Date.now();
-        console.log('[INFO] Snapshotting player net worth');
+        this.logService.log('Started snapshotting player net worth');
         this.SnapshotPlayerNetWorth(sessionId).subscribe(() => {
 
           this.netWorthHistory.history = this.netWorthHistory.history
@@ -88,7 +90,6 @@ export class IncomeService {
             this.netWorthHistory.history.pop();
           }
 
-          console.log(this.totalNetWorthItems);
           const snapShot: NetWorthSnapshot = {
             timestamp: Date.now(),
             value: this.totalNetWorth,
@@ -100,7 +101,7 @@ export class IncomeService {
           this.settingsService.set('networth', this.netWorthHistory);
           this.localPlayer.netWorthSnapshots = this.netWorthHistory.history;
           this.partyService.updatePlayer(this.localPlayer);
-          console.log('[INFO] Finished Snapshotting player net worth');
+          this.logService.log('Finished Snapshotting player net worth');
         });
       }
     }, 30 * 1000);
@@ -122,7 +123,7 @@ export class IncomeService {
       this.getPlayerStashTabs(sessionId, accountName, league),
       this.getValuesFromNinja(league)
     ).do(() => {
-      console.log('[INFO]: Finished retriving stashtabs and value information.');
+      this.logService.log('Finished retriving stashtabs and value information.');
       this.playerStashTabs.forEach((tab: Stash, tabIndex: number) => {
         tab.items.forEach((item: Item) => {
 

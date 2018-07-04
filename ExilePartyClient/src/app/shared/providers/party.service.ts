@@ -21,6 +21,7 @@ import { map } from 'rxjs/operators';
 import { LogMessage } from '../interfaces/log-message.interface';
 import { IncomeService } from './income.service';
 import { NetWorthSnapshot } from './../interfaces/income.interface';
+import { LogService } from './log.service';
 
 @Injectable()
 export class PartyService {
@@ -58,7 +59,8 @@ export class PartyService {
     private accountService: AccountService,
     private logMonitorService: LogMonitorService,
     private externalService: ExternalService,
-    private settingService: SettingsService
+    private settingService: SettingsService,
+    private logService: LogService
   ) {
     this.recentParties.next(this.settingService.get('recentParties') || []);
 
@@ -83,7 +85,7 @@ export class PartyService {
     this.initHubConnection();
 
     this._hubConnection.onclose(() => {
-      console.log('[ERROR] Signalr connection closed, reconnecting in 5000 ms');
+      this.logService.log('[ERROR] Signalr connection closed, reconnecting in 5000 ms');
       setTimeout(() => {
         this.initHubConnection();
       }, 5000);
@@ -95,7 +97,7 @@ export class PartyService {
       this.accountService.player.next(player);
       this.selectedPlayer.next(player);
       this.isEntering = false;
-      console.log('[INFO] entered party:', party);
+      this.logService.log('Entered party:', party);
     });
 
     this._hubConnection.on('PlayerUpdated', (player: Player) => {
@@ -106,7 +108,7 @@ export class PartyService {
       if (this.selectedPlayerObj.connectionID === player.connectionID) {
         this.selectedPlayer.next(player);
       }
-      console.log('[INFO] player updated:', player);
+      this.logService.log('Player updated:', player);
     });
 
     this._hubConnection.on('GenericPlayerUpdated', (player: Player) => {
@@ -116,14 +118,13 @@ export class PartyService {
       if (this.selectedGenericPlayerObj.character.name === player.character.name) {
         this.selectedGenericPlayer.next(player);
       }
-      console.log('[INFO] generic player updated:', player);
     });
 
     this._hubConnection.on('PlayerJoined', (player: Player) => {
       this.party.players = this.party.players.filter(x => x.character.name !== player.character.name);
       this.party.players.push(player);
       this.updatePlayerLists(this.party);
-      console.log('[INFO] player joined:', player);
+      this.logService.log('player joined:', player);
     });
 
     this._hubConnection.on('PlayerLeft', (player: Player) => {
@@ -133,25 +134,25 @@ export class PartyService {
         this.selectedPlayer.next(this.currentPlayer);
       }
 
-      console.log('[INFO] player left:', player);
+      this.logService.log('player left:', player);
     });
 
     this.logMonitorService.areaJoin.subscribe((msg: LogMessage) => {
-      console.log('[INFO] Player joined area: ', msg.player.name);
+      this.logService.log('Player joined area: ', msg.player.name);
       this.handleAreaEvent(msg);
     });
     this.logMonitorService.areaLeft.subscribe((msg: LogMessage) => {
-      console.log('[INFO] Player left area: ', msg.player.name);
+      this.logService.log('Player left area: ', msg.player.name);
       this.handleAreaEvent(msg);
     });
 
   }
 
   initHubConnection() {
-    console.log('[INFO] Starting signalr connection');
+    this.logService.log('Starting signalr connection');
     this._hubConnection.start().catch((err) => {
       console.error(err.toString());
-      console.log('[ERROR] Could not connect to signalr, trying again in 5000 ms');
+      this.logService.log('Could not connect to signalr, trying again in 5000 ms');
       setTimeout(() => this.initHubConnection(), 5000);
     });
   }
@@ -265,7 +266,7 @@ export class PartyService {
 
         this.addRecentPlayer(newPlayer);
       } else {
-        console.log('[WARN] Account lookup failed for: ', event.player.name);
+        this.logService.log('Account lookup failed for: ', event.player.name);
       }
     });
   }
@@ -288,7 +289,7 @@ export class PartyService {
           this.addGenericPlayer(newPlayer);
         },
           (error) => {
-            console.log(`[WARN] getCharacter failed for player: ${player.name}, account: ${account} (profile probaly private)`);
+            this.logService.log(`getCharacter failed for player: ${player.name}, account: ${account} (profile probaly private)`);
           }
         );
       }
