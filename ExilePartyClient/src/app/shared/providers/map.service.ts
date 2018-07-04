@@ -93,11 +93,12 @@ export class MapService {
         }
 
         this.localPlayer.pastAreas = this.pastAreaList;
-        this.localPlayer.areaInfo = this.currentArea;
-        this.localPlayer.area = this.currentArea.eventArea.name;
 
         this.partyService.updatePlayer(this.localPlayer);
       }
+
+      this.localPlayer.area = this.currentArea.eventArea.name;
+      this.localPlayer.areaInfo = this.currentArea;
 
       this.durationInterval = setInterval(() => {
         this.durationSeconds++;
