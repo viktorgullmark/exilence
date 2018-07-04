@@ -20,6 +20,7 @@ import { LogService } from './log.service';
 import { NinjaService } from './ninja.service';
 import { PartyService } from './party.service';
 import { SettingsService } from './settings.service';
+import { AnalyticsService } from './analytics.service';
 
 
 
@@ -46,7 +47,8 @@ export class IncomeService {
     private partyService: PartyService,
     private externalService: ExternalService,
     private settingsService: SettingsService,
-    private logService: LogService
+    private logService: LogService,
+    private analyticsService: AnalyticsService
   ) {
 
 
@@ -71,8 +73,9 @@ export class IncomeService {
 
     this.snapshotInterval = setInterval(() => {
 
-      this.netWorthHistory = this.settingsService.get('networth');
+      this.analyticsService.sendEvent('income', `snapshotting networth`);
 
+      this.netWorthHistory = this.settingsService.get('networth');
       if (this.netWorthHistory.lastSnapshot < (Date.now() - this.fiveMinutes) && this.localPlayer !== undefined) {
         this.netWorthHistory.lastSnapshot = Date.now();
         this.logService.log('Started snapshotting player net worth');

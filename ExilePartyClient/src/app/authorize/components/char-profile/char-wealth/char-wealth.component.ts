@@ -63,7 +63,6 @@ export class CharWealthComponent implements OnInit {
   }
 
   hideGraph() {
-    this.resetNetWorth();
     this.isGraphHidden = true;
   }
 

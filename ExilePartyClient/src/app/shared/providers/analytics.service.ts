@@ -32,6 +32,21 @@ export class AnalyticsService {
     });
   }
 
+  sendEvent(category: string, action: string) {
+
+    const params = {
+      ec: category,
+      ea: action,
+    };
+
+    this.visitor.event(params).send((err) => {
+      if (err) {
+        this.logService.log('Sending event: ', err, true);
+      }
+    });
+
+  }
+
   sendScreenview(screenName: string) {
     this.visitor.screenview(screenName, this.appName, this.version, (err) => {
       if (err) {
