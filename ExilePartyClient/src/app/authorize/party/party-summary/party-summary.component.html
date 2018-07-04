@@ -20,12 +20,12 @@
           </div>
       </div>
   </div>
-  <!-- <div class="flex-area">
+  <div class="flex-area">
       <button mat-raised-button color="primary" *ngIf="!isGraphHidden" (click)="hideGraph()" type="button" class="right-aligned extra-margin">{{'GRAPH.HIDE' | translate}}</button>
       <button mat-raised-button color="primary" *ngIf="isGraphHidden" (click)="showGraph()" type="button" class="right-aligned extra-margin">{{'GRAPH.SHOW' | translate}}</button>
-  </div> -->
+  </div>
   <div class="income-graph-wrapper" [hidden]="isGraphHidden">
-      <app-income (hidden)="toggleGraph($event)" [view]="graphDimensions"></app-income>
+      <app-income title="Net worth summary for group" (hidden)="toggleGraph($event)" [view]="graphDimensions"></app-income>
   </div>
   <div class="table-outer-wrapper" [ngClass]="{'full-height-table': isGraphHidden }">
       <div class="search-form-wrapper">

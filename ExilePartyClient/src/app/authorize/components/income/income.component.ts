@@ -19,11 +19,12 @@ export class IncomeComponent implements OnInit {
   dateData: ChartSeries[] = [];
   @Input() player: Player;
   @Input() view = [1000, 400];
-
+  @Input() title = 'Net worth graph based on selected tabs';
   @Output() hidden: EventEmitter<any> = new EventEmitter;
 
   public isHidden = false;
   public visible = true;
+  private data = [];
 
   // line interpolation
   curveType = 'Linear';
@@ -46,12 +47,14 @@ export class IncomeComponent implements OnInit {
       this.updateGraph(this.player);
       this.partyService.selectedPlayer.subscribe(res => {
         this.dateData = [];
+        this.data = [];
         if (res.netWorthSnapshots !== null) {
           this.updateGraph(res);
         }
       });
     } else {
       // party logic
+
       this.partyService.party.players.forEach(p => {
         if (p.netWorthSnapshots !== null) {
           this.updateGraph(p);
@@ -60,6 +63,7 @@ export class IncomeComponent implements OnInit {
       this.partyService.partyUpdated.subscribe(party => {
         if (party !== undefined) {
           this.dateData = [];
+          this.data = [];
           party.players.forEach(p => {
             if (p.netWorthSnapshots !== null) {
               this.updateGraph(p);
@@ -92,8 +96,8 @@ export class IncomeComponent implements OnInit {
         return seriesEntry;
       })
     };
+    this.dateData.push(entry);
     const data = [... this.dateData];
-    data[0] = entry;
     this.dateData = data;
   }
 

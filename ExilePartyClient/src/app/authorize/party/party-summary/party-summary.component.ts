@@ -13,11 +13,11 @@ import { Player } from '../../../shared/interfaces/player.interface';
 export class PartySummaryComponent implements OnInit {
   form: FormGroup;
 
-  isGraphHidden = true;
+  isGraphHidden = false;
   @ViewChild('table') table: NetworthTableComponent;
 
   private oneHourAgo = (Date.now() - (1 * 60 * 60 * 1000));
-  public graphDimensions = [640, 250];
+  public graphDimensions = [1000, 365];
   public gain = 0;
   public partyNetworth = 0;
   constructor(
