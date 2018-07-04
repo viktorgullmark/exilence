@@ -1,8 +1,9 @@
-import { Component, Input, OnInit, OnDestroy } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { Subscription } from 'rxjs';
 
 import { GithubRelease } from '../../../shared/interfaces/github.interface';
 import { ExternalService } from '../../../shared/providers/external.service';
-import { Subscription } from 'rxjs';
+import { LogService } from '../../../shared/providers/log.service';
 
 
 
@@ -20,7 +21,8 @@ export class NotficationBarComponent implements OnInit, OnDestroy {
   public notifications: string[] = [];
   private releaseSub: Subscription;
   constructor(
-    private externalService: ExternalService
+    private externalService: ExternalService,
+    private logService: LogService
   ) {
     setTimeout(res => {
       setInterval(this.checkForNewRelease(), 1000 * 60 * 10); // Check every 10 minutes.
@@ -33,8 +35,8 @@ export class NotficationBarComponent implements OnInit, OnDestroy {
 
   checkForNewRelease() {
     this.releaseSub = this.externalService.getLatestRelease().subscribe((release: GithubRelease) => {
-      console.log('[INFO] Current Version: ', this.appVersion);
-      console.log('[INFO] Latest Version: ', release.name);
+      this.logService.log('Current Version: ' + this.appVersion);
+      this.logService.log('Latest Version: ' + release.name);
 
       if (this.appVersion !== release.name) {
         if (this.notifications.indexOf('NEW_VERSION') === -1) {

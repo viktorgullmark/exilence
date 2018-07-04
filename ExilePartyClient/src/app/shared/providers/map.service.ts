@@ -57,8 +57,6 @@ export class MapService {
         this.pastAreaList[0].eventArea.name.indexOf(e.name) > -1 &&
         this.lastInstanceServer === this.pastAreaList[0].instanceServer
       ) {
-        console.log('[INFO]: PROBABLY ENTERING THE SAME MAP AGAIN');
-
         this.currentArea = this.pastAreaList.shift();
         this.durationSeconds = this.currentArea.duration;
 

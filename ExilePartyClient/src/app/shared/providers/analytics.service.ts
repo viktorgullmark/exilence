@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import ua from 'universal-analytics';
 
 import * as pkg from '../../../../package.json';
+import { LogService } from './log.service';
 
 @Injectable()
 export class AnalyticsService {
@@ -9,7 +10,7 @@ export class AnalyticsService {
   private visitor;
   private version: string;
   private appName: string;
-  constructor() {
+  constructor(private logService: LogService) {
     this.version = pkg['version'];
     this.appName = 'ExileParty';
   }
@@ -26,7 +27,7 @@ export class AnalyticsService {
   sendPageview(page: string) {
     this.visitor.pageview(page).send((err) => {
       if (err) {
-        console.log('[ERROR] Sending pageview: ', err);
+        this.logService.log('Sending pageview: ', err, true);
       }
     });
   }
@@ -34,7 +35,7 @@ export class AnalyticsService {
   sendScreenview(screenName: string) {
     this.visitor.screenview(screenName, this.appName, this.version, (err) => {
       if (err) {
-        console.log('[ERROR] Sending screenview: ', err);
+        this.logService.log('Sending screenview: ', err, true);
       }
     }).send();
   }

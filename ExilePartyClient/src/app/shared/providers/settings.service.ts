@@ -10,7 +10,6 @@ export class SettingsService {
 
   set(key: string, object: any) {
     this.electronService.settings.set(key, object);
-    console.log('[INFO]: Settings saved: ', this.electronService.settings.getAll());
   }
   get(key: string) {
     return this.electronService.settings.get(key);

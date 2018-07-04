@@ -24,6 +24,7 @@ import { CanActivateAuthorized } from './shared/guards/authorized.guard';
 import { AccountService } from './shared/providers/account.service';
 import { ElectronService } from './shared/providers/electron.service';
 import { ExternalService } from './shared/providers/external.service';
+import { LogService } from './shared/providers/log.service';
 import { NinjaService } from './shared/providers/ninja.service';
 import { SessionService } from './shared/providers/session.service';
 import { SettingsService } from './shared/providers/settings.service';
@@ -62,6 +63,7 @@ export function HttpLoaderFactory(http: HttpClient) {
   providers: [
     ExternalService,
     ElectronService,
+    LogService,
     CanActivateAuthorized,
     AccountService,
     SessionService,
