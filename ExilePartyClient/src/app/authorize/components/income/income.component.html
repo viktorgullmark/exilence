@@ -1,11 +1,12 @@
 <h3 class="mat-h3">{{title}}
-  <span class="mat-caption caption-text">(updates every 5 minutes)</span>
+  <span class="mat-caption caption-text">(updates every 7.5 minutes)</span>
 </h3>
 <div class="chart-container">
-  <ngx-charts-line-chart *ngIf="visible" [view]="view" class="chart-container" [ngClass]="{'summary-chart': player == undefined}" [scheme]="colorScheme" [results]="dateData" [legend]="player == undefined" 
-    legendTitle="Players" (legendLabelClick)="onLegendLabelClick($event)" gradient="false" xAxis="true" yAxis="true" showXAxisLabel="true"
-    showYAxisLabel="true" xAxisLabel="Time" [xAxisTickFormatting]="axisFormat" animations="true" yAxisLabel="Net worth in Chaos"
-    autoScale="true" timeline="true" showGridLines="true" [curve]="curve" (select)="select($event)">
+  <ngx-charts-line-chart *ngIf="visible" [view]="view" class="chart-container" [ngClass]="{'summary-chart': player == undefined}"
+    [scheme]="colorScheme" [results]="dateData" [legend]="player == undefined" legendTitle="Players" (legendLabelClick)="onLegendLabelClick($event)"
+    gradient="false" xAxis="true" yAxis="true" showXAxisLabel="true" showYAxisLabel="true" xAxisLabel="Time" [xAxisTickFormatting]="axisFormat"
+    animations="true" yAxisLabel="Net worth in Chaos" autoScale="true" timeline="true" showGridLines="true" [curve]="curve"
+    (select)="select($event)">
     <ng-template #tooltipTemplate let-model="model">
       Net worth: {{ model.value.toFixed(1) }} chaos
       <br> Time: {{ axisFormat(model.name) }}
