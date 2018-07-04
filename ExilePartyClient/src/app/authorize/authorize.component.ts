@@ -6,6 +6,7 @@ import { Player } from '../shared/interfaces/player.interface';
 import { AccountService } from '../shared/providers/account.service';
 import { MapService } from '../shared/providers/map.service';
 import { PartyService } from '../shared/providers/party.service';
+import { RobotService } from '../shared/providers/robot.service';
 
 @Component({
   selector: 'app-authorize',
@@ -18,6 +19,7 @@ export class AuthorizeComponent implements OnInit {
   constructor(@Inject(FormBuilder) fb: FormBuilder,
     public partyService: PartyService,
     private mapService: MapService,
+    private robotService: RobotService,
     private accountService: AccountService,
     private router: Router) {
     this.form = fb.group({
