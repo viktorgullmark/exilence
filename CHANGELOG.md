@@ -1,6 +1,9 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [0.3.11] - 2018-07-04
+- Hotfix for summary-graph: color-adjustments
+
 ## [0.3.10] - 2018-07-04
 - Hotfix for graph not updating properly when players reset their net worth stats
 

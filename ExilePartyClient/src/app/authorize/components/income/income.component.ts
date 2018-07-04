@@ -30,7 +30,10 @@ export class IncomeComponent implements OnInit {
   curveType = 'Linear';
   curve = d3.curveLinear;
 
-  colorScheme: any;
+  colorScheme = {
+    domain: ['#e91e63', '#f2f2f2', '#FFEE93', '#8789C0', '#45F0DF']
+  };
+
   schemeType = 'ordinal';
   selectedColorScheme: string;
 
@@ -39,7 +42,6 @@ export class IncomeComponent implements OnInit {
     private incomeService: IncomeService,
     private partyService: PartyService,
   ) {
-    this.setColorScheme('fire');
   }
 
   ngOnInit() {
