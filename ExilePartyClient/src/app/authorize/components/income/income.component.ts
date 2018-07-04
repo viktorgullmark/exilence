@@ -96,7 +96,13 @@ export class IncomeComponent implements OnInit {
         return seriesEntry;
       })
     };
-    this.dateData.push(entry);
+    if (player.netWorthSnapshots[0].timestamp === 0) {
+      if (this.player !== undefined) {
+        this.dateData.push(entry);
+      }
+    } else {
+      this.dateData.push(entry);
+    }
     const data = [... this.dateData];
     this.dateData = data;
   }
