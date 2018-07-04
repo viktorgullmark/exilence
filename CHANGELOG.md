@@ -1,6 +1,9 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [0.3.12] - 2018-07-04
+- Fixed a bug related to rendering of graph
+
 ## [0.3.11] - 2018-07-04
 - Hotfix for summary-graph: color-adjustments
 
