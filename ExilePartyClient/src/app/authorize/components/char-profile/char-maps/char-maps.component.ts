@@ -52,16 +52,13 @@ export class CharMapsComponent implements OnInit {
 
   updateAvgTimeSpent(pastAreas) {
     if (pastAreas !== null) {
-      const pastHourAreas = pastAreas
-        .filter((area: ExtendedAreaInfo) => area.timestamp > this.oneHourAgo);
-
-      if (pastHourAreas[0] !== undefined) {
+      if (pastAreas[0] !== undefined) {
         let total = 0;
-        pastHourAreas.forEach(area => {
+        pastAreas.forEach(area => {
           total = total + area.duration;
         });
 
-        const average = total / pastHourAreas.length;
+        const average = total / pastAreas.length;
 
         const minute = Math.floor(average / 60);
         let seconds = average % 60;
