@@ -13,7 +13,7 @@
             <br/>
             <div class="stat-inner-wrapper">
                 <span class="stat-placeholder" *ngIf="filteredArr == null || filteredArr.length == 0">No data</span>
-                <span class="stat" *ngIf="filteredArr != null && filteredArr.length > 0">{{filteredArr.length}}</span>
+                <span class="stat" *ngIf="filteredArr != null && filteredArr.length > 0">{{filteredArr.length == 50 ? '50+' : filteredArr.length}}</span>
             </div>
         </div>
     </div>
