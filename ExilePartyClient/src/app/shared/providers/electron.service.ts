@@ -17,6 +17,7 @@ export class ElectronService {
   shell: typeof shell;
   fs: typeof fs;
   settings: any;
+  robot: any;
   constructor(
     private analyticsService: AnalyticsService
   ) {
@@ -29,6 +30,15 @@ export class ElectronService {
       this.fs = window.require('fs');
       this.shell = window.require('electron').shell;
       this.settings = window.require('electron-settings');
+
+      this.robot = window.require('robot-js');
+
+      const process = this.robot.Process.getCurrent();
+
+      console.log('ROBOT Is 64 Bit: ', process.is64Bit());
+      console.log('ROBOT PID: ', process.getPID());
+      console.log('ROBOT GetName: ', process.getName());
+      console.log('ROBOT GetPath: ', process.getPath());
 
     }
   }
