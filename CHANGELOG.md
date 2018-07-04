@@ -1,6 +1,10 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [0.3.9] - 2018-07-04
+- Fixed calculation for average time spent per area
+- Minor optimizations throughout the app
+
 ## [0.3.8] - 2018-07-03
 - Added check for undefined in map-table
 
