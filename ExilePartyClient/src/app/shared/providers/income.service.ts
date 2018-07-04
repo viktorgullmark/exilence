@@ -15,12 +15,12 @@ import { Player } from '../interfaces/player.interface';
 import { NinjaLine, NinjaTypes } from '../interfaces/poe-ninja.interface';
 import { Stash } from '../interfaces/stash.interface';
 import { AccountService } from './account.service';
+import { AnalyticsService } from './analytics.service';
 import { ExternalService } from './external.service';
 import { LogService } from './log.service';
 import { NinjaService } from './ninja.service';
 import { PartyService } from './party.service';
 import { SettingsService } from './settings.service';
-import { AnalyticsService } from './analytics.service';
 
 
 
@@ -38,7 +38,7 @@ export class IncomeService {
 
   private totalNetWorthItems: NetWorthItem[] = [];
   public totalNetWorth = 0;
-  private fiveMinutes = 5 * 60 * 1000;
+  private sevenAndAHalfMinute = 7.5 * 60 * 1000;
   private twelveHoursAgo = (Date.now() - (12 * 60 * 60 * 1000));
 
   constructor(
@@ -76,7 +76,7 @@ export class IncomeService {
       this.analyticsService.sendEvent('income', `snapshotting networth`);
 
       this.netWorthHistory = this.settingsService.get('networth');
-      if (this.netWorthHistory.lastSnapshot < (Date.now() - this.fiveMinutes) && this.localPlayer !== undefined) {
+      if (this.netWorthHistory.lastSnapshot < (Date.now() - this.sevenAndAHalfMinute) && this.localPlayer !== undefined) {
         this.netWorthHistory.lastSnapshot = Date.now();
         this.logService.log('Started snapshotting player net worth');
         this.SnapshotPlayerNetWorth(sessionId).subscribe(() => {
