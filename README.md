@@ -9,6 +9,10 @@ Download latest release at https://github.com/viktorgullmark/exile-party/release
 
 Report bugs at https://github.com/viktorgullmark/exile-party/issues
 
+## Screenshots from 0.4.0b
+
+https://imgur.com/a/cpODf7I
+
 ## Contents
 
 - [Changelog](https://github.com/viktorgullmark/exile-party/blob/master/CHANGELOG.md)

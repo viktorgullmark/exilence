@@ -1,6 +1,11 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [0.4.0] - 2018-07-04
+- Improved descriptions throughout the app
+- Minor tweaks to summary-graph
+- Initial beta-release
+
 ## [0.3.12] - 2018-07-04
 - Fixed a bug related to rendering of graph
 
