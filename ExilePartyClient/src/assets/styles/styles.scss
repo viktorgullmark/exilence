@@ -85,6 +85,10 @@ mat-vertical-stepper {
     margin-top: 15px !important;
 }
 
+.legend-label:hover, .active, .legend-label-text, .chart-legend {
+    color: #fff !important;
+}
+
 a {
     cursor: pointer;
 
