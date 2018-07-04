@@ -1,7 +1,8 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, OnDestroy } from '@angular/core';
 
 import { GithubRelease } from '../../../shared/interfaces/github.interface';
 import { ExternalService } from '../../../shared/providers/external.service';
+import { Subscription } from 'rxjs';
 
 
 
@@ -12,12 +13,12 @@ import { ExternalService } from '../../../shared/providers/external.service';
   styleUrls: ['./notfication-bar.component.scss']
 })
 
-export class NotficationBarComponent implements OnInit {
+export class NotficationBarComponent implements OnInit, OnDestroy {
 
   @Input() appVersion: string;
   public latestVersion;
   public notifications: string[] = [];
-
+  private releaseSub: Subscription;
   constructor(
     private externalService: ExternalService
   ) {
@@ -31,7 +32,7 @@ export class NotficationBarComponent implements OnInit {
 
 
   checkForNewRelease() {
-    this.externalService.getLatestRelease().subscribe((release: GithubRelease) => {
+    this.releaseSub = this.externalService.getLatestRelease().subscribe((release: GithubRelease) => {
       console.log('[INFO] Current Version: ', this.appVersion);
       console.log('[INFO] Latest Version: ', release.name);
 
@@ -43,6 +44,10 @@ export class NotficationBarComponent implements OnInit {
 
       this.latestVersion = release.name;
     });
+  }
+
+  ngOnDestroy() {
+    this.releaseSub.unsubscribe();
   }
 
 }

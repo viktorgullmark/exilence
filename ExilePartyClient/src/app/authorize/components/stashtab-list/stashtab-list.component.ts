@@ -1,18 +1,19 @@
 import { SelectionModel } from '@angular/cdk/collections';
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, OnDestroy, ViewChild } from '@angular/core';
 import { MatSort, MatTableDataSource } from '@angular/material';
 
 import { Stash, Tab } from '../../../shared/interfaces/stash.interface';
 import { ExternalService } from '../../../shared/providers/external.service';
 import { PartyService } from '../../../shared/providers/party.service';
 import { SettingsService } from '../../../shared/providers/settings.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-stashtab-list',
   templateUrl: './stashtab-list.component.html',
   styleUrls: ['./stashtab-list.component.scss']
 })
-export class StashtabListComponent implements OnInit {
+export class StashtabListComponent implements OnInit, OnDestroy {
 
   displayedColumns: string[] = ['select', 'position', 'name'];
   searchText = '';
@@ -22,7 +23,7 @@ export class StashtabListComponent implements OnInit {
   @ViewChild(MatSort) sort: MatSort;
 
   selection = new SelectionModel<any>(true, []);
-
+  private stashTabSub: Subscription;
   constructor(
     private settingsService: SettingsService,
     private externalService: ExternalService,
@@ -47,7 +48,7 @@ export class StashtabListComponent implements OnInit {
       }
     }
 
-    this.externalService.getStashTabs(sessionId, accountName, league)
+    this.stashTabSub = this.externalService.getStashTabs(sessionId, accountName, league)
       .subscribe((res: Stash) => {
         this.dataSource = res.tabs.map((tab: Tab) => {
           return { position: tab.i, name: tab.n };
@@ -100,6 +101,10 @@ export class StashtabListComponent implements OnInit {
     this.isAllSelected() ?
       this.selection.clear() :
       this.source.data.forEach(row => this.selection.select(row));
+  }
+
+  ngOnDestroy() {
+    this.stashTabSub.unsubscribe();
   }
 
 }
