@@ -38,7 +38,8 @@
     "release": "npm run build:prod && npx electron-builder build --windows",
     "electron:mac": "npm run build:prod && npx electron-builder build --mac",
     "test": "ng test",
-    "e2e": "ng e2e"
+    "e2e": "ng e2e",
+    "rebuild": "electron-rebuild -f -w robot-js"
   },
   "dependencies": {
     "@swimlane/ngx-charts": "^8.1.0",
@@ -47,6 +48,7 @@
     "electron-settings": "^3.2.0",
     "electron-updater": "2.21.4",
     "poe-log-monitor": "^1.2.3",
+    "robot-js": "^2.0.0",
     "universal-analytics": "^0.4.17"
   },
   "devDependencies": {

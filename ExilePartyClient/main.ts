@@ -1,4 +1,4 @@
-import { app, BrowserWindow, dialog, screen } from 'electron';
+import { app, BrowserWindow, dialog, screen, globalShortcut } from 'electron';
 import * as path from 'path';
 import * as url from 'url';
 
@@ -50,6 +50,7 @@ function createWindow() {
     }));
   }
 
+
   // Emitted when the window is closed.
   win.on('closed', () => {
     // Dereference the window object, usually you would store window
@@ -97,12 +98,26 @@ try {
 
   });
 
+  app.on('web-contents-created', function (event, wc) {
+    wc.on('before-input-event', function (event2, input: any) {
+      if (input.key === 'i' && input.ctrl && input.shift) {
+        // Do something for Ctrl-X
+        win.webContents.openDevTools();
+        console.log('OPENED DEVTOOLS');
+        event.preventDefault();
+      }
+    });
+  });
+
   // This method will be called when Electron has finished
   // initialization and is ready to create browser windows.
   // Some APIs can only be used after this event occurs.
   app.on('ready', () => {
     createWindow();
     autoUpdater.checkForUpdates();
+    globalShortcut.register('Command+Shift+I', () => {
+      win.openDevTools();
+    });
   });
 
   // Quit when all windows are closed.
