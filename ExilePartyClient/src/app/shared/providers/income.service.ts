@@ -27,19 +27,20 @@ import { SettingsService } from './settings.service';
 @Injectable()
 export class IncomeService {
 
+  private lastNinjaHit = 0;
   private ninjaPrices: any[] = [];
   private playerStashTabs: any[] = [];
-  private snapshotInterval: any;
   private netWorthHistory: NetWorthHistory;
+  private sessionId: string;
 
   public networthSnapshots: NetWorthSnapshot[] = [];
-
   public localPlayer: Player;
 
   private totalNetWorthItems: NetWorthItem[] = [];
   public totalNetWorth = 0;
   private sevenAndAHalfMinute = 7.5 * 60 * 1000;
   private twelveHoursAgo = (Date.now() - (12 * 60 * 60 * 1000));
+  private oneHourAgo = (Date.now() - (1 * 60 * 60 * 1000));
 
   constructor(
     private ninjaService: NinjaService,
@@ -48,19 +49,15 @@ export class IncomeService {
     private externalService: ExternalService,
     private settingsService: SettingsService,
     private logService: LogService,
-    private analyticsService: AnalyticsService
+    private analyticsService: AnalyticsService,
   ) {
 
 
   }
 
-  StopSnapshotting() {
-    if (this.snapshotInterval) {
-      clearInterval(this.snapshotInterval);
-    }
-  }
+  InitializeSnapshotting(sessionId: string) {
 
-  StartSnapshotting(sessionId: string) {
+    this.sessionId = sessionId;
 
     this.netWorthHistory = this.settingsService.get('networth');
 
@@ -70,54 +67,53 @@ export class IncomeService {
         this.localPlayer.netWorthSnapshots = this.netWorthHistory.history;
       }
     });
-
-    this.snapshotInterval = setInterval(() => {
-
-      this.analyticsService.sendEvent('income', `snapshotting networth`);
-
-      this.netWorthHistory = this.settingsService.get('networth');
-      if (this.netWorthHistory.lastSnapshot < (Date.now() - this.sevenAndAHalfMinute) && this.localPlayer !== undefined) {
-        this.netWorthHistory.lastSnapshot = Date.now();
-        this.logService.log('Started snapshotting player net worth');
-        this.SnapshotPlayerNetWorth(sessionId).subscribe(() => {
-
-          this.netWorthHistory.history = this.netWorthHistory.history
-            .filter((snaphot: NetWorthSnapshot) => snaphot.timestamp > this.twelveHoursAgo);
-
-          // We are a new player that have not parsed income before
-          // Remove the placeholder element
-          if (
-            this.netWorthHistory.history.length === 1 &&
-            this.netWorthHistory.history[0].value === 0
-          ) {
-            this.netWorthHistory.history.pop();
-          }
-
-          const snapShot: NetWorthSnapshot = {
-            timestamp: Date.now(),
-            value: this.totalNetWorth,
-            items: this.totalNetWorthItems,
-          };
-
-          this.netWorthHistory.history.unshift(snapShot);
-
-          this.settingsService.set('networth', this.netWorthHistory);
-          this.localPlayer.netWorthSnapshots = this.netWorthHistory.history;
-          this.partyService.updatePlayer(this.localPlayer);
-          this.logService.log('Finished Snapshotting player net worth');
-        });
-      }
-    }, 30 * 1000);
-
   }
 
+  Snapshot() {
+    this.netWorthHistory = this.settingsService.get('networth');
+    if (
+      this.netWorthHistory.lastSnapshot < (Date.now() - this.sevenAndAHalfMinute) &&
+      this.localPlayer !== undefined &&
+      this.sessionId !== undefined
+    ) {
+      this.analyticsService.sendEvent('income', `snapshotting networth`);
+      this.netWorthHistory.lastSnapshot = Date.now();
+      this.logService.log('Started snapshotting player net worth');
+      this.SnapshotPlayerNetWorth(this.sessionId).subscribe(() => {
+
+        this.netWorthHistory.history = this.netWorthHistory.history
+          .filter((snaphot: NetWorthSnapshot) => snaphot.timestamp > this.twelveHoursAgo);
+
+        // We are a new player that have not parsed income before
+        // Remove the placeholder element
+        if (
+          this.netWorthHistory.history.length === 1 &&
+          this.netWorthHistory.history[0].value === 0
+        ) {
+          this.netWorthHistory.history.pop();
+        }
+
+        const snapShot: NetWorthSnapshot = {
+          timestamp: Date.now(),
+          value: this.totalNetWorth,
+          items: this.totalNetWorthItems,
+        };
+
+        this.netWorthHistory.history.unshift(snapShot);
+
+        this.settingsService.set('networth', this.netWorthHistory);
+        this.localPlayer.netWorthSnapshots = this.netWorthHistory.history;
+        this.partyService.updatePlayer(this.localPlayer);
+        this.logService.log('Finished Snapshotting player net worth');
+      });
+    }
+  }
 
   SnapshotPlayerNetWorth(sessionId: string) {
 
     const accountName = this.partyService.accountInfo.accountName;
     const league = this.partyService.currentPlayer.character.league;
 
-    this.ninjaPrices = [];
     this.playerStashTabs = [];
     this.totalNetWorthItems = [];
     this.totalNetWorth = 0;
@@ -126,7 +122,7 @@ export class IncomeService {
       this.getPlayerStashTabs(sessionId, accountName, league),
       this.getValuesFromNinja(league)
     ).do(() => {
-      this.logService.log('Finished retriving stashtabs and value information.');
+      this.logService.log('Finished retriving stashhtabs and value information.');
       this.playerStashTabs.forEach((tab: Stash, tabIndex: number) => {
         tab.items.forEach((item: Item) => {
 
@@ -193,64 +189,72 @@ export class IncomeService {
         }
         return 0;
       });
-
     });
-
   }
-
 
   getPriceForItem(name: string) {
     return this.ninjaPrices[name];
   }
 
   getValuesFromNinja(league: string) {
-    const enumTypes = Object.values(NinjaTypes);
-    return Observable
-      .from(enumTypes)
-      .concatMap(type => this.ninjaService.getFromNinja(league, type)
-        .delay(750))
-      .do(typeResponse => {
-        typeResponse.lines.forEach((line: NinjaLine) => {
+    const length = Object.values(this.ninjaPrices).length;
+    if (length > 0 && this.lastNinjaHit > this.oneHourAgo) {
+      return Observable.of(null);
+    } else {
+      this.logService.log('[INFO] Retriving prices from poe.ninja');
+      this.lastNinjaHit = Date.now();
+      this.ninjaPrices = [];
 
-          // Filter each line here, probably needs improvement
-          // But the response differse for Currency & Fragments hence the if's
+      const enumTypes = Object.values(NinjaTypes);
+      return Observable
+        .from(enumTypes)
+        .concatMap(type => this.ninjaService.getFromNinja(league, type)
+          .delay(750))
+        .do(typeResponse => {
+          typeResponse.lines.forEach((line: NinjaLine) => {
 
-          let links = 0;
-          let value = 0;
-          let name = '';
+            // Filter each line here, probably needs improvement
+            // But the response differse for Currency & Fragments hence the if's
 
-          if ('chaosEquivalent' in line) {
-            value = line.chaosEquivalent;
-          }
-          if ('chaosValue' in line) {
-            value = line.chaosValue;
-          }
-          if ('currencyTypeName' in line) {
-            name = line.currencyTypeName;
-          }
-          if ('name' in line) {
+            let links = 0;
+            let value = 0;
+            let name = '';
 
-            if (line.name.indexOf('Remnant') > -1) {
-              const debug = -1;
+            if ('chaosEquivalent' in line) {
+              value = line.chaosEquivalent;
             }
-
-            name = line.name;
-            if (line.baseType && (line.name.indexOf(line.baseType) === -1)) {
-              name += ' ' + line.baseType;
+            if ('chaosValue' in line) {
+              value = line.chaosValue;
             }
-            name.trim();
-          }
-          if ('links' in line) {
-            links = line.links;
-          }
-          if (links === 0 && name !== '') {
-            this.ninjaPrices[name] = value;
-          }
+            if ('currencyTypeName' in line) {
+              name = line.currencyTypeName;
+            }
+            if ('name' in line) {
+
+              if (line.name.indexOf('Remnant') > -1) {
+                const debug = -1;
+              }
+
+              name = line.name;
+              if (line.baseType && (line.name.indexOf(line.baseType) === -1)) {
+                name += ' ' + line.baseType;
+              }
+              name.trim();
+            }
+            if ('links' in line) {
+              links = line.links;
+            }
+            if (links === 0 && name !== '') {
+              this.ninjaPrices[name] = value;
+            }
+          });
         });
-      });
+    }
   }
 
   getPlayerStashTabs(sessionId: string, accountName: string, league: string) {
+
+    this.logService.log('[INFO] Retriving stashtabs from official site api');
 
     let selectedStashTabs: any[] = this.settingsService.get('selectedStashTabs');
 
