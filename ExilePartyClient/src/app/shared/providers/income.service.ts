@@ -82,7 +82,7 @@ export class IncomeService {
       this.SnapshotPlayerNetWorth(this.sessionId).subscribe(() => {
 
         this.netWorthHistory.history = this.netWorthHistory.history
-          .filter((snaphot: NetWorthSnapshot) => snaphot.timestamp > this.twelveHoursAgo);
+          .filter((snaphot: NetWorthSnapshot) => snaphot.timestamp > this.oneHourAgo);
 
         // We are a new player that have not parsed income before
         // Remove the placeholder element
