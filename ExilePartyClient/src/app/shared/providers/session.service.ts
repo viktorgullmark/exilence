@@ -23,11 +23,10 @@ export class SessionService {
   initSession(sessionId: string) {
     localStorage.setItem('sessionId', sessionId);
     if (sessionId) {
-      this.incomeService.StartSnapshotting(sessionId);
+      this.incomeService.InitializeSnapshotting(sessionId);
     }
   }
   cancelSession() {
-    this.incomeService.StopSnapshotting();
     this.accountService.clearCharacterList();
     this.partyService.leaveParty(this.partyService.party.name, this.player);
     localStorage.removeItem('sessionId');

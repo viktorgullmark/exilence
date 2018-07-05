@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { AreaEventType, AreaInfo, EventArea, ExtendedAreaInfo } from '../interfaces/area.interface';
 import { Player } from '../interfaces/player.interface';
 import { AccountService } from './account.service';
+import { IncomeService } from './income.service';
 import { LogMonitorService } from './log-monitor.service';
 import { PartyService } from './party.service';
 
@@ -20,7 +21,8 @@ export class MapService {
   constructor(
     private logMonitorService: LogMonitorService,
     private accountService: AccountService,
-    private partyService: PartyService
+    private partyService: PartyService,
+    private incomeService: IncomeService
   ) {
 
     this.accountService.player.subscribe(player => {
@@ -34,6 +36,8 @@ export class MapService {
     });
 
     this.logMonitorService.areaEvent.subscribe((e: EventArea) => {
+
+      this.incomeService.Snapshot();
 
       clearInterval(this.durationInterval);
 

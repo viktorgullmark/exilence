@@ -170,9 +170,9 @@ export class LoginComponent implements OnInit {
                 this.accountService.player.next(this.player);
                 this.accountService.accountInfo.next(form);
                 this.settingsService.set('account', form);
+                this.analyticsService.startTracking(form.accountName);
                 this.sessionService.initSession(form.sessionId);
                 this.isLoading = false;
-                this.analyticsService.startTracking(form.accountName);
                 this.router.navigate(['/authorized/dashboard']);
             });
     }
