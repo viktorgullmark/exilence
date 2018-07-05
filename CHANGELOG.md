@@ -7,6 +7,7 @@ All notable changes to this project will be documented in this file.
 - Added scroll to player-list to allow for larger groups
 - Added support for abyssal-sockets
 - Tweaks for snapshotting of players
+- Bug-fix for stash-tabs not being selected properly when targeted in the header
 
 ## [0.4.0] - 2018-07-04
 - Improved descriptions throughout the app
