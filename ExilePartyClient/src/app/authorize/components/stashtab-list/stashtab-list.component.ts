@@ -101,6 +101,8 @@ export class StashtabListComponent implements OnInit, OnDestroy {
     this.isAllSelected() ?
       this.selection.clear() :
       this.source.data.forEach(row => this.selection.select(row));
+
+    this.settingsService.set('selectedStashTabs', this.selection.selected);
   }
 
   ngOnDestroy() {
