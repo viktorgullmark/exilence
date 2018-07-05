@@ -111,8 +111,8 @@ export class IncomeService {
 
   SnapshotPlayerNetWorth(sessionId: string) {
 
-    const accountName = this.partyService.accountInfo.accountName;
-    const league = this.partyService.currentPlayer.character.league;
+    const accountName = this.localPlayer.account;
+    const league = this.localPlayer.character.league;
 
     this.playerStashTabs = [];
     this.totalNetWorthItems = [];
