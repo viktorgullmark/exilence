@@ -6,6 +6,7 @@ All notable changes to this project will be documented in this file.
 - Masked sessionId to make it easier for streamers/content-creators to use the app on stream
 - Added scroll to player-list to allow for larger groups
 - Added support for abyssal-sockets
+- Tweaks for snapshotting of players
 
 ## [0.4.0] - 2018-07-04
 - Improved descriptions throughout the app
