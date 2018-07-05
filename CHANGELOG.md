@@ -6,7 +6,7 @@ All notable changes to this project will be documented in this file.
 - Masked sessionId to make it easier for streamers/content-creators to use the app on stream
 - Added scroll to player-list to allow for larger groups
 - Added support for abyssal-sockets
-- Tweaks for snapshotting of players
+- Improvements for snapshotting of players and fetching of price-information
 - Bug-fix for stash-tabs not being selected properly when targeted in the header
 
 ## [0.4.0] - 2018-07-04
