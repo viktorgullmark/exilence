@@ -7,6 +7,7 @@ import { RouterModule } from '@angular/router';
 
 import { AnalyticsService } from '../shared/providers/analytics.service';
 import { IncomeService } from '../shared/providers/income.service';
+import { LogMonitorService } from '../shared/providers/log-monitor.service';
 import { MapService } from '../shared/providers/map.service';
 import { PartyService } from '../shared/providers/party.service';
 import { SharedModule } from '../shared/shared.module';
@@ -35,6 +36,7 @@ import { SettingsModule } from './settings/settings.module';
   ],
   declarations: [AuthorizeComponent],
   providers: [
+    LogMonitorService,
     PartyService,
     IncomeService,
     MapService,
