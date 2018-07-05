@@ -3,6 +3,7 @@
     <mat-step [stepControl]="accFormGroup">
       <form [formGroup]="accFormGroup">
         <ng-template matStepLabel>{{'ACCOUNT.NAME_INFO' | translate}}</ng-template>
+        <span class="mat-body-1">If you can't fetch your characters. Go to <a class="external-link" (click)="openLink('https://www.pathofexile.com')">pathofexile.com</a> and set your profile to public, <br/>and make sure your character-list is set to visible</span><br/><br/>
         <mat-form-field>
           <input matInput formControlName="accountName" placeholder="{{'ACCOUNT.NAME' | translate}}" (change)="fetched = false">
         </mat-form-field>
