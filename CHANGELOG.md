@@ -4,6 +4,7 @@ All notable changes to this project will be documented in this file.
 ## [0.4.1] - 2018-07-05
 - Added informative text on how to fetch character-list
 - Masked sessionId to make it easier for streamers/content-creators to use the app on stream
+- Added scroll to player-list to allow for larger groups
 
 ## [0.4.0] - 2018-07-04
 - Improved descriptions throughout the app
