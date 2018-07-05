@@ -4,6 +4,7 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 
 import { NinjaResponse, NinjaTypes } from '../interfaces/poe-ninja.interface';
+import { AnalyticsService } from './analytics.service';
 
 @Injectable()
 
@@ -14,10 +15,12 @@ export class NinjaService {
 
   constructor(
     private http: HttpClient,
-    private datePipe: DatePipe
+    private datePipe: DatePipe,
+    private analyticsService: AnalyticsService
   ) { }
 
   getFromNinja(league: string, type: NinjaTypes): Observable<NinjaResponse> {
+    this.analyticsService.sendEvent('income', `GET Ninja: ${type}`);
     const baseUrl = (type === NinjaTypes.CURRENCY || type === NinjaTypes.FRAGMENT) ? this.itemUrl : this.currencyUrl;
     const date = this.datePipe.transform(new Date(), 'yyyy-MM-dd');
     const parameters = `?league=${league}&type=${type}&date=${date}`;

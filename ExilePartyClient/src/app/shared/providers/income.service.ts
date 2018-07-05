@@ -76,7 +76,7 @@ export class IncomeService {
       this.localPlayer !== undefined &&
       this.sessionId !== undefined
     ) {
-      this.analyticsService.sendEvent('income', `snapshotting networth`);
+
       this.netWorthHistory.lastSnapshot = Date.now();
       this.logService.log('Started snapshotting player net worth');
       this.SnapshotPlayerNetWorth(this.sessionId).subscribe(() => {
