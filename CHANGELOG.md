@@ -2,8 +2,8 @@
 All notable changes to this project will be documented in this file.
 
 ## [0.4.2] - 2018-07-05
-- Added Patreon-link to support server-costs
 - Added logout when disconnected from server
+- Added informative page if disconnection would occur
 
 ## [0.4.1] - 2018-07-05
 - Added informative text on how to fetch character-list

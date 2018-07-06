@@ -1,11 +1,11 @@
-
-.disconnected-container{
-    height: 100%;
+.centered-content {
     display: flex;
-    align-items: center;
-    justify-content: center;
-    .disconnected-content-container{
-        max-width: 90%;
+    flex-direction: column;
+    align-self: center;
+    margin: auto;
+
+
+    &.text-block {
+        width: 40%;
     }
 }
-

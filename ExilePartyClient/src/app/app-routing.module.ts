@@ -13,7 +13,7 @@ import { DisconnectedComponent } from './authorize/disconnected/disconnected.com
 
 const routes: Routes = [
     // login-section
-    { path: 'login', component: DisconnectedComponent },
+    { path: 'login', component: LoginComponent },
     { path: '', redirectTo: 'login', pathMatch: 'full' },
 
     // authorized
