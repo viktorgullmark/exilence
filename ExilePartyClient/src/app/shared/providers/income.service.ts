@@ -72,7 +72,7 @@ export class IncomeService {
   Snapshot() {
     this.netWorthHistory = this.settingsService.get('networth');
     if (
-      this.netWorthHistory.lastSnapshot < (Date.now() - this.sevenAndAHalfMinute) &&
+      // this.netWorthHistory.lastSnapshot < (Date.now() - this.sevenAndAHalfMinute) &&
       this.localPlayer !== undefined &&
       this.sessionId !== undefined
     ) {
@@ -258,9 +258,9 @@ export class IncomeService {
 
     let selectedStashTabs: any[] = this.settingsService.get('selectedStashTabs');
 
-    if (selectedStashTabs === undefined || selectedStashTabs.length === 0) {
+    if (selectedStashTabs === undefined) {
       selectedStashTabs = [];
-      for (let i = 0; i < 6; i++) {
+      for (let i = 0; i < 5; i++) {
         selectedStashTabs.push({ name: '', position: i });
       }
     }
