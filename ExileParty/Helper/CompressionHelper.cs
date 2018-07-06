@@ -7,6 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using ExileParty.Models;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Serialization;
 
 namespace ExileParty.Helper
 {
@@ -14,7 +15,7 @@ namespace ExileParty.Helper
     {
         public static string Gzip<T>(T input)
         {
-            var jsonString = JsonConvert.SerializeObject(input);
+            var jsonString = JsonConvert.SerializeObject(input, new JsonSerializerSettings { ContractResolver = new CamelCasePropertyNamesContractResolver() });
 
             var buffer = Encoding.UTF8.GetBytes(jsonString);
 

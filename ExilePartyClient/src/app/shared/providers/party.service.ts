@@ -73,8 +73,6 @@ export class PartyService {
       });
     });
 
-
-
     this.recentParties.next(this.settingService.get('recentParties') || []);
 
     this.accountService.player.subscribe(res => {
@@ -109,15 +107,15 @@ export class PartyService {
 
     this._hubConnection.on('EnteredParty', (partyData: string, playerData: string) => {
       this.decompress(partyData, (party: Party) => {
-      this.decompress(playerData, (player: Player) => {
-        this.party = party;
-        this.updatePlayerLists(this.party);
-        this.accountService.player.next(player);
-        this.selectedPlayer.next(player);
-        this.isEntering = false;
-        this.logService.log('Entered party:', party);
+        this.decompress(playerData, (player: Player) => {
+          this.party = party;
+          this.updatePlayerLists(this.party);
+          this.accountService.player.next(player);
+          this.selectedPlayer.next(player);
+          this.isEntering = false;
+          this.logService.log('Entered party:', party);
+        });
       });
-    });
     });
 
     this._hubConnection.on('PlayerUpdated', (data: string) => {
@@ -193,10 +191,10 @@ export class PartyService {
 
   public updatePlayer(player: Player) {
     this.externalService.getCharacter(this.accountInfo)
-      .subscribe((data: EquipmentResponse) => {
-        player = this.externalService.setCharacter(data, player);
+      .subscribe((equipment: EquipmentResponse) => {
+        player = this.externalService.setCharacter(equipment, player);
         if (this._hubConnection) {
-          this._hubConnection.invoke('UpdatePlayer', player, this.party.name);
+          this.compress(player, (data) => this._hubConnection.invoke('UpdatePlayer', this.party.name, data));
         }
       });
   }
@@ -221,7 +219,7 @@ export class PartyService {
     this.initParty();
     if (partyName !== '') {
       if (this._hubConnection) {
-        this._hubConnection.invoke('LeaveParty', partyName, player);
+        this.compress(player, (data) => this._hubConnection.invoke('LeaveParty', partyName, data));
       }
     }
   }

@@ -69,8 +69,10 @@ namespace ExileParty.Hubs
             await Clients.Group(partyName).SendAsync("PlayerUpdated", CompressionHelper.Gzip(player));
         }
 
-        public async Task LeaveParty(string partyName, PlayerModel player)
+        public async Task LeaveParty(string partyName, string playerObj)
         {
+            var player = CompressionHelper.GunzipAndConvert<PlayerModel>(playerObj);
+
             var foundParty = await _cache.GetAsync<PartyModel>($"party:{partyName}");
             if (foundParty != null)
             {
@@ -94,8 +96,10 @@ namespace ExileParty.Hubs
             await Groups.RemoveFromGroupAsync(Context.ConnectionId, partyName);
         }
 
-        public async Task UpdatePlayer(PlayerModel player, string partyName)
+        public async Task UpdatePlayer(string partyName, string playerObj)
         {
+            var player = CompressionHelper.GunzipAndConvert<PlayerModel>(playerObj);
+
             var party = await _cache.GetAsync<PartyModel>($"party:{partyName}");
             if (party != null)
             {
@@ -139,8 +143,8 @@ namespace ExileParty.Hubs
                 var foundParty = await _cache.GetAsync<PartyModel>($"party:{partyName}");
                 var foundPlayer = foundParty.Players.FirstOrDefault(x => x.ConnectionID == Context.ConnectionId);
                 if (foundPlayer != null)
-                {
-                    await LeaveParty(partyName, foundPlayer);
+                {   //This compression and then uncompression is ugly
+                    await LeaveParty(partyName, CompressionHelper.Gzip(foundPlayer));
                     var success = await RemoveFromIndex();
                 }
             }
