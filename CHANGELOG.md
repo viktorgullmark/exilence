@@ -1,6 +1,19 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [0.4.2] - 2018-07-06
+- Restored map-functionality, instance-servers should now work
+- Added logout when disconnected from server
+- Added informative page if disconnection would occur
+
+## [0.4.1] - 2018-07-05
+- Added informative text on how to fetch character-list
+- Masked sessionId to make it easier for streamers/content-creators to use the app on stream
+- Added scroll to player-list to allow for larger groups
+- Added support for abyssal-sockets
+- Improvements for snapshotting of players and fetching of price-information
+- Bug-fix for stash-tabs not being selected properly when targeted in the header
+
 ## [0.4.0] - 2018-07-04
 - Improved descriptions throughout the app
 - Minor tweaks to summary-graph

@@ -9,6 +9,7 @@ import { NotFoundComponent } from './not-found/not-found.component';
 import { CanActivateAuthorized } from './shared/guards/authorized.guard';
 import { InspectPlayersComponent } from './authorize/inspect-players/inspect-players.component';
 import { SettingsComponent } from './authorize/settings/settings.component';
+import { DisconnectedComponent } from './authorize/disconnected/disconnected.component';
 
 const routes: Routes = [
     // login-section
@@ -21,6 +22,7 @@ const routes: Routes = [
         { path: 'party', component: PartyComponent },
         { path: 'inspect-players', component: InspectPlayersComponent },
         { path: 'settings', component: SettingsComponent },
+        { path: 'disconnected', component: DisconnectedComponent },
         { path: '', redirectTo: '/authorized/dashboard', pathMatch: 'full' }
     ]},
 

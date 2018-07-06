@@ -7,6 +7,7 @@ import { RouterModule } from '@angular/router';
 
 import { AnalyticsService } from '../shared/providers/analytics.service';
 import { IncomeService } from '../shared/providers/income.service';
+import { LogMonitorService } from '../shared/providers/log-monitor.service';
 import { MapService } from '../shared/providers/map.service';
 import { PartyService } from '../shared/providers/party.service';
 import { SharedModule } from '../shared/shared.module';
@@ -15,6 +16,7 @@ import { DashboardModule } from './dashboard/dashboard.module';
 import { InspectPlayersModule } from './inspect-players/inspect-players.module';
 import { PartyModule } from './party/party.module';
 import { SettingsModule } from './settings/settings.module';
+import { DisconnectedModule } from './disconnected/disconnected.module';
 
 @NgModule({
   imports: [
@@ -27,6 +29,7 @@ import { SettingsModule } from './settings/settings.module';
     MatFormFieldModule,
     MatIconModule,
     DashboardModule,
+    DisconnectedModule,
     RouterModule,
     PartyModule,
     InspectPlayersModule,
@@ -35,6 +38,7 @@ import { SettingsModule } from './settings/settings.module';
   ],
   declarations: [AuthorizeComponent],
   providers: [
+    LogMonitorService,
     PartyService,
     IncomeService,
     MapService,

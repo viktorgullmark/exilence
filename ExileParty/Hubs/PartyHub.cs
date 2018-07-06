@@ -97,9 +97,12 @@ namespace ExileParty.Hubs
             if (party != null)
             {
                 var index = party.Players.IndexOf(party.Players.FirstOrDefault(x => x.ConnectionID == player.ConnectionID));
-                party.Players[index] = player;
-                await _cache.SetAsync<PartyModel>($"party:{partyName}", party);
-                await Clients.Group(partyName).SendAsync("PlayerUpdated", player);
+                if(index != -1)
+                {
+                    party.Players[index] = player;
+                    await _cache.SetAsync<PartyModel>($"party:{partyName}", party);
+                    await Clients.Group(partyName).SendAsync("PlayerUpdated", player);
+                }
             }
         }
         public async Task GenericUpdatePlayer(PlayerModel player, string partyName)

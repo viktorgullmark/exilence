@@ -16,7 +16,7 @@ export class LogMonitorService {
 
   constructor(private accountService: AccountService) {
     this.accountService.accountInfo.subscribe(res => {
-      if (res !== undefined) {
+      if (res !== undefined && this.poeLog === undefined) {
         this.poeLog = new this.PathOfExileLog({
           logfile: res.filePath,
           interval: 500

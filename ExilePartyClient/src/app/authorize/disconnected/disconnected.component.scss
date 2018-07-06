@@ -1,0 +1,11 @@
+.centered-content {
+    display: flex;
+    flex-direction: column;
+    align-self: center;
+    margin: auto;
+
+
+    &.text-block {
+        width: 40%;
+    }
+}

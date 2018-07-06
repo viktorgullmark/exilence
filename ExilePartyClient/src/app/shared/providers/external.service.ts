@@ -12,8 +12,8 @@ import { Property } from '../interfaces/property.interface';
 import { Requirement } from '../interfaces/requirement.interface';
 import { Stash } from '../interfaces/stash.interface';
 import { AccountService } from './account.service';
+import { AnalyticsService } from './analytics.service';
 import { ElectronService } from './electron.service';
-import { IncomeService } from './income.service';
 
 @Injectable()
 export class ExternalService {
@@ -22,7 +22,8 @@ export class ExternalService {
   constructor(
     private http: HttpClient,
     private electronService: ElectronService,
-    private accountService: AccountService
+    private accountService: AccountService,
+    private analyticsService: AnalyticsService
   ) { }
 
   getLatestRelease(): Observable<any> {
@@ -48,6 +49,7 @@ export class ExternalService {
   }
 
   getStashTab(sessionId: string, account: string, league: string, index: number): Observable<Stash> {
+    this.analyticsService.sendEvent('income', `GET Stashtab`);
     this.setCookie(sessionId);
     const parameters = `?league=${league}&accountName=${account}&tabIndex=${index}&tabs=1`;
     return this.http.get<Stash>('https://www.pathofexile.com/character-window/get-stash-items' + parameters);

@@ -1,13 +1,12 @@
 import { NgModule } from '@angular/core';
+import { MatIconModule, MatTabsModule } from '@angular/material';
 import { MatDividerModule } from '@angular/material/divider';
 
-import { LogMonitorService } from '../../shared/providers/log-monitor.service';
 import { SharedModule } from '../../shared/shared.module';
 import { CharProfileModule } from '../components/char-profile/char-profile.module';
 import { PlayerListModule } from './../components/player-list/player-list.module';
-import { PartyComponent } from './party.component';
-import { MatTabsModule, MatIconModule } from '@angular/material';
 import { PartySummaryModule } from './party-summary/party-summary.module';
+import { PartyComponent } from './party.component';
 
 
 @NgModule({
@@ -21,8 +20,6 @@ import { PartySummaryModule } from './party-summary/party-summary.module';
     PartySummaryModule
   ],
   declarations: [PartyComponent],
-  providers: [
-    LogMonitorService
-  ]
+  providers: []
 })
 export class PartyModule { }
