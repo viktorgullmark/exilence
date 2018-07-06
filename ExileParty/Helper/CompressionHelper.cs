@@ -5,31 +5,36 @@ using System.IO.Compression;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using ExileParty.Models;
+using Newtonsoft.Json;
 
 namespace ExileParty.Helper
 {
-    public static class GzipHelper
+    public static class CompressionHelper
     {
-        public static string Zip(string input)
+        public static string Gzip<T>(T input)
         {
-            var inputBytes = Encoding.UTF8.GetBytes(input);
+            var jsonString = JsonConvert.ToString(input);
+
+            var buffer = Encoding.UTF8.GetBytes(jsonString);
 
             using (var outputStream = new MemoryStream())
             {
                 using (var gZipStream = new GZipStream(outputStream, CompressionMode.Compress))
-                    gZipStream.Write(inputBytes, 0, inputBytes.Length);
+                    gZipStream.Write(buffer, 0, buffer.Length);
 
                 var outputBytes = outputStream.ToArray();
 
-                var output = Encoding.UTF8.GetString(outputBytes);
+                var base64String = Convert.ToBase64String(outputBytes);
 
-                return output;
+                return base64String;
             }
         }
 
-        public static string Unzip(string input)
+        public static T GunzipAndConvert<T>(string input)
         {
-            string output = null;
+            string jsonString = null;
+
 
             byte[] inputBytes = Convert.FromBase64String(input);
 
@@ -37,11 +42,12 @@ namespace ExileParty.Helper
             using (var gZipStream = new GZipStream(inputStream, CompressionMode.Decompress))
             using (var streamReader = new StreamReader(gZipStream))
             {
-                output = streamReader.ReadToEnd();
+                jsonString = streamReader.ReadToEnd();
 
             }
 
-            return output;
+            return JsonConvert.DeserializeObject<T>(jsonString);
+
         }
     }
 }

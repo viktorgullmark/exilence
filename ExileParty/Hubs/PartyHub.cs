@@ -28,9 +28,7 @@ namespace ExileParty.Hubs
                 
         public async Task JoinParty(string partyName, string playerObj)
         {
-            string unzipped = GzipHelper.Unzip(playerObj);
-            PlayerModel player = JsonConvert.DeserializeObject<PlayerModel>(unzipped);
-
+            var player = CompressionHelper.GunzipAndConvert<PlayerModel>(playerObj);
 
             // set initial id of player
             player.ConnectionID = Context.ConnectionId;
