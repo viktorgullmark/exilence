@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using ExileParty.Helper;
 using System.Linq;
 using ExileParty.Interfaces;
+using Newtonsoft.Json;
 
 namespace ExileParty.Hubs
 {
@@ -25,8 +26,12 @@ namespace ExileParty.Hubs
             _characterService = characterService;
         }
                 
-        public async Task JoinParty(string partyName, PlayerModel player)
+        public async Task JoinParty(string partyName, string playerObj)
         {
+            string unzipped = GzipHelper.Unzip(playerObj);
+            PlayerModel player = JsonConvert.DeserializeObject<PlayerModel>(unzipped);
+
+
             // set initial id of player
             player.ConnectionID = Context.ConnectionId;
 

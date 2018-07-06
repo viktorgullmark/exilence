@@ -22,6 +22,7 @@ import { LogMessage } from '../interfaces/log-message.interface';
 import { IncomeService } from './income.service';
 import { NetWorthSnapshot } from './../interfaces/income.interface';
 import { LogService } from './log.service';
+import { ElectronService } from './electron.service';
 
 @Injectable()
 export class PartyService {
@@ -60,8 +61,20 @@ export class PartyService {
     private logMonitorService: LogMonitorService,
     private externalService: ExternalService,
     private settingService: SettingsService,
-    private logService: LogService
+    private logService: LogService,
+    private electronService: ElectronService
   ) {
+
+    const testObj = { test: 'test'};
+    console.log(testObj);
+    this.compress(testObj, (data) => {
+      this.decompress(data, (obj) => {
+        console.log(obj);
+      });
+    });
+
+
+
     this.recentParties.next(this.settingService.get('recentParties') || []);
 
     this.accountService.player.subscribe(res => {
@@ -191,8 +204,32 @@ export class PartyService {
     this.party.players.push(player);
     this.party.name = partyName;
     if (this._hubConnection) {
-      this._hubConnection.invoke('JoinParty', partyName, player);
+      this.compress(player, (data) => this._hubConnection.invoke('JoinParty', partyName, data));
     }
+  }
+
+  compress(object: any, callback: any) {
+    const jsonString = JSON.stringify(object);
+    this.electronService.zlib.gzip(jsonString, (err, buffer) => {
+      if (!err) {
+        const string = buffer.toString('base64');
+        callback(string);
+      } else {
+        this.logService.log(err, null, true);
+      }
+    });
+  }
+
+  decompress(base64string: string, callback: any) {
+    const buffer = Buffer.from(base64string, 'base64');
+    this.electronService.zlib.gunzip(buffer, (err, jsonString) => {
+      if (!err) {
+        const obj = JSON.parse(jsonString);
+        callback(obj);
+      } else {
+        this.logService.log(err, null, true);
+      }
+    });
   }
 
   public leaveParty(partyName: string, player: Player) {
