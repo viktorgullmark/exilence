@@ -2,7 +2,6 @@
 All notable changes to this project will be documented in this file.
 
 ## [0.4.2] - 2018-07-06
-
 - Restored map-functionality, instance-servers should now work
 - Added logout when disconnected from server
 - Added informative page if disconnection would occur
