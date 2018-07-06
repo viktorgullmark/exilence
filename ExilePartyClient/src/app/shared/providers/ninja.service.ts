@@ -10,8 +10,8 @@ import { AnalyticsService } from './analytics.service';
 
 export class NinjaService {
 
-  private currencyUrl = 'http://poe.ninja/api/data/itemoverview';
-  private itemUrl = 'http://poe.ninja/api/data/currencyoverview';
+  private itemUrl = 'http://poe.ninja/api/data/itemoverview';
+  private currencyUrl = 'http://poe.ninja/api/data/currencyoverview';
 
   constructor(
     private http: HttpClient,
@@ -21,7 +21,7 @@ export class NinjaService {
 
   getFromNinja(league: string, type: NinjaTypes): Observable<NinjaResponse> {
     this.analyticsService.sendEvent('income', `GET Ninja: ${type}`);
-    const baseUrl = (type === NinjaTypes.CURRENCY || type === NinjaTypes.FRAGMENT) ? this.itemUrl : this.currencyUrl;
+    const baseUrl = (type === NinjaTypes.CURRENCY || type === NinjaTypes.FRAGMENT) ? this.currencyUrl : this.itemUrl;
     const date = this.datePipe.transform(new Date(), 'yyyy-MM-dd');
     const parameters = `?league=${league}&type=${type}&date=${date}`;
     const url = baseUrl + parameters;
