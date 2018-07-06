@@ -42,7 +42,7 @@ namespace ExileParty.Hubs
             {
                 party = new PartyModel() { Name = partyName, Players = new List<PlayerModel> { player } };
                 await _cache.SetAsync<PartyModel>($"party:{partyName}", party);
-                await Clients.Caller.SendAsync("EnteredParty", party, player);
+                await Clients.Caller.SendAsync("EnteredParty", CompressionHelper.Gzip(party), CompressionHelper.Gzip(player));
             }
             else
             {
@@ -61,12 +61,12 @@ namespace ExileParty.Hubs
                 }
 
                 await _cache.SetAsync<PartyModel>($"party:{partyName}", party);
-                await Clients.Caller.SendAsync("EnteredParty", party, player);
+                await Clients.Caller.SendAsync("EnteredParty", CompressionHelper.Gzip(party), CompressionHelper.Gzip(player));
             }
 
             await Groups.AddToGroupAsync(Context.ConnectionId, partyName);
-            await Clients.OthersInGroup(partyName).SendAsync("PlayerJoined", player);
-            await Clients.Group(partyName).SendAsync("PlayerUpdated", player);
+            await Clients.OthersInGroup(partyName).SendAsync("PlayerJoined", CompressionHelper.Gzip(player));
+            await Clients.Group(partyName).SendAsync("PlayerUpdated", CompressionHelper.Gzip(player));
         }
 
         public async Task LeaveParty(string partyName, PlayerModel player)
@@ -90,7 +90,7 @@ namespace ExileParty.Hubs
                 await _cache.SetAsync<PartyModel>($"party:{partyName}", foundParty);
             }
 
-            await Clients.OthersInGroup(partyName).SendAsync("PlayerLeft", player);
+            await Clients.OthersInGroup(partyName).SendAsync("PlayerLeft", CompressionHelper.Gzip(player));
             await Groups.RemoveFromGroupAsync(Context.ConnectionId, partyName);
         }
 
@@ -104,7 +104,7 @@ namespace ExileParty.Hubs
                 {
                     party.Players[index] = player;
                     await _cache.SetAsync<PartyModel>($"party:{partyName}", party);
-                    await Clients.Group(partyName).SendAsync("PlayerUpdated", player);
+                    await Clients.Group(partyName).SendAsync("PlayerUpdated", CompressionHelper.Gzip(player));
                 }
             }
         }

@@ -14,7 +14,7 @@ namespace ExileParty.Helper
     {
         public static string Gzip<T>(T input)
         {
-            var jsonString = JsonConvert.ToString(input);
+            var jsonString = JsonConvert.SerializeObject(input);
 
             var buffer = Encoding.UTF8.GetBytes(jsonString);
 
