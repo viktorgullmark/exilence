@@ -35,11 +35,6 @@ export class ElectronService {
 
       const process = this.robot.Process.getCurrent();
 
-      console.log('ROBOT Is 64 Bit: ', process.is64Bit());
-      console.log('ROBOT PID: ', process.getPID());
-      console.log('ROBOT GetName: ', process.getName());
-      console.log('ROBOT GetPath: ', process.getPath());
-
     }
   }
 

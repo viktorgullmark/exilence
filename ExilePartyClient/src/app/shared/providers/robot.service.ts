@@ -8,9 +8,13 @@ export class RobotService {
 
   keyboard: any;
   clipboard: any;
+  window: any;
+  process: any;
 
   robotInterval: any;
 
+  pathOfExileWindowRef: any;
+  activeWindowTitle: string;
   lastKeypressValues: number[];
   clipboardValue: string;
 
@@ -19,9 +23,15 @@ export class RobotService {
   ) {
     this.keyboard = this.electronService.robot.Keyboard;
     this.clipboard = this.electronService.robot.Clipboard;
+    this.window = this.electronService.robot.Window;
+    this.process = this.electronService.robot.Process;
 
     this.Initialize();
     this.robotInterval = setInterval(() => this.robotHearbeat(), 100);
+
+    setInterval(() => {
+      this.setPathOfExileWindowToActive();
+    }, 15 * 1000);
   }
 
   Initialize() {
@@ -54,9 +64,24 @@ export class RobotService {
       console.log(pressedKeys);
     }
 
+    // Window
+    const activeWindow = this.window.getActive();
+    this.activeWindowTitle = activeWindow.getTitle();
+    if (this.activeWindowTitle === 'Path of Exile') {
+      this.pathOfExileWindowRef = activeWindow;
+    }
+  }
 
-
-
+  setPathOfExileWindowToActive() {
+    if (this.pathOfExileWindowRef) {
+      this.window.setActive(this.pathOfExileWindowRef);
+      const range = this.electronService.robot.Range(5, 10);
+      this.keyboard().autoDelay.min = 10;
+      this.keyboard().autoDelay.max = 30;
+      this.keyboard().click(Keys.Enter);
+      this.keyboard().click('Short message');
+      this.keyboard().click(Keys.Enter);
+    }
   }
 
 }
