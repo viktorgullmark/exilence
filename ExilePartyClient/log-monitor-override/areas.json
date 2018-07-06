@@ -1,0 +1,4366 @@
+{
+  "area": {
+    "Unearthed Hideout": [
+      {
+        "act": 1,
+        "level": 20,
+        "town": false,
+        "waypoint": true,
+        "bosses": []
+      }
+    ],
+    "Enlightened Hideout": [
+      {
+        "act": 1,
+        "level": 20,
+        "town": false,
+        "waypoint": true,
+        "bosses": []
+      }
+    ],
+    "Coastal Hideout": [
+      {
+        "act": 1,
+        "level": 20,
+        "town": false,
+        "waypoint": true,
+        "bosses": []
+      }
+    ],
+    "Overgrown Hideout": [
+      {
+        "act": 1,
+        "level": 20,
+        "town": false,
+        "waypoint": true,
+        "bosses": []
+      }
+    ],
+    "Lush Hideout": [
+      {
+        "act": 1,
+        "level": 20,
+        "town": false,
+        "waypoint": true,
+        "bosses": []
+      }
+    ],
+    "Battle-scarred Hideout": [
+      {
+        "act": 1,
+        "level": 20,
+        "town": false,
+        "waypoint": true,
+        "bosses": []
+      }
+    ],
+    "Backstreet Hideout": [
+      {
+        "act": 1,
+        "level": 20,
+        "town": false,
+        "waypoint": true,
+        "bosses": []
+      }
+    ],
+    "Immaculate Hideout": [
+      {
+        "act": 1,
+        "level": 20,
+        "town": false,
+        "waypoint": true,
+        "bosses": []
+      }
+    ],
+    "Lioneye's Watch": [
+      {
+        "act": 1,
+        "level": 13,
+        "town": true,
+        "waypoint": true,
+        "bosses": []
+      },
+      {
+        "act": 6,
+        "level": 50,
+        "town": true,
+        "waypoint": true,
+        "bosses": []
+      }
+    ],
+    "The Twilight Strand": [
+      {
+        "act": 1,
+        "level": 1,
+        "town": false,
+        "waypoint": false,
+        "bosses": [
+          {
+            "name": "Hillock"
+          }
+        ]
+      },
+      {
+        "act": 6,
+        "level": 45,
+        "town": false,
+        "waypoint": false,
+        "bosses": [
+          {
+            "name": "Rhys of Abram"
+          }
+        ]
+      }
+    ],
+    "The Coast": [
+      {
+        "act": 1,
+        "level": 2,
+        "town": false,
+        "waypoint": true,
+        "bosses": [
+          {
+            "name": "Fire Fury"
+          }
+        ]
+      },
+      {
+        "act": 6,
+        "level": 45,
+        "town": false,
+        "waypoint": true,
+        "bosses": []
+      }
+    ],
+    "The Tidal Island": [
+      {
+        "act": 1,
+        "level": 3,
+        "town": false,
+        "waypoint": false,
+        "bosses": [
+          {
+            "name": "Hailrake"
+          }
+        ]
+      },
+      {
+        "act": 6,
+        "level": 45,
+        "town": false,
+        "waypoint": false,
+        "bosses": [
+          {
+            "name": "Riptide"
+          }
+        ]
+      }
+    ],
+    "The Mud Flats": [
+      {
+        "act": 1,
+        "level": 4,
+        "town": false,
+        "waypoint": false,
+        "bosses": [
+          {
+            "name": "Oozeback Bloom"
+          }
+        ]
+      },
+      {
+        "act": 6,
+        "level": 46,
+        "town": false,
+        "waypoint": false,
+        "bosses": [
+          {
+            "name": "The Dishonoured Queen"
+          },
+          {
+            "name": "Forgotten Warrior"
+          }
+        ]
+      }
+    ],
+    "The Fetid Pool": [
+      {
+        "act": 1,
+        "level": 5,
+        "town": false,
+        "waypoint": false,
+        "bosses": [
+          {
+            "name": "Kadavrus the Defiler"
+          }
+        ]
+      }
+    ],
+    "The Flooded Depths": [
+      {
+        "act": 1,
+        "level": 6,
+        "town": false,
+        "waypoint": false,
+        "bosses": [
+          {
+            "name": "The Deep Dweller"
+          }
+        ]
+      }
+    ],
+    "The Submerged Passage": [
+      {
+        "act": 1,
+        "level": 5,
+        "town": false,
+        "waypoint": true,
+        "bosses": [
+          {
+            "name": "Brood Princess"
+          }
+        ]
+      }
+    ],
+    "The Ledge": [
+      {
+        "act": 1,
+        "level": 6,
+        "town": false,
+        "waypoint": true,
+        "bosses": [
+          {
+            "name": "Kuduku, the False God"
+          }
+        ]
+      }
+    ],
+    "The Climb": [
+      {
+        "act": 1,
+        "level": 7,
+        "town": false,
+        "waypoint": true,
+        "bosses": [
+          {
+            "name": "Ironpoint the Forsaken"
+          },
+          {
+            "name": "The Faun"
+          }
+        ]
+      }
+    ],
+    "The Lower Prison": [
+      {
+        "act": 1,
+        "level": 8,
+        "town": false,
+        "waypoint": true,
+        "bosses": [
+          {
+            "name": "Chatters"
+          }
+        ]
+      },
+      {
+        "act": 6,
+        "level": 47,
+        "town": false,
+        "waypoint": true,
+        "bosses": []
+      }
+    ],
+    "The Upper Prison": [
+      {
+        "act": 1,
+        "level": 9,
+        "town": false,
+        "waypoint": true,
+        "bosses": [
+          {
+            "name": "Sawbones"
+          },
+          {
+            "name": "Brutus, Lord Incarcerator"
+          }
+        ]
+      }
+    ],
+    "Prisoner's Gate": [
+      {
+        "act": 1,
+        "level": 10,
+        "town": false,
+        "waypoint": true,
+        "bosses": [
+          {
+            "name": "Ungulath"
+          },
+          {
+            "name": "The Burning Menace"
+          }
+        ]
+      },
+      {
+        "act": 6,
+        "level": 47,
+        "town": false,
+        "waypoint": true,
+        "bosses": [
+          {
+            "name": "Abberath, the Cloven One"
+          }
+        ]
+      }
+    ],
+    "The Ship Graveyard": [
+      {
+        "act": 1,
+        "level": 11,
+        "town": false,
+        "waypoint": true,
+        "bosses": [
+          {
+            "name": "Captain Fairgraves"
+          }
+        ]
+      }
+    ],
+    "The Ship Graveyard Cave": [
+      {
+        "act": 1,
+        "level": 12,
+        "town": false,
+        "waypoint": false,
+        "bosses": [
+          {
+            "name": "Stranglecharm"
+          }
+        ]
+      }
+    ],
+    "The Cavern of Wrath": [
+      {
+        "act": 1,
+        "level": 12,
+        "town": false,
+        "waypoint": true,
+        "bosses": [
+          {
+            "name": "Amarissa, Daughter of Merveil"
+          }
+        ]
+      }
+    ],
+    "The Cavern of Anger": [
+      {
+        "act": 1,
+        "level": 13,
+        "town": false,
+        "waypoint": false,
+        "bosses": [
+          {
+            "name": "Ambrosia, Daughter of Merveil"
+          },
+          {
+            "name": "Merveil, the Siren"
+          }
+        ]
+      },
+      {
+        "act": 6,
+        "level": 49,
+        "town": false,
+        "waypoint": false,
+        "bosses": [
+          {
+            "name": "Brinecrack"
+          }
+        ]
+      }
+    ],
+    "The Forest Encampment": [
+      {
+        "act": 2,
+        "level": 23,
+        "town": true,
+        "waypoint": true,
+        "bosses": []
+      }
+    ],
+    "The Southern Forest": [
+      {
+        "act": 2,
+        "level": 13,
+        "town": false,
+        "waypoint": true,
+        "bosses": []
+      },
+      {
+        "act": 6,
+        "level": 49,
+        "town": false,
+        "waypoint": true,
+        "bosses": [
+          {
+            "name": "Hollowskull, the Willing Host"
+          }
+        ]
+      }
+    ],
+    "The Old Fields": [
+      {
+        "act": 2,
+        "level": 14,
+        "town": false,
+        "waypoint": false,
+        "bosses": [
+          {
+            "name": "Gneiss"
+          }
+        ]
+      }
+    ],
+    "The Den": [
+      {
+        "act": 2,
+        "level": 15,
+        "town": false,
+        "waypoint": false,
+        "bosses": [
+          {
+            "name": "The Great White Beast"
+          }
+        ]
+      },
+      {
+        "act": 7,
+        "level": 53,
+        "town": false,
+        "waypoint": true,
+        "bosses": [
+          {
+            "name": "The Great White Bones"
+          },
+          {
+            "name": "The Bone Sculptor"
+          }
+        ]
+      }
+    ],
+    "The Crossroads": [
+      {
+        "act": 2,
+        "level": 15,
+        "town": false,
+        "waypoint": true,
+        "bosses": [
+          {
+            "name": "Bravalo"
+          }
+        ]
+      },
+      {
+        "act": 7,
+        "level": 51,
+        "town": false,
+        "waypoint": true,
+        "bosses": []
+      }
+    ],
+    "The Crypt Level 1": [
+      {
+        "act": 2,
+        "level": 17,
+        "town": false,
+        "waypoint": true,
+        "bosses": []
+      }
+    ],
+    "The Crypt Level 2": [
+      {
+        "act": 2,
+        "level": 18,
+        "town": false,
+        "waypoint": false,
+        "bosses": [
+          {
+            "name": "Archbishop Geofri the Abashed"
+          }
+        ]
+      }
+    ],
+    "The Chamber of Sins Level 1": [
+      {
+        "act": 2,
+        "level": 15,
+        "town": false,
+        "waypoint": true,
+        "bosses": [
+          {
+            "name": "Black Death"
+          }
+        ]
+      },
+      {
+        "act": 7,
+        "level": 52,
+        "town": false,
+        "waypoint": true,
+        "bosses": []
+      }
+    ],
+    "The Chamber of Sins Level 2": [
+      {
+        "act": 2,
+        "level": 16,
+        "town": false,
+        "waypoint": false,
+        "bosses": [
+          {
+            "name": "Fidelitas, the Mourning"
+          }
+        ]
+      },
+      {
+        "act": 7,
+        "level": 52,
+        "town": false,
+        "waypoint": false,
+        "bosses": [
+          {
+            "name": "Plague Retch"
+          }
+        ]
+      }
+    ],
+    "The Broken Bridge": [
+      {
+        "act": 2,
+        "level": 16,
+        "town": false,
+        "waypoint": true,
+        "bosses": [
+          {
+            "name": "Kraityn, Scarbearer"
+          }
+        ]
+      },
+      {
+        "act": 7,
+        "level": 50,
+        "town": false,
+        "waypoint": false,
+        "bosses": []
+      }
+    ],
+    "The Riverways": [
+      {
+        "act": 2,
+        "level": 15,
+        "town": false,
+        "waypoint": true,
+        "bosses": [
+          {
+            "name": "Targa, Beast Poacher"
+          }
+        ]
+      },
+      {
+        "act": 6,
+        "level": 48,
+        "town": false,
+        "waypoint": true,
+        "bosses": [
+          {
+            "name": "The Animal Pack"
+          }
+        ]
+      }
+    ],
+    "The Northern Forest": [
+      {
+        "act": 2,
+        "level": 21,
+        "town": false,
+        "waypoint": true,
+        "bosses": [
+          {
+            "name": "Seleslatha"
+          }
+        ]
+      },
+      {
+        "act": 7,
+        "level": 53,
+        "town": false,
+        "waypoint": true,
+        "bosses": [
+          {
+            "name": "Tunnelworm"
+          }
+        ]
+      }
+    ],
+    "The Western Forest": [
+      {
+        "act": 2,
+        "level": 17,
+        "town": false,
+        "waypoint": true,
+        "bosses": [
+          {
+            "name": "Alira Darktongue"
+          },
+          {
+            "name": "Captain Arteri"
+          }
+        ]
+      },
+      {
+        "act": 6,
+        "level": 48,
+        "town": false,
+        "waypoint": true,
+        "bosses": [
+          {
+            "name": "Defiled Proclamation"
+          }
+        ]
+      }
+    ],
+    "The Weaver's Chambers": [
+      {
+        "act": 2,
+        "level": 18,
+        "town": false,
+        "waypoint": false,
+        "bosses": [
+          {
+            "name": "The Weaver"
+          }
+        ]
+      }
+    ],
+    "The Vaal Ruins": [
+      {
+        "act": 2,
+        "level": 20,
+        "town": false,
+        "waypoint": false,
+        "bosses": []
+      }
+    ],
+    "The Wetlands": [
+      {
+        "act": 2,
+        "level": 19,
+        "town": false,
+        "waypoint": true,
+        "bosses": [
+          {
+            "name": "Oak, Skullbreaker"
+          }
+        ]
+      },
+      {
+        "act": 6,
+        "level": 48,
+        "town": false,
+        "waypoint": false,
+        "bosses": [
+          {
+            "name": "Ryslatha, the Puppet Mistress"
+          }
+        ]
+      }
+    ],
+    "The Dread Thicket": [
+      {
+        "act": 2,
+        "level": 21,
+        "town": false,
+        "waypoint": false,
+        "bosses": [
+          {
+            "name": "Nadia the Soothing"
+          },
+          {
+            "name": "Aidan the Frenzied"
+          }
+        ]
+      },
+      {
+        "act": 7,
+        "level": 53,
+        "town": false,
+        "waypoint": false,
+        "bosses": [
+          {
+            "name": "Gruthkul, Mother of Despair"
+          },
+          {
+            "name": "The Dreadstone"
+          }
+        ]
+      }
+    ],
+    "The Caverns": [
+      {
+        "act": 2,
+        "level": 22,
+        "town": false,
+        "waypoint": true,
+        "bosses": [
+          {
+            "name": "Q'uru"
+          }
+        ]
+      }
+    ],
+    "The Ancient Pyramid": [
+      {
+        "act": 2,
+        "level": 23,
+        "town": false,
+        "waypoint": false,
+        "bosses": []
+      }
+    ],
+    "The Fellshrine Ruins": [
+      {
+        "act": 2,
+        "level": 16,
+        "town": false,
+        "waypoint": false,
+        "bosses": [
+          {
+            "name": "Soulmourn"
+          }
+        ]
+      },
+      {
+        "act": 7,
+        "level": 51,
+        "town": false,
+        "waypoint": false,
+        "bosses": [
+          {
+            "name": "Bundle of Woe"
+          }
+        ]
+      }
+    ],
+    "The Sarn Encampment": [
+      {
+        "act": 3,
+        "level": 33,
+        "town": true,
+        "waypoint": true,
+        "bosses": []
+      },
+      {
+        "act": 8,
+        "level": 60,
+        "town": true,
+        "waypoint": true,
+        "bosses": []
+      }
+    ],
+    "The City of Sarn": [
+      {
+        "act": 3,
+        "level": 23,
+        "town": false,
+        "waypoint": true,
+        "bosses": [
+          {
+            "name": "Guard Captain"
+          }
+        ]
+      }
+    ],
+    "The Slums": [
+      {
+        "act": 3,
+        "level": 24,
+        "town": false,
+        "waypoint": false,
+        "bosses": [
+          {
+            "name": "Perpetus"
+          }
+        ]
+      }
+    ],
+    "The Crematorium": [
+      {
+        "act": 3,
+        "level": 25,
+        "town": false,
+        "waypoint": true,
+        "bosses": [
+          {
+            "name": "Hatebeat"
+          },
+          {
+            "name": "Piety"
+          }
+        ]
+      }
+    ],
+    "The Marketplace": [
+      {
+        "act": 3,
+        "level": 26,
+        "town": false,
+        "waypoint": true,
+        "bosses": [
+          {
+            "name": "Marceus the Defaced"
+          }
+        ]
+      }
+    ],
+    "The Catacombs": [
+      {
+        "act": 3,
+        "level": 27,
+        "town": false,
+        "waypoint": false,
+        "bosses": []
+      }
+    ],
+    "The Battlefront": [
+      {
+        "act": 3,
+        "level": 27,
+        "town": false,
+        "waypoint": true,
+        "bosses": [
+          {
+            "name": "Captain Aurelianus"
+          }
+        ]
+      }
+    ],
+    "The Solaris Temple Level 1": [
+      {
+        "act": 3,
+        "level": 27,
+        "town": false,
+        "waypoint": true,
+        "bosses": [
+          {
+            "name": "The Infernal Seal"
+          },
+          {
+            "name": "The Voltaic Seal"
+          }
+        ]
+      },
+      {
+        "act": 8,
+        "level": 59,
+        "town": false,
+        "waypoint": true,
+        "bosses": []
+      }
+    ],
+    "The Solaris Temple Level 2": [
+      {
+        "act": 3,
+        "level": 28,
+        "town": false,
+        "waypoint": true,
+        "bosses": [
+          {
+            "name": "Banner of Passion"
+          },
+          {
+            "name": "Banner of Knowledge"
+          },
+          {
+            "name": "Banner of Action"
+          }
+        ]
+      },
+      {
+        "act": 8,
+        "level": 59,
+        "town": false,
+        "waypoint": false,
+        "bosses": [
+          {
+            "name": "Dawn, Harbinger of Solaris"
+          }
+        ]
+      }
+    ],
+    "The Docks": [
+      {
+        "act": 3,
+        "level": 29,
+        "town": false,
+        "waypoint": true,
+        "bosses": [
+          {
+            "name": "The Shipyard Terror"
+          }
+        ]
+      }
+    ],
+    "The Sewers": [
+      {
+        "act": 3,
+        "level": 26,
+        "town": false,
+        "waypoint": true,
+        "bosses": [
+          {
+            "name": "Gloomglut"
+          }
+        ]
+      }
+    ],
+    "The Ebony Barracks": [
+      {
+        "act": 3,
+        "level": 29,
+        "town": false,
+        "waypoint": true,
+        "bosses": [
+          {
+            "name": "General Gravicius"
+          }
+        ]
+      }
+    ],
+    "The Lunaris Temple Level 1": [
+      {
+        "act": 3,
+        "level": 29,
+        "town": false,
+        "waypoint": true,
+        "bosses": [
+          {
+            "name": "Fleshrend, Grand Inquisitor"
+          },
+          {
+            "name": "Kole"
+          }
+        ]
+      },
+      {
+        "act": 8,
+        "level": 59,
+        "town": false,
+        "waypoint": true,
+        "bosses": []
+      }
+    ],
+    "The Lunaris Temple Level 2": [
+      {
+        "act": 3,
+        "level": 30,
+        "town": false,
+        "waypoint": false,
+        "bosses": [
+          {
+            "name": "Piety"
+          },
+          {
+            "name": "Spinecrack"
+          }
+        ]
+      },
+      {
+        "act": 8,
+        "level": 59,
+        "town": false,
+        "waypoint": false,
+        "bosses": [
+          {
+            "name": "Dusk, Harbinger of Lunaris"
+          }
+        ]
+      }
+    ],
+    "The Imperial Gardens": [
+      {
+        "act": 3,
+        "level": 30,
+        "town": false,
+        "waypoint": true,
+        "bosses": [
+          {
+            "name": "Thistlesage"
+          },
+          {
+            "name": "The Conqueror Wurm"
+          }
+        ]
+      }
+    ],
+    "The Library": [
+      {
+        "act": 3,
+        "level": 30,
+        "town": false,
+        "waypoint": true,
+        "bosses": []
+      }
+    ],
+    "The Archives": [
+      {
+        "act": 3,
+        "level": 31,
+        "town": false,
+        "waypoint": false,
+        "bosses": [
+          {
+            "name": "Trinian, Intellectus Prime"
+          }
+        ]
+      }
+    ],
+    "The Sceptre of God": [
+      {
+        "act": 3,
+        "level": 32,
+        "town": false,
+        "waypoint": true,
+        "bosses": [
+          {
+            "name": "Caliga, Imperatrix"
+          }
+        ]
+      }
+    ],
+    "The Upper Sceptre of God": [
+      {
+        "act": 3,
+        "level": 33,
+        "town": false,
+        "waypoint": false,
+        "bosses": [
+          {
+            "name": "Paradisae Venenum"
+          },
+          {
+            "name": "Dominus, High Templar"
+          },
+          {
+            "name": "Draconarius Wilhelm Flamebrand"
+          },
+          {
+            "name": "Imperator Stantinus Bitterblade"
+          },
+          {
+            "name": "Compulsor Octavia Sparkfist"
+          }
+        ]
+      }
+    ],
+    "Highgate": [
+      {
+        "act": 4,
+        "level": 40,
+        "town": true,
+        "waypoint": true,
+        "bosses": []
+      },
+      {
+        "act": 9,
+        "level": 67,
+        "town": true,
+        "waypoint": true,
+        "bosses": []
+      }
+    ],
+    "The Aqueduct": [
+      {
+        "act": 4,
+        "level": 33,
+        "town": false,
+        "waypoint": true,
+        "bosses": [
+          {
+            "name": "The Hundred Foot Shadow"
+          }
+        ]
+      }
+    ],
+    "The Dried Lake": [
+      {
+        "act": 4,
+        "level": 34,
+        "town": false,
+        "waypoint": false,
+        "bosses": [
+          {
+            "name": "Voll, Emperor of Purity"
+          },
+          {
+            "name": "Nightwane"
+          }
+        ]
+      }
+    ],
+    "The Mines Level 1": [
+      {
+        "act": 4,
+        "level": 34,
+        "town": false,
+        "waypoint": false,
+        "bosses": [
+          {
+            "name": "Pikerivet"
+          },
+          {
+            "name": "Voidscream"
+          }
+        ]
+      }
+    ],
+    "The Mines Level 2": [
+      {
+        "act": 4,
+        "level": 35,
+        "town": false,
+        "waypoint": false,
+        "bosses": [
+          {
+            "name": "Hammerstorm"
+          },
+          {
+            "name": "Voidscream"
+          },
+          {
+            "name": "Pikerivet"
+          },
+          {
+            "name": "The Burning Man"
+          }
+        ]
+      }
+    ],
+    "The Crystal Veins": [
+      {
+        "act": 4,
+        "level": 36,
+        "town": false,
+        "waypoint": true,
+        "bosses": [
+          {
+            "name": "The Burning Man"
+          },
+          {
+            "name": "Hammerstorm"
+          }
+        ]
+      }
+    ],
+    "Kaom's Dream": [
+      {
+        "act": 4,
+        "level": 37,
+        "town": false,
+        "waypoint": false,
+        "bosses": [
+          {
+            "name": "Torchoak Grove"
+          },
+          {
+            "name": "Triskeriaki"
+          }
+        ]
+      }
+    ],
+    "Kaom's Stronghold": [
+      {
+        "act": 4,
+        "level": 38,
+        "town": false,
+        "waypoint": true,
+        "bosses": [
+          {
+            "name": "King Kaom"
+          }
+        ]
+      }
+    ],
+    "Daresso's Dream": [
+      {
+        "act": 4,
+        "level": 37,
+        "town": false,
+        "waypoint": false,
+        "bosses": [
+          {
+            "name": "Barkhul"
+          },
+          {
+            "name": "Eyepecker"
+          },
+          {
+            "name": "Steelchaw"
+          }
+        ]
+      }
+    ],
+    "The Grand Arena": [
+      {
+        "act": 4,
+        "level": 38,
+        "town": false,
+        "waypoint": true,
+        "bosses": [
+          {
+            "name": "Daresso, King of Swords"
+          },
+          {
+            "name": "Rudiarius Felix"
+          },
+          {
+            "name": "Mevion"
+          },
+          {
+            "name": "Dimachaeri Cassius"
+          }
+        ]
+      }
+    ],
+    "The Belly of the Beast Level 1": [
+      {
+        "act": 4,
+        "level": 38,
+        "town": false,
+        "waypoint": false,
+        "bosses": [
+          {
+            "name": "The Bone Queen"
+          }
+        ]
+      }
+    ],
+    "The Belly of the Beast Level 2": [
+      {
+        "act": 4,
+        "level": 39,
+        "town": false,
+        "waypoint": false,
+        "bosses": [
+          {
+            "name": "Piety, the Abomination"
+          }
+        ]
+      }
+    ],
+    "The Harvest": [
+      {
+        "act": 4,
+        "level": 40,
+        "town": false,
+        "waypoint": true,
+        "bosses": [
+          {
+            "name": "Malachai, The Nightmare"
+          },
+          {
+            "name": "Doedre Darktongue"
+          },
+          {
+            "name": "Maligaro, The Inquisitor"
+          },
+          {
+            "name": "Shavronne of Umbra"
+          }
+        ]
+      }
+    ],
+    "The Ascent": [
+      {
+        "act": 4,
+        "level": 40,
+        "town": false,
+        "waypoint": false,
+        "bosses": [
+          {
+            "name": "The White Death"
+          }
+        ]
+      }
+    ],
+    "Overseer's Tower": [
+      {
+        "act": 5,
+        "level": 45,
+        "town": true,
+        "waypoint": true,
+        "bosses": []
+      }
+    ],
+    "The Slave Pens": [
+      {
+        "act": 5,
+        "level": 41,
+        "town": false,
+        "waypoint": true,
+        "bosses": [
+          {
+            "name": "Overseer Krow"
+          }
+        ]
+      }
+    ],
+    "The Control Blocks": [
+      {
+        "act": 5,
+        "level": 41,
+        "town": false,
+        "waypoint": false,
+        "bosses": [
+          {
+            "name": "Justicar Casticus"
+          }
+        ]
+      },
+      {
+        "act": 10,
+        "level": 66,
+        "town": false,
+        "waypoint": true,
+        "bosses": [
+          {
+            "name": "Vilenta"
+          }
+        ]
+      }
+    ],
+    "Oriath Square": [
+      {
+        "act": 5,
+        "level": 42,
+        "town": false,
+        "waypoint": true,
+        "bosses": [
+          {
+            "name": "The Matriarch"
+          },
+          {
+            "name": "Oriath Enforcer"
+          }
+        ]
+      }
+    ],
+    "The Ruined Square": [
+      {
+        "act": 5,
+        "level": 44,
+        "town": false,
+        "waypoint": true,
+        "bosses": [
+          {
+            "name": "Utula, Stone and Steel"
+          },
+          {
+            "name": "The Risen Matriarch"
+          }
+        ]
+      }
+    ],
+    "The Templar Courts": [
+      {
+        "act": 5,
+        "level": 42,
+        "town": false,
+        "waypoint": true,
+        "bosses": []
+      }
+    ],
+    "The Torched Courts": [
+      {
+        "act": 5,
+        "level": 44,
+        "town": false,
+        "waypoint": false,
+        "bosses": [
+          {
+            "name": "Cato, Scholar of Light"
+          }
+        ]
+      },
+      {
+        "act": 10,
+        "level": 65,
+        "town": false,
+        "waypoint": false,
+        "bosses": []
+      }
+    ],
+    "The Chamber of Innocence": [
+      {
+        "act": 5,
+        "level": 43,
+        "town": false,
+        "waypoint": true,
+        "bosses": [
+          {
+            "name": "High Templar Avarius"
+          }
+        ]
+      }
+    ],
+    "The Ossuary": [
+      {
+        "act": 5,
+        "level": 44,
+        "town": false,
+        "waypoint": false,
+        "bosses": []
+      },
+      {
+        "act": 10,
+        "level": 67,
+        "town": false,
+        "waypoint": false,
+        "bosses": []
+      }
+    ],
+    "The Reliquary": [
+      {
+        "act": 5,
+        "level": 44,
+        "town": false,
+        "waypoint": true,
+        "bosses": []
+      },
+      {
+        "act": 10,
+        "level": 67,
+        "town": false,
+        "waypoint": true,
+        "bosses": []
+      }
+    ],
+    "The Cathedral Rooftop": [
+      {
+        "act": 5,
+        "level": 45,
+        "town": false,
+        "waypoint": true,
+        "bosses": [
+          {
+            "name": "Kitava, the Insatiable"
+          }
+        ]
+      },
+      {
+        "act": 10,
+        "level": 64,
+        "town": false,
+        "waypoint": false,
+        "bosses": []
+      }
+    ],
+    "The Karui Fortress": [
+      {
+        "act": 6,
+        "level": 46,
+        "town": false,
+        "waypoint": false,
+        "bosses": [
+          {
+            "name": "Tukohama, Karui God of War"
+          }
+        ]
+      }
+    ],
+    "The Ridge": [
+      {
+        "act": 6,
+        "level": 46,
+        "town": false,
+        "waypoint": true,
+        "bosses": [
+          {
+            "name": "Fleetfreak"
+          }
+        ]
+      }
+    ],
+    "Shavronne's Tower": [
+      {
+        "act": 6,
+        "level": 47,
+        "town": false,
+        "waypoint": false,
+        "bosses": [
+          {
+            "name": "Shavronne the Returned"
+          },
+          {
+            "name": "Reassembled Brutus"
+          }
+        ]
+      }
+    ],
+    "The Beacon": [
+      {
+        "act": 6,
+        "level": 49,
+        "town": false,
+        "waypoint": true,
+        "bosses": []
+      }
+    ],
+    "The Brine King's Reef": [
+      {
+        "act": 6,
+        "level": 50,
+        "town": false,
+        "waypoint": true,
+        "bosses": [
+          {
+            "name": "Tsoagoth, The Brine King"
+          }
+        ]
+      }
+    ],
+    "The Bridge Encampment": [
+      {
+        "act": 7,
+        "level": 55,
+        "town": true,
+        "waypoint": true,
+        "bosses": []
+      }
+    ],
+    "The Crypt": [
+      {
+        "act": 7,
+        "level": 51,
+        "town": false,
+        "waypoint": true,
+        "bosses": []
+      }
+    ],
+    "Maligaro's Sanctum": [
+      {
+        "act": 7,
+        "level": 52,
+        "town": false,
+        "waypoint": false,
+        "bosses": [
+          {
+            "name": "Maligaro, the Artist"
+          },
+          {
+            "name": "Black Death, Pain Unending"
+          },
+          {
+            "name": "Fidelitas, Loyalty Undying"
+          }
+        ]
+      }
+    ],
+    "The Ashen Fields": [
+      {
+        "act": 7,
+        "level": 53,
+        "town": false,
+        "waypoint": true,
+        "bosses": [
+          {
+            "name": "Greust, Lord of the Forest"
+          },
+          {
+            "name": "Oak"
+          },
+          {
+            "name": "Alira"
+          },
+          {
+            "name": "Kraityn"
+          }
+        ]
+      }
+    ],
+    "The Causeway": [
+      {
+        "act": 7,
+        "level": 54,
+        "town": false,
+        "waypoint": true,
+        "bosses": []
+      }
+    ],
+    "The Vaal City": [
+      {
+        "act": 7,
+        "level": 54,
+        "town": false,
+        "waypoint": true,
+        "bosses": []
+      }
+    ],
+    "The Temple of Decay Level 1": [
+      {
+        "act": 7,
+        "level": 54,
+        "town": false,
+        "waypoint": false,
+        "bosses": [
+          {
+            "name": "Blightblade"
+          }
+        ]
+      }
+    ],
+    "The Temple of Decay Level 2": [
+      {
+        "act": 7,
+        "level": 55,
+        "town": false,
+        "waypoint": false,
+        "bosses": [
+          {
+            "name": "Arakaali, Spinner of Shadows"
+          }
+        ]
+      }
+    ],
+    "The Sarn Ramparts": [
+      {
+        "act": 8,
+        "level": 55,
+        "town": false,
+        "waypoint": true,
+        "bosses": []
+      }
+    ],
+    "The Toxic Conduits": [
+      {
+        "act": 8,
+        "level": 56,
+        "town": false,
+        "waypoint": false,
+        "bosses": [
+          {
+            "name": "Lingering Aberration"
+          }
+        ]
+      }
+    ],
+    "Doedre's Cesspool": [
+      {
+        "act": 8,
+        "level": 56,
+        "town": false,
+        "waypoint": true,
+        "bosses": [
+          {
+            "name": "Doedre the Vile"
+          }
+        ]
+      }
+    ],
+    "The Grand Promenade": [
+      {
+        "act": 8,
+        "level": 56,
+        "town": false,
+        "waypoint": false,
+        "bosses": [
+          {
+            "name": "Ondar, the Betrayer"
+          }
+        ]
+      }
+    ],
+    "The High Gardens": [
+      {
+        "act": 8,
+        "level": 58,
+        "town": false,
+        "waypoint": false,
+        "bosses": [
+          {
+            "name": "Yugul, Reflection of Terror"
+          }
+        ]
+      }
+    ],
+    "The Bath House": [
+      {
+        "act": 8,
+        "level": 57,
+        "town": false,
+        "waypoint": true,
+        "bosses": [
+          {
+            "name": "Hector Titucius, Eternal Servant"
+          }
+        ]
+      }
+    ],
+    "The Lunaris Concourse": [
+      {
+        "act": 8,
+        "level": 58,
+        "town": false,
+        "waypoint": true,
+        "bosses": [
+          {
+            "name": "Nightbringer Lucius"
+          }
+        ]
+      }
+    ],
+    "The Quay": [
+      {
+        "act": 8,
+        "level": 57,
+        "town": false,
+        "waypoint": false,
+        "bosses": [
+          {
+            "name": "Tolman"
+          }
+        ]
+      }
+    ],
+    "The Grain Gate": [
+      {
+        "act": 8,
+        "level": 57,
+        "town": false,
+        "waypoint": true,
+        "bosses": [
+          {
+            "name": "Gemling Legionnaire"
+          },
+          {
+            "name": "Gemling Captain"
+          }
+        ]
+      }
+    ],
+    "The Imperial Fields": [
+      {
+        "act": 8,
+        "level": 58,
+        "town": false,
+        "waypoint": true,
+        "bosses": [
+          {
+            "name": "Effigy of Fear"
+          }
+        ]
+      }
+    ],
+    "The Solaris Concourse": [
+      {
+        "act": 8,
+        "level": 58,
+        "town": false,
+        "waypoint": true,
+        "bosses": []
+      }
+    ],
+    "The Harbour Bridge": [
+      {
+        "act": 8,
+        "level": 60,
+        "town": false,
+        "waypoint": false,
+        "bosses": [
+          {
+            "name": "Lunaris, Eternal Moon"
+          },
+          {
+            "name": "Solaris, Eternal Sun"
+          }
+        ]
+      }
+    ],
+    "The Blood Aqueduct": [
+      {
+        "act": 9,
+        "level": 61,
+        "town": false,
+        "waypoint": true,
+        "bosses": []
+      }
+    ],
+    "The Descent": [
+      {
+        "act": 9,
+        "level": 61,
+        "town": false,
+        "waypoint": false,
+        "bosses": []
+      }
+    ],
+    "The Vastiri Desert": [
+      {
+        "act": 9,
+        "level": 61,
+        "town": false,
+        "waypoint": true,
+        "bosses": []
+      }
+    ],
+    "The Oasis": [
+      {
+        "act": 9,
+        "level": 61,
+        "town": false,
+        "waypoint": false,
+        "bosses": [
+          {
+            "name": "Shakari, Queen of the Sands"
+          }
+        ]
+      }
+    ],
+    "The Foothills": [
+      {
+        "act": 9,
+        "level": 62,
+        "town": false,
+        "waypoint": true,
+        "bosses": [
+          {
+            "name": "Boulderback"
+          }
+        ]
+      }
+    ],
+    "The Boiling Lake": [
+      {
+        "act": 9,
+        "level": 62,
+        "town": false,
+        "waypoint": false,
+        "bosses": [
+          {
+            "name": "The Basilisk"
+          }
+        ]
+      }
+    ],
+    "The Tunnel": [
+      {
+        "act": 9,
+        "level": 62,
+        "town": false,
+        "waypoint": true,
+        "bosses": []
+      }
+    ],
+    "The Quarry": [
+      {
+        "act": 9,
+        "level": 63,
+        "town": false,
+        "waypoint": true,
+        "bosses": [
+          {
+            "name": "Garukhan, Queen of the Winds"
+          }
+        ]
+      }
+    ],
+    "The Refinery": [
+      {
+        "act": 9,
+        "level": 63,
+        "town": false,
+        "waypoint": false,
+        "bosses": [
+          {
+            "name": "General Adus"
+          }
+        ]
+      }
+    ],
+    "The Belly of the Beast": [
+      {
+        "act": 9,
+        "level": 63,
+        "town": false,
+        "waypoint": false,
+        "bosses": [
+          {
+            "name": "Droolmaw"
+          }
+        ]
+      }
+    ],
+    "The Rotting Core": [
+      {
+        "act": 9,
+        "level": 64,
+        "town": false,
+        "waypoint": false,
+        "bosses": [
+          {
+            "name": "The Depraved Trinity"
+          },
+          {
+            "name": "Doedre, Darksoul"
+          },
+          {
+            "name": "Maligaro, The Broken"
+          },
+          {
+            "name": "Shavronne, Unbound"
+          }
+        ]
+      }
+    ],
+    "Oriath Docks": [
+      {
+        "act": 10,
+        "level": 69,
+        "town": true,
+        "waypoint": true,
+        "bosses": []
+      }
+    ],
+    "The Ravaged Square": [
+      {
+        "act": 10,
+        "level": 64,
+        "town": false,
+        "waypoint": true,
+        "bosses": [
+          {
+            "name": "The Rotten Matriarch"
+          }
+        ]
+      }
+    ],
+    "The Desecrated Chambers": [
+      {
+        "act": 10,
+        "level": 65,
+        "town": false,
+        "waypoint": true,
+        "bosses": [
+          {
+            "name": "Avarius, Reassembled"
+          }
+        ]
+      }
+    ],
+    "The Canals": [
+      {
+        "act": 10,
+        "level": 66,
+        "town": false,
+        "waypoint": false,
+        "bosses": []
+      }
+    ],
+    "The Feeding Trough": [
+      {
+        "act": 10,
+        "level": 67,
+        "town": false,
+        "waypoint": false,
+        "bosses": [
+          {
+            "name": "Kitava, the Insatiable"
+          }
+        ]
+      }
+    ],
+    "Oriath": [
+      {
+        "act": 11,
+        "level": 69,
+        "town": true,
+        "waypoint": true,
+        "bosses": []
+      }
+    ],
+    "The Templar Laboratory": [
+      {
+        "act": 11,
+        "level": 68,
+        "town": false,
+        "waypoint": true,
+        "bosses": []
+      }
+    ]
+  },
+  "vaal": {
+    "Strange Sinkhole": {
+      "bosses": [
+        {
+          "name": "Mother of the Hive"
+        }
+      ]
+    },
+    "Concealed Cavity": {
+      "bosses": [
+        {
+          "name": "The All-seeing Eye"
+        }
+      ]
+    },
+    "Sunken Shingle": {
+      "bosses": [
+        {
+          "name": "Perquil the Lucky"
+        }
+      ]
+    },
+    "Clouded Ridge": {
+      "bosses": [
+        {
+          "name": "Konu, Maker of Wind"
+        }
+      ]
+    },
+    "Forgotten Oubliette": {
+      "bosses": [
+        {
+          "name": "Coniraya, Shadow of Malice"
+        }
+      ]
+    },
+    "Remote Gulch": {
+      "bosses": [
+        {
+          "name": "Sheaq, Maker of Floods"
+        }
+      ]
+    },
+    "Narrow Ravine": {
+      "bosses": [
+        {
+          "name": "Kamaq, Soilmaker"
+        }
+      ]
+    },
+    "Mystical Clearing": {
+      "bosses": [
+        {
+          "name": "Simi, the Nature Touched"
+        }
+      ]
+    },
+    "Covered-up Hollow": {
+      "bosses": [
+        {
+          "name": "Cintiq, the Inescapable"
+        }
+      ]
+    },
+    "Hidden Patch": {
+      "bosses": [
+        {
+          "name": "Thornrunner"
+        }
+      ]
+    },
+    "Entombed Alcove": {
+      "bosses": [
+        {
+          "name": "Shrapnelbearer"
+        }
+      ]
+    },
+    "Secret Laboratory": {
+      "bosses": [
+        {
+          "name": "Atziri's Pride"
+        }
+      ]
+    },
+    "Secluded Copse": {
+      "bosses": [
+        {
+          "name": "Kutec, Vaal Fleshsmith"
+        }
+      ]
+    },
+    "Forbidden Chamber": {
+      "bosses": [
+        {
+          "name": "Haviri, Vaal Metalsmith"
+        }
+      ]
+    },
+    "Quarantined Quarters": {
+      "bosses": [
+        {
+          "name": "The Sunburst Queen"
+        }
+      ]
+    },
+    "Disused Furnace": {
+      "bosses": [
+        {
+          "name": "Curator Miem"
+        }
+      ]
+    },
+    "Blind Alley": {
+      "bosses": [
+        {
+          "name": "M'gaska, the Living Pyre"
+        }
+      ]
+    },
+    "Entombed Chamber": {
+      "bosses": [
+        {
+          "name": "Ossecati, Boneshaper"
+        }
+      ]
+    },
+    "Sacred Chambers": {
+      "bosses": [
+        {
+          "name": "Shadow of Vengeance"
+        }
+      ]
+    },
+    "Stagnant Canal": {
+      "bosses": [
+        {
+          "name": "Wiraqucha, Ancient Guardian"
+        }
+      ]
+    },
+    "Walled-off Ducts": {
+      "bosses": [
+        {
+          "name": "Cava, Artist of Pain"
+        }
+      ]
+    },
+    "Neglected Cellar": {
+      "bosses": [
+        {
+          "name": "Rima, Deep Temptress"
+        }
+      ]
+    },
+    "Arcane Chambers": {
+      "bosses": [
+        {
+          "name": "Beheader Ataguchu"
+        }
+      ]
+    },
+    "Inner Grounds": {
+      "bosses": [
+        {
+          "name": "Inti of the Blood Moon"
+        }
+      ]
+    },
+    "Sealed Corridors": {
+      "bosses": [
+        {
+          "name": "Wiraq, the Impaler"
+        }
+      ]
+    },
+    "Restricted Gallery": {
+      "bosses": [
+        {
+          "name": "Ch'aska, Maker of Rain"
+        }
+      ]
+    },
+    "Forgotten Conduit": {
+      "bosses": [
+        {
+          "name": "Torrent of Fear"
+        }
+      ]
+    },
+    "Ancient Catacomb": {
+      "bosses": [
+        {
+          "name": "Commander of Flesh"
+        }
+      ]
+    },
+    "Haunted Mineshaft": {
+      "bosses": [
+        {
+          "name": "Calxipher"
+        }
+      ]
+    },
+    "Abandoned Dam": {
+      "bosses": [
+        {
+          "name": "Quetzerxi"
+        }
+      ]
+    },
+    "Desolate Track": {
+      "bosses": [
+        {
+          "name": "Quetzerxi"
+        }
+      ]
+    },
+    "Reclaimed Barracks": {
+      "bosses": [
+        {
+          "name": "Huitepa the Blind"
+        }
+      ]
+    },
+    "Sealed Basement": {
+      "bosses": [
+        {
+          "name": "Guraq, Daylight's Blade"
+        }
+      ]
+    },
+    "Secluded Canal": {
+      "bosses": [
+        {
+          "name": "Xuatl, Cutting Wind"
+        }
+      ]
+    },
+    "Forbidden Archives": {
+      "bosses": [
+        {
+          "name": "Exartze, the Woven Stone"
+        }
+      ]
+    },
+    "Cremated Archives": {
+      "bosses": [
+        {
+          "name": "Exartze, the Woven Stone"
+        }
+      ]
+    },
+    "Twisted Inquisitorium": {
+      "bosses": [
+        {
+          "name": "Anacuacotli, Death's Worship"
+        }
+      ]
+    },
+    "Deathly Chambers": {
+      "bosses": [
+        {
+          "name": "Harbinger of Disorder"
+        }
+      ]
+    },
+    "Restricted Collection": {
+      "bosses": [
+        {
+          "name": "Iorphia, Dream Eater"
+        }
+      ]
+    },
+    "Side Chapel": {
+      "bosses": [
+        {
+          "name": "Daluatti, Stoneraiser"
+        }
+      ]
+    },
+    "Radiant Pools": {
+      "bosses": [
+        {
+          "name": "Perquil the Lucky"
+        }
+      ]
+    },
+    "Clouded Ledge": {
+      "bosses": [
+        {
+          "name": "Simi, the Nature Touched"
+        }
+      ]
+    },
+    "Sealed Repository": {
+      "bosses": [
+        {
+          "name": "Inti of the Blood Moon"
+        }
+      ]
+    },
+    "Flooded Complex": {
+      "bosses": [
+        {
+          "name": "M'gaska, the Living Pyre"
+        }
+      ]
+    },
+    "Forbidden Shrine": {
+      "bosses": [
+        {
+          "name": "Shrapnelbearer"
+        }
+      ]
+    },
+    "Evacuated Quarter": {
+      "bosses": [
+        {
+          "name": "Curator Miem"
+        }
+      ]
+    },
+    "Concealed Caldarium": {
+      "bosses": [
+        {
+          "name": "Cava, Artist of Pain"
+        }
+      ]
+    },
+    "Moonlit Chambers": {
+      "bosses": [
+        {
+          "name": "Beheader Ataguchu"
+        }
+      ]
+    },
+    "Shifting Sands": {
+      "bosses": [
+        {
+          "name": "Wiraq, the Impaler"
+        }
+      ]
+    },
+    "Forgotten Gulch": {
+      "bosses": [
+        {
+          "name": "Curator Miem"
+        }
+      ]
+    },
+    "Desolate Isle": {
+      "bosses": [
+        {
+          "name": "Wiraqucha, Ancient Guardian"
+        }
+      ]
+    },
+    "Dusty Bluff": {
+      "bosses": [
+        {
+          "name": "Quetzerxi"
+        }
+      ]
+    }
+  },
+  "labyrinth": {
+    "Aspirants' Plaza": [
+      {
+        "trial": false
+      }
+    ],
+    "Trial of Piercing Truth": [
+      {
+        "trial": true
+      }
+    ],
+    "Trial of Swirling Fear": [
+      {
+        "trial": true
+      }
+    ],
+    "Trial of Crippling Grief": [
+      {
+        "trial": true
+      }
+    ],
+    "Trial of Burning Rage": [
+      {
+        "trial": true
+      }
+    ],
+    "Trial of Lingering Pain": [
+      {
+        "trial": true
+      }
+    ],
+    "Trial of Stinging Doubt": [
+      {
+        "trial": true
+      }
+    ]
+  },
+  "map": {
+    "Beach": [
+      {
+        "level": 68,
+        "tier": 1,
+        "bosses": [
+          {
+            "name": "Glace"
+          }
+        ]
+      }
+    ],
+    "Dungeon": [
+      {
+        "level": 68,
+        "tier": 1,
+        "bosses": [
+          {
+            "name": "Penitentiary Incarcerator"
+          }
+        ]
+      }
+    ],
+    "Graveyard": [
+      {
+        "level": 68,
+        "tier": 1,
+        "bosses": [
+          {
+            "name": "Steelpoint the Avenger"
+          },
+          {
+            "name": "Champion of Frost"
+          },
+          {
+            "name": "Thunderskull"
+          }
+        ]
+      }
+    ],
+    "Lookout": [
+      {
+        "level": 68,
+        "tier": 1,
+        "bosses": [
+          {
+            "name": "The Grey Plague"
+          }
+        ]
+      }
+    ],
+    "Alleyways": [
+      {
+        "level": 69,
+        "tier": 2,
+        "bosses": [
+          {
+            "name": "Calderus"
+          }
+        ]
+      }
+    ],
+    "Arid Lake": [
+      {
+        "level": 69,
+        "tier": 2,
+        "bosses": [
+          {
+            "name": "Drought-Maddened Rhoa"
+          }
+        ]
+      }
+    ],
+    "Desert": [
+      {
+        "level": 69,
+        "tier": 2,
+        "bosses": [
+          {
+            "name": "Preethi, Eye-Pecker"
+          }
+        ]
+      }
+    ],
+    "Flooded Mine": [
+      {
+        "level": 69,
+        "tier": 2,
+        "bosses": [
+          {
+            "name": "The Eroding One"
+          }
+        ]
+      }
+    ],
+    "Marshes": [
+      {
+        "level": 69,
+        "tier": 2,
+        "bosses": [
+          {
+            "name": "Tore, Towering Ancient"
+          }
+        ]
+      }
+    ],
+    "Pen": [
+      {
+        "level": 69,
+        "tier": 2,
+        "bosses": [
+          {
+            "name": "Arwyn, the Houndmaster"
+          }
+        ]
+      }
+    ],
+    "Arcade": [
+      {
+        "level": 70,
+        "tier": 3,
+        "bosses": [
+          {
+            "name": "Herald of Ashes"
+          },
+          {
+            "name": "Herald of Thunder"
+          }
+        ]
+      }
+    ],
+    "Burial Chambers": [
+      {
+        "level": 70,
+        "tier": 3,
+        "bosses": [
+          {
+            "name": "Witch of the Cauldron"
+          }
+        ]
+      }
+    ],
+    "Cage": [
+      {
+        "level": 70,
+        "tier": 3,
+        "bosses": [
+          {
+            "name": "Executioner Bloodwing"
+          }
+        ]
+      }
+    ],
+    "Cells": [
+      {
+        "level": 70,
+        "tier": 3,
+        "bosses": [
+          {
+            "name": "Megaera"
+          }
+        ]
+      }
+    ],
+    "Excavation": [
+      {
+        "level": 70,
+        "tier": 3,
+        "bosses": [
+          {
+            "name": "Shrieker Eihal"
+          },
+          {
+            "name": "Breaker Toruul"
+          }
+        ]
+      }
+    ],
+    "Iceberg": [
+      {
+        "level": 70,
+        "tier": 3,
+        "bosses": [
+          {
+            "name": "One random Mutewind Warband boss with a supporting Warband"
+          }
+        ]
+      }
+    ],
+    "Leyline": [
+      {
+        "level": 70,
+        "tier": 3,
+        "bosses": [
+          {
+            "name": "Mirage of Bones"
+          }
+        ]
+      }
+    ],
+    "Peninsula": [
+      {
+        "level": 70,
+        "tier": 3,
+        "bosses": [
+          {
+            "name": "Titan of the Grove"
+          }
+        ]
+      }
+    ],
+    "Port": [
+      {
+        "level": 70,
+        "tier": 3,
+        "bosses": [
+          {
+            "name": "Unravelling Horror"
+          }
+        ]
+      }
+    ],
+    "Springs": [
+      {
+        "level": 70,
+        "tier": 3,
+        "bosses": [
+          {
+            "name": "Aulen Greychain"
+          }
+        ]
+      }
+    ],
+    "Esh's Domain": [
+      {
+        "level": 70,
+        "tier": null,
+        "bosses": [
+          {
+            "name": "Esh, Forked Thought"
+          }
+        ]
+      }
+    ],
+    "Tul's Domain": [
+      {
+        "level": 70,
+        "tier": null,
+        "bosses": [
+          {
+            "name": "Tul, Creeping Avalanche"
+          }
+        ]
+      }
+    ],
+    "Xoph's Domain": [
+      {
+        "level": 70,
+        "tier": null,
+        "bosses": [
+          {
+            "name": "Xoph, Dark Embers"
+          }
+        ]
+      }
+    ],
+    "The Apex of Sacrifice": [
+      {
+        "level": 70,
+        "tier": null,
+        "bosses": [
+          {
+            "name": "Atziri, Queen of the Vaal"
+          },
+          {
+            "name": "Q'ura"
+          },
+          {
+            "name": "Y'ara'az"
+          },
+          "A'alai",
+          "Vessel of the Vaal",
+          "Vessel of the Vaal"
+        ]
+      }
+    ],
+    "Canyon": [
+      {
+        "level": 71,
+        "tier": 4,
+        "bosses": [
+          {
+            "name": "Gnar, Eater of Carrion"
+          },
+          {
+            "name": "Stonebeak, Battle Fowl"
+          }
+        ]
+      }
+    ],
+    "Chateau": [
+      {
+        "level": 71,
+        "tier": 4,
+        "bosses": [
+          {
+            "name": "The Reaver"
+          }
+        ]
+      }
+    ],
+    "City Square": [
+      {
+        "level": 71,
+        "tier": 4,
+        "bosses": [
+          {
+            "name": "Carius, the Unnatural"
+          },
+          {
+            "name": "Pileah, Corpse Burner"
+          },
+          {
+            "name": "Pileah, Burning Corpse"
+          }
+        ]
+      }
+    ],
+    "Courthouse": [
+      {
+        "level": 71,
+        "tier": 4,
+        "bosses": [
+          {
+            "name": "Thena Moga, The Crimson Storm"
+          },
+          {
+            "name": "Ion Darkshroud, The Hungering Blade"
+          },
+          {
+            "name": "Bolt Brownfur, Earth Churner"
+          }
+        ]
+      }
+    ],
+    "Gorge": [
+      {
+        "level": 71,
+        "tier": 4,
+        "bosses": [
+          {
+            "name": "Rek'tar, the Breaker"
+          }
+        ]
+      }
+    ],
+    "Grotto": [
+      {
+        "level": 71,
+        "tier": 4,
+        "bosses": [
+          {
+            "name": "Void Anomaly"
+          }
+        ]
+      }
+    ],
+    "Lighthouse": [
+      {
+        "level": 71,
+        "tier": 4,
+        "bosses": [
+          {
+            "name": "One random Redblade Warband boss with a supporting Warband"
+          }
+        ]
+      }
+    ],
+    "Relic Chambers": [
+      {
+        "level": 71,
+        "tier": 4,
+        "bosses": [
+          {
+            "name": "Litanius, the Black Prayer"
+          }
+        ]
+      }
+    ],
+    "Strand": [
+      {
+        "level": 71,
+        "tier": 4,
+        "bosses": [
+          {
+            "name": "Master of the Blade Massier"
+          }
+        ]
+      }
+    ],
+    "Whakawairua Tuahu": [
+      {
+        "level": 71,
+        "tier": 4,
+        "bosses": [
+          {
+            "name": "Tormented Temptress"
+          }
+        ]
+      }
+    ],
+    "Volcano": [
+      {
+        "level": 71,
+        "tier": 4,
+        "bosses": [
+          {
+            "name": "Forest of Flames"
+          }
+        ]
+      }
+    ],
+    "Ancient City": [
+      {
+        "level": 72,
+        "tier": 5,
+        "bosses": [
+          {
+            "name": "Lady Stormflay"
+          }
+        ]
+      }
+    ],
+    "Barrows": [
+      {
+        "level": 72,
+        "tier": 5,
+        "bosses": [
+          {
+            "name": "Beast of the Pits"
+          }
+        ]
+      }
+    ],
+    "Channel": [
+      {
+        "level": 72,
+        "tier": 5,
+        "bosses": [
+          {
+            "name": "The Winged Death"
+          }
+        ]
+      }
+    ],
+    "Conservatory": [
+      {
+        "level": 72,
+        "tier": 5,
+        "bosses": [
+          {
+            "name": "The Forgotten Soldier"
+          }
+        ]
+      }
+    ],
+    "Haunted Mansion": [
+      {
+        "level": 72,
+        "tier": 5,
+        "bosses": [
+          {
+            "name": "Barthol, the Pure"
+          },
+          {
+            "name": "Barthol, the Corrupter"
+          }
+        ]
+      }
+    ],
+    "Ivory Temple": [
+      {
+        "level": 72,
+        "tier": 5,
+        "bosses": [
+          {
+            "name": "One random Perandus Manor boss"
+          }
+        ]
+      }
+    ],
+    "Maze": [
+      {
+        "level": 72,
+        "tier": 5,
+        "bosses": [
+          {
+            "name": "Shadow of the Vaal"
+          }
+        ]
+      }
+    ],
+    "Spider Lair": [
+      {
+        "level": 72,
+        "tier": 5,
+        "bosses": [
+          {
+            "name": "Thraxia"
+          }
+        ]
+      }
+    ],
+    "Sulphur Vents": [
+      {
+        "level": 72,
+        "tier": 5,
+        "bosses": [
+          {
+            "name": "The Gorgon"
+          }
+        ]
+      }
+    ],
+    "Toxic Sewer": [
+      {
+        "level": 72,
+        "tier": 5,
+        "bosses": [
+          {
+            "name": "Arachnoxia"
+          }
+        ]
+      }
+    ],
+    "The Beachhead": [
+      {
+        "level": 72,
+        "tier": 5,
+        "bosses": []
+      }
+    ],
+    "Academy": [
+      {
+        "level": 73,
+        "tier": 6,
+        "bosses": [
+          {
+            "name": "The Arbiter of Knowledge"
+          }
+        ]
+      }
+    ],
+    "Atoll": [
+      {
+        "level": 73,
+        "tier": 6,
+        "bosses": [
+          {
+            "name": "Puruna, the Challenger"
+          }
+        ]
+      }
+    ],
+    "Maelström of Chaos": [
+      {
+        "level": 73,
+        "tier": 6,
+        "bosses": [
+          {
+            "name": "Merveil, the Reflection"
+          },
+          {
+            "name": "Merveil, the Returned"
+          }
+        ]
+      }
+    ],
+    "Ashen Wood": [
+      {
+        "level": 73,
+        "tier": 6,
+        "bosses": [
+          {
+            "name": "Lord of the Ashen Arrow"
+          }
+        ]
+      }
+    ],
+    "Cemetery": [
+      {
+        "level": 73,
+        "tier": 6,
+        "bosses": [
+          {
+            "name": "Erebix, Light's Bane"
+          }
+        ]
+      }
+    ],
+    "Hallowed Ground": [
+      {
+        "level": 73,
+        "tier": 6,
+        "bosses": [
+          {
+            "name": "Maker of Mires"
+          }
+        ]
+      }
+    ],
+    "Fields": [
+      {
+        "level": 73,
+        "tier": 6,
+        "bosses": [
+          {
+            "name": "Drek, Apex Hunter"
+          }
+        ]
+      }
+    ],
+    "Jungle Valley": [
+      {
+        "level": 73,
+        "tier": 6,
+        "bosses": [
+          {
+            "name": "Queen of the Great Tangle"
+          }
+        ]
+      }
+    ],
+    "Mausoleum": [
+      {
+        "level": 73,
+        "tier": 6,
+        "bosses": [
+          {
+            "name": "Tolman, the Exhumer"
+          }
+        ]
+      }
+    ],
+    "Phantasmagoria": [
+      {
+        "level": 73,
+        "tier": 6,
+        "bosses": [
+          {
+            "name": "Erythrophagia"
+          }
+        ]
+      }
+    ],
+    "Thicket": [
+      {
+        "level": 73,
+        "tier": 6,
+        "bosses": [
+          {
+            "name": "The Primal One"
+          }
+        ]
+      }
+    ],
+    "Underground Sea": [
+      {
+        "level": 73,
+        "tier": 6,
+        "bosses": [
+          {
+            "name": "Merveil, the Reflection"
+          }
+        ]
+      }
+    ],
+    "Wharf": [
+      {
+        "level": 73,
+        "tier": 6,
+        "bosses": [
+          {
+            "name": "Stone of the Currents"
+          }
+        ]
+      }
+    ],
+    "Arachnid Nest": [
+      {
+        "level": 74,
+        "tier": 7,
+        "bosses": [
+          {
+            "name": "Spinner of False Hope"
+          }
+        ]
+      }
+    ],
+    "Bazaar": [
+      {
+        "level": 74,
+        "tier": 7,
+        "bosses": [
+          {
+            "name": "Ancient Sculptor"
+          }
+        ]
+      }
+    ],
+    "Bone Crypt": [
+      {
+        "level": 74,
+        "tier": 7,
+        "bosses": [
+          {
+            "name": "Xixic, High Necromancer"
+          }
+        ]
+      }
+    ],
+    "Olmec's Sanctum": [
+      {
+        "level": 74,
+        "tier": 7,
+        "bosses": [
+          {
+            "name": "Olmec, the All Stone"
+          }
+        ]
+      }
+    ],
+    "Coral Ruins": [
+      {
+        "level": 74,
+        "tier": 7,
+        "bosses": [
+          {
+            "name": "Captain Tanner Lightfoot"
+          }
+        ]
+      }
+    ],
+    "Dunes": [
+      {
+        "level": 74,
+        "tier": 7,
+        "bosses": [
+          {
+            "name": "The Blacksmith"
+          }
+        ]
+      }
+    ],
+    "Pillars of Arun": [
+      {
+        "level": 74,
+        "tier": 7,
+        "bosses": [
+          {
+            "name": "Talin, Faithbreaker"
+          }
+        ]
+      }
+    ],
+    "Gardens": [
+      {
+        "level": 74,
+        "tier": 7,
+        "bosses": [
+          {
+            "name": "Sallazzang"
+          }
+        ]
+      }
+    ],
+    "Lava Chamber": [
+      {
+        "level": 74,
+        "tier": 7,
+        "bosses": [
+          {
+            "name": "Fire and Fury"
+          }
+        ]
+      }
+    ],
+    "Ramparts": [
+      {
+        "level": 74,
+        "tier": 7,
+        "bosses": [
+          {
+            "name": "Legius Garhall"
+          }
+        ]
+      }
+    ],
+    "Residence": [
+      {
+        "level": 74,
+        "tier": 7,
+        "bosses": [
+          {
+            "name": "Excellis Aurafix"
+          }
+        ]
+      }
+    ],
+    "Tribunal": [
+      {
+        "level": 74,
+        "tier": 7,
+        "bosses": [
+          {
+            "name": "Shavronne the Sickening"
+          }
+        ]
+      }
+    ],
+    "Underground River": [
+      {
+        "level": 74,
+        "tier": 7,
+        "bosses": [
+          {
+            "name": "It That Fell"
+          }
+        ]
+      }
+    ],
+    "Caer Blaidd, Wolfpack's Den": [
+      {
+        "level": 74,
+        "tier": 7,
+        "bosses": [
+          {
+            "name": "Solus, Pack Alpha"
+          },
+          {
+            "name": "Storm Eye"
+          },
+          {
+            "name": "Winterfang"
+          }
+        ]
+      }
+    ],
+    "Armoury": [
+      {
+        "level": 75,
+        "tier": 8,
+        "bosses": [
+          {
+            "name": "Warmonger"
+          }
+        ]
+      }
+    ],
+    "Courtyard": [
+      {
+        "level": 75,
+        "tier": 8,
+        "bosses": [
+          {
+            "name": "Oriath's Vengeance"
+          },
+          {
+            "name": "Oriath's Vigil"
+          },
+          {
+            "name": "Oriath's Virtue"
+          }
+        ]
+      }
+    ],
+    "The Vinktar Square": [
+      {
+        "level": 75,
+        "tier": 8,
+        "bosses": [
+          {
+            "name": "Avatar of Thunder"
+          }
+        ]
+      }
+    ],
+    "Geode": [
+      {
+        "level": 75,
+        "tier": 8,
+        "bosses": [
+          {
+            "name": "Avatar of Undoing"
+          }
+        ]
+      }
+    ],
+    "Infested Valley": [
+      {
+        "level": 75,
+        "tier": 8,
+        "bosses": [
+          {
+            "name": "Gorulis, Will-Thief"
+          }
+        ]
+      }
+    ],
+    "Laboratory": [
+      {
+        "level": 75,
+        "tier": 8,
+        "bosses": [
+          {
+            "name": "Riftwalker"
+          }
+        ]
+      }
+    ],
+    "Mineral Pools": [
+      {
+        "level": 75,
+        "tier": 8,
+        "bosses": [
+          {
+            "name": "Merveil, the Reflection"
+          },
+          {
+            "name": "Merveil, the Returned"
+          }
+        ]
+      }
+    ],
+    "Mud Geyser": [
+      {
+        "level": 75,
+        "tier": 8,
+        "bosses": [
+          {
+            "name": "Tunneltrap"
+          }
+        ]
+      }
+    ],
+    "Overgrown Ruin": [
+      {
+        "level": 75,
+        "tier": 8,
+        "bosses": [
+          {
+            "name": "Visceris"
+          }
+        ]
+      }
+    ],
+    "Shore": [
+      {
+        "level": 75,
+        "tier": 8,
+        "bosses": [
+          {
+            "name": "Belcer, the Pirate Lord"
+          }
+        ]
+      }
+    ],
+    "Mao Kun": [
+      {
+        "level": 75,
+        "tier": 8,
+        "bosses": [
+          {
+            "name": "Fairgraves, Never Dying"
+          }
+        ]
+      }
+    ],
+    "The Pale Court": [
+      {
+        "level": 75,
+        "tier": null,
+        "bosses": [
+          {
+            "name": "Eber, the Plaguemaw"
+          },
+          {
+            "name": "Inya, the Unbearable Whispers"
+          },
+          {
+            "name": "Volkuur, the Unbreathing Queen"
+          },
+          "Yriel, the Feral Lord"
+        ]
+      }
+    ],
+    "Tropical Island": [
+      {
+        "level": 75,
+        "tier": 8,
+        "bosses": [
+          {
+            "name": "Blood Progenitor"
+          }
+        ]
+      }
+    ],
+    "Uul-Netol's Domain": [
+      {
+        "level": 75,
+        "tier": null,
+        "bosses": [
+          {
+            "name": "Uul-Netol, Unburdened Flesh"
+          }
+        ]
+      }
+    ],
+    "Untainted Paradise": [
+      {
+        "level": 75,
+        "tier": 8,
+        "bosses": [
+          {
+            "name": "Clutch Queen"
+          },
+          {
+            "name": "Colossal Spitter"
+          },
+          {
+            "name": "Elder Devourer"
+          },
+          "Great Maw",
+          "Prime Ape",
+          "The First Rhoa"
+        ]
+      }
+    ],
+    "Vaal Pyramid": [
+      {
+        "level": 75,
+        "tier": 8,
+        "bosses": [
+          {
+            "name": "The Fallen Queen"
+          },
+          {
+            "name": "The Hollow Lady"
+          },
+          {
+            "name": "The Broken Prince"
+          }
+        ]
+      }
+    ],
+    "Vaults of Atziri": [
+      {
+        "level": 75,
+        "tier": 8,
+        "bosses": [
+          {
+            "name": "(none)"
+          }
+        ]
+      }
+    ],
+    "Arena": [
+      {
+        "level": 76,
+        "tier": 9,
+        "bosses": [
+          {
+            "name": "Avatar of the Forge"
+          },
+          {
+            "name": "Avatar of the Huntress"
+          },
+          {
+            "name": "Avatar of the Skies"
+          }
+        ]
+      }
+    ],
+    "Estuary": [
+      {
+        "level": 76,
+        "tier": 9,
+        "bosses": [
+          {
+            "name": "Sumter the Twisted"
+          }
+        ]
+      }
+    ],
+    "Moon Temple": [
+      {
+        "level": 76,
+        "tier": 9,
+        "bosses": [
+          {
+            "name": "Sebbert, Crescent's Point"
+          }
+        ]
+      }
+    ],
+    "The Twilight Temple": [
+      {
+        "level": 76,
+        "tier": 9,
+        "bosses": [
+          {
+            "name": "Helial, the Day Unending"
+          },
+          {
+            "name": "Selenia, the Endless Night"
+          }
+        ]
+      }
+    ],
+    "Museum": [
+      {
+        "level": 76,
+        "tier": 9,
+        "bosses": [
+          {
+            "name": "He of Many Pieces"
+          }
+        ]
+      }
+    ],
+    "The Putrid Cloister": [
+      {
+        "level": 76,
+        "tier": 9,
+        "bosses": [
+          {
+            "name": "Headmistress Braeta"
+          }
+        ]
+      }
+    ],
+    "Plateau": [
+      {
+        "level": 76,
+        "tier": 9,
+        "bosses": [
+          {
+            "name": "Puruna, the Challenger"
+          },
+          {
+            "name": "Poporo, the Highest Spire"
+          }
+        ]
+      }
+    ],
+    "Scriptorium": [
+      {
+        "level": 76,
+        "tier": 9,
+        "bosses": [
+          {
+            "name": "Gisale, Thought Thief"
+          }
+        ]
+      }
+    ],
+    "Sepulchre": [
+      {
+        "level": 76,
+        "tier": 9,
+        "bosses": [
+          {
+            "name": "Doedre the Defiler"
+          }
+        ]
+      }
+    ],
+    "Temple": [
+      {
+        "level": 76,
+        "tier": 9,
+        "bosses": [
+          {
+            "name": "Jorus, Sky's Edge"
+          }
+        ]
+      }
+    ],
+    "Poorjoy's Asylum": [
+      {
+        "level": 76,
+        "tier": 9,
+        "bosses": [
+          {
+            "name": "Mistress Hyseria"
+          }
+        ]
+      }
+    ],
+    "Tower": [
+      {
+        "level": 76,
+        "tier": 9,
+        "bosses": [
+          {
+            "name": "Liantra Bazur"
+          }
+        ]
+      }
+    ],
+    "Vault": [
+      {
+        "level": 76,
+        "tier": 9,
+        "bosses": [
+          {
+            "name": "Guardian of the Vault"
+          }
+        ]
+      }
+    ],
+    "Waste Pool": [
+      {
+        "level": 76,
+        "tier": 9,
+        "bosses": [
+          {
+            "name": "Portentia, the Foul"
+          }
+        ]
+      }
+    ],
+    "Arachnid Tomb": [
+      {
+        "level": 77,
+        "tier": 10,
+        "bosses": [
+          {
+            "name": "Hybrid Widow"
+          }
+        ]
+      }
+    ],
+    "Belfry": [
+      {
+        "level": 77,
+        "tier": 10,
+        "bosses": [
+          {
+            "name": "Lord of the Grey"
+          }
+        ]
+      }
+    ],
+    "Bog": [
+      {
+        "level": 77,
+        "tier": 10,
+        "bosses": [
+          {
+            "name": "Skullbeak"
+          }
+        ]
+      }
+    ],
+    "Cursed Crypt": [
+      {
+        "level": 77,
+        "tier": 10,
+        "bosses": [
+          {
+            "name": "Pagan Bishop of Agony"
+          }
+        ]
+      }
+    ],
+    "The Coward's Trial": [
+      {
+        "level": 77,
+        "tier": 10,
+        "bosses": [
+          {
+            "name": "Infector of Dreams"
+          }
+        ]
+      }
+    ],
+    "Orchard": [
+      {
+        "level": 77,
+        "tier": 10,
+        "bosses": [
+          {
+            "name": "Vision of Justice"
+          }
+        ]
+      }
+    ],
+    "Pier": [
+      {
+        "level": 77,
+        "tier": 10,
+        "bosses": [
+          {
+            "name": "Ancient Architect"
+          }
+        ]
+      }
+    ],
+    "Precinct": [
+      {
+        "level": 77,
+        "tier": 10,
+        "bosses": [
+          {
+            "name": "Three random Rogue Exiles"
+          }
+        ]
+      }
+    ],
+    "Shipyard": [
+      {
+        "level": 77,
+        "tier": 10,
+        "bosses": [
+          {
+            "name": "One random Brinerot Warband boss with a supporting Warband"
+          }
+        ]
+      }
+    ],
+    "Siege": [
+      {
+        "level": 77,
+        "tier": 10,
+        "bosses": [
+          {
+            "name": "Tahsin, Warmaker"
+          }
+        ]
+      }
+    ],
+    "The Beachhead 10": [
+      {
+        "level": 77,
+        "tier": 10,
+        "bosses": [
+          {
+            "name": ""
+          }
+        ]
+      }
+    ],
+    "Wasteland": [
+      {
+        "level": 77,
+        "tier": 10,
+        "bosses": [
+          {
+            "name": "The Brittle Emperor"
+          }
+        ]
+      }
+    ],
+    "Colonnade": [
+      {
+        "level": 78,
+        "tier": 11,
+        "bosses": [
+          {
+            "name": "Tyrant"
+          }
+        ]
+      }
+    ],
+    "Coves": [
+      {
+        "level": 78,
+        "tier": 11,
+        "bosses": [
+          {
+            "name": "Telvar, the Inebriated Pirate Treasure"
+          }
+        ]
+      }
+    ],
+    "Factory": [
+      {
+        "level": 78,
+        "tier": 11,
+        "bosses": [
+          {
+            "name": "Pesquin, the Mad Baron"
+          }
+        ]
+      }
+    ],
+    "Mesa": [
+      {
+        "level": 78,
+        "tier": 11,
+        "bosses": [
+          {
+            "name": "Oak the Mighty"
+          }
+        ]
+      }
+    ],
+    "Lair": [
+      {
+        "level": 78,
+        "tier": 11,
+        "bosses": [
+          {
+            "name": "Lycius, Midnight's Howl"
+          }
+        ]
+      }
+    ],
+    "Pit": [
+      {
+        "level": 78,
+        "tier": 11,
+        "bosses": [
+          {
+            "name": "Olof, Son of the Headsman"
+          }
+        ]
+      }
+    ],
+    "Primordial Pool": [
+      {
+        "level": 78,
+        "tier": 11,
+        "bosses": [
+          {
+            "name": "Nightmare's Omen"
+          }
+        ]
+      }
+    ],
+    "Promenade": [
+      {
+        "level": 78,
+        "tier": 11,
+        "bosses": [
+          {
+            "name": "Blackguard Avenger Blackguard Tempest"
+          }
+        ]
+      }
+    ],
+    "Hall of Grandmasters": [
+      {
+        "level": 78,
+        "tier": 11,
+        "bosses": [
+          {
+            "name": "(none)*"
+          }
+        ]
+      }
+    ],
+    "Spider Forest": [
+      {
+        "level": 78,
+        "tier": 11,
+        "bosses": [
+          {
+            "name": "Enticer of Rot"
+          }
+        ]
+      }
+    ],
+    "Waterways": [
+      {
+        "level": 78,
+        "tier": 11,
+        "bosses": [
+          {
+            "name": "Fragment of Winter"
+          }
+        ]
+      }
+    ],
+    "Castle Ruins": [
+      {
+        "level": 79,
+        "tier": 12,
+        "bosses": [
+          {
+            "name": "Leif, the Swift-Handed"
+          }
+        ]
+      }
+    ],
+    "Crystal Ore": [
+      {
+        "level": 79,
+        "tier": 12,
+        "bosses": [
+          {
+            "name": "Champion of the Hollows Lord of the Hollows Messenger of the Hollows"
+          }
+        ]
+      }
+    ],
+    "Defiled Cathedral": [
+      {
+        "level": 79,
+        "tier": 12,
+        "bosses": [
+          {
+            "name": "Woad, Mockery of Man"
+          }
+        ]
+      }
+    ],
+    "Necropolis": [
+      {
+        "level": 79,
+        "tier": 12,
+        "bosses": [
+          {
+            "name": "Burtok, Conjuror of Bones"
+          }
+        ]
+      }
+    ],
+    "Death and Taxes": [
+      {
+        "level": 79,
+        "tier": 12,
+        "bosses": [
+          {
+            "name": "Avatar of Apocalypse"
+          }
+        ]
+      }
+    ],
+    "Overgrown Shrine": [
+      {
+        "level": 79,
+        "tier": 12,
+        "bosses": [
+          {
+            "name": "Maligaro the Mutilator"
+          }
+        ]
+      }
+    ],
+    "Acton's Nightmare": [
+      {
+        "level": 79,
+        "tier": 12,
+        "bosses": [
+          {
+            "name": "Rose Thorn"
+          }
+        ]
+      }
+    ],
+    "Racecourse": [
+      {
+        "level": 79,
+        "tier": 12,
+        "bosses": [
+          {
+            "name": "Shredder of Gladiators Crusher of Gladiators Bringer of Blood"
+          }
+        ]
+      }
+    ],
+    "Summit": [
+      {
+        "level": 79,
+        "tier": 12,
+        "bosses": [
+          {
+            "name": "Mephod, the Earth Scorcher"
+          }
+        ]
+      }
+    ],
+    "Torture Chamber": [
+      {
+        "level": 79,
+        "tier": 12,
+        "bosses": [
+          {
+            "name": "Shock and Horror"
+          }
+        ]
+      }
+    ],
+    "Oba's Cursed Trove": [
+      {
+        "level": 79,
+        "tier": 12,
+        "bosses": []
+      }
+    ],
+    "Villa": [
+      {
+        "level": 79,
+        "tier": 12,
+        "bosses": [
+          {
+            "name": "The High Templar"
+          }
+        ]
+      }
+    ],
+    "Arsenal": [
+      {
+        "level": 80,
+        "tier": 13,
+        "bosses": [
+          {
+            "name": "The Steel Soul"
+          }
+        ]
+      }
+    ],
+    "Caldera": [
+      {
+        "level": 80,
+        "tier": 13,
+        "bosses": [
+          {
+            "name": "The Infernal King"
+          }
+        ]
+      }
+    ],
+    "Core": [
+      {
+        "level": 80,
+        "tier": 13,
+        "bosses": [
+          {
+            "name": "Eater of Souls"
+          }
+        ]
+      }
+    ],
+    "Chayula's Domain": [
+      {
+        "level": 80,
+        "tier": null,
+        "bosses": [
+          {
+            "name": "Chayula, Who Dreamt"
+          }
+        ]
+      }
+    ],
+    "Desert Spring": [
+      {
+        "level": 80,
+        "tier": 13,
+        "bosses": [
+          {
+            "name": "Terror of the Infinite Drifts"
+          }
+        ]
+      }
+    ],
+    "Ghetto": [
+      {
+        "level": 80,
+        "tier": 13,
+        "bosses": [
+          {
+            "name": "Hephaeus, The Hammer"
+          }
+        ]
+      }
+    ],
+    "Malformation": [
+      {
+        "level": 80,
+        "tier": 13,
+        "bosses": [
+          {
+            "name": "Nightmare Manifest"
+          }
+        ]
+      }
+    ],
+    "Park": [
+      {
+        "level": 80,
+        "tier": 13,
+        "bosses": [
+          {
+            "name": "Suncaller Asha"
+          }
+        ]
+      }
+    ],
+    "Shrine": [
+      {
+        "level": 80,
+        "tier": 13,
+        "bosses": [
+          {
+            "name": "Piety the Empyrean"
+          }
+        ]
+      }
+    ],
+    "Terrace": [
+      {
+        "level": 80,
+        "tier": 13,
+        "bosses": [
+          {
+            "name": "Varhesh, Shimmering Aberration"
+          }
+        ]
+      }
+    ],
+    "The Alluring Abyss": [
+      {
+        "level": 80,
+        "tier": null,
+        "bosses": [
+          {
+            "name": "Atziri, Queen of the Vaal"
+          },
+          {
+            "name": "Q'ura"
+          },
+          {
+            "name": "Y'ara'az"
+          },
+          "A'alai",
+          "Vessel of the Vaal",
+          "Vessel of the Vaal"
+        ]
+      }
+    ],
+    "Acid Lakes": [
+      {
+        "level": 81,
+        "tier": 14,
+        "bosses": [
+          {
+            "name": "Two random Renegades Warband bosses with a supporting Warband"
+          }
+        ]
+      }
+    ],
+    "Colosseum": [
+      {
+        "level": 81,
+        "tier": 14,
+        "bosses": [
+          {
+            "name": "Ambrius, Legion Slayer"
+          }
+        ]
+      }
+    ],
+    "Crimson Temple": [
+      {
+        "level": 81,
+        "tier": 14,
+        "bosses": [
+          {
+            "name": "The Sanguine Siren"
+          }
+        ]
+      }
+    ],
+    "Dark Forest": [
+      {
+        "level": 81,
+        "tier": 14,
+        "bosses": [
+          {
+            "name": "The Cursed King"
+          }
+        ]
+      }
+    ],
+    "Dig": [
+      {
+        "level": 81,
+        "tier": 14,
+        "bosses": [
+          {
+            "name": "Stalker of the Endless Dunes"
+          }
+        ]
+      }
+    ],
+    "Palace": [
+      {
+        "level": 81,
+        "tier": 14,
+        "bosses": [
+          {
+            "name": "God's Chosen The Hallowed Husk"
+          }
+        ]
+      }
+    ],
+    "Plaza": [
+      {
+        "level": 81,
+        "tier": 14,
+        "bosses": [
+          {
+            "name": "The Goddess"
+          }
+        ]
+      }
+    ],
+    "Basilica": [
+      {
+        "level": 82,
+        "tier": 15,
+        "bosses": [
+          {
+            "name": "Konley, the Unrepentant"
+          },
+          {
+            "name": "The Cleansing Light"
+          }
+        ]
+      }
+    ],
+    "Carcass": [
+      {
+        "level": 82,
+        "tier": 15,
+        "bosses": [
+          {
+            "name": "Amalgam of Nightmares"
+          }
+        ]
+      }
+    ],
+    "Lava Lake": [
+      {
+        "level": 82,
+        "tier": 15,
+        "bosses": [
+          {
+            "name": "Kitava, the Insatiable"
+          }
+        ]
+      }
+    ],
+    "Reef": [
+      {
+        "level": 82,
+        "tier": 15,
+        "bosses": [
+          {
+            "name": "Nassar, Lion of the Seas"
+          }
+        ]
+      }
+    ],
+    "Sunken City": [
+      {
+        "level": 82,
+        "tier": 15,
+        "bosses": [
+          {
+            "name": "Armala, the Widow"
+          }
+        ]
+      }
+    ],
+    "The Beachhead 15": [
+      {
+        "level": 82,
+        "tier": 15,
+        "bosses": [
+          {
+            "name": ""
+          }
+        ]
+      }
+    ],
+    "Forge of the Phoenix": [
+      {
+        "level": 83,
+        "tier": 16,
+        "bosses": [
+          {
+            "name": "Guardian of the Phoenix"
+          }
+        ]
+      }
+    ],
+    "Lair of the Hydra": [
+      {
+        "level": 83,
+        "tier": 16,
+        "bosses": [
+          {
+            "name": "Guardian of the Hydra"
+          }
+        ]
+      }
+    ],
+    "Maze of the Minotaur": [
+      {
+        "level": 83,
+        "tier": 16,
+        "bosses": [
+          {
+            "name": "Guardian of the Minotaur"
+          }
+        ]
+      }
+    ],
+    "Pit of the Chimera": [
+      {
+        "level": 83,
+        "tier": 16,
+        "bosses": [
+          {
+            "name": "Guardian of the Chimera"
+          }
+        ]
+      }
+    ],
+    "Vaal Temple": [
+      {
+        "level": 83,
+        "tier": 16,
+        "bosses": [
+          {
+            "name": "K'aj A'alai"
+          },
+          {
+            "name": "K'aj Q'ura"
+          },
+          {
+            "name": "K'aj Y'ara'az"
+          }
+        ]
+      }
+    ],
+    "The Shaper's Realm": [
+      {
+        "level": 84,
+        "tier": null,
+        "bosses": [
+          {
+            "name": "The Shaper"
+          }
+        ]
+      }
+    ]
+  }
+}
