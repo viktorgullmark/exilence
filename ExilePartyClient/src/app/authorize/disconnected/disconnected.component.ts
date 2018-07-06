@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { ElectronService } from '../../shared/providers/electron.service';
 
 @Component({
   selector: 'app-disconnected',
@@ -7,9 +8,12 @@ import { Component, OnInit } from '@angular/core';
 })
 export class DisconnectedComponent implements OnInit {
 
-  constructor() { }
+  constructor(private electronService: ElectronService) { }
 
   ngOnInit() {
   }
 
+  openLink(link: string) {
+    this.electronService.shell.openExternal(link);
+  }
 }
