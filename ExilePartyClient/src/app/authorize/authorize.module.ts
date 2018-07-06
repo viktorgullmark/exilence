@@ -16,6 +16,7 @@ import { DashboardModule } from './dashboard/dashboard.module';
 import { InspectPlayersModule } from './inspect-players/inspect-players.module';
 import { PartyModule } from './party/party.module';
 import { SettingsModule } from './settings/settings.module';
+import { DisconnectedModule } from './disconnected/disconnected.module';
 
 @NgModule({
   imports: [
@@ -28,6 +29,7 @@ import { SettingsModule } from './settings/settings.module';
     MatFormFieldModule,
     MatIconModule,
     DashboardModule,
+    DisconnectedModule,
     RouterModule,
     PartyModule,
     InspectPlayersModule,

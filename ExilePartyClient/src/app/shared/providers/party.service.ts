@@ -88,7 +88,7 @@ export class PartyService {
       this.logService.log('[ERROR] Signalr connection closed, reconnecting in 5000 ms');
       this.accountService.clearCharacterList();
       localStorage.removeItem('sessionId');
-      this.router.navigate(['/authorized/dashboard']);
+      this.router.navigate(['/authorized/disconnected']);
       setTimeout(() => {
         this.initHubConnection();
       }, 5000);
