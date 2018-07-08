@@ -82,7 +82,7 @@ namespace ExileParty
 
             //if (env.IsProduction())
             //{
-                BackgroundJob.Enqueue<ICharacterService>(cs => cs.StartTradeIndexing());
+                //BackgroundJob.Enqueue<ICharacterService>(cs => cs.StartTradeIndexing());
             //}
 
             app.UseSignalR(routes =>

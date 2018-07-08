@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using ExileParty.Helper;
 using System.Linq;
 using ExileParty.Interfaces;
+using Newtonsoft.Json;
 
 namespace ExileParty.Hubs
 {
@@ -25,8 +26,10 @@ namespace ExileParty.Hubs
             _characterService = characterService;
         }
                 
-        public async Task JoinParty(string partyName, PlayerModel player)
+        public async Task JoinParty(string partyName, string playerObj)
         {
+            var player = CompressionHelper.Decompress<PlayerModel>(playerObj);
+
             // set initial id of player
             player.ConnectionID = Context.ConnectionId;
 
@@ -39,7 +42,7 @@ namespace ExileParty.Hubs
             {
                 party = new PartyModel() { Name = partyName, Players = new List<PlayerModel> { player } };
                 await _cache.SetAsync<PartyModel>($"party:{partyName}", party);
-                await Clients.Caller.SendAsync("EnteredParty", party, player);
+                await Clients.Caller.SendAsync("EnteredParty", CompressionHelper.Compress(party), CompressionHelper.Compress(player));
             }
             else
             {
@@ -58,16 +61,18 @@ namespace ExileParty.Hubs
                 }
 
                 await _cache.SetAsync<PartyModel>($"party:{partyName}", party);
-                await Clients.Caller.SendAsync("EnteredParty", party, player);
+                await Clients.Caller.SendAsync("EnteredParty", CompressionHelper.Compress(party), CompressionHelper.Compress(player));
             }
 
             await Groups.AddToGroupAsync(Context.ConnectionId, partyName);
-            await Clients.OthersInGroup(partyName).SendAsync("PlayerJoined", player);
-            await Clients.Group(partyName).SendAsync("PlayerUpdated", player);
+            await Clients.OthersInGroup(partyName).SendAsync("PlayerJoined", CompressionHelper.Compress(player));
+            await Clients.Group(partyName).SendAsync("PlayerUpdated", CompressionHelper.Compress(player));
         }
 
-        public async Task LeaveParty(string partyName, PlayerModel player)
+        public async Task LeaveParty(string partyName, string playerObj)
         {
+            var player = CompressionHelper.Decompress<PlayerModel>(playerObj);
+
             var foundParty = await _cache.GetAsync<PartyModel>($"party:{partyName}");
             if (foundParty != null)
             {
@@ -87,12 +92,14 @@ namespace ExileParty.Hubs
                 await _cache.SetAsync<PartyModel>($"party:{partyName}", foundParty);
             }
 
-            await Clients.OthersInGroup(partyName).SendAsync("PlayerLeft", player);
+            await Clients.OthersInGroup(partyName).SendAsync("PlayerLeft", CompressionHelper.Compress(player));
             await Groups.RemoveFromGroupAsync(Context.ConnectionId, partyName);
         }
 
-        public async Task UpdatePlayer(PlayerModel player, string partyName)
+        public async Task UpdatePlayer(string partyName, string playerObj)
         {
+            var player = CompressionHelper.Decompress<PlayerModel>(playerObj);
+
             var party = await _cache.GetAsync<PartyModel>($"party:{partyName}");
             if (party != null)
             {
@@ -101,7 +108,7 @@ namespace ExileParty.Hubs
                 {
                     party.Players[index] = player;
                     await _cache.SetAsync<PartyModel>($"party:{partyName}", party);
-                    await Clients.Group(partyName).SendAsync("PlayerUpdated", player);
+                    await Clients.Group(partyName).SendAsync("PlayerUpdated", CompressionHelper.Compress(player));
                 }
             }
         }
@@ -136,8 +143,8 @@ namespace ExileParty.Hubs
                 var foundParty = await _cache.GetAsync<PartyModel>($"party:{partyName}");
                 var foundPlayer = foundParty.Players.FirstOrDefault(x => x.ConnectionID == Context.ConnectionId);
                 if (foundPlayer != null)
-                {
-                    await LeaveParty(partyName, foundPlayer);
+                {   //This compression and then uncompression is ugly
+                    await LeaveParty(partyName, CompressionHelper.Compress(foundPlayer));
                     var success = await RemoveFromIndex();
                 }
             }

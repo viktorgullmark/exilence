@@ -22,6 +22,7 @@ import { LogMessage } from '../interfaces/log-message.interface';
 import { IncomeService } from './income.service';
 import { NetWorthSnapshot } from './../interfaces/income.interface';
 import { LogService } from './log.service';
+import { ElectronService } from './electron.service';
 
 @Injectable()
 export class PartyService {
@@ -41,8 +42,8 @@ export class PartyService {
   public genericPartyPlayers: Player[] = [];
   public genericPartyPlayersPromise: any;
   public genericPartyName: string;
-  public recentPlayers: RecentPlayer[] = [
-  ];
+  public recentPlayers: RecentPlayer[] = [];
+  public recentPrivatePlayers: string[] = [];
 
   // player-lists
   public incursionStd: BehaviorSubject<Player[]> = new BehaviorSubject<Player[]>([]);
@@ -60,8 +61,10 @@ export class PartyService {
     private logMonitorService: LogMonitorService,
     private externalService: ExternalService,
     private settingService: SettingsService,
-    private logService: LogService
+    private logService: LogService,
+    private electronService: ElectronService
   ) {
+
     this.recentParties.next(this.settingService.get('recentParties') || []);
 
     this.accountService.player.subscribe(res => {
@@ -94,24 +97,30 @@ export class PartyService {
       }, 5000);
     });
 
-    this._hubConnection.on('EnteredParty', (party: Party, player: Player) => {
-      this.party = party;
-      this.updatePlayerLists(this.party);
-      this.accountService.player.next(player);
-      this.selectedPlayer.next(player);
-      this.isEntering = false;
-      this.logService.log('Entered party:', party);
+    this._hubConnection.on('EnteredParty', (partyData: string, playerData: string) => {
+      this.decompress(partyData, (party: Party) => {
+        this.decompress(playerData, (player: Player) => {
+          this.party = party;
+          this.updatePlayerLists(this.party);
+          this.accountService.player.next(player);
+          this.selectedPlayer.next(player);
+          this.isEntering = false;
+          this.logService.log('Entered party:', party);
+        });
+      });
     });
 
-    this._hubConnection.on('PlayerUpdated', (player: Player) => {
-      const index = this.party.players.indexOf(this.party.players.find(x => x.connectionID === player.connectionID));
-      this.party.players[index] = player;
-      this.updatePlayerLists(this.party);
-      this.partyUpdated.next(this.party);
-      if (this.selectedPlayerObj.connectionID === player.connectionID) {
-        this.selectedPlayer.next(player);
-      }
-      this.logService.log('Player updated:', player);
+    this._hubConnection.on('PlayerUpdated', (data: string) => {
+      this.decompress(data, (player: Player) => {
+        const index = this.party.players.indexOf(this.party.players.find(x => x.connectionID === player.connectionID));
+        this.party.players[index] = player;
+        this.updatePlayerLists(this.party);
+        this.partyUpdated.next(this.party);
+        if (this.selectedPlayerObj.connectionID === player.connectionID) {
+          this.selectedPlayer.next(player);
+        }
+        this.logService.log('Player updated:', player);
+      });
     });
 
     this._hubConnection.on('GenericPlayerUpdated', (player: Player) => {
@@ -123,21 +132,24 @@ export class PartyService {
       }
     });
 
-    this._hubConnection.on('PlayerJoined', (player: Player) => {
-      this.party.players = this.party.players.filter(x => x.character.name !== player.character.name);
-      this.party.players.push(player);
-      this.updatePlayerLists(this.party);
-      this.logService.log('player joined:', player);
+    this._hubConnection.on('PlayerJoined', (data: string) => {
+      this.decompress(data, (player: Player) => {
+        this.party.players = this.party.players.filter(x => x.character.name !== player.character.name);
+        this.party.players.push(player);
+        this.updatePlayerLists(this.party);
+        this.logService.log('player joined:', player);
+      });
     });
 
-    this._hubConnection.on('PlayerLeft', (player: Player) => {
-      this.party.players = this.party.players.filter(x => x.connectionID !== player.connectionID);
-      this.updatePlayerLists(this.party);
-      if (this.selectedPlayerObj.connectionID === player.connectionID) {
-        this.selectedPlayer.next(this.currentPlayer);
-      }
-
-      this.logService.log('player left:', player);
+    this._hubConnection.on('PlayerLeft', (data: string) => {
+      this.decompress(data, (player: Player) => {
+        this.party.players = this.party.players.filter(x => x.connectionID !== player.connectionID);
+        this.updatePlayerLists(this.party);
+        if (this.selectedPlayerObj.connectionID === player.connectionID) {
+          this.selectedPlayer.next(this.currentPlayer);
+        }
+        this.logService.log('player left:', player);
+      });
     });
 
     this.logMonitorService.areaJoin.subscribe((msg: LogMessage) => {
@@ -171,10 +183,10 @@ export class PartyService {
 
   public updatePlayer(player: Player) {
     this.externalService.getCharacter(this.accountInfo)
-      .subscribe((data: EquipmentResponse) => {
-        player = this.externalService.setCharacter(data, player);
+      .subscribe((equipment: EquipmentResponse) => {
+        player = this.externalService.setCharacter(equipment, player);
         if (this._hubConnection) {
-          this._hubConnection.invoke('UpdatePlayer', player, this.party.name);
+          this.compress(player, (data) => this._hubConnection.invoke('UpdatePlayer', this.party.name, data));
         }
       });
   }
@@ -191,7 +203,7 @@ export class PartyService {
     this.party.players.push(player);
     this.party.name = partyName;
     if (this._hubConnection) {
-      this._hubConnection.invoke('JoinParty', partyName, player);
+      this.compress(player, (data) => this._hubConnection.invoke('JoinParty', partyName, data));
     }
   }
 
@@ -199,7 +211,7 @@ export class PartyService {
     this.initParty();
     if (partyName !== '') {
       if (this._hubConnection) {
-        this._hubConnection.invoke('LeaveParty', partyName, player);
+        this.compress(player, (data) => this._hubConnection.invoke('LeaveParty', partyName, data));
       }
     }
   }
@@ -275,6 +287,10 @@ export class PartyService {
   }
 
   addRecentPlayer(player: RecentPlayer) {
+    // We don't want to spam the API with requests for players we know have private profiles.
+    if (this.recentPrivatePlayers.indexOf(player.name) !== -1) {
+      return;
+    }
     this.getAccountForCharacter(player.name).then((account) => {
       if (account !== null) {
         const info: AccountInfo = {
@@ -293,6 +309,7 @@ export class PartyService {
         },
           (error) => {
             this.logService.log(`getCharacter failed for player: ${player.name}, account: ${account} (profile probaly private)`);
+            this.recentPrivatePlayers.unshift(player.name);
           }
         );
       }
@@ -300,5 +317,29 @@ export class PartyService {
   }
 
   //#endregion
+
+  compress(object: any, callback: any) {
+    const jsonString = JSON.stringify(object);
+    this.electronService.zlib.gzip(jsonString, (err, buffer) => {
+      if (!err) {
+        const string = buffer.toString('base64');
+        callback(string);
+      } else {
+        this.logService.log(err, null, true);
+      }
+    });
+  }
+
+  decompress(base64string: string, callback: any) {
+    const buffer = Buffer.from(base64string, 'base64');
+    this.electronService.zlib.gunzip(buffer, (err, jsonString) => {
+      if (!err) {
+        const obj = JSON.parse(jsonString);
+        callback(obj);
+      } else {
+        this.logService.log(err, null, true);
+      }
+    });
+  }
 
 }

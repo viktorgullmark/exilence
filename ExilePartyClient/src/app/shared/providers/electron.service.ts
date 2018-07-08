@@ -17,6 +17,7 @@ export class ElectronService {
   shell: typeof shell;
   fs: typeof fs;
   settings: any;
+  zlib: any;
   constructor(
     private analyticsService: AnalyticsService
   ) {
@@ -29,6 +30,7 @@ export class ElectronService {
       this.fs = window.require('fs');
       this.shell = window.require('electron').shell;
       this.settings = window.require('electron-settings');
+      this.zlib = window.require('zlib');
 
     }
   }
