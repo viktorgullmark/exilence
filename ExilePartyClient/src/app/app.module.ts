@@ -50,6 +50,7 @@ export function HttpLoaderFactory(http: HttpClient) {
     FormsModule,
     HttpClientModule,
     AppRoutingModule,
+    DisconnectedModule,
 
     BrowserAnimationsModule,
     TranslateModule.forRoot({
