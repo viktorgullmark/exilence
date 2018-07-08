@@ -33,6 +33,7 @@ export interface Item {
     enchantMods: Array<string>;
     utilityMods: Array<string>;
     descrText: string;
+    prophecyText: string;
     socket: number;
     stackSize?: number;
 }

@@ -34,7 +34,16 @@ export class ItemTooltipContentComponent implements OnInit {
       modClass = 'mana';
     }
 
+    // todo: append div card classes
+
     return modClass;
+  }
+
+  formatDivCard(text) {
+
+    // todo: format div card
+
+    return text;
   }
 
   formatFlaskProperties(prop, firstVal, secondVal) {
