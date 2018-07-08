@@ -37,7 +37,9 @@ export class MapService {
 
     this.logMonitorService.areaEvent.subscribe((e: EventArea) => {
 
-      this.incomeService.Snapshot();
+      setTimeout(x => {
+        this.incomeService.Snapshot();
+      }, 1000 * 60);
 
       clearInterval(this.durationInterval);
 
