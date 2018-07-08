@@ -7,6 +7,7 @@ All notable changes to this project will be documented in this file.
 - Added QoL-improvements to when net worth is calculated
 - Fixed a bug where longer group-names would overflow when listed on the dashboard
 - Added placeholder-text for when player hasn't entered any areas yet
+- Added always-on-top setting under the "Settings"-page
 - Removed menu from disconnect-page
 - Changed Patreon-url
 
