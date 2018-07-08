@@ -3,6 +3,7 @@ All notable changes to this project will be documented in this file.
 
 ## [0.4.3] - 2018-07-07
 - Fix for values doubling up for some players when changing zones
+- Added Patreon-link on dashboard
 
 ## [0.4.2] - 2018-07-06
 - Restored map-functionality, instance-servers should now work
