@@ -25,7 +25,7 @@ export class CharWealthComponent implements OnInit {
   isGraphHidden = false;
 
   private oneHourAgo = (Date.now() - (1 * 60 * 60 * 1000));
-  public graphDimensions = [640, 250];
+  public graphDimensions = [640, 200];
   public gain = 0;
   public showReset = false;
 

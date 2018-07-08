@@ -17,7 +17,7 @@ export class PartySummaryComponent implements OnInit {
   @ViewChild('table') table: NetworthTableComponent;
 
   private oneHourAgo = (Date.now() - (1 * 60 * 60 * 1000));
-  public graphDimensions = [1000, 365];
+  public graphDimensions = [1000, 300];
   public gain = 0;
   public partyNetworth = 0;
   constructor(
