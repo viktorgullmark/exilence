@@ -42,8 +42,8 @@ export class PartyService {
   public genericPartyPlayers: Player[] = [];
   public genericPartyPlayersPromise: any;
   public genericPartyName: string;
-  public recentPlayers: RecentPlayer[] = [
-  ];
+  public recentPlayers: RecentPlayer[] = [];
+  public recentPrivatePlayers: string[] = [];
 
   // player-lists
   public incursionStd: BehaviorSubject<Player[]> = new BehaviorSubject<Player[]>([]);
@@ -295,6 +295,10 @@ export class PartyService {
   }
 
   addRecentPlayer(player: RecentPlayer) {
+    // We don't want to spam the API with requests for players we know have private profiles.
+    if (this.recentPrivatePlayers.indexOf(player.name) !== -1) {
+      return;
+    }
     this.getAccountForCharacter(player.name).then((account) => {
       if (account !== null) {
         const info: AccountInfo = {
@@ -313,6 +317,7 @@ export class PartyService {
         },
           (error) => {
             this.logService.log(`getCharacter failed for player: ${player.name}, account: ${account} (profile probaly private)`);
+            this.recentPrivatePlayers.unshift(player.name);
           }
         );
       }
