@@ -32,6 +32,7 @@ export class IncomeService {
   private playerStashTabs: any[] = [];
   private netWorthHistory: NetWorthHistory;
   private sessionId: string;
+  private isSnapshotting = false;
 
   public networthSnapshots: NetWorthSnapshot[] = [];
   public localPlayer: Player;
@@ -74,16 +75,16 @@ export class IncomeService {
     if (
       // this.netWorthHistory.lastSnapshot < (Date.now() - this.sevenAndAHalfMinute) &&
       this.localPlayer !== undefined &&
-      this.sessionId !== undefined
+      this.sessionId !== undefined &&
+      !this.isSnapshotting
     ) {
-
+      this.isSnapshotting = true;
       this.netWorthHistory.lastSnapshot = Date.now();
       this.logService.log('Started snapshotting player net worth');
       this.SnapshotPlayerNetWorth(this.sessionId).subscribe(() => {
 
         this.netWorthHistory.history = this.netWorthHistory.history
           .filter((snaphot: NetWorthSnapshot) => snaphot.timestamp > this.oneHourAgo);
-
         // We are a new player that have not parsed income before
         // Remove the placeholder element
         if (
@@ -105,6 +106,9 @@ export class IncomeService {
         this.localPlayer.netWorthSnapshots = this.netWorthHistory.history;
         this.partyService.updatePlayer(this.localPlayer);
         this.logService.log('Finished Snapshotting player net worth');
+
+        // done snapshotting
+        this.isSnapshotting = false;
       });
     }
   }
