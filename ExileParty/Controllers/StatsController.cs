@@ -28,26 +28,28 @@ namespace ExileParty
         // GET: /<controller>/
         public async Task<IActionResult> Index()
         {
-            var partyList = new List<PartyModel>();
+            var partyList = new List<PartyStatistics>();
 
             var parties = await _cache.GetAsync<Dictionary<string, string>>("ConnectionIndex") ?? new Dictionary<string, string>();
 
+            StatisticsModel stats = await _cache.GetAsync<StatisticsModel>("Statistics");
+
             foreach (var partyName in parties.Select(t => t.Value).Distinct().ToList())
             {
+
                 var party = await _cache.GetAsync<PartyModel>($"party:{partyName}");
                 if (party != null)
                 {
-                    party.Players.Select(t => {
-                        t.Character.Items = null;
-                        t.NetWorthSnapshots = null;
-                        t.PastAreas = null;
-                        return t;
-                    }).ToList();
-                    partyList.Add(party);
+                    stats.TotalParties++;
+                    stats.TotalPlayers += party.Players.Count;
+
+                    PartyStatistics partyStats = new PartyStatistics { };
+                    partyStats.Players = party.Players.Select(t => t.Character.Name).ToList();
+                    partyList.Add(partyStats);
                 }
+
             }
 
-            StatisticsModel stats = await _cache.GetAsync<StatisticsModel>("Statistics");
 
             var response = new
             {
