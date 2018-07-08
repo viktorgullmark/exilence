@@ -6,6 +6,7 @@ import * as pkg from '../../package.json';
 import { Player } from './shared/interfaces/player.interface';
 import { ElectronService } from './shared/providers/electron.service';
 import { SessionService } from './shared/providers/session.service';
+import { SettingsService } from './shared/providers/settings.service';
 
 @Component({
   selector: 'app-root',
@@ -18,6 +19,7 @@ export class AppComponent {
   constructor(public electronService: ElectronService,
     private translate: TranslateService,
     public sessionService: SessionService,
+    private settingsService: SettingsService,
     private router: Router,
   ) {
 
@@ -32,6 +34,7 @@ export class AppComponent {
       // console.log('Mode electron');
       // console.log('Electron ipcRenderer', electronService.ipcRenderer);
       // console.log('NodeJS childProcess', electronService.childProcess);
+      this.loadWindowSettings();
     } else {
       // console.log('Mode web');
     }
@@ -53,5 +56,13 @@ export class AppComponent {
 
   maximize() {
     this.electronService.remote.getCurrentWindow().maximize();
+  }
+
+  loadWindowSettings() {
+    const alwaysOnTop = this.settingsService.get('alwaysOnTop');
+    if (alwaysOnTop !== undefined) {
+      this.electronService.remote.getCurrentWindow().setAlwaysOnTop(alwaysOnTop);
+      this.electronService.remote.getCurrentWindow().setVisibleOnAllWorkspaces(alwaysOnTop);
+    }
   }
 }

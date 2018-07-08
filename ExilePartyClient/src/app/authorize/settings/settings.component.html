@@ -2,10 +2,16 @@
 <mat-divider class="divider"></mat-divider>
 <div class="tab-group-header">
   <mat-tab-group #tabGroup id="tabGroup" [(selectedIndex)]="selectedIndex">
-    <mat-tab #currentGrpTab id="currentGrpTab" class="active">
+    <mat-tab #stash id="stash" class="active">
       <ng-template mat-tab-label>
         <mat-icon class="tab-icon">format_list_numbered</mat-icon>
         &nbsp;Stashtabs
+      </ng-template>
+    </mat-tab>
+    <mat-tab #general id="general" class="active">
+      <ng-template mat-tab-label>
+        <mat-icon class="tab-icon">laptop</mat-icon>
+        &nbsp;Window
       </ng-template>
     </mat-tab>
   </mat-tab-group>
@@ -13,7 +19,9 @@
 
 <div [hidden]="selectedIndex != 0">
   <h3 class="mat-h3">
-    {{'PAGES.SETTINGS.STASHTAB_LIST_HEADER' | translate}} <span class="mat-caption caption-text">(You can select at most 20 tabs)</span></h3>
+    {{'PAGES.SETTINGS.STASHTAB_LIST_HEADER' | translate}}
+    <span class="mat-caption caption-text">(You can select at most 20 tabs)</span>
+  </h3>
   <div class="table-outer-wrapper">
     <div class="search-form-wrapper">
       <form class="form search-form" [formGroup]="form">
@@ -25,5 +33,14 @@
     <div class="stash-table-wrapper">
       <app-stashtab-list #table></app-stashtab-list>
     </div>
+  </div>
+</div>
+<div [hidden]="selectedIndex != 1">
+  <h3 class="mat-h3">
+    {{'PAGES.SETTINGS.WINDOW' | translate}}
+    <span class="mat-caption caption-text"></span>
+  </h3>
+  <div>
+    <mat-checkbox class="setting-checkbox" [(ngModel)]="alwaysOnTop" (ngModelChange)="toggleAlwaysOnTop()">Set window always on top</mat-checkbox>
   </div>
 </div>
