@@ -11,6 +11,10 @@
 
     .income-graph-wrapper {
         padding: 25px;
+
+        @media screen and (max-height: 950px) {
+            display: none;
+        }
     }
 
     .flex-area {
@@ -24,6 +28,12 @@
 
         .extra-margin {
             margin-right: 25px;
+        }
+    }
+
+    .graph-btns {
+        @media screen and (max-height: 950px) {
+            display: none;
         }
     }
 
@@ -71,6 +81,10 @@
 
         @media screen and (min-height: 1200px) {
             height: 55%;
+        }
+
+        @media screen and (max-height: 950px) {
+            height: 80%;
         }
 
         .networth-table-wrapper {

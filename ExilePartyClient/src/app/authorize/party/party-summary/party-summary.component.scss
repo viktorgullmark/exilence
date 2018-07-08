@@ -6,6 +6,10 @@
     .income-graph-wrapper {
         padding-top: 25px;
         padding-bottom: 25px;
+        
+        @media screen and (max-height: 950px) {
+            display: none;
+        }
     }
 
     .flex-area {
@@ -19,6 +23,12 @@
 
         .extra-margin {
             margin-right: 25px;
+        }
+    }
+
+    .graph-btns {
+        @media screen and (max-height: 950px) {
+            display: none;
         }
     }
 
@@ -55,8 +65,8 @@
     }
 
     .table-outer-wrapper {
-        height: 45%;
-        bottom: 25px;
+        height: 47%;
+        bottom: 0px;
         width: calc(100% - 50px);
         margin-top: 25px;
         position: absolute;
@@ -65,6 +75,10 @@
             height: 55%;
         }
 
+        @media screen and (max-height: 950px) {
+            height: 80%;
+        }
+        
         .networth-table-wrapper {
             height: calc(100% - 95px);
             overflow-y: scroll;
