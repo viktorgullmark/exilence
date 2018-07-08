@@ -4,6 +4,7 @@ All notable changes to this project will be documented in this file.
 ## [0.4.4] - 2018-07-08
 - Added QoL-improvements to when net worth is calculated
 - Removed menu from disconnect-page
+- Changed Patreon-url
 
 ## [0.4.3] - 2018-07-08
 - Fix for values doubling up for some players when changing zones
