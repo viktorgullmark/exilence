@@ -52,6 +52,8 @@ export class PartyService {
   public incursionSsfHc: BehaviorSubject<Player[]> = new BehaviorSubject<Player[]>([]);
   public std: BehaviorSubject<Player[]> = new BehaviorSubject<Player[]>([]);
   public hc: BehaviorSubject<Player[]> = new BehaviorSubject<Player[]>([]);
+  public ssfStd: BehaviorSubject<Player[]> = new BehaviorSubject<Player[]>([]);
+  public ssfHc: BehaviorSubject<Player[]> = new BehaviorSubject<Player[]>([]);
 
   public genericPlayers: BehaviorSubject<Player[]> = new BehaviorSubject<Player[]>([]);
 
@@ -176,6 +178,8 @@ export class PartyService {
     this.incursionSsfHc.next(party.players.filter(x => x.character.league === 'SSF Incursion HC'));
     this.std.next(party.players.filter(x => x.character.league === 'Standard'));
     this.hc.next(party.players.filter(x => x.character.league === 'Hardcore'));
+    this.ssfStd.next(party.players.filter(x => x.character.league === 'SSF Standard'));
+    this.ssfHc.next(party.players.filter(x => x.character.league === 'SSF Hardcore'));
   }
 
   public updatePlayer(player: Player) {

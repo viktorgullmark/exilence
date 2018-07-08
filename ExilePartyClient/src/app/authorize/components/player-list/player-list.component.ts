@@ -20,6 +20,8 @@ export class PlayerListComponent implements OnInit {
   incursionSsf: Player[];
   incursionHc: Player[];
   incursionSsfHc: Player[];
+  ssfHc: Player[];
+  ssfStd: Player[];
 
   genericPlayers: Player[];
 
@@ -42,6 +44,12 @@ export class PlayerListComponent implements OnInit {
       });
       this.partyService.incursionSsfStd.subscribe(res => {
         this.incursionSsf = res;
+      });
+      this.partyService.ssfStd.subscribe(res => {
+        this.ssfStd = res;
+      });
+      this.partyService.ssfHc.subscribe(res => {
+        this.ssfHc = res;
       });
     } else {
       this.partyService.genericPlayers.subscribe(res => {

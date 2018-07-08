@@ -5,6 +5,8 @@ All notable changes to this project will be documented in this file.
 - Added support for elder items
 - Added support for shaper items
 - Added support for prophecies
+- Added support for SSF Standard
+- Added support for SSF Hardcore
 - Added price-information for SSF leagues (based on counterpart trade-league)
 - White gems in green sockets should now be displayed correctly
 - Minor style-changes to item-tooltips

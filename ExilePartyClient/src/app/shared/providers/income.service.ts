@@ -122,8 +122,14 @@ export class IncomeService {
     if (league === 'SSF Incursion HC') {
       league = 'Hardcore Incursion';
     }
+    if (league === 'SSF Hardcore') {
+      league = 'Hardcore';
+    }
     if (league === 'SSF Incursion') {
       league = 'Incursion';
+    }
+    if (league === 'SSF Standard') {
+      league = 'Standard';
     }
 
     this.playerStashTabs = [];

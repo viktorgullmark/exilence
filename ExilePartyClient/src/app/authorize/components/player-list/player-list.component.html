@@ -17,6 +17,12 @@
     <h3 class="mat-h3" *ngIf="hc.length > 0">Hardcore</h3>
     <app-player-badge *ngFor="let player of hc" [player]="player">
     </app-player-badge>
+    <h3 class="mat-h3" *ngIf="ssfHc.length > 0">SSF Hardcore</h3>
+    <app-player-badge *ngFor="let player of ssfHc" [player]="player">
+    </app-player-badge>
+    <h3 class="mat-h3" *ngIf="ssfStd.length > 0">SSF Standard</h3>
+    <app-player-badge *ngFor="let player of ssfStd" [player]="player">
+    </app-player-badge>
 </ng-container>
 <ng-container *ngIf="localList">
         <h3 class="mat-h3" *ngIf="genericPlayers.length > 0">Recently encountered players</h3>
