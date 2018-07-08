@@ -1,6 +1,19 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [0.4.4] - 2018-07-08
+- Added support for lower resolutions (down to 1344x768px)
+- Reduced data-traffic sent and received by using compression (gzip)
+- Added QoL-improvements to when net worth is calculated
+- Fixed a bug where longer group-names would overflow when listed on the dashboard
+- Added placeholder-text for when player hasn't entered any areas yet
+- Removed menu from disconnect-page
+- Changed Patreon-url
+
+## [0.4.3] - 2018-07-08
+- Fix for values doubling up for some players when changing zones
+- Added Patreon-link on dashboard
+
 ## [0.4.2] - 2018-07-06
 - Restored map-functionality, instance-servers should now work
 - Added logout when disconnected from server

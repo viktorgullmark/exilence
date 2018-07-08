@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ElectronService } from '../../shared/providers/electron.service';
+import { ElectronService } from '../shared/providers/electron.service';
 
 @Component({
   selector: 'app-disconnected',
