@@ -104,9 +104,6 @@ try {
   app.on('ready', () => {
     createWindow();
     autoUpdater.checkForUpdates();
-    globalShortcut.register('Command+Shift+I', () => {
-      win.openDevTools();
-    });
   });
 
   // Quit when all windows are closed.
