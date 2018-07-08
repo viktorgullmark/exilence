@@ -4,7 +4,7 @@
             <ng-container [ngSwitch]="item.frameType">
                 <ng-container *ngSwitchCase="3">
                     <!-- unique item -->
-                    <div>{{item.name.substring(28)}}
+                    <div *ngIf="item.identified">{{item.name.substring(28)}}
                         <br/>
                     </div>
                     <span>{{item.typeLine}}</span>
