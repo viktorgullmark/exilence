@@ -59,8 +59,11 @@
     </mat-step>
     <mat-step #lastStep>
       <ng-template matStepLabel>Complete</ng-template>
+      <span class="mat-body-1">We're using Google Analytics to track usage of our app in order to be able to improve it further.<br/>
+      This data is not shared with anyone ever, and we don't track or save any data related to your character or items, only how you use ExileParty.<br/><br/>
+      By clicking "Continue" you agree to this.</span><br/><br/>
       <div class="btn-grp">
-        <button mat-raised-button color="primary" *ngIf="!isLoading" (click)="login()">Proceed to start partying</button>
+        <button mat-raised-button color="primary" *ngIf="!isLoading" (click)="login()">Continue</button>
         <mat-progress-bar *ngIf="isLoading" class="progress-bar" color="primary" mode="indeterminate">
         </mat-progress-bar>
       </div>
