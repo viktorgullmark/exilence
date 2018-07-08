@@ -1,7 +1,9 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
-## [0.4.6] - 2018-07-08
+## [0.4.6] - 2018-07-09
+- Added support for elder items
+- Added support for shaper items
 - Added support for prophecies
 - White gems in green sockets should now be displayed correctly
 - Minor style-changes to item-tooltips
