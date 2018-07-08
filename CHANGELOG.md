@@ -3,11 +3,12 @@ All notable changes to this project will be documented in this file.
 
 ## [0.4.4] - 2018-07-08
 - Added support for lower resolutions (down to 1344x768px)
-- Reduced data-traffic sent and received by using compression (gzip)
-- Added QoL-improvements to when net worth is calculated
-- Fixed a bug where longer group-names would overflow when listed on the dashboard
 - Added placeholder-text for when player hasn't entered any areas yet
 - Added always-on-top setting under the "Settings"-page
+- Added QoL-improvements to when net worth is calculated
+- Added Google Analytics information-text to login-page
+- Reduced data-traffic sent and received by using compression (gzip)
+- Fixed a bug where longer group-names would overflow when listed on the dashboard
 - Removed menu from disconnect-page
 - Changed Patreon-url
 
