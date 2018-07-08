@@ -73,7 +73,7 @@ export class IncomeService {
   Snapshot() {
     this.netWorthHistory = this.settingsService.get('networth');
     if (
-      // this.netWorthHistory.lastSnapshot < (Date.now() - this.sevenAndAHalfMinute) &&
+      this.netWorthHistory.lastSnapshot < (Date.now() - this.fiveMinutes) &&
       this.localPlayer !== undefined &&
       this.sessionId !== undefined &&
       !this.isSnapshotting
