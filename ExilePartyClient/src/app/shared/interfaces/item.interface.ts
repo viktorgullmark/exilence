@@ -13,6 +13,8 @@ export interface Item {
     league: string;
     sockets: Array<Socket>;
     name: string;
+    shaper: boolean;
+    elder: boolean;
     typeLine: string;
     identified: boolean;
     corrupted: boolean;
