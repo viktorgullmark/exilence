@@ -2,6 +2,7 @@
 All notable changes to this project will be documented in this file.
 
 ## [0.4.6] - 2018-07-08
+- Added support for divination-cards
 - White gems in green sockets should now be displayed correctly
 - Minor style-changes to item-tooltips
 
