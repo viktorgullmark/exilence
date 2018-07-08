@@ -28,6 +28,7 @@ import { LogService } from './shared/providers/log.service';
 import { NinjaService } from './shared/providers/ninja.service';
 import { SessionService } from './shared/providers/session.service';
 import { SettingsService } from './shared/providers/settings.service';
+import { DisconnectedModule } from './disconnected/disconnected.module';
 
 // AoT requires an exported function for factories
 export function HttpLoaderFactory(http: HttpClient) {
