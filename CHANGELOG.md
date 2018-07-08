@@ -1,6 +1,9 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [0.4.5] - 2018-07-08
+- Hotfix for areas not being timed properly
+
 ## [0.4.4] - 2018-07-08
 - Added support for lower resolutions (down to 1344x768px)
 - Added placeholder-text for when player hasn't entered any areas yet
