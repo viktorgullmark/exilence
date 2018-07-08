@@ -5,6 +5,7 @@ All notable changes to this project will be documented in this file.
 - Added support for lower resolutions (down to 1344x768px)
 - Reduced data-traffic sent and received by using compression (gzip)
 - Added QoL-improvements to when net worth is calculated
+- Added placeholder-text for when player hasn't entered any areas yet
 - Removed menu from disconnect-page
 - Changed Patreon-url
 
