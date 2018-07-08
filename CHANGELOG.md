@@ -5,6 +5,7 @@ All notable changes to this project will be documented in this file.
 - Added support for lower resolutions (down to 1344x768px)
 - Added placeholder-text for when player hasn't entered any areas yet
 - Added always-on-top setting under the "Settings"-page
+- Added redirect to disconnection-page on startup if server is not reachable
 - Added QoL-improvements to when net worth is calculated
 - Added Google Analytics information-text to login-page
 - Reduced data-traffic sent and received by using compression (gzip)

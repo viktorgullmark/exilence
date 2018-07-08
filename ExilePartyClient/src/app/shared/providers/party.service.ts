@@ -88,13 +88,10 @@ export class PartyService {
     this.initHubConnection();
 
     this._hubConnection.onclose(() => {
-      this.logService.log('[ERROR] Signalr connection closed, reconnecting in 5000 ms');
+      this.logService.log('[ERROR] Signalr connection closed');
       this.accountService.clearCharacterList();
       localStorage.removeItem('sessionId');
       this.router.navigate(['/disconnected']);
-      setTimeout(() => {
-        this.initHubConnection();
-      }, 5000);
     });
 
     this._hubConnection.on('EnteredParty', (partyData: string, playerData: string) => {
@@ -167,8 +164,8 @@ export class PartyService {
     this.logService.log('Starting signalr connection');
     this._hubConnection.start().catch((err) => {
       console.error(err.toString());
-      this.logService.log('Could not connect to signalr, trying again in 5000 ms');
-      setTimeout(() => this.initHubConnection(), 5000);
+      this.logService.log('Could not connect to signalr');
+      this.router.navigate(['/disconnected']);
     });
   }
 
