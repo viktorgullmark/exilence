@@ -13,7 +13,7 @@ namespace ExileParty.Helper
 {
     public static class CompressionHelper
     {
-        public static string Gzip<T>(T input)
+        public static string Compress<T>(T input)
         {
             var jsonString = JsonConvert.SerializeObject(input, new JsonSerializerSettings { ContractResolver = new CamelCasePropertyNamesContractResolver() });
 
@@ -32,7 +32,7 @@ namespace ExileParty.Helper
             }
         }
 
-        public static T GunzipAndConvert<T>(string input)
+        public static T Decompress<T>(string input)
         {
             string jsonString = null;
 
