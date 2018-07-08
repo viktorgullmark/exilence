@@ -65,14 +65,6 @@ export class PartyService {
     private electronService: ElectronService
   ) {
 
-    const testObj = { test: 'test' };
-    console.log(testObj);
-    this.compress(testObj, (data) => {
-      this.decompress(data, (obj) => {
-        console.log(obj);
-      });
-    });
-
     this.recentParties.next(this.settingService.get('recentParties') || []);
 
     this.accountService.player.subscribe(res => {
