@@ -3,6 +3,7 @@ All notable changes to this project will be documented in this file.
 
 ## [0.4.4] - 2018-07-08
 - Added support for lower resolutions (down to 1344x768px)
+- Reduced data-traffic sent and received by using compression (gzip)
 - Added QoL-improvements to when net worth is calculated
 - Removed menu from disconnect-page
 - Changed Patreon-url
