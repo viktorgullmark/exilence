@@ -116,20 +116,22 @@ export class IncomeService {
   SnapshotPlayerNetWorth(sessionId: string) {
 
     const accountName = this.localPlayer.account;
-    let league = this.localPlayer.character.league;
+    const league = this.localPlayer.character.league;
+
+    let priceInfoLeague = league;
 
     // fetch prices for trading counter-part if character is in SSF (dynamic leagues will be added later)
-    if (league === 'SSF Incursion HC') {
-      league = 'Hardcore Incursion';
+    if (priceInfoLeague === 'SSF Incursion HC') {
+      priceInfoLeague = 'Hardcore Incursion';
     }
-    if (league === 'SSF Hardcore') {
-      league = 'Hardcore';
+    if (priceInfoLeague === 'SSF Hardcore') {
+      priceInfoLeague = 'Hardcore';
     }
-    if (league === 'SSF Incursion') {
-      league = 'Incursion';
+    if (priceInfoLeague === 'SSF Incursion') {
+      priceInfoLeague = 'Incursion';
     }
-    if (league === 'SSF Standard') {
-      league = 'Standard';
+    if (priceInfoLeague === 'SSF Standard') {
+      priceInfoLeague = 'Standard';
     }
 
     this.playerStashTabs = [];
@@ -138,7 +140,7 @@ export class IncomeService {
 
     return Observable.forkJoin(
       this.getPlayerStashTabs(sessionId, accountName, league),
-      this.getValuesFromNinja(league)
+      this.getValuesFromNinja(priceInfoLeague)
     ).do(() => {
       this.logService.log('Finished retriving stashhtabs and value information.');
       this.playerStashTabs.forEach((tab: Stash, tabIndex: number) => {
