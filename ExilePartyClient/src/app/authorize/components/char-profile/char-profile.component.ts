@@ -7,6 +7,7 @@ import { AnalyticsService } from '../../../shared/providers/analytics.service';
 import { ExternalService } from '../../../shared/providers/external.service';
 import { PartyService } from '../../../shared/providers/party.service';
 import { SessionService } from '../../../shared/providers/session.service';
+import { ElectronService } from '../../../shared/providers/electron.service';
 
 @Component({
   selector: 'app-char-profile',
@@ -27,6 +28,7 @@ export class CharProfileComponent implements OnInit {
     private sessionService: SessionService,
     private externalService: ExternalService,
     private router: Router,
+    private electronService: ElectronService,
     private analyticsService: AnalyticsService
   ) { }
 
@@ -60,6 +62,16 @@ export class CharProfileComponent implements OnInit {
       this.selectedIndex = res;
     });
 
+  }
+
+  openLink(link: string) {
+    this.electronService.shell.openExternal(link);
+  }
+  goToProfile() {
+    this.openLink('https://www.pathofexile.com/account/view-profile/'
+      + this.player.account
+      + '/characters?characterName='
+      + this.player.character.name);
   }
 
 

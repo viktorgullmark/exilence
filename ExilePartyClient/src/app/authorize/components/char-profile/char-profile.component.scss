@@ -1,3 +1,5 @@
+@import "./../../../../assets/styles/_variables.scss";
+
 .tab-icon {
     margin-right: 8px;
 }
@@ -5,4 +7,11 @@
 .tab-content {
     margin-top: 10px;
     height: calc(100% + 47px);
+}
+
+.profile-link {
+    color: $link-font-color;
+    float: right;
+    margin-top: -31px;
+    position: relative;
 }
