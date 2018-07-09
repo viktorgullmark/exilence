@@ -7,6 +7,25 @@ import { LogService } from './log.service';
 @Injectable()
 export class RobotService {
 
+  private user32 = new this.electronService.ffi.Library('user32', {
+    'GetTopWindow': ['long', ['long']],
+    'FindWindowA': ['long', ['string', 'string']],
+    'SetActiveWindow': ['long', ['long']],
+    'SetForegroundWindow': ['bool', ['long']],
+    'BringWindowToTop': ['bool', ['long']],
+    'ShowWindow': ['bool', ['long', 'int']],
+    'SwitchToThisWindow': ['void', ['long', 'bool']],
+    'GetForegroundWindow': ['long', []],
+    'AttachThreadInput': ['bool', ['int', 'long', 'bool']],
+    'GetWindowThreadProcessId': ['int', ['long', 'int']],
+    'SetWindowPos': ['bool', ['long', 'long', 'int', 'int', 'int', 'int', 'uint']],
+    'SetFocus': ['long', ['long']]
+  });
+
+  private kernel32 = new this.electronService.ffi.Library('Kernel32.dll', {
+    'GetCurrentThreadId': ['int', []]
+  });
+
   private keyboard: any;
   private clipboard: any;
   private window: any;
@@ -15,8 +34,6 @@ export class RobotService {
 
   private robotInterval: any;
 
-  private exilePartyWindowRef: any;
-  private pathOfExileWindowRef: any;
   private activeWindowTitle: string;
   private lastKeypressValues: number[];
   private clipboardValue: string;
@@ -40,16 +57,6 @@ export class RobotService {
     if (this.clipboard.hasText()) {
       this.clipboardValue = this.clipboard.getText();
     }
-
-    const poeWindow = this.findWindowByTitle('Path of Exile');
-    if (poeWindow) {
-      this.pathOfExileWindowRef = poeWindow;
-    }
-    const exilePartyWindow = this.findWindowByTitle('ExileParty');
-    if (exilePartyWindow) {
-      this.exilePartyWindowRef = exilePartyWindow;
-    }
-
   }
 
   private findWindowByTitle(title: string) {
@@ -90,60 +97,26 @@ export class RobotService {
 
   }
 
-  private setPathOfExileWindowToActiceFfi() {
-    const user32 = new this.electronService.ffi.Library('user32', {
-      'GetTopWindow': ['long', ['long']],
-      'FindWindowA': ['long', ['string', 'string']],
-      'SetActiveWindow': ['long', ['long']],
-      'SetForegroundWindow': ['bool', ['long']],
-      'BringWindowToTop': ['bool', ['long']],
-      'ShowWindow': ['bool', ['long', 'int']],
-      'SwitchToThisWindow': ['void', ['long', 'bool']],
-      'GetForegroundWindow': ['long', []],
-      'AttachThreadInput': ['bool', ['int', 'long', 'bool']],
-      'GetWindowThreadProcessId': ['int', ['long', 'int']],
-      'SetWindowPos': ['bool', ['long', 'long', 'int', 'int', 'int', 'int', 'uint']],
-      'SetFocus': ['long', ['long']]
-    });
+  private focusWindowForInput(windowTitle: String) {
 
-    const kernel32 = new this.electronService.ffi.Library('Kernel32.dll', {
-      'GetCurrentThreadId': ['int', []]
-    });
+    const winToSetOnTop = this.user32.FindWindowA(null, windowTitle);
+    const foregroundHWnd = this.user32.GetForegroundWindow();
+    const currentThreadId = this.kernel32.GetCurrentThreadId();
+    const windowThreadProcessId = this.user32.GetWindowThreadProcessId(foregroundHWnd, null);
+    const showWindow = this.user32.ShowWindow(winToSetOnTop, 9);
+    const setWindowPos1 = this.user32.SetWindowPos(winToSetOnTop, -1, 0, 0, 0, 0, 3);
+    const setWindowPos2 = this.user32.SetWindowPos(winToSetOnTop, -2, 0, 0, 0, 0, 3);
+    const setForegroundWindow = this.user32.SetForegroundWindow(winToSetOnTop);
+    const attachThreadInput = this.user32.AttachThreadInput(windowThreadProcessId, currentThreadId, 0);
+    const setFocus = this.user32.SetFocus(winToSetOnTop);
+    const setActiveWindow = this.user32.SetActiveWindow(winToSetOnTop);
 
-    const winToSetOnTop = user32.FindWindowA(null, 'Path of Exile');
-    const foregroundHWnd = user32.GetForegroundWindow();
-    const currentThreadId = kernel32.GetCurrentThreadId();
-    const windowThreadProcessId = user32.GetWindowThreadProcessId(foregroundHWnd, null);
-    const showWindow = user32.ShowWindow(winToSetOnTop, 9);
-    const setWindowPos1 = user32.SetWindowPos(winToSetOnTop, -1, 0, 0, 0, 0, 3);
-    const setWindowPos2 = user32.SetWindowPos(winToSetOnTop, -2, 0, 0, 0, 0, 3);
-    const setForegroundWindow = user32.SetForegroundWindow(winToSetOnTop);
-    const attachThreadInput = user32.AttachThreadInput(windowThreadProcessId, currentThreadId, 0);
-    const setFocus = user32.SetFocus(winToSetOnTop);
-    const setActiveWindow = user32.SetActiveWindow(winToSetOnTop);
-
-    return true;
-  }
-
-  private setPathOfExileWindowToActive(): boolean {
-    if (this.pathOfExileWindowRef) {
-      this.window.setActive(this.pathOfExileWindowRef);
-      // It might take some time, but we will do everything we can to activate the window.
-      for (let i = 0; i < 5; i++) {
-        if (this.activeWindow !== this.pathOfExileWindowRef) {
-          this.window.setActive(this.pathOfExileWindowRef);
-        }
-        this.timer.sleep(50, 50);
-      }
-      return true;
-    }
-    this.logService.log('Could not set Path of Exile window to active.', null, true);
-    return false;
+    return setForegroundWindow;
   }
 
   public sendTextToPathWindow(text: string): boolean {
 
-    const isWindowActive = this.setPathOfExileWindowToActiceFfi();
+    const isWindowActive = this.focusWindowForInput('Path of Exile');
     if (isWindowActive) {
       const keyboard = this.keyboard();
 
