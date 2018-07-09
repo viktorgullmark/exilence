@@ -16,6 +16,7 @@ import { SettingsService } from './shared/providers/settings.service';
 export class AppComponent {
   player: Player;
   public appVersion;
+  maximized = false;
   constructor(public electronService: ElectronService,
     private translate: TranslateService,
     public sessionService: SessionService,
@@ -55,7 +56,13 @@ export class AppComponent {
   }
 
   maximize() {
+    this.maximized = true;
     this.electronService.remote.getCurrentWindow().maximize();
+  }
+
+  unmaximize() {
+    this.maximized = false;
+    this.electronService.remote.getCurrentWindow().unmaximize();
   }
 
   loadWindowSettings() {
