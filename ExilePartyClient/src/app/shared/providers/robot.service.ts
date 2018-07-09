@@ -67,21 +67,34 @@ export class RobotService {
     // Window
     const activeWindow = this.window.getActive();
     this.activeWindowTitle = activeWindow.getTitle();
-    if (this.activeWindowTitle === 'Path of Exile') {
+    // if (this.activeWindowTitle === 'Path of Exile') {
+    if (this.activeWindowTitle.indexOf('Path of Exile') !== -1) {
       this.pathOfExileWindowRef = activeWindow;
     }
   }
 
-  setPathOfExileWindowToActive() {
+  setPathOfExileWindowToActive(): boolean {
     if (this.pathOfExileWindowRef) {
       this.window.setActive(this.pathOfExileWindowRef);
-      const range = this.electronService.robot.Range(5, 10);
-      this.keyboard().autoDelay.min = 10;
-      this.keyboard().autoDelay.max = 30;
-      this.keyboard().click(Keys.Enter);
-      this.keyboard().click('Short message');
-      this.keyboard().click(Keys.Enter);
+      return true;
     }
+    return false;
+  }
+
+  sendTextToPathWindow(text: string): boolean {
+
+    const isWindowActive = this.setPathOfExileWindowToActive();
+    if (isWindowActive) {
+      const keyboard = this.keyboard();
+
+      keyboard.autoDelay.min = 0;
+      keyboard.autoDelay.max = 0;
+      keyboard.click(Keys.Enter);
+      keyboard.click(text);
+      keyboard.click(Keys.Enter);
+      return true;
+    }
+    return false;
   }
 
 }
