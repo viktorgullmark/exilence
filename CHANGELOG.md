@@ -5,6 +5,7 @@ All notable changes to this project will be documented in this file.
 - Added support for elder items
 - Added support for shaper items
 - Added support for prophecies
+- Added support for divination cards
 - Added support for SSF Standard
 - Added support for SSF Hardcore
 - Added icon for unmaximizing the window after it has been maximized
