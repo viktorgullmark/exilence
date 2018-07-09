@@ -10,6 +10,7 @@ import { PartyService } from '../../../../shared/providers/party.service';
 import { SettingsService } from '../../../../shared/providers/settings.service';
 import { NetworthTableComponent } from '../../networth-table/networth-table.component';
 import { AccountService } from '../../../../shared/providers/account.service';
+import { RobotService } from '../../../../shared/providers/robot.service';
 
 @Component({
   selector: 'app-char-wealth',
@@ -36,6 +37,7 @@ export class CharWealthComponent implements OnInit {
     private partyService: PartyService,
     private analyticsService: AnalyticsService,
     private settingService: SettingsService,
+    private robotService: RobotService
   ) {
     this.form = fb.group({
       searchText: ['']
@@ -77,6 +79,16 @@ export class CharWealthComponent implements OnInit {
 
   showGraph() {
     this.isGraphHidden = false;
+  }
+
+  report() {
+
+    const value = this.player.netWorthSnapshots[0].value.toFixed(1);
+
+    // tslint:disable-next-line:max-line-length
+    const message = `${this.player.character.name} currently has a total networth of ${value} chaos and has gained ${this.gain} over the last hour.`;
+    const result = this.robotService.sendTextToPathWindow(message);
+    console.log('sendTextToPathWindow(): ', result);
   }
 
   search() {
