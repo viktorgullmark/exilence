@@ -90,13 +90,6 @@ export class RobotService {
 
   }
 
-  public firstActivate() {
-    this.pathOfExileWindowRef.setMinimized(true);
-    this.pathOfExileWindowRef.setMinimized(false);
-    this.window.setActive(this.pathOfExileWindowRef);
-    this.window.setActive(this.exilePartyWindowRef);
-  }
-
   private setPathOfExileWindowToActive(): boolean {
     if (this.pathOfExileWindowRef) {
       this.window.setActive(this.pathOfExileWindowRef);

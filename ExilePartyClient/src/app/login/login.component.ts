@@ -186,7 +186,6 @@ export class LoginComponent implements OnInit {
                 this.analyticsService.startTracking(form.accountName);
                 this.sessionService.initSession(form.sessionId);
                 this.isLoading = false;
-                this.robotService.firstActivate();
                 this.router.navigate(['/authorized/dashboard']);
             });
     }
