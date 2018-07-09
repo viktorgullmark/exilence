@@ -14,6 +14,7 @@ import { ElectronService } from '../shared/providers/electron.service';
 import { ExternalService } from '../shared/providers/external.service';
 import { SessionService } from '../shared/providers/session.service';
 import { SettingsService } from '../shared/providers/settings.service';
+import { RobotService } from '../shared/providers/robot.service';
 
 @Component({
     selector: 'app-login',
@@ -49,7 +50,8 @@ export class LoginComponent implements OnInit {
         private accountService: AccountService,
         private sessionService: SessionService,
         private settingsService: SettingsService,
-        private analyticsService: AnalyticsService
+        private analyticsService: AnalyticsService,
+        private robotService: RobotService
     ) {
 
         this.fetchSettings();
@@ -184,6 +186,7 @@ export class LoginComponent implements OnInit {
                 this.analyticsService.startTracking(form.accountName);
                 this.sessionService.initSession(form.sessionId);
                 this.isLoading = false;
+                this.robotService.firstActivate();
                 this.router.navigate(['/authorized/dashboard']);
             });
     }

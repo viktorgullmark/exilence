@@ -11,13 +11,16 @@ export class RobotService {
   private clipboard: any;
   private window: any;
   private process: any;
+  private timer: any;
 
   private robotInterval: any;
 
+  private exilePartyWindowRef: any;
   private pathOfExileWindowRef: any;
   private activeWindowTitle: string;
   private lastKeypressValues: number[];
   private clipboardValue: string;
+  private activeWindow: any;
 
   constructor(
     private electronService: ElectronService,
@@ -27,6 +30,7 @@ export class RobotService {
     this.clipboard = this.electronService.robot.Clipboard;
     this.window = this.electronService.robot.Window;
     this.process = this.electronService.robot.Process;
+    this.timer = this.electronService.robot.Timer;
 
     this.Initialize();
     this.robotInterval = setInterval(() => this.robotHearbeat(), 100);
@@ -36,6 +40,24 @@ export class RobotService {
     if (this.clipboard.hasText()) {
       this.clipboardValue = this.clipboard.getText();
     }
+
+    const poeWindow = this.findWindowByTitle('Path of Exile');
+    if (poeWindow) {
+      this.pathOfExileWindowRef = poeWindow;
+    }
+    const exilePartyWindow = this.findWindowByTitle('ExileParty');
+    if (exilePartyWindow) {
+      this.exilePartyWindowRef = exilePartyWindow;
+    }
+
+  }
+
+  private findWindowByTitle(title: string) {
+    const windowList = this.window.getList(title);
+    if (windowList.length === 1) {
+      return windowList[0];
+    }
+    return null;
   }
 
   private robotHearbeat() {
@@ -63,20 +85,29 @@ export class RobotService {
     // }
 
     // Window
-    const activeWindow = this.window.getActive();
-    this.activeWindowTitle = activeWindow.getTitle();
-    // if (this.activeWindowTitle === 'Path of Exile') {
-    if (this.activeWindowTitle.indexOf('Path of Exile') !== -1) {
-      this.pathOfExileWindowRef = activeWindow;
-    }
+    this.activeWindow = this.window.getActive();
+    this.activeWindowTitle = this.activeWindow.getTitle();
+
+  }
+
+  public firstActivate() {
+    this.window.setActive(this.pathOfExileWindowRef);
+    this.window.setActive(this.exilePartyWindowRef);
   }
 
   private setPathOfExileWindowToActive(): boolean {
     if (this.pathOfExileWindowRef) {
       this.window.setActive(this.pathOfExileWindowRef);
+      // It might take some time, but we will do everything we can to activate the window.
+      for (let i = 0; i < 5; i++) {
+        if (this.activeWindow !== this.pathOfExileWindowRef) {
+          this.window.setActive(this.pathOfExileWindowRef);
+        }
+        this.timer.sleep(50, 50);
+      }
       return true;
     }
-    this.logService.log('Could not set path window to active.', null, true);
+    this.logService.log('Could not set Path of Exile window to active.', null, true);
     return false;
   }
 

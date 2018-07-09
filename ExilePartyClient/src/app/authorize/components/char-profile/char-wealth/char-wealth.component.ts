@@ -86,7 +86,7 @@ export class CharWealthComponent implements OnInit {
     const value = this.player.netWorthSnapshots[0].value.toFixed(1);
 
     // tslint:disable-next-line:max-line-length
-    const message = `${this.player.character.name} currently has a total networth of ${value} chaos and has gained ${this.gain} over the last hour.`;
+    const message = `${this.player.character.name} currently has a total networth of ${value} chaos and has gained ${this.gain} chaos over the last hour.`;
     if (toGame) {
       const result = this.robotService.sendTextToPathWindow(message);
     } else {
