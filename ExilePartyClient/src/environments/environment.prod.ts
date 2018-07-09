@@ -1,5 +1,5 @@
 export const AppConfig = {
   production: true,
   environment: 'PROD',
-  url: 'https://exileparty.azurewebsites.net/'
+  url: 'http://exileparty.azurewebsites.net/'
 };

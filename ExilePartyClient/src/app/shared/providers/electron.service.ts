@@ -18,6 +18,7 @@ export class ElectronService {
   fs: typeof fs;
   settings: any;
   robot: any;
+  zlib: any;
   constructor(
     private analyticsService: AnalyticsService
   ) {
@@ -30,6 +31,7 @@ export class ElectronService {
       this.fs = window.require('fs');
       this.shell = window.require('electron').shell;
       this.settings = window.require('electron-settings');
+      this.zlib = window.require('zlib');
 
       this.robot = window.require('robot-js');
 

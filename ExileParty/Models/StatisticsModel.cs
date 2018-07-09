@@ -15,5 +15,14 @@ namespace ExileParty.Models
         public int StashesInLastResponse { get; set; }
         public bool RateLimitedOrDown { get; set; }
         public DateTime Timestamp { get; set; }
+        public int TotalParties { get; set; }
+        public int TotalPlayers { get; set; }
+    }
+
+    [Serializable]
+    public class PartyStatistics
+    {
+        public List<string> Players { get; set; }
+
     }
 }

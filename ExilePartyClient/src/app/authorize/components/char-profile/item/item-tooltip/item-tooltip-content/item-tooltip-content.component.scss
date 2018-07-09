@@ -66,6 +66,13 @@ hr {
     color: $tag-color;
 }
 
+.prophecy-text {
+    white-space: pre-wrap; 
+    display: inline-block; 
+    max-width: 400px;
+    color: #fff;
+}
+
 .descr-text-secondary {
     color: $descr-text-secondary-color;
 }
@@ -73,6 +80,16 @@ hr {
 .corrupted {
     color: $corrupted-item-color !important;
     font-size: 13px;
+}
+
+.elder {
+    color: $elder-item-color !important;
+    font-size: 16px;
+}
+
+.shaper {
+    color: $shaper-item-color !important;
+    font-size: 16px;
 }
 
 .generic-mod {

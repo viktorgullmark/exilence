@@ -116,7 +116,21 @@ export class IncomeService {
   SnapshotPlayerNetWorth(sessionId: string) {
 
     const accountName = this.localPlayer.account;
-    const league = this.localPlayer.character.league;
+    let league = this.localPlayer.character.league;
+
+    // fetch prices for trading counter-part if character is in SSF (dynamic leagues will be added later)
+    if (league === 'SSF Incursion HC') {
+      league = 'Hardcore Incursion';
+    }
+    if (league === 'SSF Hardcore') {
+      league = 'Hardcore';
+    }
+    if (league === 'SSF Incursion') {
+      league = 'Incursion';
+    }
+    if (league === 'SSF Standard') {
+      league = 'Standard';
+    }
 
     this.playerStashTabs = [];
     this.totalNetWorthItems = [];

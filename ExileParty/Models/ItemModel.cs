@@ -18,8 +18,11 @@ namespace ExileParty.Models
         public List<SocketModel> Sockets { get; set; }
         public string Name { get; set; }
         public string TypeLine { get; set; }
+        public string ProphecyText { get; set; }
         public bool Identified { get; set; }
         public bool Corrupted { get; set; }
+        public bool Shaper { get; set; }
+        public bool Elder { get; set; }
         public bool LockedToCharacter { get; set; }
         public List<RequirementModel> Requirements { get; set; }
         public List<string> ImplicitMods { get; set; }

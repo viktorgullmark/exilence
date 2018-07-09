@@ -1,4 +1,4 @@
-import { app, BrowserWindow, dialog, globalShortcut, screen } from 'electron';
+import { app, BrowserWindow, dialog, screen, globalShortcut } from 'electron';
 import * as path from 'path';
 import * as url from 'url';
 
@@ -49,7 +49,6 @@ function createWindow() {
       slashes: true
     }));
   }
-
 
   // Emitted when the window is closed.
   win.on('closed', () => {
@@ -104,6 +103,9 @@ try {
   app.on('ready', () => {
     createWindow();
     autoUpdater.checkForUpdates();
+    globalShortcut.register('Command+Shift+I', () => {
+      win.openDevTools();
+    });
   });
 
   // Quit when all windows are closed.

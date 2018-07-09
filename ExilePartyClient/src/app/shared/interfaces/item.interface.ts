@@ -13,6 +13,8 @@ export interface Item {
     league: string;
     sockets: Array<Socket>;
     name: string;
+    shaper: boolean;
+    elder: boolean;
     typeLine: string;
     identified: boolean;
     corrupted: boolean;
@@ -31,6 +33,7 @@ export interface Item {
     enchantMods: Array<string>;
     utilityMods: Array<string>;
     descrText: string;
+    prophecyText: string;
     socket: number;
     stackSize?: number;
 }

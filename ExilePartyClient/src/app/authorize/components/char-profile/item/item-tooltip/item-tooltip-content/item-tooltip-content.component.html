@@ -4,7 +4,7 @@
             <ng-container [ngSwitch]="item.frameType">
                 <ng-container *ngSwitchCase="3">
                     <!-- unique item -->
-                    <div>{{item.name.substring(28)}}
+                    <div *ngIf="item.identified">{{item.name.substring(28)}}
                         <br/>
                     </div>
                     <span>{{item.typeLine}}</span>
@@ -25,7 +25,9 @@
                 <span *ngSwitchCase="0">{{item.typeLine}}</span>
                 <span *ngSwitchCase="4">{{item.typeLine}}</span>
                 <span *ngSwitchCase="5">{{item.typeLine}}</span>
+                <span *ngSwitchCase="6">{{item.typeLine}}</span>
                 <span *ngSwitchCase="7">{{item.typeLine}}</span>
+                <span *ngSwitchCase="8">{{item.typeLine}}</span>
             </ng-container>
         </h3>
     </div>
@@ -39,7 +41,9 @@
                             {{prop.name}}
                         </span>
                         <ng-container *ngIf="prop.values[0] != undefined">
-                            :&nbsp;<span [ngClass]="{'generic-mod': prop.name == 'Quality' || prop.name == 'Energy Shield' || prop.name == 'Armour' || prop.name == 'Evasion Rating'}">{{prop.values[0][0]}}</span></ng-container>
+                            :&nbsp;
+                            <span [ngClass]="{'generic-mod': prop.name == 'Quality' || prop.name == 'Energy Shield' || prop.name == 'Armour' || prop.name == 'Evasion Rating'}">{{prop.values[0][0]}}</span>
+                        </ng-container>
                     </span>
                     <br/>
                 </ng-container>
@@ -53,7 +57,9 @@
                                 {{prop.name}}
                             </span>
                             <ng-container *ngIf="prop.values[0] != undefined">
-                                :&nbsp;<span class="generic-mod">{{prop.values[0][0]}}</span></ng-container>
+                                :&nbsp;
+                                <span class="generic-mod">{{prop.values[0][0]}}</span>
+                            </ng-container>
                         </ng-container>
                     </span>
                     <br/>
@@ -77,9 +83,9 @@
             <span *ngIf="item.identified != undefined && !item.identified" class="unidentified">Unidentified</span>
         </div>
         <ng-container *ngIf="item.secDescrText != undefined">
-                <span class="descr-text descr-text-secondary mat-caption">{{item.secDescrText}}</span>
-                <hr *ngIf="item.implicitMods != undefined || item.enchantMods != undefined || item.explicitMods != undefined || item.craftedMods != undefined || !item.identified">
-            </ng-container>
+            <span class="descr-text descr-text-secondary mat-caption">{{item.secDescrText}}</span>
+            <hr *ngIf="item.implicitMods != undefined || item.enchantMods != undefined || item.explicitMods != undefined || item.craftedMods != undefined || !item.identified">
+        </ng-container>
         <div class="mods">
             <ng-container *ngFor="let mod of item.implicitMods">
                 <span>{{mod}}
@@ -94,7 +100,10 @@
             </ng-container>
             <hr *ngIf="(item.implicitMods != undefined || item.enchantMods != undefined) && item.explicitMods != undefined">
             <ng-container *ngFor="let mod of item.explicitMods">
-                <span class="{{getExplicitModClass(mod)}}">{{mod}}
+                <span *ngIf="item.frameType != 6" class="{{getExplicitModClass(mod)}}">{{mod}}
+                    <br/>
+                </span>
+                <span *ngIf="item.frameType == 6" class="div-card">{{formatDivCard(mod)}}
                     <br/>
                 </span>
             </ng-container>
@@ -115,10 +124,20 @@
             <hr *ngIf="item.implicitMods != undefined || item.enchantMods != undefined || item.explicitMods != undefined || item.craftedMods != undefined || !item.identified">
             <span class="descr-text mat-caption">{{item.descrText}}</span>
         </ng-container>
-        
+        <ng-container *ngIf="item.prophecyText != undefined">
+            <hr>
+            <span class="prophecy-text mat-caption">{{item.prophecyText}}</span>
+        </ng-container>
+
         <ng-container *ngIf="item.corrupted && (item.secDescrText != undefined || item.descrText != undefined)">
             <br/>
         </ng-container>
+        <span *ngIf="item.shaper" class="shaper">Shaper
+            <br/>
+        </span>
+        <span *ngIf="item.elder" class="elder">Elder
+            <br/>
+        </span>
         <span *ngIf="item.corrupted" class="corrupted">Corrupted</span>
 
     </div>

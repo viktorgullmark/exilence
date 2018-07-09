@@ -1,5 +1,6 @@
 ExileParty
 [![Github All Releases](https://img.shields.io/github/downloads/viktorgullmark/exile-party/total.svg)](https://github.com/viktorgullmark/exile-party/releases)
+[![Become a Patreon](https://img.shields.io/badge/patreon-%F0%9F%8E%AF-orange.svg)](https://www.patreon.com/exileparty)
 ===
 Path of Exile party-app used to track gear, inventory, currency and more of partymembers with cross-league support.
 

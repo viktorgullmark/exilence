@@ -1,12 +1,30 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [0.4.6] - 2018-07-09
+- Added support for elder items
+- Added support for shaper items
+- Added support for prophecies
+- Added support for SSF Standard
+- Added support for SSF Hardcore
+- Added icon for unmaximizing the window after it has been maximized
+- Changed text from "Fetching data" to "No data" to be more accurate
+- Added price-information for SSF leagues (based on counterpart trade-league)
+- White gems in green sockets should now be displayed correctly
+- Minor style-changes to item-tooltips
+
+## [0.4.5] - 2018-07-08
+- Hotfix for areas not being timed properly
+
 ## [0.4.4] - 2018-07-08
 - Added support for lower resolutions (down to 1344x768px)
-- Reduced data-traffic sent and received by using compression (gzip)
-- Added QoL-improvements to when net worth is calculated
-- Fixed a bug where longer group-names would overflow when listed on the dashboard
 - Added placeholder-text for when player hasn't entered any areas yet
+- Added always-on-top setting under the "Settings"-page
+- Added redirect to disconnection-page on startup if server is not reachable
+- Added QoL-improvements to when net worth is calculated
+- Added Google Analytics information-text to login-page
+- Reduced data-traffic sent and received by using compression (gzip)
+- Fixed a bug where longer group-names would overflow when listed on the dashboard
 - Removed menu from disconnect-page
 - Changed Patreon-url
 

@@ -11,7 +11,8 @@
         },
         "SETTINGS": {
             "TITLE": "Settings",
-            "STASHTAB_LIST_HEADER": "Select which stash-tabs to include"
+            "STASHTAB_LIST_HEADER": "Select which stash-tabs to include",
+            "WINDOW": "Window settings"
         },
         "RECENT_PLAYERS": {
             "TITLE": "Inspect players"

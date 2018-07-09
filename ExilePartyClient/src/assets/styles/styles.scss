@@ -169,6 +169,10 @@ a {
     margin-top: 10px !important;
 }
 
+.mat-tab-label-container {
+    z-index: auto !important;
+}
+
 .down-scale-inventory {
     image-rendering: -moz-crisp-edges; /* Firefox */
     image-rendering: -o-crisp-edges; /* Opera */
