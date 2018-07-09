@@ -5,6 +5,7 @@ All notable changes to this project will be documented in this file.
 - Added link to player-profile
 - Fixed a bug where you could select two players at the same time
 - Fixed a bug for SSF leagues where net worth was not calculated
+- Changed styling of shaper/elder-items
 - Now redirects to disconnect-page when pathofexile.com is down
 
 ## [0.4.6] - 2018-07-09
