@@ -38,6 +38,7 @@ export class RobotService {
   private lastKeypressValues: number[];
   private clipboardValue: string;
   private activeWindow: any;
+  private keybinds: any[] = [];
 
   constructor(
     private electronService: ElectronService,
@@ -57,6 +58,9 @@ export class RobotService {
     if (this.clipboard.hasText()) {
       this.clipboardValue = this.clipboard.getText();
     }
+
+    this.registerKeybind([Keys.A, Keys.S], 'AS');
+
   }
 
   private findWindowByTitle(title: string) {
@@ -84,9 +88,15 @@ export class RobotService {
     for (const key of Object.keys(Keys)) {
       const pressed = keyState[key];
       if (pressed) {
-        pressedKeys.unshift(key);
+        pressedKeys.unshift(+key);
       }
     }
+    this.keybinds.forEach(bind => {
+      const match = bind.keys.every((val) => pressedKeys.includes(val));
+      if (match) {
+        console.log('Matching keybind: ', bind.event);
+      }
+    });
     // if (pressedKeys.length > 0) {
     //   console.log(pressedKeys);
     // }
@@ -94,6 +104,17 @@ export class RobotService {
     // Window
     this.activeWindow = this.window.getActive();
     this.activeWindowTitle = this.activeWindow.getTitle();
+
+  }
+
+  public registerKeybind(keys: Keys[], event: string) {
+
+    const obj = {
+      event,
+      keys
+    };
+
+    this.keybinds.unshift(obj);
 
   }
 
