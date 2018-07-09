@@ -160,5 +160,29 @@ hr {
         .chaos-res {
             color: $mod-chaosres-color;
         }
+
+        .div-card {
+            color: #fff;
+            .corrupted {
+                color: $corrupted-item-color;
+            }
+            .gemitem {
+                color: $rarity-gem-color;
+            }
+            .magicitem {
+                color: $rarity-magic-color;
+            }
+            .currencyitem {
+                color: $rarity-currency-color;
+            }
+            .uniqueitem {
+                color: $rarity-unique-color;
+            }
+            .rareitem {
+                color: $rarity-rare-color;
+            }
+            .default {}
+            .augmented {}
+        }
     }
 }
