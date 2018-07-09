@@ -31,13 +31,4 @@ export class CharEquipmentComponent implements OnInit {
   getFlaskByIndex(index: number) {
     return this.items.find(x => x.inventoryId === 'Flask' && x.x === index);
   }
-  openLink(link: string) {
-    this.electronService.shell.openExternal(link);
-  }
-  goToProfile() {
-    this.openLink('https://www.pathofexile.com/account/view-profile/'
-      + this.selectedPlayer.account
-      + '/characters?characterName='
-      + this.selectedPlayer.character.name);
-  }
 }
