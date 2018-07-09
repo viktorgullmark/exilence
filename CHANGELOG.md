@@ -1,6 +1,9 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [0.5.0] - 2018-07-XX
+- Added link to player-profile
+
 ## [0.4.6] - 2018-07-09
 - Added support for elder items
 - Added support for shaper items
