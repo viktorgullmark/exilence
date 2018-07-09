@@ -7,6 +7,7 @@ All notable changes to this project will be documented in this file.
 - Added support for prophecies
 - Added support for SSF Standard
 - Added support for SSF Hardcore
+- Added icon for unmaximizing the window after it has been maximized
 - Changed text from "Fetching data" to "No data" to be more accurate
 - Added price-information for SSF leagues (based on counterpart trade-league)
 - White gems in green sockets should now be displayed correctly
