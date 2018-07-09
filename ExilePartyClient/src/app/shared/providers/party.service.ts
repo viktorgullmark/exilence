@@ -241,7 +241,8 @@ export class PartyService {
   //#region genericPlayers
 
   public addGenericPlayer(player: Player) {
-    const exists = this.genericPartyPlayers.filter(p => p.account === player.account).length > 0;
+    const exists = this.genericPartyPlayers.filter(p => p.account === player.account).length > 0
+      || this.party.players.find(x => x.account === player.account) !== undefined;
     if (!exists) {
       this.genericPartyPlayers.unshift(player);
       this.updateGenericPlayerList(this.genericPartyPlayers);
