@@ -103,9 +103,12 @@
                 <span *ngIf="item.frameType != 6" class="{{getExplicitModClass(mod)}}">{{mod}}
                     <br/>
                 </span>
-                <span *ngIf="item.frameType == 6" class="div-card">{{formatDivCard(mod)}}
-                    <br/>
-                </span>
+                <ng-container *ngIf="item.frameType == 6">
+                    <span class="div-card" [innerHtml]="formatDivCard(mod)">
+                        <br/>
+                    </span>
+                    <hr>
+                </ng-container>
             </ng-container>
             <ng-container *ngFor="let mod of item.craftedMods">
                 <span class="crafted-mod">
