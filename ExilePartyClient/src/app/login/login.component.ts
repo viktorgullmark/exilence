@@ -77,6 +77,17 @@ export class LoginComponent implements OnInit {
             && this.pathFormGroup.controls.filePath.value.endsWith('Client.txt');
     }
 
+    checkSessionId() {
+        const form = this.getFormObj();
+        this.externalService.getCharacter(form).subscribe(
+            success => {
+
+            },
+            error => {
+
+            });
+    }
+
     openLink(link: string) {
         this.electronService.shell.openExternal(link);
     }
