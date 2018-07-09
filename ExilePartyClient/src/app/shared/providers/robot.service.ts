@@ -28,10 +28,6 @@ export class RobotService {
 
     this.Initialize();
     this.robotInterval = setInterval(() => this.robotHearbeat(), 100);
-
-    setInterval(() => {
-      this.setPathOfExileWindowToActive();
-    }, 15 * 1000);
   }
 
   Initialize() {
