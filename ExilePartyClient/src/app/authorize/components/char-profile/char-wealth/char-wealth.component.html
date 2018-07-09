@@ -27,10 +27,19 @@
     </div>
     <div class="flex-area graph-btns">
         <button mat-raised-button color="primary" *ngIf="showReset" (click)="resetNetWorth()" type="button" class="right-aligned extra-margin">{{'GRAPH.RESET' | translate}}</button>
-        <button mat-raised-button color="primary" (click)="report()" type="button" class="extra-margin">{{'GRAPH.REPORT' | translate}}</button>
+
+
+        <button mat-raised-button color="primary" type="button" [matMenuTriggerFor]="menu" class="extra-margin">
+            {{'GRAPH.REPORT' | translate}}
+            <mat-icon>arrow_drop_down</mat-icon></button>
+        <mat-menu #menu="matMenu">
+            <button (click)="report(false)" mat-menu-item>{{'ROBOT.CLIPBOARD' | translate}}</button>
+            <button (click)="report(true)" mat-menu-item>{{'ROBOT.GAME' | translate}}</button>
+        </mat-menu>
+
         <button mat-raised-button color="primary" *ngIf="!isGraphHidden" (click)="hideGraph()" type="button" [ngClass]="{'right-aligned': !showReset}"
             class="extra-margin">{{'GRAPH.HIDE' | translate}}</button>
-        <button mat-raised-button color="primary" *ngIf="isGraphHidden" (click)="showGraph()" type="button" class="extra-margin">{{'GRAPH.SHOW' | translate}}</button>        
+        <button mat-raised-button color="primary" *ngIf="isGraphHidden" (click)="showGraph()" type="button" class="extra-margin">{{'GRAPH.SHOW' | translate}}</button>
     </div>
     <div class="income-graph-wrapper" [hidden]="isGraphHidden">
         <app-income (hidden)="toggleGraph($event)" [player]="player" [view]="graphDimensions"></app-income>

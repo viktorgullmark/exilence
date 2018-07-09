@@ -80,7 +80,7 @@ export class RobotService {
     return false;
   }
 
-  sendTextToPathWindow(text: string): boolean {
+  public sendTextToPathWindow(text: string): boolean {
 
     const isWindowActive = this.setPathOfExileWindowToActive();
     if (isWindowActive) {
@@ -97,7 +97,7 @@ export class RobotService {
     return false;
   }
 
-  prepareStringForRobot(string: string) {
+  private prepareStringForRobot(string: string) {
     string = string.split('_').join('+-');
     string = string.split('@').join('%^2');
     string = string.split('!').join('+1');
@@ -111,6 +111,10 @@ export class RobotService {
     string = string.split('~').join('-');
     string = string.split('/').join('+7');
     return string;
+  }
+
+  public setTextToClipboard(text: string) {
+    this.clipboard.setText(text);
   }
 
 }
