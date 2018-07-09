@@ -41,9 +41,36 @@ export class ItemTooltipContentComponent implements OnInit {
 
   formatDivCard(text) {
 
-    // todo: format div card
+    let localText = text;
+    const matches = [];
 
-    return text;
+    const regex = /<(.*?)>{(.*?)}/gim;
+    let result = regex.exec(localText);
+
+    while (result) {
+
+      localText = localText.replace(result[0], '').trim();
+
+      matches.push({
+        class: result[1],
+        text: result[2]
+      });
+
+      regex.lastIndex = 0;
+      result = regex.exec(localText);
+
+    }
+
+
+    let html = '';
+    matches.forEach((m) => {
+      html += `<span class="${m.class}">${m.text}</span>`;
+    });
+
+    console.log(localText);
+
+
+    return html;
   }
 
   formatFlaskProperties(prop, firstVal, secondVal) {
