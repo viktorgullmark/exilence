@@ -19,6 +19,7 @@ export class ElectronService {
   settings: any;
   robot: any;
   zlib: any;
+  ffi: any;
   constructor(
     private analyticsService: AnalyticsService
   ) {
@@ -32,6 +33,7 @@ export class ElectronService {
       this.shell = window.require('electron').shell;
       this.settings = window.require('electron-settings');
       this.zlib = window.require('zlib');
+      this.ffi = window.require('ffi');
 
       this.robot = window.require('robot-js');
 
