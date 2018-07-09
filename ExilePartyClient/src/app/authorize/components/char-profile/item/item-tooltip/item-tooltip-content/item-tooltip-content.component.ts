@@ -1,10 +1,11 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, ViewEncapsulation } from '@angular/core';
 import { Item } from '../../../../../../shared/interfaces/item.interface';
 
 @Component({
   selector: 'app-item-tooltip-content',
   templateUrl: './item-tooltip-content.component.html',
-  styleUrls: ['./item-tooltip-content.component.scss']
+  styleUrls: ['./item-tooltip-content.component.scss'],
+  encapsulation: ViewEncapsulation.None
 })
 export class ItemTooltipContentComponent implements OnInit {
   @Input() item: Item;
@@ -65,10 +66,8 @@ export class ItemTooltipContentComponent implements OnInit {
     let html = '';
     matches.forEach((m) => {
       html += `<span class="${m.class}">${m.text}</span>`;
+      html += m.text.endsWith(':') ? ` ` : `<br/>`;
     });
-
-    console.log(localText);
-
 
     return html;
   }
