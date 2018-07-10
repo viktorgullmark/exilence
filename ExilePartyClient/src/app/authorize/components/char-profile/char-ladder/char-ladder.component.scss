@@ -2,7 +2,6 @@
 
 .char-ladder {
     width: 684px;
-    height: $content-height;
     border: 2px solid $main-border-color;
     background: $equipment-bg-color;
     position: relative;
@@ -43,7 +42,7 @@
         padding-left: 25px;
         margin-right: 25px;
         margin-top: 25px;
-
+        margin-bottom: 25px;
         .ladder-table-wrapper {
             height: calc(100% - 60px);
         }

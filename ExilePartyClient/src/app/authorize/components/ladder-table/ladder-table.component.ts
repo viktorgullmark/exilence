@@ -13,7 +13,7 @@ import { LadderService } from '../../../shared/providers/ladder.service';
 })
 export class LadderTableComponent implements OnInit {
   @Input() player: Player;
-  displayedColumns: string[] = ['online', 'rank', 'level', 'character', 'account', 'experience_per_hour' ];
+  displayedColumns: string[] = ['online', 'rank', 'level', 'character', 'account', 'experience_per_hour'];
   dataSource = [];
   filteredArr = [];
   source: any;
@@ -22,8 +22,6 @@ export class LadderTableComponent implements OnInit {
   }
 
   ngOnInit() {
-
-    console.log(this.player);
     this.updateTable(this.player.ladderInfo);
     this.partyService.selectedPlayer.subscribe(res => {
       if (res !== undefined) {
@@ -46,23 +44,25 @@ export class LadderTableComponent implements OnInit {
   }
 
   updateTable(playersOnLadder: LadderPlayer[]) {
-    playersOnLadder.forEach((player: LadderPlayer) => {
-      const newPlayerObj = {
-        character: player.name,
-        level: player.level,
-        online: player.online,
-        account: player.account,
-        dead: player.dead,
-        experience: player.experience,
-        rank: player.rank,
-        twitch: player.twitch,
-        class: player.class,
-        class_rank: player.class_rank,
-        experience_per_hour: player.experience_per_hour
-      };
+    if (playersOnLadder !== null) {
+      playersOnLadder.forEach((player: LadderPlayer) => {
+        const newPlayerObj = {
+          character: player.name,
+          level: player.level,
+          online: player.online,
+          account: player.account,
+          dead: player.dead,
+          experience: player.experience,
+          rank: player.rank,
+          twitch: player.twitch,
+          class: player.class,
+          class_rank: player.class_rank,
+          experience_per_hour: player.experience_per_hour
+        };
 
-      this.dataSource.push(newPlayerObj);
-    });
+        this.dataSource.push(newPlayerObj);
+      });
+    }
   }
 }
 
