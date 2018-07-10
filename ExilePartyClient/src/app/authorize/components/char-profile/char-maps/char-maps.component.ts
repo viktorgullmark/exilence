@@ -19,8 +19,6 @@ export class CharMapsComponent implements OnInit {
   averageTimeSpent = '';
   filteredArr = [];
 
-  private oneHourAgo = (Date.now() - (1 * 60 * 60 * 1000));
-
   @ViewChild('table') table: MapTableComponent;
 
   constructor(@Inject(FormBuilder)
