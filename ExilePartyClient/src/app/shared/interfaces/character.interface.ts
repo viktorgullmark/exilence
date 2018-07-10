@@ -7,4 +7,5 @@ export interface Character {
     class: string;
     level: number;
     items: Array<Item>;
+    lastActive?: boolean;
 }

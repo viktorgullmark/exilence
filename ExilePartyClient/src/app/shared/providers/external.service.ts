@@ -11,7 +11,6 @@ import { Player } from '../interfaces/player.interface';
 import { Property } from '../interfaces/property.interface';
 import { Requirement } from '../interfaces/requirement.interface';
 import { Stash } from '../interfaces/stash.interface';
-import { AccountService } from './account.service';
 import { AnalyticsService } from './analytics.service';
 import { ElectronService } from './electron.service';
 import { Router } from '../../../../node_modules/@angular/router';
@@ -23,7 +22,6 @@ export class ExternalService {
   constructor(
     private http: HttpClient,
     private electronService: ElectronService,
-    private accountService: AccountService,
     private analyticsService: AnalyticsService,
     private router: Router
   ) { }

@@ -111,6 +111,10 @@ namespace ExileParty.Hubs
                     await Clients.Group(partyName).SendAsync("PlayerUpdated", CompressionHelper.Compress(player));
                 }
             }
+            else
+            {
+                Context.Abort();
+            }
         }
         public async Task GenericUpdatePlayer(PlayerModel player, string partyName)
         {
