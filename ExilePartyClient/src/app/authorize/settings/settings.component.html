@@ -64,21 +64,21 @@
       <!-- keybinds -->
       <ng-container *ngFor="let keybind of keybinds">
         <mat-grid-tile [colspan]="2" [rowspan]="1">
-          {{keybind.name}}
+          {{keybind.description}}
         </mat-grid-tile>
         <mat-grid-tile [colspan]="2" [rowspan]="1">
           <mat-form-field>
-            <mat-select [(value)]="keybind.modifierKeyId">
+            <mat-select [compareWith]="compareKeyCodes" [(value)]="keybind.modifierKeyCode">
               <mat-option>None</mat-option>
-              <mat-option *ngFor="let key of modifierKeys" value="{{key.id}}">{{key.name}}</mat-option>
+              <mat-option *ngFor="let key of modifierKeys" value="{{key.code}}">{{key.name}}</mat-option>
             </mat-select>
           </mat-form-field>
         </mat-grid-tile>
         <mat-grid-tile [colspan]="2" [rowspan]="1">
           <mat-form-field>
-            <mat-select [(value)]="keybind.triggerKeyId">
+            <mat-select [compareWith]="compareKeyCodes" [(value)]="keybind.triggerKeyCode">
               <mat-option>None</mat-option>
-              <mat-option *ngFor="let key of triggerKeys" value="{{key.id}}">{{key.name}}</mat-option>
+              <mat-option *ngFor="let key of triggerKeys" value="{{key.code}}">{{key.name}}</mat-option>
             </mat-select>
           </mat-form-field>
         </mat-grid-tile>

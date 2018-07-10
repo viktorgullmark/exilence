@@ -2,6 +2,7 @@ import { Component, Inject, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 
 import { Keys } from '../../shared/interfaces/key.interface';
+import { Keybind } from '../../shared/interfaces/keybind.interface';
 import { AnalyticsService } from '../../shared/providers/analytics.service';
 import { ElectronService } from '../../shared/providers/electron.service';
 import { KeybindService } from '../../shared/providers/keybind.service';
@@ -20,23 +21,16 @@ export class SettingsComponent implements OnInit {
 
   // temporary arrays
   modifierKeys = [
-    { id: 1, name: 'Shift', code: Keys.Shift },
-    { id: 2, name: 'Ctrl', code: Keys.Ctrl },
-    { id: 2, name: 'Alt', code: Keys.Alt }
+    { name: 'Shift', code: Keys.Shift },
+    { name: 'Ctrl', code: Keys.Ctrl },
+    { name: 'Alt', code: Keys.Alt }
   ];
   triggerKeys = [
-    { id: 1, name: 'F1', code: Keys.F1 },
-    { id: 2, name: 'F2', code: Keys.F2 },
-    { id: 2, name: 'Q', code: Keys.Q },
-    { id: 2, name: 'W', code: Keys.W },
-    { id: 2, name: 'E', code: Keys.E }
+    { name: 'A', code: Keys.A },
+    { name: 'S', code: Keys.S },
+    { name: 'D', code: Keys.D }
   ];
-  keybinds = [
-    { name: 'Send net worth summary to party', triggerKeyId: Keys.A, modifierKeyId: Keys.S },
-    { name: 'Test 2', triggerKeyId: 1, modifierKeyId: 2 },
-    { name: 'Test 3', triggerKeyId: 2, modifierKeyId: 1 },
-    { name: 'Test 4', triggerKeyId: 2, modifierKeyId: 2 }
-  ];
+  keybinds: Keybind[] = [];
 
   @ViewChild('table') table: StashtabListComponent;
 
@@ -50,6 +44,14 @@ export class SettingsComponent implements OnInit {
     this.form = fb.group({
       searchText: ['']
     });
+
+    this.keybindService.keybinds.subscribe((binds: Keybind[]) => {
+      this.keybinds = binds;
+      console.log(binds);
+      console.log(this.modifierKeys);
+      console.log(this.triggerKeys);
+    });
+
   }
 
   ngOnInit() {
@@ -61,15 +63,25 @@ export class SettingsComponent implements OnInit {
       this.alwaysOnTop = onTopSetting;
     }
   }
+  compareKeyCodes(c1: any, c2: any): boolean {
+    return +c1 === +c2;
+  }
 
   resetKeybinds() {
     // todo: reset keybinds
   }
 
   saveKeybinds() {
-    this.keybindService.updateKeybinds(this.keybinds);
-    // todo: save keybinds
-    // this.settingsService.set('keybinds', this.keybinds);
+
+    let numberBinds = [...this.keybinds];
+    numberBinds = numberBinds.map(bind => {
+      bind.modifierKeyCode = +bind.modifierKeyCode;
+      bind.triggerKeyCode = +bind.triggerKeyCode;
+      return bind;
+    });
+
+    this.keybindService.updateKeybinds(numberBinds);
+    this.settingsService.set('keybinds', numberBinds);
   }
 
   search() {

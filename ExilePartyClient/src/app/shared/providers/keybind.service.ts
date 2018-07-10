@@ -4,33 +4,32 @@ import { throttle } from 'rxjs/operators';
 
 import { BehaviorSubject } from '../../../../node_modules/rxjs/internal/BehaviorSubject';
 import { Keys } from '../interfaces/key.interface';
+import { Keybind } from '../interfaces/keybind.interface';
 import { RobotService } from './robot.service';
 import { SettingsService } from './settings.service';
 
 
-
-
-
-@Injectable({
-  providedIn: 'root'
-})
+@Injectable()
 export class KeybindService {
 
   public keybindEvent: BehaviorSubject<string> = new BehaviorSubject<string>('');
   public keybinds: BehaviorSubject<any[]> = new BehaviorSubject<any[]>([]);
 
-  private savedBinds: any[] = [];
-  private localKeybinds: any[] = [];
+  private savedBinds: Keybind[] = [];
+  private localKeybinds: Keybind[] = [];
 
   constructor(
     private robotService: RobotService,
     private settingsService: SettingsService
   ) {
 
-    this.registerKeybind([Keys.A, Keys.S], 'test');
+    this.registerKeybind(Keys.Ctrl, Keys.S, 'party-networth', 'Report Networth to party');
 
-    // this.savedBinds = this.settingsService.get('keybinds');
-    this.updateUserOverrides();
+    const binds = this.settingsService.get('keybinds');
+    if (binds !== undefined) {
+      this.savedBinds = binds;
+      this.updateUserOverrides();
+    }
 
     // Robot service emits event every 0.1 secounds if matches, throttle here so we don't spam
     // We should filter the list here instead of in the robot service since we only care about 2+ keys
@@ -38,18 +37,19 @@ export class KeybindService {
     this.robotService.pressedKeysList
       .pipe(throttle(val => interval(1000)))
       .subscribe(t => this.checkKeybinds(t));
-
   }
 
-  public registerKeybind(eventKeys: number[], eventName: string) {
+  public registerKeybind(modifierKeyCode: number, triggerKeyCode: number, event: string, description: string) {
     this.localKeybinds.unshift({
-      keys: eventKeys,
-      event
+      modifierKeyCode,
+      triggerKeyCode,
+      event,
+      description
     });
     this.updateUserOverrides();
   }
 
-  public updateKeybinds(keybinds: any[]) {
+  public updateKeybinds(keybinds: Keybind[]) {
     this.savedBinds = keybinds;
     this.updateUserOverrides();
   }
@@ -60,7 +60,8 @@ export class KeybindService {
       for (let j = 0; j < this.savedBinds.length; j++) {
         const savedBind = this.savedBinds[j];
         if (bind.event === savedBind.event) {
-          bind.keys = savedBind.keys;
+          bind.modifierKeyCode = savedBind.modifierKeyCode;
+          bind.triggerKeyCode = savedBind.triggerKeyCode;
           break;
         }
       }
@@ -70,7 +71,7 @@ export class KeybindService {
 
   private checkKeybinds(pressedKeys: number[]) {
     this.localKeybinds.forEach(bind => {
-      const match = bind.keys.every((val) => pressedKeys.includes(val));
+      const match = (pressedKeys.indexOf(bind.modifierKeyCode) !== -1) && (pressedKeys.indexOf(bind.triggerKeyCode) !== -1);
       if (match) {
         this.keybindEvent.next(bind.event);
         console.log('keybind matched');
