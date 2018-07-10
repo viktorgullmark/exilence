@@ -74,9 +74,14 @@ export class PartySummaryComponent implements OnInit {
       .filter((snaphot: NetWorthSnapshot) => snaphot.timestamp > this.oneHourAgo);
 
     if (pastHoursSnapshots[0] !== undefined) {
-      const lastValue = pastHoursSnapshots[0].value;
-      const firstValue = pastHoursSnapshots[pastHoursSnapshots.length - 1].value;
-      this.gain = this.gain + lastValue - firstValue;
+      const lastSnapshot = pastHoursSnapshots[0];
+      const firstSnapshot = pastHoursSnapshots[pastHoursSnapshots.length - 1];
+
+      const gainHour = ((1000 * 60 * 60)) / (lastSnapshot.timestamp - firstSnapshot.timestamp) * (lastSnapshot.value - firstSnapshot.value);
+
+      this.gain = gainHour;
+
+      console.log(this.gain);
     }
   }
 }
