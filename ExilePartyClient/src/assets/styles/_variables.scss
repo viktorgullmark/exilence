@@ -1,6 +1,6 @@
 @import "./exile-party-theme.scss";
 
-// general
+/* #region General */
 $main-border-color: $accent;
 $bg-color: #303030;
 $toolbar-bg-color: #0a0a0a;
@@ -12,8 +12,9 @@ $stepper-bg-color: rgba(66, 66, 66, 0.67);
 $version-font-color: rgb(206, 206, 206);
 $link-font-color: rgb(206, 206, 206);
 $external-link-color: $primary;
+/* #endregion */
 
-// character
+/* #region Player */
 $inventory-border-color: $accent;
 $inventory-bg-color: rgba(21, 21, 21, 0.5);;
 $equipment-border-color: #969696;
@@ -25,15 +26,17 @@ $recent-party-badge-hover-bg-color: linear-gradient(to bottom right, #5c5c5c, #6
 $player-area-font-color: rgb(219, 219, 219);
 $player-league-font-color: rgb(209, 243, 164);
 $currency-chaos-color: rgb(240, 204, 0);
+/* #endregion */
 
-// items
+/* #region Item */
 $item-bg-color: rgba(5, 4, 41, 0.52);
 $item-weaponswap-bg-color: #191919;
 $equipment-slot-bg-color: rgb(19, 19, 19);
 $unidentified-item-color: #410c0c;
 $unidentified-item-font-color: #e80000;
+/* #endregion */
 
-// item-tooltip
+/* #region Item-tooltip */
 $mod-generic-color: #9a9aff;
 $item-tooltip-bg-color: rgba(0, 0, 0, 0.85);
 $gem-tooltip-bg-color: $item-tooltip-bg-color;
@@ -67,15 +70,19 @@ $networth-placeholder-color: rgb(206, 206, 206);
 $stat-placeholder-color: rgb(206, 206, 206);
 $stat-color: rgb(206, 206, 206);
 $descr-text-secondary-color: rgb(0, 167, 167);
+/* #endregion */
 
-// padding
+/* #region Padding & Margin */
 $container-padding: 15px;
 $content-container-padding: 5px 25px 5px 25px;
+/* #endregion */
 
-// fonts
+/* #region Font */
 $main-font: 'Roboto';
 $font-color: #fff;
+/* #endregion */
 
-// width / height
+/* #region Width & Height */
 $toolbar-height: 40px;
 $content-height: calc(100% - 40px);
+/* #endregion */

@@ -10,10 +10,11 @@ $exileparty-accent-dark: mat-palette($mat-grey, 800);
 $exileparty-warn: mat-palette($mat-deep-orange);
 $exileparty-theme: mat-dark-theme($exileparty-primary, $exileparty-accent, $exileparty-warn);
 
-// global variables
+/* #region Global */
 $primary: mat-color($exileparty-primary);
 $accent: mat-color($exileparty-accent);
 $accent-dark: mat-color($exileparty-accent-dark);
 $darker: mat-color($exileparty-darker);
 $dark: mat-color($exileparty-dark);
 $secondary: mat-color($exileparty-secondary);
+/* #endregion */
