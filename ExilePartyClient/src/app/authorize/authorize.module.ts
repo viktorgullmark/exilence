@@ -16,6 +16,7 @@ import { DashboardModule } from './dashboard/dashboard.module';
 import { InspectPlayersModule } from './inspect-players/inspect-players.module';
 import { PartyModule } from './party/party.module';
 import { SettingsModule } from './settings/settings.module';
+import { LadderService } from '../shared/providers/ladder.service';
 
 @NgModule({
   imports: [
@@ -40,7 +41,8 @@ import { SettingsModule } from './settings/settings.module';
     PartyService,
     IncomeService,
     MapService,
-    AnalyticsService
+    AnalyticsService,
+    LadderService
   ]
 })
 export class AuthorizeModule { }

@@ -8,6 +8,7 @@ import { MatTabsModule } from '@angular/material/tabs';
 import { CharWealthModule } from './char-wealth/char-wealth.module';
 import { MatIconModule } from '@angular/material/icon';
 import { CharMapsModule } from './char-maps/char-maps.module';
+import { CharLadderModule } from './char-ladder/char-ladder.module';
 
 @NgModule({
   imports: [
@@ -17,6 +18,7 @@ import { CharMapsModule } from './char-maps/char-maps.module';
     CharSummaryModule,
     CharWealthModule,
     CharMapsModule,
+    CharLadderModule,
     MatTabsModule,
     MatIconModule
   ],
