@@ -24,7 +24,6 @@ export class CharWealthComponent implements OnInit {
 
   isGraphHidden = false;
 
-  private oneHourAgo = (Date.now() - (1 * 60 * 60 * 1000));
   public graphDimensions = [640, 200];
   public gain = 0;
   public showReset = false;
@@ -84,9 +83,9 @@ export class CharWealthComponent implements OnInit {
   }
 
   updateGain(player: Player) {
-
+    const oneHourAgo = (Date.now() - (1 * 60 * 60 * 1000));
     const pastHoursSnapshots = player.netWorthSnapshots
-      .filter((snaphot: NetWorthSnapshot) => snaphot.timestamp > this.oneHourAgo);
+      .filter((snaphot: NetWorthSnapshot) => snaphot.timestamp > oneHourAgo);
 
     if (pastHoursSnapshots[0] !== undefined) {
       const lastSnapshot = pastHoursSnapshots[0];

@@ -29,6 +29,7 @@ export class PartySummaryComponent implements OnInit {
     });
     this.partyService.partyUpdated.subscribe(res => {
       if (res !== undefined) {
+        this.oneHourAgo = (Date.now() - (1 * 60 * 60 * 1000));
         let networth = 0;
         this.gain = 0;
         res.players.forEach(p => {
