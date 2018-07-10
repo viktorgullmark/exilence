@@ -8,6 +8,7 @@ All notable changes to this project will be documented in this file.
 - Fixed a bug where you could select two players at the same time
 - Fixed a bug for SSF leagues where net worth was not calculated
 - Fixed a bug where abyssal sockets weren't shown
+- Fixed a bug where gain wasn't shown correctly on summary-view
 - Changed styling of shaper/elder-items
 - Now redirects to disconnect-page when pathofexile.com is down
 
