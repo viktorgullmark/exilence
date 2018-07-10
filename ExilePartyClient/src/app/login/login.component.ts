@@ -138,6 +138,11 @@ export class LoginComponent implements OnInit {
                 this.accountService.characterList.next(res);
                 this.fetched = true;
                 this.stepper.selectedIndex = 1;
+                // res.forEach(char => {
+                //     if ('lastActive' in char && char.lastActive === true) {
+                //         // Set character here
+                //     }
+                // });
                 // set delay to avoid flickering when animating
                 setTimeout(() => {
                     this.isFetching = false;
