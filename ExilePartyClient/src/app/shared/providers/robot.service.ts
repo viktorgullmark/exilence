@@ -29,13 +29,10 @@ export class RobotService {
   private keyboard: any;
   private clipboard: any;
   private window: any;
-  private process: any;
   private timer: any;
 
   private robotInterval: any;
-
   private activeWindowTitle: string;
-  private lastKeypressValues: number[];
   private clipboardValue: string;
   private activeWindow: any;
   private keybinds: any[] = [];
@@ -47,7 +44,6 @@ export class RobotService {
     this.keyboard = this.electronService.robot.Keyboard;
     this.clipboard = this.electronService.robot.Clipboard;
     this.window = this.electronService.robot.Window;
-    this.process = this.electronService.robot.Process;
     this.timer = this.electronService.robot.Timer;
 
     this.Initialize();
@@ -61,14 +57,6 @@ export class RobotService {
 
     this.registerKeybind([Keys.A, Keys.S], 'AS');
 
-  }
-
-  private findWindowByTitle(title: string) {
-    const windowList = this.window.getList(title);
-    if (windowList.length === 1) {
-      return windowList[0];
-    }
-    return null;
   }
 
   private robotHearbeat() {
