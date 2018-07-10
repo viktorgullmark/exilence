@@ -40,7 +40,6 @@ export class IncomeService {
   private totalNetWorthItems: NetWorthItem[] = [];
   public totalNetWorth = 0;
   private fiveMinutes = 5 * 60 * 1000;
-  private twelveHoursAgo = (Date.now() - (12 * 60 * 60 * 1000));
   private oneHourAgo = (Date.now() - (1 * 60 * 60 * 1000));
 
   constructor(
@@ -50,10 +49,7 @@ export class IncomeService {
     private externalService: ExternalService,
     private settingsService: SettingsService,
     private logService: LogService,
-    private analyticsService: AnalyticsService,
   ) {
-
-
   }
 
   InitializeSnapshotting(sessionId: string) {

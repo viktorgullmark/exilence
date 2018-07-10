@@ -13,14 +13,8 @@ import { AccountService } from './account.service';
 import { ExternalService } from './external.service';
 import { LogMonitorService } from './log-monitor.service';
 import { SettingsService } from './settings.service';
-import { areAllEquivalent } from '@angular/compiler/src/output/output_ast';
-import { interval } from 'rxjs/observable/interval';
-import { Observable } from 'rxjs/Observable';
-import { from } from 'rxjs';
-import { map } from 'rxjs/operators';
+
 import { LogMessage } from '../interfaces/log-message.interface';
-import { IncomeService } from './income.service';
-import { NetWorthSnapshot } from './../interfaces/income.interface';
 import { LogService } from './log.service';
 import { ElectronService } from './electron.service';
 
@@ -309,7 +303,7 @@ export class PartyService {
           newPlayer = this.externalService.setCharacter(response, newPlayer);
           this.addGenericPlayer(newPlayer);
         },
-          (error) => {
+          () => {
             this.logService.log(`getCharacter failed for player: ${player.name}, account: ${account} (profile probaly private)`);
             this.recentPrivatePlayers.unshift(player.name);
           }

@@ -19,7 +19,7 @@ export class ElectronService {
   settings: any;
   zlib: any;
   constructor(
-    private analyticsService: AnalyticsService
+    private analyticsService: AnalyticsService // Not used but instanciated here
   ) {
     // Conditional imports
     if (this.isElectron()) {
