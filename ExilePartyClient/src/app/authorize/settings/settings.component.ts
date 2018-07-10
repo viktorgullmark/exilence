@@ -1,11 +1,12 @@
 import { Component, Inject, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 
-import { AnalyticsService } from '../../shared/providers/analytics.service';
-import { StashtabListComponent } from '../components/stashtab-list/stashtab-list.component';
-import { ElectronService } from '../../shared/providers/electron.service';
-import { SettingsService } from '../../shared/providers/settings.service';
 import { Keys } from '../../shared/interfaces/key.interface';
+import { AnalyticsService } from '../../shared/providers/analytics.service';
+import { ElectronService } from '../../shared/providers/electron.service';
+import { KeybindService } from '../../shared/providers/keybind.service';
+import { SettingsService } from '../../shared/providers/settings.service';
+import { StashtabListComponent } from '../components/stashtab-list/stashtab-list.component';
 
 @Component({
   selector: 'app-settings',
@@ -20,14 +21,18 @@ export class SettingsComponent implements OnInit {
   // temporary arrays
   modifierKeys = [
     { id: 1, name: 'Shift', code: Keys.Shift },
-    { id: 2, name: 'Ctrl', code: Keys.Ctrl }
+    { id: 2, name: 'Ctrl', code: Keys.Ctrl },
+    { id: 2, name: 'Alt', code: Keys.Alt }
   ];
   triggerKeys = [
     { id: 1, name: 'F1', code: Keys.F1 },
-    { id: 2, name: 'F2', code: Keys.F2 }
+    { id: 2, name: 'F2', code: Keys.F2 },
+    { id: 2, name: 'Q', code: Keys.Q },
+    { id: 2, name: 'W', code: Keys.W },
+    { id: 2, name: 'E', code: Keys.E }
   ];
   keybinds = [
-    { name: 'Send net worth summary to party', triggerKeyId: 1, modifierKeyId: 1 },
+    { name: 'Send net worth summary to party', triggerKeyId: Keys.A, modifierKeyId: Keys.S },
     { name: 'Test 2', triggerKeyId: 1, modifierKeyId: 2 },
     { name: 'Test 3', triggerKeyId: 2, modifierKeyId: 1 },
     { name: 'Test 4', triggerKeyId: 2, modifierKeyId: 2 }
@@ -39,7 +44,8 @@ export class SettingsComponent implements OnInit {
   fb: FormBuilder,
     private analyticsService: AnalyticsService,
     private electronService: ElectronService,
-    private settingsService: SettingsService
+    private settingsService: SettingsService,
+    private keybindService: KeybindService
   ) {
     this.form = fb.group({
       searchText: ['']
@@ -61,7 +67,9 @@ export class SettingsComponent implements OnInit {
   }
 
   saveKeybinds() {
+    this.keybindService.updateKeybinds(this.keybinds);
     // todo: save keybinds
+    // this.settingsService.set('keybinds', this.keybinds);
   }
 
   search() {

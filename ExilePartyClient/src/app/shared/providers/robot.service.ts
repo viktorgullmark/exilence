@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 
+import { BehaviorSubject } from '../../../../node_modules/rxjs/internal/BehaviorSubject';
 import { Keys } from '../interfaces/key.interface';
 import { ElectronService } from './electron.service';
 import { LogService } from './log.service';
@@ -29,13 +30,12 @@ export class RobotService {
   private keyboard: any;
   private clipboard: any;
   private window: any;
-  private timer: any;
 
-  private robotInterval: any;
-  private activeWindowTitle: string;
+  // private activeWindowTitle: string;
+  // private activeWindow: any;
   private clipboardValue: string;
-  private activeWindow: any;
-  private keybinds: any[] = [];
+
+  public pressedKeysList: BehaviorSubject<number[]> = new BehaviorSubject<number[]>([]);
 
   constructor(
     private electronService: ElectronService,
@@ -44,18 +44,15 @@ export class RobotService {
     this.keyboard = this.electronService.robot.Keyboard;
     this.clipboard = this.electronService.robot.Clipboard;
     this.window = this.electronService.robot.Window;
-    this.timer = this.electronService.robot.Timer;
 
     this.Initialize();
-    this.robotInterval = setInterval(() => this.robotHearbeat(), 100);
+    setInterval(() => this.robotHearbeat(), 100);
   }
 
   private Initialize() {
     if (this.clipboard.hasText()) {
       this.clipboardValue = this.clipboard.getText();
     }
-
-    this.registerKeybind([Keys.A, Keys.S], 'AS');
 
   }
 
@@ -72,37 +69,20 @@ export class RobotService {
 
     // Keyboard
     const keyState = this.keyboard.getState();
-    const pressedKeys = [];
+    const tempPressedKeys = [];
     for (const key of Object.keys(Keys)) {
       const pressed = keyState[key];
       if (pressed) {
-        pressedKeys.unshift(+key);
+        tempPressedKeys.unshift(+key);
       }
     }
-    this.keybinds.forEach(bind => {
-      const match = bind.keys.every((val) => pressedKeys.includes(val));
-      if (match) {
-        console.log('Matching keybind: ', bind.event);
-      }
-    });
-    // if (pressedKeys.length > 0) {
-    //   console.log(pressedKeys);
-    // }
+    if (tempPressedKeys.length >= 2) {
+      this.pressedKeysList.next(tempPressedKeys);
+    }
 
-    // Window
-    this.activeWindow = this.window.getActive();
-    this.activeWindowTitle = this.activeWindow.getTitle();
-
-  }
-
-  public registerKeybind(keys: Keys[], event: string) {
-
-    const obj = {
-      event,
-      keys
-    };
-
-    this.keybinds.unshift(obj);
+    // // Window
+    // this.activeWindow = this.window.getActive();
+    // this.activeWindowTitle = this.activeWindow.getTitle();
 
   }
 
