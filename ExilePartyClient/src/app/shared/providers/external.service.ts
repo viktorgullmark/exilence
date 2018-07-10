@@ -34,11 +34,7 @@ export class ExternalService {
     this.setCookie(data.sessionId);
 
     const parameters = `?accountName=${data.accountName}&character=${data.characterName}`;
-    return this.http.get('https://www.pathofexile.com/character-window/get-items' + parameters, { withCredentials: true })
-      .catch(e => {
-        this.router.navigate(['/disconnected']);
-        return Observable.of(e);
-      });
+    return this.http.get('https://www.pathofexile.com/character-window/get-items' + parameters, { withCredentials: true });
   }
 
   getCharacterList(account: string) {
@@ -46,7 +42,7 @@ export class ExternalService {
     return this.http.get('https://www.pathofexile.com/character-window/get-characters' + parameters)
     .catch(e => {
       this.router.navigate(['/disconnected']);
-      return Observable.of(e);
+      return Observable.of(null);
     });
   }
 
@@ -56,7 +52,7 @@ export class ExternalService {
     return this.http.get<Stash>('https://www.pathofexile.com/character-window/get-stash-items' + parameters)
     .catch(e => {
       this.router.navigate(['/disconnected']);
-      return Observable.of(e);
+      return Observable.of(null);
     });
   }
 
@@ -67,7 +63,7 @@ export class ExternalService {
     return this.http.get<Stash>('https://www.pathofexile.com/character-window/get-stash-items' + parameters)
     .catch(e => {
       this.router.navigate(['/disconnected']);
-      return Observable.of(e);
+      return Observable.of(null);
     });
   }
 
