@@ -79,7 +79,7 @@ export class PartySummaryComponent implements OnInit {
 
       const gainHour = ((1000 * 60 * 60)) / (lastSnapshot.timestamp - firstSnapshot.timestamp) * (lastSnapshot.value - firstSnapshot.value);
 
-      this.gain = gainHour;
+      this.gain = this.gain + gainHour;
 
       console.log(this.gain);
     }
