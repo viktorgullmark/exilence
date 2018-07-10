@@ -43,7 +43,9 @@ export class PartySummaryComponent implements OnInit {
   }
   ngOnInit() {
     let networth = 0;
+    this.gain = 0;
     this.partyService.party.players.forEach(p => {
+      this.updateGain(p);
       networth = networth + p.netWorthSnapshots[0].value;
     });
     this.partyNetworth = networth;
