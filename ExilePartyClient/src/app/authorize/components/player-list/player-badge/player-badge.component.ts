@@ -16,12 +16,15 @@ export class PlayerBadgeComponent implements OnInit {
   constructor(private partyService: PartyService, private robotService: RobotService) { }
 
   ngOnInit() {
-    this.partyService.selectedPlayer.subscribe(res => {
-      this.selectedPlayer = res;
-    });
-    this.partyService.selectedGenericPlayer.subscribe(res => {
-      this.selectedGenericPlayer = res;
-    });
+    if (!this.localPlayer) {
+      this.partyService.selectedPlayer.subscribe(res => {
+        this.selectedPlayer = res;
+      });
+    } else {
+      this.partyService.selectedGenericPlayer.subscribe(res => {
+        this.selectedGenericPlayer = res;
+      });
+    }
   }
 
   invitePlayer(playerName: string) {

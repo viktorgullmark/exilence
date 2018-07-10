@@ -14,6 +14,7 @@ import { Stash } from '../interfaces/stash.interface';
 import { AccountService } from './account.service';
 import { AnalyticsService } from './analytics.service';
 import { ElectronService } from './electron.service';
+import { Router } from '../../../../node_modules/@angular/router';
 
 @Injectable()
 export class ExternalService {
@@ -23,7 +24,8 @@ export class ExternalService {
     private http: HttpClient,
     private electronService: ElectronService,
     private accountService: AccountService,
-    private analyticsService: AnalyticsService
+    private analyticsService: AnalyticsService,
+    private router: Router
   ) { }
 
   getLatestRelease(): Observable<any> {
@@ -34,25 +36,41 @@ export class ExternalService {
     this.setCookie(data.sessionId);
 
     const parameters = `?accountName=${data.accountName}&character=${data.characterName}`;
-    return this.http.get('https://www.pathofexile.com/character-window/get-items' + parameters, { withCredentials: true });
+    return this.http.get('https://www.pathofexile.com/character-window/get-items' + parameters, { withCredentials: true })
+      .catch(e => {
+        this.router.navigate(['/disconnected']);
+        return Observable.of(null);
+      });
   }
 
   getCharacterList(account: string) {
     const parameters = `?accountName=${account}`;
-    return this.http.get('https://www.pathofexile.com/character-window/get-characters' + parameters);
+    return this.http.get('https://www.pathofexile.com/character-window/get-characters' + parameters)
+    .catch(e => {
+      this.router.navigate(['/disconnected']);
+      return Observable.of(null);
+    });
   }
 
   getStashTabs(sessionId: string, account: string, league: string) {
     this.setCookie(sessionId);
     const parameters = `?league=${league}&accountName=${account}&tabs=1`;
-    return this.http.get<Stash>('https://www.pathofexile.com/character-window/get-stash-items' + parameters);
+    return this.http.get<Stash>('https://www.pathofexile.com/character-window/get-stash-items' + parameters)
+    .catch(e => {
+      this.router.navigate(['/disconnected']);
+      return Observable.of(null);
+    });
   }
 
   getStashTab(sessionId: string, account: string, league: string, index: number): Observable<Stash> {
     this.analyticsService.sendEvent('income', `GET Stashtab`);
     this.setCookie(sessionId);
     const parameters = `?league=${league}&accountName=${account}&tabIndex=${index}&tabs=1`;
-    return this.http.get<Stash>('https://www.pathofexile.com/character-window/get-stash-items' + parameters);
+    return this.http.get<Stash>('https://www.pathofexile.com/character-window/get-stash-items' + parameters)
+    .catch(e => {
+      this.router.navigate(['/disconnected']);
+      return Observable.of(null);
+    });
   }
 
   setCookie(sessionId: string) {

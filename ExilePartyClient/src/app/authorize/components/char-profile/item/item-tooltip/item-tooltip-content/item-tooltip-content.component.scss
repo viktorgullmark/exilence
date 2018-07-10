@@ -60,15 +60,15 @@ hr {
 }
 
 .descr-text {
-    white-space: pre-wrap; 
-    display: inline-block; 
+    white-space: pre-wrap;
+    display: inline-block;
     max-width: 400px;
     color: $tag-color;
 }
 
 .prophecy-text {
-    white-space: pre-wrap; 
-    display: inline-block; 
+    white-space: pre-wrap;
+    display: inline-block;
     max-width: 400px;
     color: #fff;
 }
@@ -82,14 +82,14 @@ hr {
     font-size: 13px;
 }
 
-.elder {
+.elder-item {
     color: $elder-item-color !important;
-    font-size: 16px;
+    font-size: 13px;
 }
 
-.shaper {
+.shaper-item {
     color: $shaper-item-color !important;
-    font-size: 16px;
+    font-size: 13px;
 }
 
 .generic-mod {
@@ -126,6 +126,7 @@ hr {
 
     .mods {
         color: $mod-generic-color;
+
         .crafted-mod {
             color: $crafted-mod-color;
         }
@@ -163,25 +164,33 @@ hr {
 
         .div-card {
             color: #fff;
+
             .corrupted {
                 color: $corrupted-item-color;
             }
+
             .gemitem {
                 color: $rarity-gem-color;
             }
+
             .magicitem {
                 color: $rarity-magic-color;
             }
+
             .currencyitem {
                 color: $rarity-currency-color;
             }
+
             .uniqueitem {
                 color: $rarity-unique-color;
             }
+
             .rareitem {
                 color: $rarity-rare-color;
             }
+
             .default {}
+
             .augmented {}
         }
     }
