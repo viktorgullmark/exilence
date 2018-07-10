@@ -12,7 +12,8 @@
         "SETTINGS": {
             "TITLE": "Settings",
             "STASHTAB_LIST_HEADER": "Select which stash-tabs to include",
-            "WINDOW": "Window settings"
+            "WINDOW": "Window",
+            "KEYBINDS": "Keybinds"
         },
         "RECENT_PLAYERS": {
             "TITLE": "Inspect players"
@@ -65,5 +66,9 @@
     "STASH": {
         "SEARCH": "Filter tabs",
         "SELECT_TABS": "Select stashtabs"
+    },
+    "KEYBINDS": {
+        "RESET": "Reset keybinds",
+        "SAVE": "Save keybinds"
     }
 }
