@@ -37,7 +37,7 @@ export class ExternalService {
     return this.http.get('https://www.pathofexile.com/character-window/get-items' + parameters, { withCredentials: true })
       .catch(e => {
         this.router.navigate(['/disconnected']);
-        return Observable.of(null);
+        return Observable.of(e);
       });
   }
 
@@ -46,7 +46,7 @@ export class ExternalService {
     return this.http.get('https://www.pathofexile.com/character-window/get-characters' + parameters)
     .catch(e => {
       this.router.navigate(['/disconnected']);
-      return Observable.of(null);
+      return Observable.of(e);
     });
   }
 
@@ -56,7 +56,7 @@ export class ExternalService {
     return this.http.get<Stash>('https://www.pathofexile.com/character-window/get-stash-items' + parameters)
     .catch(e => {
       this.router.navigate(['/disconnected']);
-      return Observable.of(null);
+      return Observable.of(e);
     });
   }
 
@@ -67,7 +67,7 @@ export class ExternalService {
     return this.http.get<Stash>('https://www.pathofexile.com/character-window/get-stash-items' + parameters)
     .catch(e => {
       this.router.navigate(['/disconnected']);
-      return Observable.of(null);
+      return Observable.of(e);
     });
   }
 

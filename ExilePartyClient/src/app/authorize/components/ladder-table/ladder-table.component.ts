@@ -1,5 +1,5 @@
 import { Component, OnInit, Input, Inject, ViewChild, Output, EventEmitter } from '@angular/core';
-import { Player } from '../../../shared/interfaces/player.interface';
+import { Player, LadderPlayer } from '../../../shared/interfaces/player.interface';
 import { PartyService } from '../../../shared/providers/party.service';
 import { Validators, FormBuilder, FormGroup } from '@angular/forms';
 import { ExtendedAreaInfo } from '../../../shared/interfaces/area.interface';
@@ -13,7 +13,7 @@ import { LadderService } from '../../../shared/providers/ladder.service';
 })
 export class LadderTableComponent implements OnInit {
   @Input() player: Player;
-  displayedColumns: string[] = ['rank', 'level', 'character', 'account', 'twitch', 'experience' ];
+  displayedColumns: string[] = ['online', 'rank', 'level', 'character', 'account', 'experience_per_hour' ];
   dataSource = [];
   filteredArr = [];
   source: any;
@@ -22,17 +22,17 @@ export class LadderTableComponent implements OnInit {
   }
 
   ngOnInit() {
+
+    console.log(this.player);
+    this.updateTable(this.player.ladderInfo);
     this.partyService.selectedPlayer.subscribe(res => {
       if (res !== undefined) {
         this.player = res;
         this.dataSource = [];
-        this.ladderService.getLadderInfoForCharacter(this.player.character.league, this.player.character.name).subscribe(ladder => {
-          if (ladder !== null) {
-            this.updateTable(ladder.list);
-            this.init();
-          }
-        });
-
+        if (res.ladderInfo !== null && res.ladderInfo !== undefined) {
+          this.updateTable(res.ladderInfo);
+        }
+        this.init();
       }
     });
   }
@@ -45,8 +45,8 @@ export class LadderTableComponent implements OnInit {
     }, 0);
   }
 
-  updateTable(playersOnLadder: any[]) {
-    playersOnLadder.forEach((player: any) => {
+  updateTable(playersOnLadder: LadderPlayer[]) {
+    playersOnLadder.forEach((player: LadderPlayer) => {
       const newPlayerObj = {
         character: player.name,
         level: player.level,
