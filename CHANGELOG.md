@@ -7,6 +7,7 @@ All notable changes to this project will be documented in this file.
 - Fixed a bug where players weren't disconnected properly after party was dropped due to inactivity
 - Fixed a bug where you could select two players at the same time
 - Fixed a bug for SSF leagues where net worth was not calculated
+- Fixed a bug where abyssal sockets weren't shown
 - Changed styling of shaper/elder-items
 - Now redirects to disconnect-page when pathofexile.com is down
 
