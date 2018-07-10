@@ -9,6 +9,33 @@
     border-radius: 1px;
     transform-origin: top left;
 
+    .info-container {
+        margin: 25px;
+        display: flex;
+
+        .info-wrapper {
+            width: 60%;
+            p{
+                margin-top: 0;
+            }
+        }
+
+        .link-wrapper {
+            text-align: right;
+            .title {
+                font-size: 14px;
+
+                .poeracing-link {
+                    color: $primary;
+                    font-weight: 500;
+                    text-decoration: underline;
+                }
+            }
+
+            width: 40%;
+        }
+    }
+
     .table-outer-wrapper {
         height: 50%;
         bottom: 25px;
@@ -16,11 +43,9 @@
         padding-left: 25px;
         margin-right: 25px;
         margin-top: 25px;
-    
+
         .ladder-table-wrapper {
             height: calc(100% - 60px);
         }
     }
-    
 }
-
