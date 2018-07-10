@@ -4,7 +4,7 @@ All notable changes to this project will be documented in this file.
 ## [0.5.0] - 2018-07-XX
 - Added link to player-profile
 - Reworked how gain is calculated
-- Fixed a bug where players weren't disconnected properly when idle(15min+)
+- Fixed a bug where players weren't disconnected properly after party was dropped due to inactivity
 - Fixed a bug where you could select two players at the same time
 - Fixed a bug for SSF leagues where net worth was not calculated
 - Changed styling of shaper/elder-items
