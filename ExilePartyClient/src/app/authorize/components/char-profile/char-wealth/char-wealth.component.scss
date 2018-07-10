@@ -21,7 +21,7 @@
         display: flex;
         align-items: flex-end;
         justify-content: end;
-
+        padding: 25px 25px 0px 25px;
         .right-aligned {
             margin-left: auto;
         }
@@ -78,7 +78,7 @@
         margin-right: 25px;
         margin-top: 25px;
         position: absolute;
-
+        padding-bottom: 25px;
         @media screen and (min-height: 1200px) {
             height: 55%;
         }
