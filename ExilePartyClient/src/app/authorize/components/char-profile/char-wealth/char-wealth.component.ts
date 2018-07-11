@@ -4,8 +4,10 @@ import { Router } from '@angular/router';
 
 import { NetWorthSnapshot } from '../../../../shared/interfaces/income.interface';
 import { Player } from '../../../../shared/interfaces/player.interface';
+import { AccountService } from '../../../../shared/providers/account.service';
 import { AnalyticsService } from '../../../../shared/providers/analytics.service';
 import { ElectronService } from '../../../../shared/providers/electron.service';
+import { IncomeService } from '../../../../shared/providers/income.service';
 import { PartyService } from '../../../../shared/providers/party.service';
 import { RobotService } from '../../../../shared/providers/robot.service';
 import { SettingsService } from '../../../../shared/providers/settings.service';
@@ -37,7 +39,9 @@ export class CharWealthComponent implements OnInit {
     private partyService: PartyService,
     private analyticsService: AnalyticsService,
     private settingService: SettingsService,
-    private robotService: RobotService
+    private robotService: RobotService,
+    private incomeService: IncomeService,
+    private accountService: AccountService
   ) {
     this.form = fb.group({
       searchText: ['']
@@ -68,10 +72,12 @@ export class CharWealthComponent implements OnInit {
   }
 
   resetNetWorth() {
-    if (this.player.account === this.partyService.currentPlayer.account) {
+    const player = this.player;
+    if (player.account === this.partyService.currentPlayer.account) {
       const emptyHistory = this.settingService.deleteNetWorth();
-      this.player.netWorthSnapshots = emptyHistory.history;
-      this.partyService.updatePlayer(this.player);
+      player.netWorthSnapshots = emptyHistory.history;
+      this.incomeService.loadSnapshotsFromSettings();
+      this.accountService.player.next(this.player);
     }
   }
 
@@ -97,14 +103,16 @@ export class CharWealthComponent implements OnInit {
   }
 
   loadPreviousSnapshot(event) {
-    this.table.loadPreviousSnapshot(event);
+    if (this.player.netWorthSnapshots[0] !== undefined) {
+      this.table.loadPreviousSnapshot(event);
 
-    this.networthValue = event.value;
+      this.networthValue = event.value;
 
-    const lastSnapshotTimestamp = this.player.netWorthSnapshots[0].timestamp;
-    const loadedSnapshotTimestamp = event.name.getTime();
+      const lastSnapshotTimestamp = this.player.netWorthSnapshots[0].timestamp;
+      const loadedSnapshotTimestamp = event.name.getTime();
 
-    this.previousSnapshot = loadedSnapshotTimestamp !== lastSnapshotTimestamp;
+      this.previousSnapshot = loadedSnapshotTimestamp !== lastSnapshotTimestamp;
+    }
   }
 
   search() {

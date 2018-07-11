@@ -52,7 +52,7 @@ export class IncomeService {
 
     this.sessionId = sessionId;
 
-    this.netWorthHistory = this.settingsService.get('networth');
+    this.loadSnapshotsFromSettings();
 
     this.accountService.player.subscribe(res => {
       if (res !== undefined) {
@@ -60,6 +60,10 @@ export class IncomeService {
         this.localPlayer.netWorthSnapshots = this.netWorthHistory.history;
       }
     });
+  }
+
+  loadSnapshotsFromSettings() {
+    this.netWorthHistory = this.settingsService.get('networth');
   }
 
   Snapshot() {
