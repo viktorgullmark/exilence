@@ -83,14 +83,16 @@ export class CharWealthComponent implements OnInit {
   }
 
   loadPreviousSnapshot(event) {
-    this.table.loadPreviousSnapshot(event);
+    if (this.player.netWorthSnapshots[0] !== undefined) {
+      this.table.loadPreviousSnapshot(event);
 
-    this.networthValue = event.value;
+      this.networthValue = event.value;
 
-    const lastSnapshotTimestamp = this.player.netWorthSnapshots[0].timestamp;
-    const loadedSnapshotTimestamp = event.name.getTime();
+      const lastSnapshotTimestamp = this.player.netWorthSnapshots[0].timestamp;
+      const loadedSnapshotTimestamp = event.name.getTime();
 
-    this.previousSnapshot = loadedSnapshotTimestamp !== lastSnapshotTimestamp;
+      this.previousSnapshot = loadedSnapshotTimestamp !== lastSnapshotTimestamp;
+    }
   }
 
   search() {
