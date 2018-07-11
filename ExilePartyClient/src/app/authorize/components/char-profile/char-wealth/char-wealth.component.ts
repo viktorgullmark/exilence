@@ -4,12 +4,13 @@ import { Router } from '@angular/router';
 
 import { NetWorthSnapshot } from '../../../../shared/interfaces/income.interface';
 import { Player } from '../../../../shared/interfaces/player.interface';
+import { AccountService } from '../../../../shared/providers/account.service';
 import { AnalyticsService } from '../../../../shared/providers/analytics.service';
 import { ElectronService } from '../../../../shared/providers/electron.service';
+import { IncomeService } from '../../../../shared/providers/income.service';
 import { PartyService } from '../../../../shared/providers/party.service';
 import { SettingsService } from '../../../../shared/providers/settings.service';
 import { NetworthTableComponent } from '../../networth-table/networth-table.component';
-import { AccountService } from '../../../../shared/providers/account.service';
 
 @Component({
   selector: 'app-char-wealth',
@@ -37,6 +38,8 @@ export class CharWealthComponent implements OnInit {
     private partyService: PartyService,
     private analyticsService: AnalyticsService,
     private settingService: SettingsService,
+    private incomeService: IncomeService,
+    private accountService: AccountService
   ) {
     this.form = fb.group({
       searchText: ['']
@@ -71,7 +74,8 @@ export class CharWealthComponent implements OnInit {
     if (player.account === this.partyService.currentPlayer.account) {
       const emptyHistory = this.settingService.deleteNetWorth();
       player.netWorthSnapshots = emptyHistory.history;
-      this.partyService.updatePlayer(player);
+      this.incomeService.loadSnapshotsFromSettings();
+      this.accountService.player.next(this.player);
     }
   }
 
