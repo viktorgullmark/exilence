@@ -112,7 +112,7 @@ export class IncomeComponent implements OnInit {
   }
 
   axisFormat(val) {
-    return moment(val).format('HH:mm');
+    return moment(val).format('LT');
   }
 
   setColorScheme(name) {

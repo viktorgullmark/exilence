@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
+import * as moment from 'moment';
 
 import * as pkg from '../../package.json';
 import { Player } from './shared/interfaces/player.interface';
@@ -29,6 +30,7 @@ export class AppComponent {
     this.logout();
 
     translate.setDefaultLang('en');
+    moment.locale('se');
     // console.log('AppConfig', AppConfig);
 
     if (electronService.isElectron()) {

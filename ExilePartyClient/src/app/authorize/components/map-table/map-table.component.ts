@@ -69,7 +69,7 @@ export class MapTableComponent implements OnInit {
           tier: area.eventArea.info[0].level,
           time: ((minute < 10) ? '0' + minute.toString() : seconds.toString())
             + ':' + ((seconds < 10) ? '0' + seconds.toString() : seconds.toString()),
-          timestamp: moment(area.timestamp).format('HH:mm')
+          timestamp: moment(area.timestamp).format('LT')
         };
 
         this.dataSource.push(newAreaObj);
