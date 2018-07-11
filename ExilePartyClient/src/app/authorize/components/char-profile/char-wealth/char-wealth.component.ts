@@ -27,6 +27,8 @@ export class CharWealthComponent implements OnInit {
   public graphDimensions = [640, 200];
   public gain = 0;
   public showReset = false;
+  public previousSnapshot = false;
+  public networthValue = 0;
 
   constructor(
     @Inject(FormBuilder) fb: FormBuilder,
@@ -46,7 +48,9 @@ export class CharWealthComponent implements OnInit {
         this.showReset = false;
       }
       this.player = res;
+      this.networthValue = this.player.netWorthSnapshots[0].value;
       this.updateGain(res);
+      this.previousSnapshot = false;
     });
   }
 
@@ -76,6 +80,17 @@ export class CharWealthComponent implements OnInit {
 
   showGraph() {
     this.isGraphHidden = false;
+  }
+
+  loadPreviousSnapshot(event) {
+    this.table.loadPreviousSnapshot(event);
+
+    this.networthValue = event.value;
+
+    const lastSnapshotTimestamp = this.player.netWorthSnapshots[0].timestamp;
+    const loadedSnapshotTimestamp = event.name.getTime();
+
+    this.previousSnapshot = loadedSnapshotTimestamp !== lastSnapshotTimestamp;
   }
 
   search() {

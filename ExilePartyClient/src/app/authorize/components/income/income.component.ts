@@ -21,6 +21,7 @@ export class IncomeComponent implements OnInit {
   @Input() view = [1000, 400];
   @Input() title = 'Net worth graph based on selected tabs';
   @Output() hidden: EventEmitter<any> = new EventEmitter;
+  @Output() loadPrevious: EventEmitter<any> = new EventEmitter;
 
   public isHidden = false;
   public visible = true;
@@ -120,13 +121,18 @@ export class IncomeComponent implements OnInit {
   }
 
   select(data): void {
-    const items = this.dateData[0].series.filter(t => {
+    const snapshot = this.dateData[0].series.filter(t => {
       if (t.name === data.name) {
         return true;
       }
       return false;
-    })[0].items;
-    console.log('[INFO] Clicked item items: ', items);
+    })[0];
+    console.log('[INFO] Clicked snapshot: ', snapshot);
+    this.loadPreviousSnapshot(snapshot);
+  }
+
+  loadPreviousSnapshot(snapshot) {
+    this.loadPrevious.emit(snapshot);
   }
 
   onLegendLabelClick(entry) {
