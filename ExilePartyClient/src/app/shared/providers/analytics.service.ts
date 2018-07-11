@@ -10,6 +10,9 @@ export class AnalyticsService {
   private visitor;
   private version: string;
   private appName: string;
+
+  private pastScreens: string[] = [];
+
   constructor(private logService: LogService) {
     this.version = pkg['version'];
     this.appName = 'ExileParty';
@@ -47,7 +50,19 @@ export class AnalyticsService {
 
   }
 
+  sendLastPartyPlayerScreen() {
+    for (let i = 0; i < this.pastScreens.length; i++) {
+      const screen = this.pastScreens[i];
+      if (screen.indexOf('/authorized/party/player/') !== -1) {
+        this.sendScreenview(screen);
+        break;
+      }
+    }
+  }
+
   sendScreenview(screenName: string) {
+    this.pastScreens.unshift(screenName);
+
     this.visitor.screenview(screenName, this.appName, this.version, (err) => {
       if (err) {
         this.logService.log('Sending screenview: ', err, true);
