@@ -21,19 +21,19 @@ export class NetworthTableComponent implements OnInit {
 
   ngOnInit() {
     if (this.player !== undefined) {
-      this.updateTable(this.player);
+      this.loadPlayerData(this.player);
       this.partyService.selectedPlayer.subscribe(res => {
         this.player = res;
         this.dataSource = [];
         if (res.netWorthSnapshots !== null) {
-          this.updateTable(res);
+          this.loadPlayerData(res);
         }
         this.filter();
       });
     } else {
       // party logic
       this.partyService.party.players.forEach(p => {
-        this.updateTable(p);
+        this.loadPlayerData(p);
       });
       this.filter();
 
@@ -42,7 +42,7 @@ export class NetworthTableComponent implements OnInit {
           this.dataSource = [];
           party.players.forEach(p => {
             if (p.netWorthSnapshots !== null) {
-              this.updateTable(p);
+              this.loadPlayerData(p);
             }
           });
           this.filter();
@@ -69,8 +69,21 @@ export class NetworthTableComponent implements OnInit {
     this.source.sort = this.sort;
   }
 
-  updateTable(player: Player) {
-    player.netWorthSnapshots[0].items.forEach(snapshot => {
+  loadPlayerData(player: Player) {
+    this.updateTable(player.netWorthSnapshots[0].items);
+  }
+
+  loadPreviousSnapshot(snapshot: any) {
+    this.dataSource = [];
+    this.updateTable(snapshot.items);
+
+    this.filter();
+
+    console.log('[INFO] Loaded previous items to table');
+  }
+
+  updateTable(items: any[]) {
+    items.forEach(snapshot => {
       const existingItem = this.dataSource.find(x => x.name === snapshot.name);
       if (existingItem !== undefined) {
         const indexOfItem = this.dataSource.indexOf(existingItem);
@@ -80,7 +93,7 @@ export class NetworthTableComponent implements OnInit {
         this.dataSource[indexOfItem] = existingItem;
       } else {
         const newObj = {
-          position: player.netWorthSnapshots[0].items.indexOf(snapshot) + 1,
+          position: items.indexOf(snapshot) + 1,
           name: snapshot.name,
           stacksize: snapshot.stacksize,
           value: snapshot.value,
@@ -90,8 +103,8 @@ export class NetworthTableComponent implements OnInit {
         this.dataSource.push(newObj);
       }
     });
-
   }
-
 }
+
+
 
