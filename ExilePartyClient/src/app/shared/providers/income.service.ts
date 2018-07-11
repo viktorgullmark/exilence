@@ -1,10 +1,8 @@
-import 'rxjs/add/observable/empty';
 import 'rxjs/add/observable/forkJoin';
 import 'rxjs/add/observable/from';
 import 'rxjs/add/operator/concatMap';
 import 'rxjs/add/operator/delay';
 import 'rxjs/add/operator/do';
-import 'rxjs/add/operator/take';
 
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
@@ -15,7 +13,6 @@ import { Player } from '../interfaces/player.interface';
 import { NinjaLine, NinjaTypes } from '../interfaces/poe-ninja.interface';
 import { Stash } from '../interfaces/stash.interface';
 import { AccountService } from './account.service';
-import { AnalyticsService } from './analytics.service';
 import { ExternalService } from './external.service';
 import { LogService } from './log.service';
 import { NinjaService } from './ninja.service';
@@ -40,7 +37,6 @@ export class IncomeService {
   private totalNetWorthItems: NetWorthItem[] = [];
   public totalNetWorth = 0;
   private fiveMinutes = 5 * 60 * 1000;
-  private oneHourAgo = (Date.now() - (1 * 60 * 60 * 1000));
 
   constructor(
     private ninjaService: NinjaService,
@@ -67,6 +63,7 @@ export class IncomeService {
   }
 
   Snapshot() {
+    const oneHourAgo = (Date.now() - (1 * 60 * 60 * 1000));
     this.netWorthHistory = this.settingsService.get('networth');
     if (
       this.netWorthHistory.lastSnapshot < (Date.now() - this.fiveMinutes) &&
@@ -80,7 +77,8 @@ export class IncomeService {
       this.SnapshotPlayerNetWorth(this.sessionId).subscribe(() => {
 
         this.netWorthHistory.history = this.netWorthHistory.history
-          .filter((snaphot: NetWorthSnapshot) => snaphot.timestamp > this.oneHourAgo);
+          .filter((snaphot: NetWorthSnapshot) => snaphot.timestamp > oneHourAgo);
+
         // We are a new player that have not parsed income before
         // Remove the placeholder element
         if (
@@ -103,7 +101,6 @@ export class IncomeService {
         this.partyService.updatePlayer(this.localPlayer);
         this.logService.log('Finished Snapshotting player net worth');
 
-        // done snapshotting
         this.isSnapshotting = false;
       });
     }
@@ -213,8 +210,9 @@ export class IncomeService {
   }
 
   getValuesFromNinja(league: string) {
+    const oneHourAgo = (Date.now() - (1 * 60 * 60 * 1000));
     const length = Object.values(this.ninjaPrices).length;
-    if (length > 0 && this.lastNinjaHit > this.oneHourAgo) {
+    if (length > 0 && this.lastNinjaHit > oneHourAgo) {
       return Observable.of(null);
     } else {
       this.logService.log('[INFO] Retriving prices from poe.ninja');

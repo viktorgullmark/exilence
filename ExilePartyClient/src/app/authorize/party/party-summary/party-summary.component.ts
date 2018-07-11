@@ -1,9 +1,10 @@
-import { Component, OnInit, Inject, ViewChild } from '@angular/core';
+import { Component, Inject, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
-import { PartyService } from '../../../shared/providers/party.service';
-import { NetworthTableComponent } from '../../components/networth-table/networth-table.component';
+
 import { NetWorthSnapshot } from '../../../shared/interfaces/income.interface';
 import { Player } from '../../../shared/interfaces/player.interface';
+import { PartyService } from '../../../shared/providers/party.service';
+import { NetworthTableComponent } from '../../components/networth-table/networth-table.component';
 
 @Component({
   selector: 'app-party-summary',
@@ -29,6 +30,7 @@ export class PartySummaryComponent implements OnInit {
     });
     this.partyService.partyUpdated.subscribe(res => {
       if (res !== undefined) {
+        this.oneHourAgo = (Date.now() - (1 * 60 * 60 * 1000));
         let networth = 0;
         this.gain = 0;
         res.players.forEach(p => {
@@ -43,7 +45,9 @@ export class PartySummaryComponent implements OnInit {
   }
   ngOnInit() {
     let networth = 0;
+    this.gain = 0;
     this.partyService.party.players.forEach(p => {
+      this.updateGain(p);
       networth = networth + p.netWorthSnapshots[0].value;
     });
     this.partyNetworth = networth;
@@ -71,9 +75,12 @@ export class PartySummaryComponent implements OnInit {
       .filter((snaphot: NetWorthSnapshot) => snaphot.timestamp > this.oneHourAgo);
 
     if (pastHoursSnapshots[0] !== undefined) {
-      const lastValue = pastHoursSnapshots[0].value;
-      const firstValue = pastHoursSnapshots[pastHoursSnapshots.length - 1].value;
-      this.gain = this.gain + lastValue - firstValue;
+      const lastSnapshot = pastHoursSnapshots[0];
+      const firstSnapshot = pastHoursSnapshots[pastHoursSnapshots.length - 1];
+
+      const gainHour = ((1000 * 60 * 60)) / (lastSnapshot.timestamp - firstSnapshot.timestamp) * (lastSnapshot.value - firstSnapshot.value);
+
+      this.gain = this.gain + gainHour;
     }
   }
 }

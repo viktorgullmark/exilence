@@ -34,11 +34,15 @@ export class ExternalService {
     this.setCookie(data.sessionId);
 
     const parameters = `?accountName=${data.accountName}&character=${data.characterName}`;
-    return this.http.get('https://www.pathofexile.com/character-window/get-items' + parameters, { withCredentials: true })
-      .catch(e => {
-        this.router.navigate(['/disconnected']);
-        return Observable.of(null);
-      });
+    return this.http.get('https://www.pathofexile.com/character-window/get-items' + parameters, { withCredentials: true }).catch(e => {
+      this.router.navigate(['/disconnected']);
+      return Observable.of(null);
+    });
+  }
+
+  getGenericCharacter(data: AccountInfo): Observable<any> {
+    const parameters = `?accountName=${data.accountName}&character=${data.characterName}`;
+    return this.http.get('https://www.pathofexile.com/character-window/get-items' + parameters, { withCredentials: true });
   }
 
   getCharacterList(account: string) {
