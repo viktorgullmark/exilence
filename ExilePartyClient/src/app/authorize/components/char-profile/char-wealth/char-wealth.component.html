@@ -45,7 +45,7 @@
         <app-income (hidden)="toggleGraph($event)" (loadPrevious)="loadPreviousSnapshot($event)" [player]="player" [view]="graphDimensions"></app-income>
     </div>
     <div class="table-outer-wrapper" [ngClass]="{'full-height-table': isGraphHidden }">
-        <div class="flex-area">
+        <div class="flex-area wrapped">
             <button mat-raised-button color="primary" (click)="goToSettings()" type="button" class="right-aligned">{{'STASH.SELECT_TABS' | translate}}</button>
         </div>
         <div class="search-form-wrapper">
