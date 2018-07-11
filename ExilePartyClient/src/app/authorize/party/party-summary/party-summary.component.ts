@@ -74,7 +74,7 @@ export class PartySummaryComponent implements OnInit {
     const pastHoursSnapshots = player.netWorthSnapshots
       .filter((snaphot: NetWorthSnapshot) => snaphot.timestamp > this.oneHourAgo);
 
-    if (pastHoursSnapshots[0] !== undefined) {
+    if (pastHoursSnapshots.length > 1) {
       const lastSnapshot = pastHoursSnapshots[0];
       const firstSnapshot = pastHoursSnapshots[pastHoursSnapshots.length - 1];
 
