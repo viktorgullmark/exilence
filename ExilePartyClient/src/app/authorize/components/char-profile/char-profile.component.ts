@@ -4,10 +4,10 @@ import { Router } from '@angular/router';
 
 import { Player } from '../../../shared/interfaces/player.interface';
 import { AnalyticsService } from '../../../shared/providers/analytics.service';
+import { ElectronService } from '../../../shared/providers/electron.service';
 import { ExternalService } from '../../../shared/providers/external.service';
 import { PartyService } from '../../../shared/providers/party.service';
 import { SessionService } from '../../../shared/providers/session.service';
-import { ElectronService } from '../../../shared/providers/electron.service';
 import { LadderService } from '../../../shared/providers/ladder.service';
 
 @Component({
@@ -32,7 +32,10 @@ export class CharProfileComponent implements OnInit {
     private electronService: ElectronService,
     private analyticsService: AnalyticsService,
     private ladderService: LadderService
-  ) { }
+  ) {
+    this.analyticsService.sendScreenview('/authorized/party/player/profile');
+   }
+
 
   ngOnInit() {
     if (!this.localProfile) {

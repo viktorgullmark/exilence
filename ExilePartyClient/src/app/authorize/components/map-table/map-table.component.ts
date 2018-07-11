@@ -1,9 +1,10 @@
-import { Component, OnInit, Input, Inject, ViewChild, Output, EventEmitter } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
+import { MatSort, MatTableDataSource } from '@angular/material';
+import * as moment from 'moment';
+
+import { ExtendedAreaInfo } from '../../../shared/interfaces/area.interface';
 import { Player } from '../../../shared/interfaces/player.interface';
 import { PartyService } from '../../../shared/providers/party.service';
-import { Validators, FormBuilder, FormGroup } from '@angular/forms';
-import { ExtendedAreaInfo } from '../../../shared/interfaces/area.interface';
-import { MatSort, MatTableDataSource } from '@angular/material';
 
 @Component({
   selector: 'app-map-table',
@@ -68,7 +69,7 @@ export class MapTableComponent implements OnInit {
           tier: area.eventArea.info[0].level,
           time: ((minute < 10) ? '0' + minute.toString() : seconds.toString())
             + ':' + ((seconds < 10) ? '0' + seconds.toString() : seconds.toString()),
-          timestamp: area.timestamp
+          timestamp: moment(area.timestamp).format('LT')
         };
 
         this.dataSource.push(newAreaObj);

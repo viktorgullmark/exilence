@@ -1,9 +1,11 @@
-import { Component, OnInit, Inject, ViewChild } from '@angular/core';
+import { Component, Inject, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
-import { PartyService } from '../../../shared/providers/party.service';
-import { NetworthTableComponent } from '../../components/networth-table/networth-table.component';
+
 import { NetWorthSnapshot } from '../../../shared/interfaces/income.interface';
 import { Player } from '../../../shared/interfaces/player.interface';
+import { AnalyticsService } from '../../../shared/providers/analytics.service';
+import { PartyService } from '../../../shared/providers/party.service';
+import { NetworthTableComponent } from '../../components/networth-table/networth-table.component';
 
 @Component({
   selector: 'app-party-summary',
@@ -23,7 +25,9 @@ export class PartySummaryComponent implements OnInit {
   constructor(
     @Inject(FormBuilder) fb: FormBuilder,
     private partyService: PartyService,
+    private analyticsService: AnalyticsService
   ) {
+    this.analyticsService.sendScreenview('/authorized/party/summary');
     this.form = fb.group({
       searchText: ['']
     });
@@ -73,15 +77,13 @@ export class PartySummaryComponent implements OnInit {
     const pastHoursSnapshots = player.netWorthSnapshots
       .filter((snaphot: NetWorthSnapshot) => snaphot.timestamp > this.oneHourAgo);
 
-    if (pastHoursSnapshots[0] !== undefined) {
+    if (pastHoursSnapshots.length > 1) {
       const lastSnapshot = pastHoursSnapshots[0];
       const firstSnapshot = pastHoursSnapshots[pastHoursSnapshots.length - 1];
 
       const gainHour = ((1000 * 60 * 60)) / (lastSnapshot.timestamp - firstSnapshot.timestamp) * (lastSnapshot.value - firstSnapshot.value);
 
       this.gain = this.gain + gainHour;
-
-      console.log(this.gain);
     }
   }
 }
