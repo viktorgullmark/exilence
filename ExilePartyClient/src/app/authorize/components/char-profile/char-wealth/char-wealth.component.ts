@@ -7,10 +7,9 @@ import { Player } from '../../../../shared/interfaces/player.interface';
 import { AnalyticsService } from '../../../../shared/providers/analytics.service';
 import { ElectronService } from '../../../../shared/providers/electron.service';
 import { PartyService } from '../../../../shared/providers/party.service';
+import { RobotService } from '../../../../shared/providers/robot.service';
 import { SettingsService } from '../../../../shared/providers/settings.service';
 import { NetworthTableComponent } from '../../networth-table/networth-table.component';
-import { AccountService } from '../../../../shared/providers/account.service';
-import { RobotService } from '../../../../shared/providers/robot.service';
 
 @Component({
   selector: 'app-char-wealth',
@@ -28,6 +27,8 @@ export class CharWealthComponent implements OnInit {
   public graphDimensions = [640, 200];
   public gain = 0;
   public showReset = false;
+  public previousSnapshot = false;
+  public networthValue = 0;
 
   constructor(
     @Inject(FormBuilder) fb: FormBuilder,
@@ -48,7 +49,9 @@ export class CharWealthComponent implements OnInit {
         this.showReset = false;
       }
       this.player = res;
+      this.networthValue = this.player.netWorthSnapshots[0].value;
       this.updateGain(res);
+      this.previousSnapshot = false;
     });
   }
 
@@ -93,6 +96,17 @@ export class CharWealthComponent implements OnInit {
     }
   }
 
+  loadPreviousSnapshot(event) {
+    this.table.loadPreviousSnapshot(event);
+
+    this.networthValue = event.value;
+
+    const lastSnapshotTimestamp = this.player.netWorthSnapshots[0].timestamp;
+    const loadedSnapshotTimestamp = event.name.getTime();
+
+    this.previousSnapshot = loadedSnapshotTimestamp !== lastSnapshotTimestamp;
+  }
+
   search() {
     this.table.doSearch(this.form.controls.searchText.value);
   }
@@ -102,7 +116,7 @@ export class CharWealthComponent implements OnInit {
     const pastHoursSnapshots = player.netWorthSnapshots
       .filter((snaphot: NetWorthSnapshot) => snaphot.timestamp > oneHourAgo);
 
-    if (pastHoursSnapshots[0] !== undefined) {
+    if (pastHoursSnapshots.length > 1) {
       const lastSnapshot = pastHoursSnapshots[0];
       const firstSnapshot = pastHoursSnapshots[pastHoursSnapshots.length - 1];
 

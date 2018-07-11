@@ -4,6 +4,7 @@ All notable changes to this project will be documented in this file.
 ## [0.5.0] - 2018-07-XX
 - Added link to player-profile
 - Reworked how gain is calculated
+- Added the ability to click on snapshots in the graph for a player, to display the items and net worth at that timestamp
 - Fixed a bug where players weren't disconnected properly after party was dropped due to inactivity
 - Fixed a bug where you could select two players at the same time
 - Fixed a bug for SSF leagues where net worth was not calculated

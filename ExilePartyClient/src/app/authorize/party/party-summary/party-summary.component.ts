@@ -3,6 +3,7 @@ import { FormBuilder, FormGroup } from '@angular/forms';
 
 import { NetWorthSnapshot } from '../../../shared/interfaces/income.interface';
 import { Player } from '../../../shared/interfaces/player.interface';
+import { AnalyticsService } from '../../../shared/providers/analytics.service';
 import { PartyService } from '../../../shared/providers/party.service';
 import { NetworthTableComponent } from '../../components/networth-table/networth-table.component';
 
@@ -24,7 +25,9 @@ export class PartySummaryComponent implements OnInit {
   constructor(
     @Inject(FormBuilder) fb: FormBuilder,
     private partyService: PartyService,
+    private analyticsService: AnalyticsService
   ) {
+    this.analyticsService.sendScreenview('/authorized/party/summary');
     this.form = fb.group({
       searchText: ['']
     });
@@ -74,7 +77,7 @@ export class PartySummaryComponent implements OnInit {
     const pastHoursSnapshots = player.netWorthSnapshots
       .filter((snaphot: NetWorthSnapshot) => snaphot.timestamp > this.oneHourAgo);
 
-    if (pastHoursSnapshots[0] !== undefined) {
+    if (pastHoursSnapshots.length > 1) {
       const lastSnapshot = pastHoursSnapshots[0];
       const firstSnapshot = pastHoursSnapshots[pastHoursSnapshots.length - 1];
 
