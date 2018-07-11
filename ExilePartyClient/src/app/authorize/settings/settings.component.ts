@@ -47,9 +47,6 @@ export class SettingsComponent implements OnInit {
 
     this.keybindService.keybinds.subscribe((binds: Keybind[]) => {
       this.keybinds = binds;
-      console.log(binds);
-      console.log(this.modifierKeys);
-      console.log(this.triggerKeys);
     });
 
   }
@@ -68,17 +65,18 @@ export class SettingsComponent implements OnInit {
   }
 
   resetKeybinds() {
-    // todo: reset keybinds
+    this.keybindService.resetKeybinds();
+    this.settingsService.set('keybinds', undefined);
   }
 
   saveKeybinds() {
 
-    let numberBinds = [...this.keybinds];
-    numberBinds = numberBinds.map(bind => {
+    const numberBinds = this.keybinds.slice();
+    for (let i = 0; i < numberBinds.length; i++) {
+      const bind = numberBinds[i];
       bind.modifierKeyCode = +bind.modifierKeyCode;
       bind.triggerKeyCode = +bind.triggerKeyCode;
-      return bind;
-    });
+    }
 
     this.keybindService.updateKeybinds(numberBinds);
     this.settingsService.set('keybinds', numberBinds);

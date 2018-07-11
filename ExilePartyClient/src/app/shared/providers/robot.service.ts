@@ -63,7 +63,6 @@ export class RobotService {
       const clip = this.clipboard.getText();
       if (clip !== this.clipboardValue) {
         this.clipboardValue = this.clipboard.getText();
-        console.log(this.clipboardValue);
       }
     }
 
