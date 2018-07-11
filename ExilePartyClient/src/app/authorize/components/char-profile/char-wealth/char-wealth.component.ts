@@ -67,10 +67,11 @@ export class CharWealthComponent implements OnInit {
   }
 
   resetNetWorth() {
-    if (this.player.account === this.partyService.currentPlayer.account) {
+    const player = this.player;
+    if (player.account === this.partyService.currentPlayer.account) {
       const emptyHistory = this.settingService.deleteNetWorth();
-      this.player.netWorthSnapshots = emptyHistory.history;
-      this.partyService.updatePlayer(this.player);
+      player.netWorthSnapshots = emptyHistory.history;
+      this.partyService.updatePlayer(player);
     }
   }
 
