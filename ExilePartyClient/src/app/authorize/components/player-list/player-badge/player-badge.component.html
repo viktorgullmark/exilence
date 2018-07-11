@@ -1,4 +1,4 @@
-<mat-card class="player-badge" *ngIf="player && (selectedPlayer || selectedGenericPlayer)" (click)="selectPlayer()" [ngClass]="{'selected-player': player?.connectionID == selectedPlayer?.connectionID || player?.character?.name == selectedGenericPlayer?.character?.name }">
+<mat-card class="player-badge" *ngIf="player && (selectedPlayer || selectedGenericPlayer)" (click)="selectPlayer()" [ngClass]="{'selected-player': (player?.connectionID == selectedPlayer?.connectionID && !localPlayer) || (player?.character?.name == selectedGenericPlayer?.character?.name && localPlayer)}">
   <div class="char-icon {{player.character?.class}}">
 
   </div>
