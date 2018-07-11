@@ -16,8 +16,23 @@ export interface Player {
     netWorthSnapshots: NetWorthSnapshot[];
     areaInfo: ExtendedAreaInfo;
     pastAreas: ExtendedAreaInfo[];
+    ladderInfo: LadderPlayer[];
 }
 
 export interface RecentPlayer {
     name: string;
+}
+
+export interface LadderPlayer {
+    name: string;
+    level: number;
+    online: boolean;
+    account: string;
+    dead: boolean;
+    experience: number;
+    rank: number;
+    twitch: string;
+    class: string;
+    class_rank: number;
+    experience_per_hour: number;
 }

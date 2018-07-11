@@ -186,6 +186,16 @@ export class PartyService {
       });
   }
 
+  public updateGenericPlayer(player: Player) {
+    this.externalService.getGenericCharacter(this.accountInfo)
+      .subscribe((equipment: EquipmentResponse) => {
+        player = this.externalService.setCharacter(equipment, player);
+        if (this._hubConnection) {
+          this.compress(player, (data) => this._hubConnection.invoke('UpdatePlayer', this.party.name, data));
+        }
+      });
+  }
+
   public getAccountForCharacter(character: string): Promise<any> {
     return this._hubConnection.invoke('GetAccountForCharacter', character).then((response) => {
       return response;
@@ -295,7 +305,7 @@ export class PartyService {
           sessionId: '',
           filePath: ''
         };
-        return this.externalService.getCharacter(info).subscribe((response: EquipmentResponse) => {
+        return this.externalService.getGenericCharacter(info).subscribe((response: EquipmentResponse) => {
           let newPlayer = {} as Player;
           newPlayer.account = account,
             newPlayer.generic = true;

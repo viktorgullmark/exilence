@@ -14,6 +14,7 @@ import { ElectronService } from '../shared/providers/electron.service';
 import { ExternalService } from '../shared/providers/external.service';
 import { SessionService } from '../shared/providers/session.service';
 import { SettingsService } from '../shared/providers/settings.service';
+import { LadderService } from '../shared/providers/ladder.service';
 
 @Component({
     selector: 'app-login',
@@ -36,6 +37,7 @@ export class LoginComponent implements OnInit {
     sessionId: string;
     filePath: string;
     netWorthHistory: NetWorthHistory;
+    form: any;
 
     private twelveHoursAgo = (Date.now() - (12 * 60 * 60 * 1000));
 
@@ -49,7 +51,8 @@ export class LoginComponent implements OnInit {
         private accountService: AccountService,
         private sessionService: SessionService,
         private settingsService: SettingsService,
-        private analyticsService: AnalyticsService
+        private analyticsService: AnalyticsService,
+        private ladderService: LadderService
     ) {
 
         this.fetchSettings();
@@ -176,20 +179,31 @@ export class LoginComponent implements OnInit {
 
     login() {
         this.isLoading = true;
-        const form = this.getFormObj();
-        this.externalService.getCharacter(form)
+        this.form = this.getFormObj();
+        this.externalService.getCharacter(this.form)
             .subscribe((data: EquipmentResponse) => {
+
                 const player = this.externalService.setCharacter(data, this.player);
                 this.player = player;
-                this.player.account = form.accountName;
-                this.player.netWorthSnapshots = this.netWorthHistory.history;
-                this.accountService.player.next(this.player);
-                this.accountService.accountInfo.next(form);
-                this.settingsService.set('account', form);
-                this.analyticsService.startTracking(form.accountName);
-                this.sessionService.initSession(form.sessionId);
-                this.isLoading = false;
-                this.router.navigate(['/authorized/dashboard']);
+
+                this.ladderService.getLadderInfoForCharacter(this.player.character.league, this.player.character.name).subscribe(res => {
+                    if (res !== null && res.list !== null) {
+                        this.player.ladderInfo = res.list;
+                    }
+                    this.completeLogin();
+                });
             });
+    }
+
+    completeLogin() {
+        this.player.account = this.form.accountName;
+        this.player.netWorthSnapshots = this.netWorthHistory.history;
+        this.accountService.player.next(this.player);
+        this.accountService.accountInfo.next(this.form);
+        this.settingsService.set('account', this.form);
+        this.analyticsService.startTracking(this.form.accountName);
+        this.sessionService.initSession(this.form.sessionId);
+        this.isLoading = false;
+        this.router.navigate(['/authorized/dashboard']);
     }
 }
