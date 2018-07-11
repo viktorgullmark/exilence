@@ -1,6 +1,7 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { colorSets as ngxChartsColorsets } from '@swimlane/ngx-charts/release/utils/color-sets';
 import * as d3 from 'd3';
+import * as moment from 'moment';
 
 import { ChartSeries, ChartSeriesEntry } from '../../../shared/interfaces/chart.interface';
 import { Player } from '../../../shared/interfaces/player.interface';
@@ -111,8 +112,7 @@ export class IncomeComponent implements OnInit {
   }
 
   axisFormat(val) {
-    const stringDate: string = val.toTimeString().split(' ')[0];
-    return stringDate.substr(0, stringDate.length - 3);
+    return moment(val).format('LT');
   }
 
   setColorScheme(name) {

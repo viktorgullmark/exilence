@@ -296,12 +296,14 @@ export class PartyService {
           filePath: ''
         };
         return this.externalService.getCharacter(info).subscribe((response: EquipmentResponse) => {
-          let newPlayer = {} as Player;
-          newPlayer.account = account,
-            newPlayer.generic = true;
-          newPlayer.genericHost = this.currentPlayer.character.name;
-          newPlayer = this.externalService.setCharacter(response, newPlayer);
-          this.addGenericPlayer(newPlayer);
+          if (response !== null) {
+            let newPlayer = {} as Player;
+            newPlayer.account = account,
+              newPlayer.generic = true;
+            newPlayer.genericHost = this.currentPlayer.character.name;
+            newPlayer = this.externalService.setCharacter(response, newPlayer);
+            this.addGenericPlayer(newPlayer);
+          }
         },
           () => {
             this.logService.log(`getCharacter failed for player: ${player.name}, account: ${account} (profile probaly private)`);
