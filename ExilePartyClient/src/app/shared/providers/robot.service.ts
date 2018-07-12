@@ -9,11 +9,6 @@ import { LogService } from './log.service';
 export class RobotService {
 
   private user32: any;
-
-  private kernel32 = new this.electronService.ffi.Library('Kernel32.dll', {
-    'GetCurrentThreadId': ['int', []]
-  });
-
   private keyboard: any;
   private clipboard: any;
   private window: any;
@@ -24,16 +19,12 @@ export class RobotService {
 
   public pressedKeysList: BehaviorSubject<number[]> = new BehaviorSubject<number[]>([]);
 
-
   INPUT_KEYBOARD = 1;
-
   KEYEVENTF_EXTENDEDKEY = 0x0001;
   KEYEVENTF_KEYUP = 0x0002;
   KEYEVENTF_UNICODE = 0x0004;
   KEYEVENTF_SCANCODE = 0x0008;
-
   MAPVK_VK_TO_VSC = 0;
-
   intPtr: any;
   input: any;
 
@@ -44,6 +35,15 @@ export class RobotService {
     this.keyboard = this.electronService.robot.Keyboard;
     this.clipboard = this.electronService.robot.Clipboard;
     this.window = this.electronService.robot.Window;
+
+    if (this.clipboard.hasText()) {
+      this.clipboardValue = this.clipboard.getText();
+    }
+    this.InitializeWin32();
+    setInterval(() => this.robotHearbeat(), 100);
+  }
+
+  private InitializeWin32() {
 
     this.intPtr = this.electronService.ref.refType('int');
     this.input = this.electronService.structType({
@@ -62,42 +62,22 @@ export class RobotService {
     });
 
     this.user32 = new this.electronService.ffi.Library('user32', {
-      'PostMessageA': ['bool', ['int32', 'uint32', 'int32', 'int32']],
-      'SendMessageA': ['int64', ['int32', 'uint32', 'int32', 'int32']],
       'SendInput': ['int', ['int', this.input, 'int']],
       // 'MapVirtualKeyEx': ['uint', ['uint', 'uint', this.intPtr]],
-      'GetTopWindow': ['long', ['long']],
       'FindWindowA': ['long', ['string', 'string']],
-      'SetActiveWindow': ['long', ['long']],
       'SetForegroundWindow': ['bool', ['long']],
-      'BringWindowToTop': ['bool', ['long']],
-      'ShowWindow': ['bool', ['long', 'int']],
-      'SwitchToThisWindow': ['void', ['long', 'bool']],
-      'GetForegroundWindow': ['long', []],
-      'AttachThreadInput': ['bool', ['int', 'long', 'bool']],
-      'GetWindowThreadProcessId': ['int', ['long', 'int']],
-      'SetWindowPos': ['bool', ['long', 'long', 'int', 'int', 'int', 'int', 'uint']],
-      'SetFocus': ['long', ['long']]
+
     });
 
-    this.Initialize();
-    setInterval(() => this.robotHearbeat(), 100);
   }
 
-  private Initialize() {
-    if (this.clipboard.hasText()) {
-      this.clipboardValue = this.clipboard.getText();
-    }
-
-  }
-
-  ConvertKeyCodeToScanCode(keyCode: number) {
+  private ConvertKeyCodeToScanCode(keyCode: number) {
     const keys = '**1234567890-=**qwertyuiop[]**asdfghjkl;\'`*\\zxcvbnm,./'.split('');
     return keys.indexOf(String.fromCharCode(keyCode).toLowerCase());
   }
 
 
-  KeyToggle(hwnd: number, keyCode: number, type = 'down' as 'down' | 'up', asScanCode = true) {
+  private KeyToggle(keyCode: number, type = 'down' as 'down' | 'up', asScanCode = true) {
     const entry = new this.input();
     entry.type = this.INPUT_KEYBOARD;
     entry.time = 0;
@@ -119,16 +99,16 @@ export class RobotService {
       entry.wScan = scanCode;
     }
 
-    const result = this.user32.SendInput(1, entry, this.electronService.arch === 'x64' ? 40 : 28);
-    console.log(`Number of key-events added: ${result}`);
+    return  !!this.user32.SendInput(1, entry, this.electronService.arch === 'x64' ? 40 : 28);
   }
 
-  KeyTap(hwnd: number, keyCode: number, asScanCode = false) {
-    this.KeyToggle(hwnd, keyCode, 'down', asScanCode);
-    this.KeyToggle(hwnd, keyCode, 'up', asScanCode);
+  private KeyTap(keyCode: number, asScanCode = true) {
+    const down = this.KeyToggle(keyCode, 'down', asScanCode);
+    const up = this.KeyToggle(keyCode, 'up', asScanCode);
+    return down && up;
   }
 
-  robotHearbeat() {
+  private robotHearbeat() {
 
     // Clipboard
     if (this.clipboard.hasText()) {
@@ -157,30 +137,12 @@ export class RobotService {
 
   }
 
-  private focusWindowForInput(windowTitle: String) {
-
-    const winToSetOnTop = this.user32.FindWindowA(null, windowTitle);
-    this.KeyTap(winToSetOnTop, Keys.T);
-    this.KeyTap(winToSetOnTop, Keys.E);
-    this.KeyTap(winToSetOnTop, Keys.S);
-    this.KeyTap(winToSetOnTop, Keys.T);
-    const foregroundHWnd = this.user32.GetForegroundWindow();
-    const currentThreadId = this.kernel32.GetCurrentThreadId();
-    const windowThreadProcessId = this.user32.GetWindowThreadProcessId(foregroundHWnd, null);
-    const showWindow = this.user32.ShowWindow(winToSetOnTop, 9);
-    const setWindowPos1 = this.user32.SetWindowPos(winToSetOnTop, -1, 0, 0, 0, 0, 3);
-    const setWindowPos2 = this.user32.SetWindowPos(winToSetOnTop, -2, 0, 0, 0, 0, 3);
-    const setForegroundWindow = this.user32.SetForegroundWindow(winToSetOnTop);
-    const attachThreadInput = this.user32.AttachThreadInput(windowThreadProcessId, currentThreadId, 0);
-    const setFocus = this.user32.SetFocus(winToSetOnTop);
-    const setActiveWindow = this.user32.SetActiveWindow(winToSetOnTop);
-    return setForegroundWindow;
-  }
 
   private sendAndFocusWindow(windowTitle: string, message: string): boolean {
     const winToSetOnTop = this.user32.FindWindowA(null, windowTitle);
-    this.KeyTap(winToSetOnTop, Keys.A);
-    return this.user32.SetForegroundWindow(winToSetOnTop);
+    const keytap = this.KeyTap(Keys.A);
+    const foreground =  this.user32.SetForegroundWindow(winToSetOnTop);
+    return keytap && foreground;
   }
 
   public sendTextToPathWindow(text: string): boolean {
@@ -199,24 +161,10 @@ export class RobotService {
     return false;
   }
 
-  private ActivateAndSend(text: string): boolean {
-    const isWindowActive = this.focusWindowForInput('Path of Exile.txt - Notepad');
-    if (isWindowActive) {
-      // const keyboard = this.keyboard();
-      // keyboard.autoDelay.min = 0;
-      // keyboard.autoDelay.max = 0;
-      // keyboard.click(Keys.Enter);
-      // keyboard.click(this.prepareStringForRobot(text));
-      // keyboard.click(Keys.Enter);
-      // return true;
-    }
-    this.logService.log('Could not send text to path window: ');
-    return false;
-  }
-
   private prepareStringForRobot(string: string) {
     string = string.split('_').join('+-');
     string = string.split('@').join('%^2');
+    string = string.split('%').join('+5');
     string = string.split('!').join('+1');
     string = string.split('(').join('+8');
     string = string.split(')').join('+9');
