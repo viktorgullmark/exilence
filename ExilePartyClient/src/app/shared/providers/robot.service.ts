@@ -44,16 +44,13 @@ export class RobotService {
   }
 
   private InitializeWin32() {
-
     this.intPtr = this.electronService.ref.refType('int');
     this.input = this.electronService.structType({
       'type': 'int',
-
       // For some reason, the wScan value is only recognized as the wScan value when we add this filler slot.
       // It might be because it's expecting the values after this to be inside a 'wrapper' substructure, as seen here:
       //     https://msdn.microsoft.com/en-us/library/windows/desktop/ms646270(v=vs.85).aspx
       '???': 'int',
-
       'wVK': 'short',
       'wScan': 'short',
       'dwFlags': 'int',
@@ -66,16 +63,13 @@ export class RobotService {
       // 'MapVirtualKeyEx': ['uint', ['uint', 'uint', this.intPtr]],
       'FindWindowA': ['long', ['string', 'string']],
       'SetForegroundWindow': ['bool', ['long']],
-
     });
-
   }
 
   private ConvertKeyCodeToScanCode(keyCode: number) {
     const keys = '**1234567890-=**qwertyuiop[]**asdfghjkl;\'`*\\zxcvbnm,./'.split('');
     return keys.indexOf(String.fromCharCode(keyCode).toLowerCase());
   }
-
 
   private KeyToggle(keyCode: number, type = 'down' as 'down' | 'up', asScanCode = true) {
     const entry = new this.input();
@@ -137,17 +131,17 @@ export class RobotService {
 
   }
 
-
   private sendAndFocusWindow(windowTitle: string, message: string): boolean {
     const winToSetOnTop = this.user32.FindWindowA(null, windowTitle);
-    const keytap = this.KeyTap(Keys.A);
+    const keytap = this.KeyTap(Keys.Ctrl);
     const foreground =  this.user32.SetForegroundWindow(winToSetOnTop);
     return keytap && foreground;
   }
 
   public sendTextToPathWindow(text: string): boolean {
 
-    const isWindowActive = this.sendAndFocusWindow('Path of Exile.txt - Notepad', text);
+    const windowTitle = 'Path of Exile';
+    const isWindowActive = this.sendAndFocusWindow(windowTitle, text);
     if (isWindowActive) {
       const keyboard = this.keyboard();
       keyboard.autoDelay.min = 0;
@@ -155,9 +149,10 @@ export class RobotService {
       keyboard.click(Keys.Enter);
       keyboard.click(this.prepareStringForRobot(text));
       keyboard.click(Keys.Enter);
+      this.logService.log('Successfully send text to window');
       return true;
     }
-    this.logService.log('Could not send text to path window: ');
+    this.logService.log('Could not send text to window', windowTitle, true);
     return false;
   }
 
