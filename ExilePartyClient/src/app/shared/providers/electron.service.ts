@@ -19,7 +19,12 @@ export class ElectronService {
   settings: any;
   robot: any;
   zlib: any;
+
   ffi: any;
+  ref: any;
+  arch: any;
+  structType: any;
+
   constructor(
     private analyticsService: AnalyticsService // Not used but instanciated here
   ) {
@@ -33,7 +38,11 @@ export class ElectronService {
       this.shell = window.require('electron').shell;
       this.settings = window.require('electron-settings');
       this.zlib = window.require('zlib');
+
       this.ffi = window.require('ffi');
+      this.ref = window.require('ref');
+      this.arch = window.require('os').arch();
+      this.structType = window.require('ref-struct');
 
       this.robot = window.require('robot-js');
 

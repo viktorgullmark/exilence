@@ -4,6 +4,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 
+import { Router } from '../../../../node_modules/@angular/router';
 import { AccountInfo } from '../interfaces/account-info.interface';
 import { EquipmentResponse } from '../interfaces/equipment-response.interface';
 import { Item } from '../interfaces/item.interface';
@@ -13,7 +14,6 @@ import { Requirement } from '../interfaces/requirement.interface';
 import { Stash } from '../interfaces/stash.interface';
 import { AnalyticsService } from './analytics.service';
 import { ElectronService } from './electron.service';
-import { Router } from '../../../../node_modules/@angular/router';
 
 @Injectable()
 export class ExternalService {
@@ -70,6 +70,11 @@ export class ExternalService {
         this.router.navigate(['/disconnected']);
         return Observable.of(null);
       });
+  }
+
+  getAccountForCharacter(character: string) {
+    const parameters = `?character=${encodeURIComponent(character)}`;
+    return this.http.get('https://www.pathofexile.com/character-window/get-account-name-by-character' + parameters);
   }
 
   setCookie(sessionId: string) {
