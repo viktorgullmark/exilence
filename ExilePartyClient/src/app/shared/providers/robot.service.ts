@@ -12,6 +12,7 @@ export class RobotService {
   private keyboard: any;
   private clipboard: any;
   private window: any;
+  private timer: any;
 
   // private activeWindowTitle: string;
   // private activeWindow: any;
@@ -35,6 +36,7 @@ export class RobotService {
     this.keyboard = this.electronService.robot.Keyboard;
     this.clipboard = this.electronService.robot.Clipboard;
     this.window = this.electronService.robot.Window;
+    this.timer = this.electronService.robot.Timer;
 
     if (this.clipboard.hasText()) {
       this.clipboardValue = this.clipboard.getText();
@@ -140,9 +142,10 @@ export class RobotService {
 
   public sendTextToPathWindow(text: string): boolean {
 
-    const windowTitle = 'Path of Exile';
+    const windowTitle = 'Path of Exile.txt - Notepad';
     const isWindowActive = this.sendAndFocusWindow(windowTitle, text);
     if (isWindowActive) {
+      this.timer.sleep(500, 500);
       const keyboard = this.keyboard();
       keyboard.autoDelay.min = 0;
       keyboard.autoDelay.max = 0;
