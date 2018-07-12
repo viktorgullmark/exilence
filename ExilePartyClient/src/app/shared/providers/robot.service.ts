@@ -17,6 +17,7 @@ export class RobotService {
   // private activeWindowTitle: string;
   // private activeWindow: any;
   private clipboardValue: string;
+  private tempPressedKeys: number[] = [];
 
   public pressedKeysList: BehaviorSubject<number[]> = new BehaviorSubject<number[]>([]);
 
@@ -95,7 +96,7 @@ export class RobotService {
       entry.wScan = scanCode;
     }
 
-    return  !!this.user32.SendInput(1, entry, this.electronService.arch === 'x64' ? 40 : 28);
+    return !!this.user32.SendInput(1, entry, this.electronService.arch === 'x64' ? 40 : 28);
   }
 
   private KeyTap(keyCode: number, asScanCode = true) {
@@ -116,15 +117,15 @@ export class RobotService {
 
     // Keyboard
     const keyState = this.keyboard.getState();
-    const tempPressedKeys = [];
+    this.tempPressedKeys = [];
     for (const key of Object.keys(Keys)) {
       const pressed = keyState[key];
       if (pressed) {
-        tempPressedKeys.unshift(+key);
+        this.tempPressedKeys.unshift(+key);
       }
     }
-    if (tempPressedKeys.length >= 2) {
-      this.pressedKeysList.next(tempPressedKeys);
+    if (this.tempPressedKeys.length >= 2) {
+      this.pressedKeysList.next(this.tempPressedKeys);
     }
 
     // // Window
@@ -136,16 +137,18 @@ export class RobotService {
   private sendAndFocusWindow(windowTitle: string, message: string): boolean {
     const winToSetOnTop = this.user32.FindWindowA(null, windowTitle);
     const keytap = this.KeyTap(Keys.Ctrl);
-    const foreground =  this.user32.SetForegroundWindow(winToSetOnTop);
+    const foreground = this.user32.SetForegroundWindow(winToSetOnTop);
     return keytap && foreground;
   }
 
   public sendTextToPathWindow(text: string): boolean {
 
-    const windowTitle = 'Path of Exile.txt - Notepad';
+    const windowTitle = 'Path of Exile';
     const isWindowActive = this.sendAndFocusWindow(windowTitle, text);
     if (isWindowActive) {
+
       this.timer.sleep(500, 500);
+
       const keyboard = this.keyboard();
       keyboard.autoDelay.min = 0;
       keyboard.autoDelay.max = 0;
