@@ -178,7 +178,7 @@ export class PartyService {
       const lastSnapshot = pastHoursSnapshots[0];
       const firstSnapshot = pastHoursSnapshots[pastHoursSnapshots.length - 1];
       const gainHour = ((1000 * 60 * 60)) / (lastSnapshot.timestamp - firstSnapshot.timestamp) * (lastSnapshot.value - firstSnapshot.value);
-      this.messageValueService.partyGain = this.messageValueService.partyGain  + gainHour;
+      this.messageValueService.partyGain = this.messageValueService.partyGain + gainHour;
     }
   }
 
@@ -274,7 +274,8 @@ export class PartyService {
   }
 
   handleAreaEvent(event: LogMessage) {
-    this.getAccountForCharacter(event.player.name).then((account: string) => {
+    this.externalService.getAccountForCharacter(event.player.name).subscribe((res: any) => {
+      const account = res.accountName;
       if (account !== null) {
 
         const newPlayer: RecentPlayer = {
