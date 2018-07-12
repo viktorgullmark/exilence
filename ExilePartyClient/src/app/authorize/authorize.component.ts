@@ -8,6 +8,7 @@ import { KeybindService } from '../shared/providers/keybind.service';
 import { MapService } from '../shared/providers/map.service';
 import { PartyService } from '../shared/providers/party.service';
 import { RobotService } from '../shared/providers/robot.service';
+import { MessageValueService } from '../shared/providers/message-value.service';
 
 @Component({
   selector: 'app-authorize',
@@ -23,6 +24,7 @@ export class AuthorizeComponent implements OnInit {
     private robotService: RobotService,
     private keybindService: KeybindService,
     private accountService: AccountService,
+    private messageValueService: MessageValueService,
     private router: Router) {
     this.form = fb.group({
       partyCode: [this.partyService.party.name !== '' ? this.partyService.party.name : this.generatePartyName(),

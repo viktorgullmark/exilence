@@ -26,8 +26,6 @@ export class KeybindService {
     private logService: LogService
   ) {
 
-    this.registerKeybind(Keys.Ctrl, Keys.S, 'party-networth', 'Report Networth to party');
-
     const binds = this.settingsService.get('keybinds');
     if (binds !== undefined) {
       this.userKeybinds = binds;

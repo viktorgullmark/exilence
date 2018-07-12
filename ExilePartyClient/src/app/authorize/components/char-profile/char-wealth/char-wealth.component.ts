@@ -12,6 +12,7 @@ import { PartyService } from '../../../../shared/providers/party.service';
 import { RobotService } from '../../../../shared/providers/robot.service';
 import { SettingsService } from '../../../../shared/providers/settings.service';
 import { NetworthTableComponent } from '../../networth-table/networth-table.component';
+import { MessageValueService } from '../../../../shared/providers/message-value.service';
 
 @Component({
   selector: 'app-char-wealth',
@@ -27,10 +28,8 @@ export class CharWealthComponent implements OnInit {
   isGraphHidden = false;
 
   public graphDimensions = [640, 200];
-  public gain = 0;
   public showReset = false;
   public previousSnapshot = false;
-  public networthValue = 0;
 
   constructor(
     @Inject(FormBuilder) fb: FormBuilder,
@@ -41,7 +40,8 @@ export class CharWealthComponent implements OnInit {
     private settingService: SettingsService,
     private robotService: RobotService,
     private incomeService: IncomeService,
-    private accountService: AccountService
+    private accountService: AccountService,
+    private messageValueService: MessageValueService
   ) {
     this.form = fb.group({
       searchText: ['']
@@ -53,8 +53,6 @@ export class CharWealthComponent implements OnInit {
         this.showReset = false;
       }
       this.player = res;
-      this.networthValue = this.player.netWorthSnapshots[0].value;
-      this.updateGain(res);
       this.previousSnapshot = false;
     });
   }
@@ -90,15 +88,11 @@ export class CharWealthComponent implements OnInit {
   }
 
   report(toGame: boolean) {
-
-    const value = this.player.netWorthSnapshots[0].value.toFixed(1);
-
-    // tslint:disable-next-line:max-line-length
-    const message = `${this.player.character.name} currently has a total networth of ${value} chaos and has gained ${this.gain} chaos over the last hour.`;
+    this.messageValueService.updateMessages();
     if (toGame) {
-      const result = this.robotService.sendTextToPathWindow(message);
+      this.robotService.sendTextToPathWindow(this.messageValueService.playerNetworthMsg);
     } else {
-      this.robotService.setTextToClipboard(message);
+      this.robotService.setTextToClipboard(this.messageValueService.playerNetworthMsg);
     }
   }
 
@@ -106,7 +100,7 @@ export class CharWealthComponent implements OnInit {
     if (this.player.netWorthSnapshots[0] !== undefined) {
       this.table.loadPreviousSnapshot(event);
 
-      this.networthValue = event.value;
+      this.messageValueService.playerValue = event.value;
 
       const lastSnapshotTimestamp = this.player.netWorthSnapshots[0].timestamp;
       const loadedSnapshotTimestamp = event.name.getTime();
@@ -117,24 +111,6 @@ export class CharWealthComponent implements OnInit {
 
   search() {
     this.table.doSearch(this.form.controls.searchText.value);
-  }
-
-  updateGain(player: Player) {
-    const oneHourAgo = (Date.now() - (1 * 60 * 60 * 1000));
-    const pastHoursSnapshots = player.netWorthSnapshots
-      .filter((snaphot: NetWorthSnapshot) => snaphot.timestamp > oneHourAgo);
-
-    if (pastHoursSnapshots.length > 1) {
-      const lastSnapshot = pastHoursSnapshots[0];
-      const firstSnapshot = pastHoursSnapshots[pastHoursSnapshots.length - 1];
-
-      const gainHour = ((1000 * 60 * 60)) / (lastSnapshot.timestamp - firstSnapshot.timestamp) * (lastSnapshot.value - firstSnapshot.value);
-
-      this.gain = gainHour;
-
-    } else {
-      this.gain = 0;
-    }
   }
 
   openLink(link: string) {
