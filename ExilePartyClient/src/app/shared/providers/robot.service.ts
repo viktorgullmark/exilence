@@ -14,10 +14,11 @@ export class RobotService {
   private window: any;
   private timer: any;
 
-  // private activeWindowTitle: string;
-  // private activeWindow: any;
+  private activeWindowTitle: string;
+  private activeWindow: any;
   private clipboardValue: string;
   private tempPressedKeys: number[] = [];
+  private lastKeyBoardEvent = 0;
 
   public pressedKeysList: BehaviorSubject<number[]> = new BehaviorSubject<number[]>([]);
 
@@ -116,21 +117,27 @@ export class RobotService {
     }
 
     // Keyboard
-    const keyState = this.keyboard.getState();
-    this.tempPressedKeys = [];
-    for (const key of Object.keys(Keys)) {
-      const pressed = keyState[key];
-      if (pressed) {
-        this.tempPressedKeys.unshift(+key);
+    if ((
+      this.lastKeyBoardEvent < (Date.now() - 1250))
+      && (this.activeWindowTitle === 'Path of Exile' || this.activeWindowTitle === 'ExileParty') {
+      const keyState = this.keyboard.getState();
+      this.tempPressedKeys = [];
+      for (const key of Object.keys(Keys)) {
+        const pressed = keyState[key];
+        if (pressed) {
+          this.tempPressedKeys.unshift(+key);
+        }
+      }
+      if (this.tempPressedKeys.length >= 2) {
+        this.pressedKeysList.next(this.tempPressedKeys);
+        this.lastKeyBoardEvent = Date.now();
       }
     }
-    if (this.tempPressedKeys.length >= 2) {
-      this.pressedKeysList.next(this.tempPressedKeys);
-    }
+
 
     // // Window
-    // this.activeWindow = this.window.getActive();
-    // this.activeWindowTitle = this.activeWindow.getTitle();
+    this.activeWindow = this.window.getActive();
+    this.activeWindowTitle = this.activeWindow.getTitle();
 
   }
 
@@ -147,7 +154,7 @@ export class RobotService {
     const isWindowActive = this.sendAndFocusWindow(windowTitle, text);
     if (isWindowActive) {
 
-      this.timer.sleep(500, 500);
+      this.timer.sleep(250, 250);
 
       const keyboard = this.keyboard();
       keyboard.autoDelay.min = 0;
