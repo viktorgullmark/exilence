@@ -27,8 +27,31 @@ export class SettingsComponent implements OnInit {
   ];
   triggerKeys = [
     { name: 'A', code: Keys.A },
+    { name: 'B', code: Keys.B },
+    { name: 'C', code: Keys.C },
+    { name: 'D', code: Keys.D },
+    { name: 'E', code: Keys.E },
+    { name: 'F', code: Keys.F },
+    { name: 'G', code: Keys.G },
+    { name: 'H', code: Keys.H },
+    { name: 'I', code: Keys.I },
+    { name: 'J', code: Keys.J },
+    { name: 'K', code: Keys.K },
+    { name: 'L', code: Keys.L },
+    { name: 'M', code: Keys.M },
+    { name: 'N', code: Keys.N },
+    { name: 'O', code: Keys.O },
+    { name: 'P', code: Keys.P },
+    { name: 'Q', code: Keys.Q },
+    { name: 'R', code: Keys.R },
     { name: 'S', code: Keys.S },
-    { name: 'D', code: Keys.D }
+    { name: 'T', code: Keys.T },
+    { name: 'U', code: Keys.U },
+    { name: 'V', code: Keys.V },
+    { name: 'W', code: Keys.W },
+    { name: 'X', code: Keys.X },
+    { name: 'Y', code: Keys.Y },
+    { name: 'Z', code: Keys.Z },
   ];
   keybinds: Keybind[] = [];
 
