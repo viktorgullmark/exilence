@@ -106,6 +106,28 @@ export class RobotService {
     return down && up;
   }
 
+  private SendInputText(text: string) {
+
+    text = 'Jimmy luktar illa';
+
+    const codes = text.split('').map(c => {
+      const code = c.charCodeAt(0);
+      return code;
+    });
+
+    this.KeyToggle(Keys.Enter, 'down', false);
+    this.KeyToggle(Keys.Enter, 'up', false);
+
+    this.KeyToggle(Keys.Ctrl, 'down', false);
+    this.KeyToggle(Keys.V, 'down', false);
+
+    this.KeyToggle(Keys.Ctrl, 'up', false);
+    this.KeyToggle(Keys.V, 'up', false);
+
+    this.KeyToggle(Keys.Enter, 'down', false);
+    this.KeyToggle(Keys.Enter, 'up', false);
+  }
+
   private robotHearbeat() {
 
     // Clipboard
@@ -162,14 +184,16 @@ export class RobotService {
 
     const windowTitle = 'Path of Exile';
     const isWindowActive = this.sendAndFocusWindow(windowTitle, text);
+
     if (isWindowActive) {
       setTimeout(() => {
-        const keyboard = this.keyboard();
-        keyboard.autoDelay.min = 30;
-        keyboard.autoDelay.max = 30;
-        keyboard.click(Keys.Enter);
-        keyboard.click('^V');
-        keyboard.click(Keys.Enter);
+        // const keyboard = this.keyboard();
+        // keyboard.autoDelay.min = 30;
+        // keyboard.autoDelay.max = 30;
+        // keyboard.click(Keys.Enter);
+        // keyboard.click('^V');
+        // keyboard.click(Keys.Enter);
+        this.SendInputText(text);
         this.logService.log('Successfully send text to window');
         this.timer.sleep(150);
         if (clipboardValue) {
