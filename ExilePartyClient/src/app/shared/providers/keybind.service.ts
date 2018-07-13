@@ -5,6 +5,7 @@ import { Keybind } from '../interfaces/keybind.interface';
 import { LogService } from './log.service';
 import { RobotService } from './robot.service';
 import { SettingsService } from './settings.service';
+import { ElectronService } from './electron.service';
 
 
 @Injectable()
@@ -20,9 +21,14 @@ export class KeybindService {
   constructor(
     private robotService: RobotService,
     private settingsService: SettingsService,
-    private logService: LogService
+    private logService: LogService,
+    private electronService: ElectronService
   ) {
 
+    this.electronService.ipcRenderer.on('keybind', res => {
+      console.log(res);
+      this.keybindEvent.next('party-summary-networth');
+    });
     const binds = this.settingsService.get('keybinds');
     if (binds !== undefined) {
       this.userKeybinds = binds;
