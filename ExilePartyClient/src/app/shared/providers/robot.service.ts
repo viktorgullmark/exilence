@@ -165,8 +165,8 @@ export class RobotService {
     if (isWindowActive) {
       setTimeout(() => {
         const keyboard = this.keyboard();
-        keyboard.autoDelay.min = 0;
-        keyboard.autoDelay.max = 0;
+        keyboard.autoDelay.min = 1;
+        keyboard.autoDelay.max = 1;
         keyboard.click(Keys.Enter);
         keyboard.click('^V');
         keyboard.click(Keys.Enter);
