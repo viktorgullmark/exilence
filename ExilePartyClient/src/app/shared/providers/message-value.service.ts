@@ -35,13 +35,13 @@ export class MessageValueService {
 
   updateMessages() {
     // tslint:disable-next-line:max-line-length
-    this.playerNetworthMsg = `Personal net worth: ${this.playerValue.toFixed(1)} chaos. Gain is ${this.playerGain.toFixed(1)} chaos / hour`;
+    this.playerNetworthMsg = `Personal net worth: ${this.playerValue.toFixed(1)}c. Gain is ${this.playerGain.toFixed(1)}c / hour`;
     // tslint:disable-next-line:max-line-length
-    this.partyNetworthMsg = `Group net worth: ${this.partyValue.toFixed(1)} chaos. Gain is ${this.partyGain.toFixed(1)} chaos / hour`;
+    this.partyNetworthMsg = `Group net worth: ${this.partyValue.toFixed(1)}c. Gain is ${this.partyGain.toFixed(1)}c / hour`;
   }
 
   initKeybinds() {
-    this.keybindService.registerKeybind(Keys.Ctrl, Keys.B, 'party-personal-networth', 'Report personal net worth to party');
-    this.keybindService.registerKeybind(Keys.Ctrl, Keys.G, 'party-summary-networth', 'Report summarized net worth to party');
+    // this.keybindService.registerKeybind(Keys.Ctrl, Keys.B, 'party-personal-networth', 'Report personal net worth to party');
+    // this.keybindService.registerKeybind(Keys.Ctrl, Keys.G, 'party-summary-networth', 'Report summarized net worth to party');
   }
 }

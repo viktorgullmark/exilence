@@ -88,7 +88,7 @@ export class SettingsComponent implements OnInit {
   }
 
   resetKeybinds() {
-    this.keybindService.resetKeybinds();
+    // this.keybindService.resetKeybinds();
     this.settingsService.set('keybinds', undefined);
   }
 
@@ -101,7 +101,7 @@ export class SettingsComponent implements OnInit {
       bind.triggerKeyCode = +bind.triggerKeyCode;
     }
 
-    this.keybindService.updateKeybinds(numberBinds);
+    // this.keybindService.updateKeybinds(numberBinds);
     this.settingsService.set('keybinds', numberBinds);
   }
 

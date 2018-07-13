@@ -8,10 +8,21 @@ let win, serve;
 const args = process.argv.slice(1);
 serve = args.some(val => val === '--serve');
 
-ipcMain.on('user-data', function(event, arg) {
+ipcMain.on('user-data', function (event, arg) {
   console.log(arg);
-  event.sender.send('test-data', { test: 'test'});
+  event.sender.send('test-data', { test: 'test' });
 });
+
+ipcMain.on('keybinds-update', function (event, binds) {
+  console.log('keybinds-update', binds);
+  globalShortcut.unregisterAll();
+  binds.forEach(bind => {
+    globalShortcut.register(bind.keys, () => {
+      win.webContents.send('keybind', bind);
+    });
+  });
+});
+
 
 
 autoUpdater.logger = log;
@@ -114,7 +125,7 @@ try {
     });
     globalShortcut.register('Control+Y', () => {
       console.log('keybind triggered, sending ipc');
-      win.webContents.send('keybind', { bind: 'Control+Y'});
+      win.webContents.send('keybind', { bind: 'Control+Y' });
     });
   });
 

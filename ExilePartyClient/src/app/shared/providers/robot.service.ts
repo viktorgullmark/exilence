@@ -17,8 +17,6 @@ export class RobotService {
   private activeWindowTitle: string;
   private activeWindow: any;
   private clipboardValue: string;
-  private tempPressedKeys: number[] = [];
-  private lastKeyBoardEvent = 0;
 
   public pressedKeysList: BehaviorSubject<number[]> = new BehaviorSubject<number[]>([]);
 
@@ -108,8 +106,6 @@ export class RobotService {
 
   private SendInputText(text: string) {
 
-    text = 'Jimmy luktar illa';
-
     const codes = text.split('').map(c => {
       const code = c.charCodeAt(0);
       return code;
@@ -138,26 +134,7 @@ export class RobotService {
       }
     }
 
-    // Keyboard
-    if ((
-      this.lastKeyBoardEvent < (Date.now() - 1000))
-      && (this.activeWindowTitle === 'Path of Exile' || this.activeWindowTitle === 'ExileParty')) {
-      const keyState = this.keyboard.getState();
-      this.tempPressedKeys = [];
-      for (const key of Object.keys(Keys)) {
-        const pressed = keyState[key];
-        if (pressed) {
-          this.tempPressedKeys.unshift(+key);
-        }
-      }
-      if (this.tempPressedKeys.length >= 2) {
-        this.pressedKeysList.next(this.tempPressedKeys);
-        this.lastKeyBoardEvent = Date.now();
-      }
-    }
-
-
-    // // Window
+    // Window
     this.activeWindow = this.window.getActive();
     this.activeWindowTitle = this.activeWindow.getTitle();
 
@@ -187,42 +164,20 @@ export class RobotService {
 
     if (isWindowActive) {
       setTimeout(() => {
-        // const keyboard = this.keyboard();
-        // keyboard.autoDelay.min = 30;
-        // keyboard.autoDelay.max = 30;
-        // keyboard.click(Keys.Enter);
-        // keyboard.click('^V');
-        // keyboard.click(Keys.Enter);
         this.SendInputText(text);
         this.logService.log('Successfully send text to window');
-        this.timer.sleep(150);
-        if (clipboardValue) {
-          this.clipboard.setText(clipboardValue);
-        }
-        return true;
-      }, 250);
+        setTimeout(() => {
+          if (clipboardValue) {
+            this.clipboard.setText(clipboardValue);
+          }
+          return true;
+        }, (150));
+      }, 0);
 
     } else {
       this.logService.log('Could not send text to window', windowTitle, true);
       return false;
     }
-  }
-
-  private prepareStringForRobot(string: string) {
-    string = string.split('_').join('+-');
-    string = string.split('@').join('%^2');
-    string = string.split('%').join('+5');
-    string = string.split('!').join('+1');
-    string = string.split('(').join('+8');
-    string = string.split(')').join('+9');
-    string = string.split('"').join('+2');
-    string = string.split(';').join('+{COMMA}');
-    string = string.split(',').join('{COMMA}');
-    string = string.split(':').join('+{PERIOD}');
-    string = string.split('.').join('{PERIOD}');
-    string = string.split('~').join('-');
-    string = string.split('/').join('+7');
-    return string;
   }
 
   public setTextToClipboard(text: string) {
