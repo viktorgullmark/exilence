@@ -41,7 +41,7 @@ export class CharWealthComponent implements OnInit {
     private robotService: RobotService,
     private incomeService: IncomeService,
     private accountService: AccountService,
-    private messageValueService: MessageValueService
+    public messageValueService: MessageValueService
   ) {
     this.form = fb.group({
       searchText: ['']
