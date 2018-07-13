@@ -150,20 +150,36 @@ export class RobotService {
 
   public sendTextToPathWindow(text: string): boolean {
 
+    while (this.keyboard.getState(Keys.Ctrl) || this.keyboard.getState(Keys.Alt) || this.keyboard.getState(Keys.Shift)) {
+      this.timer.sleep(20);
+    }
+
+    let clipboardValue = null;
+    if (this.clipboard.hasText()) {
+      clipboardValue = this.clipboardValue;
+      this.clipboard.setText(text);
+    }
+
     const windowTitle = 'Path of Exile';
     const isWindowActive = this.sendAndFocusWindow(windowTitle, text);
     if (isWindowActive) {
 
-      this.timer.sleep(250, 250);
+      setTimeout(() => {
+        const keyboard = this.keyboard();
+        keyboard.autoDelay.min = 0;
+        keyboard.autoDelay.max = 0;
+        keyboard.click(Keys.Enter);
+        keyboard.click('^V');
+        keyboard.click(Keys.Enter);
+        this.logService.log('Successfully send text to window');
+        this.timer.sleep(50);
+        if (clipboardValue) {
+          this.clipboard.setText(clipboardValue);
+        }
+        return true;
+      }, 50);
 
-      const keyboard = this.keyboard();
-      keyboard.autoDelay.min = 0;
-      keyboard.autoDelay.max = 0;
-      keyboard.click(Keys.Enter);
-      keyboard.click(this.prepareStringForRobot(text));
-      keyboard.click(Keys.Enter);
-      this.logService.log('Successfully send text to window');
-      return true;
+
     }
     this.logService.log('Could not send text to window', windowTitle, true);
     return false;

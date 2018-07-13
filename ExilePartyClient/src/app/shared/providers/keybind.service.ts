@@ -1,9 +1,6 @@
 import { Injectable } from '@angular/core';
-import { interval } from 'rxjs/observable/interval';
-import { throttle } from 'rxjs/operators';
 
 import { BehaviorSubject } from '../../../../node_modules/rxjs/internal/BehaviorSubject';
-import { Keys } from '../interfaces/key.interface';
 import { Keybind } from '../interfaces/keybind.interface';
 import { LogService } from './log.service';
 import { RobotService } from './robot.service';
@@ -36,7 +33,7 @@ export class KeybindService {
     // We should filter the list here instead of in the robot service since we only care about 2+ keys
     // But other keybinds could care about only one (logout macro)
     this.robotService.pressedKeysList
-      .pipe(throttle(val => interval(1000)))
+      // .pipe(throttle(val => interval(1000)))
       .subscribe(t => this.checkKeybinds(t));
   }
 

@@ -2,17 +2,16 @@ import { Component, Inject, Input, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { Router } from '@angular/router';
 
-import { NetWorthSnapshot } from '../../../../shared/interfaces/income.interface';
 import { Player } from '../../../../shared/interfaces/player.interface';
 import { AccountService } from '../../../../shared/providers/account.service';
 import { AnalyticsService } from '../../../../shared/providers/analytics.service';
 import { ElectronService } from '../../../../shared/providers/electron.service';
 import { IncomeService } from '../../../../shared/providers/income.service';
+import { MessageValueService } from '../../../../shared/providers/message-value.service';
 import { PartyService } from '../../../../shared/providers/party.service';
 import { RobotService } from '../../../../shared/providers/robot.service';
 import { SettingsService } from '../../../../shared/providers/settings.service';
 import { NetworthTableComponent } from '../../networth-table/networth-table.component';
-import { MessageValueService } from '../../../../shared/providers/message-value.service';
 
 @Component({
   selector: 'app-char-wealth',
