@@ -119,7 +119,7 @@ export class RobotService {
     // Keyboard
     if ((
       this.lastKeyBoardEvent < (Date.now() - 1250))
-      && (this.activeWindowTitle === 'Path of Exile' || this.activeWindowTitle === 'ExileParty') {
+      && (this.activeWindowTitle === 'Path of Exile' || this.activeWindowTitle === 'ExileParty')) {
       const keyState = this.keyboard.getState();
       this.tempPressedKeys = [];
       for (const key of Object.keys(Keys)) {
