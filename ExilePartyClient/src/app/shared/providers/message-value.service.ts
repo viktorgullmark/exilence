@@ -35,9 +35,9 @@ export class MessageValueService {
 
   updateMessages() {
     // tslint:disable-next-line:max-line-length
-    this.playerNetworthMsg = `Personal net worth is ${this.playerValue.toFixed(1)} chaos and gain is ${this.playerGain.toFixed(1)} chaos over the last hour.`;
+    this.playerNetworthMsg = `Personal net worth: ${this.playerValue.toFixed(1)} chaos. Gain is ${this.playerGain.toFixed(1)} chaos / hour`;
     // tslint:disable-next-line:max-line-length
-    this.partyNetworthMsg = `Party net worth is ${this.partyValue.toFixed(1)} chaos and gain is ${this.partyGain.toFixed(1)} chaos over the last hour.`;
+    this.partyNetworthMsg = `Group net worth: ${this.partyValue.toFixed(1)} chaos. Gain is ${this.partyGain.toFixed(1)} chaos / hour`;
   }
 
   initKeybinds() {

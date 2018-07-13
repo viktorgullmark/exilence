@@ -163,7 +163,6 @@ export class RobotService {
     const windowTitle = 'Path of Exile';
     const isWindowActive = this.sendAndFocusWindow(windowTitle, text);
     if (isWindowActive) {
-
       setTimeout(() => {
         const keyboard = this.keyboard();
         keyboard.autoDelay.min = 0;
@@ -179,10 +178,10 @@ export class RobotService {
         return true;
       }, 50);
 
-
+    } else {
+      this.logService.log('Could not send text to window', windowTitle, true);
+      return false;
     }
-    this.logService.log('Could not send text to window', windowTitle, true);
-    return false;
   }
 
   private prepareStringForRobot(string: string) {
