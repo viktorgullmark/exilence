@@ -151,7 +151,7 @@ export class RobotService {
   public sendTextToPathWindow(text: string): boolean {
 
     while (this.keyboard.getState(Keys.Ctrl) || this.keyboard.getState(Keys.Alt) || this.keyboard.getState(Keys.Shift)) {
-      this.timer.sleep(20);
+      this.timer.sleep(50);
     }
 
     let clipboardValue = null;
@@ -171,12 +171,12 @@ export class RobotService {
         keyboard.click('^V');
         keyboard.click(Keys.Enter);
         this.logService.log('Successfully send text to window');
-        this.timer.sleep(50);
+        this.timer.sleep(150);
         if (clipboardValue) {
           this.clipboard.setText(clipboardValue);
         }
         return true;
-      }, 50);
+      }, 250);
 
     } else {
       this.logService.log('Could not send text to window', windowTitle, true);
