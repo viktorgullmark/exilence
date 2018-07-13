@@ -118,7 +118,7 @@ export class RobotService {
 
     // Keyboard
     if ((
-      this.lastKeyBoardEvent < (Date.now() - 1250))
+      this.lastKeyBoardEvent < (Date.now() - 1000))
       && (this.activeWindowTitle === 'Path of Exile' || this.activeWindowTitle === 'ExileParty')) {
       const keyState = this.keyboard.getState();
       this.tempPressedKeys = [];
@@ -165,8 +165,8 @@ export class RobotService {
     if (isWindowActive) {
       setTimeout(() => {
         const keyboard = this.keyboard();
-        keyboard.autoDelay.min = 1;
-        keyboard.autoDelay.max = 1;
+        keyboard.autoDelay.min = 30;
+        keyboard.autoDelay.max = 30;
         keyboard.click(Keys.Enter);
         keyboard.click('^V');
         keyboard.click(Keys.Enter);
