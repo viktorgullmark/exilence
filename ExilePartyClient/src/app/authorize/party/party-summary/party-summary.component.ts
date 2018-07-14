@@ -5,6 +5,7 @@ import { AnalyticsService } from '../../../shared/providers/analytics.service';
 import { MessageValueService } from '../../../shared/providers/message-value.service';
 import { PartyService } from '../../../shared/providers/party.service';
 import { NetworthTableComponent } from '../../components/networth-table/networth-table.component';
+import { RobotService } from '../../../shared/providers/robot.service';
 
 @Component({
   selector: 'app-party-summary',
@@ -23,7 +24,8 @@ export class PartySummaryComponent implements OnInit {
     @Inject(FormBuilder) fb: FormBuilder,
     private partyService: PartyService,
     private analyticsService: AnalyticsService,
-    public messageValueService: MessageValueService
+    public messageValueService: MessageValueService,
+    private robotService: RobotService
   ) {
     this.analyticsService.sendScreenview('/authorized/party/summary');
     this.form = fb.group({
@@ -50,4 +52,12 @@ export class PartySummaryComponent implements OnInit {
     this.table.doSearch(this.form.controls.searchText.value);
   }
 
+  report(toGame: boolean) {
+    this.messageValueService.updateMessages();
+    if (toGame) {
+      this.robotService.sendTextToPathWindow(this.messageValueService.partyNetworthMsg, true);
+    } else {
+      this.robotService.setTextToClipboard(this.messageValueService.partyNetworthMsg);
+    }
+  }
 }

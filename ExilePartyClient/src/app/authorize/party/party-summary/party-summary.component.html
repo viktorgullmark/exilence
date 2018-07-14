@@ -1,42 +1,52 @@
 <div class="party-summary down-scale">
-  <div class="income-summary-wrapper">
-      <div class="networth-wrapper">
-          <span class="title">Current net worth</span>
-          <br/>
-          <div class="networth-inner-wrapper">
-              <span class="networth" *ngIf="messageValueService.partyValue > 0">
-                  {{messageValueService.partyValue.toFixed(1)}}c
-              </span>
-              <span class="networth-placeholder" *ngIf="messageValueService.partyValue == 0">
-                 No data
-              </span>
-          </div>
-      </div>
-      <div class="networth-wrapper">
-          <span class="title">Gain past hour</span>
-          <br/>
-          <div class="networth-inner-wrapper">
-              <span class="networth">{{messageValueService.partyGain.toFixed(1)}}c</span>
-          </div>
-      </div>
-  </div>
-  <div class="flex-area graph-btns">
-      <button mat-raised-button color="primary" *ngIf="!isGraphHidden" (click)="hideGraph()" type="button" class="right-aligned extra-margin">{{'GRAPH.HIDE' | translate}}</button>
-      <button mat-raised-button color="primary" *ngIf="isGraphHidden" (click)="showGraph()" type="button" class="right-aligned extra-margin">{{'GRAPH.SHOW' | translate}}</button>
-  </div>
-  <div class="income-graph-wrapper" [hidden]="isGraphHidden">
-      <app-income title="Net worth summary for group" (hidden)="toggleGraph($event)" [view]="graphDimensions"></app-income>
-  </div>
-  <div class="table-outer-wrapper" [ngClass]="{'full-height-table': isGraphHidden }">
-      <div class="search-form-wrapper">
-          <form class="form search-form" [formGroup]="form">
-              <mat-form-field>
-                  <input matInput formControlName="searchText" placeholder="{{'CURRENCY.SEARCH' | translate}}" class="search-text-input" (ngModelChange)="search()">
-              </mat-form-field>
-          </form>
-      </div>
-      <div class="networth-table-wrapper">
-          <app-networth-table #table></app-networth-table>
-      </div>
-  </div>
+    <div class="income-summary-wrapper">
+        <div class="networth-wrapper">
+            <span class="title">Current net worth</span>
+            <br/>
+            <div class="networth-inner-wrapper">
+                <span class="networth" *ngIf="messageValueService.partyValue > 0">
+                    {{messageValueService.partyValue.toFixed(1)}}c
+                </span>
+                <span class="networth-placeholder" *ngIf="messageValueService.partyValue == 0">
+                    No data
+                </span>
+            </div>
+        </div>
+        <div class="networth-wrapper">
+            <span class="title">Gain past hour</span>
+            <br/>
+            <div class="networth-inner-wrapper">
+                <span class="networth">{{messageValueService.partyGain.toFixed(1)}}c</span>
+            </div>
+        </div>
+    </div>
+    <div class="flex-area graph-btns">
+        <div class="btn-grp">
+            <button mat-raised-button color="primary" class="extra-margin" type="button" [matMenuTriggerFor]="menu">
+                {{'GRAPH.REPORT' | translate}}
+                <mat-icon>arrow_drop_down</mat-icon>
+            </button>
+            <mat-menu #menu="matMenu">
+                <button (click)="report(false)" mat-menu-item>{{'ROBOT.CLIPBOARD' | translate}}</button>
+                <button (click)="report(true)" mat-menu-item>{{'ROBOT.GAME' | translate}}</button>
+            </mat-menu>
+            <button mat-raised-button color="primary" *ngIf="!isGraphHidden" (click)="hideGraph()" type="button" class="right-aligned">{{'GRAPH.HIDE' | translate}}</button>
+            <button mat-raised-button color="primary" *ngIf="isGraphHidden" (click)="showGraph()" type="button" class="right-aligned">{{'GRAPH.SHOW' | translate}}</button>
+        </div>
+    </div>
+    <div class="income-graph-wrapper" [hidden]="isGraphHidden">
+        <app-income title="Net worth summary for group" (hidden)="toggleGraph($event)" [view]="graphDimensions"></app-income>
+    </div>
+    <div class="table-outer-wrapper" [ngClass]="{'full-height-table': isGraphHidden }">
+        <div class="search-form-wrapper">
+            <form class="form search-form" [formGroup]="form">
+                <mat-form-field>
+                    <input matInput formControlName="searchText" placeholder="{{'CURRENCY.SEARCH' | translate}}" class="search-text-input" (ngModelChange)="search()">
+                </mat-form-field>
+            </form>
+        </div>
+        <div class="networth-table-wrapper">
+            <app-networth-table #table></app-networth-table>
+        </div>
+    </div>
 </div>
