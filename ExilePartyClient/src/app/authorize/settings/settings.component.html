@@ -69,16 +69,16 @@
         <mat-grid-tile [colspan]="2" [rowspan]="1">
           <mat-form-field>
             <mat-select [compareWith]="compareKeyCodes" [(value)]="keybind.modifierKeyCode">
-              <mat-option>None</mat-option>
-              <mat-option *ngFor="let key of modifierKeys" value="{{key.code}}">{{key.name}}</mat-option>
+              <!-- <mat-option>None</mat-option> -->
+              <mat-option *ngFor="let key of modifierKeys" value="{{key.name}}">{{key.name}}</mat-option>
             </mat-select>
           </mat-form-field>
         </mat-grid-tile>
         <mat-grid-tile [colspan]="2" [rowspan]="1">
           <mat-form-field>
             <mat-select [compareWith]="compareKeyCodes" [(value)]="keybind.triggerKeyCode">
-              <mat-option>None</mat-option>
-              <mat-option *ngFor="let key of triggerKeys" value="{{key.code}}">{{key.name}}</mat-option>
+              <!-- <mat-option>None</mat-option> -->
+              <mat-option *ngFor="let key of triggerKeys" value="{{key.name}}">{{key.name}}</mat-option>
             </mat-select>
           </mat-form-field>
         </mat-grid-tile>

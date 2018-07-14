@@ -115,10 +115,6 @@ try {
     globalShortcut.register('Command+Shift+I', () => {
       win.openDevTools();
     });
-    globalShortcut.register('Control+Y', () => {
-      console.log('keybind triggered, sending ipc');
-      win.webContents.send('keybind', { bind: 'Control+Y' });
-    });
   });
 
   // Quit when all windows are closed.

@@ -41,7 +41,7 @@ export class MessageValueService {
   }
 
   initKeybinds() {
-    this.keybindService.registerKeybind('9', 'party-personal-networth', 'Report personal net worth to party');
-    this.keybindService.registerKeybind('8', 'party-summary-networth', 'Report summarized net worth to party');
+    this.keybindService.registerKeybind('Ctrl+C', 'party-personal-networth', 'Report personal net worth to party');
+    this.keybindService.registerKeybind('Ctrl+D', 'party-summary-networth', 'Report summarized net worth to party');
   }
 }

@@ -53,7 +53,7 @@ export class SettingsComponent implements OnInit {
     { name: 'Y', code: Keys.Y },
     { name: 'Z', code: Keys.Z },
   ];
-  keybinds: Keybind[] = [];
+  keybinds: any[];
 
   @ViewChild('table') table: StashtabListComponent;
 
@@ -68,8 +68,14 @@ export class SettingsComponent implements OnInit {
       searchText: ['']
     });
 
-    this.keybindService.keybinds.subscribe((binds: Keybind[]) => {
-      this.keybinds = binds;
+    this.keybindService.keybinds.subscribe((binds: any[]) => {
+      this.keybinds = binds.map(bind => ({
+        triggerKeyCode: bind.keys.split('+')[1],
+        modifierKeyCode: bind.keys.split('+')[0],
+        event: bind.event,
+        title: bind.title
+      }));
+      console.log('binds',this.keybinds);
     });
 
   }
@@ -84,7 +90,7 @@ export class SettingsComponent implements OnInit {
     }
   }
   compareKeyCodes(c1: any, c2: any): boolean {
-    return +c1 === +c2;
+    return c1 === c2;
   }
 
   resetKeybinds() {
@@ -93,8 +99,17 @@ export class SettingsComponent implements OnInit {
   }
 
   saveKeybinds() {
-    this.keybindService.updateKeybinds(this.keybinds);
-    this.settingsService.set('keybinds', this.keybinds);
+    this.keybindService.updateKeybinds(this.mapBindings(this.keybinds));
+    this.settingsService.set('keybinds', this.mapBindings(this.keybinds));
+  }
+
+  // map bindings back to proper format
+  mapBindings(binds: any[]) {
+    return this.keybinds.map(bind => ({
+      keys: bind.modifierKeyCode + '+' + bind.triggerKeyCode,
+      event: bind.event,
+      title: bind.title
+    }));
   }
 
   search() {
