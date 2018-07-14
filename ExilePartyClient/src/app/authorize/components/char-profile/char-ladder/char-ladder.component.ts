@@ -5,6 +5,7 @@ import { AnalyticsService } from '../../../../shared/providers/analytics.service
 import { PartyService } from '../../../../shared/providers/party.service';
 import { LadderTableComponent } from '../../ladder-table/ladder-table.component';
 import { LadderService } from '../../../../shared/providers/ladder.service';
+import { ElectronService } from '../../../../shared/providers/electron.service';
 
 @Component({
   selector: 'app-char-ladder',
@@ -26,7 +27,8 @@ export class CharLadderComponent implements OnInit {
   fb: FormBuilder,
     private partyService: PartyService,
     private analyticsService: AnalyticsService,
-    private ladderService: LadderService
+    private ladderService: LadderService,
+    private electronService: ElectronService
   ) {
     this.form = fb.group({
       searchText: ['']
@@ -39,5 +41,8 @@ export class CharLadderComponent implements OnInit {
 
   ngOnInit() {
     this.analyticsService.sendScreenview('/authorized/party/player/ladder');
+  }
+  openLink(link: string) {
+    this.electronService.shell.openExternal(link);
   }
 }
