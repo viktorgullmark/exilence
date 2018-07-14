@@ -17,6 +17,8 @@ import { SettingsService } from './settings.service';
 import { LogMessage } from '../interfaces/log-message.interface';
 import { LogService } from './log.service';
 import { ElectronService } from './electron.service';
+import { NetWorthSnapshot } from '../interfaces/income.interface';
+import { MessageValueService } from './message-value.service';
 
 @Injectable()
 export class PartyService {
@@ -58,7 +60,8 @@ export class PartyService {
     private externalService: ExternalService,
     private settingService: SettingsService,
     private logService: LogService,
-    private electronService: ElectronService
+    private electronService: ElectronService,
+    private messageValueService: MessageValueService
   ) {
 
     this.recentParties.next(this.settingService.get('recentParties') || []);
@@ -99,6 +102,16 @@ export class PartyService {
           this.selectedPlayer.next(player);
           this.isEntering = false;
           this.logService.log('Entered party:', party);
+
+          // set initial values for party net worth
+          let networth = 0;
+          this.messageValueService.partyGain = 0;
+          this.party.players.forEach(p => {
+            this.updatePartyGain(p);
+            networth = networth + p.netWorthSnapshots[0].value;
+          });
+          this.messageValueService.partyValue = networth;
+
         });
       });
     });
@@ -154,6 +167,19 @@ export class PartyService {
       this.handleAreaEvent(msg);
     });
 
+  }
+
+  updatePartyGain(player: Player) {
+    const oneHourAgo = (Date.now() - (1 * 60 * 60 * 1000));
+    const pastHoursSnapshots = player.netWorthSnapshots
+      .filter((snaphot: NetWorthSnapshot) => snaphot.timestamp > oneHourAgo);
+
+    if (pastHoursSnapshots.length > 1) {
+      const lastSnapshot = pastHoursSnapshots[0];
+      const firstSnapshot = pastHoursSnapshots[pastHoursSnapshots.length - 1];
+      const gainHour = ((1000 * 60 * 60)) / (lastSnapshot.timestamp - firstSnapshot.timestamp) * (lastSnapshot.value - firstSnapshot.value);
+      this.messageValueService.partyGain = this.messageValueService.partyGain + gainHour;
+    }
   }
 
   initHubConnection() {
@@ -248,7 +274,8 @@ export class PartyService {
   }
 
   handleAreaEvent(event: LogMessage) {
-    this.getAccountForCharacter(event.player.name).then((account: string) => {
+    this.externalService.getAccountForCharacter(event.player.name).subscribe((res: any) => {
+      const account = res.accountName;
       if (account !== null) {
 
         const newPlayer: RecentPlayer = {

@@ -1,12 +1,21 @@
 import { app, BrowserWindow, dialog, screen, globalShortcut } from 'electron';
 import * as path from 'path';
 import * as url from 'url';
-
+const ipcMain = require('electron').ipcMain;
 const log = require('electron-log');
 const { autoUpdater } = require('electron-updater');
 let win, serve;
 const args = process.argv.slice(1);
 serve = args.some(val => val === '--serve');
+
+ipcMain.on('keybinds-update', function (event, binds) {
+  globalShortcut.unregisterAll();
+  binds.forEach(bind => {
+    globalShortcut.register(bind.keys, () => {
+      win.webContents.send('keybind', bind);
+    });
+  });
+});
 
 autoUpdater.logger = log;
 autoUpdater.logger.transports.file.level = 'info';

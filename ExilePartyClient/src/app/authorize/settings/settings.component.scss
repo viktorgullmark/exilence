@@ -7,3 +7,28 @@
         overflow-y: scroll;
     }
 }
+
+.setting-tab-content {
+    margin-top: 25px;
+}
+
+.grid-header {
+    background: #272727;
+}
+
+.flex-area {
+    display: flex;
+    align-items: flex-end;
+    justify-content: end;
+
+    .right-aligned {
+        margin-left: auto;
+        button {
+            margin-left: 15px;
+        }
+    }
+}
+
+.btn-area-divider {
+    margin-top: 15px;
+}

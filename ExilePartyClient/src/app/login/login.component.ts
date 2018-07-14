@@ -15,6 +15,7 @@ import { ExternalService } from '../shared/providers/external.service';
 import { SessionService } from '../shared/providers/session.service';
 import { SettingsService } from '../shared/providers/settings.service';
 import { LadderService } from '../shared/providers/ladder.service';
+import { RobotService } from '../shared/providers/robot.service';
 
 @Component({
     selector: 'app-login',
@@ -52,7 +53,8 @@ export class LoginComponent implements OnInit {
         private sessionService: SessionService,
         private settingsService: SettingsService,
         private analyticsService: AnalyticsService,
-        private ladderService: LadderService
+        private ladderService: LadderService,
+        private robotService: RobotService
     ) {
 
         this.fetchSettings();

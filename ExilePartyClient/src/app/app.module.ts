@@ -17,6 +17,7 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { AuthorizeModule } from './authorize/authorize.module';
 import { NotficationBarModule } from './authorize/components/notfication-bar/notfication-bar.module';
+import { DisconnectedModule } from './disconnected/disconnected.module';
 import { LoginModule } from './login/login.module';
 import { NotFoundModule } from './not-found/not-found.module';
 import { WebviewDirective } from './shared/directives/webview.directive';
@@ -26,9 +27,9 @@ import { ElectronService } from './shared/providers/electron.service';
 import { ExternalService } from './shared/providers/external.service';
 import { LogService } from './shared/providers/log.service';
 import { NinjaService } from './shared/providers/ninja.service';
+import { RobotService } from './shared/providers/robot.service';
 import { SessionService } from './shared/providers/session.service';
 import { SettingsService } from './shared/providers/settings.service';
-import { DisconnectedModule } from './disconnected/disconnected.module';
 
 // AoT requires an exported function for factories
 export function HttpLoaderFactory(http: HttpClient) {
@@ -65,6 +66,7 @@ export function HttpLoaderFactory(http: HttpClient) {
   providers: [
     ExternalService,
     ElectronService,
+    RobotService,
     LogService,
     CanActivateAuthorized,
     AccountService,

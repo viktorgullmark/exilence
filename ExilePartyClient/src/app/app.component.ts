@@ -24,7 +24,6 @@ export class AppComponent {
     private settingsService: SettingsService,
     private router: Router,
   ) {
-
     this.appVersion = pkg['version'];
 
     this.logout();
