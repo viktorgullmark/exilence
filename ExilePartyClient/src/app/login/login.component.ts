@@ -182,12 +182,12 @@ export class LoginComponent implements OnInit {
     login() {
         this.isLoading = true;
         this.form = this.getFormObj();
+        this.analyticsService.startTracking(this.form.accountName);
         this.externalService.getCharacter(this.form)
             .subscribe((data: EquipmentResponse) => {
 
                 const player = this.externalService.setCharacter(data, this.player);
                 this.player = player;
-
                 this.ladderService.getLadderInfoForCharacter(this.player.character.league, this.player.character.name).subscribe(res => {
                     if (res !== null && res.list !== null) {
                         this.player.ladderInfo = res.list;
@@ -203,7 +203,6 @@ export class LoginComponent implements OnInit {
         this.accountService.player.next(this.player);
         this.accountService.accountInfo.next(this.form);
         this.settingsService.set('account', this.form);
-        this.analyticsService.startTracking(this.form.accountName);
         this.sessionService.initSession(this.form.sessionId);
         this.isLoading = false;
         this.router.navigate(['/authorized/dashboard']);
