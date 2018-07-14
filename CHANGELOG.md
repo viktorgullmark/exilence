@@ -1,6 +1,9 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [0.5.1] - 2018-07-XX
+- Changed default keybindings
+
 ## [0.5.0] - 2018-07-14
 - Added first version of keybindings (Settings -> Keybinds)
 - Added new tab "Ladder": shows your ranking and the players next to you on the ladder
