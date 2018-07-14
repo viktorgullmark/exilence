@@ -34,6 +34,7 @@ export class ExternalService {
     this.setCookie(data.sessionId);
 
     const parameters = `?accountName=${data.accountName}&character=${data.characterName}`;
+
     return this.http.get('https://www.pathofexile.com/character-window/get-items' + parameters, { withCredentials: true }).catch(e => {
       if (e.status !== 403 && e.status !== 404) {
         this.router.navigate(['/disconnected']);

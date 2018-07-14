@@ -8,6 +8,7 @@ import { ElectronService } from '../../../shared/providers/electron.service';
 import { ExternalService } from '../../../shared/providers/external.service';
 import { PartyService } from '../../../shared/providers/party.service';
 import { SessionService } from '../../../shared/providers/session.service';
+import { LadderService } from '../../../shared/providers/ladder.service';
 
 @Component({
   selector: 'app-char-profile',
@@ -29,10 +30,12 @@ export class CharProfileComponent implements OnInit {
     private externalService: ExternalService,
     private router: Router,
     private electronService: ElectronService,
-    private analyticsService: AnalyticsService
+    private analyticsService: AnalyticsService,
+    private ladderService: LadderService
   ) {
     this.analyticsService.sendScreenview('/authorized/party/player/profile');
    }
+
 
   ngOnInit() {
     if (!this.localProfile) {
