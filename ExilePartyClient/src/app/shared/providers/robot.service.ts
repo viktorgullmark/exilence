@@ -149,20 +149,20 @@ export class RobotService {
 
   public sendTextToPathWindow(text: string, fromApp: boolean): boolean {
 
-    while (this.keyboard.getState(Keys.Ctrl) || this.keyboard.getState(Keys.Alt) || this.keyboard.getState(Keys.Shift)) {
-      this.timer.sleep(50);
-    }
-
-    let clipboardValue = null;
-    if (this.clipboard.hasText()) {
-      clipboardValue = this.clipboardValue;
-      this.clipboard.setText(text);
-    }
-
     const windowTitle = 'Path of Exile';
     const shouldSendToWindow = this.activeWindowTitle === 'Path of Exile' || fromApp;
 
     if (shouldSendToWindow) {
+
+      while (this.keyboard.getState(Keys.Ctrl) || this.keyboard.getState(Keys.Alt) || this.keyboard.getState(Keys.Shift)) {
+        this.timer.sleep(50);
+      }
+
+      let clipboardValue = null;
+      if (this.clipboard.hasText()) {
+        clipboardValue = this.clipboardValue;
+        this.clipboard.setText(text);
+      }
       const isWindowActive = this.sendAndFocusWindow(windowTitle, text);
 
       if (isWindowActive) {
