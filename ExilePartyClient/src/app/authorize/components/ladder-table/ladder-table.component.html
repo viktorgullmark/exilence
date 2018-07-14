@@ -1,4 +1,7 @@
-<table mat-table [dataSource]="source" class="mat-elevation-z8" matSort matSortActive="rank" matSortDisableClear matSortDirection="asc">
+<div class="not-found-message" *ngIf="dataSource.length == 0">
+  Sorry, we could not find you on the ladder
+</div>
+<table *ngIf="dataSource.length > 0" mat-table [dataSource]="source" class="mat-elevation-z8" matSort matSortActive="rank" matSortDisableClear matSortDirection="asc">
 
   <ng-container matColumnDef="online">
     <th mat-header-cell *matHeaderCellDef></th>

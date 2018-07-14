@@ -6,6 +6,7 @@ import { Observable } from 'rxjs/Observable';
 import { AccountService } from './account.service';
 import { Player } from '../interfaces/player.interface';
 import { PartyService } from './party.service';
+import { AnalyticsService } from './analytics.service';
 
 @Injectable()
 export class LadderService {
@@ -16,7 +17,8 @@ export class LadderService {
   constructor(
     private http: HttpClient,
     private accountService: AccountService,
-    private partyService: PartyService
+    private partyService: PartyService,
+    private analyticsService: AnalyticsService
   ) {
     this.accountService.player.subscribe(res => {
       if (res !== undefined) {
@@ -48,9 +50,10 @@ export class LadderService {
       this.cooldown = false;
     }, 1000 * 60 * 5);
     const parameters = `?name=${characterName}&ladder=${league}`;
+    this.analyticsService.sendEvent('ladder', `GET LadderInfo`);
     return this.http.get(this.url + 'follow' + parameters)
       .catch(e => {
-        return Observable.of(e);
+        return Observable.of(null);
       });
   }
 }

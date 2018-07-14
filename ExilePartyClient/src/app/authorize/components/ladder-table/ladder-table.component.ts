@@ -24,7 +24,7 @@ export class LadderTableComponent implements OnInit {
   ngOnInit() {
     this.updateTable(this.player.ladderInfo);
     this.partyService.selectedPlayer.subscribe(res => {
-      if (res !== undefined) {
+      if (res !== undefined && res !== null) {
         this.player = res;
         this.dataSource = [];
         if (res.ladderInfo !== null && res.ladderInfo !== undefined) {
