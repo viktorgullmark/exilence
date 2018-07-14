@@ -69,7 +69,7 @@
         <mat-grid-tile [colspan]="2" [rowspan]="1">
           <mat-form-field>
             <mat-select [(value)]="keybind.modifierKeyCode">
-              <!-- <mat-option>None</mat-option> -->
+              <mat-option value="None">None</mat-option>
               <mat-option *ngFor="let key of modifierKeys" value="{{key.name}}">{{key.name}}</mat-option>
             </mat-select>
           </mat-form-field>
