@@ -89,9 +89,6 @@ export class SettingsComponent implements OnInit {
       this.alwaysOnTop = onTopSetting;
     }
   }
-  compareKeyCodes(c1: any, c2: any): boolean {
-    return c1 === c2;
-  }
 
   resetKeybinds() {
     this.keybindService.resetKeybinds();
