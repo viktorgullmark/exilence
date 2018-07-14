@@ -4,6 +4,7 @@ All notable changes to this project will be documented in this file.
 ## [0.5.1] - 2018-07-XX
 - Changed default keybindings
 - Added descriptive text to keybinds-page
+- Added ranking to player-badge (if player is on ladder)
 - Fixed a bug where buttons sometimes overlapped in the currency-tab
 
 ## [0.5.0] - 2018-07-14
