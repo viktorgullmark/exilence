@@ -147,7 +147,7 @@ export class RobotService {
     return keytap && foreground;
   }
 
-  public sendTextToPathWindow(text: string): boolean {
+  public sendTextToPathWindow(text: string, fromApp: boolean): boolean {
 
     while (this.keyboard.getState(Keys.Ctrl) || this.keyboard.getState(Keys.Alt) || this.keyboard.getState(Keys.Shift)) {
       this.timer.sleep(50);
@@ -160,23 +160,27 @@ export class RobotService {
     }
 
     const windowTitle = 'Path of Exile';
-    const isWindowActive = this.sendAndFocusWindow(windowTitle, text);
+    const shouldSendToWindow = this.activeWindowTitle === 'Path of Exile' || fromApp;
 
-    if (isWindowActive) {
-      setTimeout(() => {
-        this.SendInputText(text);
-        this.logService.log('Successfully send text to window');
+    if (shouldSendToWindow) {
+      const isWindowActive = this.sendAndFocusWindow(windowTitle, text);
+
+      if (isWindowActive) {
         setTimeout(() => {
-          if (clipboardValue) {
-            this.clipboard.setText(clipboardValue);
-          }
-          return true;
-        }, (150));
-      }, 0);
+          this.SendInputText(text);
+          this.logService.log('Successfully send text to window');
+          setTimeout(() => {
+            if (clipboardValue) {
+              this.clipboard.setText(clipboardValue);
+            }
+            return true;
+          }, (150));
+        }, 0);
 
-    } else {
-      this.logService.log('Could not send text to window', windowTitle, true);
-      return false;
+      } else {
+        this.logService.log('Could not send text to window', windowTitle, true);
+        return false;
+      }
     }
   }
 

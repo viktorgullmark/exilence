@@ -28,7 +28,7 @@ export class PlayerBadgeComponent implements OnInit {
   }
 
   invitePlayer(playerName: string) {
-    const result = this.robotService.sendTextToPathWindow(`/invite ${playerName}`);
+    const result = this.robotService.sendTextToPathWindow(`/invite ${playerName}`, true);
   }
 
   selectPlayer() {

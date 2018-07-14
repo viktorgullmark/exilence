@@ -6,6 +6,7 @@ import { Player } from '../../../../shared/interfaces/player.interface';
 import { AnalyticsService } from '../../../../shared/providers/analytics.service';
 import { PartyService } from '../../../../shared/providers/party.service';
 import { MapTableComponent } from '../../map-table/map-table.component';
+import * as moment from 'moment';
 
 @Component({
   selector: 'app-char-maps',
@@ -42,7 +43,7 @@ export class CharMapsComponent implements OnInit {
     this.filteredArr = [];
     if (this.player.pastAreas !== null) {
       this.filteredArr = this.player.pastAreas.filter(res => {
-        return filteredArr.some(x => x.timestamp === res.timestamp);
+        return filteredArr.some(x => x.timestamp === moment(res.timestamp).format('LT'));
       });
     }
     this.updateAvgTimeSpent(this.filteredArr);

@@ -24,10 +24,10 @@ export class MessageValueService {
     this.keybindService.keybindEvent.subscribe(event => {
       this.updateMessages();
       if (event === 'party-personal-networth') {
-        this.robotService.sendTextToPathWindow(this.playerNetworthMsg);
+        this.robotService.sendTextToPathWindow(this.playerNetworthMsg, false);
       }
       if (event === 'party-summary-networth') {
-        this.robotService.sendTextToPathWindow(this.partyNetworthMsg);
+        this.robotService.sendTextToPathWindow(this.partyNetworthMsg, false);
       }
     });
 
