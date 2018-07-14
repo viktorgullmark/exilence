@@ -103,7 +103,7 @@ export class SettingsComponent implements OnInit {
   // map bindings back to proper format
   mapBindings(binds: any[]) {
     return this.keybinds.map(bind => ({
-      keys: bind.modifierKeyCode + '+' + bind.triggerKeyCode,
+      keys: bind.modifierKeyode !== 'None' ? bind.modifierKeyCode + '+' + bind.triggerKeyCode : bind.triggerKeyCode,
       event: bind.event,
       title: bind.title
     }));
