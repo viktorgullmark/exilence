@@ -106,10 +106,10 @@ export class RobotService {
 
   private SendInputText(text: string) {
 
-    const codes = text.split('').map(c => {
-      const code = c.charCodeAt(0);
-      return code;
-    });
+    // const codes = text.split('').map(c => {
+    //   const code = c.charCodeAt(0);
+    //   return code;
+    // });
 
     this.KeyToggle(Keys.Enter, 'down', false);
     this.KeyToggle(Keys.Enter, 'up', false);

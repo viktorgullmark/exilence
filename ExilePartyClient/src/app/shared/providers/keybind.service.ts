@@ -27,7 +27,7 @@ export class KeybindService {
       this.keybindEvent.next(bind.event);
     });
 
-    this.updateKeybinds([{ keys: '7', event: 'party-personal-networth', title: 'Report personal net worth to party' }]);
+    // this.updateKeybinds([{ keys: '7', event: 'party-personal-networth', title: 'Report personal net worth to party' }]);
 
     const binds = this.settingsService.get('keybinds');
     if (binds !== undefined) {
