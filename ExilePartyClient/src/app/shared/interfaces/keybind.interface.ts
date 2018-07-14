@@ -1,6 +1,5 @@
 export interface Keybind {
-  triggerKeyCode: number;
-  modifierKeyCode: number;
+  keys: string;
   event: string;
   title: string;
 }

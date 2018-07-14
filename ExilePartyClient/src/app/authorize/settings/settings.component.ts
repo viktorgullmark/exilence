@@ -88,21 +88,13 @@ export class SettingsComponent implements OnInit {
   }
 
   resetKeybinds() {
-    // this.keybindService.resetKeybinds();
+    this.keybindService.resetKeybinds();
     this.settingsService.set('keybinds', undefined);
   }
 
   saveKeybinds() {
-
-    const numberBinds = this.keybinds.slice();
-    for (let i = 0; i < numberBinds.length; i++) {
-      const bind = numberBinds[i];
-      bind.modifierKeyCode = +bind.modifierKeyCode;
-      bind.triggerKeyCode = +bind.triggerKeyCode;
-    }
-
-    // this.keybindService.updateKeybinds(numberBinds);
-    this.settingsService.set('keybinds', numberBinds);
+    this.keybindService.updateKeybinds(this.keybinds);
+    this.settingsService.set('keybinds', this.keybinds);
   }
 
   search() {

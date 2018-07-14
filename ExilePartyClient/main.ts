@@ -8,13 +8,7 @@ let win, serve;
 const args = process.argv.slice(1);
 serve = args.some(val => val === '--serve');
 
-ipcMain.on('user-data', function (event, arg) {
-  console.log(arg);
-  event.sender.send('test-data', { test: 'test' });
-});
-
 ipcMain.on('keybinds-update', function (event, binds) {
-  console.log('keybinds-update', binds);
   globalShortcut.unregisterAll();
   binds.forEach(bind => {
     globalShortcut.register(bind.keys, () => {
@@ -22,8 +16,6 @@ ipcMain.on('keybinds-update', function (event, binds) {
     });
   });
 });
-
-
 
 autoUpdater.logger = log;
 autoUpdater.logger.transports.file.level = 'info';
