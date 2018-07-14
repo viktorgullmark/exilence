@@ -150,7 +150,7 @@ export class RobotService {
   public sendTextToPathWindow(text: string, fromApp: boolean): boolean {
 
     const windowTitle = 'Path of Exile';
-    const shouldSendToWindow = this.activeWindowTitle === 'Path of Exile' || fromApp;
+    const shouldSendToWindow = this.activeWindowTitle === 'Path of Exile' || this.activeWindowTitle === 'ExileParty' || fromApp;
 
     if (shouldSendToWindow) {
 
