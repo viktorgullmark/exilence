@@ -29,10 +29,9 @@ namespace ExileParty
         public async Task<IActionResult> Index()
         {
             var partyList = new List<PartyStatistics>();
+            int players = 0;
 
             var parties = await _cache.GetAsync<Dictionary<string, string>>("ConnectionIndex") ?? new Dictionary<string, string>();
-
-            StatisticsModel stats = await _cache.GetAsync<StatisticsModel>("Statistics");
 
             foreach (var partyName in parties.Select(t => t.Value).Distinct().ToList())
             {
@@ -40,12 +39,10 @@ namespace ExileParty
                 var party = await _cache.GetAsync<PartyModel>($"party:{partyName}");
                 if (party != null)
                 {
-                    stats.TotalParties++;
-                    stats.TotalPlayers += party.Players.Count;
-
                     PartyStatistics partyStats = new PartyStatistics { };
                     partyStats.Players = party.Players.Select(t => t.Character.Name).ToList();
                     partyList.Add(partyStats);
+                    players += partyStats.Players.Count;
                 }
 
             }
@@ -53,7 +50,8 @@ namespace ExileParty
 
             var response = new
             {
-                Statistics = stats,
+                totalParties = partyList.Count(),
+                totalPlayers = players,                
                 Parties = partyList
             };
 
