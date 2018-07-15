@@ -1,6 +1,7 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { Player } from '../../../../shared/interfaces/player.interface';
 import { PartyService } from '../../../../shared/providers/party.service';
+import { RobotService } from '../../../../shared/providers/robot.service';
 
 @Component({
   selector: 'app-player-badge',
@@ -12,7 +13,7 @@ export class PlayerBadgeComponent implements OnInit {
   @Input() localPlayer = false;
   selectedPlayer: Player;
   selectedGenericPlayer: Player;
-  constructor(private partyService: PartyService) { }
+  constructor(private partyService: PartyService, private robotService: RobotService) { }
 
   ngOnInit() {
     if (!this.localPlayer) {
@@ -26,12 +27,24 @@ export class PlayerBadgeComponent implements OnInit {
     }
   }
 
+  invitePlayer(playerName: string) {
+    const result = this.robotService.sendTextToPathWindow(`/invite ${playerName}`, true);
+  }
+
   selectPlayer() {
     if (!this.localPlayer) {
       this.partyService.selectedPlayer.next(this.player);
     }
     if (this.localPlayer) {
       this.partyService.selectedGenericPlayer.next(this.player);
+    }
+  }
+
+  getRanking() {
+    if (this.player.ladderInfo !== null) {
+      return this.player.ladderInfo.find(x => x.name === this.player.character.name).rank;
+    } else {
+      return '';
     }
   }
 

@@ -1,0 +1,20 @@
+<div class="char-ladder">
+    <div class="info-container">
+        <div class="info-wrapper">
+            <p class="mat-body-1">
+                This page displays your current ranking on the ladder, as well as players close to you in the rankings.<br/><br/>
+                This page will be updated once every 5 minutes.
+            </p>
+        </div>
+        <div class="link-wrapper">
+            <span class="title">Powered by
+                <a class="poeracing-link" (click)="openLink('http://poe-racing.com')">http://poe-racing.com</a>
+            </span>
+        </div>
+    </div>
+    <div class="table-outer-wrapper">
+        <div class="ladder-table-wrapper">
+            <app-ladder-table #table [player]="player"></app-ladder-table>
+        </div>
+    </div>
+</div>

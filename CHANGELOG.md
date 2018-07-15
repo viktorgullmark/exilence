@@ -1,18 +1,27 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
-## [0.5.0] - 2018-07-XX
-- Added link to player-profile
-- Reworked how gain is calculated
+## [0.5.1] - 2018-07-XX
+- Changed default keybindings
+- Added descriptive text to keybinds-page
+- Added ranking to player-badge (if player is on ladder)
+- Fixed a bug where buttons sometimes overlapped in the currency-tab
+
+## [0.5.0] - 2018-07-14
+- Added first version of keybindings (Settings -> Keybinds)
+- Added new tab "Ladder": shows your ranking and the players next to you on the ladder
+- Added link to player-profile next to equipment
+- Reworked how gain is calculated to be more accurate
 - Added the ability to click on snapshots in the graph for a player, to display the items and net worth at that timestamp
 - Fixed a bug where players weren't disconnected properly after party was dropped due to inactivity
 - Fixed a bug where you could select two players at the same time
 - Fixed a bug for SSF leagues where net worth was not calculated
 - Fixed a bug where abyssal sockets weren't shown
 - Fixed a bug where gain wasn't shown correctly on summary-view
+- Fixed a bug where the summary-view wasn't updated correctly
 - Fixed a bug where history wasn't cleared properly when resetting graph
 - Fixed how timestamps are compared when events occur
-- Changed styling of shaper/elder-items
+- Improved styling of shaper/elder-items
 - Now redirects to disconnect-page when pathofexile.com is down
 
 ## [0.4.6] - 2018-07-09

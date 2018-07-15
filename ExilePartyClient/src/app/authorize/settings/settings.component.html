@@ -8,7 +8,13 @@
         &nbsp;Stashtabs
       </ng-template>
     </mat-tab>
-    <mat-tab #general id="general" class="active">
+    <mat-tab #general id="keybinds">
+      <ng-template mat-tab-label>
+        <mat-icon class="tab-icon">keyboard</mat-icon>
+        &nbsp;Keybinds
+      </ng-template>
+    </mat-tab>
+    <mat-tab #window id="window">
       <ng-template mat-tab-label>
         <mat-icon class="tab-icon">laptop</mat-icon>
         &nbsp;Window
@@ -35,12 +41,72 @@
     </div>
   </div>
 </div>
+
 <div [hidden]="selectedIndex != 1">
-  <h3 class="mat-h3">
-    {{'PAGES.SETTINGS.WINDOW' | translate}}
-    <span class="mat-caption caption-text"></span>
-  </h3>
-  <div>
+  <div class="keybinds-info-text">
+    <p class="mat-body-1">
+      This page lets you select custom keybindings for functions in the app, e.g reporting the current gain for your group.
+      <br/> These keybinds will work globally on your PC.
+    </p>
+    <p class="mat-body-1">
+      To avoid any conflicts with the keybinds, make sure the combination you select does not interfere with other macros or in-game
+      binds.
+    </p>
+  </div>
+  <div class="setting-tab-content">
+    <mat-grid-list cols="6" rowHeight="50px">
+      <!-- col-headers -->
+      <mat-grid-tile [colspan]="2" [rowspan]="1" class="grid-header">
+        <span class="grid-header-title">
+          Event name
+        </span>
+      </mat-grid-tile>
+      <mat-grid-tile [colspan]="2" [rowspan]="1" class="grid-header">
+        <span class="grid-header-title">
+          Modifier-key
+        </span>
+      </mat-grid-tile>
+      <mat-grid-tile [colspan]="2" [rowspan]="1" class="grid-header">
+        <span class="grid-header-title">
+          Trigger-key
+        </span>
+      </mat-grid-tile>
+      <!-- keybinds -->
+      <ng-container *ngFor="let keybind of keybinds">
+        <mat-grid-tile [colspan]="2" [rowspan]="1">
+          {{keybind.title}}
+        </mat-grid-tile>
+        <mat-grid-tile [colspan]="2" [rowspan]="1">
+          <mat-form-field>
+            <mat-select [(value)]="keybind.modifierKeyCode">
+              <mat-option value="None">None</mat-option>
+              <mat-option *ngFor="let key of modifierKeys" value="{{key.name}}">{{key.name}}</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </mat-grid-tile>
+        <mat-grid-tile [colspan]="2" [rowspan]="1">
+          <mat-form-field>
+            <mat-select [(value)]="keybind.triggerKeyCode">
+              <!-- <mat-option>None</mat-option> -->
+              <mat-option *ngFor="let key of triggerKeys" value="{{key.name}}">{{key.name}}</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </mat-grid-tile>
+      </ng-container>
+    </mat-grid-list>
+    <mat-divider class="divider btn-area-divider"></mat-divider>
+    <div class="flex-area">
+      <div class="right-aligned">
+        <button mat-raised-button color="primary" (click)="resetKeybinds()" type="button">{{'KEYBINDS.RESET' | translate}}</button>
+        <button mat-raised-button color="primary" (click)="saveKeybinds()" type="button">{{'KEYBINDS.SAVE' | translate}}</button>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<div [hidden]="selectedIndex != 2">
+  <div class="setting-tab-content">
     <mat-checkbox class="setting-checkbox" [(ngModel)]="alwaysOnTop" (ngModelChange)="toggleAlwaysOnTop()">Set window always on top</mat-checkbox>
   </div>
 </div>

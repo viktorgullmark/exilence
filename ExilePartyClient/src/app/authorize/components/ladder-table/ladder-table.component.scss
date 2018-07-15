@@ -1,0 +1,37 @@
+@import "./../../../../assets/styles/_variables.scss";
+
+table {
+    width: 100%;
+}
+
+td {
+    min-height: 48px;
+
+    &.active {
+        background: #251c20 !important;
+    }
+
+    &.ranking {
+        color: $ranking-font-color !important;
+    }
+
+    &.experience {
+        color: $experience-font-color !important;
+    }
+
+    .status-icon {
+        color: rgb(131, 0, 0);
+        height: 21px;
+        width: 21px;
+        font-size: 21px;
+    }
+
+    .online {
+        color: rgb(0, 110, 0);
+    }
+}
+
+.not-found-message {
+    font-size: 16px;
+    color: #ff5858;
+}

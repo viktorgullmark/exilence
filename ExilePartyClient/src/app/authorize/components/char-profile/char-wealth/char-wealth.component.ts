@@ -2,13 +2,14 @@ import { Component, Inject, Input, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { Router } from '@angular/router';
 
-import { NetWorthSnapshot } from '../../../../shared/interfaces/income.interface';
 import { Player } from '../../../../shared/interfaces/player.interface';
 import { AccountService } from '../../../../shared/providers/account.service';
 import { AnalyticsService } from '../../../../shared/providers/analytics.service';
 import { ElectronService } from '../../../../shared/providers/electron.service';
 import { IncomeService } from '../../../../shared/providers/income.service';
+import { MessageValueService } from '../../../../shared/providers/message-value.service';
 import { PartyService } from '../../../../shared/providers/party.service';
+import { RobotService } from '../../../../shared/providers/robot.service';
 import { SettingsService } from '../../../../shared/providers/settings.service';
 import { NetworthTableComponent } from '../../networth-table/networth-table.component';
 
@@ -26,10 +27,8 @@ export class CharWealthComponent implements OnInit {
   isGraphHidden = false;
 
   public graphDimensions = [640, 200];
-  public gain = 0;
   public showReset = false;
   public previousSnapshot = false;
-  public networthValue = 0;
 
   constructor(
     @Inject(FormBuilder) fb: FormBuilder,
@@ -38,8 +37,10 @@ export class CharWealthComponent implements OnInit {
     private partyService: PartyService,
     private analyticsService: AnalyticsService,
     private settingService: SettingsService,
+    private robotService: RobotService,
     private incomeService: IncomeService,
-    private accountService: AccountService
+    private accountService: AccountService,
+    public messageValueService: MessageValueService
   ) {
     this.form = fb.group({
       searchText: ['']
@@ -51,8 +52,6 @@ export class CharWealthComponent implements OnInit {
         this.showReset = false;
       }
       this.player = res;
-      this.networthValue = this.player.netWorthSnapshots[0].value;
-      this.updateGain(res);
       this.previousSnapshot = false;
     });
   }
@@ -87,11 +86,20 @@ export class CharWealthComponent implements OnInit {
     this.isGraphHidden = false;
   }
 
+  report(toGame: boolean) {
+    this.messageValueService.updateMessages();
+    if (toGame) {
+      this.robotService.sendTextToPathWindow(this.messageValueService.playerNetworthMsg, true);
+    } else {
+      this.robotService.setTextToClipboard(this.messageValueService.playerNetworthMsg);
+    }
+  }
+
   loadPreviousSnapshot(event) {
     if (this.player.netWorthSnapshots[0] !== undefined) {
       this.table.loadPreviousSnapshot(event);
 
-      this.networthValue = event.value;
+      this.messageValueService.playerValue = event.value;
 
       const lastSnapshotTimestamp = this.player.netWorthSnapshots[0].timestamp;
       const loadedSnapshotTimestamp = event.name.getTime();
@@ -102,24 +110,6 @@ export class CharWealthComponent implements OnInit {
 
   search() {
     this.table.doSearch(this.form.controls.searchText.value);
-  }
-
-  updateGain(player: Player) {
-    const oneHourAgo = (Date.now() - (1 * 60 * 60 * 1000));
-    const pastHoursSnapshots = player.netWorthSnapshots
-      .filter((snaphot: NetWorthSnapshot) => snaphot.timestamp > oneHourAgo);
-
-    if (pastHoursSnapshots.length > 1) {
-      const lastSnapshot = pastHoursSnapshots[0];
-      const firstSnapshot = pastHoursSnapshots[pastHoursSnapshots.length - 1];
-
-      const gainHour = ((1000 * 60 * 60)) / (lastSnapshot.timestamp - firstSnapshot.timestamp) * (lastSnapshot.value - firstSnapshot.value);
-
-      this.gain = gainHour;
-
-    } else {
-      this.gain = 0;
-    }
   }
 
   openLink(link: string) {

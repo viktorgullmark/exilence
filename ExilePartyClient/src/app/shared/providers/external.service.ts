@@ -4,6 +4,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 
+import { Router } from '../../../../node_modules/@angular/router';
 import { AccountInfo } from '../interfaces/account-info.interface';
 import { EquipmentResponse } from '../interfaces/equipment-response.interface';
 import { Item } from '../interfaces/item.interface';
@@ -13,7 +14,6 @@ import { Requirement } from '../interfaces/requirement.interface';
 import { Stash } from '../interfaces/stash.interface';
 import { AnalyticsService } from './analytics.service';
 import { ElectronService } from './electron.service';
-import { Router } from '../../../../node_modules/@angular/router';
 
 @Injectable()
 export class ExternalService {
@@ -34,8 +34,9 @@ export class ExternalService {
     this.setCookie(data.sessionId);
 
     const parameters = `?accountName=${data.accountName}&character=${data.characterName}`;
+
     return this.http.get('https://www.pathofexile.com/character-window/get-items' + parameters, { withCredentials: true }).catch(e => {
-      if (e.status !== 403) {
+      if (e.status !== 403 && e.status !== 404) {
         this.router.navigate(['/disconnected']);
       }
       return Observable.of(null);
@@ -46,7 +47,9 @@ export class ExternalService {
     const parameters = `?accountName=${account}`;
     return this.http.get('https://www.pathofexile.com/character-window/get-characters' + parameters)
       .catch(e => {
-        this.router.navigate(['/disconnected']);
+        if (e.status !== 403 && e.status !== 404) {
+          this.router.navigate(['/disconnected']);
+        }
         return Observable.of(null);
       });
   }
@@ -56,7 +59,9 @@ export class ExternalService {
     const parameters = `?league=${league}&accountName=${account}&tabs=1`;
     return this.http.get<Stash>('https://www.pathofexile.com/character-window/get-stash-items' + parameters)
       .catch(e => {
-        this.router.navigate(['/disconnected']);
+        if (e.status !== 403 && e.status !== 404) {
+          this.router.navigate(['/disconnected']);
+        }
         return Observable.of(null);
       });
   }
@@ -67,9 +72,16 @@ export class ExternalService {
     const parameters = `?league=${league}&accountName=${account}&tabIndex=${index}&tabs=1`;
     return this.http.get<Stash>('https://www.pathofexile.com/character-window/get-stash-items' + parameters)
       .catch(e => {
-        this.router.navigate(['/disconnected']);
+        if (e.status !== 403 && e.status !== 404) {
+          this.router.navigate(['/disconnected']);
+        }
         return Observable.of(null);
       });
+  }
+
+  getAccountForCharacter(character: string) {
+    const parameters = `?character=${encodeURIComponent(character)}`;
+    return this.http.get('https://www.pathofexile.com/character-window/get-account-name-by-character' + parameters);
   }
 
   setCookie(sessionId: string) {
