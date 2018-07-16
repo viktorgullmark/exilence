@@ -7,7 +7,6 @@
           <input matInput formControlName="accountName" placeholder="{{'ACCOUNT.NAME' | translate}}">
         </mat-form-field>
         <div class="btn-grp">
-          <button mat-raised-button class="btn-back" matStepperPrevious>Back</button>
           <button mat-raised-button color="primary" matStepperNext>Continue</button>
         </div>
       </form>
@@ -22,6 +21,7 @@
           </mat-select>
         </mat-form-field>
         <div class="btn-grp">
+          <button mat-raised-button class="btn-back" matStepperPrevious>Back</button>
           <button mat-raised-button color="primary" *ngIf="!isFetching" (click)="getCharacterList()">Fetch characters</button>
           <mat-progress-bar *ngIf="isFetching" class="progress-bar" color="primary" mode="indeterminate">
           </mat-progress-bar>
