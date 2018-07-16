@@ -4,7 +4,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 
-import { Router } from '../../../../node_modules/@angular/router';
+import { Router } from '@angular/router';
 import { AccountInfo } from '../interfaces/account-info.interface';
 import { EquipmentResponse } from '../interfaces/equipment-response.interface';
 import { Item } from '../interfaces/item.interface';
@@ -14,10 +14,14 @@ import { Requirement } from '../interfaces/requirement.interface';
 import { Stash } from '../interfaces/stash.interface';
 import { AnalyticsService } from './analytics.service';
 import { ElectronService } from './electron.service';
+import { BehaviorSubject } from 'rxjs/internal/BehaviorSubject';
+import { League } from '../interfaces/league.interface';
 
 @Injectable()
 export class ExternalService {
   public url: 'https://www.pathofexile.com/character-window/get-items';
+
+  public leagues: BehaviorSubject<League[]> = new BehaviorSubject<League[]>([]);
 
   constructor(
     private http: HttpClient,
@@ -36,6 +40,17 @@ export class ExternalService {
     const parameters = `?accountName=${data.accountName}&character=${data.characterName}`;
 
     return this.http.get('https://www.pathofexile.com/character-window/get-items' + parameters, { withCredentials: true }).catch(e => {
+      if (e.status !== 403 && e.status !== 404) {
+        this.router.navigate(['/disconnected']);
+      }
+      return Observable.of(null);
+    });
+  }
+
+  getLeagues(): Observable<any> {
+    const leagueType = 'main';
+    const parameters = `?type=${leagueType}`;
+    return this.http.get('http://api.pathofexile.com/leagues' + parameters).catch(e => {
       if (e.status !== 403 && e.status !== 404) {
         this.router.navigate(['/disconnected']);
       }

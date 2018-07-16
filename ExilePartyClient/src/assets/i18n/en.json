@@ -44,6 +44,10 @@
         "CLOSE": "Close",
         "INFORMATION": "Account information"
     },
+    "LEAGUE": {
+        "LEAGUE_INFO": "Choose your league",
+        "NAME": "League"
+    },
     "CHARACTER": {
         "NAME": "Character name",
         "NAME_INFO": "Select your current character"

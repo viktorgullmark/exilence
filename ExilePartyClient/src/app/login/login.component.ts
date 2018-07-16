@@ -16,6 +16,7 @@ import { SessionService } from '../shared/providers/session.service';
 import { SettingsService } from '../shared/providers/settings.service';
 import { LadderService } from '../shared/providers/ladder.service';
 import { RobotService } from '../shared/providers/robot.service';
+import { League } from '../shared/interfaces/league.interface';
 
 @Component({
     selector: 'app-login',
@@ -24,6 +25,7 @@ import { RobotService } from '../shared/providers/robot.service';
 })
 export class LoginComponent implements OnInit {
     accFormGroup: FormGroup;
+    leagueFormGroup: FormGroup;
     sessFormGroup: FormGroup;
     charFormGroup: FormGroup;
     pathFormGroup: FormGroup;
@@ -32,7 +34,9 @@ export class LoginComponent implements OnInit {
     isFetching = false;
     fetched = false;
     characterList: Character[] = [];
+    leagues: League[];
     player = {} as Player;
+    leagueName: string;
     characterName: string;
     accountName: string;
     sessionId: string;
@@ -56,11 +60,20 @@ export class LoginComponent implements OnInit {
         private ladderService: LadderService,
         private robotService: RobotService
     ) {
+        this.externalService.leagues.subscribe((res: League[]) => {
+            this.leagues = res;
+        });
 
+        this.externalService.getLeagues().subscribe(res => {
+            this.externalService.leagues.next(res);
+        });
         this.fetchSettings();
 
         this.accFormGroup = fb.group({
             accountName: [this.accountName !== undefined ? this.accountName : '', Validators.required]
+        });
+        this.leagueFormGroup = fb.group({
+            leagueName: [this.leagueName !== undefined ? this.leagueName : '', Validators.required]
         });
         this.sessFormGroup = fb.group({
             sessionId: [this.sessionId !== undefined ? this.sessionId : '']
@@ -72,7 +85,7 @@ export class LoginComponent implements OnInit {
             filePath: [this.filePath !== undefined ? this.filePath :
                 'C:/Program Files (x86)/Steam/steamapps/common/Path of Exile/logs/Client.txt', Validators.required]
         });
-        if (this.characterName !== undefined) {
+        if (this.characterName !== undefined && this.accountName !== undefined) {
             this.getCharacterList(this.accountName);
         }
     }
@@ -101,6 +114,7 @@ export class LoginComponent implements OnInit {
         this.characterName = this.settingsService.get('account.characterName');
         this.sessionId = this.settingsService.get('account.sessionId');
         this.accountName = this.settingsService.get('account.accountName');
+        this.leagueName = this.settingsService.get('account.leagueName');
         this.filePath = this.settingsService.get('account.filePath');
         this.netWorthHistory = this.settingsService.get('networth');
 
@@ -138,9 +152,10 @@ export class LoginComponent implements OnInit {
         this.isFetching = true;
         this.externalService.getCharacterList(accountName !== undefined ? accountName : this.accFormGroup.controls.accountName.value)
             .subscribe((res: Character[]) => {
-                this.accountService.characterList.next(res);
+                const charactersByLeague = res.filter(x => x.league === this.leagueFormGroup.controls.leagueName.value);
+                this.accountService.characterList.next(charactersByLeague);
                 this.fetched = true;
-                this.stepper.selectedIndex = 1;
+                this.stepper.selectedIndex = 2;
                 // res.forEach(char => {
                 //     if ('lastActive' in char && char.lastActive === true) {
                 //         // Set character here
@@ -162,6 +177,7 @@ export class LoginComponent implements OnInit {
         return {
             accountName: this.accFormGroup.controls.accountName.value,
             characterName: this.charFormGroup.controls.characterName.value,
+            leagueName: this.leagueFormGroup.controls.leagueName.value,
             sessionId: this.sessFormGroup.controls.sessionId.value,
             filePath: this.pathFormGroup.controls.filePath.value
         } as AccountInfo;
@@ -203,6 +219,8 @@ export class LoginComponent implements OnInit {
         this.accountService.player.next(this.player);
         this.accountService.accountInfo.next(this.form);
         this.settingsService.set('account', this.form);
+        console.log(this.settingsService.get('account.leagueName'));
+        console.log(this.settingsService.get('account.characterName'));
         this.sessionService.initSession(this.form.sessionId);
         this.isLoading = false;
         this.router.navigate(['/authorized/dashboard']);
