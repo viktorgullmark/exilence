@@ -5,7 +5,6 @@ All notable changes to this project will be documented in this file.
 - Changed default keybindings
 - Added the ability to disable individual keybinds
 - Added support for F1-F12 as trigger-keys
-- Removed shift as modifier-key
 - Added descriptive text to keybinds-page
 - Added league-selection to login-page
 - Added ranking to player-badge (if player is on ladder)

@@ -21,6 +21,7 @@ export class SettingsComponent implements OnInit {
 
   // temporary arrays
   modifierKeys = [
+    { name: 'Shift', code: Keys.Shift },
     { name: 'Ctrl', code: Keys.Ctrl },
     { name: 'Alt', code: Keys.Alt }
   ];
