@@ -219,8 +219,6 @@ export class LoginComponent implements OnInit {
         this.accountService.player.next(this.player);
         this.accountService.accountInfo.next(this.form);
         this.settingsService.set('account', this.form);
-        console.log(this.settingsService.get('account.leagueName'));
-        console.log(this.settingsService.get('account.characterName'));
         this.sessionService.initSession(this.form.sessionId);
         this.isLoading = false;
         this.router.navigate(['/authorized/dashboard']);
