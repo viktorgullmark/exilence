@@ -19,10 +19,13 @@ ipcMain.on('keybinds-update', function (event, binds) {
   });
 });
 
+ipcMain.on('keybinds-unregister', function (event) {
+  globalShortcut.unregisterAll();
+});
+
 autoUpdater.logger = log;
 autoUpdater.logger.transports.file.level = 'info';
 log.info('App starting...');
-
 
 function sendStatusToWindow(text) {
   log.info(text);

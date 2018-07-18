@@ -18,6 +18,8 @@ export class RobotService {
   private activeWindow: any;
   private clipboardValue: string;
 
+  public activeWindowTitleSub: BehaviorSubject<string> = new BehaviorSubject<string>('');
+
   public pressedKeysList: BehaviorSubject<number[]> = new BehaviorSubject<number[]>([]);
 
   INPUT_KEYBOARD = 1;
@@ -37,6 +39,10 @@ export class RobotService {
     this.clipboard = this.electronService.robot.Clipboard;
     this.window = this.electronService.robot.Window;
     this.timer = this.electronService.robot.Timer;
+
+    this.activeWindowTitleSub.subscribe(res => {
+      this.activeWindowTitle = res;
+    });
 
     if (this.clipboard.hasText()) {
       this.clipboardValue = this.clipboard.getText();
@@ -136,8 +142,7 @@ export class RobotService {
 
     // Window
     this.activeWindow = this.window.getActive();
-    this.activeWindowTitle = this.activeWindow.getTitle();
-
+    this.activeWindowTitleSub.next(this.activeWindow.getTitle());
   }
 
   private sendAndFocusWindow(windowTitle: string, message: string): boolean {

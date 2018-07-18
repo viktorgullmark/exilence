@@ -20,11 +20,20 @@ export class KeybindService {
 
   constructor(
     private settingsService: SettingsService,
-    private electronService: ElectronService
+    private electronService: ElectronService,
+    private robotService: RobotService
   ) {
 
     this.electronService.ipcRenderer.on('keybind', (event, bind) => {
       this.keybindEvent.next(bind.event);
+    });
+
+    this.robotService.activeWindowTitleSub.subscribe(res => {
+      if (res === 'Path of Exile' || res === 'ExileParty') {
+        this.electronService.ipcRenderer.send('keybinds-update', this.activeBinds);
+      } else {
+        this.electronService.ipcRenderer.send('keybinds-unregister');
+      }
     });
 
     // this.updateKeybinds([{ keys: '7', event: 'party-personal-networth', title: 'Report personal net worth to party' }]);
@@ -37,7 +46,7 @@ export class KeybindService {
   }
 
   public registerKeybind(keys: string, event: string, title: string) {
-    const bind = {keys, event, title, enabled: true };
+    const bind = { keys, event, title, enabled: true };
     this.registeredBinds.unshift(bind);
     this.updateUserOverrides();
   }
