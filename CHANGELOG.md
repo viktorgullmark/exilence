@@ -3,6 +3,7 @@ All notable changes to this project will be documented in this file.
 
 ## [0.5.1] - 2018-07-XX
 - Changed default keybindings
+- Keybinds now only work when the active window is Path of Exile or ExileParty
 - Added the ability to disable individual keybinds
 - Added support for F1-F12 as trigger-keys
 - Added descriptive text to keybinds-page
