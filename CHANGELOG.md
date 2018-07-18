@@ -3,6 +3,7 @@ All notable changes to this project will be documented in this file.
 
 ## [0.5.1] - 2018-07-XX
 - Changed default keybindings
+- Added the ability to disable individual keybinds
 - Added descriptive text to keybinds-page
 - Added league-selection to login-page
 - Added ranking to player-badge (if player is on ladder)
