@@ -1,6 +1,9 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [0.5.2] - 2018-07-18
+- Hotfix for external framework not loading (robot-js)
+
 ## [0.5.1] - 2018-07-18
 - Changed default keybindings
 - Keybinds now only work with Path of Exile or ExileParty in focus
