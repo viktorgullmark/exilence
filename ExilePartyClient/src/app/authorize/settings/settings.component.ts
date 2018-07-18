@@ -21,7 +21,6 @@ export class SettingsComponent implements OnInit {
 
   // temporary arrays
   modifierKeys = [
-    { name: 'Shift', code: Keys.Shift },
     { name: 'Ctrl', code: Keys.Ctrl },
     { name: 'Alt', code: Keys.Alt }
   ];
@@ -52,6 +51,18 @@ export class SettingsComponent implements OnInit {
     { name: 'X', code: Keys.X },
     { name: 'Y', code: Keys.Y },
     { name: 'Z', code: Keys.Z },
+    { name: 'F1', code: Keys.F1 },
+    { name: 'F2', code: Keys.F2 },
+    { name: 'F3', code: Keys.F3 },
+    { name: 'F4', code: Keys.F4 },
+    { name: 'F5', code: Keys.F5 },
+    { name: 'F6', code: Keys.F6 },
+    { name: 'F7', code: Keys.F7 },
+    { name: 'F8', code: Keys.F8 },
+    { name: 'F9', code: Keys.F9 },
+    { name: 'F10', code: Keys.F10 },
+    { name: 'F11', code: Keys.F11 },
+    { name: 'F12', code: Keys.F12 },
   ];
   keybinds: any[];
 
