@@ -73,9 +73,10 @@ export class SettingsComponent implements OnInit {
         triggerKeyCode: bind.keys.split('+')[1],
         modifierKeyCode: bind.keys.split('+')[0],
         event: bind.event,
-        title: bind.title
+        title: bind.title,
+        enabled: bind.enabled
       }));
-      console.log('binds',this.keybinds);
+      console.log('binds', this.keybinds);
     });
 
   }
@@ -95,6 +96,10 @@ export class SettingsComponent implements OnInit {
     this.settingsService.set('keybinds', undefined);
   }
 
+  test(keybind) {
+    console.log(keybind);
+  }
+
   saveKeybinds() {
     this.keybindService.updateKeybinds(this.mapBindings(this.keybinds));
     this.settingsService.set('keybinds', this.mapBindings(this.keybinds));
@@ -105,7 +110,8 @@ export class SettingsComponent implements OnInit {
     return this.keybinds.map(bind => ({
       keys: bind.modifierKeyode !== 'None' ? bind.modifierKeyCode + '+' + bind.triggerKeyCode : bind.triggerKeyCode,
       event: bind.event,
-      title: bind.title
+      title: bind.title,
+      enabled: bind.enabled
     }));
   }
 

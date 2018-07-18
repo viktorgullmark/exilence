@@ -11,9 +11,11 @@ serve = args.some(val => val === '--serve');
 ipcMain.on('keybinds-update', function (event, binds) {
   globalShortcut.unregisterAll();
   binds.forEach(bind => {
-    globalShortcut.register(bind.keys, () => {
-      win.webContents.send('keybind', bind);
-    });
+    if (bind.enabled) {
+      globalShortcut.register(bind.keys, () => {
+        win.webContents.send('keybind', bind);
+      });
+    }
   });
 });
 

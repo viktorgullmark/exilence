@@ -37,7 +37,7 @@ export class KeybindService {
   }
 
   public registerKeybind(keys: string, event: string, title: string) {
-    const bind = { keys, event, title };
+    const bind = {keys, event, title, enabled: true };
     this.registeredBinds.unshift(bind);
     this.updateUserOverrides();
   }
@@ -63,6 +63,7 @@ export class KeybindService {
         const savedBind = this.userKeybinds[j];
         if (bind.event === savedBind.event) {
           bind.keys = savedBind.keys;
+          bind.enabled = savedBind.enabled;
           break;
         }
       }

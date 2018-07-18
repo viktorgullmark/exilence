@@ -54,7 +54,7 @@
     </p>
   </div>
   <div class="setting-tab-content">
-    <mat-grid-list cols="6" rowHeight="50px">
+    <mat-grid-list cols="8" rowHeight="50px">
       <!-- col-headers -->
       <mat-grid-tile [colspan]="2" [rowspan]="1" class="grid-header">
         <span class="grid-header-title">
@@ -71,6 +71,11 @@
           Trigger-key
         </span>
       </mat-grid-tile>
+      <mat-grid-tile [colspan]="2" [rowspan]="1" class="grid-header">
+        <span class="grid-header-title">
+          Enabled
+        </span>
+      </mat-grid-tile>
       <!-- keybinds -->
       <ng-container *ngFor="let keybind of keybinds">
         <mat-grid-tile [colspan]="2" [rowspan]="1">
@@ -78,7 +83,7 @@
         </mat-grid-tile>
         <mat-grid-tile [colspan]="2" [rowspan]="1">
           <mat-form-field>
-            <mat-select [(value)]="keybind.modifierKeyCode">
+            <mat-select [(value)]="keybind.modifierKeyCode" [disabled]="!keybind.enabled">
               <mat-option value="None">None</mat-option>
               <mat-option *ngFor="let key of modifierKeys" value="{{key.name}}">{{key.name}}</mat-option>
             </mat-select>
@@ -86,11 +91,14 @@
         </mat-grid-tile>
         <mat-grid-tile [colspan]="2" [rowspan]="1">
           <mat-form-field>
-            <mat-select [(value)]="keybind.triggerKeyCode">
+            <mat-select [(value)]="keybind.triggerKeyCode" [disabled]="!keybind.enabled">
               <!-- <mat-option>None</mat-option> -->
               <mat-option *ngFor="let key of triggerKeys" value="{{key.name}}">{{key.name}}</mat-option>
             </mat-select>
           </mat-form-field>
+        </mat-grid-tile>
+        <mat-grid-tile [colspan]="2" [rowspan]="1">
+          <mat-checkbox [(ngModel)]="keybind.enabled" (ngModelChange)="test(keybind)"></mat-checkbox>
         </mat-grid-tile>
       </ng-container>
     </mat-grid-list>
