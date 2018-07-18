@@ -179,7 +179,7 @@ export class RobotService {
               this.clipboard.setText(clipboardValue);
             }
             return true;
-          }, (150));
+          }, (250));
         }, 0);
 
       } else {
