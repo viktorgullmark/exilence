@@ -107,10 +107,6 @@ export class SettingsComponent implements OnInit {
     this.settingsService.set('keybinds', undefined);
   }
 
-  test(keybind) {
-    console.log(keybind);
-  }
-
   saveKeybinds() {
     this.keybindService.updateKeybinds(this.mapBindings(this.keybinds));
     this.settingsService.set('keybinds', this.mapBindings(this.keybinds));
