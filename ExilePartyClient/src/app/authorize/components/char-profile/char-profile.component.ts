@@ -19,7 +19,7 @@ export class CharProfileComponent implements OnInit {
   player: Player;
 
   @Input() localProfile = false;
-  @ViewChild('tabGroup') tabGroup: MatTabGroup;
+  @ViewChild('subTabGroup') subTabGroup: MatTabGroup;
   @ViewChild('equipmentTab') equipmentTab: MatTab;
 
   selectedIndex = 0;
@@ -57,10 +57,10 @@ export class CharProfileComponent implements OnInit {
 
     // select first tab
     this.equipmentTab.isActive = true;
-    this.tabGroup.selectedIndex = this.selectedIndex;
+    this.subTabGroup.selectedIndex = this.selectedIndex;
 
     // update local index when tab is changed
-    this.tabGroup.selectedIndexChange.subscribe(res => {
+    this.subTabGroup.selectedIndexChange.subscribe(res => {
       if (res === 0) {
         this.analyticsService.sendScreenview('/authorized/party/player/profile');
       }
