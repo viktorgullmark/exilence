@@ -68,7 +68,6 @@ export class PartyService {
 
     this.accountService.player.subscribe(res => {
       this.currentPlayer = res;
-      console.log('set current player', this.currentPlayer);
     });
     this.selectedPlayer.subscribe(res => {
       this.selectedPlayerObj = res;
@@ -128,6 +127,7 @@ export class PartyService {
         this.party.players[index] = player;
         this.updatePlayerLists(this.party);
         this.partyUpdated.next(this.party);
+
         // if player is self, set history based on local data
         const playerObj = Object.assign({}, player);
         if (playerObj.account === this.currentPlayer.account) {

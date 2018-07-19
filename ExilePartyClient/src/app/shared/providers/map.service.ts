@@ -114,8 +114,9 @@ export class MapService {
           items: []
         }];
       }
-      this.localPlayer.netWorthSnapshots = historyToSend;
-      this.partyService.updatePlayer(this.localPlayer);
+      const objToSend = Object.assign({}, this.localPlayer);
+      objToSend.netWorthSnapshots = historyToSend;
+      this.partyService.updatePlayer(objToSend);
 
       this.durationInterval = setInterval(() => {
         this.durationSeconds++;

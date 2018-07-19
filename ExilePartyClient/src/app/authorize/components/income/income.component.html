@@ -5,7 +5,7 @@
   <ngx-charts-line-chart *ngIf="visible" [view]="view" class="chart-container" [ngClass]="{'summary-chart': player == undefined}"
     [scheme]="colorScheme" [results]="dateData" [legend]="player == undefined" legendTitle="Players" (legendLabelClick)="onLegendLabelClick($event)"
     gradient="false" xAxis="true" yAxis="true" showXAxisLabel="true" showYAxisLabel="true" xAxisLabel="Time" [xAxisTickFormatting]="axisFormat"
-    animations="true" yAxisLabel="Net worth in Chaos" autoScale="true" timeline="true" showGridLines="true" [curve]="curve"
+    animations="true" yAxisLabel="Net worth in Chaos" autoScale="true" showGridLines="true" [curve]="curve"
     (select)="select($event)">
     <ng-template #tooltipTemplate let-model="model">
       Net worth: {{ model.value.toFixed(1) }} chaos
