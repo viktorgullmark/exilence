@@ -1,6 +1,10 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [0.5.3] - 2018-07-XX
+- Added support to see extended currency-history for yourself (7 days are saved)
+- Fixed a bug where the current tab was not always selected
+
 ## [0.5.2] - 2018-07-18
 - Hotfix for external framework not loading (robot-js)
 
