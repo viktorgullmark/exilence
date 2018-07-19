@@ -2,7 +2,7 @@
 
 <head>
     <meta charset="utf-8">
-    <title>ExileParty Networth Popout</title>
+    <title>ExileParty Networth</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500" rel="stylesheet">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
@@ -11,15 +11,17 @@
 
         body {
             margin: 0px;
+            font-size: 14px;
             color: #fff;
             font-family: 'Roboto';
             background: linear-gradient(rgba(16, 16, 16, 0.9), rgba(16, 16, 16, 0.88));
+            overflow: hidden;
         }
 
         header {
             -webkit-app-region: drag;
             padding: 5px;
-            height: 20px;
+            height: 15px;
             background-color: #0a0a0a;
             display: flex;
         }
@@ -32,6 +34,22 @@
             align-items: center;
         }
 
+        .label {
+            margin: 5px;
+        }
+
+        #networth {
+            color: #f0cc00;
+        }
+
+        #gain {
+            color: #f0cc00;
+        }
+
+        .material-icons {
+            font-size: 20px;
+        }
+
         main {
             /* height: 130px; */
             padding: 5px;
@@ -41,18 +59,26 @@
 
 <body>
     <header>
-        Some header here
+        Networth
         <div class="right-area">
             <i class="material-icons" onclick="closeWindow()">close</i>
         </div>
     </header>
     <main>
-        Content here
+        <p class="label">Current net worth:
+            <span id="networth"></span></p>
+        <p class="label">Gain past hour:
+            <span id="gain"></span></p>
     </main>
     <script>
         const { ipcRenderer, remote } = require('electron')
-        ipcRenderer.on('popout-networth-update', (event, arg) => {
-            console.log(arg)
+
+        const gainElement = document.getElementById('gain');
+        const networthElement = document.getElementById('networth');;
+
+        ipcRenderer.on('popout-networth-update', (event, data) => {
+            networthElement.innerText = data.networth + 'c';
+            gainElement.innerText = data.gain + 'c';
         })
 
         function closeWindow() {

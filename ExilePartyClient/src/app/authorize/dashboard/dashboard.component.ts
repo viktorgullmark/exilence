@@ -6,7 +6,6 @@ import { AccountService } from '../../shared/providers/account.service';
 import { AnalyticsService } from '../../shared/providers/analytics.service';
 import { ElectronService } from '../../shared/providers/electron.service';
 import { PartyService } from '../../shared/providers/party.service';
-import { NetWorthSnapshot } from '../../shared/interfaces/income.interface';
 
 @Component({
   selector: 'app-dashboard',
@@ -60,10 +59,13 @@ export class DashboardComponent implements OnInit {
   }
 
   popoutNetworth() {
-    this.electronService.ipcRenderer.send('popout-networth', {test: 'test'});
+    this.electronService.ipcRenderer.send('popout-networth', {action: 'open'});
     setInterval(() => {
       this.count++;
-      this.electronService.ipcRenderer.send('popout-networth-update', {count: this.count});
+      this.electronService.ipcRenderer.send('popout-networth-update', {
+        networth: this.count,
+        gain: 3620
+      });
     }, 1000);
   }
 }

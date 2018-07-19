@@ -31,14 +31,16 @@ ipcMain.on('popout-networth-update', (event, data) => {
 });
 
 ipcMain.on('popout-networth', (event, data) => {
+
   networthPopout = new BrowserWindow({
     x: 100,
     y: 100,
-    height: 150,
-    width: 300,
+    height: 100,
+    width: 200,
     show: false,
     frame: false,
     resizable: false,
+    alwaysOnTop: true,
     icon: path.join(__dirname, 'dist/assets/img/app-icon.png'),
   });
 
@@ -55,6 +57,7 @@ ipcMain.on('popout-networth', (event, data) => {
   networthPopout.on('closed', () => {
     this.networthPopout = null;
   });
+
 });
 
 autoUpdater.logger = log;
