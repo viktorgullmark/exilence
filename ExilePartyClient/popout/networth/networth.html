@@ -1,0 +1,67 @@
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>ExileParty Networth Popout</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <style>
+        /* Styles here  */
+
+        body {
+            margin: 0px;
+            color: #fff;
+            font-family: 'Roboto';
+            background: linear-gradient(rgba(16, 16, 16, 0.9), rgba(16, 16, 16, 0.88));
+        }
+
+        header {
+            -webkit-app-region: drag;
+            padding: 5px;
+            height: 20px;
+            background-color: #0a0a0a;
+            display: flex;
+        }
+
+        header .right-area {
+            -webkit-app-region: no-drag;
+            justify-content: end;
+            margin-left: auto;
+            display: flex;
+            align-items: center;
+        }
+
+        main {
+            /* height: 130px; */
+            padding: 5px;
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        Some header here
+        <div class="right-area">
+            <i class="material-icons" onclick="closeWindow()">close</i>
+        </div>
+    </header>
+    <main>
+        Content here
+    </main>
+    <script>
+        const { ipcRenderer, remote } = require('electron')
+        ipcRenderer.on('popout-networth-update', (event, arg) => {
+            console.log(arg)
+        })
+
+        function closeWindow() {
+            remote.getCurrentWindow().close();
+        }
+
+    </script>
+</body>
+
+
+
+</html>

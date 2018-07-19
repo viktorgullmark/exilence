@@ -18,13 +18,14 @@ export class DashboardComponent implements OnInit {
   isLoading = true;
   recentParties: string[];
   player: Player;
+  private count = 0;
 
   constructor(
     private electronService: ElectronService,
     private partyService: PartyService,
     private accountService: AccountService,
     private analyticsService: AnalyticsService,
-    private router: Router
+    private router: Router,
   ) {
 
     this.partyService.recentParties.subscribe(parties => {
@@ -55,6 +56,14 @@ export class DashboardComponent implements OnInit {
     }
     this.router.navigateByUrl('/404', { skipLocationChange: true }).then(() =>
       this.router.navigate(['/authorized/party']));
+  }
+
+  popoutNetworth() {
+    this.electronService.ipcRenderer.send('popout-networth', {test: 'test'});
+    setInterval(() => {
+      this.count++;
+      this.electronService.ipcRenderer.send('popout-networth-update', {count: this.count});
+    }, 1000);
   }
 }
 

@@ -1,10 +1,11 @@
-import { app, BrowserWindow, dialog, screen, globalShortcut } from 'electron';
+import { app, BrowserWindow, dialog, globalShortcut, screen } from 'electron';
 import * as path from 'path';
 import * as url from 'url';
+
 const ipcMain = require('electron').ipcMain;
 const log = require('electron-log');
 const { autoUpdater } = require('electron-updater');
-let win, serve;
+let win, serve, networthPopout;
 const args = process.argv.slice(1);
 serve = args.some(val => val === '--serve');
 
@@ -21,6 +22,39 @@ ipcMain.on('keybinds-update', function (event, binds) {
 
 ipcMain.on('keybinds-unregister', function (event) {
   globalShortcut.unregisterAll();
+});
+
+ipcMain.on('popout-networth-update', (event, data) => {
+  if (!networthPopout.isDestroyed()) {
+    networthPopout.webContents.send('popout-networth-update', data);
+  }
+});
+
+ipcMain.on('popout-networth', (event, data) => {
+  networthPopout = new BrowserWindow({
+    x: 100,
+    y: 100,
+    height: 150,
+    width: 300,
+    show: false,
+    frame: false,
+    resizable: false,
+    icon: path.join(__dirname, 'dist/assets/img/app-icon.png'),
+  });
+
+  networthPopout.loadURL(url.format({
+    pathname: path.join(__dirname, 'popout/networth/networth.html'),
+    protocol: 'file:',
+    slashes: true
+  }));
+
+  networthPopout.once('ready-to-show', () => {
+    networthPopout.show();
+  });
+
+  networthPopout.on('closed', () => {
+    this.networthPopout = null;
+  });
 });
 
 autoUpdater.logger = log;
