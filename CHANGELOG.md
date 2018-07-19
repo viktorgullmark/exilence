@@ -6,6 +6,7 @@ All notable changes to this project will be documented in this file.
 - Added support to store extended area-history for yourself (up to one week)
 - Fixed a bug where the current tab was not always selected
 - Fixed a bug where the group-summary page was not always up-to-date
+- Improved form-validation to login-form
 - Style-improvements to ladder-tab
 
 ## [0.5.2] - 2018-07-18
