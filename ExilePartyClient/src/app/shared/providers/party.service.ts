@@ -19,6 +19,7 @@ import { LogService } from './log.service';
 import { ElectronService } from './electron.service';
 import { NetWorthSnapshot } from '../interfaces/income.interface';
 import { MessageValueService } from './message-value.service';
+import { ExtendedAreaInfo } from '../interfaces/area.interface';
 
 @Injectable()
 export class PartyService {
@@ -99,6 +100,7 @@ export class PartyService {
           // if player is self, set history based on local data
           if (player.account === this.currentPlayer.account) {
             player.netWorthSnapshots = this.currentPlayer.netWorthSnapshots;
+            player.pastAreas = this.currentPlayer.pastAreas;
           }
           this.party = party;
           this.updatePlayerLists(this.party);
@@ -132,6 +134,7 @@ export class PartyService {
         const playerObj = Object.assign({}, player);
         if (playerObj.account === this.currentPlayer.account) {
           playerObj.netWorthSnapshots = Object.assign([], this.currentPlayer.netWorthSnapshots);
+          playerObj.pastAreas = Object.assign([], this.currentPlayer.pastAreas);
         }
         if (this.selectedPlayerObj.account === playerObj.account) {
           this.selectedPlayer.next(playerObj);
@@ -248,7 +251,9 @@ export class PartyService {
           items: []
         }];
       }
+      const areasToSend = playerToSend.pastAreas.filter((area: ExtendedAreaInfo) => area.timestamp > oneHourAgo);
       playerToSend.netWorthSnapshots = historyToSend;
+      playerToSend.pastAreas = areasToSend;
 
       this.compress(playerToSend, (data) => this._hubConnection.invoke('JoinParty', partyName, data));
     }

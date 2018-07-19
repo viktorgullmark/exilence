@@ -7,12 +7,13 @@ import { IncomeService } from './income.service';
 import { LogMonitorService } from './log-monitor.service';
 import { PartyService } from './party.service';
 import { NetWorthSnapshot } from '../interfaces/income.interface';
+import { SettingsService } from './settings.service';
 
 
 @Injectable()
 export class MapService {
 
-  private pastAreaList: ExtendedAreaInfo[] = [];
+  private areaHistory: ExtendedAreaInfo[] = [];
   private currentArea: ExtendedAreaInfo;
   private lastInstanceServer: string;
   private durationSeconds = 0;
@@ -23,8 +24,11 @@ export class MapService {
     private logMonitorService: LogMonitorService,
     private accountService: AccountService,
     private partyService: PartyService,
-    private incomeService: IncomeService
+    private incomeService: IncomeService,
+    private settingsService: SettingsService
   ) {
+
+    this.loadAreasFromSettings();
 
     this.accountService.player.subscribe(player => {
       if (player !== undefined) {
@@ -37,7 +41,9 @@ export class MapService {
     });
 
     this.logMonitorService.areaEvent.subscribe((e: EventArea) => {
-
+      this.areaHistory = this.settingsService.get('areas');
+      const oneWeekAgo = (Date.now() - (1 * 60 * 60 * 24 * 7 * 1000));
+      const oneHourAgo = (Date.now() - (1 * 60 * 60 * 1000));
       setTimeout(x => {
         this.incomeService.Snapshot();
       }, 1000 * 60);
@@ -52,6 +58,9 @@ export class MapService {
         instanceServer: this.lastInstanceServer,
       };
 
+      this.areaHistory = this.areaHistory
+          .filter((area: ExtendedAreaInfo) => area.timestamp > oneWeekAgo);
+
       // If we enter a map
       // And got atleast three zones in out history (map --> hideout --> map)
       // And our last zone was a Hideout
@@ -59,12 +68,12 @@ export class MapService {
       // And is located on the same instance server as this one
       // It's probably the same map
       if (e.type === 'map' &&
-        this.pastAreaList.length > 0 &&
+        this.areaHistory.length > 0 &&
         this.currentArea.eventArea.name.indexOf('Hideout') > -1 &&
-        this.pastAreaList[0].eventArea.name.indexOf(e.name) > -1 &&
-        this.lastInstanceServer === this.pastAreaList[0].instanceServer
+        this.areaHistory[0].eventArea.name.indexOf(e.name) > -1 &&
+        this.lastInstanceServer === this.areaHistory[0].instanceServer
       ) {
-        this.currentArea = this.pastAreaList.shift();
+        this.currentArea = this.areaHistory.shift();
         this.durationSeconds = this.currentArea.duration;
 
       } else {
@@ -75,7 +84,7 @@ export class MapService {
 
         if (this.currentArea !== undefined) {
           this.currentArea.duration = this.durationSeconds;
-          this.pastAreaList.unshift(this.currentArea);
+          this.areaHistory.unshift(this.currentArea);
         }
 
         this.durationSeconds = 0;
@@ -95,16 +104,17 @@ export class MapService {
         }
         this.currentArea = extendedInfo;
 
-        if (this.pastAreaList.length > 50) {
-          this.pastAreaList.pop();
+        if (this.areaHistory.length > 50) {
+          this.areaHistory.pop();
         }
-
-        this.localPlayer.pastAreas = this.pastAreaList;
+        const areasToSend = this.areaHistory.filter(x => x.timestamp > oneHourAgo);
+        this.localPlayer.pastAreas = areasToSend;
       }
+
+      this.settingsService.set('areas', this.areaHistory);
 
       this.localPlayer.area = this.currentArea.eventArea.name;
       this.localPlayer.areaInfo = this.currentArea;
-      const oneHourAgo = (Date.now() - (1 * 60 * 60 * 1000));
       let historyToSend = this.localPlayer.netWorthSnapshots
         .filter((snaphot: NetWorthSnapshot) => snaphot.timestamp > oneHourAgo);
       if (historyToSend.length === 0) {
@@ -130,5 +140,8 @@ export class MapService {
 
     });
 
+  }
+  loadAreasFromSettings() {
+    this.areaHistory = this.settingsService.get('areas');
   }
 }

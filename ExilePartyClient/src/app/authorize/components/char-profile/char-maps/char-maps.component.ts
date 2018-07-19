@@ -31,6 +31,9 @@ export class CharMapsComponent implements OnInit {
       searchText: ['']
     });
     this.partyService.selectedPlayer.subscribe(res => {
+      if (res.account === this.partyService.currentPlayer.account) {
+        res.pastAreas = this.partyService.currentPlayer.pastAreas;
+      }
       this.player = res;
     });
   }

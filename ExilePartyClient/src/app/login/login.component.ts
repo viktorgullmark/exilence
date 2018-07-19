@@ -17,6 +17,7 @@ import { SettingsService } from '../shared/providers/settings.service';
 import { LadderService } from '../shared/providers/ladder.service';
 import { RobotService } from '../shared/providers/robot.service';
 import { League } from '../shared/interfaces/league.interface';
+import { ExtendedAreaInfo } from '../shared/interfaces/area.interface';
 
 @Component({
     selector: 'app-login',
@@ -42,6 +43,7 @@ export class LoginComponent implements OnInit {
     sessionId: string;
     filePath: string;
     netWorthHistory: NetWorthHistory;
+    areaHistory: ExtendedAreaInfo[];
     form: any;
 
     private twelveHoursAgo = (Date.now() - (12 * 60 * 60 * 1000));
@@ -117,6 +119,12 @@ export class LoginComponent implements OnInit {
         this.leagueName = this.settingsService.get('account.leagueName');
         this.filePath = this.settingsService.get('account.filePath');
         this.netWorthHistory = this.settingsService.get('networth');
+        this.areaHistory = this.settingsService.get('areas');
+
+        if (this.areaHistory === undefined) {
+            this.areaHistory = [];
+            this.settingsService.set('areas', this.areaHistory);
+        }
 
         // Set up placeholder history if we don't have any
         if (!this.netWorthHistory || this.netWorthHistory.history.length === 0) {
@@ -209,6 +217,7 @@ export class LoginComponent implements OnInit {
     completeLogin() {
         this.player.account = this.form.accountName;
         this.player.netWorthSnapshots = this.netWorthHistory.history;
+        this.player.pastAreas = this.areaHistory;
         this.accountService.player.next(this.player);
         this.accountService.accountInfo.next(this.form);
         this.settingsService.set('account', this.form);
