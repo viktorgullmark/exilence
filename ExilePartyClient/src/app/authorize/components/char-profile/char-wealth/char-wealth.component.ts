@@ -75,7 +75,7 @@ export class CharWealthComponent implements OnInit {
       const emptyHistory = this.settingService.deleteNetWorth();
       player.netWorthSnapshots = emptyHistory.history;
       this.incomeService.loadSnapshotsFromSettings();
-      this.accountService.player.next(this.player);
+      this.accountService.player.next(player);
     }
   }
 
