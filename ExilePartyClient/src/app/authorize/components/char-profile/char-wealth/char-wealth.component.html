@@ -38,7 +38,7 @@
 
         <button mat-raised-button color="primary" *ngIf="showReset" (click)="popout()" type="button" class="right-aligned extra-margin">{{'GRAPH.POPOUT' | translate}}</button>
         <button mat-raised-button color="primary" *ngIf="showReset" (click)="resetNetWorth()" type="button" class="extra-margin">{{'GRAPH.RESET' | translate}}</button>
-        <button mat-raised-button color="primary" *ngIf="!isGraphHidden" (click)="hideGraph()" type="button">{{'GRAPH.HIDE' | translate}}</button>
+        <button mat-raised-button color="primary" *ngIf="!isGraphHidden" (click)="hideGraph()" type="button" [ngClass]="{'right-aligned': !showReset}">{{'GRAPH.HIDE' | translate}}</button>
         <button mat-raised-button color="primary" *ngIf="isGraphHidden" (click)="showGraph()" type="button">{{'GRAPH.SHOW' | translate}}</button>
     </div>
     <div class="income-graph-wrapper" [hidden]="isGraphHidden">
