@@ -21,7 +21,7 @@ export class IncomeComponent implements OnInit {
   dateData: ChartSeries[] = [];
   @Input() player: Player;
   @Input() view = [1000, 400];
-  @Input() title = 'Net worth graph based on selected tabs';
+  @Input() title = 'Net worth graph';
   @Output() hidden: EventEmitter<any> = new EventEmitter;
   @Output() loadPrevious: EventEmitter<any> = new EventEmitter;
 
