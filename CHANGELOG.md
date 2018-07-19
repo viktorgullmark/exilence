@@ -4,6 +4,7 @@ All notable changes to this project will be documented in this file.
 ## [0.5.3] - 2018-07-XX
 - Added support to store extended currency-history for yourself (up to one week)
 - Added support to store extended area-history for yourself (up to one week)
+- Added pagination to area-table (10 per page)
 - Fixed a bug where the current tab was not always selected
 - Fixed a bug where the group-summary page was not always up-to-date
 - Improved form-validation to login-form
