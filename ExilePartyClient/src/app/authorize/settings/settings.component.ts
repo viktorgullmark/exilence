@@ -88,7 +88,6 @@ export class SettingsComponent implements OnInit {
         title: bind.title,
         enabled: bind.enabled
       }));
-      console.log('binds', this.keybinds);
     });
 
   }

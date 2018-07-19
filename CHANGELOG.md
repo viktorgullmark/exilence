@@ -1,9 +1,12 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
-## [0.5.1] - 2018-07-XX
+## [0.5.2] - 2018-07-18
+- Hotfix for external framework not loading (robot-js)
+
+## [0.5.1] - 2018-07-18
 - Changed default keybindings
-- Keybinds now only work when the active window is Path of Exile or ExileParty
+- Keybinds now only work with Path of Exile or ExileParty in focus
 - Added the ability to disable individual keybinds
 - Added support for F1-F12 as trigger-keys
 - Added descriptive text to keybinds-page
