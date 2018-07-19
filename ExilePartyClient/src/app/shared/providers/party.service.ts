@@ -153,6 +153,7 @@ export class PartyService {
       this.decompress(data, (player: Player) => {
         this.party.players = this.party.players.filter(x => x.character.name !== player.character.name);
         this.party.players.push(player);
+        this.partyUpdated.next(this.party);
         this.updatePlayerLists(this.party);
         this.logService.log('player joined:', player);
       });
@@ -161,6 +162,7 @@ export class PartyService {
     this._hubConnection.on('PlayerLeft', (data: string) => {
       this.decompress(data, (player: Player) => {
         this.party.players = this.party.players.filter(x => x.account !== player.account);
+        this.partyUpdated.next(this.party);
         this.updatePlayerLists(this.party);
         if (this.selectedPlayerObj.account === player.account) {
           this.selectedPlayer.next(this.currentPlayer);
