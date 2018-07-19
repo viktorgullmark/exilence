@@ -25,7 +25,7 @@ ipcMain.on('keybinds-unregister', function (event) {
 });
 
 ipcMain.on('popout-networth-update', (event, data) => {
-  if (!networthPopout.isDestroyed()) {
+  if ( networthPopout && !networthPopout.isDestroyed()) {
     networthPopout.webContents.send('popout-networth-update', data);
   }
 });
