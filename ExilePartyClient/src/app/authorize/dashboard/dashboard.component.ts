@@ -57,17 +57,6 @@ export class DashboardComponent implements OnInit {
     this.router.navigateByUrl('/404', { skipLocationChange: true }).then(() =>
       this.router.navigate(['/authorized/party']));
   }
-
-  popoutNetworth() {
-    this.electronService.ipcRenderer.send('popout-networth', {action: 'open'});
-    setInterval(() => {
-      this.count++;
-      this.electronService.ipcRenderer.send('popout-networth-update', {
-        networth: this.count,
-        gain: 3620
-      });
-    }, 1000);
-  }
 }
 
 

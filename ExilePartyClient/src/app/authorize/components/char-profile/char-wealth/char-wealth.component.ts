@@ -79,6 +79,10 @@ export class CharWealthComponent implements OnInit {
     }
   }
 
+  popout() {
+    this.electronService.ipcRenderer.send('popout-networth', {action: 'open'});
+  }
+
   hideGraph() {
     this.isGraphHidden = true;
   }

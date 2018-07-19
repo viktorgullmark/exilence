@@ -1,11 +1,12 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatTabGroup } from '@angular/material';
 
-import { AnalyticsService } from '../../shared/providers/analytics.service';
-import { PartyService } from '../../shared/providers/party.service';
-import { MessageValueService } from '../../shared/providers/message-value.service';
-import { Player } from '../../shared/interfaces/player.interface';
 import { NetWorthSnapshot } from '../../shared/interfaces/income.interface';
+import { Player } from '../../shared/interfaces/player.interface';
+import { AnalyticsService } from '../../shared/providers/analytics.service';
+import { ElectronService } from '../../shared/providers/electron.service';
+import { MessageValueService } from '../../shared/providers/message-value.service';
+import { PartyService } from '../../shared/providers/party.service';
 
 @Component({
   selector: 'app-party',
@@ -20,13 +21,18 @@ export class PartyComponent implements OnInit {
   constructor(
     public partyService: PartyService,
     private analyticsService: AnalyticsService,
-    private messageValueService: MessageValueService
+    private messageValueService: MessageValueService,
+    private electronService: ElectronService
   ) {
     this.partyService.selectedPlayer.subscribe(res => {
       if (res !== undefined) {
         this.player = res;
         this.messageValueService.playerValue = this.player.netWorthSnapshots[0].value;
         this.updatePlayerGain(res);
+        this.electronService.ipcRenderer.send('popout-networth-update', {
+          networth: this.messageValueService.playerValue,
+          gain: this.messageValueService.playerGain
+        });
       }
     });
     this.partyService.partyUpdated.subscribe(res => {
@@ -68,6 +74,7 @@ export class PartyComponent implements OnInit {
     } else {
       this.messageValueService.playerGain = 0;
     }
+
   }
 
 
