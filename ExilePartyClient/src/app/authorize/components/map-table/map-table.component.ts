@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
-import { MatSort, MatTableDataSource } from '@angular/material';
+import { MatSort, MatTableDataSource, MatPaginator } from '@angular/material';
 import * as moment from 'moment';
 
 import { ExtendedAreaInfo } from '../../../shared/interfaces/area.interface';
@@ -20,6 +20,8 @@ export class MapTableComponent implements OnInit {
   filteredArr = [];
   source: any;
   @ViewChild(MatSort) sort: MatSort;
+  @ViewChild(MatPaginator) paginator: MatPaginator;
+
   constructor(private partyService: PartyService) {
   }
 
@@ -53,6 +55,7 @@ export class MapTableComponent implements OnInit {
       );
 
       this.source = new MatTableDataSource(this.filteredArr);
+      this.source.paginator = this.paginator;
       this.source.sort = this.sort;
       this.filtered.emit(this.filteredArr);
     }, 0);

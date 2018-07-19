@@ -2,7 +2,7 @@ import { NgModule } from '@angular/core';
 import { CommonModule, DatePipe } from '@angular/common';
 import { MapTableComponent } from './map-table.component';
 import { MatTableModule } from '@angular/material/table';
-import { MatInputModule, MatSortModule } from '@angular/material';
+import { MatInputModule, MatSortModule, MatPaginatorModule } from '@angular/material';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { SharedModule } from '../../../shared/shared.module';
 
@@ -10,7 +10,8 @@ import { SharedModule } from '../../../shared/shared.module';
   imports: [
     SharedModule,
     MatTableModule,
-    MatSortModule
+    MatSortModule,
+    MatPaginatorModule
   ],
   declarations: [MapTableComponent],
   exports: [MapTableComponent],
