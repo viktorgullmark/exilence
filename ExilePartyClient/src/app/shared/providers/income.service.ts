@@ -104,9 +104,12 @@ export class IncomeService {
         const historyToSend = this.netWorthHistory.history
           .filter((snaphot: NetWorthSnapshot) => snaphot.timestamp > oneHourAgo);
 
+        this.accountService.player.next(this.localPlayer);
+
         this.settingsService.set('networth', this.netWorthHistory);
-        this.localPlayer.netWorthSnapshots = historyToSend;
-        this.partyService.updatePlayer(this.localPlayer);
+        const objToSend = Object.assign({}, this.localPlayer);
+        objToSend.netWorthSnapshots = historyToSend;
+        this.partyService.updatePlayer(objToSend);
         this.logService.log('Finished Snapshotting player net worth');
 
         this.isSnapshotting = false;

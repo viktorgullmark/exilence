@@ -29,7 +29,7 @@ export class AppComponent {
     this.logout();
 
     translate.setDefaultLang('en');
-    moment.locale('se');
+    moment.locale('en');
     // console.log('AppConfig', AppConfig);
 
     if (electronService.isElectron()) {

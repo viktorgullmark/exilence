@@ -7,6 +7,7 @@ import { ChartSeries, ChartSeriesEntry } from '../../../shared/interfaces/chart.
 import { Player } from '../../../shared/interfaces/player.interface';
 import { IncomeService } from '../../../shared/providers/income.service';
 import { PartyService } from '../../../shared/providers/party.service';
+import { AccountService } from '../../../shared/providers/account.service';
 
 
 @Component({
@@ -28,6 +29,8 @@ export class IncomeComponent implements OnInit {
   public visible = true;
   private data = [];
 
+  private isSummary = false;
+
   // line interpolation
   curveType = 'Linear';
   curve = d3.curveLinear;
@@ -39,10 +42,10 @@ export class IncomeComponent implements OnInit {
   schemeType = 'ordinal';
   selectedColorScheme: string;
 
-
   constructor(
     private incomeService: IncomeService,
     private partyService: PartyService,
+    private accountService: AccountService
   ) {
   }
 
@@ -58,7 +61,7 @@ export class IncomeComponent implements OnInit {
       });
     } else {
       // party logic
-
+      this.isSummary = true;
       this.partyService.party.players.forEach(p => {
         if (p.netWorthSnapshots !== null) {
           this.updateGraph(p);
@@ -89,9 +92,22 @@ export class IncomeComponent implements OnInit {
   }
 
   updateGraph(player: Player) {
+    const playerObj = Object.assign({}, player);
+
+    if (this.isSummary) {
+      const oneHourAgo = (Date.now() - (1 * 60 * 60 * 1000));
+      playerObj.netWorthSnapshots = playerObj.netWorthSnapshots.filter(x => x.timestamp > oneHourAgo);
+      if (playerObj.netWorthSnapshots.length === 0) {
+        playerObj.netWorthSnapshots = [{
+          timestamp: 0,
+          value: 0,
+          items: []
+        }];
+      }
+    }
     const entry: ChartSeries = {
-      name: player.character.name,
-      series: player.netWorthSnapshots.map(snapshot => {
+      name: playerObj.character.name,
+      series: playerObj.netWorthSnapshots.map(snapshot => {
         const seriesEntry: ChartSeriesEntry = {
           name: new Date(snapshot.timestamp),
           value: snapshot.value,
@@ -100,7 +116,7 @@ export class IncomeComponent implements OnInit {
         return seriesEntry;
       })
     };
-    if (player.netWorthSnapshots[0].timestamp === 0) {
+    if (playerObj.netWorthSnapshots[0].timestamp === 0) {
       if (this.player !== undefined) {
         this.dateData.push(entry);
       }
@@ -112,7 +128,8 @@ export class IncomeComponent implements OnInit {
   }
 
   axisFormat(val) {
-    return moment(val).format('LT');
+    return moment(val).format('ddd, LT');
+    // return moment(val).format('LT');
   }
 
   setColorScheme(name) {

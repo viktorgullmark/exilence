@@ -130,7 +130,6 @@ export class LoginComponent implements OnInit {
             };
             this.settingsService.set('networth', this.netWorthHistory);
         }
-
     }
 
     ngOnInit() {

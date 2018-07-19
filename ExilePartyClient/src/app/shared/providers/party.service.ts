@@ -97,10 +97,8 @@ export class PartyService {
       this.decompress(partyData, (party: Party) => {
         this.decompress(playerData, (player: Player) => {
           // if player is self, set history based on local data
-          if (player.connectionID === this.currentPlayer.connectionID) {
-            const playerIndex = party.players.indexOf(player);
+          if (player.account === this.currentPlayer.account) {
             player.netWorthSnapshots = this.currentPlayer.netWorthSnapshots;
-            party.players[playerIndex] = player;
           }
           this.party = party;
           this.updatePlayerLists(this.party);
@@ -124,18 +122,21 @@ export class PartyService {
 
     this._hubConnection.on('PlayerUpdated', (data: string) => {
       this.decompress(data, (player: Player) => {
-        const index = this.party.players.indexOf(this.party.players.find(x => x.connectionID === player.connectionID));
-        // if player is self, set history based on local data
-        if (player.connectionID === this.currentPlayer.connectionID) {
-          player.netWorthSnapshots = this.currentPlayer.netWorthSnapshots;
-        }
+        const index = this.party.players.indexOf(this.party.players.find(x => x.account === player.account));
+
         this.party.players[index] = player;
         this.updatePlayerLists(this.party);
         this.partyUpdated.next(this.party);
-        if (this.selectedPlayerObj.connectionID === player.connectionID) {
-          this.selectedPlayer.next(player);
+
+        // if player is self, set history based on local data
+        const playerObj = Object.assign({}, player);
+        if (playerObj.account === this.currentPlayer.account) {
+          playerObj.netWorthSnapshots = Object.assign([], this.currentPlayer.netWorthSnapshots);
         }
-        this.logService.log('Player updated:', player);
+        if (this.selectedPlayerObj.account === playerObj.account) {
+          this.selectedPlayer.next(playerObj);
+        }
+        this.logService.log('Player updated:', playerObj);
       });
     });
 
@@ -159,9 +160,9 @@ export class PartyService {
 
     this._hubConnection.on('PlayerLeft', (data: string) => {
       this.decompress(data, (player: Player) => {
-        this.party.players = this.party.players.filter(x => x.connectionID !== player.connectionID);
+        this.party.players = this.party.players.filter(x => x.account !== player.account);
         this.updatePlayerLists(this.party);
-        if (this.selectedPlayerObj.connectionID === player.connectionID) {
+        if (this.selectedPlayerObj.account === player.account) {
           this.selectedPlayer.next(this.currentPlayer);
         }
         this.logService.log('player left:', player);
@@ -229,12 +230,25 @@ export class PartyService {
   }
 
   public joinParty(partyName: string, player: Player) {
+    const playerToSend = Object.assign({}, player);
     this.isEntering = true;
     this.initParty();
     this.party.players.push(player);
     this.party.name = partyName;
     if (this._hubConnection) {
-      this.compress(player, (data) => this._hubConnection.invoke('JoinParty', partyName, data));
+      const oneHourAgo = (Date.now() - (1 * 60 * 60 * 1000));
+      let historyToSend = playerToSend.netWorthSnapshots
+        .filter((snaphot: NetWorthSnapshot) => snaphot.timestamp > oneHourAgo);
+      if (historyToSend.length === 0) {
+        historyToSend = [{
+          timestamp: 0,
+          value: 0,
+          items: []
+        }];
+      }
+      playerToSend.netWorthSnapshots = historyToSend;
+
+      this.compress(playerToSend, (data) => this._hubConnection.invoke('JoinParty', partyName, data));
     }
   }
 

@@ -47,6 +47,7 @@ export class CharWealthComponent implements OnInit {
     });
     this.partyService.selectedPlayer.subscribe(res => {
       if (res.account === this.partyService.currentPlayer.account) {
+        res.netWorthSnapshots = this.partyService.currentPlayer.netWorthSnapshots;
         this.showReset = true;
       } else {
         this.showReset = false;
