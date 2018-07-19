@@ -10,20 +10,24 @@
         /* Styles here  */
 
         body {
-            margin: 0px;
+            margin: 0;
             font-size: 14px;
             color: #fff;
-            font-family: 'Roboto';
-            background: linear-gradient(rgba(16, 16, 16, 0.9), rgba(16, 16, 16, 0.88));
-            overflow: hidden;
+            font-family: Roboto;
+            background: linear-gradient(rgba(16, 16, 16, .9), rgba(16, 16, 16, .88));
+            overflow: hidden
+        }
+
+        header,
+        main {
+            padding: 5px
         }
 
         header {
             -webkit-app-region: drag;
-            padding: 5px;
             height: 15px;
             background-color: #0a0a0a;
-            display: flex;
+            display: flex
         }
 
         header .right-area {
@@ -31,28 +35,20 @@
             justify-content: end;
             margin-left: auto;
             display: flex;
-            align-items: center;
+            align-items: center
         }
 
         .label {
-            margin: 5px;
+            margin: 5px
         }
 
+        #gain,
         #networth {
-            color: #f0cc00;
-        }
-
-        #gain {
-            color: #f0cc00;
+            color: #f0cc00
         }
 
         .material-icons {
-            font-size: 20px;
-        }
-
-        main {
-            /* height: 130px; */
-            padding: 5px;
+            font-size: 20px
         }
     </style>
 </head>
@@ -66,9 +62,11 @@
     </header>
     <main>
         <p class="label">Current net worth:
-            <span id="networth"></span></p>
+            <span id="networth"></span>
+        </p>
         <p class="label">Gain past hour:
-            <span id="gain"></span></p>
+            <span id="gain"></span>
+        </p>
     </main>
     <script>
         const { ipcRenderer, remote } = require('electron')
