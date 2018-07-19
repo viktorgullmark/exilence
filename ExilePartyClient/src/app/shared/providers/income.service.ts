@@ -68,6 +68,7 @@ export class IncomeService {
 
   Snapshot() {
     const oneHourAgo = (Date.now() - (1 * 60 * 60 * 1000));
+    const oneWeekAgo = (Date.now() - (1 * 60 * 60 * 24 * 7 * 1000));
     this.netWorthHistory = this.settingsService.get('networth');
     if (
       this.netWorthHistory.lastSnapshot < (Date.now() - this.fiveMinutes) &&
@@ -81,7 +82,7 @@ export class IncomeService {
       this.SnapshotPlayerNetWorth(this.sessionId).subscribe(() => {
 
         this.netWorthHistory.history = this.netWorthHistory.history
-          .filter((snaphot: NetWorthSnapshot) => snaphot.timestamp > oneHourAgo);
+          .filter((snaphot: NetWorthSnapshot) => snaphot.timestamp > oneWeekAgo);
 
         // We are a new player that have not parsed income before
         // Remove the placeholder element
@@ -100,8 +101,11 @@ export class IncomeService {
 
         this.netWorthHistory.history.unshift(snapShot);
 
+        const historyToSend = this.netWorthHistory.history
+          .filter((snaphot: NetWorthSnapshot) => snaphot.timestamp > oneHourAgo);
+
         this.settingsService.set('networth', this.netWorthHistory);
-        this.localPlayer.netWorthSnapshots = this.netWorthHistory.history;
+        this.localPlayer.netWorthSnapshots = historyToSend;
         this.partyService.updatePlayer(this.localPlayer);
         this.logService.log('Finished Snapshotting player net worth');
 

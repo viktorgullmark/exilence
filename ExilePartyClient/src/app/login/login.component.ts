@@ -118,12 +118,6 @@ export class LoginComponent implements OnInit {
         this.filePath = this.settingsService.get('account.filePath');
         this.netWorthHistory = this.settingsService.get('networth');
 
-        // Filter snapshots to only include last hour
-        if (this.netWorthHistory && this.netWorthHistory.history) {
-            this.netWorthHistory.history = this.netWorthHistory.history
-                .filter((snaphot: NetWorthSnapshot) => snaphot.timestamp > this.twelveHoursAgo);
-        }
-
         // Set up placeholder history if we don't have any
         if (!this.netWorthHistory || this.netWorthHistory.history.length === 0) {
             this.netWorthHistory = {

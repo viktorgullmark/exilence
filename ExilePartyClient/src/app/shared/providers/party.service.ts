@@ -96,6 +96,12 @@ export class PartyService {
     this._hubConnection.on('EnteredParty', (partyData: string, playerData: string) => {
       this.decompress(partyData, (party: Party) => {
         this.decompress(playerData, (player: Player) => {
+          // if player is self, set history based on local data
+          if (player.connectionID === this.currentPlayer.connectionID) {
+            const playerIndex = party.players.indexOf(player);
+            player.netWorthSnapshots = this.currentPlayer.netWorthSnapshots;
+            party.players[playerIndex] = player;
+          }
           this.party = party;
           this.updatePlayerLists(this.party);
           this.accountService.player.next(player);
@@ -119,6 +125,10 @@ export class PartyService {
     this._hubConnection.on('PlayerUpdated', (data: string) => {
       this.decompress(data, (player: Player) => {
         const index = this.party.players.indexOf(this.party.players.find(x => x.connectionID === player.connectionID));
+        // if player is self, set history based on local data
+        if (player.connectionID === this.currentPlayer.connectionID) {
+          player.netWorthSnapshots = this.currentPlayer.netWorthSnapshots;
+        }
         this.party.players[index] = player;
         this.updatePlayerLists(this.party);
         this.partyUpdated.next(this.party);
