@@ -34,6 +34,7 @@ export class MapService {
     this.accountService.player.subscribe(player => {
       if (player !== undefined) {
         this.localPlayer = player;
+        this.localPlayer.pastAreas = this.areaHistory;
       }
     });
 
@@ -58,7 +59,7 @@ export class MapService {
         duration: 0,
         instanceServer: this.lastInstanceServer,
       };
-
+      let areasToSend;
       this.areaHistory = this.areaHistory
           .filter((area: ExtendedAreaInfo) => area.timestamp > oneWeekAgo);
 
@@ -105,11 +106,9 @@ export class MapService {
         }
         this.currentArea = extendedInfo;
 
-        if (this.areaHistory.length > 50) {
-          this.areaHistory.pop();
-        }
-        const areasToSend = HistoryHelper.filterAreas(this.areaHistory, oneHourAgo);
-        this.localPlayer.pastAreas = areasToSend;
+        areasToSend = HistoryHelper.filterAreas(this.areaHistory, oneHourAgo);
+
+        this.accountService.player.next(this.localPlayer);
       }
 
       this.settingsService.set('areas', this.areaHistory);
@@ -120,6 +119,9 @@ export class MapService {
       const historyToSend = HistoryHelper.filterNetworth(this.localPlayer.netWorthSnapshots, oneHourAgo);
 
       const objToSend = Object.assign({}, this.localPlayer);
+      if(areasToSend !== undefined){
+        objToSend.pastAreas = areasToSend;
+      }
       objToSend.netWorthSnapshots = historyToSend;
       this.partyService.updatePlayer(objToSend);
 

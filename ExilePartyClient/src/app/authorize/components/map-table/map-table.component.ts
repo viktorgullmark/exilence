@@ -62,6 +62,10 @@ export class MapTableComponent implements OnInit {
 
   }
 
+  formatDate(timestamp) {
+    return moment(timestamp).format('ddd, LT');
+  }
+
   updateTable(player: Player) {
     if (player.pastAreas !== null && player.pastAreas !== undefined) {
       player.pastAreas.forEach((area: ExtendedAreaInfo) => {
@@ -72,7 +76,7 @@ export class MapTableComponent implements OnInit {
           tier: area.eventArea.info[0].level,
           time: ((minute < 10) ? '0' + minute.toString() : seconds.toString())
             + ':' + ((seconds < 10) ? '0' + seconds.toString() : seconds.toString()),
-          timestamp: moment(area.timestamp).format('LT')
+          timestamp: area.timestamp
         };
 
         this.dataSource.push(newAreaObj);

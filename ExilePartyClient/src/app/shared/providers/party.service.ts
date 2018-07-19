@@ -99,14 +99,15 @@ export class PartyService {
       this.decompress(partyData, (party: Party) => {
         this.decompress(playerData, (player: Player) => {
           // if player is self, set history based on local data
-          if (player.account === this.currentPlayer.account) {
-            player.netWorthSnapshots = this.currentPlayer.netWorthSnapshots;
-            player.pastAreas = this.currentPlayer.pastAreas;
+          const playerObj = Object.assign({}, player);
+          if (playerObj.account === this.currentPlayer.account) {
+            playerObj.netWorthSnapshots = Object.assign([], this.currentPlayer.netWorthSnapshots);
+            playerObj.pastAreas = Object.assign([], this.currentPlayer.pastAreas);
           }
           this.party = party;
           this.updatePlayerLists(this.party);
-          this.accountService.player.next(player);
-          this.selectedPlayer.next(player);
+          this.accountService.player.next(playerObj);
+          this.selectedPlayer.next(playerObj);
           this.isEntering = false;
           this.logService.log('Entered party:', party);
 
