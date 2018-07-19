@@ -20,6 +20,7 @@ import { ElectronService } from './electron.service';
 import { NetWorthSnapshot } from '../interfaces/income.interface';
 import { MessageValueService } from './message-value.service';
 import { ExtendedAreaInfo } from '../interfaces/area.interface';
+import { HistoryHelper } from '../helpers/history.helper';
 
 @Injectable()
 export class PartyService {
@@ -242,19 +243,10 @@ export class PartyService {
     this.party.name = partyName;
     if (this._hubConnection) {
       const oneHourAgo = (Date.now() - (1 * 60 * 60 * 1000));
-      let historyToSend = playerToSend.netWorthSnapshots
-        .filter((snaphot: NetWorthSnapshot) => snaphot.timestamp > oneHourAgo);
-      if (historyToSend.length === 0) {
-        historyToSend = [{
-          timestamp: 0,
-          value: 0,
-          items: []
-        }];
-      }
-      const areasToSend = playerToSend.pastAreas.filter((area: ExtendedAreaInfo) => area.timestamp > oneHourAgo);
+      const historyToSend = HistoryHelper.filterNetworth(playerToSend.netWorthSnapshots, oneHourAgo);
+      const areasToSend = HistoryHelper.filterAreas(playerToSend.pastAreas, oneHourAgo);
       playerToSend.netWorthSnapshots = historyToSend;
       playerToSend.pastAreas = areasToSend;
-
       this.compress(playerToSend, (data) => this._hubConnection.invoke('JoinParty', partyName, data));
     }
   }

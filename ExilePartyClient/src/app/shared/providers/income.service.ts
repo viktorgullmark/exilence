@@ -18,6 +18,7 @@ import { LogService } from './log.service';
 import { NinjaService } from './ninja.service';
 import { PartyService } from './party.service';
 import { SettingsService } from './settings.service';
+import { HistoryHelper } from '../helpers/history.helper';
 
 
 
@@ -101,8 +102,7 @@ export class IncomeService {
 
         this.netWorthHistory.history.unshift(snapShot);
 
-        const historyToSend = this.netWorthHistory.history
-          .filter((snaphot: NetWorthSnapshot) => snaphot.timestamp > oneHourAgo);
+        const historyToSend = HistoryHelper.filterNetworth(this.netWorthHistory.history, oneHourAgo);
 
         this.accountService.player.next(this.localPlayer);
 

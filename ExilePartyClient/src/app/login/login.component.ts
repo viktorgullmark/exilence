@@ -87,9 +87,6 @@ export class LoginComponent implements OnInit {
             filePath: [this.filePath !== undefined ? this.filePath :
                 'C:/Program Files (x86)/Steam/steamapps/common/Path of Exile/logs/Client.txt', Validators.required]
         });
-        // if (this.characterName !== undefined && this.accountName !== undefined) {
-        //     this.getCharacterList(this.accountName);
-        // }
     }
 
     checkPath() {
@@ -160,16 +157,9 @@ export class LoginComponent implements OnInit {
                 if (this.characterList.find(x => x.name === this.characterName) === undefined) {
                     this.charFormGroup.controls.characterName.setValue('');
                 }
-                // res.forEach(char => {
-                //     if ('lastActive' in char && char.lastActive === true) {
-                //         // Set character here
-                //     }
-                // });
-                // set delay to avoid flickering when animating
                 setTimeout(() => {
                     this.stepper.selectedIndex = 2;
                 }, 250);
-
                 setTimeout(() => {
                     this.isFetching = false;
                 }, 500);

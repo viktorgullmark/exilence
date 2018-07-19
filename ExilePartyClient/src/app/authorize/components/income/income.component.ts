@@ -144,7 +144,6 @@ export class IncomeComponent implements OnInit {
       }
       return false;
     })[0];
-    console.log('[INFO] Clicked snapshot: ', snapshot);
     this.loadPreviousSnapshot(snapshot);
   }
 
@@ -153,7 +152,6 @@ export class IncomeComponent implements OnInit {
   }
 
   onLegendLabelClick(entry) {
-    console.log('[INFO] Legend clicked', entry);
   }
 
 }

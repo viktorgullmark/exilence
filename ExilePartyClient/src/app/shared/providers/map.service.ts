@@ -8,6 +8,7 @@ import { LogMonitorService } from './log-monitor.service';
 import { PartyService } from './party.service';
 import { NetWorthSnapshot } from '../interfaces/income.interface';
 import { SettingsService } from './settings.service';
+import { HistoryHelper } from '../helpers/history.helper';
 
 
 @Injectable()
@@ -107,7 +108,7 @@ export class MapService {
         if (this.areaHistory.length > 50) {
           this.areaHistory.pop();
         }
-        const areasToSend = this.areaHistory.filter(x => x.timestamp > oneHourAgo);
+        const areasToSend = HistoryHelper.filterAreas(this.areaHistory, oneHourAgo);
         this.localPlayer.pastAreas = areasToSend;
       }
 
@@ -115,15 +116,9 @@ export class MapService {
 
       this.localPlayer.area = this.currentArea.eventArea.name;
       this.localPlayer.areaInfo = this.currentArea;
-      let historyToSend = this.localPlayer.netWorthSnapshots
-        .filter((snaphot: NetWorthSnapshot) => snaphot.timestamp > oneHourAgo);
-      if (historyToSend.length === 0) {
-        historyToSend = [{
-          timestamp: 0,
-          value: 0,
-          items: []
-        }];
-      }
+
+      const historyToSend = HistoryHelper.filterNetworth(this.localPlayer.netWorthSnapshots, oneHourAgo);
+
       const objToSend = Object.assign({}, this.localPlayer);
       objToSend.netWorthSnapshots = historyToSend;
       this.partyService.updatePlayer(objToSend);
