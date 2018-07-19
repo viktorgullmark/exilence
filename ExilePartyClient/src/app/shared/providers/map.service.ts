@@ -6,6 +6,7 @@ import { AccountService } from './account.service';
 import { IncomeService } from './income.service';
 import { LogMonitorService } from './log-monitor.service';
 import { PartyService } from './party.service';
+import { NetWorthSnapshot } from '../interfaces/income.interface';
 
 
 @Injectable()
@@ -103,6 +104,17 @@ export class MapService {
 
       this.localPlayer.area = this.currentArea.eventArea.name;
       this.localPlayer.areaInfo = this.currentArea;
+      const oneHourAgo = (Date.now() - (1 * 60 * 60 * 1000));
+      let historyToSend = this.localPlayer.netWorthSnapshots
+        .filter((snaphot: NetWorthSnapshot) => snaphot.timestamp > oneHourAgo);
+      if (historyToSend.length === 0) {
+        historyToSend = [{
+          timestamp: 0,
+          value: 0,
+          items: []
+        }];
+      }
+      this.localPlayer.netWorthSnapshots = historyToSend;
       this.partyService.updatePlayer(this.localPlayer);
 
       this.durationInterval = setInterval(() => {

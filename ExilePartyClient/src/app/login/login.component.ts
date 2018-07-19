@@ -119,18 +119,45 @@ export class LoginComponent implements OnInit {
         this.netWorthHistory = this.settingsService.get('networth');
 
         // Set up placeholder history if we don't have any
-        if (!this.netWorthHistory || this.netWorthHistory.history.length === 0) {
-            this.netWorthHistory = {
-                lastSnapshot: 0,
-                history: [{
-                    timestamp: 0,
-                    value: 0,
-                    items: []
-                }]
-            };
-            this.settingsService.set('networth', this.netWorthHistory);
-        }
-
+        // if (!this.netWorthHistory || this.netWorthHistory.history.length === 0) {
+        //     this.netWorthHistory = {
+        //         lastSnapshot: 0,
+        //         history: [{
+        //             timestamp: 0,
+        //             value: 0,
+        //             items: []
+        //         }]
+        //     };
+        this.netWorthHistory = {
+            lastSnapshot: 0,
+            history: [{
+                timestamp: 1531902351000,
+                value: 810,
+                items: []
+            },
+            {
+                timestamp: 1531816011000,
+                value: 740,
+                items: []
+            },
+            {
+                timestamp: 1531841151000,
+                value: 765,
+                items: []
+            },
+            {
+                timestamp: 1531743951000,
+                value: 750,
+                items: []
+            },
+            {
+                timestamp: 1531643211000,
+                value: 700,
+                items: []
+            }]
+        };
+        this.settingsService.set('networth', this.netWorthHistory);
+        // }
     }
 
     ngOnInit() {

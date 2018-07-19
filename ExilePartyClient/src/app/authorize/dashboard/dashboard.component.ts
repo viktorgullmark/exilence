@@ -6,6 +6,7 @@ import { AccountService } from '../../shared/providers/account.service';
 import { AnalyticsService } from '../../shared/providers/analytics.service';
 import { ElectronService } from '../../shared/providers/electron.service';
 import { PartyService } from '../../shared/providers/party.service';
+import { NetWorthSnapshot } from '../../shared/interfaces/income.interface';
 
 @Component({
   selector: 'app-dashboard',
