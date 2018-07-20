@@ -29,9 +29,12 @@ export class PartyComponent implements OnInit {
         this.player = res;
         this.messageValueService.playerValue = this.player.netWorthSnapshots[0].value;
         this.updatePlayerGain(res);
-        this.electronService.ipcRenderer.send('popout-networth-update', {
-          networth: this.messageValueService.playerValue,
-          gain: this.messageValueService.playerGain
+        this.electronService.ipcRenderer.send('popout-window-update', {
+          event: 'networth',
+          data: {
+            networth: this.messageValueService.playerValue,
+            gain: this.messageValueService.playerGain
+          }
         });
       }
     });

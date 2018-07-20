@@ -74,9 +74,11 @@
         const gainElement = document.getElementById('gain');
         const networthElement = document.getElementById('networth');;
 
-        ipcRenderer.on('popout-networth-update', (event, data) => {
-            networthElement.innerText = +data.networth.toFixed(1) + 'c';
-            gainElement.innerText = +data.gain.toFixed(1) + 'c';
+        ipcRenderer.on('popout-window-update', (event, window) => {
+            if (window.event === 'networth') {
+                networthElement.innerText = +window.data.networth.toFixed(1) + 'c';
+                gainElement.innerText = +window.data.gain.toFixed(1) + 'c';
+            }
         })
 
         function closeWindow() {
