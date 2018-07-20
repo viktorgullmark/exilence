@@ -1,5 +1,6 @@
+
 <h3 class="mat-h3 graph-title">{{title}}
-  <span class="mat-caption caption-text">(updates when you change area, at most every 5 minutes)</span>
+  <span class="mat-caption caption-text">(updates when you change area, at most every 5 minutes)</span><mat-icon class="info-icon" matTooltip="Only data from the last hour is shared with your group">info</mat-icon>
 </h3>
 <div class="chart-container">
   <ngx-charts-line-chart *ngIf="visible" [view]="view" class="chart-container" [ngClass]="{'summary-chart': player == undefined}"

@@ -78,8 +78,6 @@ export class NetworthTableComponent implements OnInit {
     this.updateTable(snapshot.items);
 
     this.filter();
-
-    console.log('[INFO] Loaded previous items to table');
   }
 
   updateTable(items: any[]) {

@@ -31,6 +31,9 @@ export class CharMapsComponent implements OnInit {
       searchText: ['']
     });
     this.partyService.selectedPlayer.subscribe(res => {
+      if (res.account === this.partyService.currentPlayer.account) {
+        res.pastAreas = this.partyService.currentPlayer.pastAreas;
+      }
       this.player = res;
     });
   }
@@ -43,7 +46,7 @@ export class CharMapsComponent implements OnInit {
     this.filteredArr = [];
     if (this.player.pastAreas !== null) {
       this.filteredArr = this.player.pastAreas.filter(res => {
-        return filteredArr.some(x => x.timestamp === moment(res.timestamp).format('LT'));
+        return filteredArr.some(x => x.timestamp === res.timestamp);
       });
     }
     this.updateAvgTimeSpent(this.filteredArr);

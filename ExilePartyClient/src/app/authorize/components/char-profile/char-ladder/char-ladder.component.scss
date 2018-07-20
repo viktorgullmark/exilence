@@ -2,6 +2,7 @@
 
 .char-ladder {
     width: 684px;
+    height: $content-height;
     border: 2px solid $main-border-color;
     background: $equipment-bg-color;
     position: relative;
@@ -14,13 +15,15 @@
 
         .info-wrapper {
             width: 60%;
-            p{
+
+            p {
                 margin-top: 0;
             }
         }
 
         .link-wrapper {
             text-align: right;
+
             .title {
                 font-size: 14px;
 
@@ -36,13 +39,13 @@
     }
 
     .table-outer-wrapper {
-        height: 50%;
         bottom: 25px;
         width: calc(100% - 50px);
         padding-left: 25px;
         margin-right: 25px;
         margin-top: 25px;
         margin-bottom: 25px;
+
         .ladder-table-wrapper {
             height: calc(100% - 60px);
         }

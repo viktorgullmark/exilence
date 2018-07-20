@@ -19,6 +19,8 @@ import { LogService } from './log.service';
 import { ElectronService } from './electron.service';
 import { NetWorthSnapshot } from '../interfaces/income.interface';
 import { MessageValueService } from './message-value.service';
+import { ExtendedAreaInfo } from '../interfaces/area.interface';
+import { HistoryHelper } from '../helpers/history.helper';
 
 @Injectable()
 export class PartyService {
@@ -97,13 +99,15 @@ export class PartyService {
       this.decompress(partyData, (party: Party) => {
         this.decompress(playerData, (player: Player) => {
           // if player is self, set history based on local data
-          if (player.account === this.currentPlayer.account) {
-            player.netWorthSnapshots = this.currentPlayer.netWorthSnapshots;
+          const playerObj = Object.assign({}, player);
+          if (playerObj.account === this.currentPlayer.account) {
+            playerObj.netWorthSnapshots = Object.assign([], this.currentPlayer.netWorthSnapshots);
+            playerObj.pastAreas = Object.assign([], this.currentPlayer.pastAreas);
           }
           this.party = party;
           this.updatePlayerLists(this.party);
-          this.accountService.player.next(player);
-          this.selectedPlayer.next(player);
+          this.accountService.player.next(playerObj);
+          this.selectedPlayer.next(playerObj);
           this.isEntering = false;
           this.logService.log('Entered party:', party);
 
@@ -132,6 +136,7 @@ export class PartyService {
         const playerObj = Object.assign({}, player);
         if (playerObj.account === this.currentPlayer.account) {
           playerObj.netWorthSnapshots = Object.assign([], this.currentPlayer.netWorthSnapshots);
+          playerObj.pastAreas = Object.assign([], this.currentPlayer.pastAreas);
         }
         if (this.selectedPlayerObj.account === playerObj.account) {
           this.selectedPlayer.next(playerObj);
@@ -239,17 +244,10 @@ export class PartyService {
     this.party.name = partyName;
     if (this._hubConnection) {
       const oneHourAgo = (Date.now() - (1 * 60 * 60 * 1000));
-      let historyToSend = playerToSend.netWorthSnapshots
-        .filter((snaphot: NetWorthSnapshot) => snaphot.timestamp > oneHourAgo);
-      if (historyToSend.length === 0) {
-        historyToSend = [{
-          timestamp: 0,
-          value: 0,
-          items: []
-        }];
-      }
+      const historyToSend = HistoryHelper.filterNetworth(playerToSend.netWorthSnapshots, oneHourAgo);
+      const areasToSend = HistoryHelper.filterAreas(playerToSend.pastAreas, oneHourAgo);
       playerToSend.netWorthSnapshots = historyToSend;
-
+      playerToSend.pastAreas = areasToSend;
       this.compress(playerToSend, (data) => this._hubConnection.invoke('JoinParty', partyName, data));
     }
   }

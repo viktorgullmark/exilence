@@ -5,14 +5,17 @@ import { NgxChartsModule } from '@swimlane/ngx-charts';
 
 import { IncomeComponent } from './income.component';
 import { SharedModule } from '../../../shared/shared.module';
-import { MatButtonModule } from '@angular/material';
+import { MatButtonModule, MatIconModule } from '@angular/material';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 @NgModule({
   imports: [
     SharedModule,
     BrowserModule,
     NgxChartsModule,
-    MatButtonModule
+    MatButtonModule,
+    MatIconModule,
+    MatTooltipModule
   ],
   declarations: [
     IncomeComponent

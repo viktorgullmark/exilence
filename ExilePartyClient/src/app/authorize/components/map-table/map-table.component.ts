@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
-import { MatSort, MatTableDataSource } from '@angular/material';
+import { MatSort, MatTableDataSource, MatPaginator } from '@angular/material';
 import * as moment from 'moment';
 
 import { ExtendedAreaInfo } from '../../../shared/interfaces/area.interface';
@@ -20,6 +20,8 @@ export class MapTableComponent implements OnInit {
   filteredArr = [];
   source: any;
   @ViewChild(MatSort) sort: MatSort;
+  @ViewChild(MatPaginator) paginator: MatPaginator;
+
   constructor(private partyService: PartyService) {
   }
 
@@ -53,10 +55,15 @@ export class MapTableComponent implements OnInit {
       );
 
       this.source = new MatTableDataSource(this.filteredArr);
+      this.source.paginator = this.paginator;
       this.source.sort = this.sort;
       this.filtered.emit(this.filteredArr);
     }, 0);
 
+  }
+
+  formatDate(timestamp) {
+    return moment(timestamp).format('ddd, LT');
   }
 
   updateTable(player: Player) {
@@ -69,7 +76,7 @@ export class MapTableComponent implements OnInit {
           tier: area.eventArea.info[0].level,
           time: ((minute < 10) ? '0' + minute.toString() : seconds.toString())
             + ':' + ((seconds < 10) ? '0' + seconds.toString() : seconds.toString()),
-          timestamp: moment(area.timestamp).format('LT')
+          timestamp: area.timestamp
         };
 
         this.dataSource.push(newAreaObj);

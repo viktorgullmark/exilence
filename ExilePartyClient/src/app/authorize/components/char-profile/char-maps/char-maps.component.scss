@@ -44,7 +44,7 @@
 }
 
 .table-outer-wrapper {
-    height: 80%;
+    height: 83%;
     bottom: 25px;
     width: calc(100% - 50px);
     padding-left: 25px;
@@ -52,12 +52,10 @@
     margin-top: 25px;
     position: absolute;
 
-    @media screen and (min-height: 1200px) {
-        height: 85%;
-    }
-
     .map-table-wrapper {
         height: calc(100% - 60px);
-        overflow-y: scroll;
+        @media screen and (max-height: 975px) {
+            overflow-y: scroll
+        }
     }
 }

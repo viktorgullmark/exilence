@@ -1,5 +1,5 @@
 <div class="not-found-message" *ngIf="dataSource.length == 0">
-  Sorry, we could not find you on the ladder
+  Sorry, the selected player does not currently have a ranking
 </div>
 <table *ngIf="dataSource.length > 0" mat-table [dataSource]="source" class="mat-elevation-z8" matSort matSortActive="rank" matSortDisableClear matSortDirection="asc">
 
