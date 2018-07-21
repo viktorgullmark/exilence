@@ -326,43 +326,42 @@ export class PartyService {
           this.recentPlayers.splice(-1, 1);
         }
 
-        this.addRecentPlayer(newPlayer);
+        this.addRecentPlayer(newPlayer, account);
       } else {
         this.logService.log('Account lookup failed for: ', event.player.name);
       }
     });
   }
 
-  addRecentPlayer(player: RecentPlayer) {
+  addRecentPlayer(player: RecentPlayer, accountName: string) {
     // We don't want to spam the API with requests for players we know have private profiles.
     if (this.recentPrivatePlayers.indexOf(player.name) !== -1) {
       return;
     }
-    this.getAccountForCharacter(player.name).then((account) => {
-      if (account !== null) {
-        const info: AccountInfo = {
-          accountName: account,
-          characterName: player.name,
-          sessionId: '',
-          filePath: ''
-        };
-        return this.externalService.getCharacter(info).subscribe((response: EquipmentResponse) => {
-          if (response !== null) {
-            let newPlayer = {} as Player;
-            newPlayer.account = account,
-              newPlayer.generic = true;
-            newPlayer.genericHost = this.currentPlayer.character.name;
-            newPlayer = this.externalService.setCharacter(response, newPlayer);
-            this.addGenericPlayer(newPlayer);
-          }
-        },
-          () => {
-            this.logService.log(`getCharacter failed for player: ${player.name}, account: ${account} (profile probaly private)`);
-            this.recentPrivatePlayers.unshift(player.name);
-          }
-        );
-      }
-    });
+    const account = accountName;
+    if (account !== null) {
+      const info: AccountInfo = {
+        accountName: account,
+        characterName: player.name,
+        sessionId: '',
+        filePath: ''
+      };
+      return this.externalService.getCharacter(info).subscribe((response: EquipmentResponse) => {
+        if (response !== null) {
+          let newPlayer = {} as Player;
+          newPlayer.account = account,
+            newPlayer.generic = true;
+          newPlayer.genericHost = this.currentPlayer.character.name;
+          newPlayer = this.externalService.setCharacter(response, newPlayer);
+          this.addGenericPlayer(newPlayer);
+        }
+      },
+        () => {
+          this.logService.log(`getCharacter failed for player: ${player.name}, account: ${account} (profile probaly private)`);
+          this.recentPrivatePlayers.unshift(player.name);
+        }
+      );
+    }
   }
 
   //#endregion
