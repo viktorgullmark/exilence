@@ -11,6 +11,7 @@ All notable changes to this project will be documented in this file.
 - Added ExileParty-tag to report-messages
 - Improved form-validation to login-form
 - Style-improvements to ladder-tab
+- Style-improvements to area-tab
 
 ## [0.5.2] - 2018-07-18
 - Hotfix for external framework not loading (robot-js)
