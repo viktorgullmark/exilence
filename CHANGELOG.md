@@ -1,7 +1,7 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
-## [0.5.3] - 2018-07-XX
+## [0.5.3] - 2018-07-21
 - Added support to store extended currency-history for yourself (up to one week)
 - Added support to store extended area-history for yourself (up to one week)
 - Added pagination to area-table (10 per page)
