@@ -5,8 +5,10 @@ All notable changes to this project will be documented in this file.
 - Added support to store extended currency-history for yourself (up to one week)
 - Added support to store extended area-history for yourself (up to one week)
 - Added pagination to area-table (10 per page)
+- Added button to reset area-history
 - Fixed a bug where the current tab was not always selected
 - Fixed a bug where the group-summary page was not always up-to-date
+- Added ExileParty-tag to report-messages
 - Improved form-validation to login-form
 - Style-improvements to ladder-tab
 
