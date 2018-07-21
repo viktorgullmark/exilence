@@ -27,18 +27,20 @@
         </div>
     </div>
     <div class="flex-area graph-btns">
-        <button mat-raised-button color="primary" type="button" [matMenuTriggerFor]="menu">
-            {{'GRAPH.REPORT' | translate}}
-            <mat-icon>arrow_drop_down</mat-icon>
-        </button>
-        <mat-menu #menu="matMenu">
-            <button (click)="report(false)" mat-menu-item>{{'ROBOT.CLIPBOARD' | translate}}</button>
-            <button (click)="report(true)" mat-menu-item>{{'ROBOT.GAME' | translate}}</button>
-        </mat-menu>
+        <ng-container *ngIf="selfSelected">
+            <button mat-raised-button color="primary" type="button" [matMenuTriggerFor]="menu">
+                {{'GRAPH.REPORT' | translate}}
+                <mat-icon>arrow_drop_down</mat-icon>
+            </button>
+            <mat-menu #menu="matMenu">
+                <button (click)="report(false)" mat-menu-item>{{'ROBOT.CLIPBOARD' | translate}}</button>
+                <button (click)="report(true)" mat-menu-item>{{'ROBOT.GAME' | translate}}</button>
+            </mat-menu>
+        </ng-container>
 
-        <button mat-raised-button color="primary" *ngIf="showReset" (click)="resetNetWorth()" type="button" class="right-aligned extra-margin">{{'GRAPH.RESET' | translate}}</button>
+        <button mat-raised-button color="primary" *ngIf="selfSelected" (click)="resetNetWorth()" type="button" class="right-aligned extra-margin">{{'GRAPH.RESET' | translate}}</button>
 
-        <button mat-raised-button color="primary" *ngIf="!isGraphHidden" (click)="hideGraph()" type="button" [ngClass]="{'right-aligned': !showReset}">{{'GRAPH.HIDE' | translate}}</button>
+        <button mat-raised-button color="primary" *ngIf="!isGraphHidden" (click)="hideGraph()" type="button" [ngClass]="{'right-aligned': !selfSelected}">{{'GRAPH.HIDE' | translate}}</button>
         <button mat-raised-button color="primary" *ngIf="isGraphHidden" (click)="showGraph()" type="button">{{'GRAPH.SHOW' | translate}}</button>
     </div>
     <div class="income-graph-wrapper" [hidden]="isGraphHidden">

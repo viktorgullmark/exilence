@@ -27,7 +27,7 @@ export class CharWealthComponent implements OnInit {
   isGraphHidden = false;
 
   public graphDimensions = [640, 200];
-  public showReset = false;
+  public selfSelected = false;
   public previousSnapshot = false;
 
   constructor(
@@ -48,9 +48,9 @@ export class CharWealthComponent implements OnInit {
     this.partyService.selectedPlayer.subscribe(res => {
       if (res.account === this.partyService.currentPlayer.account) {
         res.netWorthSnapshots = this.partyService.currentPlayer.netWorthSnapshots;
-        this.showReset = true;
+        this.selfSelected = true;
       } else {
-        this.showReset = false;
+        this.selfSelected = false;
       }
       this.player = res;
       this.previousSnapshot = false;
@@ -76,6 +76,7 @@ export class CharWealthComponent implements OnInit {
       player.netWorthSnapshots = emptyHistory.history;
       this.incomeService.loadSnapshotsFromSettings();
       this.accountService.player.next(player);
+      this.partyService.selectedPlayer.next(player);
     }
   }
 
