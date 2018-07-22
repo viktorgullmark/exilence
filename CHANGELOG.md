@@ -5,6 +5,7 @@ All notable changes to this project will be documented in this file.
 - Minor style-adjustments to area-tab
 - Fixed a bug where the selected players values were posted instead of the current players (yourself)
 - Reduced delay before snapshotting when changing areas (QoL-change)
+- Changed application-name from 'exile-party' to 'ExileParty'
 
 ## [0.5.3] - 2018-07-21
 - Added support to store extended currency-history for yourself (up to one week)
