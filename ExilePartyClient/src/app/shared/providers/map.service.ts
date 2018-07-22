@@ -46,9 +46,11 @@ export class MapService {
       this.areaHistory = this.settingsService.get('areas');
       const oneWeekAgo = (Date.now() - (1 * 60 * 60 * 24 * 7 * 1000));
       const oneHourAgo = (Date.now() - (1 * 60 * 60 * 1000));
+
+      // delay snapshot by 25 seconds, to make room for stashing/vendoring
       setTimeout(x => {
         this.incomeService.Snapshot();
-      }, 1000 * 60);
+      }, 1000 * 25);
 
       clearInterval(this.durationInterval);
 
