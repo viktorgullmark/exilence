@@ -19,6 +19,7 @@ import { PartyModule } from './party/party.module';
 import { SettingsModule } from './settings/settings.module';
 import { LadderService } from '../shared/providers/ladder.service';
 import { MessageValueService } from '../shared/providers/message-value.service';
+import { StashService } from '../shared/providers/stash.service';
 
 @NgModule({
   imports: [
@@ -46,7 +47,8 @@ import { MessageValueService } from '../shared/providers/message-value.service';
     IncomeService,
     MapService,
     AnalyticsService,
-    LadderService
+    LadderService,
+    StashService
   ]
 })
 export class AuthorizeModule { }

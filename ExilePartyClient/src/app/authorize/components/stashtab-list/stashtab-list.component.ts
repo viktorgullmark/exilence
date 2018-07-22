@@ -7,13 +7,14 @@ import { ExternalService } from '../../../shared/providers/external.service';
 import { PartyService } from '../../../shared/providers/party.service';
 import { SettingsService } from '../../../shared/providers/settings.service';
 import { Subscription } from 'rxjs';
+import { StashService } from '../../../shared/providers/stash.service';
 
 @Component({
   selector: 'app-stashtab-list',
   templateUrl: './stashtab-list.component.html',
   styleUrls: ['./stashtab-list.component.scss']
 })
-export class StashtabListComponent implements OnInit, OnDestroy {
+export class StashtabListComponent implements OnInit {
 
   displayedColumns: string[] = ['select', 'position', 'name'];
   searchText = '';
@@ -23,22 +24,23 @@ export class StashtabListComponent implements OnInit, OnDestroy {
   @ViewChild(MatSort) sort: MatSort;
 
   selection = new SelectionModel<any>(true, []);
-  private stashTabSub: Subscription;
+  private stash: Stash;
   constructor(
     private settingsService: SettingsService,
     private externalService: ExternalService,
-    private partyService: PartyService
-  ) { }
+    private partyService: PartyService,
+    private stashService: StashService
+  ) {
+    this.stashService.stash.subscribe(res => {
+      this.stash = res;
+      this.init();
+    });
+  }
 
   ngOnInit() {
-    // temporarily until implemented
-    this.init();
   }
 
   init() {
-    const sessionId = this.settingsService.get('account.sessionId');
-    const accountName = this.settingsService.get('account.accountName');
-    const league = this.partyService.currentPlayer.character.league;
     let selectedStashTabs: any[] = this.settingsService.get('selectedStashTabs');
 
     if (selectedStashTabs === undefined) {
@@ -48,22 +50,19 @@ export class StashtabListComponent implements OnInit, OnDestroy {
       }
     }
 
-    this.stashTabSub = this.externalService.getStashTabs(sessionId, accountName, league)
-      .subscribe((res: Stash) => {
-        this.dataSource = res.tabs.map((tab: Tab) => {
-          return { position: tab.i, name: tab.n };
-        });
+    this.dataSource = this.stash.tabs.map((tab: Tab) => {
+      return { position: tab.i, name: tab.n };
+    });
 
-        this.dataSource.forEach(r => {
-          selectedStashTabs.forEach(t => {
-            if (r.position === t.position) {
-              this.toggle(this.selection, r);
-            }
-          });
-        });
-
-        this.filter();
+    this.dataSource.forEach(r => {
+      selectedStashTabs.forEach(t => {
+        if (r.position === t.position) {
+          this.toggle(this.selection, r);
+        }
       });
+    });
+
+    this.filter();
   }
 
   doSearch(text: string) {
@@ -104,9 +103,4 @@ export class StashtabListComponent implements OnInit, OnDestroy {
 
     this.settingsService.set('selectedStashTabs', this.selection.selected);
   }
-
-  ngOnDestroy() {
-    this.stashTabSub.unsubscribe();
-  }
-
 }

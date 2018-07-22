@@ -1,4 +1,4 @@
-<div class="char-inventory" [ngStyle]="{'width.px': 57*width, 'height.px': 57*height,'margin-top.px': topMargin}">
+<div class="char-inventory" [ngStyle]="{'width.px': 57*width, 'height.px': 57*height,'margin-top.px': topMargin}" [ngClass]="{'stashtab': inventoryId != 'MainInventory' }">
   <div class="inner-container">
     <div *ngFor="let item of items">
       <div class="inventory-item-slot" *ngIf="item.inventoryId == inventoryId" [ngStyle]="{'width.px': 57*item.w, 'height.px': 57*item.h, 'left.px': 57*item.x, 'top.px': 57*item.y }">

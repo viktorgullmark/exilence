@@ -10,6 +10,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { CharMapsModule } from './char-maps/char-maps.module';
 import { CharLadderModule } from './char-ladder/char-ladder.module';
+import { CharStashModule } from './char-stash/char-stash.module';
 
 @NgModule({
   imports: [
@@ -20,6 +21,7 @@ import { CharLadderModule } from './char-ladder/char-ladder.module';
     CharWealthModule,
     CharMapsModule,
     CharLadderModule,
+    CharStashModule,
     MatTabsModule,
     MatIconModule,
     MatButtonModule

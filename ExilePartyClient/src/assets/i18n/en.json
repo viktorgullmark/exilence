@@ -70,7 +70,10 @@
     },
     "STASH": {
         "SEARCH": "Filter tabs",
-        "SELECT_TABS": "Select stashtabs"
+        "SELECT_TABS": "Select stashtabs",
+        "TAB": {
+            "NAME": "Tabname"
+        }
     },
     "KEYBINDS": {
         "RESET": "Reset keybinds",

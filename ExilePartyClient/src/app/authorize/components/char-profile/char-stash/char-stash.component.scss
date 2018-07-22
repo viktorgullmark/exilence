@@ -1,0 +1,13 @@
+@import "./../../../../../assets/styles/_variables.scss";
+
+.char-stash {
+    width: 684px;
+    height: $content-height;
+    border: 2px solid $main-border-color;
+    background: $equipment-bg-color;
+    position: relative;
+    border-radius: 1px;
+    .inner-container {
+        padding: 25px;
+    }
+}

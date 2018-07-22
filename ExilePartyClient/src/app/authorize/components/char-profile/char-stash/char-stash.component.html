@@ -1,0 +1,17 @@
+<div class="char-stash">
+    <div class="inner-container">
+        <form [formGroup]="stashFormGroup">
+            <mat-form-field>
+                <mat-select (selectionChange)="loadStashtab()" formControlName="tabId" placeholder="{{'STASH.TAB.NAME' | translate}}" required>
+                    <mat-option *ngFor="let tab of stash.tabs" [value]="tab.id">{{tab.n}}</mat-option>
+                </mat-select>
+            </mat-form-field>
+        </form>
+    </div>
+    <ng-container *ngIf="selectedTab">
+        <ng-container [ngSwitch]="selectedTab.type">
+            <app-char-inventory *ngSwitchCase="'PremiumStash'" [topMargin]="10" [items]="player?.character?.items" inventoryWidth="12" inventoryHeight="12"
+                inventoryId="Stash"></app-char-inventory>
+        </ng-container>
+    </ng-container>
+</div>
