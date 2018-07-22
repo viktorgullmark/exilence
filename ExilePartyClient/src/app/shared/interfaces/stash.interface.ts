@@ -25,3 +25,8 @@ export interface Colour {
     g: number;
     b: number;
 }
+
+export interface StashTab {
+    items: Item[];
+    index: number;
+}
