@@ -2,9 +2,9 @@ ExileParty
 [![Github All Releases](https://img.shields.io/github/downloads/viktorgullmark/exile-party/total.svg)](https://github.com/viktorgullmark/exile-party/releases)
 [![Become a Patreon](https://img.shields.io/badge/patreon-%F0%9F%8E%AF-orange.svg)](https://www.patreon.com/exileparty)
 ===
-Path of Exile party-app used to track gear, inventory, currency and more of partymembers with cross-league support.
+Path of Exile party-app used to track gear, inventory, currency, maps and more of partymembers with cross-league support.
 
-You could use this app to either improve the party-experience with your current party, or group up with your friends from different leagues while in discord with each other to show off your character.
+You could use this app to either improve the party-experience with your current party, or group up with your friends from different leagues while talking in discord with each other to share your character-data.
 
 Download latest release at https://github.com/viktorgullmark/exile-party/releases/latest
 
@@ -36,6 +36,7 @@ Currently runs with:
 - Angular-CLI v6.0.3
 - Electron v2.0.1
 - Electron Builder v20.13.4
+- Robot-JS v.2.0.0
 
 ## Help with development
 
@@ -44,21 +45,23 @@ If you want to help with development we gladly accept pull-requests. To set up t
 ```
 npm install -g @angular/cli
 npm install
-npm start
-npm run electron:windows (to build the project)
+npm install -g --production windows-build-tools
+npm run rebuild (to bundle robot-js and node-ffi)
+npm start (to serve the project)
+npm run electron:windows (to build the installer)
 ```
 
 See https://github.com/maximegris/angular-electron for additional commands.
 
 To run the API you'll need a local redis-server. 
 
-If requested I can set up an additional redis-cache in azure for developing against.
+If you're interested in helping with development, contact us directly on discord: https://discordapp.com/invite/ymr3VnA and we'll help setting it up.
 
 ## Acknowledgements
 
-Huge thanks to https://poe.ninja for providing a great API, which lets us calculate net worth of players.
+Huge thanks to https://poe.ninja for providing a great API, which lets us calculate net worth of players, as well as http://poe-racing.com/ for fetching ladder-information.
 
 Thanks to https://github.com/klayveR for providing a great log-monitor to track the Client.txt.
 
-And a thank you to GGG for creating this game!
+And a thank you to GGG for assisting with additional endpoints and for creating a great game!
 
