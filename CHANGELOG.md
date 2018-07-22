@@ -1,6 +1,9 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [0.5.4] - 2018-07-XX
+- Minor style-adjustments to area-tab
+
 ## [0.5.3] - 2018-07-21
 - Added support to store extended currency-history for yourself (up to one week)
 - Added support to store extended area-history for yourself (up to one week)
