@@ -88,6 +88,7 @@ export class MapService {
 
         if (this.currentArea !== undefined) {
           this.currentArea.duration = this.durationSeconds;
+          this.currentArea.timestamp = Date.now();
           this.areaHistory.unshift(this.currentArea);
         }
 
