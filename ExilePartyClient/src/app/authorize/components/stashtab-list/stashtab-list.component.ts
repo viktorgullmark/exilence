@@ -46,7 +46,7 @@ export class StashtabListComponent implements OnInit {
     if (selectedStashTabs === undefined) {
       selectedStashTabs = [];
       for (let i = 0; i < 6; i++) {
-        selectedStashTabs.push({ name: '', position: i });
+        selectedStashTabs.push({ name: this.stash.tabs[i].n, position: this.stash.tabs[i].i });
       }
     }
 

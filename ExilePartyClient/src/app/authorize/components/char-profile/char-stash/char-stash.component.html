@@ -1,17 +1,24 @@
 <div class="char-stash">
     <div class="inner-container">
-        <form [formGroup]="stashFormGroup">
-            <mat-form-field>
-                <mat-select (selectionChange)="loadStashtab()" formControlName="tabId" placeholder="{{'STASH.TAB.NAME' | translate}}" required>
-                    <mat-option *ngFor="let tab of stash.tabs" [value]="tab.id">{{tab.n}}</mat-option>
-                </mat-select>
-            </mat-form-field>
-        </form>
+        <ng-container *ngIf="player.stashTabs">
+            <form [formGroup]="stashFormGroup">
+                <mat-form-field>
+                    <mat-select (selectionChange)="loadStashtab()" formControlName="tabId" placeholder="{{'STASH.TAB.NAME' | translate}}" required>
+                        <mat-option *ngFor="let tab of player.stashTabs" [value]="tab.index">{{tab.name}}</mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </form>
+        </ng-container>
+        <ng-container *ngIf="!player.stashTabs">
+            <p class="mat-body-1">
+                Stashtabs on this page will update at the same frequency as the currencytab (every time the player changes area, at most every 5 minutes)
+            </p>
+        </ng-container>
     </div>
     <ng-container *ngIf="selectedTab">
         <ng-container [ngSwitch]="selectedTab.type">
-            <app-char-inventory *ngSwitchCase="'PremiumStash'" [topMargin]="10" [items]="player?.character?.items" inventoryWidth="12" inventoryHeight="12"
-                inventoryId="Stash"></app-char-inventory>
+            <app-char-inventory *ngSwitchCase="'PremiumStash'" [topMargin]="10" [items]="selectedTab.items" inventoryWidth="12" inventoryHeight="12"
+                [inventoryId]="getInventoryId(selectedTab)"></app-char-inventory>
         </ng-container>
     </ng-container>
 </div>

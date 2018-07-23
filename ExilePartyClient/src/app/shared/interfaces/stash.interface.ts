@@ -18,6 +18,7 @@ export interface Tab {
     srcL: string;
     srcC: string;
     srcR: string;
+    items: Item[];
 }
 
 export interface Colour {
@@ -29,4 +30,5 @@ export interface Colour {
 export interface StashTab {
     items: Item[];
     index: number;
+    name: string;
 }

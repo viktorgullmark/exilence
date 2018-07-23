@@ -11,7 +11,7 @@ import { NetWorthHistory, NetWorthItem, NetWorthSnapshot } from '../interfaces/i
 import { Item } from '../interfaces/item.interface';
 import { Player } from '../interfaces/player.interface';
 import { NinjaLine, NinjaTypes } from '../interfaces/poe-ninja.interface';
-import { Stash } from '../interfaces/stash.interface';
+import { Stash, StashTab } from '../interfaces/stash.interface';
 import { AccountService } from './account.service';
 import { ExternalService } from './external.service';
 import { LogService } from './log.service';
@@ -19,6 +19,7 @@ import { NinjaService } from './ninja.service';
 import { PartyService } from './party.service';
 import { SettingsService } from './settings.service';
 import { HistoryHelper } from '../helpers/history.helper';
+import { StashService } from './stash.service';
 
 
 
@@ -31,6 +32,9 @@ export class IncomeService {
   private netWorthHistory: NetWorthHistory;
   private sessionId: string;
   private isSnapshotting = false;
+  private playerTabItems: StashTab[];
+  private selectedStashTabs: any[];
+  private stash: Stash;
 
   public networthSnapshots: NetWorthSnapshot[] = [];
   public localPlayer: Player;
@@ -46,7 +50,11 @@ export class IncomeService {
     private externalService: ExternalService,
     private settingsService: SettingsService,
     private logService: LogService,
+    private stashService: StashService
   ) {
+    this.stashService.stash.subscribe(res => {
+      this.stash = res;
+    });
   }
 
   InitializeSnapshotting(sessionId: string) {
@@ -104,6 +112,8 @@ export class IncomeService {
 
         const historyToSend = HistoryHelper.filterNetworth(this.netWorthHistory.history, oneHourAgo);
 
+        this.localPlayer.stashTabs = this.playerTabItems;
+
         this.accountService.player.next(this.localPlayer);
 
         this.settingsService.set('networth', this.netWorthHistory);
@@ -147,7 +157,19 @@ export class IncomeService {
       this.getValuesFromNinja(priceInfoLeague)
     ).do(() => {
       this.logService.log('Finished retriving stashhtabs and value information.');
+      this.playerTabItems = [];
       this.playerStashTabs.forEach((tab: Stash, tabIndex: number) => {
+        // if the retrieved tab is selected, include items from tab on playerobject
+        debugger;
+        const selectedTab = this.selectedStashTabs.find(x => x.position === tabIndex);
+        if (selectedTab !== undefined) {
+          this.playerTabItems.push({
+            items: tab.items,
+            index: tabIndex,
+            name: selectedTab.name
+          } as StashTab);
+        }
+
         tab.items.forEach((item: Item) => {
 
           let itemName = item.name;
@@ -281,20 +303,20 @@ export class IncomeService {
 
     this.logService.log('[INFO] Retriving stashtabs from official site api');
 
-    let selectedStashTabs: any[] = this.settingsService.get('selectedStashTabs');
+    this.selectedStashTabs = this.settingsService.get('selectedStashTabs');
 
-    if (selectedStashTabs === undefined) {
-      selectedStashTabs = [];
+    if (this.selectedStashTabs === undefined || this.selectedStashTabs.length === 0) {
+      this.selectedStashTabs = [];
       for (let i = 0; i < 5; i++) {
-        selectedStashTabs.push({ name: '', position: i });
+        this.selectedStashTabs.push({ name: this.stash.tabs[i].n, position: this.stash.tabs[i].i});
       }
     }
 
-    if (selectedStashTabs.length > 20) {
-      selectedStashTabs = selectedStashTabs.slice(0, 19);
+    if (this.selectedStashTabs.length > 20) {
+      this.selectedStashTabs = this.selectedStashTabs.slice(0, 19);
     }
 
-    return Observable.from(selectedStashTabs)
+    return Observable.from(this.selectedStashTabs)
       .concatMap((tab: any) => {
         return this.externalService.getStashTab(sessionId, accountName, league, tab.position)
           .delay(750);

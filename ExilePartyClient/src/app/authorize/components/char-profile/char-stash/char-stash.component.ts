@@ -32,10 +32,10 @@ export class CharStashComponent implements OnInit {
     });
     this.partyService.selectedPlayer.subscribe(res => {
       this.player = res;
+      this.loadStashtab();
     });
     this.stashService.stash.subscribe(res => {
       if (res !== undefined) {
-        res.tabs = res.tabs.filter(x => x.type === 'PremiumStash');
         this.stash = res;
       }
     });
@@ -46,8 +46,27 @@ export class CharStashComponent implements OnInit {
   }
 
   loadStashtab() {
-    const tabToSelect = this.stash.tabs.find(x => x.id === this.stashFormGroup.controls.tabId.value);
+    this.selectedTab = undefined;
+    if (this.stash !== undefined) {
+      const tabToSelect = this.stash.tabs.find(x => x.i === this.stashFormGroup.controls.tabId.value);
+      if (this.player.stashTabs !== null && this.player.stashTabs !== undefined && tabToSelect !== undefined) {
+        const playerTab = this.player.stashTabs.find(x => x.index === tabToSelect.i);
+        if (playerTab !== undefined) {
+          tabToSelect.items = playerTab.items;
+        }
+      }
+      this.selectedTab = tabToSelect;
+    }
+  }
 
-    this.selectedTab = tabToSelect;
+  getInventoryId(selectedTab: Tab){
+    if(selectedTab.items !== null && selectedTab.items !== undefined && selectedTab.items.length > 0){
+      return selectedTab.items[0].inventoryId;
+    }
+    return '';
+  }
+
+  private deepClone(array: any[]): any[] {
+    return JSON.parse(JSON.stringify(array));
   }
 }
