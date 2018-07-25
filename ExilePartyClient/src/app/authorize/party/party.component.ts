@@ -43,8 +43,8 @@ export class PartyComponent implements OnInit {
         this.electronService.ipcRenderer.send('popout-window-update', {
           event: 'networth',
           data: {
-            networth: this.messageValueService.playerValue,
-            gain: this.messageValueService.playerGain
+            networth: this.messageValueService.currentPlayerValue,
+            gain: this.messageValueService.currentPlayerGain
           }
         });
         this.updatePlayerGain(res, false);
