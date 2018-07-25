@@ -29,4 +29,9 @@ export class SettingsService {
     this.electronService.settings.set('networth', netWorthHistory);
     return netWorthHistory;
   }
+  deleteAreas() {
+    const areas = [];
+    this.electronService.settings.set('areas', areas);
+    return areas;
+  }
 }

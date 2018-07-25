@@ -3,9 +3,9 @@
 
   </div>
   <div class="player-badge-content">
-    <span class="mat-subheading-1"><span class="player-rank">{{getRanking() != '' ? '#' + getRanking() + ' ' : ''}}</span>{{player.character.name}}</span>
+    <span class="mat-subheading-1"><span class="player-rank">{{getRanking() != '' ? '#' + getRanking() + ' ' : ''}}</span>{{player.character?.name}}</span>
     <br/>
-    <span class="mat-subheading-1">Level {{player.character.level}} {{player.character.class}}</span>
+    <span class="mat-subheading-1">Level {{player.character?.level}} {{player.character?.class}}</span>
     <br/>
     <span class="player-area mat-caption">{{player.area != undefined && player.area != '' ? player.area : 'No zone entered yet'}}</span>
   </div>

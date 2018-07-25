@@ -41,7 +41,7 @@ export class PlayerBadgeComponent implements OnInit {
   }
 
   getRanking() {
-    if (this.player.ladderInfo !== null) {
+    if (this.player.ladderInfo !== null && !this.localPlayer) {
       return this.player.ladderInfo.find(x => x.name === this.player.character.name).rank;
     } else {
       return '';

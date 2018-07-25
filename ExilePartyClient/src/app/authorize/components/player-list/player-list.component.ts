@@ -53,9 +53,11 @@ export class PlayerListComponent implements OnInit {
       });
     } else {
       this.partyService.genericPlayers.subscribe(res => {
-        this.genericPlayers = res;
-        if (this.partyService.selectedGenericPlayerObj === undefined && this.genericPlayers.length > 0) {
-          this.partyService.selectedGenericPlayer.next(this.genericPlayers[0]);
+        if (res !== undefined) {
+          this.genericPlayers = res;
+          if (this.partyService.selectedGenericPlayerObj === undefined && this.genericPlayers.length > 0) {
+            this.partyService.selectedGenericPlayer.next(this.genericPlayers[0]);
+          }
         }
       });
     }

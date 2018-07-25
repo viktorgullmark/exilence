@@ -1,14 +1,25 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
-## [0.5.3] - 2018-07-XX
+## [0.5.4] - 2018-07-XX
+- Minor style-adjustments to area-tab
+- Fixed a bug where the selected players values were posted instead of the current players (yourself)
+- Reduced delay before snapshotting when changing areas (QoL-change)
+- Changed application-name from 'exile-party' to 'ExileParty'
+- Changed timestamp for areas to reflect the time when you leave the area, instead of when you enter it
+
+## [0.5.3] - 2018-07-21
 - Added support to store extended currency-history for yourself (up to one week)
 - Added support to store extended area-history for yourself (up to one week)
 - Added pagination to area-table (10 per page)
+- Added button to reset area-history
 - Fixed a bug where the current tab was not always selected
+- Fixed inspect-players tab, should now work as usual again
 - Fixed a bug where the group-summary page was not always up-to-date
+- Added ExileParty-tag to report-messages
 - Improved form-validation to login-form
 - Style-improvements to ladder-tab
+- Style-improvements to area-tab
 
 ## [0.5.2] - 2018-07-18
 - Hotfix for external framework not loading (robot-js)

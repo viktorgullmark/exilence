@@ -1,12 +1,16 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatTabGroup } from '@angular/material';
 
-import { NetWorthSnapshot } from '../../shared/interfaces/income.interface';
-import { Player } from '../../shared/interfaces/player.interface';
 import { AnalyticsService } from '../../shared/providers/analytics.service';
 import { ElectronService } from '../../shared/providers/electron.service';
 import { MessageValueService } from '../../shared/providers/message-value.service';
+
 import { PartyService } from '../../shared/providers/party.service';
+
+import { Player } from '../../shared/interfaces/player.interface';
+import { NetWorthSnapshot } from '../../shared/interfaces/income.interface';
+import { AccountService } from '../../shared/providers/account.service';
+
 
 @Component({
   selector: 'app-party',
@@ -20,6 +24,7 @@ export class PartyComponent implements OnInit {
   private oneHourAgo = (Date.now() - (1 * 60 * 60 * 1000));
   constructor(
     public partyService: PartyService,
+    private accountService: AccountService,
     private analyticsService: AnalyticsService,
     private messageValueService: MessageValueService,
     private electronService: ElectronService
@@ -28,7 +33,13 @@ export class PartyComponent implements OnInit {
       if (res !== undefined) {
         this.player = res;
         this.messageValueService.playerValue = this.player.netWorthSnapshots[0].value;
-        this.updatePlayerGain(res);
+        this.updatePlayerGain(res, false);
+      }
+    });
+    this.accountService.player.subscribe(res => {
+      if (res !== undefined) {
+        // update msg-values based on current player
+        this.messageValueService.currentPlayerValue = res.netWorthSnapshots[0].value;
         this.electronService.ipcRenderer.send('popout-window-update', {
           event: 'networth',
           data: {
@@ -36,6 +47,7 @@ export class PartyComponent implements OnInit {
             gain: this.messageValueService.playerGain
           }
         });
+        this.updatePlayerGain(res, false);
       }
     });
     this.partyService.partyUpdated.subscribe(res => {
@@ -64,7 +76,7 @@ export class PartyComponent implements OnInit {
     });
   }
 
-  updatePlayerGain(player: Player) {
+  updatePlayerGain(player: Player, current: boolean) {
     const oneHourAgo = (Date.now() - (1 * 60 * 60 * 1000));
     const pastHoursSnapshots = player.netWorthSnapshots
       .filter((snaphot: NetWorthSnapshot) => snaphot.timestamp > oneHourAgo);
@@ -73,9 +85,17 @@ export class PartyComponent implements OnInit {
       const lastSnapshot = pastHoursSnapshots[0];
       const firstSnapshot = pastHoursSnapshots[pastHoursSnapshots.length - 1];
       const gainHour = ((1000 * 60 * 60)) / (lastSnapshot.timestamp - firstSnapshot.timestamp) * (lastSnapshot.value - firstSnapshot.value);
-      this.messageValueService.playerGain = gainHour;
+      if (current) {
+        this.messageValueService.currentPlayerGain = gainHour;
+      } else {
+        this.messageValueService.playerGain = gainHour;
+      }
     } else {
-      this.messageValueService.playerGain = 0;
+      if (current) {
+        this.messageValueService.currentPlayerGain = 0;
+      } else {
+        this.messageValueService.playerGain = 0;
+      }
     }
 
   }

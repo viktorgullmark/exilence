@@ -41,10 +41,10 @@
 
 <!-- tab MAPS -->
 <div class="tab-content" [hidden]="selectedIndex != 2 || localProfile">
-    <app-char-maps *ngIf="!localProfile && selectedIndex == 2" [player]="player"></app-char-maps>
+    <app-char-maps *ngIf="!localProfile" [player]="player"></app-char-maps>  
 </div>
 
 <!-- tab LADDER -->
 <div class="tab-content" [hidden]="selectedIndex != 3 || localProfile">
-    <app-char-ladder *ngIf="!localProfile && selectedIndex == 3" [player]="player"></app-char-ladder>
+    <app-char-ladder *ngIf="!localProfile" [player]="player"></app-char-ladder>
 </div>

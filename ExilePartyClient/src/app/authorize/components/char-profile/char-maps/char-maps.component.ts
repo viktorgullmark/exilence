@@ -7,6 +7,9 @@ import { AnalyticsService } from '../../../../shared/providers/analytics.service
 import { PartyService } from '../../../../shared/providers/party.service';
 import { MapTableComponent } from '../../map-table/map-table.component';
 import * as moment from 'moment';
+import { SettingsService } from '../../../../shared/providers/settings.service';
+import { MapService } from '../../../../shared/providers/map.service';
+import { AccountService } from '../../../../shared/providers/account.service';
 
 @Component({
   selector: 'app-char-maps',
@@ -19,13 +22,16 @@ export class CharMapsComponent implements OnInit {
 
   averageTimeSpent = '';
   filteredArr = [];
-
+  selfSelected = false;
   @ViewChild('table') table: MapTableComponent;
 
   constructor(@Inject(FormBuilder)
   fb: FormBuilder,
     private partyService: PartyService,
-    private analyticsService: AnalyticsService
+    private analyticsService: AnalyticsService,
+    private settingsService: SettingsService,
+    private mapService: MapService,
+    private accountService: AccountService
   ) {
     this.form = fb.group({
       searchText: ['']
@@ -33,6 +39,9 @@ export class CharMapsComponent implements OnInit {
     this.partyService.selectedPlayer.subscribe(res => {
       if (res.account === this.partyService.currentPlayer.account) {
         res.pastAreas = this.partyService.currentPlayer.pastAreas;
+        this.selfSelected = true;
+      } else {
+        this.selfSelected = false;
       }
       this.player = res;
     });
@@ -50,6 +59,17 @@ export class CharMapsComponent implements OnInit {
       });
     }
     this.updateAvgTimeSpent(this.filteredArr);
+  }
+
+  resetAreaHistory() {
+
+    if (this.player.account === this.partyService.currentPlayer.account) {
+      const emptyHistory = this.settingsService.deleteAreas();
+      this.player.pastAreas = emptyHistory;
+      this.mapService.loadAreasFromSettings();
+      this.accountService.player.next(this.player);
+      this.partyService.selectedPlayer.next(this.player);
+    }
   }
 
   updateAvgTimeSpent(pastAreas) {

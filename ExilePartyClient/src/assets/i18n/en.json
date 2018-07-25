@@ -60,7 +60,8 @@
         "PARTY": "Group"
     },
     "MAPS": {
-        "SEARCH": "Filter areas"
+        "SEARCH": "Filter areas",
+        "RESET": "Clear areas"
     },
     "CURRENCY": {
         "SEARCH": "Filter currency"
