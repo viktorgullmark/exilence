@@ -50,7 +50,9 @@ ipcMain.on('popout-window', (event, data: ExileWindowEvent) => {
 
   const window = data.event;
 
-  if (windows[window] === undefined) {
+  if (windows[window] !== undefined && windows[window] !== null) {
+    windows[window].destroy();
+  }
     windows[window] = new BrowserWindow({
       x: 100,
       y: 100,
@@ -76,7 +78,7 @@ ipcMain.on('popout-window', (event, data: ExileWindowEvent) => {
     windows[window].on('closed', (e) => {
       windows[window] = null;
     });
-  }
+
 });
 
 autoUpdater.logger = log;
