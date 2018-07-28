@@ -4,20 +4,20 @@ import { MatStep, MatStepper } from '@angular/material';
 import { Router } from '@angular/router';
 
 import { AccountInfo } from '../shared/interfaces/account-info.interface';
+import { ExtendedAreaInfo } from '../shared/interfaces/area.interface';
 import { Character } from '../shared/interfaces/character.interface';
 import { EquipmentResponse } from '../shared/interfaces/equipment-response.interface';
-import { NetWorthHistory, NetWorthSnapshot } from '../shared/interfaces/income.interface';
+import { NetWorthHistory } from '../shared/interfaces/income.interface';
+import { League } from '../shared/interfaces/league.interface';
 import { Player } from '../shared/interfaces/player.interface';
 import { AccountService } from '../shared/providers/account.service';
 import { AnalyticsService } from '../shared/providers/analytics.service';
 import { ElectronService } from '../shared/providers/electron.service';
 import { ExternalService } from '../shared/providers/external.service';
+import { IncomeService } from '../shared/providers/income.service';
+import { LadderService } from '../shared/providers/ladder.service';
 import { SessionService } from '../shared/providers/session.service';
 import { SettingsService } from '../shared/providers/settings.service';
-import { LadderService } from '../shared/providers/ladder.service';
-import { RobotService } from '../shared/providers/robot.service';
-import { League } from '../shared/interfaces/league.interface';
-import { ExtendedAreaInfo } from '../shared/interfaces/area.interface';
 
 @Component({
     selector: 'app-login',
@@ -60,7 +60,7 @@ export class LoginComponent implements OnInit {
         private settingsService: SettingsService,
         private analyticsService: AnalyticsService,
         private ladderService: LadderService,
-        private robotService: RobotService
+        private incomeService: IncomeService
     ) {
         this.externalService.leagues.subscribe((res: League[]) => {
             this.leagues = res;
@@ -219,6 +219,7 @@ export class LoginComponent implements OnInit {
         this.accountService.accountInfo.next(this.form);
         this.settingsService.set('account', this.form);
         this.sessionService.initSession(this.form.sessionId);
+        this.incomeService.Snapshot();
         this.isLoading = false;
         this.router.navigate(['/authorized/dashboard']);
     }
