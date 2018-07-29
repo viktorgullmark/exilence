@@ -23,7 +23,8 @@
         "SHOW": "Show graph",
         "HIDE": "Hide graph",
         "RESET": "Reset graph",
-        "REPORT": "Send net worth report"
+        "REPORT": "Send net worth report",
+        "POPOUT": "Pop out"
     },
     "ROBOT": {
         "GAME":  "Game",

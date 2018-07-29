@@ -2,11 +2,15 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatTabGroup } from '@angular/material';
 
 import { AnalyticsService } from '../../shared/providers/analytics.service';
-import { PartyService } from '../../shared/providers/party.service';
+import { ElectronService } from '../../shared/providers/electron.service';
 import { MessageValueService } from '../../shared/providers/message-value.service';
+
+import { PartyService } from '../../shared/providers/party.service';
+
 import { Player } from '../../shared/interfaces/player.interface';
 import { NetWorthSnapshot } from '../../shared/interfaces/income.interface';
 import { AccountService } from '../../shared/providers/account.service';
+
 
 @Component({
   selector: 'app-party',
@@ -22,7 +26,8 @@ export class PartyComponent implements OnInit {
     public partyService: PartyService,
     private accountService: AccountService,
     private analyticsService: AnalyticsService,
-    private messageValueService: MessageValueService
+    private messageValueService: MessageValueService,
+    private electronService: ElectronService
   ) {
     this.partyService.selectedPlayer.subscribe(res => {
       if (res !== undefined) {
@@ -35,7 +40,14 @@ export class PartyComponent implements OnInit {
       if (res !== undefined) {
         // update msg-values based on current player
         this.messageValueService.currentPlayerValue = res.netWorthSnapshots[0].value;
-        this.updatePlayerGain(res, true);
+        this.electronService.ipcRenderer.send('popout-window-update', {
+          event: 'networth',
+          data: {
+            networth: this.messageValueService.currentPlayerValue,
+            gain: this.messageValueService.currentPlayerGain
+          }
+        });
+        this.updatePlayerGain(res, false);
       }
     });
     this.partyService.partyUpdated.subscribe(res => {
@@ -85,6 +97,7 @@ export class PartyComponent implements OnInit {
         this.messageValueService.playerGain = 0;
       }
     }
+
   }
 
 

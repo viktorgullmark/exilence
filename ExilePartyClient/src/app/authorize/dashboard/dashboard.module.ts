@@ -8,7 +8,7 @@ import { DashboardComponent } from './dashboard.component';
   imports: [
     SharedModule,
     MatDividerModule,
-    MatCardModule,
+    MatCardModule
   ],
   declarations: [DashboardComponent]
 })

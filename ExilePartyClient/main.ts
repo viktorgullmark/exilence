@@ -1,19 +1,36 @@
-import { app, BrowserWindow, dialog, screen, globalShortcut } from 'electron';
+import { app, BrowserWindow, dialog, globalShortcut } from 'electron';
 import * as path from 'path';
 import * as url from 'url';
+
+
+export interface ExileWindowEvent {
+  event: ExileWindowEnum;
+  data?: any;
+}
+
+export enum ExileWindowEnum {
+  Main = 'main',
+  Networth = 'networth',
+  Ladder = 'ladder',
+  Areas = 'areas',
+  Trade = 'trade'
+}
+
 const ipcMain = require('electron').ipcMain;
 const log = require('electron-log');
 const { autoUpdater } = require('electron-updater');
-let win, serve;
+
+const windows: BrowserWindow[] = [];
+
 const args = process.argv.slice(1);
-serve = args.some(val => val === '--serve');
+const serve = args.some(val => val === '--serve');
 
 ipcMain.on('keybinds-update', function (event, binds) {
   globalShortcut.unregisterAll();
   binds.forEach(bind => {
     if (bind.enabled) {
       globalShortcut.register(bind.keys, () => {
-        win.webContents.send('keybind', bind);
+        windows[ExileWindowEnum.Main].webContents.send('keybind', bind);
       });
     }
   });
@@ -23,22 +40,59 @@ ipcMain.on('keybinds-unregister', function (event) {
   globalShortcut.unregisterAll();
 });
 
+ipcMain.on('popout-window-update', (event, window: ExileWindowEvent ) => {
+  if (windows[window.event] && !windows[window.event].isDestroyed()) {
+    windows[window.event].webContents.send('popout-window-update', window);
+  }
+});
+
+ipcMain.on('popout-window', (event, data: ExileWindowEvent) => {
+
+  const window = data.event;
+
+  if (windows[window] !== undefined && windows[window] !== null) {
+    windows[window].destroy();
+  }
+    windows[window] = new BrowserWindow({
+      x: 100,
+      y: 100,
+      height: 85,
+      width: 200,
+      show: false,
+      frame: false,
+      resizable: false,
+      alwaysOnTop: true,
+      icon: path.join(__dirname, 'dist/assets/img/app-icon.png'),
+    });
+
+    windows[window].loadURL(url.format({
+      pathname: path.join(__dirname, 'popout/networth.html'),
+      protocol: 'file:',
+      slashes: true
+    }));
+
+    windows[window].once('ready-to-show', () => {
+      windows[window].show();
+    });
+
+    windows[window].on('closed', (e) => {
+      windows[window] = null;
+    });
+
+});
+
 autoUpdater.logger = log;
 autoUpdater.logger.transports.file.level = 'info';
 log.info('App starting...');
 
 function sendStatusToWindow(text) {
   log.info(text);
-  win.webContents.send('message', text);
+  windows[ExileWindowEnum.Main].webContents.send('message', text);
 }
 
-function createWindow() {
-
-  const electronScreen = screen;
-  const size = electronScreen.getPrimaryDisplay().workAreaSize;
-
+function createWindow(windowType: ExileWindowEnum = ExileWindowEnum.Main) {
   // Create the browser window.
-  win = new BrowserWindow({
+  windows[ExileWindowEnum.Main] = new BrowserWindow({
     x: 100,
     y: 100,
     height: 985,
@@ -51,13 +105,15 @@ function createWindow() {
     icon: path.join(__dirname, 'dist/assets/img/app-icon.png'),
   });
 
+  const filePath: string = null;
+
   if (serve) {
     require('electron-reload')(__dirname, {
       electron: require(`${__dirname}/node_modules/electron`)
     });
-    win.loadURL('http://localhost:4200');
+    windows[ExileWindowEnum.Main].loadURL('http://localhost:4200');
   } else {
-    win.loadURL(url.format({
+    windows[ExileWindowEnum.Main].loadURL(url.format({
       pathname: path.join(__dirname, 'dist/index.html'),
       protocol: 'file:',
       slashes: true
@@ -65,11 +121,23 @@ function createWindow() {
   }
 
   // Emitted when the window is closed.
-  win.on('closed', () => {
+  windows[ExileWindowEnum.Main].on('closed', () => {
     // Dereference the window object, usually you would store window
     // in an array if your app supports multi windows, this is the time
     // when you should delete the corresponding element.
-    win = null;
+    if (windows[ExileWindowEnum.Networth] !== undefined) {
+      windows[ExileWindowEnum.Networth].destroy();
+    }
+    if (windows[ExileWindowEnum.Ladder] !== undefined) {
+      windows[ExileWindowEnum.Ladder].destroy();
+    }
+    if (windows[ExileWindowEnum.Trade] !== undefined) {
+      windows[ExileWindowEnum.Trade].destroy();
+    }
+    if (windows[ExileWindowEnum.Areas] !== undefined) {
+      windows[ExileWindowEnum.Areas].destroy();
+    }
+
   });
 }
 
@@ -118,7 +186,7 @@ try {
     createWindow();
     autoUpdater.checkForUpdates();
     globalShortcut.register('Command+Shift+I', () => {
-      win.openDevTools();
+      windows[ExileWindowEnum.Main].openDevTools();
     });
   });
 
@@ -134,7 +202,7 @@ try {
   app.on('activate', () => {
     // On OS X it's common to re-create a window in the app when the
     // dock icon is clicked and there are no other windows open.
-    if (win === null) {
+    if (windows[ExileWindowEnum.Main] === null) {
       createWindow();
     }
   });
@@ -143,5 +211,6 @@ try {
   // Catch Error
   // throw e;
 }
+
 
 

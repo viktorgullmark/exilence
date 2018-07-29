@@ -38,6 +38,8 @@
             </mat-menu>
         </ng-container>
 
+        <button mat-raised-button color="primary" *ngIf="selfSelected" (click)="popout()" type="button" class="right-aligned extra-margin margin-left">{{'GRAPH.POPOUT' | translate}}</button>
+
         <button mat-raised-button color="primary" *ngIf="selfSelected" (click)="resetNetWorth()" type="button" class="right-aligned extra-margin">{{'GRAPH.RESET' | translate}}</button>
 
         <button mat-raised-button color="primary" *ngIf="!isGraphHidden" (click)="hideGraph()" type="button" [ngClass]="{'right-aligned': !selfSelected}">{{'GRAPH.HIDE' | translate}}</button>

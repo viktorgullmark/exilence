@@ -6,7 +6,6 @@ import { AccountService } from '../../shared/providers/account.service';
 import { AnalyticsService } from '../../shared/providers/analytics.service';
 import { ElectronService } from '../../shared/providers/electron.service';
 import { PartyService } from '../../shared/providers/party.service';
-import { NetWorthSnapshot } from '../../shared/interfaces/income.interface';
 
 @Component({
   selector: 'app-dashboard',
@@ -19,13 +18,14 @@ export class DashboardComponent implements OnInit {
   isLoading = true;
   recentParties: string[];
   player: Player;
+  private count = 0;
 
   constructor(
     private electronService: ElectronService,
     private partyService: PartyService,
     private accountService: AccountService,
     private analyticsService: AnalyticsService,
-    private router: Router
+    private router: Router,
   ) {
 
     this.partyService.recentParties.subscribe(parties => {

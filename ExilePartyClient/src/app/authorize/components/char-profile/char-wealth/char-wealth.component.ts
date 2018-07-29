@@ -94,6 +94,22 @@ export class CharWealthComponent implements OnInit {
     }
   }
 
+  popout() {
+    const data = {
+      event: 'networth',
+    };
+    this.electronService.ipcRenderer.send('popout-window', data);
+    setTimeout(res => {
+      this.electronService.ipcRenderer.send('popout-window-update', {
+        event: 'networth',
+        data: {
+          networth: this.messageValueService.currentPlayerValue,
+          gain: this.messageValueService.currentPlayerGain
+        }
+      });
+    }, 1000);
+  }
+
   hideGraph() {
     this.isGraphHidden = true;
   }
