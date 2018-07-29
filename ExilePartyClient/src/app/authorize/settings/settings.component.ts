@@ -96,7 +96,7 @@ export class SettingsComponent implements OnInit {
 
     this.sessionId = this.sessionService.getSession();
     this.sessionIdValid = this.settingsService.get('account.sessionIdValid');
-    if (!this.sessionIdValid) {
+    if (!this.sessionIdValid || this.sessionId === '') {
       this.selectedIndex = 1;
     }
   }
