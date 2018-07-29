@@ -2,9 +2,13 @@
 All notable changes to this project will be documented in this file.
 
 ## [0.5.4] - 2018-07-XX
+- Added validation of sessionId when logging in
+- Added placeholder-block for inventory when no sessionId has been provided
+- Stashtab-settings are now disabled if no sessionId has been provided
 - Minor style-adjustments to area-tab
 - Fixed a bug where the selected players values were posted instead of the current players (yourself)
 - Reduced delay before snapshotting when changing areas (QoL-change)
+- Now snapshots on login, and not only upon entering your first area (QoL-change)
 - Changed application-name from 'exile-party' to 'ExileParty'
 - Changed timestamp for areas to reflect the time when you leave the area, instead of when you enter it
 
