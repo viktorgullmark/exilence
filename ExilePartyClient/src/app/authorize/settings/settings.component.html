@@ -2,7 +2,7 @@
 <mat-divider class="divider"></mat-divider>
 <div class="tab-group-header">
   <mat-tab-group #tabGroup id="tabGroup" [(selectedIndex)]="selectedIndex">
-    <mat-tab #stash id="stash" class="active">
+    <mat-tab #stash id="stash" class="active" [disabled]="!sessionId">
       <ng-template mat-tab-label>
         <mat-icon class="tab-icon">format_list_numbered</mat-icon>
         &nbsp;Stashtabs
@@ -37,7 +37,7 @@
       </form>
     </div>
     <div class="stash-table-wrapper">
-      <app-stashtab-list #table></app-stashtab-list>
+      <app-stashtab-list #table [validated]="sessionIdValid"></app-stashtab-list>
     </div>
   </div>
 </div>

@@ -1,5 +1,5 @@
 import { SelectionModel } from '@angular/cdk/collections';
-import { Component, OnInit, OnDestroy, ViewChild } from '@angular/core';
+import { Component, OnInit, OnDestroy, ViewChild, Input } from '@angular/core';
 import { MatSort, MatTableDataSource } from '@angular/material';
 
 import { Stash, Tab } from '../../../shared/interfaces/stash.interface';
@@ -21,6 +21,7 @@ export class StashtabListComponent implements OnInit, OnDestroy {
   source: any;
   dataSource: any;
   @ViewChild(MatSort) sort: MatSort;
+  @Input() validated: boolean;
 
   selection = new SelectionModel<any>(true, []);
   private stashTabSub: Subscription;
@@ -50,19 +51,21 @@ export class StashtabListComponent implements OnInit, OnDestroy {
 
     this.stashTabSub = this.externalService.getStashTabs(sessionId, accountName, league)
       .subscribe((res: Stash) => {
-        this.dataSource = res.tabs.map((tab: Tab) => {
-          return { position: tab.i, name: tab.n };
-        });
-
-        this.dataSource.forEach(r => {
-          selectedStashTabs.forEach(t => {
-            if (r.position === t.position) {
-              this.toggle(this.selection, r);
-            }
+        if (res !== null) {
+          this.dataSource = res.tabs.map((tab: Tab) => {
+            return { position: tab.i, name: tab.n };
           });
-        });
 
-        this.filter();
+          this.dataSource.forEach(r => {
+            selectedStashTabs.forEach(t => {
+              if (r.position === t.position) {
+                this.toggle(this.selection, r);
+              }
+            });
+          });
+
+          this.filter();
+        }
       });
   }
 

@@ -1,4 +1,4 @@
-<table mat-table [dataSource]="source" class="mat-elevation-z8" matSort matSortActive="position" matSortDisableClear matSortDirection="asc">
+<table mat-table *ngIf="validated" [dataSource]="source" class="mat-elevation-z8" matSort matSortActive="position" matSortDisableClear matSortDirection="asc">
 
     <!-- Checkbox Column -->
     <ng-container matColumnDef="select">
