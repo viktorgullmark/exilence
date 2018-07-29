@@ -68,6 +68,7 @@
     "ERROR": {
         "PATH_NOT_VALID": "The filepath is not valid",
         "SESSIONID_NOT_VALID": "The sessionId is not valid",
+        "SESSIONID_NOT_VALIDATED": "The sessionId has not been validated yet",
         "SESSIONID_NOT_PROVIDED": "No sessionId provided"
     },
     "STASH": {

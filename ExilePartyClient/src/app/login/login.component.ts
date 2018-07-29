@@ -46,6 +46,7 @@ export class LoginComponent implements OnInit {
     netWorthHistory: NetWorthHistory;
     areaHistory: ExtendedAreaInfo[];
     form: any;
+    needsValidation: boolean;
 
     private twelveHoursAgo = (Date.now() - (12 * 60 * 60 * 1000));
 
@@ -136,7 +137,7 @@ export class LoginComponent implements OnInit {
         });
         this.checkPath();
         this.sessFormGroup.valueChanges.subscribe(val => {
-            this.sessionIdValid = false;
+            this.needsValidation = true;
         });
     }
 
@@ -214,6 +215,7 @@ export class LoginComponent implements OnInit {
             form.leagueName,
             0
         ).subscribe(res => {
+            this.needsValidation = false;
             this.sessionIdValid = res !== false;
         });
     }
