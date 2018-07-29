@@ -12,6 +12,7 @@ import { PartyService } from '../../../../shared/providers/party.service';
 import { RobotService } from '../../../../shared/providers/robot.service';
 import { SettingsService } from '../../../../shared/providers/settings.service';
 import { NetworthTableComponent } from '../../networth-table/networth-table.component';
+import { SessionService } from '../../../../shared/providers/session.service';
 
 @Component({
   selector: 'app-char-wealth',
@@ -30,6 +31,9 @@ export class CharWealthComponent implements OnInit {
   public selfSelected = false;
   public previousSnapshot = false;
 
+  public sessionId: string;
+  public sessionIdValid: boolean;
+
   constructor(
     @Inject(FormBuilder) fb: FormBuilder,
     private router: Router,
@@ -40,7 +44,9 @@ export class CharWealthComponent implements OnInit {
     private robotService: RobotService,
     private incomeService: IncomeService,
     private accountService: AccountService,
-    public messageValueService: MessageValueService
+    public messageValueService: MessageValueService,
+    private settingsService: SettingsService,
+    private sessionService: SessionService
   ) {
     this.form = fb.group({
       searchText: ['']
@@ -55,6 +61,8 @@ export class CharWealthComponent implements OnInit {
       this.player = res;
       this.previousSnapshot = false;
     });
+    this.sessionId = this.sessionService.getSession();
+    this.sessionIdValid = this.settingsService.get('account.sessionIdValid');
   }
 
   ngOnInit() {

@@ -231,7 +231,9 @@ export class LoginComponent implements OnInit {
             this.player.character.league,
             0
         ).subscribe(res => {
-            this.player.sessionIdProvided = res !== false;
+            this.sessionIdValid = res !== false;
+            this.form = this.getFormObj();
+            this.player.sessionIdProvided = this.sessionIdValid;
             this.accountService.player.next(this.player);
             this.accountService.accountInfo.next(this.form);
             this.settingsService.set('account', this.form);

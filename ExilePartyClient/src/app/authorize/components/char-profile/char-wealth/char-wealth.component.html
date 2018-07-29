@@ -48,7 +48,7 @@
     </div>
     <div class="table-outer-wrapper" [ngClass]="{'full-height-table': isGraphHidden }">
         <div class="flex-area wrapped">
-            <button mat-raised-button color="primary" (click)="goToSettings()" type="button" class="right-aligned">{{'STASH.SELECT_TABS' | translate}}</button>
+            <button mat-raised-button color="primary" [disabled]="sessionId == '' || !sessionIdValid" (click)="goToSettings()" type="button" class="right-aligned">{{'STASH.SELECT_TABS' | translate}}</button>
         </div>
         <div class="search-form-wrapper">
             <form class="form search-form" [formGroup]="form">
