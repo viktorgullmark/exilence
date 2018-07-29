@@ -56,11 +56,11 @@ ipcMain.on('popout-window', (event, data: ExileWindowEvent) => {
     windows[window] = new BrowserWindow({
       x: 100,
       y: 100,
-      height: 100,
+      height: 85,
       width: 200,
       show: false,
       frame: false,
-      resizable: true,
+      resizable: false,
       alwaysOnTop: true,
       icon: path.join(__dirname, 'dist/assets/img/app-icon.png'),
     });
