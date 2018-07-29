@@ -2,7 +2,7 @@
 <mat-divider class="divider"></mat-divider>
 <div class="tab-group-header">
   <mat-tab-group #tabGroup id="tabGroup" [(selectedIndex)]="selectedIndex">
-    <mat-tab #stash id="stash" class="active">
+    <mat-tab #stash id="stash" class="active" [disabled]="!sessionId">
       <ng-template mat-tab-label>
         <mat-icon class="tab-icon">format_list_numbered</mat-icon>
         &nbsp;Stashtabs
@@ -37,7 +37,7 @@
       </form>
     </div>
     <div class="stash-table-wrapper">
-      <app-stashtab-list #table></app-stashtab-list>
+      <app-stashtab-list #table [validated]="sessionIdValid || sessionId == undefined"></app-stashtab-list>
     </div>
   </div>
 </div>
@@ -54,9 +54,9 @@
     </p>
   </div>
   <div class="setting-tab-content">
-    <mat-grid-list cols="8" rowHeight="50px">
+    <mat-grid-list cols="9" rowHeight="50px">
       <!-- col-headers -->
-      <mat-grid-tile [colspan]="2" [rowspan]="1" class="grid-header">
+      <mat-grid-tile [colspan]="3" [rowspan]="1" class="grid-header">
         <span class="grid-header-title">
           Event name
         </span>
@@ -78,7 +78,7 @@
       </mat-grid-tile>
       <!-- keybinds -->
       <ng-container *ngFor="let keybind of keybinds">
-        <mat-grid-tile [colspan]="2" [rowspan]="1">
+        <mat-grid-tile [colspan]="3" [rowspan]="1">
           {{keybind.title}}
         </mat-grid-tile>
         <mat-grid-tile [colspan]="2" [rowspan]="1">

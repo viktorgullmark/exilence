@@ -15,6 +15,7 @@ namespace ExileParty.Models
         public string Guild { get; set; }
         public List<string> InArea { get; set; }
         public bool Generic { get; set; }
+        public bool SessionIdProvided { get; set; }
         public string GenericHost { get; set; }
         public List<NetWorthSnapshot> NetWorthSnapshots { get; set; }
 

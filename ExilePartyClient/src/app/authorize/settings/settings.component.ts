@@ -8,6 +8,7 @@ import { ElectronService } from '../../shared/providers/electron.service';
 import { KeybindService } from '../../shared/providers/keybind.service';
 import { SettingsService } from '../../shared/providers/settings.service';
 import { StashtabListComponent } from '../components/stashtab-list/stashtab-list.component';
+import { SessionService } from '../../shared/providers/session.service';
 
 @Component({
   selector: 'app-settings',
@@ -18,6 +19,8 @@ export class SettingsComponent implements OnInit {
   form: FormGroup;
   selectedIndex = 0;
   alwaysOnTop = false;
+  sessionId: string;
+  sessionIdValid: boolean;
 
   // temporary arrays
   modifierKeys = [
@@ -74,7 +77,8 @@ export class SettingsComponent implements OnInit {
     private analyticsService: AnalyticsService,
     private electronService: ElectronService,
     private settingsService: SettingsService,
-    private keybindService: KeybindService
+    private keybindService: KeybindService,
+    private sessionService: SessionService
   ) {
     this.form = fb.group({
       searchText: ['']
@@ -90,6 +94,11 @@ export class SettingsComponent implements OnInit {
       }));
     });
 
+    this.sessionId = this.sessionService.getSession();
+    this.sessionIdValid = this.settingsService.get('account.sessionIdValid');
+    if (!this.sessionIdValid || this.sessionId === '') {
+      this.selectedIndex = 1;
+    }
   }
 
   ngOnInit() {

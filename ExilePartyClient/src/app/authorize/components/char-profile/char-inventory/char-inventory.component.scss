@@ -23,3 +23,22 @@
         }
     }
 }
+
+.char-inventory-placeholder {
+    background: $inventory-placeholder-bg-color;
+    border: 2px solid $inventory-placeholder-border-color;
+    height: 40px;
+    .inner-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100%;
+        .error-icon {
+            font-size: 16px;
+            margin-top: 5px;
+        }
+        .error-text {
+            font-size: 16px;
+        }
+    }
+}

@@ -1,4 +1,4 @@
-<div class="char-inventory" [ngStyle]="{'width.px': 57*width, 'height.px': 57*height,'margin-top.px': topMargin}">
+<div class="char-inventory" *ngIf="sessionIdProvided" [ngStyle]="{'width.px': 57*width, 'height.px': 57*height,'margin-top.px': topMargin}">
   <div class="inner-container">
     <div *ngFor="let item of items">
       <div class="inventory-item-slot" *ngIf="item.inventoryId == inventoryId" [ngStyle]="{'width.px': 57*item.w, 'height.px': 57*item.h, 'left.px': 57*item.x, 'top.px': 57*item.y }">
@@ -7,5 +7,12 @@
     </div>
     <div *ngFor="let square of grid" class="grid-square">
     </div>
+  </div>
+</div>
+<div class="char-inventory-placeholder" [ngStyle]="{'width.px': 57*width, 'margin-top.px': topMargin}" *ngIf="!sessionIdProvided">
+  <div class="inner-container">
+    <mat-icon class="error-icon">error</mat-icon> {{'ERROR.SESSIONID_NOT_PROVIDED' | translate}}
+    <span class="error-text">
+    </span>
   </div>
 </div>

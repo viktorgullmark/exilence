@@ -3,4 +3,6 @@ export interface AccountInfo {
     accountName: string;
     characterName: string;
     filePath: string;
+    leagueName: string;
+    sessionIdValid: boolean;
 }

@@ -343,8 +343,10 @@ export class PartyService {
       const info: AccountInfo = {
         accountName: account,
         characterName: player.name,
+        leagueName: '',
         sessionId: '',
-        filePath: ''
+        filePath: '',
+        sessionIdValid: false
       };
       return this.externalService.getCharacter(info).subscribe((response: EquipmentResponse) => {
         if (response !== null) {

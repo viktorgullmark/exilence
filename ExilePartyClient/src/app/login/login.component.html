@@ -51,8 +51,10 @@
         </mat-form-field>
         <div class="btn-grp">
           <button mat-raised-button class="btn-back" matStepperPrevious>Back</button>
-          <button mat-raised-button color="primary" matStepperNext>Continue</button>
+          <button mat-raised-button color="primary" (click)="validateSessionId()" type="button" [disabled]="sessFormGroup.controls.sessionId.value == ''">Validate</button>
+          <button mat-raised-button color="primary" matStepperNext [disabled]="(!sessionIdValid || needsValidation) && sessFormGroup.controls.sessionId.value != ''">Continue</button>
         </div>
+        <span class="form-error" *ngIf="!sessionIdValid && !needsValidation && sessFormGroup.controls.sessionId.value != ''">{{'ERROR.SESSIONID_NOT_VALID' | translate}}</span>
       </form>
     </mat-step>
     <mat-step [stepControl]="pathFormGroup">

@@ -4,20 +4,20 @@ import { MatStep, MatStepper } from '@angular/material';
 import { Router } from '@angular/router';
 
 import { AccountInfo } from '../shared/interfaces/account-info.interface';
+import { ExtendedAreaInfo } from '../shared/interfaces/area.interface';
 import { Character } from '../shared/interfaces/character.interface';
 import { EquipmentResponse } from '../shared/interfaces/equipment-response.interface';
-import { NetWorthHistory, NetWorthSnapshot } from '../shared/interfaces/income.interface';
+import { NetWorthHistory } from '../shared/interfaces/income.interface';
+import { League } from '../shared/interfaces/league.interface';
 import { Player } from '../shared/interfaces/player.interface';
 import { AccountService } from '../shared/providers/account.service';
 import { AnalyticsService } from '../shared/providers/analytics.service';
 import { ElectronService } from '../shared/providers/electron.service';
 import { ExternalService } from '../shared/providers/external.service';
+import { IncomeService } from '../shared/providers/income.service';
+import { LadderService } from '../shared/providers/ladder.service';
 import { SessionService } from '../shared/providers/session.service';
 import { SettingsService } from '../shared/providers/settings.service';
-import { LadderService } from '../shared/providers/ladder.service';
-import { RobotService } from '../shared/providers/robot.service';
-import { League } from '../shared/interfaces/league.interface';
-import { ExtendedAreaInfo } from '../shared/interfaces/area.interface';
 
 @Component({
     selector: 'app-login',
@@ -41,10 +41,12 @@ export class LoginComponent implements OnInit {
     characterName: string;
     accountName: string;
     sessionId: string;
+    sessionIdValid = false;
     filePath: string;
     netWorthHistory: NetWorthHistory;
     areaHistory: ExtendedAreaInfo[];
     form: any;
+    needsValidation: boolean;
 
     private twelveHoursAgo = (Date.now() - (12 * 60 * 60 * 1000));
 
@@ -60,7 +62,7 @@ export class LoginComponent implements OnInit {
         private settingsService: SettingsService,
         private analyticsService: AnalyticsService,
         private ladderService: LadderService,
-        private robotService: RobotService
+        private incomeService: IncomeService
     ) {
         this.externalService.leagues.subscribe((res: League[]) => {
             this.leagues = res;
@@ -94,17 +96,6 @@ export class LoginComponent implements OnInit {
             && this.pathFormGroup.controls.filePath.value.endsWith('Client.txt');
     }
 
-    checkSessionId() {
-        const form = this.getFormObj();
-        this.externalService.getCharacter(form).subscribe(
-            success => {
-
-            },
-            error => {
-
-            });
-    }
-
     openLink(link: string) {
         this.electronService.shell.openExternal(link);
     }
@@ -114,6 +105,7 @@ export class LoginComponent implements OnInit {
         this.sessionId = this.settingsService.get('account.sessionId');
         this.accountName = this.settingsService.get('account.accountName');
         this.leagueName = this.settingsService.get('account.leagueName');
+        this.sessionIdValid = this.settingsService.get('account.sessionIdValid');
         this.filePath = this.settingsService.get('account.filePath');
         this.netWorthHistory = this.settingsService.get('networth');
         this.areaHistory = this.settingsService.get('areas');
@@ -144,6 +136,9 @@ export class LoginComponent implements OnInit {
             }
         });
         this.checkPath();
+        this.sessFormGroup.valueChanges.subscribe(val => {
+            this.needsValidation = true;
+        });
     }
 
     getCharacterList(accountName?: string) {
@@ -177,7 +172,8 @@ export class LoginComponent implements OnInit {
             characterName: this.charFormGroup.controls.characterName.value,
             leagueName: this.leagueFormGroup.controls.leagueName.value,
             sessionId: this.sessFormGroup.controls.sessionId.value,
-            filePath: this.pathFormGroup.controls.filePath.value
+            filePath: this.pathFormGroup.controls.filePath.value,
+            sessionIdValid: this.sessionIdValid
         } as AccountInfo;
     }
 
@@ -211,15 +207,40 @@ export class LoginComponent implements OnInit {
             });
     }
 
+    validateSessionId() {
+        const form = this.getFormObj();
+        this.externalService.validateSessionId(
+            form.sessionId,
+            form.accountName,
+            form.leagueName,
+            0
+        ).subscribe(res => {
+            this.needsValidation = false;
+            this.sessionIdValid = res !== false;
+        });
+    }
+
     completeLogin() {
         this.player.account = this.form.accountName;
         this.player.netWorthSnapshots = this.netWorthHistory.history;
         this.player.pastAreas = this.areaHistory;
-        this.accountService.player.next(this.player);
-        this.accountService.accountInfo.next(this.form);
-        this.settingsService.set('account', this.form);
-        this.sessionService.initSession(this.form.sessionId);
-        this.isLoading = false;
-        this.router.navigate(['/authorized/dashboard']);
+
+        this.externalService.validateSessionId(
+            this.form.sessionId,
+            this.player.account,
+            this.player.character.league,
+            0
+        ).subscribe(res => {
+            this.sessionIdValid = res !== false;
+            this.form = this.getFormObj();
+            this.player.sessionIdProvided = this.sessionIdValid;
+            this.accountService.player.next(this.player);
+            this.accountService.accountInfo.next(this.form);
+            this.settingsService.set('account', this.form);
+            this.sessionService.initSession(this.form.sessionId);
+            this.incomeService.Snapshot();
+            this.isLoading = false;
+            this.router.navigate(['/authorized/dashboard']);
+        });
     }
 }
