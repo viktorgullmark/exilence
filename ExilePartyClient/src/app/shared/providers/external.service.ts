@@ -94,6 +94,18 @@ export class ExternalService {
       });
   }
 
+  validateSessionId(sessionId: string, account: string, league: string, index: number){
+    this.setCookie(sessionId);
+    const parameters = `?league=${league}&accountName=${account}&tabIndex=${index}&tabs=1`;
+    return this.http.get<Stash>('https://www.pathofexile.com/character-window/get-stash-items' + parameters)
+      .catch(e => {
+        if (e.status !== 200) {
+          return Observable.of(false);
+        }
+        return Observable.of(null);
+      });
+  }
+
   getAccountForCharacter(character: string) {
     const parameters = `?character=${encodeURIComponent(character)}`;
     return this.http.get('https://www.pathofexile.com/character-window/get-account-name-by-character' + parameters);

@@ -16,9 +16,11 @@ $external-link-color: $primary;
 
 /* #region Player */
 $inventory-border-color: $accent;
-$inventory-bg-color: rgba(21, 21, 21, 0.5);;
+$inventory-bg-color: rgba(21, 21, 21, 0.5);
+$inventory-placeholder-bg-color: #2a2a2a;
+$inventory-placeholder-border-color: $accent;
 $equipment-border-color: #969696;
-$equipment-bg-color: rgba(21, 21, 21, 0.5);;
+$equipment-bg-color: rgba(21, 21, 21, 0.5);
 $player-badge-bg-color: linear-gradient(to bottom right, #3a3a3a, #232323);
 $player-badge-selected-bg-color: #505050;
 $recent-party-badge-bg-color: $player-badge-bg-color;
