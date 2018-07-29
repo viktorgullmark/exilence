@@ -13,6 +13,7 @@ import { RobotService } from '../../../../shared/providers/robot.service';
 import { SettingsService } from '../../../../shared/providers/settings.service';
 import { NetworthTableComponent } from '../../networth-table/networth-table.component';
 import { SessionService } from '../../../../shared/providers/session.service';
+import { KeybindService } from '../../../../shared/providers/keybind.service';
 
 @Component({
   selector: 'app-char-wealth',
@@ -34,6 +35,8 @@ export class CharWealthComponent implements OnInit {
   public sessionId: string;
   public sessionIdValid: boolean;
 
+  public reportKeybind: any;
+
   constructor(
     @Inject(FormBuilder) fb: FormBuilder,
     private router: Router,
@@ -46,7 +49,8 @@ export class CharWealthComponent implements OnInit {
     private accountService: AccountService,
     public messageValueService: MessageValueService,
     private settingsService: SettingsService,
-    private sessionService: SessionService
+    private sessionService: SessionService,
+    private keybindService: KeybindService
   ) {
     this.form = fb.group({
       searchText: ['']
@@ -63,6 +67,8 @@ export class CharWealthComponent implements OnInit {
     });
     this.sessionId = this.sessionService.getSession();
     this.sessionIdValid = this.settingsService.get('account.sessionIdValid');
+
+    this.reportKeybind = this.keybindService.activeBinds.find(x => x.event === 'party-personal-networth');
   }
 
   ngOnInit() {

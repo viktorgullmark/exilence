@@ -34,7 +34,7 @@
             </button>
             <mat-menu #menu="matMenu">
                 <button (click)="report(false)" mat-menu-item>{{'ROBOT.CLIPBOARD' | translate}}</button>
-                <button (click)="report(true)" mat-menu-item>{{'ROBOT.GAME' | translate}}</button>
+                <button (click)="report(true)" mat-menu-item>{{'ROBOT.GAME' | translate}} <span class="keybind-text">({{reportKeybind != undefined ? reportKeybind.keys : ''}})</span></button>
             </mat-menu>
         </ng-container>
 

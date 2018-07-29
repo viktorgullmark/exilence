@@ -16,7 +16,7 @@ export class KeybindService {
 
   private userKeybinds: Keybind[] = [];
   private registeredBinds: Keybind[] = [];
-  private activeBinds: Keybind[] = [];
+  public activeBinds: Keybind[] = [];
 
   constructor(
     private settingsService: SettingsService,

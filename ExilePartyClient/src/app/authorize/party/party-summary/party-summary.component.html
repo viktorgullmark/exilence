@@ -28,7 +28,7 @@
             </button>
             <mat-menu #menu="matMenu">
                 <button (click)="report(false)" mat-menu-item>{{'ROBOT.CLIPBOARD' | translate}}</button>
-                <button (click)="report(true)" mat-menu-item>{{'ROBOT.GAME' | translate}}</button>
+                <button (click)="report(true)" mat-menu-item>{{'ROBOT.GAME' | translate}} <span class="keybind-text">({{reportKeybind != undefined ? reportKeybind.keys : ''}})</span></button>
             </mat-menu>
             <button mat-raised-button color="primary" *ngIf="!isGraphHidden" (click)="hideGraph()" type="button" class="right-aligned">{{'GRAPH.HIDE' | translate}}</button>
             <button mat-raised-button color="primary" *ngIf="isGraphHidden" (click)="showGraph()" type="button" class="right-aligned">{{'GRAPH.SHOW' | translate}}</button>
