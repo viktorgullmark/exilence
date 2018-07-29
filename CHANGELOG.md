@@ -4,6 +4,7 @@ All notable changes to this project will be documented in this file.
 ## [0.5.4] - 2018-07-XX
 - Added validation of sessionId when logging in
 - Added placeholder-block for inventory when no sessionId has been provided
+- Added keybind-text to report-buttons (to show which keybind it has)
 - Stashtab-settings are now disabled if no sessionId has been provided
 - Minor style-adjustments to area-tab
 - Fixed a bug where the selected players values were posted instead of the current players (yourself)
