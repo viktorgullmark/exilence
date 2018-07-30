@@ -9,9 +9,9 @@
         </mat-checkbox>
       </th>
       <td mat-cell *matCellDef="let row">
-        <mat-checkbox (click)="$event.stopPropagation()"
+        <mat-checkbox (click)="$event.stopPropagation(); checkSelectionLength(row)"
                       (change)="$event ? toggle(selection, row) : null"
-                      [checked]="selection.isSelected(row)">
+                      [checked]="selection.isSelected(row)" [disabled]="selection.selected.length > 20 && !selection.isSelected(row)">
         </mat-checkbox>
       </td>
     </ng-container>

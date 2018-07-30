@@ -7,6 +7,7 @@ import { ExternalService } from '../../../shared/providers/external.service';
 import { PartyService } from '../../../shared/providers/party.service';
 import { SettingsService } from '../../../shared/providers/settings.service';
 import { Subscription } from 'rxjs';
+import { ErrorService } from '../../../shared/providers/error.service';
 
 @Component({
   selector: 'app-stashtab-list',
@@ -28,7 +29,8 @@ export class StashtabListComponent implements OnInit, OnDestroy {
   constructor(
     private settingsService: SettingsService,
     private externalService: ExternalService,
-    private partyService: PartyService
+    private partyService: PartyService,
+    private errorService: ErrorService
   ) { }
 
   ngOnInit() {
@@ -86,9 +88,15 @@ export class StashtabListComponent implements OnInit, OnDestroy {
     this.source.sort = this.sort;
   }
 
-  toggle(selection, row) {
-    this.selection.toggle(row);
+  checkSelectionLength(row) {
+    if (this.selection.selected.length > 20 && !this.selection.isSelected(row)) {
+      this.errorService.showError({ message: 'You can select at most 20 stash tabs', action: 'Ok' });
+    }
+  }
 
+  toggle(selection, row) {
+
+    this.selection.toggle(row);
     this.settingsService.set('selectedStashTabs', selection.selected);
   }
 
