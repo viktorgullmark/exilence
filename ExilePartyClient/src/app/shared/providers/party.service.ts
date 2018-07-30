@@ -21,6 +21,7 @@ import { NetWorthSnapshot } from '../interfaces/income.interface';
 import { MessageValueService } from './message-value.service';
 import { ExtendedAreaInfo } from '../interfaces/area.interface';
 import { HistoryHelper } from '../helpers/history.helper';
+import { LeagueWithPlayers } from '../interfaces/league.interface';
 
 @Injectable()
 export class PartyService {
@@ -42,17 +43,7 @@ export class PartyService {
   public genericPartyName: string;
   public recentPlayers: RecentPlayer[] = [];
   public recentPrivatePlayers: string[] = [];
-
-  // player-lists
-  public incursionStd: BehaviorSubject<Player[]> = new BehaviorSubject<Player[]>([]);
-  public incursionSsfStd: BehaviorSubject<Player[]> = new BehaviorSubject<Player[]>([]);
-  public incursionHc: BehaviorSubject<Player[]> = new BehaviorSubject<Player[]>([]);
-  public incursionSsfHc: BehaviorSubject<Player[]> = new BehaviorSubject<Player[]>([]);
-  public std: BehaviorSubject<Player[]> = new BehaviorSubject<Player[]>([]);
-  public hc: BehaviorSubject<Player[]> = new BehaviorSubject<Player[]>([]);
-  public ssfStd: BehaviorSubject<Player[]> = new BehaviorSubject<Player[]>([]);
-  public ssfHc: BehaviorSubject<Player[]> = new BehaviorSubject<Player[]>([]);
-
+  public playerLeagues: BehaviorSubject<LeagueWithPlayers[]> = new BehaviorSubject<LeagueWithPlayers[]>([]);
   public genericPlayers: BehaviorSubject<Player[]> = new BehaviorSubject<Player[]>([]);
 
   constructor(
@@ -210,14 +201,20 @@ export class PartyService {
   }
 
   updatePlayerLists(party: Party) {
-    this.incursionStd.next(party.players.filter(x => x.character.league === 'Incursion'));
-    this.incursionSsfStd.next(party.players.filter(x => x.character.league === 'SSF Incursion'));
-    this.incursionHc.next(party.players.filter(x => x.character.league === 'Hardcore Incursion'));
-    this.incursionSsfHc.next(party.players.filter(x => x.character.league === 'SSF Incursion HC'));
-    this.std.next(party.players.filter(x => x.character.league === 'Standard'));
-    this.hc.next(party.players.filter(x => x.character.league === 'Hardcore'));
-    this.ssfStd.next(party.players.filter(x => x.character.league === 'SSF Standard'));
-    this.ssfHc.next(party.players.filter(x => x.character.league === 'SSF Hardcore'));
+
+    // construct initial object based on players in party
+    const leagues: LeagueWithPlayers[] = [];
+    party.players.forEach(player => {
+      const league = leagues.find(l => l.id === player.character.league);
+      if (league === undefined) {
+        leagues.push({id: player.character.league, players: [player]} as LeagueWithPlayers);
+      } else {
+        const indexOfLeague = leagues.indexOf(league);
+        leagues[indexOfLeague].players.push(player);
+      }
+    });
+
+    this.playerLeagues.next(leagues);
   }
 
   public updatePlayer(player: Player) {
