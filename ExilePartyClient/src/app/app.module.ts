@@ -31,7 +31,7 @@ import { RobotService } from './shared/providers/robot.service';
 import { SessionService } from './shared/providers/session.service';
 import { SettingsService } from './shared/providers/settings.service';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
-import { ErrorService } from './shared/providers/error.service';
+import { AlertService } from './shared/providers/alert.service';
 
 // AoT requires an exported function for factories
 export function HttpLoaderFactory(http: HttpClient) {
@@ -78,7 +78,7 @@ export function HttpLoaderFactory(http: HttpClient) {
     UpperCasePipe,
     DatePipe,
     NinjaService,
-    ErrorService
+    AlertService
   ],
   bootstrap: [AppComponent]
 })

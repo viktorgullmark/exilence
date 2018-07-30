@@ -1,4 +1,4 @@
-export interface ErrorMessage {
+export interface AlertMessage {
     message: string;
     action: string;
 }
