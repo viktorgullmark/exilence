@@ -125,16 +125,16 @@ function createWindow(windowType: ExileWindowEnum = ExileWindowEnum.Main) {
     // Dereference the window object, usually you would store window
     // in an array if your app supports multi windows, this is the time
     // when you should delete the corresponding element.
-    if (windows[ExileWindowEnum.Networth] !== undefined) {
+    if (windows[ExileWindowEnum.Networth] !== undefined && windows[ExileWindowEnum.Networth] !== null) {
       windows[ExileWindowEnum.Networth].destroy();
     }
-    if (windows[ExileWindowEnum.Ladder] !== undefined) {
+    if (windows[ExileWindowEnum.Ladder] !== undefined && windows[ExileWindowEnum.Ladder] !== null) {
       windows[ExileWindowEnum.Ladder].destroy();
     }
-    if (windows[ExileWindowEnum.Trade] !== undefined) {
+    if (windows[ExileWindowEnum.Trade] !== undefined && windows[ExileWindowEnum.Trade] !== null) {
       windows[ExileWindowEnum.Trade].destroy();
     }
-    if (windows[ExileWindowEnum.Areas] !== undefined) {
+    if (windows[ExileWindowEnum.Areas] !== undefined && windows[ExileWindowEnum.Areas] !== null) {
       windows[ExileWindowEnum.Areas].destroy();
     }
 
