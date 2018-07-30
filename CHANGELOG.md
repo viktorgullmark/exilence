@@ -11,7 +11,7 @@ All notable changes to this project will be documented in this file.
 - Added the ability to remove groups from the recent-groups list on dashboard
 - Made item-tooltips more compact by reducing the line-height
 - Stashtab-settings are now disabled if no sessionId has been provided
-- Minor style-adjustments to area-tab
+- Minor style-adjustments across the app
 - Fixed a bug where the selected players values were posted instead of the current players (yourself)
 - Fixed a bug where history-updates weren't correctly shared with the rest of the group
 - Reduced delay before snapshotting when changing areas (QoL-change)
