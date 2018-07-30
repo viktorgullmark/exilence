@@ -12,6 +12,7 @@ All notable changes to this project will be documented in this file.
 - Stashtab-settings are now disabled if no sessionId has been provided
 - Minor style-adjustments to area-tab
 - Fixed a bug where the selected players values were posted instead of the current players (yourself)
+- Fixed a bug where history-updates weren't correctly shared with the rest of the group
 - Reduced delay before snapshotting when changing areas (QoL-change)
 - Now displays a notification-bar in the bottom when area- and networth-history is cleared
 - Now snapshots on login, and not only upon entering your first area (QoL-change)
