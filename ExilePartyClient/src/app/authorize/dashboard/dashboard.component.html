@@ -9,6 +9,7 @@
             </div>
             <div class="recent-party-badge-container" *ngFor="let party of recentParties, let i = index">
                 <mat-card class="recent-party-badge" (click)="joinParty(party)" *ngIf="i < 4">
+                    <mat-icon (click)="$event.stopPropagation(); removePartyFromRecent(party)" class="close-icon">close</mat-icon>
                     {{party}}
                 </mat-card>
             </div>
@@ -22,8 +23,9 @@
     </p>
     <h3 class="mat-h3">Beta information</h3>
     <p class="mat-body-1">
-        This version is a beta release, which means it's still in an early stage. Bug reports and feature-requests are greatly
-        appreciated as it will help us develop the app further, and are preferrebly posted in our <a class="inline-link" (click)="openLink('https://discord.gg/ymr3VnA')">Discord</a> or directly at 
+        This version is a beta release, which means it's still in an early stage. Bug reports and feature-requests are greatly appreciated
+        as it will help us develop the app further, and are preferrebly posted in our
+        <a class="inline-link" (click)="openLink('https://discord.gg/ymr3VnA')">Discord</a> or directly at
         <a class="inline-link" (click)="openLink('https://github.com/viktorgullmark/exile-party/issues')">https://github.com/viktorgullmark/exile-party/issues</a>. Updates will be applied automatically when you restart
         the program. Please be patient as it will download the new version and apply it before you can start using the application.
     </p>
@@ -31,10 +33,13 @@
         Feel free to contact us on GitHub, Discord or directly in-game for any questions/input.
     </p>
     <p class="mat-body-1">
-        ign: CojL<br/>ign: Umaycry<br/><br/>
-        <a class="inline-link" (click)="openLink('https://github.com/viktorgullmark')">github.com/viktorgullmark</a> 
+        ign: CojL
+        <br/>ign: Umaycry
         <br/>
-        <a class="inline-link" (click)="openLink('https://github.com/petterannerwall')">github.com/petterannerwall</a> 
+        <br/>
+        <a class="inline-link" (click)="openLink('https://github.com/viktorgullmark')">github.com/viktorgullmark</a>
+        <br/>
+        <a class="inline-link" (click)="openLink('https://github.com/petterannerwall')">github.com/petterannerwall</a>
     </p>
     <h3 class="mat-h3">Donations</h3>
     <p class="mat-body-1">

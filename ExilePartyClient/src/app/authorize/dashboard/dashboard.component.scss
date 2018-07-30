@@ -21,6 +21,14 @@
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
+            .close-icon {
+                position: absolute;
+                top: 5px;
+                right: 5px;
+                font-size: 15px;
+                width: 15px;
+                height: 15px;
+            }
         }
 
         :hover {

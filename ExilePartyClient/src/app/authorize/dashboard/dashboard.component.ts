@@ -44,6 +44,10 @@ export class DashboardComponent implements OnInit {
     }, 2000);
   }
 
+  removePartyFromRecent(party: string) {
+    this.partyService.removePartyFromRecent(party);
+  }
+
   openLink(link: string) {
     this.electronService.shell.openExternal(link);
   }

@@ -279,6 +279,18 @@ export class PartyService {
     this.recentParties.next(recent);
   }
 
+  public removePartyFromRecent(partyName: string) {
+    const recent: string[] = this.settingService.get('recentParties') || [];
+
+    const index = recent.indexOf(partyName);
+    if (index !== -1) {
+      recent.splice(index, 1);
+    }
+
+    this.settingService.set('recentParties', recent);
+    this.recentParties.next(recent);
+  }
+
   //#region genericPlayers
 
   public addGenericPlayer(player: Player) {
