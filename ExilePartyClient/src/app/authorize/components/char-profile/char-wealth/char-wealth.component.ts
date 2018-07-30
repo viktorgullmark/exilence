@@ -93,6 +93,7 @@ export class CharWealthComponent implements OnInit {
       this.incomeService.loadSnapshotsFromSettings();
       this.accountService.player.next(player);
       this.partyService.selectedPlayer.next(player);
+      this.partyService.updatePlayer(player);
       this.alertService.showAlert({ message: 'Net worth history was cleared', action: 'OK' });
     }
   }

@@ -70,6 +70,7 @@ export class CharMapsComponent implements OnInit {
       this.mapService.loadAreasFromSettings();
       this.accountService.player.next(this.player);
       this.partyService.selectedPlayer.next(this.player);
+      this.partyService.updatePlayer(this.player);
       this.alertService.showAlert({ message: 'Area history was cleared', action: 'OK' });
     }
   }
