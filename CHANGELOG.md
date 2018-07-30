@@ -9,6 +9,7 @@ All notable changes to this project will be documented in this file.
 - Added support for future leagues and events (leagues are now listed dynamically)
 - Added validation for max-count when selecting stash-tabs in settings, and displays error if exceeded
 - Added the ability to remove groups from the recent-groups list on dashboard
+- Made item-tooltips more compact by reducing the line-height
 - Stashtab-settings are now disabled if no sessionId has been provided
 - Minor style-adjustments to area-tab
 - Fixed a bug where the selected players values were posted instead of the current players (yourself)
