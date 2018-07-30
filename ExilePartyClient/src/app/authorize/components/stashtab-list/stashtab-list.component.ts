@@ -90,7 +90,7 @@ export class StashtabListComponent implements OnInit, OnDestroy {
 
   checkSelectionLength(row) {
     if (this.selection.selected.length > 20 && !this.selection.isSelected(row)) {
-      this.alertService.showAlert({ message: 'You can select at most 20 stash tabs', action: 'Ok' });
+      this.alertService.showAlert({ message: 'You can select at most 20 stash tabs', action: 'OK' });
     }
   }
 

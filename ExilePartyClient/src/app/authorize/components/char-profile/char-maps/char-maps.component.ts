@@ -10,6 +10,7 @@ import * as moment from 'moment';
 import { SettingsService } from '../../../../shared/providers/settings.service';
 import { MapService } from '../../../../shared/providers/map.service';
 import { AccountService } from '../../../../shared/providers/account.service';
+import { AlertService } from '../../../../shared/providers/alert.service';
 
 @Component({
   selector: 'app-char-maps',
@@ -31,7 +32,8 @@ export class CharMapsComponent implements OnInit {
     private analyticsService: AnalyticsService,
     private settingsService: SettingsService,
     private mapService: MapService,
-    private accountService: AccountService
+    private accountService: AccountService,
+    private alertService: AlertService
   ) {
     this.form = fb.group({
       searchText: ['']
@@ -62,13 +64,13 @@ export class CharMapsComponent implements OnInit {
   }
 
   resetAreaHistory() {
-
     if (this.player.account === this.partyService.currentPlayer.account) {
       const emptyHistory = this.settingsService.deleteAreas();
       this.player.pastAreas = emptyHistory;
       this.mapService.loadAreasFromSettings();
       this.accountService.player.next(this.player);
       this.partyService.selectedPlayer.next(this.player);
+      this.alertService.showAlert({ message: 'Area history was cleared', action: 'OK' });
     }
   }
 
