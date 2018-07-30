@@ -21,10 +21,11 @@
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
+            padding: 26px 24px 26px 24px;
             .close-icon {
                 position: absolute;
-                top: 5px;
-                right: 5px;
+                top: 3px;
+                right: 3px;
                 font-size: 15px;
                 width: 15px;
                 height: 15px;
