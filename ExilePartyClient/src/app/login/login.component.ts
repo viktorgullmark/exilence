@@ -238,7 +238,6 @@ export class LoginComponent implements OnInit {
             this.accountService.accountInfo.next(this.form);
             this.settingsService.set('account', this.form);
             this.sessionService.initSession(this.form.sessionId);
-            this.incomeService.Snapshot();
             this.isLoading = false;
             this.router.navigate(['/authorized/dashboard']);
         });
