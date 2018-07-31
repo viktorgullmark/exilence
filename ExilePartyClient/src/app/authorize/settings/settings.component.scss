@@ -3,8 +3,17 @@
 
 .table-outer-wrapper {
     .stash-table-wrapper {
-        height: 600px;
+        height: 680px;
         overflow-y: scroll;
+        @media screen and (max-height: 960px) {
+            height: 620px;
+        }
+        @media screen and (max-height: 910px) {
+            height: 560px;
+        }
+        @media screen and (max-height: 840px) {
+            height: 400px;
+        }
     }
 }
 
