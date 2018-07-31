@@ -1,7 +1,7 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
-## [0.5.4] - 2018-07-XX
+## [0.5.4] - 2018-08-01
 - Added game-overlay for personal net worth (Currency -> Pop out)
 - Added validation of sessionId when logging in
 - Added placeholder-block for inventory when no sessionId has been provided
