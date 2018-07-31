@@ -34,9 +34,11 @@ export class LadderService {
         if (!this.cooldown) {
           this.getLadderInfoForCharacter(this.localPlayer.character.league, this.localPlayer.character.name)
             .subscribe(data => {
-              const player = this.localPlayer;
-              player.ladderInfo = data.list;
-              this.partyService.updatePlayer(player);
+              if (data !== null) {
+                const player = this.localPlayer;
+                player.ladderInfo = data.list;
+                this.partyService.updatePlayer(player);
+              }
             });
         }
       },
