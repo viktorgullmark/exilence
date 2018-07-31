@@ -14,6 +14,7 @@ All notable changes to this project will be documented in this file.
 - Minor style-adjustments across the app with improved responsitivity
 - Fixed a bug where the selected players values were posted instead of the current players (yourself)
 - Fixed a bug where history-updates weren't correctly shared with the rest of the group
+- Fixed a bug where the player-list on the inspect-players page would exceed the window-height
 - Reduced delay before snapshotting when changing areas (QoL-change)
 - Now displays a notification-bar in the bottom when area- and networth-history is cleared
 - Now snapshots on login, and not only upon entering your first area (QoL-change)
