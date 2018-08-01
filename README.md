@@ -10,7 +10,9 @@ Download latest release at https://github.com/viktorgullmark/exile-party/release
 
 Report bugs at https://github.com/viktorgullmark/exile-party/issues
 
-## Screenshots from 0.4.0b
+Communicate with us at our Discord https://discord.gg/ymr3VnA
+
+## Screenshots from 0.5.4b
 
 https://imgur.com/a/cpODf7I
 
@@ -58,8 +60,6 @@ To run the API you'll need a local redis-server.
 If you're interested in helping with development, contact us directly on discord: https://discordapp.com/invite/ymr3VnA and we'll help setting it up.
 
 ## Acknowledgements
-
-Thanks to:
 
 - https://poe.ninja for providing a great API, which lets us calculate net worth of players
 
