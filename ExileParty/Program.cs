@@ -27,9 +27,7 @@ namespace ExileParty
                 })
                 .ConfigureLogging((hostingContext, builder) =>
                 {
-
-                    builder.AddConfiguration(hostingContext.Configuration.GetSection("Logging"));
-
+                    
                     builder.AddFilter((provider, category, logLevel) =>
                     {
                         if (
