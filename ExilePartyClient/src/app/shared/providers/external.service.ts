@@ -2,20 +2,21 @@ import 'rxjs/add/operator/map';
 
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { Router } from '@angular/router';
+import { BehaviorSubject } from 'rxjs/internal/BehaviorSubject';
 import { Observable } from 'rxjs/Observable';
 
-import { Router } from '@angular/router';
 import { AccountInfo } from '../interfaces/account-info.interface';
 import { EquipmentResponse } from '../interfaces/equipment-response.interface';
 import { Item } from '../interfaces/item.interface';
+import { League } from '../interfaces/league.interface';
 import { Player } from '../interfaces/player.interface';
 import { Property } from '../interfaces/property.interface';
 import { Requirement } from '../interfaces/requirement.interface';
 import { Stash } from '../interfaces/stash.interface';
 import { AnalyticsService } from './analytics.service';
 import { ElectronService } from './electron.service';
-import { BehaviorSubject } from 'rxjs/internal/BehaviorSubject';
-import { League } from '../interfaces/league.interface';
+import { LogService } from './log.service';
 
 @Injectable()
 export class ExternalService {
@@ -27,7 +28,8 @@ export class ExternalService {
     private http: HttpClient,
     private electronService: ElectronService,
     private analyticsService: AnalyticsService,
-    private router: Router
+    private router: Router,
+    private logService: LogService
   ) { }
 
   getLatestRelease(): Observable<any> {
@@ -41,6 +43,7 @@ export class ExternalService {
 
     return this.http.get('https://www.pathofexile.com/character-window/get-items' + parameters, { withCredentials: true }).catch(e => {
       if (e.status !== 403 && e.status !== 404) {
+        this.logService.log('Could not character items, disconnecting!', null, true);
         this.router.navigate(['/disconnected']);
       }
       return Observable.of(null);
@@ -52,6 +55,7 @@ export class ExternalService {
     const parameters = `?type=${leagueType}`;
     return this.http.get('http://api.pathofexile.com/leagues' + parameters).catch(e => {
       if (e.status !== 403 && e.status !== 404) {
+        this.logService.log('Could not fetch leagues, disconnecting!', null, true);
         this.router.navigate(['/disconnected']);
       }
       return Observable.of(null);
@@ -63,6 +67,7 @@ export class ExternalService {
     return this.http.get('https://www.pathofexile.com/character-window/get-characters' + parameters)
       .catch(e => {
         if (e.status !== 403 && e.status !== 404) {
+          this.logService.log('Could not fetch character list, disconnecting!', null, true);
           this.router.navigate(['/disconnected']);
         }
         return Observable.of(null);
@@ -75,6 +80,7 @@ export class ExternalService {
     return this.http.get<Stash>('https://www.pathofexile.com/character-window/get-stash-items' + parameters)
       .catch(e => {
         if (e.status !== 403 && e.status !== 404) {
+          this.logService.log('Could not fetch stashtab list, disconnecting!', null, true);
           this.router.navigate(['/disconnected']);
         }
         return Observable.of(null);
@@ -88,13 +94,14 @@ export class ExternalService {
     return this.http.get<Stash>('https://www.pathofexile.com/character-window/get-stash-items' + parameters)
       .catch(e => {
         if (e.status !== 403 && e.status !== 404) {
+          this.logService.log('Could not fetch stashtabs, disconnecting!', null, true);
           this.router.navigate(['/disconnected']);
         }
         return Observable.of(null);
       });
   }
 
-  validateSessionId(sessionId: string, account: string, league: string, index: number){
+  validateSessionId(sessionId: string, account: string, league: string, index: number) {
     this.setCookie(sessionId);
     const parameters = `?league=${league}&accountName=${account}&tabIndex=${index}&tabs=1`;
     return this.http.get<Stash>('https://www.pathofexile.com/character-window/get-stash-items' + parameters)

@@ -16,4 +16,8 @@ export class DisconnectedComponent implements OnInit {
   openLink(link: string) {
     this.electronService.shell.openExternal(link);
   }
+
+  relaunch() {
+    this.electronService.ipcRenderer.send('relaunch');
+  }
 }

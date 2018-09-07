@@ -46,6 +46,8 @@ export class PartyService {
   public playerLeagues: BehaviorSubject<LeagueWithPlayers[]> = new BehaviorSubject<LeagueWithPlayers[]>([]);
   public genericPlayers: BehaviorSubject<Player[]> = new BehaviorSubject<Player[]>([]);
 
+  private reconnectAttempts = 0;
+
   constructor(
     private router: Router,
     private accountService: AccountService,
@@ -81,9 +83,7 @@ export class PartyService {
 
     this._hubConnection.onclose(() => {
       this.logService.log('[ERROR] Signalr connection closed');
-      this.accountService.clearCharacterList();
-      localStorage.removeItem('sessionId');
-      this.router.navigate(['/disconnected']);
+      this.reconnect();
     });
 
     this._hubConnection.on('EnteredParty', (partyData: string, playerData: string) => {
@@ -193,11 +193,33 @@ export class PartyService {
 
   initHubConnection() {
     this.logService.log('Starting signalr connection');
-    this._hubConnection.start().catch((err) => {
+    this._hubConnection.start().then(() => {
+      console.log('Successfully established signalr connection!');
+      this.reconnectAttempts = 0;
+    }).catch((err) => {
       console.error(err.toString());
       this.logService.log('Could not connect to signalr');
-      this.router.navigate(['/disconnected']);
+      this.reconnect();
     });
+  }
+
+  reconnect() {
+    if (this.reconnectAttempts > 5) {
+      this.disconnect('Could not connect after 5 attempts.');
+    } else {
+      this.logService.log('Trying to reconnect to signalr in 5 seconds.', null, true);
+      setTimeout(() => {
+        this.initHubConnection();
+      }, (5000));
+    }
+    this.reconnectAttempts++;
+  }
+
+  disconnect(reason: string) {
+    this.logService.log(reason, null, true);
+    this.accountService.clearCharacterList();
+    localStorage.removeItem('sessionId');
+    this.router.navigate(['/disconnected']);
   }
 
   updatePlayerLists(party: Party) {
@@ -207,7 +229,7 @@ export class PartyService {
     party.players.forEach(player => {
       const league = leagues.find(l => l.id === player.character.league);
       if (league === undefined) {
-        leagues.push({id: player.character.league, players: [player]} as LeagueWithPlayers);
+        leagues.push({ id: player.character.league, players: [player] } as LeagueWithPlayers);
       } else {
         const indexOfLeague = leagues.indexOf(league);
         leagues[indexOfLeague].players.push(player);

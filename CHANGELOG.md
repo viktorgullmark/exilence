@@ -1,6 +1,10 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [0.5.5] - 2018-09-07
+- Added reconnect functionality, now tries to reconnect five times before disconnecting.
+- Added relaunch button to disconnect screen.
+
 ## [0.5.4] - 2018-08-01
 - Added game-overlay for personal net worth (Currency -> Pop out)
 - Added validation of sessionId when logging in
