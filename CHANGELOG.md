@@ -1,6 +1,10 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [0.5.6] - 2018-XX-XX
+- Fixed a bug where item-names werent displayed properly after an update from GGG
+- Removed case-sensitivity in the path for the client.txt-file
+
 ## [0.5.5] - 2018-09-07
 - Added reconnect functionality, now tries to reconnect five times before disconnecting.
 - Added relaunch button to disconnect screen.
