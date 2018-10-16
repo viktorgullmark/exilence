@@ -4,21 +4,21 @@
             <ng-container [ngSwitch]="item.frameType">
                 <ng-container *ngSwitchCase="3">
                     <!-- unique item -->
-                    <div *ngIf="item.identified">{{item.name.substring(28)}}
+                    <div *ngIf="item.identified">{{item.name}}
                         <br/>
                     </div>
                     <span>{{item.typeLine}}</span>
                 </ng-container>
                 <ng-container *ngSwitchCase="2">
                     <!-- rare item -->
-                    <div *ngIf="item.identified">{{item.name.substring(28)}}
+                    <div *ngIf="item.identified">{{item.name}}
                         <br/>
                     </div>
                     <span>{{item.typeLine}}</span>
                 </ng-container>
                 <!-- magic item -->
                 <span *ngSwitchCase="1">
-                    <ng-container *ngIf="item.identified">{{item.typeLine.substring(28)}}</ng-container>
+                    <ng-container *ngIf="item.identified">{{item.typeLine}}</ng-container>
                     <ng-container *ngIf="!item.identified">{{item.typeLine}}</ng-container>
                 </span>
                 <!-- normal item -->
