@@ -46,7 +46,8 @@ export class PartyService {
   public playerLeagues: BehaviorSubject<LeagueWithPlayers[]> = new BehaviorSubject<LeagueWithPlayers[]>([]);
   public genericPlayers: BehaviorSubject<Player[]> = new BehaviorSubject<Player[]>([]);
 
-  private reconnectAttempts = 0;
+  private reconnectAttempts: number;
+  private forceClosed: boolean;
 
   constructor(
     private router: Router,
@@ -58,6 +59,9 @@ export class PartyService {
     private electronService: ElectronService,
     private messageValueService: MessageValueService
   ) {
+
+    this.reconnectAttempts = 0;
+    this.forceClosed = false;
 
     this.recentParties.next(this.settingService.get('recentParties') || []);
 
@@ -82,7 +86,7 @@ export class PartyService {
     this.initHubConnection();
 
     this._hubConnection.onclose(() => {
-      this.logService.log('[ERROR] Signalr connection closed');
+      this.logService.log('Signalr connection closed', null, true);
       this.reconnect();
     });
 
@@ -167,6 +171,10 @@ export class PartyService {
       });
     });
 
+    this._hubConnection.on('ForceDisconnect', () => {
+      this.disconnect('Recived force disconnect command from server.');
+    });
+
     this.logMonitorService.areaJoin.subscribe((msg: LogMessage) => {
       this.logService.log('Player joined area: ', msg.player.name);
       this.handleAreaEvent(msg);
@@ -204,7 +212,7 @@ export class PartyService {
   }
 
   reconnect() {
-    if (this.reconnectAttempts > 5) {
+    if (this.reconnectAttempts > 5 && !this.forceClosed) {
       this.disconnect('Could not connect after 5 attempts.');
     } else {
       this.logService.log('Trying to reconnect to signalr in 5 seconds.', null, true);
@@ -216,6 +224,7 @@ export class PartyService {
   }
 
   disconnect(reason: string) {
+    this.forceClosed = true;
     this.logService.log(reason, null, true);
     this.accountService.clearCharacterList();
     localStorage.removeItem('sessionId');
@@ -244,7 +253,9 @@ export class PartyService {
       .subscribe((equipment: EquipmentResponse) => {
         player = this.externalService.setCharacter(equipment, player);
         if (this._hubConnection) {
-          this.compress(player, (data) => this._hubConnection.invoke('UpdatePlayer', this.party.name, data));
+          this.compress(player, (data) => this._hubConnection.invoke('UpdatePlayer', this.party.name, data).catch((e) => {
+            console.log('LOOK AT THIS ONE!');
+          }));
         }
       });
   }
