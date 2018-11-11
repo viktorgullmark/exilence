@@ -7,6 +7,7 @@ import 'rxjs/add/operator/do';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 
+import { HistoryHelper } from '../helpers/history.helper';
 import { NetWorthHistory, NetWorthItem, NetWorthSnapshot } from '../interfaces/income.interface';
 import { Item } from '../interfaces/item.interface';
 import { Player } from '../interfaces/player.interface';
@@ -18,7 +19,6 @@ import { LogService } from './log.service';
 import { NinjaService } from './ninja.service';
 import { PartyService } from './party.service';
 import { SettingsService } from './settings.service';
-import { HistoryHelper } from '../helpers/history.helper';
 
 
 
@@ -216,10 +216,6 @@ export class IncomeService {
     });
   }
 
-  getPriceForItem(name: string) {
-    return this.ninjaPrices[name];
-  }
-
   getValuesFromNinja(league: string) {
     const oneHourAgo = (Date.now() - (1 * 60 * 60 * 1000));
     const length = Object.values(this.ninjaPrices).length;
@@ -255,11 +251,6 @@ export class IncomeService {
               name = line.currencyTypeName;
             }
             if ('name' in line) {
-
-              if (line.name.indexOf('Remnant') > -1) {
-                const debug = -1;
-              }
-
               name = line.name;
               if (line.baseType && (line.name.indexOf(line.baseType) === -1)) {
                 name += ' ' + line.baseType;
