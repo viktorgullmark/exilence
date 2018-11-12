@@ -33,6 +33,8 @@ export class LoginComponent implements OnInit {
     pathValid = false;
     isLoading = false;
     isFetching = false;
+    isFetchingLeagues = false;
+    fetchedLeagues = false;
     fetched = false;
     characterList: Character[] = [];
     leagues: League[];
@@ -68,9 +70,6 @@ export class LoginComponent implements OnInit {
             this.leagues = res;
         });
 
-        this.externalService.getLeagues().subscribe(res => {
-            this.externalService.leagues.next(res);
-        });
         this.fetchSettings();
 
         this.accFormGroup = fb.group({
@@ -139,6 +138,30 @@ export class LoginComponent implements OnInit {
         this.sessFormGroup.valueChanges.subscribe(val => {
             this.needsValidation = true;
         });
+    }
+
+    getLeagues(accountName?: string) {
+        this.isFetchingLeagues = true;
+        this.externalService.getCharacterList(accountName !== undefined ? accountName :
+            this.accFormGroup.controls.accountName.value).subscribe(res => {
+
+                // map character-leagues to new array
+                const distinctLeagues = [];
+                res.forEach(char => {
+                    if (distinctLeagues.find(l => l.id === char.league) === undefined) {
+                        distinctLeagues.push({ id: char.league } as League);
+                    }
+                });
+
+                this.externalService.leagues.next(distinctLeagues);
+                this.fetchedLeagues = true;
+                setTimeout(() => {
+                    this.stepper.selectedIndex = 1;
+                }, 250);
+                setTimeout(() => {
+                    this.isFetchingLeagues = false;
+                }, 500);
+            });
     }
 
     getCharacterList(accountName?: string) {

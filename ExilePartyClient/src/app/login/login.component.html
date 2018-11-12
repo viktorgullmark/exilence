@@ -7,7 +7,9 @@
           <input matInput formControlName="accountName" placeholder="{{'ACCOUNT.NAME' | translate}}" required>
         </mat-form-field>
         <div class="btn-grp">
-          <button mat-raised-button color="primary" matStepperNext>Continue</button>
+            <button mat-raised-button color="primary" *ngIf="!isFetchingLeagues" (click)="getLeagues()">Fetch leagues</button>
+            <mat-progress-bar *ngIf="isFetchingLeagues" class="progress-bar" color="primary" mode="indeterminate">
+            </mat-progress-bar>
         </div>
       </form>
     </mat-step>

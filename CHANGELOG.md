@@ -2,6 +2,7 @@
 All notable changes to this project will be documented in this file.
 
 ## [0.5.6] - 2018-XX-XX
+- Added support for private-leagues
 - Fixed a bug where item-names werent displayed properly after an update from GGG
 - Removed case-sensitivity in the path for the client.txt-file
 
