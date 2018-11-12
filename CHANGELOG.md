@@ -5,6 +5,7 @@ All notable changes to this project will be documented in this file.
 - Added support for private-leagues
 - Improved reconnect-functionality to avoid infinite loop when party has expired
 - Fixed a bug where item-names werent displayed properly after an update from GGG
+- Changed hosting-provider for servers
 - Removed case-sensitivity in the path for the client.txt-file
 
 ## [0.5.5] - 2018-09-07
