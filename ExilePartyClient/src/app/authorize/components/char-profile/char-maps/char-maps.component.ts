@@ -65,8 +65,8 @@ export class CharMapsComponent implements OnInit {
             icon: 'map',
             title: 'Map tab',
             // tslint:disable-next-line:max-line-length
-            content: 'This tab updates every time you change area in game.<br/><br/>' +
-              'We store all your area/map-data one week back in time.'
+            content: 'This tab updates every time the selected player changes area in game.<br/><br/>' +
+              'We store all the area/map-data one week back in time for each player.'
           }
         });
         dialogRef.afterClosed().subscribe(result => {

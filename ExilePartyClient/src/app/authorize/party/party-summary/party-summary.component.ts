@@ -51,8 +51,9 @@ export class PartySummaryComponent implements OnInit {
           icon: 'attach_money',
           title: 'Currency summary',
           // tslint:disable-next-line:max-line-length
-          content: 'This tab updates approximately once every 5 minutes, as long as the party remains active.<br/><br/>' +
-            'We store all your parties net worth data one week back in time.'
+          content: 'This tab updates when a partymember changes area in game, at most once every 5 minutes.<br/><br/>' +
+          'We store all your parties net worth data one week back in time. This will be extended in the future.<br/><br/>' +
+          'If this data is incorrect for some reason, you can clear the history by pressing the "reset graph"-button.'
         }
       });
       dialogRef.afterClosed().subscribe(result => {
