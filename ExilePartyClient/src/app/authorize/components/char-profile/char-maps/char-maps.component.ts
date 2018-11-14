@@ -57,70 +57,72 @@ export class CharMapsComponent implements OnInit {
   }
 
   openMapDialog(): void {
-    if (!this.settingsService.get('diaShown_maps')) {
-      const dialogRef = this.dialog.open(InfoDialogComponent, {
-        width: '650px',
-        data: {
-          icon: 'map',
-          title: 'Map tab',
-          // tslint:disable-next-line:max-line-length
-          content: 'This tab updates every time you change area in game.<br/><br/>' +
-            'We store all your area/map-data one week back in time.'
-        }
-      });
-      dialogRef.afterClosed().subscribe(result => {
-        this.settingsService.set('diaShown_maps', true);
-      });
-    }
-  }
-
-  updateSummary(filteredArr) {
-    this.filteredArr = [];
-    if (this.player.pastAreas !== null) {
-      this.filteredArr = this.player.pastAreas.filter(res => {
-        return filteredArr.some(x => x.timestamp === res.timestamp);
-      });
-    }
-    this.updateAvgTimeSpent(this.filteredArr);
-  }
-
-  resetAreaHistory() {
-    if (this.player.account === this.partyService.currentPlayer.account) {
-      const emptyHistory = this.settingsService.deleteAreas();
-      this.player.pastAreas = emptyHistory;
-      this.mapService.loadAreasFromSettings();
-      this.accountService.player.next(this.player);
-      this.partyService.selectedPlayer.next(this.player);
-      this.partyService.updatePlayer(this.player);
-      this.alertService.showAlert({ message: 'Area history was cleared', action: 'OK' });
-    }
-  }
-
-  updateAvgTimeSpent(pastAreas) {
-    if (pastAreas !== null) {
-      if (pastAreas[0] !== undefined) {
-        let total = 0;
-        pastAreas.forEach(area => {
-          total = total + area.duration;
+    setTimeout(() => {
+      if (!this.settingsService.get('diaShown_maps')) {
+        const dialogRef = this.dialog.open(InfoDialogComponent, {
+          width: '650px',
+          data: {
+            icon: 'map',
+            title: 'Map tab',
+            // tslint:disable-next-line:max-line-length
+            content: 'This tab updates every time you change area in game.<br/><br/>' +
+              'We store all your area/map-data one week back in time.'
+          }
         });
-
-        const average = total / pastAreas.length;
-
-        const minute = Math.floor(average / 60);
-        let seconds = average % 60;
-        seconds = Math.floor(seconds);
-        this.averageTimeSpent = ((minute < 10) ? '0' + minute.toString() : seconds.toString())
-          + ':' + ((seconds < 10) ? '0' + seconds.toString() : seconds.toString());
-      } else {
-        this.averageTimeSpent = '';
+        dialogRef.afterClosed().subscribe(result => {
+          this.settingsService.set('diaShown_maps', true);
+        });
       }
+    });
+}
+
+updateSummary(filteredArr) {
+  this.filteredArr = [];
+  if (this.player.pastAreas !== null) {
+    this.filteredArr = this.player.pastAreas.filter(res => {
+      return filteredArr.some(x => x.timestamp === res.timestamp);
+    });
+  }
+  this.updateAvgTimeSpent(this.filteredArr);
+}
+
+resetAreaHistory() {
+  if (this.player.account === this.partyService.currentPlayer.account) {
+    const emptyHistory = this.settingsService.deleteAreas();
+    this.player.pastAreas = emptyHistory;
+    this.mapService.loadAreasFromSettings();
+    this.accountService.player.next(this.player);
+    this.partyService.selectedPlayer.next(this.player);
+    this.partyService.updatePlayer(this.player);
+    this.alertService.showAlert({ message: 'Area history was cleared', action: 'OK' });
+  }
+}
+
+updateAvgTimeSpent(pastAreas) {
+  if (pastAreas !== null) {
+    if (pastAreas[0] !== undefined) {
+      let total = 0;
+      pastAreas.forEach(area => {
+        total = total + area.duration;
+      });
+
+      const average = total / pastAreas.length;
+
+      const minute = Math.floor(average / 60);
+      let seconds = average % 60;
+      seconds = Math.floor(seconds);
+      this.averageTimeSpent = ((minute < 10) ? '0' + minute.toString() : seconds.toString())
+        + ':' + ((seconds < 10) ? '0' + seconds.toString() : seconds.toString());
     } else {
       this.averageTimeSpent = '';
     }
+  } else {
+    this.averageTimeSpent = '';
   }
+}
 
-  search() {
-    this.table.doSearch(this.form.controls.searchText.value);
-  }
+search() {
+  this.table.doSearch(this.form.controls.searchText.value);
+}
 
 }
