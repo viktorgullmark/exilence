@@ -4,6 +4,7 @@ All notable changes to this project will be documented in this file.
 ## [0.5.6] - 2018-XX-XX
 - Added support for private-leagues
 - Added a tutorial (helper-tooltips) that will be shown the first time you launch Exile Party
+- Added a FAQ-page, listing frequently asked questions with answers
 - Added a general tab to the settings-page
 - Added a button to reset helper-tooltips
 - Improved reconnect-functionality to avoid infinite loop when party has expired
