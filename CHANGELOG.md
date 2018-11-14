@@ -3,10 +3,14 @@ All notable changes to this project will be documented in this file.
 
 ## [0.5.6] - 2018-XX-XX
 - Added support for private-leagues
+- Added a tutorial (helper-tooltips) that will be shown the first time you launch Exile Party
+- Added a general tab to the settings-page
+- Added a button to reset helper-tooltips
 - Improved reconnect-functionality to avoid infinite loop when party has expired
 - Fixed a bug where item-names werent displayed properly after an update from GGG
 - Changed hosting-provider for servers
 - Removed case-sensitivity in the path for the client.txt-file
+- Minor bugfixes and code-cleanup
 
 ## [0.5.5] - 2018-09-07
 - Added reconnect functionality, now tries to reconnect five times before disconnecting.

@@ -79,5 +79,8 @@
     "KEYBINDS": {
         "RESET": "Reset keybinds",
         "SAVE": "Save keybinds"
+    },
+    "SETTINGS": {
+        "RESET_DIALOGS": "Reset tutorial-dialogs"
     }
 }

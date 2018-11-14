@@ -1,5 +1,5 @@
 <div [hidden]="player == undefined">
-    <mat-tab-group #subTabGroup id="subTabGroup" [(selectedIndex)]="selectedIndex">
+    <mat-tab-group #subTabGroup id="subTabGroup" [(selectedIndex)]="selectedIndex" (selectedTabChange)="openDialog()">
         <mat-tab #equipmentTab id="equipmentTab" class="active">
             <ng-template mat-tab-label>
                 <mat-icon class="tab-icon">accessibility</mat-icon>
@@ -29,22 +29,22 @@
 
 <!-- tab EQUIPMENT -->
 <div class="tab-content down-scale-inventory" *ngIf="player?.character?.items" [hidden]="selectedIndex != 0">
-    <app-char-equipment [items]="player?.character?.items"></app-char-equipment>
+    <app-char-equipment #charEquipment [items]="player?.character?.items"></app-char-equipment>
     <button mat-raised-button color="primary" (click)="goToProfile()" class="profile-link" type="button">Go to profile</button>
     <app-char-inventory [topMargin]="10" [items]="player?.character?.items"></app-char-inventory>
 </div>
 
 <!-- tab CURRENCY -->
 <div class="tab-content" [hidden]="selectedIndex != 1 || localProfile">
-    <app-char-wealth *ngIf="!localProfile && selectedIndex == 1" [player]="player"></app-char-wealth>
+    <app-char-wealth #charWealth *ngIf="!localProfile && selectedIndex == 1" [player]="player"></app-char-wealth>
 </div>
 
 <!-- tab MAPS -->
 <div class="tab-content" [hidden]="selectedIndex != 2 || localProfile">
-    <app-char-maps *ngIf="!localProfile" [player]="player"></app-char-maps>  
+    <app-char-maps #charMaps *ngIf="!localProfile" [player]="player"></app-char-maps>  
 </div>
 
 <!-- tab LADDER -->
 <div class="tab-content" [hidden]="selectedIndex != 3 || localProfile">
-    <app-char-ladder *ngIf="!localProfile" [player]="player"></app-char-ladder>
+    <app-char-ladder #charLadder *ngIf="!localProfile" [player]="player"></app-char-ladder>
 </div>

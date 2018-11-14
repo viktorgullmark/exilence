@@ -10,6 +10,7 @@ import { PartyService } from '../../shared/providers/party.service';
 import { Player } from '../../shared/interfaces/player.interface';
 import { NetWorthSnapshot } from '../../shared/interfaces/income.interface';
 import { AccountService } from '../../shared/providers/account.service';
+import { PartySummaryComponent } from './party-summary/party-summary.component';
 
 
 @Component({
@@ -21,6 +22,7 @@ export class PartyComponent implements OnInit {
   selectedIndex = 0;
   player: Player;
   @ViewChild('tabGroup') tabGroup: MatTabGroup;
+  @ViewChild('tabSummary') tabSummary: PartySummaryComponent;
   private oneHourAgo = (Date.now() - (1 * 60 * 60 * 1000));
   constructor(
     public partyService: PartyService,
@@ -74,6 +76,10 @@ export class PartyComponent implements OnInit {
       }
       this.selectedIndex = res;
     });
+  }
+
+  openDialog() {
+    this.tabSummary.openSummaryDialog();
   }
 
   updatePlayerGain(player: Player, current: boolean) {

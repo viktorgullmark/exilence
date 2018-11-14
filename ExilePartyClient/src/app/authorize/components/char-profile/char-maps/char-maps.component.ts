@@ -1,4 +1,4 @@
-import { Component, Inject, Input, OnInit, ViewChild } from '@angular/core';
+import { Component, Inject, Input, OnInit, ViewChild, AfterViewInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 
 import { ExtendedAreaInfo } from '../../../../shared/interfaces/area.interface';
@@ -11,6 +11,8 @@ import { SettingsService } from '../../../../shared/providers/settings.service';
 import { MapService } from '../../../../shared/providers/map.service';
 import { AccountService } from '../../../../shared/providers/account.service';
 import { AlertService } from '../../../../shared/providers/alert.service';
+import { InfoDialogComponent } from '../../info-dialog/info-dialog.component';
+import { MatDialog } from '@angular/material';
 
 @Component({
   selector: 'app-char-maps',
@@ -33,7 +35,8 @@ export class CharMapsComponent implements OnInit {
     private settingsService: SettingsService,
     private mapService: MapService,
     private accountService: AccountService,
-    private alertService: AlertService
+    private alertService: AlertService,
+    private dialog: MatDialog
   ) {
     this.form = fb.group({
       searchText: ['']
@@ -51,6 +54,24 @@ export class CharMapsComponent implements OnInit {
 
   ngOnInit() {
     this.analyticsService.sendScreenview('/authorized/party/player/maps');
+  }
+
+  openMapDialog(): void {
+    if (!this.settingsService.get('diaShown_maps')) {
+      const dialogRef = this.dialog.open(InfoDialogComponent, {
+        width: '650px',
+        data: {
+          icon: 'map',
+          title: 'Map tab',
+          // tslint:disable-next-line:max-line-length
+          content: 'This tab updates every time you change area in game.<br/><br/>' +
+            'We store all your area/map-data one week back in time.'
+        }
+      });
+      dialogRef.afterClosed().subscribe(result => {
+        this.settingsService.set('diaShown_maps', true);
+      });
+    }
   }
 
   updateSummary(filteredArr) {

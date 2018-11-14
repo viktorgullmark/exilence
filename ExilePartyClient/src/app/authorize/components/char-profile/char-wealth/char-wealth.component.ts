@@ -1,4 +1,4 @@
-import { Component, Inject, Input, OnInit, ViewChild } from '@angular/core';
+import { Component, Inject, Input, OnInit, ViewChild, AfterViewInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { Router } from '@angular/router';
 
@@ -15,6 +15,8 @@ import { NetworthTableComponent } from '../../networth-table/networth-table.comp
 import { SessionService } from '../../../../shared/providers/session.service';
 import { KeybindService } from '../../../../shared/providers/keybind.service';
 import { AlertService } from '../../../../shared/providers/alert.service';
+import { InfoDialogComponent } from '../../info-dialog/info-dialog.component';
+import { MatDialog } from '@angular/material';
 
 @Component({
   selector: 'app-char-wealth',
@@ -52,7 +54,8 @@ export class CharWealthComponent implements OnInit {
     private settingsService: SettingsService,
     private sessionService: SessionService,
     private keybindService: KeybindService,
-    private alertService: AlertService
+    private alertService: AlertService,
+    private dialog: MatDialog
   ) {
     this.form = fb.group({
       searchText: ['']
@@ -95,6 +98,24 @@ export class CharWealthComponent implements OnInit {
       this.partyService.selectedPlayer.next(player);
       this.partyService.updatePlayer(player);
       this.alertService.showAlert({ message: 'Net worth history was cleared', action: 'OK' });
+    }
+  }
+
+  openCurrencyDialog(): void {
+    if (!this.settingsService.get('diaShown_wealth')) {
+      const dialogRef = this.dialog.open(InfoDialogComponent, {
+        width: '650px',
+        data: {
+          icon: 'attach_money',
+          title: 'Currency tab',
+          // tslint:disable-next-line:max-line-length
+          content: 'This tab updates approximately once every 5 minutes, as long as you remain active in-game.<br/><br/>' +
+            'We store all your net worth data one week back in time.'
+        }
+      });
+      dialogRef.afterClosed().subscribe(result => {
+        this.settingsService.set('diaShown_wealth', true);
+      });
     }
   }
 
