@@ -5,6 +5,7 @@ All notable changes to this project will be documented in this file.
 - Added support for private-leagues
 - Added a tutorial (helper-tooltips) that will be shown the first time you launch Exile Party
 - Added a FAQ-page, listing frequently asked questions with answers
+- Added language-support (now displays timestamps within the app in your system language)
 - Added a general tab to the settings-page
 - Added a button to reset helper-tooltips
 - Improved reconnect-functionality to avoid infinite loop when party has expired
