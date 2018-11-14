@@ -6,6 +6,10 @@ import { MessageValueService } from '../../../shared/providers/message-value.ser
 import { PartyService } from '../../../shared/providers/party.service';
 import { NetworthTableComponent } from '../../components/networth-table/networth-table.component';
 import { RobotService } from '../../../shared/providers/robot.service';
+import { KeybindService } from '../../../shared/providers/keybind.service';
+import { SettingsService } from '../../../shared/providers/settings.service';
+import { MatDialog } from '@angular/material';
+import { InfoDialogComponent } from '../../components/info-dialog/info-dialog.component';
 
 @Component({
   selector: 'app-party-summary',
@@ -19,22 +23,43 @@ export class PartySummaryComponent implements OnInit {
   @ViewChild('table') table: NetworthTableComponent;
 
   public graphDimensions = [1000, 300];
-
+  public reportKeybind: any;
   constructor(
     @Inject(FormBuilder) fb: FormBuilder,
     private partyService: PartyService,
     private analyticsService: AnalyticsService,
     public messageValueService: MessageValueService,
-    private robotService: RobotService
+    private robotService: RobotService,
+    private keybindService: KeybindService,
+    private settingsService: SettingsService,
+    private dialog: MatDialog
   ) {
     this.analyticsService.sendScreenview('/authorized/party/summary');
     this.form = fb.group({
       searchText: ['']
     });
+    this.reportKeybind = this.keybindService.activeBinds.find(x => x.event === 'party-summary-networth');
   }
   ngOnInit() {
   }
 
+  openSummaryDialog(): void {
+    if (!this.settingsService.get('diaShown_partySummary')) {
+      const dialogRef = this.dialog.open(InfoDialogComponent, {
+        width: '650px',
+        data: {
+          icon: 'attach_money',
+          title: 'Currency summary',
+          // tslint:disable-next-line:max-line-length
+          content: 'This tab updates approximately once every 5 minutes, as long as the party remains active.<br/><br/>' +
+            'We store all your parties net worth data one week back in time.'
+        }
+      });
+      dialogRef.afterClosed().subscribe(result => {
+        this.settingsService.set('diaShown_partySummary', true);
+      });
+    }
+  }
 
   toggleGraph(event: boolean) {
     this.isGraphHidden = true;

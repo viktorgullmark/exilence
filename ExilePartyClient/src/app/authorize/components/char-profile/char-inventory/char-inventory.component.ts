@@ -1,6 +1,8 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { Item } from '../../../../shared/interfaces/item.interface';
 import { Tab } from '../../../../shared/interfaces/stash.interface';
+import { SessionService } from '../../../../shared/providers/session.service';
+import { PartyService } from '../../../../shared/providers/party.service';
 
 @Component({
   selector: 'app-char-inventory',
@@ -17,7 +19,15 @@ export class CharInventoryComponent implements OnInit {
   private width: number;
   private height: number;
   grid = [];
-  constructor() {
+  sessionIdProvided: boolean;
+  constructor(private partyService: PartyService) {
+    this.grid = Array(this.width * this.height).fill(0);
+
+    this.partyService.selectedPlayer.subscribe(res => {
+      if (res !== undefined) {
+        this.sessionIdProvided = res.sessionIdProvided;
+      }
+    });
   }
 
   ngOnInit() {

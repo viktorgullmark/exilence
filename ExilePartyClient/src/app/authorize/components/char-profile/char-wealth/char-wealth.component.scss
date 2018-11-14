@@ -2,7 +2,7 @@
 
 .char-wealth {
     width: 684px;
-    height: $content-height;
+    height: calc(100% - 85px);
     border: 2px solid $main-border-color;
     background: $equipment-bg-color;
     position: relative;
@@ -29,6 +29,11 @@
         .extra-margin {
             margin-right: 25px;
         }
+
+        .margin-left {
+            margin-left: 25px;
+        }
+        
         &.wrapped {
             margin-right: -25px;
             margin-left: -25px;

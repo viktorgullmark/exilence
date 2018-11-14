@@ -70,6 +70,7 @@ namespace ExileParty
                 app.UseDeveloperExceptionPage();
             }
 
+
             //Enable sessions
             app.UseSession();
             app.UseMvc();
@@ -79,6 +80,7 @@ namespace ExileParty
 
             app.UseHangfireServer();
             app.UseHangfireDashboard();
+
 
             //if (env.IsProduction())
             //{

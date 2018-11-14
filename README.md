@@ -10,7 +10,9 @@ Download latest release at https://github.com/viktorgullmark/exile-party/release
 
 Report bugs at https://github.com/viktorgullmark/exile-party/issues
 
-## Screenshots from 0.4.0b
+Communicate with us at our Discord https://discord.gg/ymr3VnA
+
+## Screenshots from 0.5.4b
 
 https://imgur.com/a/cpODf7I
 
@@ -59,9 +61,11 @@ If you're interested in helping with development, contact us directly on discord
 
 ## Acknowledgements
 
-Huge thanks to https://poe.ninja for providing a great API, which lets us calculate net worth of players, as well as http://poe-racing.com/ for fetching ladder-information.
+- https://poe.ninja for providing a great API, which lets us calculate net worth of players
 
-Thanks to https://github.com/klayveR for providing a great log-monitor to track the Client.txt.
+- http://poe-racing.com/ for fetching ladder-information
 
-And a thank you to GGG for assisting with additional endpoints and for creating a great game!
+- https://github.com/klayveR for providing a great log-monitor to track the Client.txt
+
+- GGG for assisting with additional endpoints and for creating a great game!
 

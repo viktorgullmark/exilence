@@ -6,6 +6,8 @@ import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { NetworthTableModule } from '../../components/networth-table/networth-table.module';
 import { IncomeModule } from '../../components/income/income.module';
 import { SharedModule } from '../../../shared/shared.module';
+import { InfoDialogModule } from '../../components/info-dialog/info-dialog.module';
+import { InfoDialogComponent } from '../../components/info-dialog/info-dialog.component';
 
 @NgModule({
   imports: [
@@ -17,9 +19,11 @@ import { SharedModule } from '../../../shared/shared.module';
     MatInputModule,
     MatButtonModule,
     MatMenuModule,
-    MatIconModule
+    MatIconModule,
+    InfoDialogModule
   ],
   declarations: [PartySummaryComponent],
-  exports: [PartySummaryComponent]
+  exports: [PartySummaryComponent],
+  entryComponents: [InfoDialogComponent]
 })
 export class PartySummaryModule { }

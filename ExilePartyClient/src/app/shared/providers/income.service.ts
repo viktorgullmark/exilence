@@ -42,6 +42,7 @@ export class IncomeService {
   private totalNetWorthItems: NetWorthItem[] = [];
   public totalNetWorth = 0;
   private fiveMinutes = 5 * 60 * 1000;
+  private sessionIdValid = false;
 
   constructor(
     private ninjaService: NinjaService,
@@ -79,10 +80,13 @@ export class IncomeService {
     const oneHourAgo = (Date.now() - (1 * 60 * 60 * 1000));
     const oneWeekAgo = (Date.now() - (1 * 60 * 60 * 24 * 7 * 1000));
     this.netWorthHistory = this.settingsService.get('networth');
+
+    this.sessionIdValid = this.settingsService.get('account.sessionIdValid');
+
     if (
       this.netWorthHistory.lastSnapshot < (Date.now() - this.fiveMinutes) &&
       this.localPlayer !== undefined &&
-      this.sessionId !== undefined &&
+      (this.sessionId !== undefined && this.sessionId !== '' && this.sessionIdValid) &&
       !this.isSnapshotting
     ) {
       this.isSnapshotting = true;
@@ -160,7 +164,6 @@ export class IncomeService {
       this.playerTabItems = [];
       this.playerStashTabs.forEach((tab: Stash, tabIndex: number) => {
         // if the retrieved tab is selected, include items from tab on playerobject
-        debugger;
         const selectedTab = this.selectedStashTabs.find(x => x.position === tabIndex);
         if (selectedTab !== undefined) {
           this.playerTabItems.push({
@@ -238,10 +241,6 @@ export class IncomeService {
     });
   }
 
-  getPriceForItem(name: string) {
-    return this.ninjaPrices[name];
-  }
-
   getValuesFromNinja(league: string) {
     const oneHourAgo = (Date.now() - (1 * 60 * 60 * 1000));
     const length = Object.values(this.ninjaPrices).length;
@@ -277,11 +276,6 @@ export class IncomeService {
               name = line.currencyTypeName;
             }
             if ('name' in line) {
-
-              if (line.name.indexOf('Remnant') > -1) {
-                const debug = -1;
-              }
-
               name = line.name;
               if (line.baseType && (line.name.indexOf(line.baseType) === -1)) {
                 name += ' ' + line.baseType;
@@ -307,6 +301,7 @@ export class IncomeService {
 
     if (this.selectedStashTabs === undefined || this.selectedStashTabs.length === 0) {
       this.selectedStashTabs = [];
+
       for (let i = 0; i < 5; i++) {
         this.selectedStashTabs.push({ name: this.stash.tabs[i].n, position: this.stash.tabs[i].i});
       }

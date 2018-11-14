@@ -13,6 +13,7 @@ export interface Player {
     sessionId: string;
     inArea: Array<string>;
     generic: boolean;
+    sessionIdProvided: boolean;
     genericHost: string;
     netWorthSnapshots: NetWorthSnapshot[];
     areaInfo: ExtendedAreaInfo;

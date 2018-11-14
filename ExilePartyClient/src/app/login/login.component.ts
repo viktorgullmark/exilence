@@ -4,20 +4,20 @@ import { MatStep, MatStepper } from '@angular/material';
 import { Router } from '@angular/router';
 
 import { AccountInfo } from '../shared/interfaces/account-info.interface';
+import { ExtendedAreaInfo } from '../shared/interfaces/area.interface';
 import { Character } from '../shared/interfaces/character.interface';
 import { EquipmentResponse } from '../shared/interfaces/equipment-response.interface';
-import { NetWorthHistory, NetWorthSnapshot } from '../shared/interfaces/income.interface';
+import { NetWorthHistory } from '../shared/interfaces/income.interface';
+import { League } from '../shared/interfaces/league.interface';
 import { Player } from '../shared/interfaces/player.interface';
 import { AccountService } from '../shared/providers/account.service';
 import { AnalyticsService } from '../shared/providers/analytics.service';
 import { ElectronService } from '../shared/providers/electron.service';
 import { ExternalService } from '../shared/providers/external.service';
+import { IncomeService } from '../shared/providers/income.service';
+import { LadderService } from '../shared/providers/ladder.service';
 import { SessionService } from '../shared/providers/session.service';
 import { SettingsService } from '../shared/providers/settings.service';
-import { LadderService } from '../shared/providers/ladder.service';
-import { RobotService } from '../shared/providers/robot.service';
-import { League } from '../shared/interfaces/league.interface';
-import { ExtendedAreaInfo } from '../shared/interfaces/area.interface';
 
 @Component({
     selector: 'app-login',
@@ -33,6 +33,8 @@ export class LoginComponent implements OnInit {
     pathValid = false;
     isLoading = false;
     isFetching = false;
+    isFetchingLeagues = false;
+    fetchedLeagues = false;
     fetched = false;
     characterList: Character[] = [];
     leagues: League[];
@@ -41,10 +43,12 @@ export class LoginComponent implements OnInit {
     characterName: string;
     accountName: string;
     sessionId: string;
+    sessionIdValid = false;
     filePath: string;
     netWorthHistory: NetWorthHistory;
     areaHistory: ExtendedAreaInfo[];
     form: any;
+    needsValidation: boolean;
 
     private twelveHoursAgo = (Date.now() - (12 * 60 * 60 * 1000));
 
@@ -60,15 +64,12 @@ export class LoginComponent implements OnInit {
         private settingsService: SettingsService,
         private analyticsService: AnalyticsService,
         private ladderService: LadderService,
-        private robotService: RobotService
+        private incomeService: IncomeService
     ) {
         this.externalService.leagues.subscribe((res: League[]) => {
             this.leagues = res;
         });
 
-        this.externalService.getLeagues().subscribe(res => {
-            this.externalService.leagues.next(res);
-        });
         this.fetchSettings();
 
         this.accFormGroup = fb.group({
@@ -91,18 +92,7 @@ export class LoginComponent implements OnInit {
 
     checkPath() {
         this.pathValid = this.electronService.fs.existsSync(this.pathFormGroup.controls.filePath.value)
-            && this.pathFormGroup.controls.filePath.value.endsWith('Client.txt');
-    }
-
-    checkSessionId() {
-        const form = this.getFormObj();
-        this.externalService.getCharacter(form).subscribe(
-            success => {
-
-            },
-            error => {
-
-            });
+            && this.pathFormGroup.controls.filePath.value.toLowerCase().endsWith('client.txt');
     }
 
     openLink(link: string) {
@@ -114,6 +104,7 @@ export class LoginComponent implements OnInit {
         this.sessionId = this.settingsService.get('account.sessionId');
         this.accountName = this.settingsService.get('account.accountName');
         this.leagueName = this.settingsService.get('account.leagueName');
+        this.sessionIdValid = this.settingsService.get('account.sessionIdValid');
         this.filePath = this.settingsService.get('account.filePath');
         this.netWorthHistory = this.settingsService.get('networth');
         this.areaHistory = this.settingsService.get('areas');
@@ -144,6 +135,33 @@ export class LoginComponent implements OnInit {
             }
         });
         this.checkPath();
+        this.sessFormGroup.valueChanges.subscribe(val => {
+            this.needsValidation = true;
+        });
+    }
+
+    getLeagues(accountName?: string) {
+        this.isFetchingLeagues = true;
+        this.externalService.getCharacterList(accountName !== undefined ? accountName :
+            this.accFormGroup.controls.accountName.value).subscribe(res => {
+
+                // map character-leagues to new array
+                const distinctLeagues = [];
+                res.forEach(char => {
+                    if (distinctLeagues.find(l => l.id === char.league) === undefined) {
+                        distinctLeagues.push({ id: char.league } as League);
+                    }
+                });
+
+                this.externalService.leagues.next(distinctLeagues);
+                this.fetchedLeagues = true;
+                setTimeout(() => {
+                    this.stepper.selectedIndex = 1;
+                }, 250);
+                setTimeout(() => {
+                    this.isFetchingLeagues = false;
+                }, 500);
+            });
     }
 
     getCharacterList(accountName?: string) {
@@ -177,7 +195,8 @@ export class LoginComponent implements OnInit {
             characterName: this.charFormGroup.controls.characterName.value,
             leagueName: this.leagueFormGroup.controls.leagueName.value,
             sessionId: this.sessFormGroup.controls.sessionId.value,
-            filePath: this.pathFormGroup.controls.filePath.value
+            filePath: this.pathFormGroup.controls.filePath.value,
+            sessionIdValid: this.sessionIdValid
         } as AccountInfo;
     }
 
@@ -202,24 +221,52 @@ export class LoginComponent implements OnInit {
 
                 const player = this.externalService.setCharacter(data, this.player);
                 this.player = player;
-                this.ladderService.getLadderInfoForCharacter(this.player.character.league, this.player.character.name).subscribe(res => {
-                    if (res !== null && res.list !== null) {
-                        this.player.ladderInfo = res.list;
-                    }
-                    this.completeLogin();
-                });
+                this.ladderService.getLadderInfoForCharacter(this.player.character.league, this.player.character.name).subscribe(
+                    res => {
+                        if (res !== null && res.list !== null) {
+                            this.player.ladderInfo = res.list;
+                        }
+                        this.completeLogin();
+                    },
+                    err => this.completeLogin(),
+                    () => this.completeLogin()
+                );
             });
+    }
+
+    validateSessionId() {
+        const form = this.getFormObj();
+        this.externalService.validateSessionId(
+            form.sessionId,
+            form.accountName,
+            form.leagueName,
+            0
+        ).subscribe(res => {
+            this.needsValidation = false;
+            this.sessionIdValid = res !== false;
+        });
     }
 
     completeLogin() {
         this.player.account = this.form.accountName;
         this.player.netWorthSnapshots = this.netWorthHistory.history;
         this.player.pastAreas = this.areaHistory;
-        this.accountService.player.next(this.player);
-        this.accountService.accountInfo.next(this.form);
-        this.settingsService.set('account', this.form);
-        this.sessionService.initSession(this.form.sessionId);
-        this.isLoading = false;
-        this.router.navigate(['/authorized/dashboard']);
+
+        this.externalService.validateSessionId(
+            this.form.sessionId,
+            this.player.account,
+            this.player.character.league,
+            0
+        ).subscribe(res => {
+            this.sessionIdValid = res !== false;
+            this.form = this.getFormObj();
+            this.player.sessionIdProvided = this.sessionIdValid;
+            this.accountService.player.next(this.player);
+            this.accountService.accountInfo.next(this.form);
+            this.settingsService.set('account', this.form);
+            this.sessionService.initSession(this.form.sessionId);
+            this.isLoading = false;
+            this.router.navigate(['/authorized/dashboard']);
+        });
     }
 }

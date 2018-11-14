@@ -55,6 +55,10 @@ a {
     margin-bottom: 20px !important;
 }
 
+.keybind-text {
+    font-size: 12px;
+}
+
 .progress-spinner {
     position: relative !important;
     display: flex !important;
@@ -240,6 +244,10 @@ a {
 /* #region Override classes for Material */
 .legend-label:hover, .active, .legend-label-text, .chart-legend {
     color: #fff !important;
+}
+
+.mat-expansion-panel {
+    background: #272727 !important;
 }
 
 .mat-tab-label-container {

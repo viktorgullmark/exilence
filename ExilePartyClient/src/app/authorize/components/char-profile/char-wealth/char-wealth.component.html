@@ -34,9 +34,11 @@
             </button>
             <mat-menu #menu="matMenu">
                 <button (click)="report(false)" mat-menu-item>{{'ROBOT.CLIPBOARD' | translate}}</button>
-                <button (click)="report(true)" mat-menu-item>{{'ROBOT.GAME' | translate}}</button>
+                <button (click)="report(true)" mat-menu-item>{{'ROBOT.GAME' | translate}} <span class="keybind-text">({{reportKeybind != undefined ? reportKeybind.keys : ''}})</span></button>
             </mat-menu>
         </ng-container>
+
+        <button mat-raised-button color="primary" *ngIf="selfSelected" (click)="popout()" type="button" class="right-aligned extra-margin margin-left">{{'GRAPH.POPOUT' | translate}}</button>
 
         <button mat-raised-button color="primary" *ngIf="selfSelected" (click)="resetNetWorth()" type="button" class="right-aligned extra-margin">{{'GRAPH.RESET' | translate}}</button>
 
@@ -48,7 +50,7 @@
     </div>
     <div class="table-outer-wrapper" [ngClass]="{'full-height-table': isGraphHidden }">
         <div class="flex-area wrapped">
-            <button mat-raised-button color="primary" (click)="goToSettings()" type="button" class="right-aligned">{{'STASH.SELECT_TABS' | translate}}</button>
+            <button mat-raised-button color="primary" [disabled]="sessionId == '' || !sessionIdValid" (click)="goToSettings()" type="button" class="right-aligned">{{'STASH.SELECT_TABS' | translate}}</button>
         </div>
         <div class="search-form-wrapper">
             <form class="form search-form" [formGroup]="form">

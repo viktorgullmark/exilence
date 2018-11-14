@@ -21,6 +21,7 @@ import { NetWorthSnapshot } from '../interfaces/income.interface';
 import { MessageValueService } from './message-value.service';
 import { ExtendedAreaInfo } from '../interfaces/area.interface';
 import { HistoryHelper } from '../helpers/history.helper';
+import { LeagueWithPlayers } from '../interfaces/league.interface';
 
 @Injectable()
 export class PartyService {
@@ -42,18 +43,11 @@ export class PartyService {
   public genericPartyName: string;
   public recentPlayers: RecentPlayer[] = [];
   public recentPrivatePlayers: string[] = [];
-
-  // player-lists
-  public incursionStd: BehaviorSubject<Player[]> = new BehaviorSubject<Player[]>([]);
-  public incursionSsfStd: BehaviorSubject<Player[]> = new BehaviorSubject<Player[]>([]);
-  public incursionHc: BehaviorSubject<Player[]> = new BehaviorSubject<Player[]>([]);
-  public incursionSsfHc: BehaviorSubject<Player[]> = new BehaviorSubject<Player[]>([]);
-  public std: BehaviorSubject<Player[]> = new BehaviorSubject<Player[]>([]);
-  public hc: BehaviorSubject<Player[]> = new BehaviorSubject<Player[]>([]);
-  public ssfStd: BehaviorSubject<Player[]> = new BehaviorSubject<Player[]>([]);
-  public ssfHc: BehaviorSubject<Player[]> = new BehaviorSubject<Player[]>([]);
-
+  public playerLeagues: BehaviorSubject<LeagueWithPlayers[]> = new BehaviorSubject<LeagueWithPlayers[]>([]);
   public genericPlayers: BehaviorSubject<Player[]> = new BehaviorSubject<Player[]>([]);
+
+  private reconnectAttempts: number;
+  private forceClosed: boolean;
 
   constructor(
     private router: Router,
@@ -65,6 +59,9 @@ export class PartyService {
     private electronService: ElectronService,
     private messageValueService: MessageValueService
   ) {
+
+    this.reconnectAttempts = 0;
+    this.forceClosed = false;
 
     this.recentParties.next(this.settingService.get('recentParties') || []);
 
@@ -89,10 +86,8 @@ export class PartyService {
     this.initHubConnection();
 
     this._hubConnection.onclose(() => {
-      this.logService.log('[ERROR] Signalr connection closed');
-      this.accountService.clearCharacterList();
-      localStorage.removeItem('sessionId');
-      this.router.navigate(['/disconnected']);
+      this.logService.log('Signalr connection closed', null, true);
+      this.reconnect();
     });
 
     this._hubConnection.on('EnteredParty', (partyData: string, playerData: string) => {
@@ -176,6 +171,10 @@ export class PartyService {
       });
     });
 
+    this._hubConnection.on('ForceDisconnect', () => {
+      this.disconnect('Recived force disconnect command from server.');
+    });
+
     this.logMonitorService.areaJoin.subscribe((msg: LogMessage) => {
       this.logService.log('Player joined area: ', msg.player.name);
       this.handleAreaEvent(msg);
@@ -202,22 +201,51 @@ export class PartyService {
 
   initHubConnection() {
     this.logService.log('Starting signalr connection');
-    this._hubConnection.start().catch((err) => {
+    this._hubConnection.start().then(() => {
+      console.log('Successfully established signalr connection!');
+      this.reconnectAttempts = 0;
+    }).catch((err) => {
       console.error(err.toString());
       this.logService.log('Could not connect to signalr');
-      this.router.navigate(['/disconnected']);
+      this.reconnect();
     });
   }
 
+  reconnect() {
+    if (this.reconnectAttempts > 5 && !this.forceClosed) {
+      this.disconnect('Could not connect after 5 attempts.');
+    } else {
+      this.logService.log('Trying to reconnect to signalr in 5 seconds.', null, true);
+      setTimeout(() => {
+        this.initHubConnection();
+      }, (5000));
+    }
+    this.reconnectAttempts++;
+  }
+
+  disconnect(reason: string) {
+    this.forceClosed = true;
+    this.logService.log(reason, null, true);
+    this.accountService.clearCharacterList();
+    localStorage.removeItem('sessionId');
+    this.router.navigate(['/disconnected']);
+  }
+
   updatePlayerLists(party: Party) {
-    this.incursionStd.next(party.players.filter(x => x.character.league === 'Incursion'));
-    this.incursionSsfStd.next(party.players.filter(x => x.character.league === 'SSF Incursion'));
-    this.incursionHc.next(party.players.filter(x => x.character.league === 'Hardcore Incursion'));
-    this.incursionSsfHc.next(party.players.filter(x => x.character.league === 'SSF Incursion HC'));
-    this.std.next(party.players.filter(x => x.character.league === 'Standard'));
-    this.hc.next(party.players.filter(x => x.character.league === 'Hardcore'));
-    this.ssfStd.next(party.players.filter(x => x.character.league === 'SSF Standard'));
-    this.ssfHc.next(party.players.filter(x => x.character.league === 'SSF Hardcore'));
+
+    // construct initial object based on players in party
+    const leagues: LeagueWithPlayers[] = [];
+    party.players.forEach(player => {
+      const league = leagues.find(l => l.id === player.character.league);
+      if (league === undefined) {
+        leagues.push({ id: player.character.league, players: [player] } as LeagueWithPlayers);
+      } else {
+        const indexOfLeague = leagues.indexOf(league);
+        leagues[indexOfLeague].players.push(player);
+      }
+    });
+
+    this.playerLeagues.next(leagues);
   }
 
   public updatePlayer(player: Player) {
@@ -225,7 +253,9 @@ export class PartyService {
       .subscribe((equipment: EquipmentResponse) => {
         player = this.externalService.setCharacter(equipment, player);
         if (this._hubConnection) {
-          this.compress(player, (data) => this._hubConnection.invoke('UpdatePlayer', this.party.name, data));
+          this.compress(player, (data) => this._hubConnection.invoke('UpdatePlayer', this.party.name, data).catch((e) => {
+            console.log('LOOK AT THIS ONE!');
+          }));
         }
       });
   }
@@ -278,6 +308,18 @@ export class PartyService {
     if (recent.length > 5) {
       recent.splice(-1, 1);
     }
+    this.settingService.set('recentParties', recent);
+    this.recentParties.next(recent);
+  }
+
+  public removePartyFromRecent(partyName: string) {
+    const recent: string[] = this.settingService.get('recentParties') || [];
+
+    const index = recent.indexOf(partyName);
+    if (index !== -1) {
+      recent.splice(index, 1);
+    }
+
     this.settingService.set('recentParties', recent);
     this.recentParties.next(recent);
   }
@@ -343,8 +385,10 @@ export class PartyService {
       const info: AccountInfo = {
         accountName: account,
         characterName: player.name,
+        leagueName: '',
         sessionId: '',
-        filePath: ''
+        filePath: '',
+        sessionIdValid: false
       };
       return this.externalService.getCharacter(info).subscribe((response: EquipmentResponse) => {
         if (response !== null) {

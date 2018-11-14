@@ -4,6 +4,8 @@ import { SharedModule } from '../../../../shared/shared.module';
 import { MapTableModule } from '../../map-table/map-table.module';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatInputModule, MatButtonModule } from '@angular/material';
+import { InfoDialogComponent } from '../../info-dialog/info-dialog.component';
+import { InfoDialogModule } from '../../info-dialog/info-dialog.module';
 
 @NgModule({
   imports: [
@@ -12,9 +14,11 @@ import { MatInputModule, MatButtonModule } from '@angular/material';
     FormsModule,
     ReactiveFormsModule,
     MatInputModule,
-    MatButtonModule
+    MatButtonModule,
+    InfoDialogModule
   ],
   declarations: [CharMapsComponent],
-  exports: [CharMapsComponent]
+  exports: [CharMapsComponent],
+  entryComponents: [InfoDialogComponent]
 })
 export class CharMapsModule { }

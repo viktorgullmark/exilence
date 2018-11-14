@@ -113,7 +113,7 @@ namespace ExileParty.Hubs
             }
             else
             {
-                Context.Abort();
+                await Clients.Group(partyName).SendAsync("ForceDisconnect");
             }
         }
         public async Task GenericUpdatePlayer(PlayerModel player, string partyName)

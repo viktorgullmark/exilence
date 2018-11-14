@@ -20,6 +20,7 @@ import { SettingsModule } from './settings/settings.module';
 import { LadderService } from '../shared/providers/ladder.service';
 import { MessageValueService } from '../shared/providers/message-value.service';
 import { StashService } from '../shared/providers/stash.service';
+import { FaqModule } from './faq/faq.module';
 
 @NgModule({
   imports: [
@@ -36,7 +37,8 @@ import { StashService } from '../shared/providers/stash.service';
     PartyModule,
     InspectPlayersModule,
     MatSidenavModule,
-    SettingsModule
+    SettingsModule,
+    FaqModule
   ],
   declarations: [AuthorizeComponent],
   providers: [

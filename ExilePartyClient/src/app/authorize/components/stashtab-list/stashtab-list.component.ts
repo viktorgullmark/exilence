@@ -1,5 +1,5 @@
 import { SelectionModel } from '@angular/cdk/collections';
-import { Component, OnInit, OnDestroy, ViewChild } from '@angular/core';
+import { Component, OnInit, OnDestroy, ViewChild, Input } from '@angular/core';
 import { MatSort, MatTableDataSource } from '@angular/material';
 
 import { Stash, Tab } from '../../../shared/interfaces/stash.interface';
@@ -8,6 +8,7 @@ import { PartyService } from '../../../shared/providers/party.service';
 import { SettingsService } from '../../../shared/providers/settings.service';
 import { Subscription } from 'rxjs';
 import { StashService } from '../../../shared/providers/stash.service';
+import { AlertService } from '../../../shared/providers/alert.service';
 
 @Component({
   selector: 'app-stashtab-list',
@@ -22,6 +23,7 @@ export class StashtabListComponent implements OnInit {
   source: any;
   dataSource: any;
   @ViewChild(MatSort) sort: MatSort;
+  @Input() validated: boolean;
 
   selection = new SelectionModel<any>(true, []);
   private stash: Stash;
@@ -29,7 +31,8 @@ export class StashtabListComponent implements OnInit {
     private settingsService: SettingsService,
     private externalService: ExternalService,
     private partyService: PartyService,
-    private stashService: StashService
+    private stashService: StashService,
+    private alertService: AlertService
   ) {
     this.stashService.stash.subscribe(res => {
       this.stash = res;
@@ -82,9 +85,15 @@ export class StashtabListComponent implements OnInit {
     this.source.sort = this.sort;
   }
 
-  toggle(selection, row) {
-    this.selection.toggle(row);
+  checkSelectionLength(row) {
+    if (this.selection.selected.length > 20 && !this.selection.isSelected(row)) {
+      this.alertService.showAlert({ message: 'You can select at most 20 stash tabs', action: 'OK' });
+    }
+  }
 
+  toggle(selection, row) {
+
+    this.selection.toggle(row);
     this.settingsService.set('selectedStashTabs', selection.selected);
   }
 

@@ -5,6 +5,7 @@ export enum NinjaTypes {
     DIVINATION_CARD = 'DivinationCard',
     PROPHECY = 'Prophecy',
     // SKILL_GEM = 'SkillGem',
+    // BASE_TYPE = 'BaseType',
     HELMET_ENCHANT = 'HelmetEnchant',
     UNIQUE_MAP = 'UniqueMap',
     MAP = 'Map',

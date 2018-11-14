@@ -8,6 +8,9 @@ import { Player } from './shared/interfaces/player.interface';
 import { ElectronService } from './shared/providers/electron.service';
 import { SessionService } from './shared/providers/session.service';
 import { SettingsService } from './shared/providers/settings.service';
+import { AlertService } from './shared/providers/alert.service';
+import { AlertMessage } from './shared/interfaces/alert-message.interface';
+import { MatSnackBar } from '@angular/material';
 
 @Component({
   selector: 'app-root',
@@ -16,6 +19,7 @@ import { SettingsService } from './shared/providers/settings.service';
 })
 export class AppComponent {
   player: Player;
+  alertMsg: AlertMessage;
   public appVersion;
   maximized = false;
   constructor(public electronService: ElectronService,
@@ -23,6 +27,8 @@ export class AppComponent {
     public sessionService: SessionService,
     private settingsService: SettingsService,
     private router: Router,
+    private alertService: AlertService,
+    public snackBar: MatSnackBar
   ) {
     this.appVersion = pkg['version'];
 
@@ -40,6 +46,19 @@ export class AppComponent {
     } else {
       // console.log('Mode web');
     }
+
+    this.alertService.alert.subscribe(res => {
+      if (res !== undefined) {
+        this.alertMsg = res;
+        this.displayAlert(this.alertMsg.message, this.alertMsg.action);
+      }
+    });
+  }
+
+  displayAlert(message: string, action: string) {
+    this.snackBar.open(message, action, {
+      duration: 2000,
+    });
   }
 
   logout() {

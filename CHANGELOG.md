@@ -1,10 +1,39 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
-## [0.5.4] - 2018-07-XX
-- Minor style-adjustments to area-tab
+## [0.5.6] - 2018-XX-XX
+- Added support for private-leagues
+- Added a tutorial (helper-tooltips) that will be shown the first time you launch Exile Party
+- Added a FAQ-page, listing frequently asked questions with answers
+- Added a general tab to the settings-page
+- Added a button to reset helper-tooltips
+- Improved reconnect-functionality to avoid infinite loop when party has expired
+- Fixed a bug where item-names werent displayed properly after an update from GGG
+- Changed hosting-provider for servers
+- Removed case-sensitivity in the path for the client.txt-file
+- Minor bugfixes and code-cleanup
+
+## [0.5.5] - 2018-09-07
+- Added reconnect functionality, now tries to reconnect five times before disconnecting.
+- Added relaunch button to disconnect screen.
+
+## [0.5.4] - 2018-08-01
+- Added game-overlay for personal net worth (Currency -> Pop out)
+- Added validation of sessionId when logging in
+- Added placeholder-block for inventory when no sessionId has been provided
+- Added keybind-text to report-buttons (to show which keybind it has)
+- Added support for future leagues and events (leagues are now listed dynamically)
+- Added validation for max-count when selecting stash-tabs in settings, and displays error if exceeded
+- Added the ability to remove groups from the recent-groups list on dashboard
+- Made item-tooltips more compact by reducing the line-height
+- Stashtab-settings are now disabled if no sessionId has been provided
+- Minor style-adjustments across the app with improved responsitivity
 - Fixed a bug where the selected players values were posted instead of the current players (yourself)
+- Fixed a bug where history-updates weren't correctly shared with the rest of the group
+- Fixed a bug where the player-list on the inspect-players page would exceed the window-height
 - Reduced delay before snapshotting when changing areas (QoL-change)
+- Now displays a notification-bar in the bottom when area- and networth-history is cleared
+- Now snapshots on login, and not only upon entering your first area (QoL-change)
 - Changed application-name from 'exile-party' to 'ExileParty'
 - Changed timestamp for areas to reflect the time when you leave the area, instead of when you enter it
 

@@ -1,4 +1,4 @@
-import { Component, Inject, Input, OnInit, ViewChild } from '@angular/core';
+import { Component, Inject, Input, OnInit, ViewChild, AfterViewInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { Router } from '@angular/router';
 
@@ -12,6 +12,11 @@ import { PartyService } from '../../../../shared/providers/party.service';
 import { RobotService } from '../../../../shared/providers/robot.service';
 import { SettingsService } from '../../../../shared/providers/settings.service';
 import { NetworthTableComponent } from '../../networth-table/networth-table.component';
+import { SessionService } from '../../../../shared/providers/session.service';
+import { KeybindService } from '../../../../shared/providers/keybind.service';
+import { AlertService } from '../../../../shared/providers/alert.service';
+import { InfoDialogComponent } from '../../info-dialog/info-dialog.component';
+import { MatDialog } from '@angular/material';
 
 @Component({
   selector: 'app-char-wealth',
@@ -30,6 +35,11 @@ export class CharWealthComponent implements OnInit {
   public selfSelected = false;
   public previousSnapshot = false;
 
+  public sessionId: string;
+  public sessionIdValid: boolean;
+
+  public reportKeybind: any;
+
   constructor(
     @Inject(FormBuilder) fb: FormBuilder,
     private router: Router,
@@ -40,7 +50,12 @@ export class CharWealthComponent implements OnInit {
     private robotService: RobotService,
     private incomeService: IncomeService,
     private accountService: AccountService,
-    public messageValueService: MessageValueService
+    public messageValueService: MessageValueService,
+    private settingsService: SettingsService,
+    private sessionService: SessionService,
+    private keybindService: KeybindService,
+    private alertService: AlertService,
+    private dialog: MatDialog
   ) {
     this.form = fb.group({
       searchText: ['']
@@ -55,6 +70,10 @@ export class CharWealthComponent implements OnInit {
       this.player = res;
       this.previousSnapshot = false;
     });
+    this.sessionId = this.sessionService.getSession();
+    this.sessionIdValid = this.settingsService.get('account.sessionIdValid');
+
+    this.reportKeybind = this.keybindService.activeBinds.find(x => x.event === 'party-personal-networth');
   }
 
   ngOnInit() {
@@ -77,7 +96,45 @@ export class CharWealthComponent implements OnInit {
       this.incomeService.loadSnapshotsFromSettings();
       this.accountService.player.next(player);
       this.partyService.selectedPlayer.next(player);
+      this.partyService.updatePlayer(player);
+      this.alertService.showAlert({ message: 'Net worth history was cleared', action: 'OK' });
     }
+  }
+
+  openCurrencyDialog(): void {
+    setTimeout(() => {
+      if (!this.settingsService.get('diaShown_wealth')) {
+        const dialogRef = this.dialog.open(InfoDialogComponent, {
+          width: '650px',
+          data: {
+            icon: 'attach_money',
+            title: 'Currency tab',
+            // tslint:disable-next-line:max-line-length
+            content: 'This tab updates approximately once every 5 minutes, as long as you remain active in-game.<br/><br/>' +
+              'We store all your net worth data one week back in time.'
+          }
+        });
+        dialogRef.afterClosed().subscribe(result => {
+          this.settingsService.set('diaShown_wealth', true);
+        });
+      }
+    });
+  }
+
+  popout() {
+    const data = {
+      event: 'networth',
+    };
+    this.electronService.ipcRenderer.send('popout-window', data);
+    setTimeout(res => {
+      this.electronService.ipcRenderer.send('popout-window-update', {
+        event: 'networth',
+        data: {
+          networth: this.messageValueService.currentPlayerValue,
+          gain: this.messageValueService.currentPlayerGain
+        }
+      });
+    }, 1000);
   }
 
   hideGraph() {

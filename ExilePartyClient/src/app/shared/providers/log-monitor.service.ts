@@ -1,6 +1,7 @@
 import { EventEmitter, Injectable } from '@angular/core';
 
 import { AccountService } from './account.service';
+import { LogService } from './log.service';
 
 @Injectable()
 export class LogMonitorService {
@@ -14,7 +15,7 @@ export class LogMonitorService {
   areaLeft: EventEmitter<any> = new EventEmitter();
   messageEvent: EventEmitter<any> = new EventEmitter();
 
-  constructor(private accountService: AccountService) {
+  constructor(private accountService: AccountService, private logService: LogService) {
     this.accountService.accountInfo.subscribe(res => {
       if (res !== undefined && this.poeLog === undefined) {
         this.poeLog = new this.PathOfExileLog({
@@ -35,6 +36,9 @@ export class LogMonitorService {
         });
         this.poeLog.on('instanceServer', (data) => {
           this.instanceServerEvent.emit(data);
+        });
+        this.poeLog.on('error', (data) => {
+          this.logService.log('poe-log-reader', data, true);
         });
       }
     });
