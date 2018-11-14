@@ -79,7 +79,18 @@ export class PartyComponent implements OnInit {
   }
 
   openDialog() {
-    this.tabSummary.openSummaryDialog();
+    switch (this.selectedIndex) {
+      // character
+      case 0: {
+        break;
+      }
+      // summary
+      case 1: {
+        this.tabSummary.openSummaryDialog();
+        break;
+      }
+    }
+
   }
 
   updatePlayerGain(player: Player, current: boolean) {
