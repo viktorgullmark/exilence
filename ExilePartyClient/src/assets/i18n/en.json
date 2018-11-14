@@ -15,6 +15,9 @@
             "WINDOW": "Window",
             "KEYBINDS": "Keybinds"
         },
+        "FAQ": {
+            "TITLE": "FAQ"
+        },
         "RECENT_PLAYERS": {
             "TITLE": "Inspect players"
         }

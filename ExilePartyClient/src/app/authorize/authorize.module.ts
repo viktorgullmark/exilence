@@ -19,6 +19,7 @@ import { PartyModule } from './party/party.module';
 import { SettingsModule } from './settings/settings.module';
 import { LadderService } from '../shared/providers/ladder.service';
 import { MessageValueService } from '../shared/providers/message-value.service';
+import { FaqModule } from './faq/faq.module';
 
 @NgModule({
   imports: [
@@ -35,7 +36,8 @@ import { MessageValueService } from '../shared/providers/message-value.service';
     PartyModule,
     InspectPlayersModule,
     MatSidenavModule,
-    SettingsModule
+    SettingsModule,
+    FaqModule
   ],
   declarations: [AuthorizeComponent],
   providers: [
