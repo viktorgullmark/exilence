@@ -21,8 +21,6 @@ export class CharInventoryComponent implements OnInit {
   grid = [];
   sessionIdProvided: boolean;
   constructor(private partyService: PartyService) {
-    this.grid = Array(this.width * this.height).fill(0);
-
     this.partyService.selectedPlayer.subscribe(res => {
       if (res !== undefined) {
         this.sessionIdProvided = res.sessionIdProvided;
