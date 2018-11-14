@@ -38,6 +38,7 @@ export class IncomeService {
   private totalNetWorthItems: NetWorthItem[] = [];
   public totalNetWorth = 0;
   private fiveMinutes = 5 * 60 * 1000;
+  private sessionIdValid = false;
 
   constructor(
     private ninjaService: NinjaService,
@@ -71,10 +72,13 @@ export class IncomeService {
     const oneHourAgo = (Date.now() - (1 * 60 * 60 * 1000));
     const oneWeekAgo = (Date.now() - (1 * 60 * 60 * 24 * 7 * 1000));
     this.netWorthHistory = this.settingsService.get('networth');
+
+    this.sessionIdValid = this.settingsService.get('account.sessionIdValid');
+
     if (
       this.netWorthHistory.lastSnapshot < (Date.now() - this.fiveMinutes) &&
       this.localPlayer !== undefined &&
-      this.sessionId !== undefined &&
+      (this.sessionId !== undefined && this.sessionId !== '' && this.sessionIdValid) &&
       !this.isSnapshotting
     ) {
       this.isSnapshotting = true;
@@ -276,6 +280,7 @@ export class IncomeService {
 
     if (selectedStashTabs === undefined) {
       selectedStashTabs = [];
+
       for (let i = 0; i < 5; i++) {
         selectedStashTabs.push({ name: '', position: i });
       }
