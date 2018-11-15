@@ -62,7 +62,7 @@ namespace ExileParty
         [Route("Ladder")]
         public async Task<IActionResult> Ladder()
         {
-            var list = await _ladderService.GetLadderForPlayer("delve", "Tzn_FindingNewLows");
+            var list = await _ladderService.GetLadderForPlayer("Nostash NoParty Trade (PL406)", "ChainFF");
             return Ok(list);
         }
     }
