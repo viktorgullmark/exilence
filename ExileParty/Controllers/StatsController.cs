@@ -16,16 +16,17 @@ namespace ExileParty
     {
         private IDistributedCache _cache;
         private ILogger<StatsController> _log;
-        private readonly ICharacterService _characterService;
+        private readonly ILadderService _ladderService;
 
-        public StatsController(IDistributedCache cache, ICharacterService characterService, ILogger<StatsController> log)
+        public StatsController(IDistributedCache cache, ILadderService ladderService, ILogger<StatsController> log)
         {
             _log = log;
             _cache = cache;
-            _characterService = characterService;
+            _ladderService = ladderService;
         }
 
         // GET: /<controller>/
+        [Route("")]
         public async Task<IActionResult> Index()
         {
             var partyList = new List<PartyStatistics>();
@@ -56,6 +57,13 @@ namespace ExileParty
             };
 
             return Ok(response);
+        }
+
+        [Route("Ladder")]
+        public async Task<IActionResult> Ladder()
+        {
+            var list = await _ladderService.GetLadderForPlayer("delve", "Tzn_FindingNewLows");
+            return Ok(list);
         }
     }
 }

@@ -16,11 +16,11 @@ namespace ExileParty.Hubs
     public class PartyHub : Hub
     {
         private IDistributedCache _cache;
-        private ICharacterService _characterService;
+        private ILadderService _characterService;
 
         private string ConnectionId => Context.ConnectionId;
         
-        public PartyHub(IDistributedCache cache, ICharacterService characterService)
+        public PartyHub(IDistributedCache cache, ILadderService characterService)
         {
             _cache = cache;
             _characterService = characterService;
@@ -190,11 +190,6 @@ namespace ExileParty.Hubs
             return success;
         }
 
-        public async Task<string> GetAccountForCharacter(string character)
-        {
-            var account = await _characterService.GetAccountFromCharacterAsync(character);
-            return account;
-        }
         
 
     }
