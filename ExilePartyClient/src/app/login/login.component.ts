@@ -1,6 +1,6 @@
 import { Component, Inject, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { MatStep, MatStepper } from '@angular/material';
+import { MatStep, MatStepper, MatDialog } from '@angular/material';
 import { Router } from '@angular/router';
 
 import { AccountInfo } from '../shared/interfaces/account-info.interface';
@@ -18,6 +18,7 @@ import { IncomeService } from '../shared/providers/income.service';
 import { LadderService } from '../shared/providers/ladder.service';
 import { SessionService } from '../shared/providers/session.service';
 import { SettingsService } from '../shared/providers/settings.service';
+import { LeagueChangedDialogComponent } from '../shared/components/league-changed-dialog/league-changed-dialog.component';
 
 @Component({
     selector: 'app-login',
@@ -64,7 +65,8 @@ export class LoginComponent implements OnInit {
         private settingsService: SettingsService,
         private analyticsService: AnalyticsService,
         private ladderService: LadderService,
-        private incomeService: IncomeService
+        private incomeService: IncomeService,
+        private dialog: MatDialog
     ) {
         this.externalService.leagues.subscribe((res: League[]) => {
             this.leagues = res;
@@ -212,6 +214,29 @@ export class LoginComponent implements OnInit {
         }, 500);
     }
 
+    checkLeagueChange(event) {
+        if (event.selectedIndex === 3 && this.settingsService.get('lastLeague') !== undefined
+            && this.settingsService.get('lastLeague') !== this.leagueFormGroup.controls.leagueName.value) {
+            // league changed since last log-in
+            const dialogRef = this.dialog.open(LeagueChangedDialogComponent, {
+                width: '650px',
+                data: {
+                    icon: 'swap_horiz',
+                    title: 'League changed',
+                    // tslint:disable-next-line:max-line-length
+                    content: 'We detected that you changed league since your last login. Please note that your networth and area history will be mixed between leagues if you continue without clearing the history.<br/><br/>' +
+                        'Do you want to clear the history?'
+                }
+            });
+            dialogRef.afterClosed().subscribe(result => {
+                if (result !== undefined) {
+                    this.netWorthHistory = result.networthHistory;
+                    this.areaHistory = result.areaHistory;
+                }
+            });
+        }
+    }
+
     login() {
         this.isLoading = true;
         this.form = this.getFormObj();
@@ -266,6 +291,7 @@ export class LoginComponent implements OnInit {
             this.settingsService.set('account', this.form);
             this.sessionService.initSession(this.form.sessionId);
             this.isLoading = false;
+            this.settingsService.set('lastLeague', this.leagueFormGroup.controls.leagueName.value);
             this.router.navigate(['/authorized/dashboard']);
         });
     }

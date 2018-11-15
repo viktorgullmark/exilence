@@ -2,6 +2,7 @@
 All notable changes to this project will be documented in this file.
 
 ## [0.6.1] - 2018-XX-XX
+- Added a popup for clearing history if you change to another league when logging in
 - Increased width of popout-window 
 
 ## [0.6.0] - 2018-11-15

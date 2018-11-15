@@ -7,6 +7,8 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { LoginComponent } from './login.component';
 import { SharedModule } from '../shared/shared.module';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { LeagueChangedDialogModule } from '../shared/components/league-changed-dialog/league-changed-dialog.module';
+import { LeagueChangedDialogComponent } from '../shared/components/league-changed-dialog/league-changed-dialog.component';
 
 @NgModule({
   imports: [
@@ -20,8 +22,10 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
     MatOptionModule,
     MatSelectModule,
     MatFormFieldModule,
-    MatProgressBarModule
+    MatProgressBarModule,
+    LeagueChangedDialogModule
   ],
-  declarations: [LoginComponent]
+  declarations: [LoginComponent],
+  entryComponents: [LeagueChangedDialogComponent]
 })
 export class LoginModule { }
