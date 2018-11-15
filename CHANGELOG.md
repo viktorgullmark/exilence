@@ -1,6 +1,9 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [0.6.1] - 2018-XX-XX
+- Increased width of popout-window 
+
 ## [0.6.0] - 2018-11-15
 - Added support for private-leagues
 - Added a tutorial (helper-tooltips) that will be shown the first time you launch Exile Party
