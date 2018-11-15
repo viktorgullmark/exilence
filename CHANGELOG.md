@@ -1,7 +1,7 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
-## [0.5.6] - 2018-XX-XX
+## [0.6.0] - 2018-11-15
 - Added support for private-leagues
 - Added a tutorial (helper-tooltips) that will be shown the first time you launch Exile Party
 - Added a FAQ-page, listing frequently asked questions with answers
