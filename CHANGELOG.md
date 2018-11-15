@@ -1,12 +1,22 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
-## [0.5.6] - 2018-XX-XX
+## [0.6.1] - 2018-XX-XX
+- Added a popup for clearing history if you change to another league when logging in
+- Increased width of popout-window 
+
+## [0.6.0] - 2018-11-15
 - Added support for private-leagues
+- Added a tutorial (helper-tooltips) that will be shown the first time you launch Exile Party
+- Added a FAQ-page, listing frequently asked questions with answers
+- Added language-support (now displays timestamps within the app in your system language)
+- Added a general tab to the settings-page
+- Added a button to reset helper-tooltips
 - Improved reconnect-functionality to avoid infinite loop when party has expired
 - Fixed a bug where item-names werent displayed properly after an update from GGG
 - Changed hosting-provider for servers
 - Removed case-sensitivity in the path for the client.txt-file
+- Minor bugfixes and code-cleanup
 
 ## [0.5.5] - 2018-09-07
 - Added reconnect functionality, now tries to reconnect five times before disconnecting.

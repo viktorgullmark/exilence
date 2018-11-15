@@ -1,5 +1,5 @@
 <div class="container">
-  <mat-vertical-stepper linear="true" #stepper class="form login-form">
+  <mat-vertical-stepper linear="true" #stepper class="form login-form" (selectionChange)="checkLeagueChange($event)">
     <mat-step [stepControl]="accFormGroup">
       <form [formGroup]="accFormGroup">
         <ng-template matStepLabel>{{'ACCOUNT.NAME_INFO' | translate}}</ng-template>

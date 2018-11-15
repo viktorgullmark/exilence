@@ -5,6 +5,8 @@ import { IncomeModule } from '../../income/income.module';
 import { NetworthTableModule } from '../../networth-table/networth-table.module';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatInputModule, MatButtonModule, MatMenuModule, MatIconModule } from '@angular/material';
+import { InfoDialogModule } from '../../info-dialog/info-dialog.module';
+import { InfoDialogComponent } from '../../info-dialog/info-dialog.component';
 
 @NgModule({
   imports: [
@@ -16,9 +18,11 @@ import { MatInputModule, MatButtonModule, MatMenuModule, MatIconModule } from '@
     MatInputModule,
     MatMenuModule,
     MatButtonModule,
-    MatIconModule
+    MatIconModule,
+    InfoDialogModule
   ],
   declarations: [CharWealthComponent],
-  exports: [CharWealthComponent]
+  exports: [CharWealthComponent],
+  entryComponents: [InfoDialogComponent]
 })
 export class CharWealthModule { }

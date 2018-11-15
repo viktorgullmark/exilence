@@ -35,7 +35,7 @@ export class AppComponent {
     this.logout();
 
     translate.setDefaultLang('en');
-    moment.locale('en');
+    moment.locale(this.electronService.remote.app.getLocale());
     // console.log('AppConfig', AppConfig);
 
     if (electronService.isElectron()) {

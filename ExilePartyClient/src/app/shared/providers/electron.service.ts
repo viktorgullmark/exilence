@@ -47,7 +47,6 @@ export class ElectronService {
       this.robot = window.require('robot-js');
 
       const process = this.robot.Process.getCurrent();
-
     }
   }
 

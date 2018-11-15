@@ -1,5 +1,5 @@
 <div class="tab-group-header">
-    <mat-tab-group #tabGroup id="tabGroup" [(selectedIndex)]="selectedIndex">
+    <mat-tab-group #tabGroup id="tabGroup" [(selectedIndex)]="selectedIndex" (selectedTabChange)="openDialog()">
         <mat-tab #currentGrpTab id="currentGrpTab" class="active">
             <ng-template mat-tab-label>
                 <mat-icon class="tab-icon">group</mat-icon>
@@ -30,5 +30,5 @@
 </div>
 
 <div [hidden]="partyService.isEntering || selectedIndex != 1">
-    <app-party-summary *ngIf="!partyService.isEntering && selectedIndex == 1"></app-party-summary>
+    <app-party-summary #tabSummary *ngIf="!partyService.isEntering && selectedIndex == 1"></app-party-summary>
 </div>

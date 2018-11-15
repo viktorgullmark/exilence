@@ -57,7 +57,7 @@ ipcMain.on('popout-window', (event, data: ExileWindowEvent) => {
     x: 100,
     y: 100,
     height: 85,
-    width: 200,
+    width: 220,
     show: false,
     frame: false,
     resizable: false,
