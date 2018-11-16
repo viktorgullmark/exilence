@@ -16,18 +16,27 @@
     <mat-step [stepControl]="leagueFormGroup">
       <form [formGroup]="leagueFormGroup">
         <ng-template matStepLabel>{{'LEAGUE.LEAGUE_INFO' | translate}}</ng-template>
-        <span class="mat-body-1">If you can't fetch your characters. Go to <a class="external-link" (click)="openLink('https://www.pathofexile.com')">pathofexile.com</a> and set your profile to public, <br/>and make sure your character-list is set to visible</span><br/><br/>
+        <span class="mat-body-1">Start by selecting the league your character is in, then continue by choosing which league you want to fetch prices from (trade-league).<br/><br/>Example: If you play Delve SSF, you should select Delve as your trade league.</span>
+        <br/>
+        <br/>
         <mat-form-field>
           <mat-select formControlName="leagueName" placeholder="{{'LEAGUE.NAME' | translate}}" required>
             <mat-option *ngFor="let item of leagues" [value]="item.id">{{item.id}}</mat-option>
           </mat-select>
         </mat-form-field>
+        <mat-form-field>
+          <mat-select formControlName="tradeLeagueName" placeholder="{{'TRADELEAGUE.NAME' | translate}}" required>
+            <mat-option *ngFor="let item of tradeLeagues" [value]="item.id">{{item.id}}</mat-option>
+          </mat-select>
+        </mat-form-field>
+        
         <div class="btn-grp">
           <button mat-raised-button class="btn-back" matStepperPrevious>Back</button>
           <button mat-raised-button color="primary" *ngIf="!isFetching" (click)="getCharacterList()">Fetch characters</button>
           <mat-progress-bar *ngIf="isFetching" class="progress-bar" color="primary" mode="indeterminate">
           </mat-progress-bar>
         </div>
+        <span class="mat-body-1">If you can't fetch your characters. Go to <a class="external-link" (click)="openLink('https://www.pathofexile.com')">pathofexile.com</a> and set your profile to public, <br/>and make sure your character-list is set to visible</span>
       </form>
     </mat-step>
     <mat-step [stepControl]="charFormGroup">
