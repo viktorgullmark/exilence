@@ -52,6 +52,9 @@
         "LEAGUE_INFO": "Choose your league",
         "NAME": "League"
     },
+    "TRADELEAGUE": {
+        "NAME": "Trade league"
+    },
     "CHARACTER": {
         "NAME": "Character name",
         "NAME_INFO": "Select your current character"

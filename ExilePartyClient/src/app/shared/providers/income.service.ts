@@ -126,21 +126,7 @@ export class IncomeService {
     const accountName = this.localPlayer.account;
     const league = this.localPlayer.character.league;
 
-    let priceInfoLeague = league;
-
-    // fetch prices for trading counter-part if character is in SSF (dynamic leagues will be added later)
-    if (priceInfoLeague === 'SSF Incursion HC') {
-      priceInfoLeague = 'Hardcore Incursion';
-    }
-    if (priceInfoLeague === 'SSF Hardcore') {
-      priceInfoLeague = 'Hardcore';
-    }
-    if (priceInfoLeague === 'SSF Incursion') {
-      priceInfoLeague = 'Incursion';
-    }
-    if (priceInfoLeague === 'SSF Standard') {
-      priceInfoLeague = 'Standard';
-    }
+    const priceInfoLeague = this.settingsService.get('account.tradeLeagueName');
 
     this.playerStashTabs = [];
     this.totalNetWorthItems = [];
@@ -223,7 +209,7 @@ export class IncomeService {
   getValuesFromNinja(league: string) {
     const oneHourAgo = (Date.now() - (1 * 60 * 60 * 1000));
     const length = Object.values(this.ninjaPrices).length;
-    if (length > 0 && this.lastNinjaHit > oneHourAgo) {
+    if (length > 0 && (this.lastNinjaHit > oneHourAgo && !this.externalService.tradeLeagueChanged)) {
       return Observable.of(null);
     } else {
       this.logService.log('[INFO] Retriving prices from poe.ninja');

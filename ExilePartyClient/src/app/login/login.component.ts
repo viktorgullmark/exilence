@@ -2,6 +2,8 @@ import { Component, Inject, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatStep, MatStepper, MatDialog } from '@angular/material';
 import { Router } from '@angular/router';
+import { delay, catchError } from 'rxjs/operators';
+import { forkJoin, of, throwError } from 'rxjs';
 
 import { AccountInfo } from '../shared/interfaces/account-info.interface';
 import { ExtendedAreaInfo } from '../shared/interfaces/area.interface';
@@ -39,8 +41,10 @@ export class LoginComponent implements OnInit {
     fetched = false;
     characterList: Character[] = [];
     leagues: League[];
+    tradeLeagues: League[];
     player = {} as Player;
     leagueName: string;
+    tradeLeagueName: string;
     characterName: string;
     accountName: string;
     sessionId: string;
@@ -78,7 +82,8 @@ export class LoginComponent implements OnInit {
             accountName: [this.accountName !== undefined ? this.accountName : '', Validators.required]
         });
         this.leagueFormGroup = fb.group({
-            leagueName: [this.leagueName !== undefined ? this.leagueName : '', Validators.required]
+            leagueName: [this.leagueName !== undefined ? this.leagueName : '', Validators.required],
+            tradeLeagueName: [this.tradeLeagueName !== undefined ? this.tradeLeagueName : '', Validators.required]
         });
         this.sessFormGroup = fb.group({
             sessionId: [this.sessionId !== undefined ? this.sessionId : '']
@@ -106,6 +111,7 @@ export class LoginComponent implements OnInit {
         this.sessionId = this.settingsService.get('account.sessionId');
         this.accountName = this.settingsService.get('account.accountName');
         this.leagueName = this.settingsService.get('account.leagueName');
+        this.tradeLeagueName = this.settingsService.get('account.tradeLeagueName');
         this.sessionIdValid = this.settingsService.get('account.sessionIdValid');
         this.filePath = this.settingsService.get('account.filePath');
         this.netWorthHistory = this.settingsService.get('networth');
@@ -144,26 +150,34 @@ export class LoginComponent implements OnInit {
 
     getLeagues(accountName?: string) {
         this.isFetchingLeagues = true;
-        this.externalService.getCharacterList(accountName !== undefined ? accountName :
-            this.accFormGroup.controls.accountName.value).subscribe(res => {
 
-                // map character-leagues to new array
-                const distinctLeagues = [];
-                res.forEach(char => {
-                    if (distinctLeagues.find(l => l.id === char.league) === undefined) {
-                        distinctLeagues.push({ id: char.league } as League);
-                    }
-                });
+        const request = forkJoin(
+            this.externalService.getCharacterList(accountName !== undefined ? accountName :
+                this.accFormGroup.controls.accountName.value),
+            this.externalService.getLeagues('main', 1)
+        );
 
-                this.externalService.leagues.next(distinctLeagues);
-                this.fetchedLeagues = true;
-                setTimeout(() => {
-                    this.stepper.selectedIndex = 1;
-                }, 250);
-                setTimeout(() => {
-                    this.isFetchingLeagues = false;
-                }, 500);
+        request.subscribe(res => {
+            // filter out SSF-leagues when listing trade-leagues
+            this.tradeLeagues = res[1].filter(x => x.id.indexOf('SSF') === -1);
+
+            // map character-leagues to new array
+            const distinctLeagues = [];
+            res[0].forEach(char => {
+                if (distinctLeagues.find(l => l.id === char.league) === undefined) {
+                    distinctLeagues.push({ id: char.league } as League);
+                }
             });
+
+            this.externalService.leagues.next(distinctLeagues);
+            this.fetchedLeagues = true;
+            setTimeout(() => {
+                this.stepper.selectedIndex = 1;
+            }, 250);
+            setTimeout(() => {
+                this.isFetchingLeagues = false;
+            }, 500);
+        });
     }
 
     getCharacterList(accountName?: string) {
@@ -196,6 +210,7 @@ export class LoginComponent implements OnInit {
             accountName: this.accFormGroup.controls.accountName.value,
             characterName: this.charFormGroup.controls.characterName.value,
             leagueName: this.leagueFormGroup.controls.leagueName.value,
+            tradeLeagueName: this.leagueFormGroup.controls.tradeLeagueName.value,
             sessionId: this.sessFormGroup.controls.sessionId.value,
             filePath: this.pathFormGroup.controls.filePath.value,
             sessionIdValid: this.sessionIdValid
@@ -215,8 +230,12 @@ export class LoginComponent implements OnInit {
     }
 
     checkLeagueChange(event) {
-        if (event.selectedIndex === 3 && this.settingsService.get('lastLeague') !== undefined
-            && this.settingsService.get('lastLeague') !== this.leagueFormGroup.controls.leagueName.value) {
+        if (event.selectedIndex === 3 &&
+            (this.settingsService.get('lastLeague') !== undefined
+            && (this.settingsService.get('lastLeague') !== this.leagueFormGroup.controls.leagueName.value)
+            ||
+            (this.settingsService.get('account.tradeLeagueName') !== undefined
+            && this.settingsService.get('account.tradeLeagueName') !== this.leagueFormGroup.controls.tradeLeagueName.value))) {
             // league changed since last log-in
             const dialogRef = this.dialog.open(LeagueChangedDialogComponent, {
                 width: '650px',
@@ -224,7 +243,7 @@ export class LoginComponent implements OnInit {
                     icon: 'swap_horiz',
                     title: 'League changed',
                     // tslint:disable-next-line:max-line-length
-                    content: 'We detected that you changed league since your last login. Please note that your networth and area history will be mixed between leagues if you continue without clearing the history.<br/><br/>' +
+                    content: 'We detected that you changed league-settings since your last login. Please note that your networth and area history will be mixed between leagues if you continue without clearing the history.<br/><br/>' +
                         'Do you want to clear the history?'
                 }
             });
@@ -253,8 +272,7 @@ export class LoginComponent implements OnInit {
                         }
                         this.completeLogin();
                     },
-                    err => this.completeLogin(),
-                    () => this.completeLogin()
+                    err => this.completeLogin()
                 );
             });
     }
@@ -288,6 +306,14 @@ export class LoginComponent implements OnInit {
             this.player.sessionIdProvided = this.sessionIdValid;
             this.accountService.player.next(this.player);
             this.accountService.accountInfo.next(this.form);
+
+            // if trade-league has changed since last login, we should update ninjaprices
+            if (this.settingsService.get('account.tradeLeagueName') !== this.leagueFormGroup.controls.tradeLeagueName.value) {
+                this.externalService.tradeLeagueChanged = true;
+            } else {
+                this.externalService.tradeLeagueChanged = false;
+            }
+
             this.settingsService.set('account', this.form);
             this.sessionService.initSession(this.form.sessionId);
             this.isLoading = false;
