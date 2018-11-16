@@ -58,7 +58,7 @@ export class CharMapsComponent implements OnInit {
 
   openMapDialog(): void {
     setTimeout(() => {
-      if (!this.settingsService.get('diaShown_maps')) {
+      if (!this.settingsService.get('diaShown_maps') && !this.settingsService.get('hideTooltips')) {
         const dialogRef = this.dialog.open(InfoDialogComponent, {
           width: '650px',
           data: {
