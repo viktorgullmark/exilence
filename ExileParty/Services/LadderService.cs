@@ -93,52 +93,61 @@ namespace ExileParty.Services
 
             if (!anyRunning && leagueStatus.LastRun < DateTime.Now.AddMinutes(-5))
             {
-                // Set league status to running for the current league
-                statuses = await _cache.GetAsync<Dictionary<string, LadderStatusModel>>($"status:ladder:{league}");
-                statuses[league].Running = true;
-                await _cache.SetAsync($"status:ladder:{league}", statuses, new DistributedCacheEntryOptions { });
-
-                var oldLadder = await RetriveLadder(league);
-
-                var newLadder = new List<LadderPlayer>();
-                var pages = Enumerable.Range(0, 75);
-                using (var rateGate = new RateGate(2, TimeSpan.FromSeconds(1)))
+                try
                 {
-                    foreach (int page in pages)
+                    // Set league status to running for the current league
+                    statuses = await _cache.GetAsync<Dictionary<string, LadderStatusModel>>($"status:ladder:{league}");
+                    statuses[league].Running = true;
+                    await _cache.SetAsync($"status:ladder:{league}", statuses, new DistributedCacheEntryOptions { });
+
+                    var oldLadder = await RetriveLadder(league);
+
+                    var newLadder = new List<LadderPlayer>();
+                    var pages = Enumerable.Range(0, 75);
+                    using (var rateGate = new RateGate(2, TimeSpan.FromSeconds(1)))
                     {
-                        await rateGate.WaitToProceed();
-                        LadderApiResponse result = await FetchLadderApiPage(league, page);
-                        var LadderPlayerList = result.Entries.Select(t => new LadderPlayer()
+                        foreach (int page in pages)
                         {
-                            Name = t.Character.Name,
-                            Level = t.Character.Level,
-                            Online = t.Online,
-                            Dead = t.Dead,
-                            Account = t.Account.Name,
-                            Experience = t.Character.Experience,
-                            Experience_per_hour = 0,
-                            Rank = t.Rank,
-                            Twitch = t.Account.Twitch?.Name,
-                            Class = t.Character.Class,
-                            Class_rank = 0,
-                            Updated = DateTime.Now
-                        }).ToList();
-                        // Convert result to LadderPlayer model here
-                        newLadder.AddRange(LadderPlayerList);
-                        if (newLadder.Count == result.Total || result.Entries.Count == 0)
-                        {
-                            break;
+                            await rateGate.WaitToProceed();
+                            LadderApiResponse result = await FetchLadderApiPage(league, page);
+                            var LadderPlayerList = result.Entries.Select(t => new LadderPlayer()
+                            {
+                                Name = t.Character.Name,
+                                Level = t.Character.Level,
+                                Online = t.Online,
+                                Dead = t.Dead,
+                                Account = t.Account.Name,
+                                Experience = t.Character.Experience,
+                                Experience_per_hour = 0,
+                                Rank = t.Rank,
+                                Twitch = t.Account.Twitch?.Name,
+                                Class = t.Character.Class,
+                                Class_rank = 0,
+                                Updated = DateTime.Now
+                            }).ToList();
+                            // Convert result to LadderPlayer model here
+                            newLadder.AddRange(LadderPlayerList);
+                            if (newLadder.Count == result.Total || result.Entries.Count == 0)
+                            {
+                                break;
+                            }
                         }
                     }
+
+                    newLadder = CalculateStatistics(oldLadder, newLadder);
+
+                    await SaveLadder(league, newLadder);
+                    statuses = await _cache.GetAsync<Dictionary<string, LadderStatusModel>>($"status:ladder:{league}");
+                    statuses[league].Running = false;
+                    statuses[league].LastRun = DateTime.Now;
+                    await _cache.SetAsync($"status:ladder:{league}", statuses, new DistributedCacheEntryOptions { });
                 }
-
-                newLadder = CalculateStatistics(oldLadder, newLadder);
-
-                await SaveLadder(league, newLadder);
-                statuses = await _cache.GetAsync<Dictionary<string, LadderStatusModel>>($"status:ladder:{league}");
-                statuses[league].Running = false;
-                statuses[league].LastRun = DateTime.Now;
-                await _cache.SetAsync($"status:ladder:{league}", statuses, new DistributedCacheEntryOptions { });
+                catch (Exception e)
+                {
+                    statuses = await _cache.GetAsync<Dictionary<string, LadderStatusModel>>($"status:ladder:{league}");
+                    statuses[league].Running = false;
+                    statuses[league].LastRun = DateTime.Now;
+                }
             }
         }
 
@@ -150,18 +159,10 @@ namespace ExileParty.Services
                 if (oldLadderEntry != null && oldLadderEntry.Updated != DateTime.MinValue)
                 {
                     var expGain = newEntry.Experience - oldLadderEntry.Experience;
-                    if (expGain > 0)
-                    {
-                        var debug = true;
-                    }
                     var oneHour = (1 * 60 * 60);
-                    var timeBetweenUpdates = newEntry.Updated.ToUnixTimeStamp() - oldLadderEntry.Updated.ToUnixTimeStamp(); // Seconds 
+                    var timeBetweenUpdates = newEntry.Updated.ToUnixTimeStamp() - oldLadderEntry.Updated.ToUnixTimeStamp();
                     var gainOverTime = (oneHour / timeBetweenUpdates) * expGain;
                     newEntry.Experience_per_hour = (long)gainOverTime;
-                    if (newLadder.Any(t => t.Name == newEntry.Name))
-                    {
-                        newEntry.Class_rank = newLadder.Where(t => t.Class == newEntry.Class).ToList().FindIndex(t => t.Name == newEntry.Name) + 1;
-                    }
                 }
             }
             return newLadder;
@@ -189,7 +190,7 @@ namespace ExileParty.Services
             var counter = 0;
             foreach (var chunk in chunks)
             {
-                await _cache.SetAsync($"ladder:{league}:{counter}", chunk, new DistributedCacheEntryOptions { });
+                await _cache.SetAsync($"ladder:{league}:{counter}", chunk, new DistributedCacheEntryOptions { SlidingExpiration = TimeSpan.FromDays(7)});
                 counter++;
             }
         }
