@@ -57,7 +57,7 @@ namespace ExileParty
                 totalParties = partyList.Count(),
                 totalPlayers = players,                
                 Parties = partyList,
-                LeagueStatus = statuses
+                LeagueStatus = statuses.OrderByDescending(t => t.Value.Finished)
             };
 
             return Ok(response);
@@ -82,7 +82,7 @@ namespace ExileParty
             }
             await _cache.SetAsync<Dictionary<string, LadderStatusModel>>($"status:ladder", statuses);
 
-            return Ok(new { Statuses = statuses });
+            return Ok(new { LeagueStatus = statuses.OrderByDescending(t => t.Value.Finished) });
         }
     }
 }
