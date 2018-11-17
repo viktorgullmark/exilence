@@ -91,7 +91,7 @@ namespace ExileParty.Services
             }
             var anyRunning = statuses.Any(t => t.Value.Running);
 
-            if (!anyRunning && leagueStatus.LastRun < DateTime.Now.AddMinutes(-2))
+            if (!anyRunning && leagueStatus.LastRun < DateTime.Now.AddMinutes(-5))
             {
                 try
                 {
@@ -103,7 +103,7 @@ namespace ExileParty.Services
                     var oldLadder = await RetriveLadder(league);
 
                     var newLadder = new List<LadderPlayer>();
-                    var pages = Enumerable.Range(0, 75);
+                    var pages = Enumerable.Range(0, 25);
                     using (var rateGate = new RateGate(2, TimeSpan.FromSeconds(1)))
                     {
                         foreach (int page in pages)
