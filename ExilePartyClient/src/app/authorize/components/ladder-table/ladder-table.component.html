@@ -1,5 +1,5 @@
 <div class="not-found-message" *ngIf="dataSource.length == 0">
-  Sorry, the selected player does not currently have a ranking
+  The selected player is not currently in top 5000 in the current league.
 </div>
 <table *ngIf="dataSource.length > 0" mat-table [dataSource]="source" class="mat-elevation-z8" matSort matSortActive="rank"
   matSortDisableClear matSortDirection="asc">
