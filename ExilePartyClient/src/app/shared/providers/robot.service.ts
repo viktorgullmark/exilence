@@ -184,7 +184,7 @@ export class RobotService {
       }
       setTimeout(x => {
         this.cooldown = false;
-      }, 1500);
+      }, 1750);
     }
   }
 
