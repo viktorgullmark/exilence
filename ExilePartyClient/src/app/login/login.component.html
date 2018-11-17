@@ -1,5 +1,5 @@
 <div class="container">
-  <mat-vertical-stepper linear="true" #stepper class="form login-form" (selectionChange)="checkLeagueChange($event)">
+  <mat-vertical-stepper #stepper class="form login-form" (selectionChange)="checkLeagueChange($event)">
     <mat-step [stepControl]="accFormGroup">
       <form [formGroup]="accFormGroup">
         <ng-template matStepLabel>{{'ACCOUNT.NAME_INFO' | translate}}</ng-template>
@@ -7,7 +7,7 @@
           <input matInput formControlName="accountName" placeholder="{{'ACCOUNT.NAME' | translate}}" required>
         </mat-form-field>
         <div class="btn-grp">
-            <button mat-raised-button color="primary" *ngIf="!isFetchingLeagues" (click)="getLeagues()">Fetch leagues</button>
+            <button mat-raised-button color="primary" *ngIf="!isFetchingLeagues" (click)="getLeagues(undefined, true)">Fetch leagues</button>
             <mat-progress-bar *ngIf="isFetchingLeagues" class="progress-bar" color="primary" mode="indeterminate">
             </mat-progress-bar>
         </div>
@@ -32,7 +32,7 @@
         
         <div class="btn-grp">
           <button mat-raised-button class="btn-back" matStepperPrevious>Back</button>
-          <button mat-raised-button color="primary" *ngIf="!isFetching" (click)="getCharacterList()">Fetch characters</button>
+          <button mat-raised-button color="primary" *ngIf="!isFetching" (click)="getCharacterList(undefined, true)">Fetch characters</button>
           <mat-progress-bar *ngIf="isFetching" class="progress-bar" color="primary" mode="indeterminate">
           </mat-progress-bar>
         </div>

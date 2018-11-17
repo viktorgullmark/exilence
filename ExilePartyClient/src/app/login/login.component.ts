@@ -146,9 +146,25 @@ export class LoginComponent implements OnInit {
         this.sessFormGroup.valueChanges.subscribe(val => {
             this.needsValidation = true;
         });
+
+        // bypass to complete if settings are prefilled
+        if (this.characterName !== undefined &&
+            this.sessionId !== undefined &&
+            this.accountName !== undefined &&
+            this.leagueName !== undefined &&
+            this.tradeLeagueName !== undefined &&
+            this.sessionIdValid !== undefined &&
+            this.filePath !== undefined &&
+            this.netWorthHistory !== undefined &&
+            this.areaHistory !== undefined) {
+
+            this.stepper.selectedIndex = 5;
+            this.getLeagues(undefined, false);
+            this.getCharacterList(undefined, false);
+        }
     }
 
-    getLeagues(accountName?: string) {
+    getLeagues(accountName?: string, skipStep?: boolean) {
         this.isFetchingLeagues = true;
 
         const request = forkJoin(
@@ -171,9 +187,11 @@ export class LoginComponent implements OnInit {
 
             this.externalService.leagues.next(distinctLeagues);
             this.fetchedLeagues = true;
-            setTimeout(() => {
-                this.stepper.selectedIndex = 1;
-            }, 250);
+            if (skipStep) {
+                setTimeout(() => {
+                    this.stepper.selectedIndex = 1;
+                }, 250);
+            }
             setTimeout(() => {
                 this.isFetchingLeagues = false;
             }, 500);
@@ -187,7 +205,7 @@ export class LoginComponent implements OnInit {
         }
     }
 
-    getCharacterList(accountName?: string) {
+    getCharacterList(accountName?: string, skipStep?: boolean) {
         this.isFetching = true;
         this.externalService.getCharacterList(accountName !== undefined ? accountName : this.accFormGroup.controls.accountName.value)
             .subscribe((res: Character[]) => {
@@ -198,9 +216,11 @@ export class LoginComponent implements OnInit {
                 if (this.characterList.find(x => x.name === this.characterName) === undefined) {
                     this.charFormGroup.controls.characterName.setValue('');
                 }
-                setTimeout(() => {
-                    this.stepper.selectedIndex = 2;
-                }, 250);
+                if (skipStep) {
+                    setTimeout(() => {
+                        this.stepper.selectedIndex = 2;
+                    }, 250);
+                }
                 setTimeout(() => {
                     this.isFetching = false;
                 }, 500);
