@@ -6,6 +6,8 @@ All notable changes to this project will be documented in this file.
 - Added support to choose which league prices should be fetched from (for SSF/private-leagues that doesn't have pricing)
 - Added a popup for clearing history if you change to another league when logging in
 - Added a limit to how often messages can be sent to the game (every 1½ second)
+- Replaced poe-racing.com-implementation with our own ladder-endpoint
+- Added ladder-parsing for private-leagues
 - Now autocompletes to the last step of the login-process if you have all settings stored
 - Now auto-selects trade-league for you if the league selected is a trade-league to avoid mistakes
 - Reworked keybind-events to be more reliable (using a new framework)
