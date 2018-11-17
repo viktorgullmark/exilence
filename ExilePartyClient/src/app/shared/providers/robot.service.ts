@@ -110,33 +110,22 @@ export class RobotService {
     return down && up;
   }
 
-  private SendInputText(text: string) {
+  private SendInputText(text: string): Promise<any> {
 
-    // const codes = text.split('').map(c => {
-    //   const code = c.charCodeAt(0);
-    //   return code;
-    // });
-
-    this.KeyToggle(Keys.Enter, 'down', false);
-    this.KeyToggle(Keys.Enter, 'up', false);
-
-    this.KeyToggle(Keys.Ctrl, 'down', false);
-    this.KeyToggle(Keys.V, 'down', false);
-
-    this.KeyToggle(Keys.Ctrl, 'up', false);
-    this.KeyToggle(Keys.V, 'up', false);
-
-    this.KeyToggle(Keys.Enter, 'down', false);
-    this.KeyToggle(Keys.Enter, 'up', false);
+    return this.electronService.keysender.startBatch()
+      .batchTypeKey('enter')
+      .batchTypeCombination(['control', 'v'])
+      .batchTypeKey('enter')
+      .sendBatch();
   }
 
   private robotHearbeat() {
-
     // Clipboard
-    if (this.clipboard.hasText()) {
-      const clip = this.clipboard.getText();
+    const currentText = this.clipboard.getText();
+    if (currentText !== undefined && currentText !== null) {
+      const clip = currentText;
       if (clip !== this.clipboardValue) {
-        this.clipboardValue = this.clipboard.getText();
+        this.clipboardValue = currentText;
       }
     }
 
@@ -149,7 +138,7 @@ export class RobotService {
     const winToSetOnTop = this.user32.FindWindowA(null, windowTitle);
     const keytap = this.KeyTap(Keys.Ctrl);
     const foreground = this.user32.SetForegroundWindow(winToSetOnTop);
-    return keytap && foreground;
+    return foreground;
   }
 
   public sendTextToPathWindow(text: string, fromApp: boolean): boolean {
@@ -162,30 +151,31 @@ export class RobotService {
       while (this.keyboard.getState(Keys.Ctrl) || this.keyboard.getState(Keys.Alt) || this.keyboard.getState(Keys.Shift)) {
         this.timer.sleep(50);
       }
-
       let clipboardValue = null;
-      if (this.clipboard.hasText()) {
+      const currentText = this.clipboard.getText();
+
+      if (currentText !== undefined && currentText !== null) {
         clipboardValue = this.clipboardValue;
         this.clipboard.setText(text);
       }
+
       const isWindowActive = this.sendAndFocusWindow(windowTitle, text);
 
       if (isWindowActive) {
-        setTimeout(() => {
-          this.SendInputText(text);
+        this.SendInputText(text).then(() => {
           this.logService.log('Successfully send text to window');
-          setTimeout(() => {
-            if (clipboardValue) {
-              this.clipboard.setText(clipboardValue);
-            }
-            return true;
-          }, (250));
-        }, 0);
+          if (clipboardValue) {
+            this.clipboard.setText(clipboardValue);
+          }
+          return true;
+        }
+        );
 
       } else {
         this.logService.log('Could not send text to window', windowTitle, true);
         return false;
       }
+
     }
   }
 

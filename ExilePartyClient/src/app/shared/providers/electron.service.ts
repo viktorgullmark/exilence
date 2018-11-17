@@ -19,6 +19,7 @@ export class ElectronService {
   settings: any;
   robot: any;
   zlib: any;
+  keysender: any;
 
   ffi: any;
   ref: any;
@@ -38,6 +39,7 @@ export class ElectronService {
       this.shell = window.require('electron').shell;
       this.settings = window.require('electron-settings');
       this.zlib = window.require('zlib');
+      this.keysender = window.require('node-key-sender');
 
       this.ffi = window.require('ffi');
       this.ref = window.require('ref');
