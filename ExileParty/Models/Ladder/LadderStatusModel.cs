@@ -9,6 +9,7 @@ namespace ExileParty.Models.Ladder
     public class LadderStatusModel
     {
         public bool Running { get; set; }
-        public DateTime LastRun { get; set; }   
+        public DateTime Started { get; set; }
+        public DateTime Finished { get; set; }
     }
 }

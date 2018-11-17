@@ -78,7 +78,7 @@ namespace ExileParty.Services
                 statuses = new Dictionary<string, LadderStatusModel>();
             }
 
-            var leagueStatus = new LadderStatusModel() { Running = false, LastRun = DateTime.MinValue };
+            var leagueStatus = new LadderStatusModel() { Running = false, Finished = DateTime.MinValue };
 
             if (statuses.ContainsKey(league))
             {
@@ -91,13 +91,14 @@ namespace ExileParty.Services
             }
             var anyRunning = statuses.Any(t => t.Value.Running);
 
-            if (!anyRunning && leagueStatus.LastRun < DateTime.Now.AddMinutes(-5))
+            if (!anyRunning && leagueStatus.Finished < DateTime.Now.AddMinutes(-5))
             {
                 try
                 {
                     // Set league status to running for the current league
                     statuses = await _cache.GetAsync<Dictionary<string, LadderStatusModel>>($"status:ladder");
                     statuses[league].Running = true;
+                    statuses[league].Started = DateTime.Now;
                     await _cache.SetAsync($"status:ladder", statuses, new DistributedCacheEntryOptions { });
 
                     var oldLadder = await RetriveLadder(league);
@@ -139,14 +140,14 @@ namespace ExileParty.Services
                     await SaveLadder(league, newLadder);
                     statuses = await _cache.GetAsync<Dictionary<string, LadderStatusModel>>($"status:ladder");
                     statuses[league].Running = false;
-                    statuses[league].LastRun = DateTime.Now;
+                    statuses[league].Finished = DateTime.Now;
                     await _cache.SetAsync($"status:ladder", statuses, new DistributedCacheEntryOptions { });
                 }
                 catch (Exception e)
                 {
                     statuses = await _cache.GetAsync<Dictionary<string, LadderStatusModel>>($"status:ladder");
                     statuses[league].Running = false;
-                    statuses[league].LastRun = DateTime.Now;
+                    statuses[league].Finished = DateTime.Now;
                 }
             }
         }

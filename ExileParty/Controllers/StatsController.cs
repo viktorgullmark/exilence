@@ -70,5 +70,19 @@ namespace ExileParty
 
             return Ok(new { List = list });
         }
+
+
+        [Route("Ladder/Reset")]
+        public async Task<IActionResult> LadderReset()
+        {
+            var statuses = await _cache.GetAsync<Dictionary<string, LadderStatusModel>>($"status:ladder");
+            foreach (var status in statuses)
+            {
+                status.Value.Running = false;
+            }
+            await _cache.SetAsync<Dictionary<string, LadderStatusModel>>($"status:ladder", statuses);
+
+            return Ok(new { Statuses = statuses });
+        }
     }
 }
