@@ -43,11 +43,19 @@
         width: calc(100% - 50px);
         padding-left: 25px;
         margin-right: 25px;
-        margin-top: 25px;
+        margin-top: 45px;
         margin-bottom: 25px;
 
         .ladder-table-wrapper {
             height: calc(100% - 60px);
+            @media screen and (max-height: 975px) {
+                overflow-y: scroll;
+                max-height: 490px;
+            }
+            @media screen and (max-height: 870px) {
+                overflow-y: scroll;
+                max-height: 390px;
+            }
         }
     }
 }
