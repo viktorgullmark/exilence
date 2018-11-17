@@ -1,7 +1,7 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
-## [0.6.1] - 2018-XX-XX
+## [0.6.1] - 2018-11-17
 - Increased the time you can be inactive before getting kicked from the server (now 1 hour instead of 15 min)
 - Added support to choose which league prices should be fetched from (for SSF/private-leagues that doesn't have pricing)
 - Added a popup for clearing history if you change to another league when logging in
