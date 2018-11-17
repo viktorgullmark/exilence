@@ -18,6 +18,8 @@ export class RobotService {
   private activeWindow: any;
   private clipboardValue: string;
 
+  private cooldown = false;
+
   public activeWindowTitleSub: BehaviorSubject<string> = new BehaviorSubject<string>('');
 
   public pressedKeysList: BehaviorSubject<number[]> = new BehaviorSubject<number[]>([]);
@@ -143,39 +145,46 @@ export class RobotService {
 
   public sendTextToPathWindow(text: string, fromApp: boolean): boolean {
 
-    const windowTitle = 'Path of Exile';
-    const shouldSendToWindow = this.activeWindowTitle === 'Path of Exile' || this.activeWindowTitle === 'ExileParty' || fromApp;
+    if (!this.cooldown) {
+      this.cooldown = true;
 
-    if (shouldSendToWindow) {
+      const windowTitle = 'Path of Exile';
+      const shouldSendToWindow = this.activeWindowTitle === 'Path of Exile' || this.activeWindowTitle === 'ExileParty' || fromApp;
 
-      while (this.keyboard.getState(Keys.Ctrl) || this.keyboard.getState(Keys.Alt) || this.keyboard.getState(Keys.Shift)) {
-        this.timer.sleep(50);
-      }
-      let clipboardValue = null;
-      const currentText = this.clipboard.getText();
+      if (shouldSendToWindow) {
 
-      if (currentText !== undefined && currentText !== null) {
-        clipboardValue = this.clipboardValue;
-        this.clipboard.setText(text);
-      }
-
-      const isWindowActive = this.sendAndFocusWindow(windowTitle, text);
-
-      if (isWindowActive) {
-        this.SendInputText(text).then(() => {
-          this.logService.log('Successfully send text to window');
-          if (clipboardValue) {
-            this.clipboard.setText(clipboardValue);
-          }
-          return true;
+        while (this.keyboard.getState(Keys.Ctrl) || this.keyboard.getState(Keys.Alt) || this.keyboard.getState(Keys.Shift)) {
+          this.timer.sleep(50);
         }
-        );
+        let clipboardValue = null;
+        const currentText = this.clipboard.getText();
 
-      } else {
-        this.logService.log('Could not send text to window', windowTitle, true);
-        return false;
+        if (currentText !== undefined && currentText !== null) {
+          clipboardValue = this.clipboardValue;
+          this.clipboard.setText(text);
+        }
+
+        const isWindowActive = this.sendAndFocusWindow(windowTitle, text);
+
+        if (isWindowActive) {
+          this.SendInputText(text).then(() => {
+            this.logService.log('Successfully send text to window');
+            if (clipboardValue) {
+              this.clipboard.setText(clipboardValue);
+            }
+            return true;
+          }
+          );
+
+        } else {
+          this.logService.log('Could not send text to window', windowTitle, true);
+          return false;
+        }
+
       }
-
+      setTimeout(x => {
+        this.cooldown = false;
+      }, 1500);
     }
   }
 

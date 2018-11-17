@@ -19,6 +19,7 @@ import { LogService } from './log.service';
 import { NinjaService } from './ninja.service';
 import { PartyService } from './party.service';
 import { SettingsService } from './settings.service';
+import { SessionService } from './session.service';
 
 
 
@@ -46,7 +47,7 @@ export class IncomeService {
     private partyService: PartyService,
     private externalService: ExternalService,
     private settingsService: SettingsService,
-    private logService: LogService,
+    private logService: LogService
   ) {
   }
 
@@ -74,12 +75,11 @@ export class IncomeService {
     this.netWorthHistory = this.settingsService.get('networth');
 
     this.sessionIdValid = this.settingsService.get('account.sessionIdValid');
-
     if (
       this.netWorthHistory.lastSnapshot < (Date.now() - this.fiveMinutes) &&
       this.localPlayer !== undefined &&
       (this.sessionId !== undefined && this.sessionId !== '' && this.sessionIdValid) &&
-      !this.isSnapshotting
+      !this.isSnapshotting && !this.accountService.loggingIn
     ) {
       this.isSnapshotting = true;
       this.netWorthHistory.lastSnapshot = Date.now();
