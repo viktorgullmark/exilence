@@ -137,6 +137,7 @@ export class LoginComponent implements OnInit {
     }
 
     ngOnInit() {
+        this.accountService.loggingIn = true;
         this.accountService.characterList.subscribe(res => {
             if (res !== undefined) {
                 this.characterList = res;
@@ -340,6 +341,8 @@ export class LoginComponent implements OnInit {
             } else {
                 this.externalService.tradeLeagueChanged = false;
             }
+
+            this.accountService.loggingIn = false;
 
             this.settingsService.set('account', this.form);
             this.sessionService.initSession(this.form.sessionId);
