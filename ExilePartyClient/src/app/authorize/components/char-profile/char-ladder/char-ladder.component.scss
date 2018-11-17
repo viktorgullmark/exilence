@@ -19,6 +19,11 @@
             p {
                 margin-top: 0;
             }
+
+            .not-found-message {
+                font-size: 14px;
+                color: #ff5858;
+            }
         }
 
         .link-wrapper {
@@ -48,10 +53,12 @@
 
         .ladder-table-wrapper {
             height: calc(100% - 60px);
+
             @media screen and (max-height: 975px) {
                 overflow-y: scroll;
                 max-height: 490px;
             }
+
             @media screen and (max-height: 870px) {
                 overflow-y: scroll;
                 max-height: 390px;

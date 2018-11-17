@@ -4,7 +4,13 @@
             <p class="mat-body-1">
                 This page displays the selected players current ranking on the ladder, as well as players close in the
                 rankings.<br /><br />
-                This page will be refreshed automatically, at most every 2 minutes and in some cases it might take longer.
+                This page will be refreshed automatically, at most every 2 minutes and in some cases it might take
+                longer.
+                <span class="not-found-message" *ngIf="player != undefined && (player.ladderInfo == null || player.ladderInfo.length == 0)">
+                    <br /><br />
+                    The selected player is not currently in top 5000 in the current league or the ladder has not been
+                    updated for us yet, please check back in a couple of minutes.
+                </span>
             </p>
         </div>
     </div>
