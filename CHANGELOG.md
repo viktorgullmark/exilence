@@ -4,10 +4,13 @@ All notable changes to this project will be documented in this file.
 ## [0.6.1] - 2018-XX-XX
 - Added support to choose which league prices should be fetched from (for SSF/private-leagues that doesn't have pricing)
 - Added a popup for clearing history if you change to another league when logging in
+- Added a limit to how often messages can be sent to the game (every 1½ second)
+- Increased the time you can be inactive before getting kicked from the server (now 1 hour instead of 15min)
 - Now autocompletes to the last step of the login-process if you have all settings stored
 - Now auto-selects trade-league for you if the league selected is a trade-league to avoid mistakes
 - Reworked keybind-events to be more reliable (using a new framework)
 - Added a global setting to hide tutorial-tooltips (found under general)
+- Fixed a bug where the program sometimes calculated net worth when changing characters (leading to inaccurate data)
 - Increased width of popout-window 
 
 ## [0.6.0] - 2018-11-15
