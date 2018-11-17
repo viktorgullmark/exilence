@@ -59,7 +59,7 @@ export class LadderService {
     this.logService.log(`Retriving ladder for league: ${league} and character: ${characterName}`);
     const parameters = `?character=${characterName}&league=${league}`;
     this.analyticsService.sendEvent('ladder', `GET LadderInfo`);
-    return this.http.get(AppConfig.url + '/api/stats/ladder' + parameters)
+    return this.http.get(AppConfig.url + 'api/stats/ladder' + parameters)
       .catch(e => {
         return Observable.of(null);
       });
