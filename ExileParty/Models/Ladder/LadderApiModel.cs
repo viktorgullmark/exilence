@@ -3,17 +3,18 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace ExileParty.Models
+namespace ExileParty.Models.Ladder
 {
+    [Serializable]
     public class LadderApiCharacter
     {
         public string Name { get; set; }
         public int Level { get; set; }
         public string @Class { get; set; }
         public string Id { get; set; }
-        public object Experience { get; set; }
+        public long Experience { get; set; }
     }
-
+    [Serializable]
     public class LadderApiGuild
     {
         public string Id { get; set; }
@@ -22,17 +23,17 @@ namespace ExileParty.Models
         public DateTime CreatedAt { get; set; }
         public string StatusMessage { get; set; }
     }
-
+    [Serializable]
     public class LadderApiChallenges
     {
         public int Total { get; set; }
     }
-
+    [Serializable]
     public class LadderApiTwitch
     {
         public string Name { get; set; }
     }
-
+    [Serializable]
     public class LadderApiAccount
     {
         public string Name { get; set; }
@@ -41,6 +42,7 @@ namespace ExileParty.Models
         public LadderApiTwitch Twitch { get; set; }
     }
 
+    [Serializable]
     public class LadderApiEntry
     {
         public int Rank { get; set; }
