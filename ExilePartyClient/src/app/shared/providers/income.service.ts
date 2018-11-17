@@ -264,7 +264,7 @@ export class IncomeService {
 
     let selectedStashTabs: any[] = this.settingsService.get('selectedStashTabs');
 
-    if (selectedStashTabs === undefined || selectedStashTabs.length === 0) {
+    if (selectedStashTabs === undefined) {
       selectedStashTabs = [];
 
       for (let i = 0; i < 5; i++) {
