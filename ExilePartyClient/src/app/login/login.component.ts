@@ -180,6 +180,13 @@ export class LoginComponent implements OnInit {
         });
     }
 
+    mapTradeLeague(event) {
+        // if the league is a tradeleague, auto-select tradeleague
+        if (this.tradeLeagues.find(x => x.id === event.value)) {
+            this.leagueFormGroup.controls.tradeLeagueName.setValue(event.value);
+        }
+    }
+
     getCharacterList(accountName?: string) {
         this.isFetching = true;
         this.externalService.getCharacterList(accountName !== undefined ? accountName : this.accFormGroup.controls.accountName.value)
@@ -232,10 +239,10 @@ export class LoginComponent implements OnInit {
     checkLeagueChange(event) {
         if (event.selectedIndex === 3 &&
             (this.settingsService.get('lastLeague') !== undefined
-            && (this.settingsService.get('lastLeague') !== this.leagueFormGroup.controls.leagueName.value)
-            ||
-            (this.settingsService.get('account.tradeLeagueName') !== undefined
-            && this.settingsService.get('account.tradeLeagueName') !== this.leagueFormGroup.controls.tradeLeagueName.value))) {
+                && (this.settingsService.get('lastLeague') !== this.leagueFormGroup.controls.leagueName.value)
+                ||
+                (this.settingsService.get('account.tradeLeagueName') !== undefined
+                    && this.settingsService.get('account.tradeLeagueName') !== this.leagueFormGroup.controls.tradeLeagueName.value))) {
             // league changed since last log-in
             const dialogRef = this.dialog.open(LeagueChangedDialogComponent, {
                 width: '650px',
