@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Caching.Distributed;
 using ExileParty.Helper;
 using Microsoft.Extensions.Logging;
+using ExileParty.Models.Ladder;
 
 namespace ExileParty
 {
@@ -48,12 +49,15 @@ namespace ExileParty
 
             }
 
+            var statuses = await _cache.GetAsync<Dictionary<string, LadderStatusModel>>($"status:ladder");
+
 
             var response = new
             {
                 totalParties = partyList.Count(),
                 totalPlayers = players,                
-                Parties = partyList
+                Parties = partyList,
+                LeagueStatus = statuses
             };
 
             return Ok(response);
