@@ -7,6 +7,7 @@ using ExileParty.Helper;
 using ExileParty.Interfaces;
 using ExileParty.Models;
 using ExileParty.Models.Ladder;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
@@ -15,6 +16,7 @@ namespace ExileParty.Services
 {
     public class LadderService : ILadderService
     {
+        private readonly IHostingEnvironment _env;
         private readonly IDistributedCache _cache;
         private readonly ILogger<LadderService> _log;
         private readonly IExternalService _externalService;
@@ -26,10 +28,11 @@ namespace ExileParty.Services
         private const string PoeNinjaStatsUrl = "http://poe.ninja/api/Data/GetStats";
         private const string TradeUrl = "http://api.pathofexile.com/public-stash-tabs";
 
-        public LadderService(IDistributedCache cache, ILogger<LadderService> log, IExternalService externalService)
+        public LadderService(IDistributedCache cache, ILogger<LadderService> log, IExternalService externalService, IHostingEnvironment env)
         {
             _cache = cache;
             _log = log;
+            _env = env;
             _externalService = externalService;
         }
 
@@ -46,7 +49,10 @@ namespace ExileParty.Services
 
         public async Task<List<LadderPlayer>> GetLadderForPlayer(string league, string character)
         {
-            TryUpdateLadder(league); //Not awaited with purpose
+            if (!_env.IsDevelopment())
+            {
+                TryUpdateLadder(league); //Not awaited with purpose
+            }
 
             var leagueLadder = await RetriveLadder(league);
 
