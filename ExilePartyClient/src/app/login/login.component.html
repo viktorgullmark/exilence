@@ -1,5 +1,5 @@
 <div class="container">
-  <mat-vertical-stepper linear="true" #stepper class="form login-form" (selectionChange)="checkLeagueChange($event)">
+  <mat-vertical-stepper #stepper class="form login-form" (selectionChange)="checkLeagueChange($event)">
     <mat-step [stepControl]="accFormGroup">
       <form [formGroup]="accFormGroup">
         <ng-template matStepLabel>{{'ACCOUNT.NAME_INFO' | translate}}</ng-template>
@@ -7,7 +7,7 @@
           <input matInput formControlName="accountName" placeholder="{{'ACCOUNT.NAME' | translate}}" required>
         </mat-form-field>
         <div class="btn-grp">
-            <button mat-raised-button color="primary" *ngIf="!isFetchingLeagues" (click)="getLeagues()">Fetch leagues</button>
+            <button mat-raised-button color="primary" *ngIf="!isFetchingLeagues" (click)="getLeagues(undefined, true)">Fetch leagues</button>
             <mat-progress-bar *ngIf="isFetchingLeagues" class="progress-bar" color="primary" mode="indeterminate">
             </mat-progress-bar>
         </div>
@@ -16,11 +16,11 @@
     <mat-step [stepControl]="leagueFormGroup">
       <form [formGroup]="leagueFormGroup">
         <ng-template matStepLabel>{{'LEAGUE.LEAGUE_INFO' | translate}}</ng-template>
-        <span class="mat-body-1">Start by selecting the league your character is in, then continue by choosing which league you want to fetch prices from (trade-league).<br/><br/>Example: If you play Delve SSF, you should select Delve as your trade league.</span>
+        <span class="mat-body-1">Start by selecting the league your character is in, then continue by choosing which league you want to fetch prices from (trade-league). Note that you will only see leagues which you have characters in.<br/><br/>Example: If you play Delve SSF, you should select Delve as your trade league.</span>
         <br/>
         <br/>
         <mat-form-field>
-          <mat-select formControlName="leagueName" placeholder="{{'LEAGUE.NAME' | translate}}" required>
+          <mat-select formControlName="leagueName" (selectionChange)="mapTradeLeague($event)" placeholder="{{'LEAGUE.NAME' | translate}}" required>
             <mat-option *ngFor="let item of leagues" [value]="item.id">{{item.id}}</mat-option>
           </mat-select>
         </mat-form-field>
@@ -32,7 +32,7 @@
         
         <div class="btn-grp">
           <button mat-raised-button class="btn-back" matStepperPrevious>Back</button>
-          <button mat-raised-button color="primary" *ngIf="!isFetching" (click)="getCharacterList()">Fetch characters</button>
+          <button mat-raised-button color="primary" *ngIf="!isFetching" (click)="getCharacterList(undefined, true)">Fetch characters</button>
           <mat-progress-bar *ngIf="isFetching" class="progress-bar" color="primary" mode="indeterminate">
           </mat-progress-bar>
         </div>

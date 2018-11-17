@@ -38,7 +38,7 @@ export class CharEquipmentComponent implements OnInit, AfterViewInit {
   }
 
   openEquipmentDialog(): void {
-    if (!this.settingsService.get('diaShown_equipment')) {
+    if (!this.settingsService.get('diaShown_equipment') && !this.settingsService.get('hideTooltips')) {
       const dialogRef = this.dialog.open(InfoDialogComponent, {
         width: '650px',
         data: {

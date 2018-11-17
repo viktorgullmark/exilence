@@ -19,6 +19,7 @@ export class SettingsComponent implements OnInit {
   form: FormGroup;
   selectedIndex = 0;
   alwaysOnTop = false;
+  hideTooltips = false;
   sessionId: string;
   sessionIdValid: boolean;
 
@@ -109,6 +110,12 @@ export class SettingsComponent implements OnInit {
     if (onTopSetting !== undefined) {
       this.alwaysOnTop = onTopSetting;
     }
+
+    const hideTooltipsSetting = this.settingsService.get('hideTooltips');
+
+    if (hideTooltipsSetting !== undefined) {
+      this.hideTooltips = hideTooltipsSetting;
+    }
   }
 
   resetKeybinds() {
@@ -146,6 +153,14 @@ export class SettingsComponent implements OnInit {
       this.electronService.remote.getCurrentWindow().setAlwaysOnTop(false);
       this.electronService.remote.getCurrentWindow().setVisibleOnAllWorkspaces(false);
       this.settingsService.set('alwaysOnTop', false);
+    }
+  }
+
+  toggleHideTooltips() {
+    if (this.hideTooltips) {
+      this.settingsService.set('hideTooltips', true);
+    } else {
+      this.settingsService.set('hideTooltips', false);
     }
   }
 

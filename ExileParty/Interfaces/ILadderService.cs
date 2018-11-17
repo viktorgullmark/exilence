@@ -9,6 +9,6 @@ namespace ExileParty.Interfaces
 {
     public interface ILadderService
     {
-        Task<List<LadderApiEntry>> GetLadderForPlayer(string league, string player);
+        Task<List<LadderPlayer>> GetLadderForPlayer(string league, string player);
     }
 }

@@ -103,7 +103,7 @@ export class CharWealthComponent implements OnInit {
 
   openCurrencyDialog(): void {
     setTimeout(() => {
-      if (!this.settingsService.get('diaShown_wealth')) {
+      if (!this.settingsService.get('diaShown_wealth') && !this.settingsService.get('hideTooltips')) {
         const dialogRef = this.dialog.open(InfoDialogComponent, {
           width: '650px',
           data: {

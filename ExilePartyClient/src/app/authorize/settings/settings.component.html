@@ -136,5 +136,10 @@
       Press this button if you want to show the tutorial-dialogs once again. 
     </p>
     <button mat-raised-button color="primary" (click)="resetDialogs()" type="button">{{'SETTINGS.RESET_DIALOGS' | translate}}</button>
+    <br/>
+    <p>
+      Check this setting if you want to ignore all helpful tooltips. 
+    </p>
+    <mat-checkbox class="setting-checkbox" [(ngModel)]="hideTooltips" (ngModelChange)="toggleHideTooltips()">Hide tooltips</mat-checkbox>
   </div>
 </div>

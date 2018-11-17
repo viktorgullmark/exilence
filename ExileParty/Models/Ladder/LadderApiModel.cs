@@ -6,12 +6,6 @@ using System.Threading.Tasks;
 namespace ExileParty.Models.Ladder
 {
     [Serializable]
-    public class LadderApiCharacterStatistics
-    {
-        public long experienceGain { get; set; }
-    }
-
-    [Serializable]
     public class LadderApiCharacter
     {
         public string Name { get; set; }
@@ -19,7 +13,6 @@ namespace ExileParty.Models.Ladder
         public string @Class { get; set; }
         public string Id { get; set; }
         public long Experience { get; set; }
-        public LadderApiCharacterStatistics Statistics { get; set; }
     }
     [Serializable]
     public class LadderApiGuild
@@ -57,7 +50,6 @@ namespace ExileParty.Models.Ladder
         public bool Online { get; set; }
         public LadderApiCharacter Character { get; set; }
         public LadderApiAccount Account { get; set; }
-        public DateTime Updated { get; set; }
     }
 
     public class LadderApiResponse

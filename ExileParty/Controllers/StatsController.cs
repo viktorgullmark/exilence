@@ -60,10 +60,11 @@ namespace ExileParty
         }
 
         [Route("Ladder")]
-        public async Task<IActionResult> Ladder()
+        public async Task<IActionResult> Ladder(string league, string character)
         {
-            var list = await _ladderService.GetLadderForPlayer("Nostash NoParty Trade (PL406)", "ChainFF");
-            return Ok(list);
+            var list = await _ladderService.GetLadderForPlayer(league, character);
+
+            return Ok(new { List = list });
         }
     }
 }

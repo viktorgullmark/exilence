@@ -3,10 +3,12 @@ import 'rxjs/add/operator/map';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
-import { AccountService } from './account.service';
+
+import { AppConfig } from '../../../environments/environment';
 import { Player } from '../interfaces/player.interface';
-import { PartyService } from './party.service';
+import { AccountService } from './account.service';
 import { AnalyticsService } from './analytics.service';
+import { PartyService } from './party.service';
 
 @Injectable()
 export class LadderService {
@@ -51,9 +53,9 @@ export class LadderService {
     setTimeout(x => {
       this.cooldown = false;
     }, 1000 * 60 * 5);
-    const parameters = `?name=${characterName}&ladder=${league}`;
+    const parameters = `?character=${characterName}&league=${league}`;
     this.analyticsService.sendEvent('ladder', `GET LadderInfo`);
-    return this.http.get(this.url + 'follow' + parameters)
+    return this.http.get(AppConfig.url + '/api/stats/ladder' + parameters)
       .catch(e => {
         return Observable.of(null);
       });
