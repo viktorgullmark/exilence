@@ -36,6 +36,8 @@ export class StashtabListComponent implements OnInit, OnDestroy {
   ngOnInit() {
     // temporarily until implemented
     this.init();
+
+    this.settingsService.isChangingStash = true;
   }
 
   init() {
@@ -118,6 +120,7 @@ export class StashtabListComponent implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     this.stashTabSub.unsubscribe();
+    this.settingsService.isChangingStash = false;
   }
 
 }

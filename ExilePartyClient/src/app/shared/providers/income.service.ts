@@ -73,13 +73,15 @@ export class IncomeService {
     const oneHourAgo = (Date.now() - (1 * 60 * 60 * 1000));
     const oneWeekAgo = (Date.now() - (1 * 60 * 60 * 24 * 7 * 1000));
     this.netWorthHistory = this.settingsService.get('networth');
+    const selectedStashtabs = this.settingsService.get('selectedStashTabs');
 
     this.sessionIdValid = this.settingsService.get('account.sessionIdValid');
     if (
       this.netWorthHistory.lastSnapshot < (Date.now() - this.fiveMinutes) &&
       this.localPlayer !== undefined &&
       (this.sessionId !== undefined && this.sessionId !== '' && this.sessionIdValid) &&
-      !this.isSnapshotting && !this.accountService.loggingIn
+      !this.isSnapshotting && !this.accountService.loggingIn && !this.settingsService.isChangingStash &&
+      (selectedStashtabs === undefined || selectedStashtabs.length > 0)
     ) {
       this.isSnapshotting = true;
       this.netWorthHistory.lastSnapshot = Date.now();

@@ -10,7 +10,7 @@ All notable changes to this project will be documented in this file.
 - Now auto-selects trade-league for you if the league selected is a trade-league to avoid mistakes
 - Reworked keybind-events to be more reliable (using a new framework)
 - Added a global setting to hide tutorial-tooltips (found under general)
-- Fixed a bug where the program sometimes calculated net worth when changing characters (leading to inaccurate data)
+- Limited how often the program calculates net worth
 - Increased width of popout-window 
 
 ## [0.6.0] - 2018-11-15

@@ -4,6 +4,7 @@ import { ElectronService } from './electron.service';
 
 @Injectable()
 export class SettingsService {
+  isChangingStash = false;
   constructor(private electronService: ElectronService) {
 
   }
