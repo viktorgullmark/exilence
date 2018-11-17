@@ -43,7 +43,6 @@ namespace ExileParty.Helper
         }
 
         public static double ToUnixTimeStamp(this DateTime dateTime)
-
         {
             return (TimeZoneInfo.ConvertTimeToUtc(dateTime) - new DateTime(1970, 1, 1)).TotalSeconds;
         }

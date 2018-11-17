@@ -16,14 +16,12 @@ namespace ExileParty.Hubs
     public class PartyHub : Hub
     {
         private IDistributedCache _cache;
-        private ILadderService _characterService;
 
         private string ConnectionId => Context.ConnectionId;
         
-        public PartyHub(IDistributedCache cache, ILadderService characterService)
+        public PartyHub(IDistributedCache cache)
         {
             _cache = cache;
-            _characterService = characterService;
         }
                 
         public async Task JoinParty(string partyName, string playerObj)
