@@ -3,6 +3,7 @@ All notable changes to this project will be documented in this file.
 
 ## [0.6.2] - 2018-11-XX
 - Messages are now posted to your current party instead of local chat
+- Minor style-tweaks/fixes
 
 ## [0.6.1] - 2018-11-17
 - Increased the time you can be inactive before getting kicked from the server (now 1 hour instead of 15 min)
