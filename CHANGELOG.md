@@ -4,6 +4,7 @@ All notable changes to this project will be documented in this file.
 ## [0.6.1] - 2018-XX-XX
 - Added support to choose which league prices should be fetched from (for SSF/private-leagues that doesn't have pricing)
 - Added a popup for clearing history if you change to another league when logging in
+- Reworked keybind-events to be more reliable (using a new framework)
 - Added a global setting to hide tutorial-tooltips (found under general)
 - Increased width of popout-window 
 
