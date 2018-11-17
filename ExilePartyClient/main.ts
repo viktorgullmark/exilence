@@ -27,6 +27,9 @@ const serve = args.some(val => val === '--serve');
 
 ipcMain.on('keybinds-update', function (event, binds) {
   globalShortcut.unregisterAll();
+  globalShortcut.register('Command+Shift+I', () => {
+    windows[ExileWindowEnum.Main].openDevTools();
+  });
   binds.forEach(bind => {
     if (bind.enabled) {
       globalShortcut.register(bind.keys, () => {
