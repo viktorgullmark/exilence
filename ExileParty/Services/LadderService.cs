@@ -72,7 +72,7 @@ namespace ExileParty.Services
 
         public async Task TryUpdateLadder(string league)
         {
-            var statuses = await _cache.GetAsync<Dictionary<string, LadderStatusModel>>($"status:ladder:{league}");
+            var statuses = await _cache.GetAsync<Dictionary<string, LadderStatusModel>>($"status:ladder");
             if (statuses == null)
             {
                 statuses = new Dictionary<string, LadderStatusModel>();
@@ -87,18 +87,18 @@ namespace ExileParty.Services
             else
             {
                 statuses.Add(league, leagueStatus);
-                await _cache.SetAsync($"status:ladder:{league}", statuses, new DistributedCacheEntryOptions { });
+                await _cache.SetAsync($"status:ladder", statuses, new DistributedCacheEntryOptions { });
             }
             var anyRunning = statuses.Any(t => t.Value.Running);
 
-            if (!anyRunning && leagueStatus.LastRun < DateTime.Now.AddMinutes(-5))
+            if (!anyRunning && leagueStatus.LastRun < DateTime.Now.AddMinutes(-2))
             {
                 try
                 {
                     // Set league status to running for the current league
-                    statuses = await _cache.GetAsync<Dictionary<string, LadderStatusModel>>($"status:ladder:{league}");
+                    statuses = await _cache.GetAsync<Dictionary<string, LadderStatusModel>>($"status:ladder");
                     statuses[league].Running = true;
-                    await _cache.SetAsync($"status:ladder:{league}", statuses, new DistributedCacheEntryOptions { });
+                    await _cache.SetAsync($"status:ladder", statuses, new DistributedCacheEntryOptions { });
 
                     var oldLadder = await RetriveLadder(league);
 
@@ -137,14 +137,14 @@ namespace ExileParty.Services
                     newLadder = CalculateStatistics(oldLadder, newLadder);
 
                     await SaveLadder(league, newLadder);
-                    statuses = await _cache.GetAsync<Dictionary<string, LadderStatusModel>>($"status:ladder:{league}");
+                    statuses = await _cache.GetAsync<Dictionary<string, LadderStatusModel>>($"status:ladder");
                     statuses[league].Running = false;
                     statuses[league].LastRun = DateTime.Now;
-                    await _cache.SetAsync($"status:ladder:{league}", statuses, new DistributedCacheEntryOptions { });
+                    await _cache.SetAsync($"status:ladder", statuses, new DistributedCacheEntryOptions { });
                 }
                 catch (Exception e)
                 {
-                    statuses = await _cache.GetAsync<Dictionary<string, LadderStatusModel>>($"status:ladder:{league}");
+                    statuses = await _cache.GetAsync<Dictionary<string, LadderStatusModel>>($"status:ladder");
                     statuses[league].Running = false;
                     statuses[league].LastRun = DateTime.Now;
                 }
