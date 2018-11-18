@@ -1,10 +1,10 @@
 import { Component, Inject, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { MatStep, MatStepper, MatDialog } from '@angular/material';
+import { MatDialog, MatStep, MatStepper } from '@angular/material';
 import { Router } from '@angular/router';
-import { delay, catchError } from 'rxjs/operators';
-import { forkJoin, of, throwError } from 'rxjs';
+import { forkJoin } from 'rxjs';
 
+import { LeagueChangedDialogComponent } from '../shared/components/league-changed-dialog/league-changed-dialog.component';
 import { AccountInfo } from '../shared/interfaces/account-info.interface';
 import { ExtendedAreaInfo } from '../shared/interfaces/area.interface';
 import { Character } from '../shared/interfaces/character.interface';
@@ -16,11 +16,9 @@ import { AccountService } from '../shared/providers/account.service';
 import { AnalyticsService } from '../shared/providers/analytics.service';
 import { ElectronService } from '../shared/providers/electron.service';
 import { ExternalService } from '../shared/providers/external.service';
-import { IncomeService } from '../shared/providers/income.service';
 import { LadderService } from '../shared/providers/ladder.service';
 import { SessionService } from '../shared/providers/session.service';
 import { SettingsService } from '../shared/providers/settings.service';
-import { LeagueChangedDialogComponent } from '../shared/components/league-changed-dialog/league-changed-dialog.component';
 
 @Component({
     selector: 'app-login',
@@ -70,7 +68,6 @@ export class LoginComponent implements OnInit {
         private settingsService: SettingsService,
         private analyticsService: AnalyticsService,
         private ladderService: LadderService,
-        private incomeService: IncomeService,
         private dialog: MatDialog
     ) {
         this.externalService.leagues.subscribe((res: League[]) => {
@@ -176,7 +173,10 @@ export class LoginComponent implements OnInit {
             this.netWorthHistory !== undefined &&
             this.areaHistory !== undefined) {
 
-            this.stepper.selectedIndex = 5;
+            for (let i = 0; i < 6; i++) {
+                this.stepper.selectedIndex = i;
+            }
+
             this.getLeagues(undefined, false);
             this.getCharacterList(undefined, false);
         }

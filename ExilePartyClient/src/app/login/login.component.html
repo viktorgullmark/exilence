@@ -1,6 +1,6 @@
 <div class="container">
-  <mat-vertical-stepper #stepper class="form login-form" (selectionChange)="checkLeagueChange($event)">
-    <mat-step [stepControl]="accFormGroup">
+  <mat-vertical-stepper #stepper linear="true" class="form login-form" (selectionChange)="checkLeagueChange($event)">
+    <mat-step [stepControl]="accFormGroup" editable="true" completed="true">
       <form [formGroup]="accFormGroup">
         <ng-template matStepLabel>{{'ACCOUNT.NAME_INFO' | translate}}</ng-template>
         <mat-form-field>
