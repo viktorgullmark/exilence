@@ -11,13 +11,13 @@
         </div>
       </form>
     </mat-step>
-    <mat-step [stepControl]="sessFormGroup" optional="true">
+    <mat-step [stepControl]="sessFormGroup" [optional]="!privateProfileError && !(!sessionIdValid && !needsValidation && sessFormGroup.controls.sessionId.value != '')">
       <form [formGroup]="sessFormGroup">
         <ng-template matStepLabel>{{'ACCOUNT.SESSIONID_INFO' | translate}}</ng-template>
         <span class="mat-body-1">If you're not sure how to find your sessionId, visit <a class="external-link" (click)="openLink('https://www.pathofexile.com/forum/view-thread/1989935/page/9#p14857124')">this
             link</a></span><br /><br />
         <mat-form-field>
-          <input matInput formControlName="sessionId" type="password" placeholder="{{'ACCOUNT.SESSIONID' | translate}}">
+          <input matInput formControlName="sessionId" type="password" placeholder="{{'ACCOUNT.SESSIONID' | translate}}" required>
         </mat-form-field>
         <div class="btn-grp">
           <button mat-raised-button class="btn-back" matStepperPrevious>Back</button>
@@ -32,7 +32,7 @@
         <span class="form-error" *ngIf="privateProfileError && !(!sessionIdValid && !needsValidation && sessFormGroup.controls.sessionId.value != '')">{{'ERROR.PRIVATE_PROFILE' | translate}}</span>
       </form>
     </mat-step>
-    <mat-step [stepControl]="leagueFormGroup">
+    <mat-step [stepControl]="leagueFormGroup" [editable]="!privateProfileError">
       <form [formGroup]="leagueFormGroup">
         <ng-template matStepLabel>{{'LEAGUE.LEAGUE_INFO' | translate}}</ng-template>
         <span class="mat-body-1">Start by selecting the league your character is in, then continue by choosing which
