@@ -182,6 +182,10 @@ export class LoginComponent implements OnInit {
         }
     }
 
+    setSessionCookie(sessionId: string) {
+        this.externalService.setCookie(sessionId);
+    }
+
     getLeagues(accountName?: string, skipStep?: boolean) {
         this.isFetchingLeagues = true;
 

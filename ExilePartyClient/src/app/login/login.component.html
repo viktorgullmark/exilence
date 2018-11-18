@@ -23,7 +23,7 @@
           <button mat-raised-button class="btn-back" matStepperPrevious>Back</button>
           <button mat-raised-button color="primary" (click)="validateSessionId()" type="button" [disabled]="sessFormGroup.controls.sessionId.value == ''">Validate</button>
           <button mat-raised-button color="primary" [disabled]="(!sessionIdValid || needsValidation) && sessFormGroup.controls.sessionId.value != ''"
-            *ngIf="!isFetchingLeagues" (click)="getLeagues(undefined, true)">Fetch leagues</button>
+            *ngIf="!isFetchingLeagues" (click)="setSessionCookie(sessFormGroup.controls.sessionId.value); getLeagues(undefined, true)">Fetch leagues</button>
           <mat-progress-bar *ngIf="isFetchingLeagues" class="progress-bar" color="primary" mode="indeterminate">
           </mat-progress-bar>
         </div>
