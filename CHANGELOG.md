@@ -3,6 +3,7 @@ All notable changes to this project will be documented in this file.
 
 ## [0.6.2] - 2018-11-XX
 - Messages are now posted to your current party instead of local chat
+- Reworked layout for some of the tabs on the settings-page
 - Minor style-tweaks/fixes
 
 ## [0.6.1] - 2018-11-17
