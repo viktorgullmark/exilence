@@ -133,6 +133,10 @@
       </p>
       <mat-checkbox class="setting-checkbox" [(ngModel)]="alwaysOnTop" (ngModelChange)="toggleAlwaysOnTop()">Set window
         always on top</mat-checkbox>
+      <p class="setting-desc-text">
+        Check this setting if you want ExileParty to be resizable
+      </p>
+      <mat-checkbox class="setting-checkbox" [(ngModel)]="isResizable" (ngModelChange)="toggleResizable()">Enable resize of window</mat-checkbox>
     </div>
   </div>
 </div>

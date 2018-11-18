@@ -111,7 +111,7 @@ function createWindow(windowType: ExileWindowEnum = ExileWindowEnum.Main) {
     minWidth: 1344,
     webPreferences: { webSecurity: false },
     frame: false,
-    resizable: true,
+    resizable: false,
     icon: path.join(__dirname, 'dist/assets/img/app-icon.png'),
   });
 

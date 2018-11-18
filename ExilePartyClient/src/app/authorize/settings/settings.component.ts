@@ -19,6 +19,7 @@ export class SettingsComponent implements OnInit {
   form: FormGroup;
   selectedIndex = 0;
   alwaysOnTop = false;
+  isResizable = false;
   hideTooltips = false;
   sessionId: string;
   sessionIdValid: boolean;
@@ -111,6 +112,12 @@ export class SettingsComponent implements OnInit {
       this.alwaysOnTop = onTopSetting;
     }
 
+    const isResizableSetting = this.settingsService.get('isResizable');
+
+    if (isResizableSetting !== undefined) {
+      this.isResizable = isResizableSetting;
+    }
+
     const hideTooltipsSetting = this.settingsService.get('hideTooltips');
 
     if (hideTooltipsSetting !== undefined) {
@@ -154,6 +161,17 @@ export class SettingsComponent implements OnInit {
       this.electronService.remote.getCurrentWindow().setVisibleOnAllWorkspaces(false);
       this.settingsService.set('alwaysOnTop', false);
     }
+  }
+
+  toggleResizable() {
+    if (this.isResizable) {
+      this.electronService.remote.getCurrentWindow().setResizable(true);
+      this.settingsService.set('isResizable', true);
+    } else {
+      this.electronService.remote.getCurrentWindow().setResizable(false);
+      this.settingsService.set('isResizable', false);
+    }
+
   }
 
   toggleHideTooltips() {
