@@ -33,6 +33,7 @@ export class LoginComponent implements OnInit {
     sessFormGroup: FormGroup;
     charFormGroup: FormGroup;
     pathFormGroup: FormGroup;
+    privateProfileError = false;
     pathValid = false;
     isLoading = false;
     isFetching = false;
@@ -106,6 +107,10 @@ export class LoginComponent implements OnInit {
         this.electronService.shell.openExternal(link);
     }
 
+    resetPrivateProfileError() {
+        this.privateProfileError = false;
+    }
+
     fetchSettings() {
         this.characterName = this.settingsService.get('account.characterName');
         this.sessionId = this.settingsService.get('account.sessionId');
@@ -166,11 +171,14 @@ export class LoginComponent implements OnInit {
     }
 
     getLeagues(accountName?: string, skipStep?: boolean) {
+        this.privateProfileError = false;
         this.isFetchingLeagues = true;
+
+        const sessId = this.sessFormGroup.controls.sessionId.value;
 
         const request = forkJoin(
             this.externalService.getCharacterList(accountName !== undefined ? accountName :
-                this.accFormGroup.controls.accountName.value),
+                this.accFormGroup.controls.accountName.value, (sessId !== undefined && sessId !== '') ? sessId : undefined),
             this.externalService.getLeagues('main', 1)
         );
 
@@ -178,24 +186,31 @@ export class LoginComponent implements OnInit {
             // filter out SSF-leagues when listing trade-leagues
             this.tradeLeagues = res[1].filter(x => x.id.indexOf('SSF') === -1);
 
-            // map character-leagues to new array
-            const distinctLeagues = [];
-            res[0].forEach(char => {
-                if (distinctLeagues.find(l => l.id === char.league) === undefined) {
-                    distinctLeagues.push({ id: char.league } as League);
-                }
-            });
-
-            this.externalService.leagues.next(distinctLeagues);
-            this.fetchedLeagues = true;
-            if (skipStep) {
-                setTimeout(() => {
-                    this.stepper.selectedIndex = 1;
-                }, 250);
-            }
-            setTimeout(() => {
+            if (res[0] === null) {
+                // profile is private
+                this.privateProfileError = true;
                 this.isFetchingLeagues = false;
-            }, 500);
+            } else {
+
+                // map character-leagues to new array
+                const distinctLeagues = [];
+                res[0].forEach(char => {
+                    if (distinctLeagues.find(l => l.id === char.league) === undefined) {
+                        distinctLeagues.push({ id: char.league } as League);
+                    }
+                });
+
+                this.externalService.leagues.next(distinctLeagues);
+                this.fetchedLeagues = true;
+                if (skipStep) {
+                    setTimeout(() => {
+                        this.stepper.selectedIndex = 2;
+                    }, 250);
+                }
+                setTimeout(() => {
+                    this.isFetchingLeagues = false;
+                }, 500);
+            }
         });
     }
 
@@ -208,7 +223,10 @@ export class LoginComponent implements OnInit {
 
     getCharacterList(accountName?: string, skipStep?: boolean) {
         this.isFetching = true;
-        this.externalService.getCharacterList(accountName !== undefined ? accountName : this.accFormGroup.controls.accountName.value)
+        const sessId = this.sessFormGroup.controls.sessionId.value;
+
+        this.externalService.getCharacterList(accountName !== undefined ? accountName : this.accFormGroup.controls.accountName.value,
+            (sessId !== undefined && sessId !== '') ? sessId : undefined)
             .subscribe((res: Character[]) => {
                 const charactersByLeague = res.filter(x => x.league === this.leagueFormGroup.controls.leagueName.value);
                 this.accountService.characterList.next(charactersByLeague);
@@ -219,7 +237,7 @@ export class LoginComponent implements OnInit {
                 }
                 if (skipStep) {
                     setTimeout(() => {
-                        this.stepper.selectedIndex = 2;
+                        this.stepper.selectedIndex = 3;
                     }, 250);
                 }
                 setTimeout(() => {
@@ -258,7 +276,7 @@ export class LoginComponent implements OnInit {
     }
 
     checkLeagueChange(event) {
-        if (event.selectedIndex === 3 &&
+        if (event.selectedIndex === 4 &&
             (this.settingsService.get('lastLeague') !== undefined
                 && (this.settingsService.get('lastLeague') !== this.leagueFormGroup.controls.leagueName.value)
                 ||

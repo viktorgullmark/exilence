@@ -52,7 +52,11 @@ export class ExternalService {
     });
   }
 
-  getCharacterList(account: string) {
+  getCharacterList(account: string, sessionId?: string) {
+    if (sessionId !== undefined) {
+      this.setCookie(sessionId);
+    }
+
     const parameters = `?accountName=${account}`;
     return this.http.get('https://www.pathofexile.com/character-window/get-characters' + parameters)
       .catch(e => {
