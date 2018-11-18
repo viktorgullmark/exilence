@@ -3,6 +3,7 @@ All notable changes to this project will be documented in this file.
 
 ## [0.6.2] - 2018-11-XX
 - Added support for private profiles (requires a sessionId to work)
+- Added a setting to enable/disable resizing of the window, instead of setting it enabled by default
 - Messages are now posted to your current party instead of local chat
 - Reworked layout for some of the tabs on the settings-page
 - Minor style-tweaks/fixes
