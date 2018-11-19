@@ -44,7 +44,6 @@ export class MapService {
 
     this.logMonitorService.areaEvent.subscribe((e: EventArea) => {
       this.areaHistory = this.settingsService.get('areas');
-      const oneWeekAgo = (Date.now() - (1 * 60 * 60 * 24 * 7 * 1000));
       const oneHourAgo = (Date.now() - (1 * 60 * 60 * 1000));
 
       // delay snapshot by 25 seconds, to make room for stashing/vendoring
@@ -62,8 +61,6 @@ export class MapService {
         instanceServer: this.lastInstanceServer,
       };
       let areasToSend;
-      this.areaHistory = this.areaHistory
-          .filter((area: ExtendedAreaInfo) => area.timestamp > oneWeekAgo);
 
       // If we enter a map
       // And got atleast three zones in out history (map --> hideout --> map)
