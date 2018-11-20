@@ -17,6 +17,7 @@ export class MapService {
   private areaHistory: ExtendedAreaInfo[] = [];
   private currentArea: ExtendedAreaInfo;
   private lastInstanceServer: string;
+  private lastTimestamp: number;
   private durationSeconds = 0;
   private durationInterval: any;
   private localPlayer: Player;
@@ -58,16 +59,35 @@ export class MapService {
       this.localPlayer.pastAreas = this.areaHistory;
       this.accountService.player.next(this.localPlayer);
       this.partyService.selectedPlayer.next(this.localPlayer);
-      // todo: update player when timestamps have been set based on file
+
+      const oneHourAgo = (Date.now() - (1 * 60 * 60 * 1000));
+      const areasToSend = HistoryHelper.filterAreas(this.areaHistory, oneHourAgo);
+
       this.settingsService.set('areas', this.areaHistory);
+
+      const objToSend = Object.assign({}, this.localPlayer);
+      if (areasToSend !== undefined) {
+        objToSend.pastAreas = areasToSend;
+      }
+
+      debugger;
+      this.partyService.updatePlayer(objToSend);
     });
 
     this.logMonitorService.historicalAreaEvent.subscribe((e: EventArea) => {
+      console.log(e);
+
+      const timestamp = Date.parse(e.timestamp);
+      const difference = timestamp - this.lastTimestamp;
+
+      const differenceMs = difference / 1000;
+      const durationSeconds = Math.floor(differenceMs % 60);
+
       const extendedInfo: ExtendedAreaInfo = {
         eventArea: e,
         type: AreaEventType.Join,
-        timestamp: Date.now(),
-        duration: 0,
+        timestamp: timestamp,
+        duration: durationSeconds,
         instanceServer: this.lastInstanceServer,
       };
 
@@ -84,8 +104,6 @@ export class MapService {
         this.lastInstanceServer === this.areaHistory[0].instanceServer
       ) {
         this.currentArea = this.areaHistory.shift();
-        this.durationSeconds = this.currentArea.duration;
-
       } else {
 
         if (e.type === 'map' && e.info.length > 0) {
@@ -93,8 +111,8 @@ export class MapService {
         }
 
         if (this.currentArea !== undefined) {
-          this.currentArea.duration = 0; // todo: read timestamp from file
-          this.currentArea.timestamp = Date.now(); // todo: read timestamp from file
+          this.currentArea.duration = durationSeconds;
+          this.currentArea.timestamp = timestamp;
           this.areaHistory.unshift(this.currentArea);
         }
 
@@ -111,10 +129,7 @@ export class MapService {
           } as AreaInfo);
         }
         this.currentArea = extendedInfo;
-
-        // this.accountService.player.next(this.localPlayer);
       }
-      // this.settingsService.set('areas', this.areaHistory);
     });
 
     this.logMonitorService.areaEvent.subscribe((e: EventArea) => {
@@ -194,7 +209,7 @@ export class MapService {
       const historyToSend = HistoryHelper.filterNetworth(this.localPlayer.netWorthSnapshots, oneHourAgo);
 
       const objToSend = Object.assign({}, this.localPlayer);
-      if(areasToSend !== undefined){
+      if (areasToSend !== undefined) {
         objToSend.pastAreas = areasToSend;
       }
       objToSend.netWorthSnapshots = historyToSend;

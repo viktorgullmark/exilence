@@ -53,8 +53,6 @@ export class LogMonitorService {
 
         this.parseEntireLog();
       }
-
-
     });
   }
 
@@ -62,7 +60,8 @@ export class LogMonitorService {
     // instantiate monitor that parses the entire log
     this.entireLog = new this.PathOfExileLog({
       logfile: this.filePath,
-      includedEvents: ['area', 'instanceServer']
+      includedEvents: ['area', 'instanceServer'],
+      chunkSize: 2048
     });
 
     this.entireLog.on('parsingStarted', (data) => {
