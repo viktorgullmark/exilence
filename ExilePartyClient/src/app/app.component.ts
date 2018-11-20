@@ -91,5 +91,9 @@ export class AppComponent {
       this.electronService.remote.getCurrentWindow().setAlwaysOnTop(alwaysOnTop);
       this.electronService.remote.getCurrentWindow().setVisibleOnAllWorkspaces(alwaysOnTop);
     }
+    const resizableWindow = this.settingsService.get('isResizable');
+    if (resizableWindow !== undefined) {
+      this.electronService.remote.getCurrentWindow().setResizable(resizableWindow);
+    }
   }
 }

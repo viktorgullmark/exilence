@@ -42,6 +42,81 @@ export class MapService {
       this.lastInstanceServer = e.address;
     });
 
+    this.logMonitorService.historicalInstanceServerEvent.subscribe(e => {
+      this.lastInstanceServer = e.address;
+    });
+
+    this.logMonitorService.parsingStarted.subscribe((e: any) => {
+      const currentDate = '[' + new Date().toUTCString() + '] ';
+      console.log(currentDate, 'parsing started...');
+      this.loadAreasFromSettings();
+    });
+
+    this.logMonitorService.parsingComplete.subscribe((e: any) => {
+      const currentDate = '[' + new Date().toUTCString() + '] ';
+      console.log(currentDate, 'parsing completed!');
+      this.localPlayer.pastAreas = this.areaHistory;
+      this.accountService.player.next(this.localPlayer);
+      this.partyService.selectedPlayer.next(this.localPlayer);
+      // todo: update player when timestamps have been set based on file
+      this.settingsService.set('areas', this.areaHistory);
+    });
+
+    this.logMonitorService.historicalAreaEvent.subscribe((e: EventArea) => {
+      const extendedInfo: ExtendedAreaInfo = {
+        eventArea: e,
+        type: AreaEventType.Join,
+        timestamp: Date.now(),
+        duration: 0,
+        instanceServer: this.lastInstanceServer,
+      };
+
+      // If we enter a map
+      // And got atleast three zones in out history (map --> hideout --> map)
+      // And our last zone was a Hideout
+      // And the map zone before that has the same map name as this one
+      // And is located on the same instance server as this one
+      // It's probably the same map
+      if (e.type === 'map' &&
+        this.areaHistory.length > 0 &&
+        this.currentArea.eventArea.name.indexOf('Hideout') > -1 &&
+        this.areaHistory[0].eventArea.name.indexOf(e.name) > -1 &&
+        this.lastInstanceServer === this.areaHistory[0].instanceServer
+      ) {
+        this.currentArea = this.areaHistory.shift();
+        this.durationSeconds = this.currentArea.duration;
+
+      } else {
+
+        if (e.type === 'map' && e.info.length > 0) {
+          e.name += ` map (T${e.info[0].tier})`;
+        }
+
+        if (this.currentArea !== undefined) {
+          this.currentArea.duration = 0; // todo: read timestamp from file
+          this.currentArea.timestamp = Date.now(); // todo: read timestamp from file
+          this.areaHistory.unshift(this.currentArea);
+        }
+
+        if (extendedInfo.eventArea.info.length === undefined) {
+          extendedInfo.eventArea.info = [];
+        }
+
+        if (extendedInfo.eventArea.info.length === 0) {
+          extendedInfo.eventArea.info.push({
+            act: 0,
+            bosses: [],
+            town: false,
+            waypoint: false
+          } as AreaInfo);
+        }
+        this.currentArea = extendedInfo;
+
+        // this.accountService.player.next(this.localPlayer);
+      }
+      // this.settingsService.set('areas', this.areaHistory);
+    });
+
     this.logMonitorService.areaEvent.subscribe((e: EventArea) => {
       this.areaHistory = this.settingsService.get('areas');
       const oneHourAgo = (Date.now() - (1 * 60 * 60 * 1000));
