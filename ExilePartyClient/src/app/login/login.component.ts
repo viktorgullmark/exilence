@@ -38,10 +38,10 @@ export class LoginComponent implements OnInit {
     isLoading = false;
     isFetching = false;
     isParsing = false;
-    parsingComplete = false;
     isFetchingLeagues = false;
     fetchedLeagues = false;
     fetched = false;
+    parsingEnabled = false;
     characterList: Character[] = [];
     leagues: League[];
     tradeLeagues: League[];
@@ -100,6 +100,8 @@ export class LoginComponent implements OnInit {
                 'C:/Program Files (x86)/Steam/steamapps/common/Path of Exile/logs/Client.txt', Validators.required]
         });
 
+        this.parsingEnabled = this.parsingEnabled !== undefined ? this.parsingEnabled : false;
+
         // reset data for parser. if we logged out we should behave as a new player, not using current data
         this.mapService.lastInstanceServer = undefined;
         this.mapService.lastTimestamp = undefined;
@@ -112,17 +114,22 @@ export class LoginComponent implements OnInit {
     }
 
     parseLog() {
-        this.isParsing = true;
-        this.parsingComplete = false;
-        if (this.logMonitorService.entireLog === undefined) {
-            this.logMonitorService.instantiateLogParser(this.pathFormGroup.controls.filePath.value);
+        if (this.parsingEnabled) {
+            this.isParsing = true;
+            this.logMonitorService.parsingCompleted = false;
+            if (this.logMonitorService.entireLog === undefined) {
+                this.logMonitorService.instantiateLogParser(this.pathFormGroup.controls.filePath.value);
+            }
+            this.logMonitorService.entireLog.parseLog();
+            this.mapService.areasParsed.subscribe(res => {
+                this.areaHistory = this.settingsService.get('areas');
+                this.logMonitorService.parsingCompleted = true;
+                this.isParsing = false;
+
+                console.log(this.isParsing);
+                console.log(this.parsingEnabled);
+            });
         }
-        this.logMonitorService.entireLog.parseLog();
-        this.mapService.areasParsed.subscribe(res => {
-            this.areaHistory = this.settingsService.get('areas');
-            this.parsingComplete = true;
-            this.isParsing = false;
-        });
     }
 
     openLink(link: string) {
@@ -152,6 +159,7 @@ export class LoginComponent implements OnInit {
         this.leagueName = this.settingsService.get('account.leagueName');
         this.tradeLeagueName = this.settingsService.get('account.tradeLeagueName');
         this.sessionIdValid = this.settingsService.get('account.sessionIdValid');
+        this.parsingEnabled = this.settingsService.get('account.parsingEnabled');
         this.filePath = this.settingsService.get('account.filePath');
         this.netWorthHistory = this.settingsService.get('networth');
         this.areaHistory = this.settingsService.get('areas');
@@ -195,6 +203,7 @@ export class LoginComponent implements OnInit {
             this.tradeLeagueName !== undefined &&
             this.sessionIdValid !== undefined &&
             this.filePath !== undefined &&
+            this.parsingEnabled !== undefined &&
             this.netWorthHistory !== undefined &&
             this.areaHistory !== undefined) {
 
@@ -204,7 +213,10 @@ export class LoginComponent implements OnInit {
 
             this.getLeagues(undefined, false);
             this.getCharacterList(undefined, false);
-            this.parseLog();
+
+            if (!this.logMonitorService.parsingCompleted) {
+                this.parseLog();
+            }
         }
     }
 
@@ -302,6 +314,7 @@ export class LoginComponent implements OnInit {
             tradeLeagueName: this.leagueFormGroup.controls.tradeLeagueName.value,
             sessionId: this.sessFormGroup.controls.sessionId.value,
             filePath: this.pathFormGroup.controls.filePath.value,
+            parsingEnabled: this.parsingEnabled,
             sessionIdValid: this.sessionIdValid
         } as AccountInfo;
     }

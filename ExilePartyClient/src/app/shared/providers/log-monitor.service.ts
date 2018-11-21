@@ -11,6 +11,8 @@ export class LogMonitorService {
   entireLog: any;
   filePath: string;
 
+  parsingCompleted = false;
+
   instanceServerEvent: EventEmitter<any> = new EventEmitter();
   areaEvent: EventEmitter<any> = new EventEmitter();
   areaJoin: EventEmitter<any> = new EventEmitter();

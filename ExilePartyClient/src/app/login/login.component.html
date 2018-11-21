@@ -87,15 +87,18 @@
           <input matInput formControlName="filePath" placeholder="{{'ACCOUNT.FILEPATH' | translate}}" (focusout)="checkPath()"
             required>
         </mat-form-field>
+        <mat-checkbox [(ngModel)]="parsingEnabled" [ngModelOptions]="{standalone: true}">Import Client.txt (will include all your previous area-history)</mat-checkbox>
+        <br/>
+        <br/>
         <div class="btn-grp">
           <button mat-raised-button class="btn-back" matStepperPrevious>Back</button>
           <button mat-raised-button color="primary" (click)="browse()" type="button">1. Browse file</button>
           <button mat-raised-button color="primary" type="button">2. Validate</button>
-          <button mat-raised-button color="primary" [disabled]="!pathValid || isParsing" (click)="parseLog()">3. Parse
+          <button mat-raised-button color="primary" [disabled]="!pathValid || (isParsing && parsingEnabled)|| !parsingEnabled" (click)="parseLog()">3. Parse
             log</button>
-          <button mat-raised-button color="primary" matStepperNext [disabled]="!pathValid || !parsingComplete">4.
+          <button mat-raised-button color="primary" matStepperNext [disabled]="!pathValid || (!logMonitorService.parsingCompleted && parsingEnabled)">4.
             Continue</button>
-          <mat-progress-bar *ngIf="!parsingComplete" class="progress-bar" color="primary" mode="indeterminate">
+          <mat-progress-bar *ngIf="isParsing && parsingEnabled" class="progress-bar" color="primary" mode="indeterminate">
           </mat-progress-bar>
         </div>
         <span class="form-error" *ngIf="!pathValid">{{'ERROR.PATH_NOT_VALID' | translate}}</span>
@@ -103,9 +106,9 @@
     </mat-step>
     <mat-step #lastStep>
       <ng-template matStepLabel>Complete</ng-template>
-      <ng-container *ngIf="!parsingComplete">
+      <ng-container *ngIf="(!logMonitorService.parsingCompleted && parsingEnabled)">
         <span class="mat-body-1">We're loading your Client.txt, please wait...</span>
-        <mat-progress-bar *ngIf="!parsingComplete" class="progress-bar" color="primary" mode="indeterminate">
+        <mat-progress-bar class="progress-bar" color="primary" mode="indeterminate">
         </mat-progress-bar>
         <br />
       </ng-container>
@@ -115,7 +118,7 @@
         items, only how you use ExileParty.<br /><br />
         By clicking "Continue" you agree to this.</span><br /><br />
       <div class="btn-grp">
-        <button mat-raised-button color="primary" [disabled]="isLoading || !parsingComplete" (click)="login()">Continue</button>
+        <button mat-raised-button color="primary" [disabled]="isLoading || (!logMonitorService.parsingCompleted && parsingEnabled)" (click)="login()">Continue</button>
         <mat-progress-bar *ngIf="isLoading" class="progress-bar" color="primary" mode="indeterminate">
         </mat-progress-bar>
       </div>
