@@ -1,7 +1,13 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
-## [0.6.2] - 2018-11-XX
+## [0.7.0] - 2018-11-XX
+- Fixed date-column in map-tab, should now be accurate and show additional information
+- Fixed time-column in map-tab, should now be accurate
+- Changed how duration is calculated for areas to be more reliable
+- Now hides zones which you've been in for more than 30 minutes (probable logout)
+- Added option to choose what zones to track (maps only, or all zones)
+- Added the ability to import your Client.txt (to see all your maphistory)
 - Added support for private profiles (requires a sessionId to work)
 - Added a setting to enable/disable resizing of the window, instead of setting it enabled by default
 - Now saves history for net worth and areas forever (for yourself only)
