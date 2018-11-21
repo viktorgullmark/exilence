@@ -87,17 +87,33 @@
           <input matInput formControlName="filePath" placeholder="{{'ACCOUNT.FILEPATH' | translate}}" (focusout)="checkPath()"
             required>
         </mat-form-field>
-        <mat-checkbox [(ngModel)]="parsingEnabled" [ngModelOptions]="{standalone: true}">Import Client.txt (will include all your previous area-history)</mat-checkbox>
-        <br/>
-        <br/>
+        <span class="mat-body-1">Choose which zones to track:</span><br /><br />
+        <mat-radio-group class="radio-group" [(ngModel)]="logMonitorService.trackMapsOnly" [ngModelOptions]="{standalone: true}"
+          required>
+          <mat-radio-button class="radio-button" [value]="true" [checked]="true">
+            Maps only (recommended)
+          </mat-radio-button>
+          <mat-radio-button class="radio-button" [value]="false">
+            Maps and areas
+          </mat-radio-button>
+        </mat-radio-group>
+        <br />
+        <br />
+        <mat-checkbox [(ngModel)]="parsingEnabled" [ngModelOptions]="{standalone: true}">Import Client.txt (will
+          include all your previous area-history)</mat-checkbox>
+        <br />
+        <br />
         <div class="btn-grp">
           <button mat-raised-button class="btn-back" matStepperPrevious>Back</button>
           <button mat-raised-button color="primary" (click)="browse()" type="button">1. Browse file</button>
           <button mat-raised-button color="primary" type="button">2. Validate</button>
-          <button mat-raised-button color="primary" [disabled]="!pathValid || (isParsing && parsingEnabled)|| !parsingEnabled" (click)="parseLog()">3. Parse
+          <button mat-raised-button color="primary" [disabled]="!pathValid || (isParsing && parsingEnabled)|| !parsingEnabled"
+            (click)="parseLog()">3. Parse
             log</button>
           <button mat-raised-button color="primary" matStepperNext [disabled]="!pathValid || (!logMonitorService.parsingCompleted && parsingEnabled)">4.
             Continue</button>
+          <span class="mat-body-1" *ngIf="isParsing && parsingEnabled"><br/><br/>We're loading your Client.txt, please wait... (may take up to several minutes,
+            depending on the filesize)</span>
           <mat-progress-bar *ngIf="isParsing && parsingEnabled" class="progress-bar" color="primary" mode="indeterminate">
           </mat-progress-bar>
         </div>
@@ -107,7 +123,8 @@
     <mat-step #lastStep>
       <ng-template matStepLabel>Complete</ng-template>
       <ng-container *ngIf="(!logMonitorService.parsingCompleted && parsingEnabled)">
-        <span class="mat-body-1">We're loading your Client.txt, please wait...</span>
+        <span class="mat-body-1">We're loading your Client.txt, please wait... (may take up to several minutes,
+          depending on the filesize)</span>
         <mat-progress-bar class="progress-bar" color="primary" mode="indeterminate">
         </mat-progress-bar>
         <br />
@@ -118,7 +135,8 @@
         items, only how you use ExileParty.<br /><br />
         By clicking "Continue" you agree to this.</span><br /><br />
       <div class="btn-grp">
-        <button mat-raised-button color="primary" [disabled]="isLoading || (!logMonitorService.parsingCompleted && parsingEnabled)" (click)="login()">Continue</button>
+        <button mat-raised-button color="primary" [disabled]="isLoading || (!logMonitorService.parsingCompleted && parsingEnabled)"
+          (click)="login()">Continue</button>
         <mat-progress-bar *ngIf="isLoading" class="progress-bar" color="primary" mode="indeterminate">
         </mat-progress-bar>
       </div>

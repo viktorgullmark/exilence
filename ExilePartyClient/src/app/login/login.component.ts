@@ -126,8 +126,7 @@ export class LoginComponent implements OnInit {
                 this.logMonitorService.parsingCompleted = true;
                 this.isParsing = false;
 
-                console.log(this.isParsing);
-                console.log(this.parsingEnabled);
+                this.stepper.selectedIndex = 5;
             });
         }
     }
@@ -163,6 +162,7 @@ export class LoginComponent implements OnInit {
         this.filePath = this.settingsService.get('account.filePath');
         this.netWorthHistory = this.settingsService.get('networth');
         this.areaHistory = this.settingsService.get('areas');
+        this.logMonitorService.trackMapsOnly = this.settingsService.get('trackMapsOnly');
 
         if (this.areaHistory === undefined) {
             this.areaHistory = [];
@@ -421,6 +421,7 @@ export class LoginComponent implements OnInit {
             this.accountService.loggingIn = false;
 
             this.settingsService.set('account', this.form);
+            this.settingsService.set('trackMapsOnly', this.logMonitorService.trackMapsOnly);
             this.sessionService.initSession(this.form.sessionId);
             this.isLoading = false;
             this.settingsService.set('lastLeague', this.leagueFormGroup.controls.leagueName.value);

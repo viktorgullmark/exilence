@@ -12,6 +12,7 @@ export class LogMonitorService {
   filePath: string;
 
   parsingCompleted = false;
+  trackMapsOnly = true;
 
   instanceServerEvent: EventEmitter<any> = new EventEmitter();
   areaEvent: EventEmitter<any> = new EventEmitter();
@@ -62,7 +63,7 @@ export class LogMonitorService {
     this.entireLog = new this.PathOfExileLog({
       logfile: this.filePath,
       includedEvents: ['area', 'instanceServer'],
-      chunkSize: 2048
+      chunkSize: 20480 // todo: read ram-size/cpu-speed and calc based on these?
     });
 
     this.entireLog.on('parsingStarted', (data) => {

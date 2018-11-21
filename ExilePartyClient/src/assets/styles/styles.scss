@@ -66,6 +66,7 @@ a {
     align-self: center !important;
     margin: auto !important;
 }
+
 /* #endregion */
 
 /* #region Scrollbar */
@@ -90,6 +91,7 @@ a {
     z-index: 9999;
     position: absolute;
 }
+
 /* #endregion */
 
 /* #region Forms */
@@ -124,6 +126,7 @@ a {
 .btn-grp {
     margin-bottom: 15px;
 }
+
 /* #endregion */
 
 /* #region Containers */
@@ -140,6 +143,7 @@ a {
     display: flex;
     justify-content: center;
     align-items: center;
+
     > * {
         width: 100%;
     }
@@ -201,6 +205,7 @@ a {
         transform: translate(-50%, -50%);
     }
 }
+
 /* #endregion */
 
 /* #region Responsitivity */
@@ -239,6 +244,7 @@ a {
         transform: scale(0.75);
     }
 }
+
 /* #endregion */
 
 /* #region Override classes for Material */
@@ -282,4 +288,5 @@ mat-vertical-stepper {
 .mat-paginator {
     background: #2f2f2f !important;
 }
+
 /* #endregion */

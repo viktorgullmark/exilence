@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { MatButtonModule, MatInputModule, MatOptionModule, MatSelectModule, MatIconModule,
-  MatStepperModule, MatProgressBarModule, MatCheckboxModule } from '@angular/material';
+  MatStepperModule, MatProgressBarModule, MatCheckboxModule, MatRadioModule } from '@angular/material';
 import { MatFormFieldModule } from '@angular/material/form-field';
 
 import { LoginComponent } from './login.component';
@@ -20,6 +20,7 @@ import { LeagueChangedDialogComponent } from '../shared/components/league-change
     MatCheckboxModule,
     MatStepperModule,
     MatButtonModule,
+    MatRadioModule,
     MatOptionModule,
     MatSelectModule,
     MatFormFieldModule,

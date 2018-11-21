@@ -16,8 +16,10 @@ export class MapService {
 
   private areaHistory: ExtendedAreaInfo[] = [];
   public currentArea: ExtendedAreaInfo;
+  public currentHistoricalArea: ExtendedAreaInfo;
   public lastInstanceServer: string;
-  public lastTimestamp: number;
+  public historicalInstanceServer: string;
+  public lastTimestamp: Date;
   private durationSeconds = 0;
   private durationInterval: any;
   private localPlayer: Player;
@@ -45,7 +47,9 @@ export class MapService {
     });
 
     this.logMonitorService.historicalInstanceServerEvent.subscribe(e => {
-      this.lastInstanceServer = e.address;
+      if (!this.logMonitorService.parsingCompleted) {
+        this.historicalInstanceServer = e.address;
+      }
     });
 
     this.logMonitorService.parsingStarted.subscribe((e: any) => {
@@ -65,160 +69,168 @@ export class MapService {
     });
 
     this.logMonitorService.historicalAreaEvent.subscribe((e: EventArea) => {
-      let durationSeconds = 0;
-      const timestamp = Date.parse(e.timestamp);
+      if ((e.type === 'map' || e.name.endsWith('Hideout') || !this.logMonitorService.trackMapsOnly)
+        && !this.logMonitorService.parsingCompleted) {
 
-      if (this.lastTimestamp !== undefined && this.lastTimestamp < timestamp) {
-        const difference = timestamp - this.lastTimestamp;
+          const timestamp = new Date(e.timestamp);
 
-        const differenceMs = difference / 1000;
-        durationSeconds = Math.floor(differenceMs % 60);
-      }
+          if (this.lastTimestamp !== undefined && this.lastTimestamp < timestamp) {
+            this.durationSeconds = (timestamp.getTime() - this.lastTimestamp.getTime()) / 1000;
+          }
 
-      this.lastTimestamp = timestamp;
+          const extendedInfo: ExtendedAreaInfo = {
+            eventArea: e,
+            type: AreaEventType.Join,
+            timestamp: timestamp.getTime(),
+            duration: 0,
+            instanceServer: this.historicalInstanceServer,
+          };
 
-      const extendedInfo: ExtendedAreaInfo = {
-        eventArea: e,
-        type: AreaEventType.Join,
-        timestamp: timestamp,
-        duration: durationSeconds,
-        instanceServer: this.lastInstanceServer,
-      };
+          // If we enter a map
+          // And got atleast three zones in out history (map --> hideout --> map)
+          // And our last zone was a Hideout
+          // And the map zone before that has the same map name as this one
+          // And is located on the same instance server as this one
+          // It's probably the same map
+          if (e.type === 'map' &&
+            this.areaHistory.length > 0 &&
+            this.currentHistoricalArea.eventArea !== undefined &&
+            this.currentHistoricalArea.eventArea.name.indexOf('Hideout') > -1 &&
+            this.areaHistory[0].eventArea.name.indexOf(e.name) > -1 &&
+            this.historicalInstanceServer === this.areaHistory[0].instanceServer
+          ) {
+            this.currentHistoricalArea = this.areaHistory.shift();
+            this.durationSeconds = this.currentHistoricalArea.duration;
+          } else {
 
-      // If we enter a map
-      // And got atleast three zones in out history (map --> hideout --> map)
-      // And our last zone was a Hideout
-      // And the map zone before that has the same map name as this one
-      // And is located on the same instance server as this one
-      // It's probably the same map
-      if (e.type === 'map' &&
-        this.areaHistory.length > 0 &&
-        this.currentArea.eventArea.name.indexOf('Hideout') > -1 &&
-        this.areaHistory[0].eventArea.name.indexOf(e.name) > -1 &&
-        this.lastInstanceServer === this.areaHistory[0].instanceServer
-      ) {
-        this.currentArea = this.areaHistory.shift();
-      } else {
+            if (e.type === 'map' && e.info.length > 0) {
+              e.name += ` map (T${e.info[0].tier})`;
+            }
 
-        if (e.type === 'map' && e.info.length > 0) {
-          e.name += ` map (T${e.info[0].tier})`;
-        }
+            if (this.currentHistoricalArea !== undefined) {
+              this.currentHistoricalArea.duration = this.durationSeconds;
+              this.currentHistoricalArea.timestamp = timestamp.getTime();
+              this.areaHistory.unshift(this.currentHistoricalArea);
+            }
 
-        if (this.currentArea !== undefined) {
-          this.currentArea.duration = durationSeconds;
-          this.currentArea.timestamp = timestamp;
-          this.areaHistory.unshift(this.currentArea);
-        }
+            this.lastTimestamp = timestamp;
 
-        if (extendedInfo.eventArea.info.length === undefined) {
-          extendedInfo.eventArea.info = [];
-        }
+            this.durationSeconds = 0;
 
-        if (extendedInfo.eventArea.info.length === 0) {
-          extendedInfo.eventArea.info.push({
-            act: 0,
-            bosses: [],
-            town: false,
-            waypoint: false
-          } as AreaInfo);
-        }
-        this.currentArea = extendedInfo;
+            if (extendedInfo.eventArea.info.length === undefined) {
+              extendedInfo.eventArea.info = [];
+            }
+
+            if (extendedInfo.eventArea.info.length === 0) {
+              extendedInfo.eventArea.info.push({
+                act: 0,
+                bosses: [],
+                town: false,
+                waypoint: false
+              } as AreaInfo);
+            }
+            this.currentHistoricalArea = extendedInfo;
+          }
       }
     });
 
     this.logMonitorService.areaEvent.subscribe((e: EventArea) => {
-      this.areaHistory = this.settingsService.get('areas');
-      const oneHourAgo = (Date.now() - (1 * 60 * 60 * 1000));
+      if (e.type === 'map' || e.name.endsWith('Hideout') || !this.logMonitorService.trackMapsOnly) {
+          this.areaHistory = this.settingsService.get('areas');
+          const oneHourAgo = (new Date().getTime() - (1 * 60 * 60 * 1000));
 
-      // delay snapshot by 25 seconds, to make room for stashing/vendoring
-      setTimeout(x => {
-        this.incomeService.Snapshot();
-      }, 1000 * 25);
+          const timestamp = new Date(e.timestamp);
 
-      clearInterval(this.durationInterval);
+          if (this.lastTimestamp !== undefined && this.lastTimestamp < timestamp) {
+            this.durationSeconds = (timestamp.getTime() - this.lastTimestamp.getTime()) / 1000;
+          }
 
-      const extendedInfo: ExtendedAreaInfo = {
-        eventArea: e,
-        type: AreaEventType.Join,
-        timestamp: Date.now(),
-        duration: 0,
-        instanceServer: this.lastInstanceServer,
-      };
-      let areasToSend;
+          // delay snapshot by 25 seconds, to make room for stashing/vendoring
+          setTimeout(x => {
+            this.incomeService.Snapshot();
+          }, 1000 * 25);
 
-      // If we enter a map
-      // And got atleast three zones in out history (map --> hideout --> map)
-      // And our last zone was a Hideout
-      // And the map zone before that has the same map name as this one
-      // And is located on the same instance server as this one
-      // It's probably the same map
-      if (e.type === 'map' &&
-        this.areaHistory.length > 0 &&
-        this.currentArea.eventArea.name.indexOf('Hideout') > -1 &&
-        this.areaHistory[0].eventArea.name.indexOf(e.name) > -1 &&
-        this.lastInstanceServer === this.areaHistory[0].instanceServer
-      ) {
-        this.currentArea = this.areaHistory.shift();
-        this.durationSeconds = this.currentArea.duration;
+          const extendedInfo: ExtendedAreaInfo = {
+            eventArea: e,
+            type: AreaEventType.Join,
+            timestamp: new Date().getTime(),
+            duration: 0,
+            instanceServer: this.lastInstanceServer,
+          };
+          let areasToSend;
 
-      } else {
+          // If we enter a map
+          // And got atleast three zones in out history (map --> hideout --> map)
+          // And our last zone was a Hideout
+          // And the map zone before that has the same map name as this one
+          // And is located on the same instance server as this one
+          // It's probably the same map
+          if (e.type === 'map' &&
+            this.areaHistory.length > 0 &&
+            this.currentArea !== undefined &&
+            this.currentArea.eventArea.name.indexOf('Hideout') > -1 &&
+            this.areaHistory[0].eventArea.name.indexOf(e.name) > -1 &&
+            this.lastInstanceServer === this.areaHistory[0].instanceServer
+          ) {
+            this.currentArea = this.areaHistory.shift();
+            this.durationSeconds = this.currentArea.duration;
 
-        if (e.type === 'map' && e.info.length > 0) {
-          e.name += ` map (T${e.info[0].tier})`;
+          } else {
+
+            if (e.type === 'map' && e.info.length > 0) {
+              e.name += ` map (T${e.info[0].tier})`;
+            }
+
+            if (this.currentArea !== undefined) {
+              this.currentArea.duration = this.durationSeconds;
+              this.currentArea.timestamp = new Date().getTime();
+              this.areaHistory.unshift(this.currentArea);
+            }
+
+            this.durationSeconds = 0;
+
+
+            if (extendedInfo.eventArea.info.length === undefined) {
+              extendedInfo.eventArea.info = [];
+            }
+
+            if (extendedInfo.eventArea.info.length === 0) {
+              extendedInfo.eventArea.info.push({
+                act: 0,
+                bosses: [],
+                town: false,
+                waypoint: false
+              } as AreaInfo);
+            }
+
+            this.lastTimestamp = timestamp;
+
+            this.currentArea = extendedInfo;
+
+            areasToSend = HistoryHelper.filterAreas(this.areaHistory, oneHourAgo);
+
+            this.accountService.player.next(this.localPlayer);
+          }
+
+          this.settingsService.set('areas', this.areaHistory);
+
+          this.localPlayer.area = this.currentArea.eventArea.name;
+          this.localPlayer.areaInfo = this.currentArea;
+
+          const historyToSend = HistoryHelper.filterNetworth(this.localPlayer.netWorthSnapshots, oneHourAgo);
+
+          const objToSend = Object.assign({}, this.localPlayer);
+          if (areasToSend !== undefined) {
+            objToSend.pastAreas = areasToSend;
+          }
+          objToSend.netWorthSnapshots = historyToSend;
+          this.partyService.updatePlayer(objToSend);
+
+          // Skip all hideout areas TODO: Add eternal lab.
+          // if (e.name.indexOf('Hideout') > -1) {
+          //   return;
+          // }
         }
-
-        if (this.currentArea !== undefined) {
-          this.currentArea.duration = this.durationSeconds;
-          this.currentArea.timestamp = Date.now();
-          this.areaHistory.unshift(this.currentArea);
-        }
-
-        this.durationSeconds = 0;
-
-
-        if (extendedInfo.eventArea.info.length === undefined) {
-          extendedInfo.eventArea.info = [];
-        }
-
-        if (extendedInfo.eventArea.info.length === 0) {
-          extendedInfo.eventArea.info.push({
-            act: 0,
-            bosses: [],
-            town: false,
-            waypoint: false
-          } as AreaInfo);
-        }
-        this.currentArea = extendedInfo;
-
-        areasToSend = HistoryHelper.filterAreas(this.areaHistory, oneHourAgo);
-
-        this.accountService.player.next(this.localPlayer);
-      }
-
-      this.settingsService.set('areas', this.areaHistory);
-
-      this.localPlayer.area = this.currentArea.eventArea.name;
-      this.localPlayer.areaInfo = this.currentArea;
-
-      const historyToSend = HistoryHelper.filterNetworth(this.localPlayer.netWorthSnapshots, oneHourAgo);
-
-      const objToSend = Object.assign({}, this.localPlayer);
-      if (areasToSend !== undefined) {
-        objToSend.pastAreas = areasToSend;
-      }
-      objToSend.netWorthSnapshots = historyToSend;
-      this.partyService.updatePlayer(objToSend);
-
-      this.durationInterval = setInterval(() => {
-        this.durationSeconds++;
-      }, 1000);
-
-      // Skip all hideout areas TODO: Add eternal lab.
-      // if (e.name.indexOf('Hideout') > -1) {
-      //   return;
-      // }
-
-
     });
 
   }
