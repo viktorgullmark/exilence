@@ -50,13 +50,12 @@ export class LogMonitorService {
         this.logTail.on('error', (data) => {
           this.logService.log('poe-log-reader', data, true);
         });
-
-        this.parseEntireLog();
       }
     });
   }
 
-  parseEntireLog() {
+  instantiateLogParser(path) {
+    this.filePath = path;
     // instantiate monitor that parses the entire log
     this.entireLog = new this.PathOfExileLog({
       logfile: this.filePath,
@@ -79,7 +78,5 @@ export class LogMonitorService {
     this.entireLog.on('error', (data) => {
       this.logService.log('poe-log-reader', data, true);
     });
-
-    this.entireLog.parseLog();
   }
 }

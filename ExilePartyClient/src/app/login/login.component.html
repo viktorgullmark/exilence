@@ -86,9 +86,12 @@
         </mat-form-field>
         <div class="btn-grp">
           <button mat-raised-button class="btn-back" matStepperPrevious>Back</button>
-          <button mat-raised-button color="primary" (click)="browse()" type="button">Browse file</button>
-          <button mat-raised-button color="primary" type="button">Validate</button>
-          <button mat-raised-button color="primary" matStepperNext [disabled]="!pathValid">Continue</button>
+          <button mat-raised-button color="primary" (click)="browse()" type="button">1. Browse file</button>
+          <button mat-raised-button color="primary" type="button">2. Validate</button>
+          <button mat-raised-button color="primary" [disabled]="!pathValid || isParsing" (click)="parseLog()">3. Parse log</button>
+          <button mat-raised-button color="primary" matStepperNext [disabled]="!pathValid || !parsingComplete">4. Continue</button>
+          <mat-progress-bar *ngIf="!parsingComplete" class="progress-bar" color="primary" mode="indeterminate">
+          </mat-progress-bar>
         </div>
         <span class="form-error" *ngIf="!pathValid">{{'ERROR.PATH_NOT_VALID' | translate}}</span>
       </form>

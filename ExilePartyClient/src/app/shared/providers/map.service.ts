@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, EventEmitter } from '@angular/core';
 
 import { AreaEventType, AreaInfo, EventArea, ExtendedAreaInfo } from '../interfaces/area.interface';
 import { Player } from '../interfaces/player.interface';
@@ -15,12 +15,13 @@ import { HistoryHelper } from '../helpers/history.helper';
 export class MapService {
 
   private areaHistory: ExtendedAreaInfo[] = [];
-  private currentArea: ExtendedAreaInfo;
-  private lastInstanceServer: string;
-  private lastTimestamp: number;
+  public currentArea: ExtendedAreaInfo;
+  public lastInstanceServer: string;
+  public lastTimestamp: number;
   private durationSeconds = 0;
   private durationInterval: any;
   private localPlayer: Player;
+  areasParsed: EventEmitter<any> = new EventEmitter();
 
   constructor(
     private logMonitorService: LogMonitorService,
@@ -48,40 +49,33 @@ export class MapService {
     });
 
     this.logMonitorService.parsingStarted.subscribe((e: any) => {
+      this.removeAreasFromSettings();
+
       const currentDate = '[' + new Date().toUTCString() + '] ';
       console.log(currentDate, 'parsing started...');
-      this.loadAreasFromSettings();
     });
 
     this.logMonitorService.parsingComplete.subscribe((e: any) => {
       const currentDate = '[' + new Date().toUTCString() + '] ';
       console.log(currentDate, 'parsing completed!');
-      this.localPlayer.pastAreas = this.areaHistory;
-      this.accountService.player.next(this.localPlayer);
-      this.partyService.selectedPlayer.next(this.localPlayer);
-
-      const oneHourAgo = (Date.now() - (1 * 60 * 60 * 1000));
-      const areasToSend = HistoryHelper.filterAreas(this.areaHistory, oneHourAgo);
 
       this.settingsService.set('areas', this.areaHistory);
 
-      const objToSend = Object.assign({}, this.localPlayer);
-      if (areasToSend !== undefined) {
-        objToSend.pastAreas = areasToSend;
-      }
-
-      debugger;
-      this.partyService.updatePlayer(objToSend);
+      this.areasParsed.emit();
     });
 
     this.logMonitorService.historicalAreaEvent.subscribe((e: EventArea) => {
-      console.log(e);
-
+      let durationSeconds = 0;
       const timestamp = Date.parse(e.timestamp);
-      const difference = timestamp - this.lastTimestamp;
 
-      const differenceMs = difference / 1000;
-      const durationSeconds = Math.floor(differenceMs % 60);
+      if (this.lastTimestamp !== undefined && this.lastTimestamp < timestamp) {
+        const difference = timestamp - this.lastTimestamp;
+
+        const differenceMs = difference / 1000;
+        durationSeconds = Math.floor(differenceMs % 60);
+      }
+
+      this.lastTimestamp = timestamp;
 
       const extendedInfo: ExtendedAreaInfo = {
         eventArea: e,
@@ -229,6 +223,10 @@ export class MapService {
 
   }
   loadAreasFromSettings() {
+    this.areaHistory = this.settingsService.get('areas');
+  }
+  removeAreasFromSettings() {
+    this.settingsService.set('areas', []);
     this.areaHistory = this.settingsService.get('areas');
   }
 }

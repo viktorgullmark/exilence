@@ -19,6 +19,8 @@ import { ExternalService } from '../shared/providers/external.service';
 import { LadderService } from '../shared/providers/ladder.service';
 import { SessionService } from '../shared/providers/session.service';
 import { SettingsService } from '../shared/providers/settings.service';
+import { LogMonitorService } from '../shared/providers/log-monitor.service';
+import { MapService } from '../shared/providers/map.service';
 
 @Component({
     selector: 'app-login',
@@ -35,6 +37,8 @@ export class LoginComponent implements OnInit {
     pathValid = false;
     isLoading = false;
     isFetching = false;
+    isParsing = false;
+    parsingComplete = false;
     isFetchingLeagues = false;
     fetchedLeagues = false;
     fetched = false;
@@ -68,6 +72,8 @@ export class LoginComponent implements OnInit {
         private settingsService: SettingsService,
         private analyticsService: AnalyticsService,
         private ladderService: LadderService,
+        private logMonitorService: LogMonitorService,
+        private mapService: MapService,
         private dialog: MatDialog
     ) {
         this.externalService.leagues.subscribe((res: League[]) => {
@@ -93,11 +99,30 @@ export class LoginComponent implements OnInit {
             filePath: [this.filePath !== undefined ? this.filePath :
                 'C:/Program Files (x86)/Steam/steamapps/common/Path of Exile/logs/Client.txt', Validators.required]
         });
+
+        // reset data for parser. if we logged out we should behave as a new player, not using current data
+        this.mapService.lastInstanceServer = undefined;
+        this.mapService.lastTimestamp = undefined;
+        this.mapService.currentArea = undefined;
     }
 
     checkPath() {
         this.pathValid = this.electronService.fs.existsSync(this.pathFormGroup.controls.filePath.value)
             && this.pathFormGroup.controls.filePath.value.toLowerCase().endsWith('client.txt');
+    }
+
+    parseLog() {
+        this.isParsing = true;
+        this.parsingComplete = false;
+        if (this.logMonitorService.entireLog === undefined) {
+            this.logMonitorService.instantiateLogParser(this.pathFormGroup.controls.filePath.value);
+        }
+        this.logMonitorService.entireLog.parseLog();
+        this.mapService.areasParsed.subscribe(res => {
+            this.areaHistory = this.settingsService.get('areas');
+            this.parsingComplete = true;
+            this.isParsing = false;
+        });
     }
 
     openLink(link: string) {
@@ -179,6 +204,7 @@ export class LoginComponent implements OnInit {
 
             this.getLeagues(undefined, false);
             this.getCharacterList(undefined, false);
+            this.parseLog();
         }
     }
 
@@ -286,10 +312,12 @@ export class LoginComponent implements OnInit {
     }
 
     directorySelectorCallback(filePath) {
-        this.pathFormGroup.controls.filePath.setValue(filePath[0]);
-        setTimeout(() => {
-            this.checkPath();
-        }, 500);
+        if (filePath !== undefined) {
+            this.pathFormGroup.controls.filePath.setValue(filePath[0]);
+            setTimeout(() => {
+                this.checkPath();
+            }, 500);
+        }
     }
 
     checkLeagueChange(event) {
