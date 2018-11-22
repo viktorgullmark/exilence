@@ -1,4 +1,4 @@
-<div class="socket-container">
+<div class="socket-container" [class.show]="!parsingSockets">
     <div [ngClass]="'inner-container-'+columns">
         <ng-container *ngFor="let socket of sockets, index as i">
             <!-- classes are formatted as: type-slot-columnwidth -->
