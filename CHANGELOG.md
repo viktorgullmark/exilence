@@ -12,7 +12,6 @@ All notable changes to this project will be documented in this file.
 - Reworked handling of area-events to be more accurate
 - Added a setting to enable/disable resizing of the window, instead of setting it enabled by default
 - Added Discord-link to sidemenu
-- Added fade-in effect for items
 - Changed the layout of the league-selection step in the login-process to be more descriptive
 - Now saves history for net worth and areas forever (for yourself only)
 - Messages are now posted to your current party instead of local chat
