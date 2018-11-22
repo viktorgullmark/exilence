@@ -10,6 +10,7 @@ All notable changes to this project will be documented in this file.
 - Added the ability to import your Client.txt (to see all your maphistory)
 - Added support for private profiles (requires a sessionId to work)
 - Added a setting to enable/disable resizing of the window, instead of setting it enabled by default
+- Added Discord-link to sidemenu
 - Added fade-in effect for sockets on items
 - Changed the layout of the league-selection step in the login-process to be more descriptive
 - Now saves history for net worth and areas forever (for yourself only)
