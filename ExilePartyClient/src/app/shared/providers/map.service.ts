@@ -79,9 +79,9 @@ export class MapService {
   }
   registerAreaEvent(e: EventArea, live: boolean) {
     // zone entered
-    if ((e.type === 'map' || e.name.endsWith('Hideout') || !this.logMonitorService.trackMapsOnly)
-      && (!this.logMonitorService.parsingCompleted || live)) {
+    const shouldUpdateAreaHistory = (e.type === 'map' || e.name.endsWith('Hideout') || !this.logMonitorService.trackMapsOnly);
 
+    if ((!this.logMonitorService.parsingCompleted || live)) {
       let diffSeconds = 0;
       let duration = 0;
 
@@ -125,7 +125,7 @@ export class MapService {
         }
 
         // if we enter the same map, add duration to previous event
-        if (sameMapAsBefore) {
+        if (sameMapAsBefore && shouldUpdateAreaHistory) {
           duration = this.areaHistory[1].duration + diffSeconds;
           // remove hideout-event from current array
           this.areaHistory.shift();
@@ -136,27 +136,32 @@ export class MapService {
           if (eventArea.eventArea.type === 'map' && eventArea.eventArea.info.length > 0) {
             eventArea.eventArea.name += ` map (T${eventArea.eventArea.info[0].tier})`;
           }
-          this.areaHistory[0].duration = diffSeconds;
-          // push the new object to our area-history
-          this.areaHistory.unshift(eventArea);
+          if (shouldUpdateAreaHistory) {
+            this.areaHistory[0].duration = diffSeconds;
+            // push the new object to our area-history
+            this.areaHistory.unshift(eventArea);
+          }
         }
       } else {
-        this.areaHistory.unshift(eventArea);
+        if (shouldUpdateAreaHistory) {
+          this.areaHistory.unshift(eventArea);
+        }
       }
 
       this.currentArea = eventArea;
+    }
+    // if live-parsing, update data now
+    if (live) {
+      // update current player and send information to party
+      this.localPlayer.area = this.currentArea.eventArea.name;
+      this.localPlayer.areaInfo = this.currentArea;
+      this.accountService.player.next(this.localPlayer);
 
-      // if live-parsing, update data now
-      if (live) {
-        // update current player and send information to party
-        this.localPlayer.area = this.currentArea.eventArea.name;
-        this.localPlayer.areaInfo = this.currentArea;
-        this.accountService.player.next(this.localPlayer);
-
-        // save updated areas to settings
+      // save updated areas to settings
+      if (shouldUpdateAreaHistory) {
         this.settingsService.set('areas', this.areaHistory);
-        this.partyService.updatePlayer(this.localPlayer);
       }
+      this.partyService.updatePlayer(this.localPlayer);
     }
   }
 
