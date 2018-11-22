@@ -50,10 +50,10 @@
     },
     "LEAGUE": {
         "LEAGUE_INFO": "Choose your league",
-        "NAME": "League"
+        "NAME": "Fetch characters from league"
     },
     "TRADELEAGUE": {
-        "NAME": "Trade league"
+        "NAME": "Fetch prices from league"
     },
     "CHARACTER": {
         "NAME": "Character name",

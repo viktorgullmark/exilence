@@ -101,6 +101,7 @@ resetAreaHistory() {
 updateAvgTimeSpent(pastAreas) {
   if (pastAreas !== null) {
     if (pastAreas[0] !== undefined) {
+      pastAreas = pastAreas.filter(x => x.duration > 0);
       let total = 0;
       pastAreas.forEach(area => {
         total = total + area.duration;

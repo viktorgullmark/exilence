@@ -63,23 +63,24 @@ export class MapTableComponent implements OnInit {
   }
 
   formatDate(timestamp) {
-    return moment(timestamp).format('ddd, LT');
+    return moment(timestamp).format('llll');
   }
 
   updateTable(player: Player) {
     if (player.pastAreas !== null && player.pastAreas !== undefined) {
       player.pastAreas.forEach((area: ExtendedAreaInfo) => {
-        const minute = Math.floor(area.duration / 60);
-        const seconds = area.duration % 60;
-        const newAreaObj = {
-          name: area.eventArea.name,
-          tier: area.eventArea.info[0].level,
-          time: ((minute < 10) ? '0' + minute.toString() : seconds.toString())
-            + ':' + ((seconds < 10) ? '0' + seconds.toString() : seconds.toString()),
-          timestamp: area.timestamp
-        };
-
-        this.dataSource.push(newAreaObj);
+        if (area.duration < 1800) {
+          const minute = Math.floor(area.duration / 60);
+          const seconds = area.duration % 60;
+          const newAreaObj = {
+            name: area.eventArea.name,
+            tier: area.eventArea.info[0].level,
+            time: ((minute < 10) ? '0' + minute.toString() : minute.toString())
+              + ':' + ((seconds < 10) ? '0' + seconds.toString() : seconds.toString()),
+            timestamp: area.timestamp
+          };
+          this.dataSource.push(newAreaObj);
+        }
       });
     }
   }

@@ -10,9 +10,9 @@ namespace ExileParty.Models
     {
         public EventArea EventArea { get; set; }
         public AreaEventType Type { get; set; }
+        public string InstanceServer { get; set; }
         public long Timestamp { get; set; }
         public int Duration { get; set; }
-        public string InstanceServer { get; set; }
     }
 
     [Serializable]
@@ -20,6 +20,7 @@ namespace ExileParty.Models
     {
         public string Name { get; set; }
         public string Type { get; set; }
+        public string Timestamp { get; set; }
         public List<AreaInfo> Info { get; set; }
     }
 

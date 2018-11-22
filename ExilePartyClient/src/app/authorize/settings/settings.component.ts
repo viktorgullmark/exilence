@@ -186,6 +186,7 @@ export class SettingsComponent implements OnInit {
     this.settingsService.set('diaShown_wealth', false);
     this.settingsService.set('diaShown_equipment', false);
     this.settingsService.set('diaShown_maps', false);
+    this.settingsService.set('diaShown_loginfo', false);
     this.settingsService.set('diaShown_partySummary', false);
   }
 }

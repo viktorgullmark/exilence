@@ -22,6 +22,7 @@ export interface EventArea {
   name: string;
   type: string;
   info: AreaInfo[];
+  timestamp: string;
 }
 
 export enum AreaEventType {
