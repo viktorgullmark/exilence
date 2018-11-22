@@ -9,6 +9,7 @@ All notable changes to this project will be documented in this file.
 - Added option to choose what zones to track (maps only, or all zones)
 - Added the ability to import your Client.txt (to see all your maphistory)
 - Added support for private profiles (requires a sessionId to work)
+- Reworked handling of area-events to be more accurate
 - Added a setting to enable/disable resizing of the window, instead of setting it enabled by default
 - Added Discord-link to sidemenu
 - Added fade-in effect for items
