@@ -108,7 +108,7 @@
           <button mat-raised-button color="primary" (click)="browse()" type="button">1. Browse file</button>
           <button mat-raised-button color="primary" type="button">2. Validate</button>
           <button mat-raised-button color="primary" [disabled]="!pathValid || (isParsing && parsingEnabled)|| !parsingEnabled"
-            (click)="parseLog()">3. Parse
+            (click)="openLogInfoDialog()">3. Parse
             log</button>
           <button mat-raised-button color="primary" matStepperNext [disabled]="!pathValid || (!logMonitorService.parsingCompleted && parsingEnabled)">4.
             Continue</button>

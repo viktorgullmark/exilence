@@ -10,6 +10,7 @@ All notable changes to this project will be documented in this file.
 - Added the ability to import your Client.txt (to see all your maphistory)
 - Added support for private profiles (requires a sessionId to work)
 - Added a setting to enable/disable resizing of the window, instead of setting it enabled by default
+- Added fade-in effect for sockets on items
 - Now saves history for net worth and areas forever (for yourself only)
 - Messages are now posted to your current party instead of local chat
 - Reworked layout for some of the tabs on the settings-page

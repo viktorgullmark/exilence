@@ -9,6 +9,8 @@ import { SharedModule } from '../shared/shared.module';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { LeagueChangedDialogModule } from '../shared/components/league-changed-dialog/league-changed-dialog.module';
 import { LeagueChangedDialogComponent } from '../shared/components/league-changed-dialog/league-changed-dialog.component';
+import { InfoDialogComponent } from '../authorize/components/info-dialog/info-dialog.component';
+import { InfoDialogModule } from '../authorize/components/info-dialog/info-dialog.module';
 
 @NgModule({
   imports: [
@@ -25,9 +27,10 @@ import { LeagueChangedDialogComponent } from '../shared/components/league-change
     MatSelectModule,
     MatFormFieldModule,
     MatProgressBarModule,
+    InfoDialogModule,
     LeagueChangedDialogModule
   ],
   declarations: [LoginComponent],
-  entryComponents: [LeagueChangedDialogComponent]
+  entryComponents: [LeagueChangedDialogComponent, InfoDialogComponent]
 })
 export class LoginModule { }

@@ -21,6 +21,7 @@ import { SessionService } from '../shared/providers/session.service';
 import { SettingsService } from '../shared/providers/settings.service';
 import { LogMonitorService } from '../shared/providers/log-monitor.service';
 import { MapService } from '../shared/providers/map.service';
+import { InfoDialogComponent } from '../authorize/components/info-dialog/info-dialog.component';
 
 @Component({
     selector: 'app-login',
@@ -391,6 +392,27 @@ export class LoginComponent implements OnInit {
         ).subscribe(res => {
             this.needsValidation = false;
             this.sessionIdValid = res !== false;
+        });
+    }
+
+    openLogInfoDialog(): void {
+        setTimeout(() => {
+          if (!this.settingsService.get('diaShown_loginfo') && !this.settingsService.get('hideTooltips')) {
+            const dialogRef = this.dialog.open(InfoDialogComponent, {
+              width: '650px',
+              data: {
+                icon: 'warning',
+                title: 'Warning',
+                // tslint:disable-next-line:max-line-length
+                content: 'We recommend deleting the Client.txt before every league.<br/><br/>' +
+                  'If its very large it might impact performance of the app.'
+              }
+            });
+            dialogRef.afterClosed().subscribe(result => {
+              this.settingsService.set('diaShown_loginfo', true);
+              this.parseLog();
+            });
+          }
         });
     }
 
