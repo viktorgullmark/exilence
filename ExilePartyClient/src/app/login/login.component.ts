@@ -412,6 +412,8 @@ export class LoginComponent implements OnInit {
               this.settingsService.set('diaShown_loginfo', true);
               this.parseLog();
             });
+          } else {
+            this.parseLog();
           }
         });
     }
