@@ -252,6 +252,7 @@ export class PartyService {
     const oneHourAgo = (Date.now() - (1 * 60 * 60 * 1000));
     const objToSend = Object.assign({}, player);
     objToSend.pastAreas = HistoryHelper.filterAreas(objToSend.pastAreas, oneHourAgo);
+    objToSend.netWorthSnapshots = HistoryHelper.filterNetworth(objToSend.netWorthSnapshots, oneHourAgo);
     this.externalService.getCharacter(this.accountInfo)
       .subscribe((equipment: EquipmentResponse) => {
         player = this.externalService.setCharacter(equipment, player);
