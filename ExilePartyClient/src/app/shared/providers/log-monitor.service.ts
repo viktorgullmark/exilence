@@ -57,6 +57,10 @@ export class LogMonitorService {
     });
   }
 
+  removeLogParser() {
+    this.entireLog.removeAllListeners();
+  }
+
   instantiateLogParser(path) {
     this.filePath = path;
     // instantiate monitor that parses the entire log

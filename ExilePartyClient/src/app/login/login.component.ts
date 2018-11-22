@@ -103,7 +103,7 @@ export class LoginComponent implements OnInit {
 
         this.parsingEnabled = this.parsingEnabled !== undefined ? this.parsingEnabled : false;
         this.logMonitorService.trackMapsOnly = this.logMonitorService.trackMapsOnly !== undefined ?
-            this.logMonitorService.trackMapsOnly : false;
+            this.logMonitorService.trackMapsOnly : true;
 
         // reset data for parser. if we logged out we should behave as a new player, not using current data
         this.mapService.lastInstanceServer = undefined;
@@ -120,9 +120,10 @@ export class LoginComponent implements OnInit {
         if (this.parsingEnabled) {
             this.isParsing = true;
             this.logMonitorService.parsingCompleted = false;
-            if (this.logMonitorService.entireLog === undefined) {
-                this.logMonitorService.instantiateLogParser(this.pathFormGroup.controls.filePath.value);
+            if (this.logMonitorService.entireLog !== undefined) {
+                this.logMonitorService.removeLogParser();
             }
+            this.logMonitorService.instantiateLogParser(this.pathFormGroup.controls.filePath.value);
             this.logMonitorService.entireLog.parseLog();
             this.mapService.areasParsed.subscribe(res => {
                 this.areaHistory = this.settingsService.get('areas');
