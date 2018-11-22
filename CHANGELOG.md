@@ -1,7 +1,7 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
-## [0.7.0] - 2018-11-XX
+## [0.7.0] - 2018-11-22
 - Fixed date-column in map-tab, should now be accurate and show additional information
 - Fixed time-column in map-tab, should now be accurate
 - Changed how duration is calculated for areas to be more reliable
