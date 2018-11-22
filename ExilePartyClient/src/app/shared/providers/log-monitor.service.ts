@@ -67,7 +67,7 @@ export class LogMonitorService {
     this.entireLog = new this.PathOfExileLog({
       logfile: this.filePath,
       includedEvents: ['area', 'instanceServer'],
-      chunkSize: 20480 // todo: read ram-size/cpu-speed and calc based on these?
+      chunkSize: 10240 // todo: read ram-size/cpu-speed and calc based on these?
     });
 
     this.entireLog.on('parsingStarted', (data) => {
