@@ -73,7 +73,7 @@ export class LoginComponent implements OnInit {
         private settingsService: SettingsService,
         private analyticsService: AnalyticsService,
         private ladderService: LadderService,
-        private logMonitorService: LogMonitorService,
+        public logMonitorService: LogMonitorService,
         private mapService: MapService,
         private dialog: MatDialog
     ) {
