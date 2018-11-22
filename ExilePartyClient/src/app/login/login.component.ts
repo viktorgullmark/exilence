@@ -102,6 +102,8 @@ export class LoginComponent implements OnInit {
         });
 
         this.parsingEnabled = this.parsingEnabled !== undefined ? this.parsingEnabled : false;
+        this.logMonitorService.trackMapsOnly = this.logMonitorService.trackMapsOnly !== undefined ?
+            this.logMonitorService.trackMapsOnly : false;
 
         // reset data for parser. if we logged out we should behave as a new player, not using current data
         this.mapService.lastInstanceServer = undefined;
@@ -397,24 +399,24 @@ export class LoginComponent implements OnInit {
 
     openLogInfoDialog(): void {
         setTimeout(() => {
-          if (!this.settingsService.get('diaShown_loginfo') && !this.settingsService.get('hideTooltips')) {
-            const dialogRef = this.dialog.open(InfoDialogComponent, {
-              width: '650px',
-              data: {
-                icon: 'warning',
-                title: 'Warning',
-                // tslint:disable-next-line:max-line-length
-                content: 'We recommend deleting the Client.txt before every league.<br/><br/>' +
-                  'If its very large it might impact performance of the app.'
-              }
-            });
-            dialogRef.afterClosed().subscribe(result => {
-              this.settingsService.set('diaShown_loginfo', true);
-              this.parseLog();
-            });
-          } else {
-            this.parseLog();
-          }
+            if (!this.settingsService.get('diaShown_loginfo') && !this.settingsService.get('hideTooltips')) {
+                const dialogRef = this.dialog.open(InfoDialogComponent, {
+                    width: '650px',
+                    data: {
+                        icon: 'warning',
+                        title: 'Warning',
+                        // tslint:disable-next-line:max-line-length
+                        content: 'We recommend deleting the Client.txt before every league.<br/><br/>' +
+                            'If its very large it might impact performance of the app.'
+                    }
+                });
+                dialogRef.afterClosed().subscribe(result => {
+                    this.settingsService.set('diaShown_loginfo', true);
+                    this.parseLog();
+                });
+            } else {
+                this.parseLog();
+            }
         });
     }
 
