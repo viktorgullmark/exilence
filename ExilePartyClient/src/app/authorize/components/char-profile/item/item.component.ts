@@ -13,13 +13,10 @@ export class ItemComponent implements OnInit {
   @Input() weaponSwap = false;
   @Input() extendHeightWith = 0;
   @ViewChild('tooltip') tooltip: ItemTooltipComponent;
-  parsingItem = true;
+
   constructor(public el: ElementRef) { }
 
   ngOnInit() {
-    setTimeout(() => {
-      this.parsingItem = false;
-    }, 1000);
   }
 
   update() {

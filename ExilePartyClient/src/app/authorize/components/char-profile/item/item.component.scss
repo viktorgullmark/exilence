@@ -1,8 +1,5 @@
 @import "./../../../../../assets/styles/_variables.scss";
 
-.show {
-    opacity: 1 !important;
-}
 
 .item-container {
     position: relative;
@@ -13,8 +10,6 @@
     justify-content: center;
     align-items: center;
     background: $item-bg-color;
-    opacity: 0;
-    transition: .5s ease-in-out all;
 
     &.shaper {
         background: $shaper-bg-color;
