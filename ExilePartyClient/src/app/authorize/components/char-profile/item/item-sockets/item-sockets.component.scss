@@ -1,9 +1,5 @@
 @import "./../../../../../../assets/styles/_variables.scss";
 
-.show {
-    opacity: 1 !important;
-}
-
 .socket-container {
     position: absolute;
     width: 100%;
@@ -13,8 +9,6 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    opacity: 0;
-    transition: .5s ease-in-out all;
 
     .inner-container-1 {
         width: 47px;

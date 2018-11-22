@@ -14,14 +14,9 @@ export class ItemSocketsComponent implements OnInit {
   @Input() columns: number;
   @Output() updated: EventEmitter<any> = new EventEmitter;
 
-  parsingSockets = true;
-
   constructor(private itemService: ItemService) { }
 
   ngOnInit() {
-    setTimeout(() => {
-      this.parsingSockets = false;
-    }, 1000);
   }
 
   selectGem(gem: Item) {
