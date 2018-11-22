@@ -5,14 +5,17 @@
         <input matInput formControlName="partyCode" placeholder="{{'PARTY.CODE' | translate}}" class="party-name-input">
         <mat-hint>{{'PARTY.NAME_HINT' | translate}}</mat-hint>
       </mat-form-field>
-      <button class="top-margin" *ngIf="!form.valid || partyService.party.name == form.controls.partyCode.value" mat-raised-button color="primary" type="submit" disabled>{{'PARTY.ENTER' | translate}}</button>
-      <button class="top-margin" *ngIf="form.valid && partyService.party.name != form.controls.partyCode.value" mat-raised-button color="primary" type="submit">{{'PARTY.ENTER' | translate}}</button>
+      <button class="top-margin" *ngIf="!form.valid || partyService.party.name == form.controls.partyCode.value"
+        mat-raised-button color="primary" type="submit" disabled>{{'PARTY.ENTER' | translate}}</button>
+      <button class="top-margin" *ngIf="form.valid && partyService.party.name != form.controls.partyCode.value"
+        mat-raised-button color="primary" type="submit">{{'PARTY.ENTER' | translate}}</button>
     </form>
     <mat-nav-list class="sidenav">
       <mat-list-item routerLinkActive="active" [routerLinkActiveOptions]="{exact:true}" routerLink="/authorized/dashboard">
         <mat-icon>home</mat-icon><a matLine>{{'PAGES.DASHBOARD.TITLE' | translate}}</a>
       </mat-list-item>
-      <mat-list-item routerLinkActive="active" [routerLinkActiveOptions]="{exact:true}" routerLink="/authorized/party" *ngIf="partyService.party.name != ''">
+      <mat-list-item routerLinkActive="active" [routerLinkActiveOptions]="{exact:true}" routerLink="/authorized/party"
+        *ngIf="partyService.party.name != ''">
         <mat-icon>group</mat-icon><a matLine>{{'PAGES.PARTY.TITLE' | translate}}</a>
       </mat-list-item>
       <mat-list-item routerLinkActive="active" [routerLinkActiveOptions]="{exact:true}" routerLink="/authorized/inspect-players">
@@ -25,6 +28,10 @@
         <mat-icon>help</mat-icon><a matLine>{{'PAGES.FAQ.TITLE' | translate}}</a>
       </mat-list-item>
     </mat-nav-list>
+    <div class="bottom-area-wrapper">
+      <img src="./../assets/img/discord-logo-white.svg" alt="Click to join our Discord" height="45" class="discord-logo"
+        (click)="openLink('https://discord.gg/ymr3VnA')">
+    </div>
   </mat-sidenav>
   <mat-sidenav-content class="content-container">
     <router-outlet></router-outlet>

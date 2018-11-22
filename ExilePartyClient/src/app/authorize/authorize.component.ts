@@ -10,6 +10,7 @@ import { PartyService } from '../shared/providers/party.service';
 import { RobotService } from '../shared/providers/robot.service';
 import { MessageValueService } from '../shared/providers/message-value.service';
 import { IncomeService } from '../shared/providers/income.service';
+import { ElectronService } from '../shared/providers/electron.service';
 
 @Component({
   selector: 'app-authorize',
@@ -27,6 +28,7 @@ export class AuthorizeComponent implements OnInit {
     private accountService: AccountService,
     private messageValueService: MessageValueService,
     private incomeService: IncomeService,
+    private electronService: ElectronService,
     private router: Router) {
     this.form = fb.group({
       partyCode: [this.partyService.party.name !== '' ? this.partyService.party.name : this.generatePartyName(),
@@ -38,6 +40,10 @@ export class AuthorizeComponent implements OnInit {
     this.accountService.player.subscribe(res => {
       this.player = res;
     });
+  }
+
+  openLink(link: string) {
+    this.electronService.shell.openExternal(link);
   }
 
   generatePartyName(): string {
