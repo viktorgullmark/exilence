@@ -359,6 +359,8 @@ export class LoginComponent implements OnInit {
                 if (result !== undefined) {
                     this.netWorthHistory = result.networthHistory;
                     this.areaHistory = result.areaHistory;
+                    this.player.netWorthSnapshots = this.netWorthHistory.history;
+                    this.player.pastAreas = this.areaHistory;
                 }
             });
         }
