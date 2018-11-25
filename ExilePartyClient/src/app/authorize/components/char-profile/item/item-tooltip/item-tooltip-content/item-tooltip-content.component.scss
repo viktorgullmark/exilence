@@ -115,6 +115,23 @@ hr {
         }
     }
 
+    .stats {
+        display: flex;
+        justify-content: center;
+
+        .stat {
+            margin: 0 10px 0 10px;
+
+            .stat-tag {
+                color: $tag-color;
+            }
+
+            .stat-value {
+                color: $font-color;
+            }
+        }
+    }
+
     .requirements {
         .requirement {
             color: $tag-color;

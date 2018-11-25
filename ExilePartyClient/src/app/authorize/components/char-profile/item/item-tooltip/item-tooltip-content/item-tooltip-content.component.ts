@@ -1,5 +1,6 @@
 import { Component, OnInit, Input, ViewEncapsulation } from '@angular/core';
 import { Item } from '../../../../../../shared/interfaces/item.interface';
+import { Property } from '../../../../../../shared/interfaces/property.interface';
 
 @Component({
   selector: 'app-item-tooltip-content',
@@ -9,9 +10,26 @@ import { Item } from '../../../../../../shared/interfaces/item.interface';
 })
 export class ItemTooltipContentComponent implements OnInit {
   @Input() item: Item;
+  physDmgProp: Property;
+  eleDmgProp: Property;
+  apsProp: Property;
+  physMinMax: Array<string>;
+  eleMinMax: Array<string>;
   constructor() { }
 
   ngOnInit() {
+    // check if the item is a weapon by identifying properties
+    if (this.item !== undefined && this.item.properties !== undefined && this.item.properties !== null) {
+      this.physDmgProp = this.item.properties.find(x => x.name === 'Physical Damage');
+      this.eleDmgProp = this.item.properties.find(x => x.name === 'Elemental Damage');
+      this.apsProp = this.item.properties.find(x => x.name === 'Attacks per Second');
+      if (this.physDmgProp !== undefined) {
+        this.physMinMax = this.physDmgProp.values[0][0].split('-');
+      }
+      if (this.eleDmgProp !== undefined) {
+        this.eleMinMax = this.eleDmgProp.values[0][0].split('-');
+      }
+    }
   }
 
   getExplicitModClass(explicit) {
@@ -62,7 +80,6 @@ export class ItemTooltipContentComponent implements OnInit {
 
     }
 
-
     let html = '';
     matches.forEach((m) => {
       html += `<span class="${m.class}">${m.text}</span>`;
@@ -83,5 +100,28 @@ export class ItemTooltipContentComponent implements OnInit {
     }
 
     return result;
+  }
+
+  isWeapon() {
+    if ((this.physDmgProp !== undefined || this.eleDmgProp !== undefined) && this.apsProp !== undefined) {
+      return true;
+    }
+    return false;
+  }
+
+  getTotalDps() {
+    return this.getEleDps() + this.getPhysDps();
+  }
+
+  getEleDps() {
+    if (this.eleMinMax !== undefined) {
+      return (+this.eleMinMax[0] + +this.eleMinMax[1]) / 2 * +this.apsProp.values[0][0];
+    } return 0;
+  }
+
+  getPhysDps() {
+    if (this.physMinMax !== undefined) {
+      return (+this.physMinMax[0] + +this.physMinMax[1]) / 2 * +this.apsProp.values[0][0];
+    } return 0;
   }
 }
