@@ -1,7 +1,7 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
-## [0.7.3] - 2018-11-25
+## [0.7.3] - 2018-11-26
 - Added DPS/pDPS/eDPS to weapon-tooltips
 - Added a column that shows which players has an item in the group summary table 
 - Fixed a bug where snapshots didnt get triggered on zone-change
