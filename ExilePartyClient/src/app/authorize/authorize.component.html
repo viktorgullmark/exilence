@@ -11,12 +11,12 @@
         mat-raised-button color="primary" type="submit">{{'PARTY.ENTER' | translate}}</button>
     </form>
     <mat-nav-list class="sidenav">
-      <mat-list-item routerLinkActive="active" [routerLinkActiveOptions]="{exact:true}" routerLink="/authorized/dashboard">
-        <mat-icon>home</mat-icon><a matLine>{{'PAGES.DASHBOARD.TITLE' | translate}}</a>
-      </mat-list-item>
-      <mat-list-item routerLinkActive="active" [routerLinkActiveOptions]="{exact:true}" routerLink="/authorized/party"
+      <mat-list-item routerLinkActive="active" class="current-group" [routerLinkActiveOptions]="{exact:true}" routerLink="/authorized/party"
         *ngIf="partyService.party.name != ''">
         <mat-icon>group</mat-icon><a matLine>{{'PAGES.PARTY.TITLE' | translate}}</a>
+      </mat-list-item>
+      <mat-list-item routerLinkActive="active" [routerLinkActiveOptions]="{exact:true}" routerLink="/authorized/dashboard">
+        <mat-icon>home</mat-icon><a matLine>{{'PAGES.DASHBOARD.TITLE' | translate}}</a>
       </mat-list-item>
       <mat-list-item routerLinkActive="active" [routerLinkActiveOptions]="{exact:true}" routerLink="/authorized/inspect-players">
         <mat-icon>compass_calibration</mat-icon><a matLine>{{'PAGES.RECENT_PLAYERS.TITLE' | translate}}</a>
@@ -29,8 +29,7 @@
       </mat-list-item>
     </mat-nav-list>
     <div class="bottom-area-wrapper">
-      <img alt="Click to join our Discord" height="45" class="discord-logo"
-        (click)="openLink('https://discord.gg/ymr3VnA')">
+      <img alt="Click to join our Discord" height="45" class="discord-logo" (click)="openLink('https://discord.gg/ymr3VnA')">
     </div>
   </mat-sidenav>
   <mat-sidenav-content class="content-container">
