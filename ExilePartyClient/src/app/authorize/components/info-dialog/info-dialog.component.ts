@@ -23,10 +23,7 @@ export class InfoDialogComponent implements OnInit {
     this.dialogRef.close();
   }
   disableTooltips() {
-    this.settingsService.set('diaShown_wealth', true);
-    this.settingsService.set('diaShown_equipment', true);
-    this.settingsService.set('diaShown_maps', true);
-    this.settingsService.set('diaShown_partySummary', true);
+    this.settingsService.set('hideTooltips', true);
     this.dialogRef.close();
   }
   ngOnInit() {

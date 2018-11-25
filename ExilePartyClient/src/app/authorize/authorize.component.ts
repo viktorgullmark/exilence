@@ -11,6 +11,7 @@ import { RobotService } from '../shared/providers/robot.service';
 import { MessageValueService } from '../shared/providers/message-value.service';
 import { StashService } from '../shared/providers/stash.service';
 import { IncomeService } from '../shared/providers/income.service';
+import { ElectronService } from '../shared/providers/electron.service';
 
 @Component({
   selector: 'app-authorize',
@@ -29,6 +30,7 @@ export class AuthorizeComponent implements OnInit {
     private messageValueService: MessageValueService,
     private stashService: StashService,
     private incomeService: IncomeService,
+    private electronService: ElectronService,
     private router: Router) {
     this.form = fb.group({
       partyCode: [this.partyService.party.name !== '' ? this.partyService.party.name : this.generatePartyName(),
@@ -41,6 +43,10 @@ export class AuthorizeComponent implements OnInit {
       this.player = res;
     });
     this.stashService.getStashTabList();
+  }
+
+  openLink(link: string) {
+    this.electronService.shell.openExternal(link);
   }
 
   generatePartyName(): string {

@@ -1,10 +1,9 @@
-import { Component, OnInit, Input, Inject, ViewChild, Output, EventEmitter } from '@angular/core';
-import { Player, LadderPlayer } from '../../../shared/interfaces/player.interface';
-import { PartyService } from '../../../shared/providers/party.service';
-import { Validators, FormBuilder, FormGroup } from '@angular/forms';
-import { ExtendedAreaInfo } from '../../../shared/interfaces/area.interface';
+import { Component, Input, OnInit, ViewChild } from '@angular/core';
 import { MatSort, MatTableDataSource } from '@angular/material';
+
+import { LadderPlayer, Player } from '../../../shared/interfaces/player.interface';
 import { LadderService } from '../../../shared/providers/ladder.service';
+import { PartyService } from '../../../shared/providers/party.service';
 
 @Component({
   selector: 'app-ladder-table',
@@ -57,12 +56,16 @@ export class LadderTableComponent implements OnInit {
           twitch: player.twitch,
           class: player.class,
           class_rank: player.class_rank,
-          experience_per_hour: player.experience_per_hour
+          experience_per_hour: this.numberWithSpaces(player.experience_per_hour)
         };
 
         this.dataSource.push(newPlayerObj);
       });
     }
+  }
+
+  numberWithSpaces(x) {
+    return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
   }
 }
 

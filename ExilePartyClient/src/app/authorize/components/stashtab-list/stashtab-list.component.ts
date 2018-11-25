@@ -15,7 +15,7 @@ import { AlertService } from '../../../shared/providers/alert.service';
   templateUrl: './stashtab-list.component.html',
   styleUrls: ['./stashtab-list.component.scss']
 })
-export class StashtabListComponent implements OnInit {
+export class StashtabListComponent implements OnInit, OnDestroy {
 
   displayedColumns: string[] = ['select', 'position', 'name'];
   searchText = '';
@@ -41,6 +41,10 @@ export class StashtabListComponent implements OnInit {
   }
 
   ngOnInit() {
+    // temporarily until implemented
+    this.init();
+
+    this.settingsService.isChangingStash = true;
   }
 
   init() {
@@ -112,4 +116,9 @@ export class StashtabListComponent implements OnInit {
 
     this.settingsService.set('selectedStashTabs', this.selection.selected);
   }
+
+  ngOnDestroy() {
+    this.settingsService.isChangingStash = false;
+  }
+
 }

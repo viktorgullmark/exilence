@@ -19,6 +19,8 @@ export class SettingsComponent implements OnInit {
   form: FormGroup;
   selectedIndex = 0;
   alwaysOnTop = false;
+  isResizable = false;
+  hideTooltips = false;
   sessionId: string;
   sessionIdValid: boolean;
 
@@ -109,6 +111,18 @@ export class SettingsComponent implements OnInit {
     if (onTopSetting !== undefined) {
       this.alwaysOnTop = onTopSetting;
     }
+
+    const isResizableSetting = this.settingsService.get('isResizable');
+
+    if (isResizableSetting !== undefined) {
+      this.isResizable = isResizableSetting;
+    }
+
+    const hideTooltipsSetting = this.settingsService.get('hideTooltips');
+
+    if (hideTooltipsSetting !== undefined) {
+      this.hideTooltips = hideTooltipsSetting;
+    }
   }
 
   resetKeybinds() {
@@ -149,10 +163,30 @@ export class SettingsComponent implements OnInit {
     }
   }
 
+  toggleResizable() {
+    if (this.isResizable) {
+      this.electronService.remote.getCurrentWindow().setResizable(true);
+      this.settingsService.set('isResizable', true);
+    } else {
+      this.electronService.remote.getCurrentWindow().setResizable(false);
+      this.settingsService.set('isResizable', false);
+    }
+
+  }
+
+  toggleHideTooltips() {
+    if (this.hideTooltips) {
+      this.settingsService.set('hideTooltips', true);
+    } else {
+      this.settingsService.set('hideTooltips', false);
+    }
+  }
+
   resetDialogs() {
     this.settingsService.set('diaShown_wealth', false);
     this.settingsService.set('diaShown_equipment', false);
     this.settingsService.set('diaShown_maps', false);
+    this.settingsService.set('diaShown_loginfo', false);
     this.settingsService.set('diaShown_partySummary', false);
   }
 }

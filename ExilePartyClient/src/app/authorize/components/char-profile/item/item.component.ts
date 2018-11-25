@@ -13,6 +13,7 @@ export class ItemComponent implements OnInit {
   @Input() weaponSwap = false;
   @Input() extendHeightWith = 0;
   @ViewChild('tooltip') tooltip: ItemTooltipComponent;
+
   constructor(public el: ElementRef) { }
 
   ngOnInit() {

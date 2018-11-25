@@ -38,14 +38,15 @@ export class CharEquipmentComponent implements OnInit, AfterViewInit {
   }
 
   openEquipmentDialog(): void {
-    if (!this.settingsService.get('diaShown_equipment')) {
+    if (!this.settingsService.get('diaShown_equipment') && !this.settingsService.get('hideTooltips')) {
       const dialogRef = this.dialog.open(InfoDialogComponent, {
         width: '650px',
         data: {
           icon: 'accessibility',
           title: 'Equipment tab',
-          content: 'Everything you see here will be updated every time a player enters a new area in-game.<br/><br/>' +
-            'This includes both the equipment and inventory of the selected player.'
+          content: 'Everything you see in the equipment tab will be updated every time a player enters a new area in-game.<br/><br/>' +
+            'This includes both the equipment and inventory of the selected player.<br/><br/>' +
+            'For the inventory to be shown a valid sessionId is required.'
         }
       });
       dialogRef.afterClosed().subscribe(result => {

@@ -5,14 +5,14 @@
                 <ng-container *ngSwitchCase="3">
                     <!-- unique item -->
                     <div *ngIf="item.identified">{{item.name}}
-                        <br/>
+                        <br />
                     </div>
                     <span>{{item.typeLine}}</span>
                 </ng-container>
                 <ng-container *ngSwitchCase="2">
                     <!-- rare item -->
                     <div *ngIf="item.identified">{{item.name}}
-                        <br/>
+                        <br />
                     </div>
                     <span>{{item.typeLine}}</span>
                 </ng-container>
@@ -32,6 +32,21 @@
         </h3>
     </div>
     <div class="tooltip-body mat-body-1">
+        <ng-container *ngIf="item.properties != undefined && item.properties.length > 0 && isWeapon(item.properties)">
+            <div class="stats">
+                <div class="stat dps-total">
+                    <span class="stat-tag">DPS</span>&nbsp;:&nbsp;<span class="stat-value">{{getTotalDps()}}</span>
+                </div>
+                <div class="stat dps-phys">
+                    <span class="stat-tag">pDPS</span>&nbsp;:&nbsp;<span class="stat-value">{{getPhysDps()}}</span>
+                </div>
+                <div class="stat dps-ele">
+                    <span class="stat-tag">eDPS</span>&nbsp;:&nbsp;<span class="stat-value">{{getEleDps()}}</span>
+                </div>
+                <br />
+            </div>
+            <hr>
+        </ng-container>
         <div class="properties">
             <!-- properties -->
             <ng-container *ngFor="let prop of item.properties">
@@ -45,7 +60,7 @@
                             <span [ngClass]="{'generic-mod': prop.name == 'Quality' || prop.name == 'Energy Shield' || prop.name == 'Armour' || prop.name == 'Evasion Rating'}">{{prop.values[0][0]}}</span>
                         </ng-container>
                     </span>
-                    <br/>
+                    <br />
                 </ng-container>
                 <ng-container *ngIf="item.inventoryId == 'Flask' && prop.values[0] != undefined">
                     <span class="property">
@@ -62,12 +77,12 @@
                             </ng-container>
                         </ng-container>
                     </span>
-                    <br/>
+                    <br />
                 </ng-container>
             </ng-container>
             <ng-container *ngFor="let mod of item.utilityMods">
                 <span class="enchant-mod">{{mod}}
-                    <br/>
+                    <br />
                 </span>
             </ng-container>
             <hr *ngIf="item.properties != undefined">
@@ -89,23 +104,23 @@
         <div class="mods">
             <ng-container *ngFor="let mod of item.implicitMods">
                 <span>{{mod}}
-                    <br/>
+                    <br />
                 </span>
             </ng-container>
             <ng-container *ngFor="let mod of item.enchantMods">
                 <span class="enchant-mod">
                     {{mod}}
                 </span>
-                <br/>
+                <br />
             </ng-container>
             <hr *ngIf="(item.implicitMods != undefined || item.enchantMods != undefined) && item.explicitMods != undefined">
             <ng-container *ngFor="let mod of item.explicitMods">
                 <span *ngIf="item.frameType != 6" class="{{getExplicitModClass(mod)}}">{{mod}}
-                    <br/>
+                    <br />
                 </span>
                 <ng-container *ngIf="item.frameType == 6">
                     <span class="div-card" [innerHtml]="formatDivCard(mod)">
-                        <br/>
+                        <br />
                     </span>
                     <hr>
                 </ng-container>
@@ -114,14 +129,14 @@
                 <span class="crafted-mod">
                     {{mod}}
                 </span>
-                <br/>
+                <br />
             </ng-container>
         </div>
         <ng-container *ngFor="let flav of item.flavourText">
             <span class="flavour-text mat-caption">
                 {{flav}}
             </span>
-            <br/>
+            <br />
         </ng-container>
         <ng-container *ngIf="item.descrText != undefined">
             <hr *ngIf="item.implicitMods != undefined || item.enchantMods != undefined || item.explicitMods != undefined || item.craftedMods != undefined || !item.identified">
@@ -133,13 +148,13 @@
         </ng-container>
 
         <ng-container *ngIf="item.corrupted && (item.secDescrText != undefined || item.descrText != undefined)">
-            <br/>
+            <br />
         </ng-container>
         <span *ngIf="item.shaper" class="shaper-item">Shaper
-            <br/>
+            <br />
         </span>
         <span *ngIf="item.elder" class="elder-item">Elder
-            <br/>
+            <br />
         </span>
         <span *ngIf="item.corrupted" class="corrupted">Corrupted</span>
 

@@ -7,6 +7,7 @@ import 'rxjs/add/operator/do';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 
+import { HistoryHelper } from '../helpers/history.helper';
 import { NetWorthHistory, NetWorthItem, NetWorthSnapshot } from '../interfaces/income.interface';
 import { Item } from '../interfaces/item.interface';
 import { Player } from '../interfaces/player.interface';
@@ -18,7 +19,6 @@ import { LogService } from './log.service';
 import { NinjaService } from './ninja.service';
 import { PartyService } from './party.service';
 import { SettingsService } from './settings.service';
-import { HistoryHelper } from '../helpers/history.helper';
 import { StashService } from './stash.service';
 
 
@@ -78,24 +78,22 @@ export class IncomeService {
 
   Snapshot() {
     const oneHourAgo = (Date.now() - (1 * 60 * 60 * 1000));
-    const oneWeekAgo = (Date.now() - (1 * 60 * 60 * 24 * 7 * 1000));
+
     this.netWorthHistory = this.settingsService.get('networth');
+    const selectedStashtabs = this.settingsService.get('selectedStashTabs');
 
     this.sessionIdValid = this.settingsService.get('account.sessionIdValid');
-
     if (
       this.netWorthHistory.lastSnapshot < (Date.now() - this.fiveMinutes) &&
       this.localPlayer !== undefined &&
       (this.sessionId !== undefined && this.sessionId !== '' && this.sessionIdValid) &&
-      !this.isSnapshotting
+      !this.isSnapshotting && !this.accountService.loggingIn && !this.settingsService.isChangingStash &&
+      (selectedStashtabs === undefined || selectedStashtabs.length > 0)
     ) {
       this.isSnapshotting = true;
       this.netWorthHistory.lastSnapshot = Date.now();
       this.logService.log('Started snapshotting player net worth');
       this.SnapshotPlayerNetWorth(this.sessionId).subscribe(() => {
-
-        this.netWorthHistory.history = this.netWorthHistory.history
-          .filter((snaphot: NetWorthSnapshot) => snaphot.timestamp > oneWeekAgo);
 
         // We are a new player that have not parsed income before
         // Remove the placeholder element
@@ -136,21 +134,7 @@ export class IncomeService {
     const accountName = this.localPlayer.account;
     const league = this.localPlayer.character.league;
 
-    let priceInfoLeague = league;
-
-    // fetch prices for trading counter-part if character is in SSF (dynamic leagues will be added later)
-    if (priceInfoLeague === 'SSF Incursion HC') {
-      priceInfoLeague = 'Hardcore Incursion';
-    }
-    if (priceInfoLeague === 'SSF Hardcore') {
-      priceInfoLeague = 'Hardcore';
-    }
-    if (priceInfoLeague === 'SSF Incursion') {
-      priceInfoLeague = 'Incursion';
-    }
-    if (priceInfoLeague === 'SSF Standard') {
-      priceInfoLeague = 'Standard';
-    }
+    const priceInfoLeague = this.settingsService.get('account.tradeLeagueName');
 
     this.playerStashTabs = [];
     this.totalNetWorthItems = [];
@@ -244,7 +228,7 @@ export class IncomeService {
   getValuesFromNinja(league: string) {
     const oneHourAgo = (Date.now() - (1 * 60 * 60 * 1000));
     const length = Object.values(this.ninjaPrices).length;
-    if (length > 0 && this.lastNinjaHit > oneHourAgo) {
+    if (length > 0 && (this.lastNinjaHit > oneHourAgo && !this.externalService.tradeLeagueChanged)) {
       return Observable.of(null);
     } else {
       this.logService.log('[INFO] Retriving prices from poe.ninja');

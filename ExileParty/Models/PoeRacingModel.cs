@@ -18,6 +18,7 @@ namespace ExileParty.Models
         public int Rank { get; set; }
         public string Twitch { get; set; }
         public string Class { get; set; }
-        public int Class_rank { get; set; }
+        public int Class_rank { get; set; } 
+        public DateTime Updated { get; set; }
     }
 }

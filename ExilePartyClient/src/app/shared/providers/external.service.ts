@@ -24,6 +24,7 @@ export class ExternalService {
   public url: 'https://www.pathofexile.com/character-window/get-items';
 
   public leagues: BehaviorSubject<League[]> = new BehaviorSubject<League[]>([]);
+  public tradeLeagueChanged = false;
 
   constructor(
     private http: HttpClient,
@@ -51,12 +52,28 @@ export class ExternalService {
     });
   }
 
-  getCharacterList(account: string) {
+  getCharacterList(account: string, sessionId?: string) {
+    if (sessionId !== undefined) {
+      this.setCookie(sessionId);
+    }
+
     const parameters = `?accountName=${account}`;
     return this.http.get('https://www.pathofexile.com/character-window/get-characters' + parameters)
       .catch(e => {
         if (e.status !== 403 && e.status !== 404) {
           this.logService.log('Could not fetch character list, disconnecting!', null, true);
+          this.router.navigate(['/disconnected']);
+        }
+        return Observable.of(null);
+      });
+  }
+
+  getLeagues(type: string, compact: number) {
+    const parameters = `?type=${type}&compact=${compact}`;
+    return this.http.get('http://api.pathofexile.com/leagues' + parameters)
+      .catch(e => {
+        if (e.status !== 403 && e.status !== 404) {
+          this.logService.log('Could not fetch leagues, disconnecting!', null, true);
           this.router.navigate(['/disconnected']);
         }
         return Observable.of(null);

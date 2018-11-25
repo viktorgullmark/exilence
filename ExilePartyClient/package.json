@@ -1,6 +1,6 @@
 {
   "name": "exile-party",
-  "version": "0.5.5",
+  "version": "0.7.2",
   "author": {
     "name": "Viktor Gullmark",
     "email": "viktor.gullmark@hotmail.com"
@@ -49,7 +49,8 @@
     "electron-updater": "2.21.4",
     "ffi": "^2.2.0",
     "moment": "^2.22.2",
-    "poe-log-monitor": "^1.2.4",
+    "node-key-sender": "github:viktorgullmark/node-key-sender",
+    "poe-log-monitor": "github:viktorgullmark/poe-log-monitor",
     "robot-js": "^2.0.0",
     "universal-analytics": "^0.4.17"
   },

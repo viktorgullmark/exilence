@@ -1,10 +1,53 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
-## [0.5.6] - 2018-XX-XX
+## [0.7.3] - 2018-11-25
+- Added DPS/pDPS/eDPS to weapon-tooltips
+- Fix for snapshots not getting triggered
+- Minor style-tweaks
+
+## [0.7.2] - 2018-11-22
+- Hotfix for missing logo (again)
+
+## [0.7.1] - 2018-11-22
+- Hotfix for missing logo
+
+## [0.7.0] - 2018-11-22
+- Fixed date-column in map-tab, should now be accurate and show additional information
+- Fixed time-column in map-tab, should now be accurate
+- Changed how duration is calculated for areas to be more reliable
+- Now hides zones which you've been in for more than 30 minutes (probable logout)
+- Added option to choose what zones to track (maps only, or all zones)
+- Added the ability to import your Client.txt (to see all your maphistory)
+- Added support for private profiles (requires a sessionId to work)
+- Reworked handling of area-events to be more accurate
+- Added a setting to enable/disable resizing of the window, instead of setting it enabled by default
+- Added Discord-link to sidemenu
+- Changed the layout of the league-selection step in the login-process to be more descriptive
+- Now saves history for net worth and areas forever (for yourself only)
+- Messages are now posted to your current party instead of local chat
+- Reworked layout for some of the tabs on the settings-page
+- Minor style-tweaks/fixes
+
+## [0.6.1] - 2018-11-17
+- Increased the time you can be inactive before getting kicked from the server (now 1 hour instead of 15 min)
+- Added support to choose which league prices should be fetched from (for SSF/private-leagues that doesn't have pricing)
+- Added a popup for clearing history if you change to another league when logging in
+- Added a limit to how often messages can be sent to the game (every 1½ second)
+- Replaced poe-racing.com-implementation with our own ladder-endpoint
+- Added ladder-parsing for private-leagues
+- Now autocompletes to the last step of the login-process if you have all settings stored
+- Now auto-selects trade-league for you if the league selected is a trade-league to avoid mistakes
+- Reworked keybind-events to be more reliable (using a new framework)
+- Added a global setting to hide tutorial-tooltips (found under general)
+- Improved the behaviour of the currency-calculations
+- Increased width of popout-window 
+
+## [0.6.0] - 2018-11-15
 - Added support for private-leagues
 - Added a tutorial (helper-tooltips) that will be shown the first time you launch Exile Party
 - Added a FAQ-page, listing frequently asked questions with answers
+- Added language-support (now displays timestamps within the app in your system language)
 - Added a general tab to the settings-page
 - Added a button to reset helper-tooltips
 - Improved reconnect-functionality to avoid infinite loop when party has expired

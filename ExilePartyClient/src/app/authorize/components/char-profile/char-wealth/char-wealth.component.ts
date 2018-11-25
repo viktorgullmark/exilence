@@ -103,15 +103,15 @@ export class CharWealthComponent implements OnInit {
 
   openCurrencyDialog(): void {
     setTimeout(() => {
-      if (!this.settingsService.get('diaShown_wealth')) {
+      if (!this.settingsService.get('diaShown_wealth') && !this.settingsService.get('hideTooltips')) {
         const dialogRef = this.dialog.open(InfoDialogComponent, {
           width: '650px',
           data: {
             icon: 'attach_money',
             title: 'Currency tab',
             // tslint:disable-next-line:max-line-length
-            content: 'This tab updates approximately once every 5 minutes, as long as you remain active in-game.<br/><br/>' +
-              'We store all your net worth data one week back in time.'
+            content: 'This tab updates when the selected player changes area in game, at most once every 5 minutes.<br/><br/>' +
+              'We store all your net worth data one week back in time. This will be extended in the future.'
           }
         });
         dialogRef.afterClosed().subscribe(result => {

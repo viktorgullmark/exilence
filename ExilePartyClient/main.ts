@@ -27,6 +27,9 @@ const serve = args.some(val => val === '--serve');
 
 ipcMain.on('keybinds-update', function (event, binds) {
   globalShortcut.unregisterAll();
+  globalShortcut.register('Command+Shift+I', () => {
+    windows[ExileWindowEnum.Main].openDevTools();
+  });
   binds.forEach(bind => {
     if (bind.enabled) {
       globalShortcut.register(bind.keys, () => {
@@ -57,7 +60,7 @@ ipcMain.on('popout-window', (event, data: ExileWindowEvent) => {
     x: 100,
     y: 100,
     height: 85,
-    width: 200,
+    width: 220,
     show: false,
     frame: false,
     resizable: false,
@@ -108,7 +111,7 @@ function createWindow(windowType: ExileWindowEnum = ExileWindowEnum.Main) {
     minWidth: 1344,
     webPreferences: { webSecurity: false },
     frame: false,
-    resizable: true,
+    resizable: false,
     icon: path.join(__dirname, 'dist/assets/img/app-icon.png'),
   });
 

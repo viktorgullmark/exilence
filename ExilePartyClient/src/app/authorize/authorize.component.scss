@@ -4,11 +4,31 @@
     .active {
         background-color: $secondary;
     }
+    .current-group {
+        margin-bottom: 15px;
+    }
     mat-list-item {
         text-transform: uppercase;
         font-size: 14px !important;
     }
 }
+
+.sidenav-container {
+    
+    .bottom-area-wrapper {
+        position: absolute;
+        bottom: 15px;
+        width: 265px !important;
+        display: flex;
+
+        .discord-logo {
+            flex: 1;
+            cursor: pointer;
+            content:url("./../../assets/img/discord-logo-white.svg");
+        }
+    }
+}
+
 
 .sidenav-form {
     padding: $container-padding;

@@ -22,8 +22,8 @@
     </mat-tab>
     <mat-tab #generalsettings id="general">
       <ng-template mat-tab-label>
-        <mat-icon class="tab-icon">settings</mat-icon>
-        &nbsp;General
+        <mat-icon class="tab-icon">help</mat-icon>
+        &nbsp;Tutorials
       </ng-template>
     </mat-tab>
   </mat-tab-group>
@@ -125,16 +125,38 @@
 
 <div [hidden]="selectedIndex != 2">
   <div class="setting-tab-content">
-    <mat-checkbox class="setting-checkbox" [(ngModel)]="alwaysOnTop" (ngModelChange)="toggleAlwaysOnTop()">Set window
-      always on top</mat-checkbox>
+    <h3 class="mat-h4 page-header">Misc</h3>
+    <mat-divider class="divider"></mat-divider>
+    <div class="setting-inner-content">
+      <p class="setting-desc-text">
+        Check this setting if you want ExileParty to be on top at all times
+      </p>
+      <mat-checkbox class="setting-checkbox" [(ngModel)]="alwaysOnTop" (ngModelChange)="toggleAlwaysOnTop()">Set window
+        always on top</mat-checkbox>
+      <p class="setting-desc-text">
+        Check this setting if you want ExileParty to be resizable
+      </p>
+      <mat-checkbox class="setting-checkbox" [(ngModel)]="isResizable" (ngModelChange)="toggleResizable()">Enable resize of window</mat-checkbox>
+    </div>
   </div>
 </div>
 
 <div [hidden]="selectedIndex != 3">
   <div class="setting-tab-content">
-    <p>
-      Press this button if you want to show the tutorial-dialogs once again. 
-    </p>
-    <button mat-raised-button color="primary" (click)="resetDialogs()" type="button">{{'SETTINGS.RESET_DIALOGS' | translate}}</button>
+    <h3 class="mat-h4 page-header">Visibility</h3>
+    <mat-divider class="divider"></mat-divider>
+    <div class="setting-inner-content">
+      <p class="setting-desc-text">
+        Press this button to restore all tutorial tooltips to their original state
+      </p>
+      <button mat-raised-button color="primary" (click)="resetDialogs()" type="button">{{'SETTINGS.RESET_DIALOGS' |
+        translate}}</button>
+      <br /><br />
+      <p class="setting-desc-text">
+        Check this setting if you want to ignore all helpful tooltips
+      </p>
+      <mat-checkbox class="setting-checkbox" [(ngModel)]="hideTooltips" (ngModelChange)="toggleHideTooltips()">Hide
+        tooltips</mat-checkbox>
+    </div>
   </div>
 </div>

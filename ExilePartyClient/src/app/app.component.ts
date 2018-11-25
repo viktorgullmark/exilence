@@ -35,7 +35,7 @@ export class AppComponent {
     this.logout();
 
     translate.setDefaultLang('en');
-    moment.locale('en');
+    moment.locale(this.electronService.remote.app.getLocale());
     // console.log('AppConfig', AppConfig);
 
     if (electronService.isElectron()) {
@@ -90,6 +90,10 @@ export class AppComponent {
     if (alwaysOnTop !== undefined) {
       this.electronService.remote.getCurrentWindow().setAlwaysOnTop(alwaysOnTop);
       this.electronService.remote.getCurrentWindow().setVisibleOnAllWorkspaces(alwaysOnTop);
+    }
+    const resizableWindow = this.settingsService.get('isResizable');
+    if (resizableWindow !== undefined) {
+      this.electronService.remote.getCurrentWindow().setResizable(resizableWindow);
     }
   }
 }

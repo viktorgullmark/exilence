@@ -50,7 +50,10 @@
     },
     "LEAGUE": {
         "LEAGUE_INFO": "Choose your league",
-        "NAME": "League"
+        "NAME": "Fetch characters from league"
+    },
+    "TRADELEAGUE": {
+        "NAME": "Fetch prices from league"
     },
     "CHARACTER": {
         "NAME": "Character name",
@@ -73,7 +76,8 @@
         "PATH_NOT_VALID": "The filepath is not valid",
         "SESSIONID_NOT_VALID": "The sessionId is not valid",
         "SESSIONID_NOT_VALIDATED": "The sessionId has not been validated yet",
-        "SESSIONID_NOT_PROVIDED": "No sessionId provided"
+        "SESSIONID_NOT_PROVIDED": "No sessionId provided",
+        "PRIVATE_PROFILE": "This account is set to private, a sessionId is required to continue"
     },
     "STASH": {
         "SEARCH": "Filter tabs",

@@ -58,15 +58,15 @@ export class CharMapsComponent implements OnInit {
 
   openMapDialog(): void {
     setTimeout(() => {
-      if (!this.settingsService.get('diaShown_maps')) {
+      if (!this.settingsService.get('diaShown_maps') && !this.settingsService.get('hideTooltips')) {
         const dialogRef = this.dialog.open(InfoDialogComponent, {
           width: '650px',
           data: {
             icon: 'map',
             title: 'Map tab',
             // tslint:disable-next-line:max-line-length
-            content: 'This tab updates every time you change area in game.<br/><br/>' +
-              'We store all your area/map-data one week back in time.'
+            content: 'This tab updates every time the selected player changes area in game.<br/><br/>' +
+              'We store all the area/map-data one week back in time for each player.'
           }
         });
         dialogRef.afterClosed().subscribe(result => {
@@ -101,6 +101,7 @@ resetAreaHistory() {
 updateAvgTimeSpent(pastAreas) {
   if (pastAreas !== null) {
     if (pastAreas[0] !== undefined) {
+      pastAreas = pastAreas.filter(x => x.duration > 0);
       let total = 0;
       pastAreas.forEach(area => {
         total = total + area.duration;

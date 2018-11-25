@@ -1,5 +1,6 @@
 @import "./../../../../../assets/styles/_variables.scss";
 
+
 .item-container {
     position: relative;
     min-width: 50px;
@@ -9,6 +10,7 @@
     justify-content: center;
     align-items: center;
     background: $item-bg-color;
+
     &.shaper {
         background: $shaper-bg-color;
     }

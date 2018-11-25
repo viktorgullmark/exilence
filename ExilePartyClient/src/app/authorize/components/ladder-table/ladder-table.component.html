@@ -1,40 +1,41 @@
-<div class="not-found-message" *ngIf="dataSource.length == 0">
-  Sorry, the selected player does not currently have a ranking
-</div>
-<table *ngIf="dataSource.length > 0" mat-table [dataSource]="source" class="mat-elevation-z8" matSort matSortActive="rank" matSortDisableClear matSortDirection="asc">
+<table *ngIf="dataSource.length > 0" mat-table [dataSource]="source" class="mat-elevation-z8" matSort matSortActive="rank"
+  matSortDisableClear matSortDirection="asc">
 
   <ng-container matColumnDef="online">
     <th mat-header-cell *matHeaderCellDef></th>
     <td mat-cell *matCellDef="let element" [ngClass]="{'active': element.character === player.character.name }">
-        <mat-icon (click)="minimize()" class="status-icon" [ngClass]="{'online': element.online }">fiber_manual_record</mat-icon>
+      <mat-icon (click)="minimize()" class="status-icon" [ngClass]="{'online': element.online }">fiber_manual_record</mat-icon>
     </td>
   </ng-container>
 
   <ng-container matColumnDef="rank">
     <th mat-header-cell *matHeaderCellDef mat-sort-header="rank"> Rank </th>
     <td mat-cell *matCellDef="let element" [ngClass]="{'active': element.character === player.character.name }" class="ranking">
-    {{element.rank}} </td>
+      {{element.rank}} </td>
   </ng-container>
 
   <ng-container matColumnDef="level">
     <th mat-header-cell *matHeaderCellDef mat-sort-header="level"> Level </th>
-    <td mat-cell *matCellDef="let element" [ngClass]="{'active': element.character === player.character.name }"> {{element.level}} </td>
+    <td mat-cell *matCellDef="let element" [ngClass]="{'active': element.character === player.character.name }">
+      {{element.level}} </td>
   </ng-container>
 
   <ng-container matColumnDef="character">
     <th mat-header-cell *matHeaderCellDef mat-sort-header="character"> Character </th>
-    <td mat-cell *matCellDef="let element" [ngClass]="{'active': element.character === player.character.name }"> {{element.character}} </td>
+    <td mat-cell *matCellDef="let element" [ngClass]="{'active': element.character === player.character.name }">
+      {{element.character}} </td>
   </ng-container>
 
   <ng-container matColumnDef="account">
     <th mat-header-cell *matHeaderCellDef mat-sort-header="account"> Account </th>
-    <td mat-cell *matCellDef="let element" [ngClass]="{'active': element.character === player.character.name }"> {{element.account}} </td>
+    <td mat-cell *matCellDef="let element" [ngClass]="{'active': element.character === player.character.name }">
+      {{element.account}} </td>
   </ng-container>
 
   <ng-container matColumnDef="experience_per_hour">
     <th mat-header-cell *matHeaderCellDef mat-sort-header="experience_per_hour"> Exp / hour </th>
     <td mat-cell *matCellDef="let element" [ngClass]="{'active': element.character === player.character.name }" class="experience">
-    {{element.experience_per_hour}} </td>
+      {{element.experience_per_hour}} </td>
   </ng-container>
 
   <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>

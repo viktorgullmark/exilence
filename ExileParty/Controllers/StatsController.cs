@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Caching.Distributed;
 using ExileParty.Helper;
 using Microsoft.Extensions.Logging;
+using ExileParty.Models.Ladder;
 
 namespace ExileParty
 {
@@ -16,16 +17,17 @@ namespace ExileParty
     {
         private IDistributedCache _cache;
         private ILogger<StatsController> _log;
-        private readonly ICharacterService _characterService;
+        private readonly ILadderService _ladderService;
 
-        public StatsController(IDistributedCache cache, ICharacterService characterService, ILogger<StatsController> log)
+        public StatsController(IDistributedCache cache, ILadderService ladderService, ILogger<StatsController> log)
         {
             _log = log;
             _cache = cache;
-            _characterService = characterService;
+            _ladderService = ladderService;
         }
 
         // GET: /<controller>/
+        [Route("")]
         public async Task<IActionResult> Index()
         {
             var partyList = new List<PartyStatistics>();
@@ -47,15 +49,40 @@ namespace ExileParty
 
             }
 
+            var statuses = await _cache.GetAsync<Dictionary<string, LadderStatusModel>>($"status:ladder");
+
 
             var response = new
             {
                 totalParties = partyList.Count(),
                 totalPlayers = players,                
-                Parties = partyList
+                Parties = partyList,
+                LeagueStatus = statuses.OrderByDescending(t => t.Value.Finished)
             };
 
             return Ok(response);
+        }
+
+        [Route("Ladder")]
+        public async Task<IActionResult> Ladder(string league, string character)
+        {
+            var list = await _ladderService.GetLadderForPlayer(league, character);
+
+            return Ok(new { List = list });
+        }
+
+
+        [Route("Ladder/Reset")]
+        public async Task<IActionResult> LadderReset()
+        {
+            var statuses = await _cache.GetAsync<Dictionary<string, LadderStatusModel>>($"status:ladder");
+            foreach (var status in statuses)
+            {
+                status.Value.Running = false;
+            }
+            await _cache.SetAsync<Dictionary<string, LadderStatusModel>>($"status:ladder", statuses);
+
+            return Ok(new { LeagueStatus = statuses.OrderByDescending(t => t.Value.Finished) });
         }
     }
 }

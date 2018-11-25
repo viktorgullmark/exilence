@@ -3,6 +3,8 @@ import { Injectable } from '@angular/core';
 import { Keys } from '../interfaces/key.interface';
 import { KeybindService } from './keybind.service';
 import { RobotService } from './robot.service';
+import { AccountService } from './account.service';
+import { Player } from '../interfaces/player.interface';
 
 @Injectable()
 export class MessageValueService {
@@ -14,7 +16,6 @@ export class MessageValueService {
   public partyValue = 0;
 
   private defaultMsg = '%No data registered';
-
   public playerNetworthMsg = this.defaultMsg;
   public partyNetworthMsg = this.defaultMsg;
 
@@ -36,10 +37,10 @@ export class MessageValueService {
   }
 
   updateMessages() {
-    // tslint:disable-next-line:max-line-length
-    this.playerNetworthMsg = `[ExileParty] My net worth: ${this.currentPlayerValue.toFixed(1)}c. Gain: ${this.currentPlayerGain.toFixed(1)}c / hour`;
-    // tslint:disable-next-line:max-line-length
-    this.partyNetworthMsg = `[ExileParty] Grp net worth: ${this.partyValue.toFixed(1)}c. Gain: ${this.partyGain.toFixed(1)}c / hour`;
+      // tslint:disable-next-line:max-line-length
+      this.playerNetworthMsg = `%[ExileParty] My net worth: ${this.currentPlayerValue.toFixed(1)}c. Gain: ${this.currentPlayerGain.toFixed(1)}c / hour`;
+      // tslint:disable-next-line:max-line-length
+      this.partyNetworthMsg = `%[ExileParty] Grp net worth: ${this.partyValue.toFixed(1)}c. Gain: ${this.partyGain.toFixed(1)}c / hour`;
   }
 
   initKeybinds() {

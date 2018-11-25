@@ -63,8 +63,6 @@ If you're interested in helping with development, contact us directly on discord
 
 - https://poe.ninja for providing a great API, which lets us calculate net worth of players
 
-- http://poe-racing.com/ for fetching ladder-information
-
 - https://github.com/klayveR for providing a great log-monitor to track the Client.txt
 
 - GGG for assisting with additional endpoints and for creating a great game!

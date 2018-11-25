@@ -44,15 +44,15 @@ export class PartySummaryComponent implements OnInit {
   }
 
   openSummaryDialog(): void {
-    if (!this.settingsService.get('diaShown_partySummary')) {
+    if (!this.settingsService.get('diaShown_partySummary') && !this.settingsService.get('hideTooltips')) {
       const dialogRef = this.dialog.open(InfoDialogComponent, {
         width: '650px',
         data: {
           icon: 'attach_money',
           title: 'Currency summary',
           // tslint:disable-next-line:max-line-length
-          content: 'This tab updates approximately once every 5 minutes, as long as the party remains active.<br/><br/>' +
-            'We store all your parties net worth data one week back in time.'
+          content: 'This tab updates when a partymember changes area in game, at most once every 5 minutes.<br/><br/>' +
+          'We store all your parties net worth data one week back in time. This will be extended in the future.'
         }
       });
       dialogRef.afterClosed().subscribe(result => {

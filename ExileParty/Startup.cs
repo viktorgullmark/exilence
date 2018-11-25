@@ -59,7 +59,8 @@ namespace ExileParty
 
             services.AddSignalR();
 
-            services.AddScoped<ICharacterService, CharacterService>();
+            services.AddScoped<ILadderService, LadderService>();
+            services.AddScoped<IExternalService, ExternalService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

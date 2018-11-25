@@ -1,33 +1,64 @@
 <div class="container">
-  <mat-vertical-stepper linear="true" #stepper class="form login-form">
-    <mat-step [stepControl]="accFormGroup">
+  <mat-vertical-stepper #stepper linear="true" class="form login-form" (selectionChange)="checkLeagueChange($event)">
+    <mat-step [stepControl]="accFormGroup" editable="true" completed="true">
       <form [formGroup]="accFormGroup">
         <ng-template matStepLabel>{{'ACCOUNT.NAME_INFO' | translate}}</ng-template>
         <mat-form-field>
           <input matInput formControlName="accountName" placeholder="{{'ACCOUNT.NAME' | translate}}" required>
         </mat-form-field>
         <div class="btn-grp">
-            <button mat-raised-button color="primary" *ngIf="!isFetchingLeagues" (click)="getLeagues()">Fetch leagues</button>
-            <mat-progress-bar *ngIf="isFetchingLeagues" class="progress-bar" color="primary" mode="indeterminate">
-            </mat-progress-bar>
+          <button mat-raised-button color="primary" (click)="resetPrivateProfileError()" matStepperNext>Continue</button>
         </div>
       </form>
     </mat-step>
-    <mat-step [stepControl]="leagueFormGroup">
-      <form [formGroup]="leagueFormGroup">
-        <ng-template matStepLabel>{{'LEAGUE.LEAGUE_INFO' | translate}}</ng-template>
-        <span class="mat-body-1">If you can't fetch your characters. Go to <a class="external-link" (click)="openLink('https://www.pathofexile.com')">pathofexile.com</a> and set your profile to public, <br/>and make sure your character-list is set to visible</span><br/><br/>
+    <mat-step [stepControl]="sessFormGroup" [optional]="!privateProfileError && !(!sessionIdValid && !needsValidation && sessFormGroup.controls.sessionId.value != '')">
+      <form [formGroup]="sessFormGroup">
+        <ng-template matStepLabel>{{'ACCOUNT.SESSIONID_INFO' | translate}}</ng-template>
+        <span class="mat-body-1">If you're not sure how to find your sessionId, visit <a class="external-link" (click)="openLink('https://www.pathofexile.com/forum/view-thread/1989935/page/9#p14857124')">this
+            link</a></span><br /><br />
         <mat-form-field>
-          <mat-select formControlName="leagueName" placeholder="{{'LEAGUE.NAME' | translate}}" required>
-            <mat-option *ngFor="let item of leagues" [value]="item.id">{{item.id}}</mat-option>
-          </mat-select>
+          <input matInput formControlName="sessionId" type="password" placeholder="{{'ACCOUNT.SESSIONID' | translate}}"
+            required>
         </mat-form-field>
         <div class="btn-grp">
           <button mat-raised-button class="btn-back" matStepperPrevious>Back</button>
-          <button mat-raised-button color="primary" *ngIf="!isFetching" (click)="getCharacterList()">Fetch characters</button>
+          <button mat-raised-button color="primary" (click)="validateSessionId()" type="button" [disabled]="sessFormGroup.controls.sessionId.value == ''">Validate</button>
+          <button mat-raised-button color="primary" [disabled]="(!sessionIdValid || needsValidation) && sessFormGroup.controls.sessionId.value != ''"
+            *ngIf="!isFetchingLeagues" (click)="setSessionCookie(sessFormGroup.controls.sessionId.value); getLeagues(undefined, true)">Fetch
+            leagues</button>
+          <mat-progress-bar *ngIf="isFetchingLeagues" class="progress-bar" color="primary" mode="indeterminate">
+          </mat-progress-bar>
+        </div>
+        <span class="form-error" *ngIf="!sessionIdValid && !needsValidation && sessFormGroup.controls.sessionId.value != ''">{{'ERROR.SESSIONID_NOT_VALID'
+          | translate}}</span>
+        <span class="form-error" *ngIf="privateProfileError && !(!sessionIdValid && !needsValidation && sessFormGroup.controls.sessionId.value != '')">{{'ERROR.PRIVATE_PROFILE'
+          | translate}}</span>
+      </form>
+    </mat-step>
+    <mat-step [stepControl]="leagueFormGroup" [editable]="!privateProfileError">
+      <form [formGroup]="leagueFormGroup">
+        <ng-template matStepLabel>{{'LEAGUE.LEAGUE_INFO' | translate}}</ng-template>
+        <mat-form-field>
+          <mat-select formControlName="leagueName" (selectionChange)="mapTradeLeague($event)" placeholder="{{'LEAGUE.NAME' | translate}}"
+            required>
+            <mat-option *ngFor="let item of leagues" [value]="item.id">{{item.id}}</mat-option>
+          </mat-select>
+        </mat-form-field>
+        <mat-form-field>
+          <mat-select formControlName="tradeLeagueName" placeholder="{{'TRADELEAGUE.NAME' | translate}}" required>
+            <mat-option *ngFor="let item of tradeLeagues" [value]="item.id">{{item.id}}</mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <div class="btn-grp">
+          <button mat-raised-button class="btn-back" matStepperPrevious>Back</button>
+          <button mat-raised-button color="primary" *ngIf="!isFetching" (click)="getCharacterList(undefined, true)">Fetch
+            characters</button>
           <mat-progress-bar *ngIf="isFetching" class="progress-bar" color="primary" mode="indeterminate">
           </mat-progress-bar>
         </div>
+        <span class="mat-body-1">If you can't fetch your characters. Go to <a class="external-link" (click)="openLink('https://www.pathofexile.com')">pathofexile.com</a>
+          and set your profile to public, <br />and make sure your character-list is set to visible</span>
       </form>
     </mat-step>
     <mat-step [stepControl]="charFormGroup">
@@ -44,43 +75,63 @@
         </div>
       </form>
     </mat-step>
-    <mat-step [stepControl]="sessFormGroup" optional="true">
-      <form [formGroup]="sessFormGroup">
-        <ng-template matStepLabel>{{'ACCOUNT.SESSIONID_INFO' | translate}}</ng-template>
-        <span class="mat-body-1">If you're not sure how to find your sessionId, visit <a class="external-link" (click)="openLink('https://www.pathofexile.com/forum/view-thread/1989935/page/9#p14857124')">this link</a></span><br/><br/>
-        <mat-form-field>
-          <input matInput formControlName="sessionId" type="password" placeholder="{{'ACCOUNT.SESSIONID' | translate}}">
-        </mat-form-field>
-        <div class="btn-grp">
-          <button mat-raised-button class="btn-back" matStepperPrevious>Back</button>
-          <button mat-raised-button color="primary" (click)="validateSessionId()" type="button" [disabled]="sessFormGroup.controls.sessionId.value == ''">Validate</button>
-          <button mat-raised-button color="primary" matStepperNext [disabled]="(!sessionIdValid || needsValidation) && sessFormGroup.controls.sessionId.value != ''">Continue</button>
-        </div>
-        <span class="form-error" *ngIf="!sessionIdValid && !needsValidation && sessFormGroup.controls.sessionId.value != ''">{{'ERROR.SESSIONID_NOT_VALID' | translate}}</span>
-      </form>
-    </mat-step>
     <mat-step [stepControl]="pathFormGroup">
       <form [formGroup]="pathFormGroup">
         <ng-template matStepLabel>{{'ACCOUNT.FILEPATH_INFO' | translate}}</ng-template>
         <mat-form-field>
-          <input matInput formControlName="filePath" placeholder="{{'ACCOUNT.FILEPATH' | translate}}" (focusout)="checkPath()" required>
+          <input matInput formControlName="filePath" placeholder="{{'ACCOUNT.FILEPATH' | translate}}" (focusout)="checkPath()"
+            required>
         </mat-form-field>
+        <span class="mat-body-1">Choose which zones to track:</span><br /><br />
+        <mat-radio-group class="radio-group" [(ngModel)]="logMonitorService.trackMapsOnly" [ngModelOptions]="{standalone: true}"
+          required>
+          <mat-radio-button class="radio-button" [value]="true" [checked]="true">
+            Maps and hideouts only (recommended) 
+          </mat-radio-button>
+          <mat-radio-button class="radio-button" [value]="false">
+            All areas
+          </mat-radio-button>
+        </mat-radio-group>
+        <br />
+        <br />
+        <mat-checkbox [(ngModel)]="parsingEnabled" [ngModelOptions]="{standalone: true}">Import Client.txt (will
+          include all your previous area-history)</mat-checkbox>
+        <br />
+        <br />
         <div class="btn-grp">
           <button mat-raised-button class="btn-back" matStepperPrevious>Back</button>
-          <button mat-raised-button color="primary" (click)="browse()" type="button">Browse file</button>
-          <button mat-raised-button color="primary" type="button">Validate</button>
-          <button mat-raised-button color="primary" matStepperNext [disabled]="!pathValid">Continue</button>
+          <button mat-raised-button color="primary" (click)="browse()" type="button">1. Browse file</button>
+          <button mat-raised-button color="primary" type="button">2. Validate</button>
+          <button mat-raised-button color="primary" [disabled]="!pathValid || (isParsing && parsingEnabled)|| !parsingEnabled"
+            (click)="openLogInfoDialog()">3. Parse
+            log</button>
+          <button mat-raised-button color="primary" matStepperNext [disabled]="!pathValid || (!logMonitorService.parsingCompleted && parsingEnabled)">4.
+            Continue</button>
+          <span class="mat-body-1" *ngIf="isParsing && parsingEnabled"><br/><br/>We're loading your Client.txt, please wait... (may take up to several minutes,
+            depending on the filesize)</span>
+          <mat-progress-bar *ngIf="isParsing && parsingEnabled" class="progress-bar" color="primary" mode="indeterminate">
+          </mat-progress-bar>
         </div>
         <span class="form-error" *ngIf="!pathValid">{{'ERROR.PATH_NOT_VALID' | translate}}</span>
       </form>
     </mat-step>
     <mat-step #lastStep>
       <ng-template matStepLabel>Complete</ng-template>
-      <span class="mat-body-1">We're using Google Analytics to track usage of our app in order to be able to improve it further.<br/>
-      This data is not shared with anyone ever, and we don't track or save any data related to your character or items, only how you use ExileParty.<br/><br/>
-      By clicking "Continue" you agree to this.</span><br/><br/>
+      <ng-container *ngIf="(!logMonitorService.parsingCompleted && parsingEnabled)">
+        <span class="mat-body-1">We're loading your Client.txt, please wait... (may take up to several minutes,
+          depending on the filesize)</span>
+        <mat-progress-bar class="progress-bar" color="primary" mode="indeterminate">
+        </mat-progress-bar>
+        <br />
+      </ng-container>
+      <span class="mat-body-1">We're using Google Analytics to track usage of our app in order to be able to improve it
+        further.<br />
+        This data is not shared with anyone ever, and we don't track or save any data related to your character or
+        items, only how you use ExileParty.<br /><br />
+        By clicking "Continue" you agree to this.</span><br /><br />
       <div class="btn-grp">
-        <button mat-raised-button color="primary" *ngIf="!isLoading" (click)="login()">Continue</button>
+        <button mat-raised-button color="primary" [disabled]="isLoading || (!logMonitorService.parsingCompleted && parsingEnabled)"
+          (click)="login()">Continue</button>
         <mat-progress-bar *ngIf="isLoading" class="progress-bar" color="primary" mode="indeterminate">
         </mat-progress-bar>
       </div>

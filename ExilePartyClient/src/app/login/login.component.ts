@@ -1,8 +1,10 @@
 import { Component, Inject, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { MatStep, MatStepper } from '@angular/material';
+import { MatDialog, MatStep, MatStepper } from '@angular/material';
 import { Router } from '@angular/router';
+import { forkJoin } from 'rxjs';
 
+import { LeagueChangedDialogComponent } from '../shared/components/league-changed-dialog/league-changed-dialog.component';
 import { AccountInfo } from '../shared/interfaces/account-info.interface';
 import { ExtendedAreaInfo } from '../shared/interfaces/area.interface';
 import { Character } from '../shared/interfaces/character.interface';
@@ -14,10 +16,12 @@ import { AccountService } from '../shared/providers/account.service';
 import { AnalyticsService } from '../shared/providers/analytics.service';
 import { ElectronService } from '../shared/providers/electron.service';
 import { ExternalService } from '../shared/providers/external.service';
-import { IncomeService } from '../shared/providers/income.service';
 import { LadderService } from '../shared/providers/ladder.service';
 import { SessionService } from '../shared/providers/session.service';
 import { SettingsService } from '../shared/providers/settings.service';
+import { LogMonitorService } from '../shared/providers/log-monitor.service';
+import { MapService } from '../shared/providers/map.service';
+import { InfoDialogComponent } from '../authorize/components/info-dialog/info-dialog.component';
 
 @Component({
     selector: 'app-login',
@@ -30,16 +34,21 @@ export class LoginComponent implements OnInit {
     sessFormGroup: FormGroup;
     charFormGroup: FormGroup;
     pathFormGroup: FormGroup;
+    privateProfileError = false;
     pathValid = false;
     isLoading = false;
     isFetching = false;
+    isParsing = false;
     isFetchingLeagues = false;
     fetchedLeagues = false;
     fetched = false;
+    parsingEnabled = false;
     characterList: Character[] = [];
     leagues: League[];
+    tradeLeagues: League[];
     player = {} as Player;
     leagueName: string;
+    tradeLeagueName: string;
     characterName: string;
     accountName: string;
     sessionId: string;
@@ -64,7 +73,9 @@ export class LoginComponent implements OnInit {
         private settingsService: SettingsService,
         private analyticsService: AnalyticsService,
         private ladderService: LadderService,
-        private incomeService: IncomeService
+        public logMonitorService: LogMonitorService,
+        private mapService: MapService,
+        private dialog: MatDialog
     ) {
         this.externalService.leagues.subscribe((res: League[]) => {
             this.leagues = res;
@@ -76,7 +87,8 @@ export class LoginComponent implements OnInit {
             accountName: [this.accountName !== undefined ? this.accountName : '', Validators.required]
         });
         this.leagueFormGroup = fb.group({
-            leagueName: [this.leagueName !== undefined ? this.leagueName : '', Validators.required]
+            leagueName: [this.leagueName !== undefined ? this.leagueName : '', Validators.required],
+            tradeLeagueName: [this.tradeLeagueName !== undefined ? this.tradeLeagueName : '', Validators.required]
         });
         this.sessFormGroup = fb.group({
             sessionId: [this.sessionId !== undefined ? this.sessionId : '']
@@ -88,6 +100,15 @@ export class LoginComponent implements OnInit {
             filePath: [this.filePath !== undefined ? this.filePath :
                 'C:/Program Files (x86)/Steam/steamapps/common/Path of Exile/logs/Client.txt', Validators.required]
         });
+
+        this.parsingEnabled = this.parsingEnabled !== undefined ? this.parsingEnabled : false;
+        this.logMonitorService.trackMapsOnly = this.logMonitorService.trackMapsOnly !== undefined ?
+            this.logMonitorService.trackMapsOnly : true;
+
+        // reset data for parser. if we logged out we should behave as a new player, not using current data
+        this.mapService.previousInstanceServer = undefined;
+        this.mapService.previousDate = undefined;
+        this.mapService.currentArea = undefined;
     }
 
     checkPath() {
@@ -95,8 +116,43 @@ export class LoginComponent implements OnInit {
             && this.pathFormGroup.controls.filePath.value.toLowerCase().endsWith('client.txt');
     }
 
+    parseLog() {
+        if (this.parsingEnabled) {
+            this.isParsing = true;
+            this.logMonitorService.parsingCompleted = false;
+            if (this.logMonitorService.entireLog !== undefined) {
+                this.logMonitorService.removeLogParser();
+            }
+            this.logMonitorService.instantiateLogParser(this.pathFormGroup.controls.filePath.value);
+            this.logMonitorService.entireLog.parseLog();
+            this.mapService.areasParsed.subscribe(res => {
+                this.areaHistory = this.settingsService.get('areas');
+                this.logMonitorService.parsingCompleted = true;
+                this.isParsing = false;
+
+                this.stepper.selectedIndex = 5;
+            });
+        }
+    }
+
     openLink(link: string) {
         this.electronService.shell.openExternal(link);
+    }
+
+    resetStepper() {
+        this.stepper.reset();
+        this.stepper.selectedIndex = 1;
+    }
+
+    resetPrivateProfileError() {
+        this.privateProfileError = false;
+    }
+
+    getRequiredState() {
+        setTimeout(() => {
+            return this.privateProfileError
+                || (!this.sessionIdValid && !this.needsValidation && this.sessFormGroup.controls.sessionId.value !== '');
+        });
     }
 
     fetchSettings() {
@@ -104,10 +160,13 @@ export class LoginComponent implements OnInit {
         this.sessionId = this.settingsService.get('account.sessionId');
         this.accountName = this.settingsService.get('account.accountName');
         this.leagueName = this.settingsService.get('account.leagueName');
+        this.tradeLeagueName = this.settingsService.get('account.tradeLeagueName');
         this.sessionIdValid = this.settingsService.get('account.sessionIdValid');
+        this.parsingEnabled = this.settingsService.get('account.parsingEnabled');
         this.filePath = this.settingsService.get('account.filePath');
         this.netWorthHistory = this.settingsService.get('networth');
         this.areaHistory = this.settingsService.get('areas');
+        this.logMonitorService.trackMapsOnly = this.settingsService.get('trackMapsOnly');
 
         if (this.areaHistory === undefined) {
             this.areaHistory = [];
@@ -129,6 +188,7 @@ export class LoginComponent implements OnInit {
     }
 
     ngOnInit() {
+        this.accountService.loggingIn = true;
         this.accountService.characterList.subscribe(res => {
             if (res !== undefined) {
                 this.characterList = res;
@@ -138,16 +198,62 @@ export class LoginComponent implements OnInit {
         this.sessFormGroup.valueChanges.subscribe(val => {
             this.needsValidation = true;
         });
+
+        // bypass to complete if settings are prefilled
+        if (this.characterName !== undefined &&
+            this.sessionId !== undefined &&
+            this.accountName !== undefined &&
+            this.leagueName !== undefined &&
+            this.tradeLeagueName !== undefined &&
+            this.sessionIdValid !== undefined &&
+            this.filePath !== undefined &&
+            this.parsingEnabled !== undefined &&
+            this.netWorthHistory !== undefined &&
+            this.areaHistory !== undefined) {
+
+            for (let i = 0; i < 6; i++) {
+                this.stepper.selectedIndex = i;
+            }
+
+            this.getLeagues(undefined, false);
+            this.getCharacterList(undefined, false);
+
+            if (!this.logMonitorService.parsingCompleted) {
+                this.parseLog();
+            }
+        }
     }
 
-    getLeagues(accountName?: string) {
+    setSessionCookie(sessionId: string) {
+        this.externalService.setCookie(sessionId);
+    }
+
+    getLeagues(accountName?: string, skipStep?: boolean) {
         this.isFetchingLeagues = true;
-        this.externalService.getCharacterList(accountName !== undefined ? accountName :
-            this.accFormGroup.controls.accountName.value).subscribe(res => {
+
+        const sessId = this.sessFormGroup.controls.sessionId.value;
+
+        const request = forkJoin(
+            this.externalService.getCharacterList(accountName !== undefined ? accountName :
+                this.accFormGroup.controls.accountName.value, (sessId !== undefined && sessId !== '') ? sessId : undefined),
+            this.externalService.getLeagues('main', 1)
+        );
+
+        request.subscribe(res => {
+            // filter out SSF-leagues when listing trade-leagues
+            this.tradeLeagues = res[1].filter(x => x.id.indexOf('SSF') === -1);
+
+            if (res[0] === null) {
+                // profile is private
+                this.privateProfileError = true;
+                this.isFetchingLeagues = false;
+                // reset settings in this case
+                this.settingsService.set('account', undefined);
+            } else {
 
                 // map character-leagues to new array
                 const distinctLeagues = [];
-                res.forEach(char => {
+                res[0].forEach(char => {
                     if (distinctLeagues.find(l => l.id === char.league) === undefined) {
                         distinctLeagues.push({ id: char.league } as League);
                     }
@@ -155,18 +261,31 @@ export class LoginComponent implements OnInit {
 
                 this.externalService.leagues.next(distinctLeagues);
                 this.fetchedLeagues = true;
-                setTimeout(() => {
-                    this.stepper.selectedIndex = 1;
-                }, 250);
+                if (skipStep) {
+                    setTimeout(() => {
+                        this.stepper.selectedIndex = 2;
+                    }, 250);
+                }
                 setTimeout(() => {
                     this.isFetchingLeagues = false;
                 }, 500);
-            });
+            }
+        });
     }
 
-    getCharacterList(accountName?: string) {
+    mapTradeLeague(event) {
+        // if the league is a tradeleague, auto-select tradeleague
+        if (this.tradeLeagues.find(x => x.id === event.value)) {
+            this.leagueFormGroup.controls.tradeLeagueName.setValue(event.value);
+        }
+    }
+
+    getCharacterList(accountName?: string, skipStep?: boolean) {
         this.isFetching = true;
-        this.externalService.getCharacterList(accountName !== undefined ? accountName : this.accFormGroup.controls.accountName.value)
+        const sessId = this.sessFormGroup.controls.sessionId.value;
+
+        this.externalService.getCharacterList(accountName !== undefined ? accountName : this.accFormGroup.controls.accountName.value,
+            (sessId !== undefined && sessId !== '') ? sessId : undefined)
             .subscribe((res: Character[]) => {
                 const charactersByLeague = res.filter(x => x.league === this.leagueFormGroup.controls.leagueName.value);
                 this.accountService.characterList.next(charactersByLeague);
@@ -175,9 +294,11 @@ export class LoginComponent implements OnInit {
                 if (this.characterList.find(x => x.name === this.characterName) === undefined) {
                     this.charFormGroup.controls.characterName.setValue('');
                 }
-                setTimeout(() => {
-                    this.stepper.selectedIndex = 2;
-                }, 250);
+                if (skipStep) {
+                    setTimeout(() => {
+                        this.stepper.selectedIndex = 3;
+                    }, 250);
+                }
                 setTimeout(() => {
                     this.isFetching = false;
                 }, 500);
@@ -194,8 +315,10 @@ export class LoginComponent implements OnInit {
             accountName: this.accFormGroup.controls.accountName.value,
             characterName: this.charFormGroup.controls.characterName.value,
             leagueName: this.leagueFormGroup.controls.leagueName.value,
+            tradeLeagueName: this.leagueFormGroup.controls.tradeLeagueName.value,
             sessionId: this.sessFormGroup.controls.sessionId.value,
             filePath: this.pathFormGroup.controls.filePath.value,
+            parsingEnabled: this.parsingEnabled,
             sessionIdValid: this.sessionIdValid
         } as AccountInfo;
     }
@@ -206,10 +329,41 @@ export class LoginComponent implements OnInit {
     }
 
     directorySelectorCallback(filePath) {
-        this.pathFormGroup.controls.filePath.setValue(filePath[0]);
-        setTimeout(() => {
-            this.checkPath();
-        }, 500);
+        if (filePath !== undefined) {
+            this.pathFormGroup.controls.filePath.setValue(filePath[0]);
+            setTimeout(() => {
+                this.checkPath();
+            }, 500);
+        }
+    }
+
+    checkLeagueChange(event) {
+        if (event.selectedIndex === 4 &&
+            (this.settingsService.get('lastLeague') !== undefined
+                && (this.settingsService.get('lastLeague') !== this.leagueFormGroup.controls.leagueName.value)
+                ||
+                (this.settingsService.get('account.tradeLeagueName') !== undefined
+                    && this.settingsService.get('account.tradeLeagueName') !== this.leagueFormGroup.controls.tradeLeagueName.value))) {
+            // league changed since last log-in
+            const dialogRef = this.dialog.open(LeagueChangedDialogComponent, {
+                width: '650px',
+                data: {
+                    icon: 'swap_horiz',
+                    title: 'League changed',
+                    // tslint:disable-next-line:max-line-length
+                    content: 'We detected that you changed league-settings since your last login. Please note that your networth and area history will be mixed between leagues if you continue without clearing the history.<br/><br/>' +
+                        'Do you want to clear the history?'
+                }
+            });
+            dialogRef.afterClosed().subscribe(result => {
+                if (result !== undefined) {
+                    this.netWorthHistory = result.networthHistory;
+                    this.areaHistory = result.areaHistory;
+                    this.player.netWorthSnapshots = this.netWorthHistory.history;
+                    this.player.pastAreas = this.areaHistory;
+                }
+            });
+        }
     }
 
     login() {
@@ -228,8 +382,7 @@ export class LoginComponent implements OnInit {
                         }
                         this.completeLogin();
                     },
-                    err => this.completeLogin(),
-                    () => this.completeLogin()
+                    err => this.completeLogin()
                 );
             });
     }
@@ -239,11 +392,34 @@ export class LoginComponent implements OnInit {
         this.externalService.validateSessionId(
             form.sessionId,
             form.accountName,
-            form.leagueName,
+            'Standard',
             0
         ).subscribe(res => {
             this.needsValidation = false;
             this.sessionIdValid = res !== false;
+        });
+    }
+
+    openLogInfoDialog(): void {
+        setTimeout(() => {
+            if (!this.settingsService.get('diaShown_loginfo') && !this.settingsService.get('hideTooltips')) {
+                const dialogRef = this.dialog.open(InfoDialogComponent, {
+                    width: '650px',
+                    data: {
+                        icon: 'warning',
+                        title: 'Warning',
+                        // tslint:disable-next-line:max-line-length
+                        content: 'We recommend deleting the Client.txt before every league.<br/><br/>' +
+                            'If its very large it might impact performance of the app.'
+                    }
+                });
+                dialogRef.afterClosed().subscribe(result => {
+                    this.settingsService.set('diaShown_loginfo', true);
+                    this.parseLog();
+                });
+            } else {
+                this.parseLog();
+            }
         });
     }
 
@@ -263,9 +439,21 @@ export class LoginComponent implements OnInit {
             this.player.sessionIdProvided = this.sessionIdValid;
             this.accountService.player.next(this.player);
             this.accountService.accountInfo.next(this.form);
+
+            // if trade-league has changed since last login, we should update ninjaprices
+            if (this.settingsService.get('account.tradeLeagueName') !== this.leagueFormGroup.controls.tradeLeagueName.value) {
+                this.externalService.tradeLeagueChanged = true;
+            } else {
+                this.externalService.tradeLeagueChanged = false;
+            }
+
+            this.accountService.loggingIn = false;
+
             this.settingsService.set('account', this.form);
+            this.settingsService.set('trackMapsOnly', this.logMonitorService.trackMapsOnly);
             this.sessionService.initSession(this.form.sessionId);
             this.isLoading = false;
+            this.settingsService.set('lastLeague', this.leagueFormGroup.controls.leagueName.value);
             this.router.navigate(['/authorized/dashboard']);
         });
     }

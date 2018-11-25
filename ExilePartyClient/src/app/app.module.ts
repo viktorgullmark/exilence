@@ -32,6 +32,8 @@ import { SessionService } from './shared/providers/session.service';
 import { SettingsService } from './shared/providers/settings.service';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { AlertService } from './shared/providers/alert.service';
+import { LogMonitorService } from './shared/providers/log-monitor.service';
+import { MapService } from './shared/providers/map.service';
 
 // AoT requires an exported function for factories
 export function HttpLoaderFactory(http: HttpClient) {
@@ -78,7 +80,9 @@ export function HttpLoaderFactory(http: HttpClient) {
     UpperCasePipe,
     DatePipe,
     NinjaService,
-    AlertService
+    AlertService,
+    LogMonitorService,
+    MapService
   ],
   bootstrap: [AppComponent]
 })
