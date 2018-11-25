@@ -11,6 +11,7 @@ import { PartyService } from '../../../shared/providers/party.service';
 })
 export class NetworthTableComponent implements OnInit {
   @Input() player: Player;
+  @Input() multiple = false;
   displayedColumns: string[] = ['position', 'name', 'stacksize', 'valuePerUnit', 'value'];
   dataSource = [];
   searchText = '';
@@ -20,6 +21,9 @@ export class NetworthTableComponent implements OnInit {
   constructor(private partyService: PartyService) { }
 
   ngOnInit() {
+    if (this.multiple) {
+      this.displayedColumns.push('holdingPlayers');
+    }
     if (this.player !== undefined) {
       this.loadPlayerData(this.player);
       this.partyService.selectedPlayer.subscribe(res => {
@@ -70,17 +74,17 @@ export class NetworthTableComponent implements OnInit {
   }
 
   loadPlayerData(player: Player) {
-    this.updateTable(player.netWorthSnapshots[0].items);
+    this.updateTable(player.netWorthSnapshots[0].items, player.character.name);
   }
 
   loadPreviousSnapshot(snapshot: any) {
     this.dataSource = [];
-    this.updateTable(snapshot.items);
+    this.updateTable(snapshot.items, this.player.character.name);
 
     this.filter();
   }
 
-  updateTable(items: any[]) {
+  updateTable(items: any[], playerName: string) {
     items.forEach(snapshot => {
       const existingItem = this.dataSource.find(x => x.name === snapshot.name);
       if (existingItem !== undefined) {
@@ -88,7 +92,9 @@ export class NetworthTableComponent implements OnInit {
         // update existing item with new data
         existingItem.stacksize = existingItem.stacksize + snapshot.stacksize;
         existingItem.value = existingItem.value + snapshot.value;
+        existingItem.holdingPlayers.push(playerName);
         this.dataSource[indexOfItem] = existingItem;
+        console.log(existingItem);
       } else {
         const newObj = {
           position: items.indexOf(snapshot) + 1,
@@ -96,8 +102,10 @@ export class NetworthTableComponent implements OnInit {
           stacksize: snapshot.stacksize,
           value: snapshot.value,
           valuePerUnit: snapshot.valuePerUnit,
-          icon: snapshot.icon
+          icon: snapshot.icon,
+          holdingPlayers: [playerName]
         };
+        console.log(newObj);
         this.dataSource.push(newObj);
       }
     });
