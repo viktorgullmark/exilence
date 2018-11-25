@@ -94,7 +94,6 @@ export class NetworthTableComponent implements OnInit {
         existingItem.value = existingItem.value + snapshot.value;
         existingItem.holdingPlayers.push(playerName);
         this.dataSource[indexOfItem] = existingItem;
-        console.log(existingItem);
       } else {
         const newObj = {
           position: items.indexOf(snapshot) + 1,
@@ -105,7 +104,6 @@ export class NetworthTableComponent implements OnInit {
           icon: snapshot.icon,
           holdingPlayers: [playerName]
         };
-        console.log(newObj);
         this.dataSource.push(newObj);
       }
     });

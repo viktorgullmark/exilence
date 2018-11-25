@@ -258,7 +258,6 @@ export class PartyService {
         player = this.externalService.setCharacter(equipment, player);
         if (this._hubConnection) {
           this.compress(player, (data) => this._hubConnection.invoke('UpdatePlayer', this.party.name, data).catch((e) => {
-            console.log('LOOK AT THIS ONE!');
           }));
         }
       });
