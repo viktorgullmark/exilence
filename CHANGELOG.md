@@ -3,7 +3,8 @@ All notable changes to this project will be documented in this file.
 
 ## [0.7.3] - 2018-11-25
 - Added DPS/pDPS/eDPS to weapon-tooltips
-- Fix for snapshots not getting triggered
+- Fixed a bug where snapshots didnt get triggered on zone-change
+- Fixed a bug where you could select all stash-tabs (max is 20)
 - Minor style-tweaks
 
 ## [0.7.2] - 2018-11-22
