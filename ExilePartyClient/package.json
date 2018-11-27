@@ -23,7 +23,8 @@
     "url": "https://github.com/viktorgullmark/exile-party.git"
   },
   "scripts": {
-    "postinstall": "node patch.js && npx electron-builder install-app-deps",
+    "rebuild": "electron-rebuild -f -w robot-js",
+    "postinstall": "node patch.js && npx electron-builder install-app-deps && npm run rebuild",
     "ng": "ng",
     "start": "npm-run-all -p ng:serve electron:serve",
     "build": "npm run electron:tsc && ng build",
@@ -34,12 +35,11 @@
     "electron:serve": "wait-on http-get://localhost:4200/ && npm run electron:tsc && electron . --serve",
     "electron:local": "npm run build:prod && electron .",
     "electron:linux": "npm run build:prod && npx electron-builder build --linux",
-    "electron:windows": "npm run build:prod && npx electron-builder build --windows",
-    "release": "npm run build:prod && npx electron-builder build --windows",
+    "electron:windows": "npm run rebuild && npm run build:prod && npx electron-builder build --windows",
+    "release": "npm run rebuild && npm run build:prod && npx electron-builder build --windows",
     "electron:mac": "npm run build:prod && npx electron-builder build --mac",
     "test": "ng test",
-    "e2e": "ng e2e",
-    "rebuild": "electron-rebuild -f -w robot-js"
+    "e2e": "ng e2e"
   },
   "dependencies": {
     "@swimlane/ngx-charts": "^8.1.0",
