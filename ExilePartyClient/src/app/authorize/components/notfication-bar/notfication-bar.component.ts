@@ -25,7 +25,7 @@ export class NotficationBarComponent implements OnInit, OnDestroy {
     private logService: LogService
   ) {
     setTimeout(res => {
-      setInterval(this.checkForNewRelease(), 1000 * 60 * 10); // Check every 10 minutes.
+      setInterval(inner => this.checkForNewRelease(), 1000 * 60 * 10); // Check every 10 minutes.
     }, 60 * 2 * 1000);
   }
 
