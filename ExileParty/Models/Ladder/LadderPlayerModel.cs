@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 namespace ExileParty.Models
 {
     [Serializable]
-    public class LadderPlayer
+    public class LadderPlayerModel
     {
         public string Name { get; set; }
         public int Level { get; set; }

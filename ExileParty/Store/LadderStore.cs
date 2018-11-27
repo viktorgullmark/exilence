@@ -9,25 +9,25 @@ namespace ExileParty.Store
     public class LadderStore
     {
         private static Dictionary<string, LadderStatusModel> LadderStatus { get; set; }
-        private static Dictionary<string, List<LadderPlayer>> Ladders { get; set; }
+        private static Dictionary<string, List<LadderPlayerModel>> Ladders { get; set; }
 
         public static void Initialize()
         {
             LadderStatus = new Dictionary<string, LadderStatusModel>();
-            Ladders = new Dictionary<string, List<LadderPlayer>>();
+            Ladders = new Dictionary<string, List<LadderPlayerModel>>();
         }
 
-        public static List<LadderPlayer> GetLadder(string league)
+        public static List<LadderPlayerModel> GetLadder(string league)
         {
             if (Ladders.ContainsKey(league))
             {
                 return Ladders[league].OrderBy(t => t.Rank).ToList();
             }
 
-            return new List<LadderPlayer>();
+            return new List<LadderPlayerModel>();
         }
 
-        public static bool SetLadder(string league, List<LadderPlayer> ladder)
+        public static bool SetLadder(string league, List<LadderPlayerModel> ladder)
         {
             return Ladders.TryAdd(league, ladder);
         }

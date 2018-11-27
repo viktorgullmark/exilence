@@ -22,6 +22,6 @@ namespace ExileParty.Models
         public ExtenedAreaInfoModel AreaInfo { get; set; }
         public List<ExtenedAreaInfoModel> PastAreas { get; set; }
 
-        public List<LadderPlayer> LadderInfo { get; set; }
+        public List<LadderPlayerModel> LadderInfo { get; set; }
     }
 }

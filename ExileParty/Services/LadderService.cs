@@ -43,13 +43,13 @@ namespace ExileParty.Services
 
         #region Ladder
 
-        public async Task<List<LadderPlayer>> GetLadderForPlayer(string league, string character)
+        public async Task<List<LadderPlayerModel>> GetLadderForPlayer(string league, string character)
         {
             TryUpdateLadder(league); //Not awaited with purpose
 
             var leagueLadder = LadderStore.GetLadder(league);
 
-            var returnList = new List<LadderPlayer>();
+            var returnList = new List<LadderPlayerModel>();
 
             var exists = leagueLadder.FirstOrDefault(t => t.Name == character);
             if (exists != null)
@@ -80,7 +80,7 @@ namespace ExileParty.Services
                 LadderStore.SetLadderRunning(league);
 
                 var oldLadder = LadderStore.GetLadder(league);
-                var newLadder = new List<LadderPlayer>();
+                var newLadder = new List<LadderPlayerModel>();
 
                 var pages = Enumerable.Range(0, 25);
                 using (var rateGate = new RateGate(2, TimeSpan.FromSeconds(1)))
@@ -89,7 +89,7 @@ namespace ExileParty.Services
                     {
                         await rateGate.WaitToProceed();
                         LadderApiResponse result = await FetchLadderApiPage(league, page);
-                        var LadderPlayerList = result.Entries.Select(t => new LadderPlayer()
+                        var LadderPlayerList = result.Entries.Select(t => new LadderPlayerModel()
                         {
                             Name = t.Character.Name,
                             Level = t.Character.Level,
@@ -120,7 +120,7 @@ namespace ExileParty.Services
             }
         }
 
-        private List<LadderPlayer> CalculateStatistics(List<LadderPlayer> oldLadder, List<LadderPlayer> newLadder)
+        private List<LadderPlayerModel> CalculateStatistics(List<LadderPlayerModel> oldLadder, List<LadderPlayerModel> newLadder)
         {
             foreach (var newEntry in newLadder)
             {
