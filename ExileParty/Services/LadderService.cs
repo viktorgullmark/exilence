@@ -45,10 +45,10 @@ namespace ExileParty.Services
 
         public async Task<List<LadderPlayer>> GetLadderForPlayer(string league, string character)
         {
-            //if (!_env.IsDevelopment())
-            //{
+            if (!_env.IsDevelopment())
+            {
                 TryUpdateLadder(league); //Not awaited with purpose
-            //}
+            }
 
             var leagueLadder = LadderStore.GetLadder(league);
 
