@@ -10,6 +10,6 @@ namespace ExileParty.Models.Ladder
     {
         public bool Running { get; set; }
         public DateTime Started { get; set; }
-        public DateTime Finished { get; set; }
+        public DateTime? Finished { get; set; }
     }
 }

@@ -1,36 +1,32 @@
-﻿using System;
+﻿using ExileParty.Helper;
+using ExileParty.Interfaces;
+using ExileParty.Models;
+using ExileParty.Models.Ladder;
+using ExileParty.Store;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.Logging;
+using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Web;
-using ExileParty.Helper;
-using ExileParty.Interfaces;
-using ExileParty.Models;
-using ExileParty.Models.Ladder;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.Caching.Distributed;
-using Microsoft.Extensions.Logging;
-using Newtonsoft.Json;
 
 namespace ExileParty.Services
 {
     public class LadderService : ILadderService
     {
         private readonly IHostingEnvironment _env;
-        private readonly IDistributedCache _cache;
         private readonly ILogger<LadderService> _log;
         private readonly IExternalService _externalService;
-
-        private bool _rateLimited;
 
         private const string LadderUrl = "http://www.pathofexile.com/api/ladders";
         private const string LeagesUrl = "http://api.pathofexile.com/leagues?type=main&compact=1";
         private const string PoeNinjaStatsUrl = "http://poe.ninja/api/Data/GetStats";
         private const string TradeUrl = "http://api.pathofexile.com/public-stash-tabs";
 
-        public LadderService(IDistributedCache cache, ILogger<LadderService> log, IExternalService externalService, IHostingEnvironment env)
+        public LadderService(ILogger<LadderService> log, IExternalService externalService, IHostingEnvironment env)
         {
-            _cache = cache;
             _log = log;
             _env = env;
             _externalService = externalService;
@@ -49,12 +45,12 @@ namespace ExileParty.Services
 
         public async Task<List<LadderPlayer>> GetLadderForPlayer(string league, string character)
         {
-            if (!_env.IsDevelopment())
-            {
+            //if (!_env.IsDevelopment())
+            //{
                 TryUpdateLadder(league); //Not awaited with purpose
-            }
+            //}
 
-            var leagueLadder = await RetriveLadder(league);
+            var leagueLadder = LadderStore.GetLadder(league);
 
             var returnList = new List<LadderPlayer>();
 
@@ -78,83 +74,52 @@ namespace ExileParty.Services
 
         public async Task TryUpdateLadder(string league)
         {
-            var statuses = await _cache.GetAsync<Dictionary<string, LadderStatusModel>>($"status:ladder");
-            if (statuses == null)
-            {
-                statuses = new Dictionary<string, LadderStatusModel>();
-            }
+            var ladderStatus = LadderStore.GetLadderStatus(league);
+            var anyRunning = LadderStore.AnyRunning();
 
-            var leagueStatus = new LadderStatusModel() { Running = false, Finished = DateTime.MinValue };
+            if (!anyRunning && (ladderStatus == null || ladderStatus.Finished < DateTime.Now.AddMinutes(-5)))
+            {
+                // Set league status to running for the current league
+                LadderStore.SetLadderRunning(league);
 
-            if (statuses.ContainsKey(league))
-            {
-                leagueStatus = statuses[league];
-            }
-            else
-            {
-                statuses.Add(league, leagueStatus);
-                await _cache.SetAsync($"status:ladder", statuses, new DistributedCacheEntryOptions { });
-            }
-            var anyRunning = statuses.Any(t => t.Value.Running);
+                var oldLadder = LadderStore.GetLadder(league);
+                var newLadder = new List<LadderPlayer>();
 
-            if (!anyRunning && leagueStatus.Finished < DateTime.Now.AddMinutes(-5))
-            {
-                try
+                var pages = Enumerable.Range(0, 25);
+                using (var rateGate = new RateGate(2, TimeSpan.FromSeconds(1)))
                 {
-                    // Set league status to running for the current league
-                    statuses = await _cache.GetAsync<Dictionary<string, LadderStatusModel>>($"status:ladder");
-                    statuses[league].Running = true;
-                    statuses[league].Started = DateTime.Now;
-                    await _cache.SetAsync($"status:ladder", statuses, new DistributedCacheEntryOptions { });
-
-                    var oldLadder = await RetriveLadder(league);
-
-                    var newLadder = new List<LadderPlayer>();
-                    var pages = Enumerable.Range(0, 25);
-                    using (var rateGate = new RateGate(2, TimeSpan.FromSeconds(1)))
+                    foreach (int page in pages)
                     {
-                        foreach (int page in pages)
+                        await rateGate.WaitToProceed();
+                        LadderApiResponse result = await FetchLadderApiPage(league, page);
+                        var LadderPlayerList = result.Entries.Select(t => new LadderPlayer()
                         {
-                            await rateGate.WaitToProceed();
-                            LadderApiResponse result = await FetchLadderApiPage(league, page);
-                            var LadderPlayerList = result.Entries.Select(t => new LadderPlayer()
-                            {
-                                Name = t.Character.Name,
-                                Level = t.Character.Level,
-                                Online = t.Online,
-                                Dead = t.Dead,
-                                Account = t.Account.Name,
-                                Experience = t.Character.Experience,
-                                Experience_per_hour = 0,
-                                Rank = t.Rank,
-                                Twitch = t.Account.Twitch?.Name,
-                                Class = t.Character.Class,
-                                Class_rank = 0,
-                                Updated = DateTime.Now
-                            }).ToList();
-                            // Convert result to LadderPlayer model here
-                            newLadder.AddRange(LadderPlayerList);
-                            if (newLadder.Count == result.Total || result.Entries.Count == 0)
-                            {
-                                break;
-                            }
+                            Name = t.Character.Name,
+                            Level = t.Character.Level,
+                            Online = t.Online,
+                            Dead = t.Dead,
+                            Account = t.Account.Name,
+                            Experience = t.Character.Experience,
+                            Experience_per_hour = 0,
+                            Rank = t.Rank,
+                            Twitch = t.Account.Twitch?.Name,
+                            Class = t.Character.Class,
+                            Class_rank = 0,
+                            Updated = DateTime.Now
+                        }).ToList();
+                        // Convert result to LadderPlayer model here
+                        newLadder.AddRange(LadderPlayerList);
+                        if (newLadder.Count == result.Total || result.Entries.Count == 0)
+                        {
+                            break;
                         }
                     }
-
-                    newLadder = CalculateStatistics(oldLadder, newLadder);
-
-                    await SaveLadder(league, newLadder);
-                    statuses = await _cache.GetAsync<Dictionary<string, LadderStatusModel>>($"status:ladder");
-                    statuses[league].Running = false;
-                    statuses[league].Finished = DateTime.Now;
-                    await _cache.SetAsync($"status:ladder", statuses, new DistributedCacheEntryOptions { });
                 }
-                catch (Exception e)
-                {
-                    statuses = await _cache.GetAsync<Dictionary<string, LadderStatusModel>>($"status:ladder");
-                    statuses[league].Running = false;
-                    statuses[league].Finished = DateTime.Now;
-                }
+
+                newLadder = CalculateStatistics(oldLadder, newLadder);
+
+                LadderStore.SetLadder(league, newLadder);
+                LadderStore.SetLadderFinished(league);
             }
         }
 
@@ -191,38 +156,6 @@ namespace ExileParty.Services
             return JsonConvert.DeserializeObject<LadderApiResponse>(json);
         }
 
-        private async Task SaveLadder(string league, List<LadderPlayer> ladder)
-        {
-            var chunks = ladder.Split(1000);
-            var counter = 0;
-            foreach (var chunk in chunks)
-            {
-                await _cache.SetAsync($"ladder:{league}:{counter}", chunk, new DistributedCacheEntryOptions { SlidingExpiration = TimeSpan.FromDays(7)});
-                counter++;
-            }
-        }
-        private async Task<List<LadderPlayer>> RetriveLadder(string league)
-        {
-            var ladder = new List<LadderPlayer>();
-            bool fetch = true;
-            var counter = 0;
-            while (fetch)
-            {
-                var chunk = await _cache.GetAsync<List<LadderPlayer>>($"ladder:{league}:{counter}");
-                if (chunk == null)
-                {
-                    fetch = false;
-                }
-                else
-                {
-                    ladder.AddRange(chunk);
-                }
-                counter++;
-            }
-            return ladder.OrderBy(t => t.Rank).ToList();
-
-
-        }
 
         #endregion
 

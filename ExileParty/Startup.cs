@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using ExileParty.Hubs;
 using ExileParty.Interfaces;
 using ExileParty.Services;
+using ExileParty.Store;
 using Hangfire;
 using Hangfire.MemoryStorage;
 using Microsoft.AspNetCore.Builder;
@@ -96,6 +97,8 @@ namespace ExileParty
                     options.ApplicationMaxBufferSize = 30 * 1024 * 1024;
                 });
             });
+
+            LadderStore.Initialize();
         }
     }
 }

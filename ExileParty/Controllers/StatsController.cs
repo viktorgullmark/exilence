@@ -9,6 +9,7 @@ using Microsoft.Extensions.Caching.Distributed;
 using ExileParty.Helper;
 using Microsoft.Extensions.Logging;
 using ExileParty.Models.Ladder;
+using ExileParty.Store;
 
 namespace ExileParty
 {
@@ -49,15 +50,19 @@ namespace ExileParty
 
             }
 
-            var statuses = await _cache.GetAsync<Dictionary<string, LadderStatusModel>>($"status:ladder");
-
+            var statuses = LadderStore.GeAllLadderStatuses();
 
             var response = new
             {
                 totalParties = partyList.Count(),
-                totalPlayers = players,                
+                totalPlayers = players,
                 Parties = partyList,
-                LeagueStatus = statuses.OrderByDescending(t => t.Value.Finished)
+                LeagueStatus = statuses.OrderByDescending(t => t.Value.Finished).Select(x => new {
+                    Name = x.Key,
+                    Running = x.Value.Running,
+                    Started = x.Value.Started.ToString("yyyy-MM-dd HH:mm:ss"),
+                    Finished = x.Value.Finished?.ToString("yyyy-MM-dd HH:mm:ss")
+                })
             };
 
             return Ok(response);
@@ -75,14 +80,14 @@ namespace ExileParty
         [Route("Ladder/Reset")]
         public async Task<IActionResult> LadderReset()
         {
-            var statuses = await _cache.GetAsync<Dictionary<string, LadderStatusModel>>($"status:ladder");
+            var statuses = LadderStore.GeAllLadderStatuses();
             foreach (var status in statuses)
             {
-                status.Value.Running = false;
+                LadderStore.SetLadderFinished(status.Key);
             }
-            await _cache.SetAsync<Dictionary<string, LadderStatusModel>>($"status:ladder", statuses);
+            statuses = LadderStore.GeAllLadderStatuses();
 
-            return Ok(new { LeagueStatus = statuses.OrderByDescending(t => t.Value.Finished) });
+            return Ok(new { LeagueStatus = statuses.OrderByDescending(t => t.Value.Started) });
         }
     }
 }
