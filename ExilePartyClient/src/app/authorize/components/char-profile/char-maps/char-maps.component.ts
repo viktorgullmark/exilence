@@ -84,7 +84,7 @@ export class CharMapsComponent implements OnInit {
           return filteredArr.some(x => x.timestamp === res.timestamp);
         });
       }
-      this.updateAvgTimeSpent(this.mapService.localPlayerAreas);
+      this.updateAvgTimeSpent(this.filteredArr);
     } else {
       if (this.player.pastAreas !== null) {
         this.filteredArr = this.player.pastAreas.filter(res => {
