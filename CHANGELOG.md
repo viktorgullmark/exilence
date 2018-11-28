@@ -5,6 +5,7 @@ All notable changes to this project will be documented in this file.
 - Improved performance for players with large area-history
 - Fixed a bug where some areas would be missing when parsing the log
 - Improved ladder-functionality
+- Changed texts on some buttons in the login-process
 
 ## [0.7.3] - 2018-11-26
 - Added DPS/pDPS/eDPS to weapon-tooltips
