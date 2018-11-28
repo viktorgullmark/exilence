@@ -74,6 +74,14 @@ namespace Exilence.Store
         }
 
 
+        public static void RemoveLadderStatus(string league)
+        {
+            if (LadderStatus.ContainsKey(league))
+            {
+                LadderStatus.Remove(league);
+            }
+        }
+
         public static Dictionary<string, LadderStatusModel> GeAllLadderStatuses()
         {
             return LadderStatus;

@@ -89,34 +89,45 @@ namespace Exilence.Services
                     {
                         await rateGate.WaitToProceed();
                         LadderApiResponse result = await FetchLadderApiPage(league, page);
-                        var LadderPlayerList = result.Entries.Select(t => new LadderPlayerModel()
+                        if (result != null)
                         {
-                            Name = t.Character.Name,
-                            Level = t.Character.Level,
-                            Online = t.Online,
-                            Dead = t.Dead,
-                            Account = t.Account.Name,
-                            Experience = t.Character.Experience,
-                            Experience_per_hour = 0,
-                            Rank = t.Rank,
-                            Twitch = t.Account.Twitch?.Name,
-                            Class = t.Character.Class,
-                            Class_rank = 0,
-                            Updated = DateTime.Now
-                        }).ToList();
-                        // Convert result to LadderPlayer model here
-                        newLadder.AddRange(LadderPlayerList);
-                        if (newLadder.Count == result.Total || result.Entries.Count == 0)
+                            var LadderPlayerList = result.Entries.Select(t => new LadderPlayerModel()
+                            {
+                                Name = t.Character.Name,
+                                Level = t.Character.Level,
+                                Online = t.Online,
+                                Dead = t.Dead,
+                                Account = t.Account.Name,
+                                Experience = t.Character.Experience,
+                                Experience_per_hour = 0,
+                                Rank = t.Rank,
+                                Twitch = t.Account.Twitch?.Name,
+                                Class = t.Character.Class,
+                                Class_rank = 0,
+                                Updated = DateTime.Now
+                            }).ToList();
+                            // Convert result to LadderPlayer model here
+                            newLadder.AddRange(LadderPlayerList);
+                            if (newLadder.Count == result.Total || result.Entries.Count == 0)
+                            {
+                                break;
+                            }
+                        }
+                        else
                         {
+                            LadderStore.RemoveLadderStatus(league);
                             break;
                         }
                     }
                 }
 
-                newLadder = CalculateStatistics(oldLadder, newLadder);
+                if (newLadder.Count > 0)
+                {
+                    newLadder = CalculateStatistics(oldLadder, newLadder);
 
-                LadderStore.SetLadder(league, newLadder);
-                LadderStore.SetLadderFinished(league);
+                    LadderStore.SetLadder(league, newLadder);
+                    LadderStore.SetLadderFinished(league);
+                }
             }
         }
 
@@ -150,7 +161,11 @@ namespace Exilence.Services
         private async Task<LadderApiResponse> HandleLadderRequest(string url)
         {
             string json = await _externalService.ExecuteGetAsync(url);
-            return JsonConvert.DeserializeObject<LadderApiResponse>(json);
+            if (json != null)
+            {
+                return JsonConvert.DeserializeObject<LadderApiResponse>(json);
+            }
+            return null;
         }
 
 
