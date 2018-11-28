@@ -1,6 +1,10 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [0.7.4] - 2018-11-XX
+- Improved performance for players with large area-history
+- Improved ladder-functionality
+
 ## [0.7.3] - 2018-11-26
 - Added DPS/pDPS/eDPS to weapon-tooltips
 - Added a column that shows which players has an item in the group summary table 
