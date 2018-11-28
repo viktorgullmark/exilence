@@ -1,0 +1,48 @@
+{
+  "productName": "Exilence",
+  "directories": {
+    "output": "app-builds"
+  },
+  "files": [
+    "**/*",
+    "!*.ts",
+    "!*.code-workspace",
+    "!LICENSE.md",
+    "!package.json",
+    "!package-lock.json",
+    "!src/",
+    "!e2e/",
+    "!hooks/",
+    "!.angular-cli.json",
+    "!_config.yml",
+    "!karma.conf.js",
+    "!tsconfig.json",
+    "!tslint.json"
+  ],
+  "npmRebuild": false,
+  "win": {
+    "icon": "dist/assets/img/app-icon.png",
+    "asar": true,
+    "asarUnpack": [
+      "node_modules/node-key-sender"
+    ],
+    "publish": [
+      "github"
+    ],
+    "target": [
+      "nsis"
+    ]
+  },
+  "mac": {
+    "icon": "dist/assets/img/icon.ico",
+    "target": [
+      "dmg"
+    ]
+  },
+  "linux": {
+    "icon": "dist/assets/img/icon.ico",
+    "target": [
+      "AppImage"
+    ]
+  }
+}

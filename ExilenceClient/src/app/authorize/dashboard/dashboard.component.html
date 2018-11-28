@@ -1,0 +1,44 @@
+<h3 class="mat-h3 page-header">{{'PAGES.DASHBOARD.TITLE' | translate}}</h3>
+<mat-divider class="divider"></mat-divider>
+<div class="dashboard-content-container">
+    <div class="recent-container" *ngIf="recentParties.length > 0">
+        <div class="recent-party-container">
+            <div class="party-headline-container">
+                <h3 class="mat-h3 party-headline">Recent groups</h3>
+                <span> (click to join)</span>
+            </div>
+            <div class="recent-party-badge-container" *ngFor="let party of recentParties, let i = index">
+                <mat-card class="recent-party-badge" (click)="joinParty(party)" *ngIf="i < 4">
+                    <mat-icon (click)="$event.stopPropagation(); removePartyFromRecent(party)" class="close-icon">close</mat-icon>
+                    {{party}}
+                </mat-card>
+            </div>
+        </div>
+    </div>
+    <h3 class="mat-h3">Getting started</h3>
+    <p class="mat-body-1">
+        To start using the app, enter a group-name of your choice in the top-left corner and press 'Enter'. Then tell your friends
+        to enter the same group-name as you, and you will be able to see each other. Note that each player updates every
+        time they enter a new zone.
+    </p>
+    <h3 class="mat-h3">Beta information</h3>
+    <p class="mat-body-1">
+        This version is a beta release, which means it's still in an early stage. Bug reports and feature-requests are greatly appreciated
+        as it will help us develop the app further, and are preferrebly posted in our
+        <a class="inline-link" (click)="openLink('https://discord.gg/ymr3VnA')">Discord</a> or directly at
+        <a class="inline-link" (click)="openLink('https://github.com/viktorgullmark/exilence/issues')">https://github.com/viktorgullmark/exilence/issues</a>. Updates will be applied automatically when you restart
+        the program. Please be patient as it will download the new version and apply it before you can start using the application.
+    </p>
+    <p class="mat-body-1">
+        Feel free to contact us on GitHub, Discord or directly in-game for any questions/input.
+    </p>
+    <p class="mat-body-1">
+        ign: CojL
+        <br/>ign: Umaycry
+        <br/>
+        <br/>
+        <a class="inline-link" (click)="openLink('https://github.com/viktorgullmark')">github.com/viktorgullmark</a>
+        <br/>
+        <a class="inline-link" (click)="openLink('https://github.com/petterannerwall')">github.com/petterannerwall</a>
+    </p>
+</div>

@@ -53,7 +53,7 @@ All notable changes to this project will be documented in this file.
 
 ## [0.6.0] - 2018-11-15
 - Added support for private-leagues
-- Added a tutorial (helper-tooltips) that will be shown the first time you launch Exile Party
+- Added a tutorial (helper-tooltips) that will be shown the first time you launch Exilence
 - Added a FAQ-page, listing frequently asked questions with answers
 - Added language-support (now displays timestamps within the app in your system language)
 - Added a general tab to the settings-page
@@ -85,7 +85,7 @@ All notable changes to this project will be documented in this file.
 - Reduced delay before snapshotting when changing areas (QoL-change)
 - Now displays a notification-bar in the bottom when area- and networth-history is cleared
 - Now snapshots on login, and not only upon entering your first area (QoL-change)
-- Changed application-name from 'exile-party' to 'ExileParty'
+- Changed application-name from 'exilence' to 'Exilence'
 - Changed timestamp for areas to reflect the time when you leave the area, instead of when you enter it
 
 ## [0.5.3] - 2018-07-21
@@ -96,7 +96,7 @@ All notable changes to this project will be documented in this file.
 - Fixed a bug where the current tab was not always selected
 - Fixed inspect-players tab, should now work as usual again
 - Fixed a bug where the group-summary page was not always up-to-date
-- Added ExileParty-tag to report-messages
+- Added Exilence-tag to report-messages
 - Improved form-validation to login-form
 - Style-improvements to ladder-tab
 - Style-improvements to area-tab
@@ -106,7 +106,7 @@ All notable changes to this project will be documented in this file.
 
 ## [0.5.1] - 2018-07-18
 - Changed default keybindings
-- Keybinds now only work with Path of Exile or ExileParty in focus
+- Keybinds now only work with Path of Exile or Exilence in focus
 - Added the ability to disable individual keybinds
 - Added support for F1-F12 as trigger-keys
 - Added descriptive text to keybinds-page
