@@ -9,7 +9,7 @@ import { PartyService } from './party.service';
 import { NetWorthSnapshot } from '../interfaces/income.interface';
 import { SettingsService } from './settings.service';
 import { HistoryHelper } from '../helpers/history.helper';
-
+import { BehaviorSubject } from 'rxjs/internal/BehaviorSubject';
 
 @Injectable()
 export class MapService {
@@ -25,6 +25,10 @@ export class MapService {
   private localPlayer: Player;
   areasParsed: EventEmitter<any> = new EventEmitter();
 
+  // areas specific to the local player (including the log if imported)
+  public localPlayerAreaSubject: BehaviorSubject<ExtendedAreaInfo[]> = new BehaviorSubject<ExtendedAreaInfo[]>([]);
+  public localPlayerAreas: ExtendedAreaInfo[];
+
   constructor(
     private logMonitorService: LogMonitorService,
     private accountService: AccountService,
@@ -38,8 +42,12 @@ export class MapService {
     this.accountService.player.subscribe(player => {
       if (player !== undefined) {
         this.localPlayer = player;
-        this.localPlayer.pastAreas = this.areaHistory;
+        // this.localPlayer.pastAreas = this.areaHistory;
       }
+    });
+
+    this.localPlayerAreaSubject.subscribe(res => {
+      this.localPlayerAreas = res;
     });
 
     this.logMonitorService.instanceServerEvent.subscribe(e => {
@@ -65,6 +73,8 @@ export class MapService {
 
       this.settingsService.set('areas', this.areaHistory);
 
+      this.updateLocalPlayerAreas(this.areaHistory);
+
       this.areasParsed.emit();
     });
 
@@ -77,6 +87,12 @@ export class MapService {
       this.registerAreaEvent(e, false);
     });
   }
+
+  updateLocalPlayerAreas(areas: ExtendedAreaInfo[]) {
+    const areasToSend = Object.assign([], areas);
+    this.localPlayerAreaSubject.next(areasToSend);
+  }
+
   registerAreaEvent(e: EventArea, live: boolean) {
     // zone entered
     const shouldUpdateAreaHistory = (e.type === 'map' || e.name.endsWith('Hideout') || !this.logMonitorService.trackMapsOnly);
@@ -159,11 +175,16 @@ export class MapService {
       // update current player and send information to party
       this.localPlayer.area = this.currentArea.eventArea.name;
       this.localPlayer.areaInfo = this.currentArea;
+
+      const oneHourAgo = (Date.now() - (1 * 60 * 60 * 1000));
+
+      this.localPlayer.pastAreas = HistoryHelper.filterAreas(this.areaHistory, oneHourAgo);
       this.accountService.player.next(this.localPlayer);
 
       // save updated areas to settings
       if (shouldUpdateAreaHistory) {
         this.settingsService.set('areas', this.areaHistory);
+        this.updateLocalPlayerAreas(this.areaHistory);
       }
       this.partyService.updatePlayer(this.localPlayer);
     }

@@ -22,6 +22,7 @@ import { SettingsService } from '../shared/providers/settings.service';
 import { LogMonitorService } from '../shared/providers/log-monitor.service';
 import { MapService } from '../shared/providers/map.service';
 import { InfoDialogComponent } from '../authorize/components/info-dialog/info-dialog.component';
+import { HistoryHelper } from '../shared/helpers/history.helper';
 
 @Component({
     selector: 'app-login',
@@ -426,7 +427,10 @@ export class LoginComponent implements OnInit {
     completeLogin() {
         this.player.account = this.form.accountName;
         this.player.netWorthSnapshots = this.netWorthHistory.history;
-        this.player.pastAreas = this.areaHistory;
+
+        const oneHourAgo = (Date.now() - (1 * 60 * 60 * 1000));
+
+        this.player.pastAreas = HistoryHelper.filterAreas(this.areaHistory, oneHourAgo);
 
         this.externalService.validateSessionId(
             this.form.sessionId,

@@ -74,56 +74,66 @@ export class CharMapsComponent implements OnInit {
         });
       }
     });
-}
-
-updateSummary(filteredArr) {
-  this.filteredArr = [];
-  if (this.player.pastAreas !== null) {
-    this.filteredArr = this.player.pastAreas.filter(res => {
-      return filteredArr.some(x => x.timestamp === res.timestamp);
-    });
   }
-  this.updateAvgTimeSpent(this.filteredArr);
-}
 
-resetAreaHistory() {
-  if (this.player.account === this.partyService.currentPlayer.account) {
-    const emptyHistory = this.settingsService.deleteAreas();
-    this.player.pastAreas = emptyHistory;
-    this.mapService.loadAreasFromSettings();
-    this.accountService.player.next(this.player);
-    this.partyService.selectedPlayer.next(this.player);
-    this.partyService.updatePlayer(this.player);
-    this.alertService.showAlert({ message: 'Area history was cleared', action: 'OK' });
+  updateSummary(filteredArr) {
+    this.filteredArr = [];
+    if (this.player.account === this.partyService.currentPlayer.account) {
+      if (this.mapService.localPlayerAreas !== null) {
+        this.filteredArr = this.mapService.localPlayerAreas.filter(res => {
+          return filteredArr.some(x => x.timestamp === res.timestamp);
+        });
+      }
+      this.updateAvgTimeSpent(this.mapService.localPlayerAreas);
+    } else {
+      if (this.player.pastAreas !== null) {
+        this.filteredArr = this.player.pastAreas.filter(res => {
+          return filteredArr.some(x => x.timestamp === res.timestamp);
+        });
+      }
+      this.updateAvgTimeSpent(this.filteredArr);
+    }
   }
-}
 
-updateAvgTimeSpent(pastAreas) {
-  if (pastAreas !== null) {
-    if (pastAreas[0] !== undefined) {
-      pastAreas = pastAreas.filter(x => x.duration > 0);
-      let total = 0;
-      pastAreas.forEach(area => {
-        total = total + area.duration;
-      });
+  resetAreaHistory() {
+    if (this.player.account === this.partyService.currentPlayer.account) {
+      const emptyHistory = this.settingsService.deleteAreas();
+      this.mapService.updateLocalPlayerAreas(emptyHistory);
+      this.player.pastAreas = emptyHistory;
+      this.mapService.loadAreasFromSettings();
+      this.accountService.player.next(this.player);
+      this.partyService.selectedPlayer.next(this.player);
+      this.partyService.updatePlayer(this.player);
+      this.alertService.showAlert({ message: 'Area history was cleared', action: 'OK' });
+    }
+  }
 
-      const average = total / pastAreas.length;
+  updateAvgTimeSpent(pastAreas) {
+    if (pastAreas !== null) {
+      if (pastAreas[0] !== undefined) {
+        pastAreas = pastAreas.filter(x => x.duration > 0);
+        let total = 0;
+        pastAreas.forEach(area => {
+          total = total + area.duration;
+        });
 
-      const minute = Math.floor(average / 60);
-      let seconds = average % 60;
-      seconds = Math.floor(seconds);
-      this.averageTimeSpent = ((minute < 10) ? '0' + minute.toString() : seconds.toString())
-        + ':' + ((seconds < 10) ? '0' + seconds.toString() : seconds.toString());
+        const average = total / pastAreas.length;
+
+        const minute = Math.floor(average / 60);
+        let seconds = average % 60;
+        seconds = Math.floor(seconds);
+        this.averageTimeSpent = ((minute < 10) ? '0' + minute.toString() : seconds.toString())
+          + ':' + ((seconds < 10) ? '0' + seconds.toString() : seconds.toString());
+      } else {
+        this.averageTimeSpent = '';
+      }
     } else {
       this.averageTimeSpent = '';
     }
-  } else {
-    this.averageTimeSpent = '';
   }
-}
 
-search() {
-  this.table.doSearch(this.form.controls.searchText.value);
-}
+  search() {
+    this.table.doSearch(this.form.controls.searchText.value);
+  }
 
 }

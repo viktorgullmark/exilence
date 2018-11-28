@@ -5,6 +5,7 @@ import * as moment from 'moment';
 import { ExtendedAreaInfo } from '../../../shared/interfaces/area.interface';
 import { Player } from '../../../shared/interfaces/player.interface';
 import { PartyService } from '../../../shared/providers/party.service';
+import { MapService } from '../../../shared/providers/map.service';
 
 @Component({
   selector: 'app-map-table',
@@ -22,17 +23,23 @@ export class MapTableComponent implements OnInit {
   @ViewChild(MatSort) sort: MatSort;
   @ViewChild(MatPaginator) paginator: MatPaginator;
 
-  constructor(private partyService: PartyService) {
+  constructor(private partyService: PartyService, private mapService: MapService) {
   }
 
   ngOnInit() {
-    this.updateTable(this.player);
+    if (this.player.account === this.partyService.currentPlayer.account) {
+      this.updateTable(this.mapService.localPlayerAreas);
+    } else {
+      this.updateTable(this.player.pastAreas);
+    }
     this.partyService.selectedPlayer.subscribe(res => {
       if (res !== undefined) {
         this.player = res;
         this.dataSource = [];
-        if (res.pastAreas !== null) {
-          this.updateTable(res);
+        if (res.pastAreas !== null && this.player.account !== this.partyService.currentPlayer.account) {
+          this.updateTable(res.pastAreas);
+        } else if (this.player.account === this.partyService.currentPlayer.account) {
+          this.updateTable(this.mapService.localPlayerAreas);
         }
         this.filter();
       }
@@ -66,9 +73,9 @@ export class MapTableComponent implements OnInit {
     return moment(timestamp).format('llll');
   }
 
-  updateTable(player: Player) {
-    if (player.pastAreas !== null && player.pastAreas !== undefined) {
-      player.pastAreas.forEach((area: ExtendedAreaInfo) => {
+  updateTable(pastAreas: ExtendedAreaInfo[]) {
+    if (pastAreas !== null && pastAreas !== undefined) {
+      pastAreas.forEach((area: ExtendedAreaInfo) => {
         if (area.duration < 1800) {
           const minute = Math.floor(area.duration / 60);
           const seconds = area.duration % 60;

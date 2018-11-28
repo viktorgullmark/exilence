@@ -97,7 +97,7 @@ export class PartyService {
           const playerObj = Object.assign({}, player);
           if (playerObj.account === this.currentPlayer.account) {
             playerObj.netWorthSnapshots = Object.assign([], this.currentPlayer.netWorthSnapshots);
-            playerObj.pastAreas = Object.assign([], this.currentPlayer.pastAreas);
+            // playerObj.pastAreas = Object.assign([], this.currentPlayer.pastAreas);
           }
           this.party = party;
           this.updatePlayerLists(this.party);
@@ -131,7 +131,7 @@ export class PartyService {
         const playerObj = Object.assign({}, player);
         if (playerObj.account === this.currentPlayer.account) {
           playerObj.netWorthSnapshots = Object.assign([], this.currentPlayer.netWorthSnapshots);
-          playerObj.pastAreas = Object.assign([], this.currentPlayer.pastAreas);
+          // playerObj.pastAreas = Object.assign([], this.currentPlayer.pastAreas);
         }
         if (this.selectedPlayerObj.account === playerObj.account) {
           this.selectedPlayer.next(playerObj);
