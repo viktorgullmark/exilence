@@ -1,10 +1,10 @@
 .vs/
 packages/
-ExileParty/obj/
-ExileParty/bin/
-ExileParty/appsettings.json
+Exilence/obj/
+Exilence/bin/
+Exilence/appsettings.json
 
-ExileParty/Properties/PublishProfiles/Local.pubxml.user
-ExileParty/appsettings.Development.json
-ExileParty/Properties/PublishProfiles/
-ExileParty/Logs/
+Exilence/Properties/PublishProfiles/Local.pubxml.user
+Exilence/appsettings.Development.json
+Exilence/Properties/PublishProfiles/
+Exilence/Logs/

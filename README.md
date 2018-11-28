@@ -1,14 +1,14 @@
-ExileParty
-[![Github All Releases](https://img.shields.io/github/downloads/viktorgullmark/exile-party/total.svg)](https://github.com/viktorgullmark/exile-party/releases)
+Exilence
+[![Github All Releases](https://img.shields.io/github/downloads/viktorgullmark/exilence/total.svg)](https://github.com/viktorgullmark/exilence/releases)
 [![Become a Patreon](https://img.shields.io/badge/patreon-%F0%9F%8E%AF-orange.svg)](https://www.patreon.com/exileparty)
 ===
 Path of Exile party-app used to track gear, inventory, currency, maps and more of partymembers with cross-league support.
 
 You could use this app to either improve the party-experience with your current party, or group up with your friends from different leagues while talking in discord with each other to share your character-data.
 
-Download latest release at https://github.com/viktorgullmark/exile-party/releases/latest
+Download latest release at https://github.com/viktorgullmark/exilence/releases/latest
 
-Report bugs at https://github.com/viktorgullmark/exile-party/issues
+Report bugs at https://github.com/viktorgullmark/exilence/issues
 
 Communicate with us at our Discord https://discord.gg/ymr3VnA
 
@@ -18,7 +18,7 @@ https://imgur.com/a/cpODf7I
 
 ## Contents
 
-- [Changelog](https://github.com/viktorgullmark/exile-party/blob/master/CHANGELOG.md)
+- [Changelog](https://github.com/viktorgullmark/exilence/blob/master/CHANGELOG.md)
 - [Important](#important)
 - [Platform](#platform)
 - [Help with development](#help-with-development)
