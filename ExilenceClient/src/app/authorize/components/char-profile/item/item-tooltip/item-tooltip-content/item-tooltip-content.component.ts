@@ -115,13 +115,13 @@ export class ItemTooltipContentComponent implements OnInit {
 
   getEleDps() {
     if (this.eleMinMax !== undefined) {
-      return (+this.eleMinMax[0] + +this.eleMinMax[1]) / 2 * +this.apsProp.values[0][0];
+      return (+this.eleMinMax[0] + +this.eleMinMax[1]) / 2 * + this.apsProp.values[0][0];
     } return 0;
   }
 
   getPhysDps() {
     if (this.physMinMax !== undefined) {
-      return (+this.physMinMax[0] + +this.physMinMax[1]) / 2 * +this.apsProp.values[0][0];
+      return (+this.physMinMax[0] + +this.physMinMax[1]) / 2 * + this.apsProp.values[0][0];
     } return 0;
   }
 }
