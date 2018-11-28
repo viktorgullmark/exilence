@@ -35,13 +35,13 @@
         <ng-container *ngIf="item.properties != undefined && item.properties.length > 0 && isWeapon(item.properties)">
             <div class="stats">
                 <div class="stat dps-total">
-                    <span class="stat-tag">DPS</span>&nbsp;:&nbsp;<span class="stat-value">{{getTotalDps()}}</span>
+                    <span class="stat-tag">DPS</span>&nbsp;:&nbsp;<span class="stat-value">{{getTotalDps().toFixed(1)}}</span>
                 </div>
                 <div class="stat dps-phys">
-                    <span class="stat-tag">pDPS</span>&nbsp;:&nbsp;<span class="stat-value">{{getPhysDps()}}</span>
+                    <span class="stat-tag">pDPS</span>&nbsp;:&nbsp;<span class="stat-value">{{getPhysDps().toFixed(1)}}</span>
                 </div>
                 <div class="stat dps-ele">
-                    <span class="stat-tag">eDPS</span>&nbsp;:&nbsp;<span class="stat-value">{{getEleDps()}}</span>
+                    <span class="stat-tag">eDPS</span>&nbsp;:&nbsp;<span class="stat-value">{{getEleDps().toFixed(1)}}</span>
                 </div>
                 <br />
             </div>
