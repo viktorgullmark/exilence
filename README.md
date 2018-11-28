@@ -1,8 +1,8 @@
-Exilence (former ExileParty)
+Exilence
 [![Github All Releases](https://img.shields.io/github/downloads/viktorgullmark/exilence/total.svg)](https://github.com/viktorgullmark/exilence/releases)
 [![Become a Patreon](https://img.shields.io/badge/patreon-%F0%9F%8E%AF-orange.svg)](https://www.patreon.com/exileparty)
 ===
-Path of Exile party-app used to track gear, inventory, currency, maps and more of partymembers with cross-league support.
+Path of Exile tracker-app used to track gear, currency, maps and more of partymembers with cross-league support.
 
 You could use this app to either improve the party-experience with your current party, or group up with your friends from different leagues while talking in discord with each other to share your character-data.
 
@@ -65,5 +65,5 @@ If you're interested in helping with development, contact us directly on discord
 
 - https://github.com/klayveR for providing a great log-monitor to track the Client.txt
 
-- GGG for assisting with additional endpoints and for creating a great game!
+- GGG for adding additional endpoints for us and for creating a great game!
 
