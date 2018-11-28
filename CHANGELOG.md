@@ -2,6 +2,7 @@
 All notable changes to this project will be documented in this file.
 
 ## [0.7.4] - 2018-11-XX
+- Renamed the app to Exilence (former ExileParty)
 - Improved performance for players with large area-history
 - Fixed a bug where some areas would be missing when parsing the log
 - Improved ladder-functionality
