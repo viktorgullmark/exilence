@@ -24,8 +24,7 @@
           <button mat-raised-button class="btn-back" matStepperPrevious>Back</button>
           <button mat-raised-button color="primary" (click)="validateSessionId()" type="button" [disabled]="sessFormGroup.controls.sessionId.value == ''">Validate</button>
           <button mat-raised-button color="primary" [disabled]="(!sessionIdValid || needsValidation) && sessFormGroup.controls.sessionId.value != ''"
-            *ngIf="!isFetchingLeagues" (click)="setSessionCookie(sessFormGroup.controls.sessionId.value); getLeagues(undefined, true)">Fetch
-            leagues</button>
+            *ngIf="!isFetchingLeagues" (click)="setSessionCookie(sessFormGroup.controls.sessionId.value); getLeagues(undefined, true)">Continue</button>
           <mat-progress-bar *ngIf="isFetchingLeagues" class="progress-bar" color="primary" mode="indeterminate">
           </mat-progress-bar>
         </div>
@@ -52,8 +51,7 @@
 
         <div class="btn-grp">
           <button mat-raised-button class="btn-back" matStepperPrevious>Back</button>
-          <button mat-raised-button color="primary" *ngIf="!isFetching" (click)="getCharacterList(undefined, true)">Fetch
-            characters</button>
+          <button mat-raised-button color="primary" *ngIf="!isFetching" (click)="getCharacterList(undefined, true)">Continue</button>
           <mat-progress-bar *ngIf="isFetching" class="progress-bar" color="primary" mode="indeterminate">
           </mat-progress-bar>
         </div>
