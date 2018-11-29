@@ -3,9 +3,18 @@
 <div class="inspect-players-wrapper">
     <mat-divider class="divider"></mat-divider>
     <p class="mat-body-1 text-wrap" *ngIf="genericPlayers.length == 0">
-        Players you encounter in-game(through trading, public parties etc) will be listed here. <br/><br/>Unless their profile is set to private, you will be able to inspect their currently equipped gear. 
+        Players you encounter in-game(through trading, public parties etc) will be listed here. <br /><br />Unless
+        their profile is set to private, you will be able to inspect their currently equipped gear.
     </p>
+    <div class="mid-text-wrapper" *ngIf="genericPlayers.length == 0">
+        <mat-icon class="header-icon">warning</mat-icon>
+        <h3 class="mat-h3">
+            No players encountered yet
+        </h3>
+    </div>
+
     <div class="inner-content-container">
+
         <div class="player-list-container">
             <app-player-list localList="true"></app-player-list>
         </div>
