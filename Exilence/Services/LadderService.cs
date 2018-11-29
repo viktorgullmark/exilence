@@ -43,6 +43,28 @@ namespace Exilence.Services
 
         #region Ladder
 
+        public List<LadderPlayerModel> GetLadderForLeague(string league, bool full = false)
+        {
+            if (LadderStore.GetLadderStatus(league) == null)
+            {
+                LadderStore.SetLadderPending(league);
+            }
+            else
+            {
+                var leagueLadder = LadderStore.GetLadder(league);
+                if (full)
+                {
+                    return leagueLadder.OrderBy(t => t.Rank.Overall).ToList();
+                }
+                else
+                {
+                    return leagueLadder.OrderBy(t => t.Rank.Overall).Take(10).ToList();
+                }                
+            }
+
+            return null;
+        }
+
         public List<LadderPlayerModel> GetLadderForPlayer(string league, string character)
         {
             if (LadderStore.GetLadderStatus(league) == null)
@@ -80,16 +102,11 @@ namespace Exilence.Services
                 if (pendingLeague != null)
                 {
                     var pendingStatus = LadderStore.GetLadderStatus(pendingLeague);
-                    if (
-                        (pendingLeague == "Standard" && pendingLeague == "Hardcore" && pendingStatus.Finished < DateTime.Now.AddDays(-1)) ||
-                        (pendingLeague != "Standard" && pendingLeague != "Hardcore" && pendingStatus.Finished < DateTime.Now.AddMinutes(-5))
-                        )
+                    if (pendingStatus.Finished < DateTime.Now.AddMinutes(-5))
                     {
-                        UpdateLadder(pendingLeague);
+                       UpdateLadder(pendingLeague);
                     }
                 }
-
-
             }
         }
 

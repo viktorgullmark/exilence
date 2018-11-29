@@ -67,8 +67,16 @@ namespace Exilence.Store
         {
             if (LadderStatus.ContainsKey(league))
             {
-                LadderStatus[league].Running = false;
-                LadderStatus[league].Finished = DateTime.Now;
+                if (league == "Standard" || league == "Hardcore")
+                {
+                    LadderStatus[league].Running = false;
+                    LadderStatus[league].Finished = DateTime.Now.AddDays(+1);
+                }
+                else
+                {
+                    LadderStatus[league].Running = false;
+                    LadderStatus[league].Finished = DateTime.Now;
+                }
             }
             else
             {
@@ -99,7 +107,8 @@ namespace Exilence.Store
         {
             if (LadderStatus.Count > 0)
             {
-                return LadderStatus.OrderByDescending(t => t.Value.Finished).Last().Key;
+                var ladder = LadderStatus.OrderByDescending(t => t.Value.Finished).Last();
+                return ladder.Key;
             }
             return null;
         }

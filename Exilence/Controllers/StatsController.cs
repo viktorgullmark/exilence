@@ -35,11 +35,10 @@ namespace Exilence
             var parties = await _cache.GetAsync<Dictionary<string, string>>("ConnectionIndex") ?? new Dictionary<string, string>();
 
             foreach (var partyName in parties.Select(t => t.Value).Distinct().ToList())
-            {
-
-                var party = await _cache.GetAsync<PartyModel>($"party:{partyName}");
-                if (party != null)
+            {   
+                if (partyName != null)
                 {
+                    var party = await _cache.GetAsync<PartyModel>($"party:{partyName}");
                     PartyStatistics partyStats = new PartyStatistics { };
                     partyStats.Players = party.Players.Select(t => t.Character.Name).ToList();
                     partyList.Add(partyStats);
