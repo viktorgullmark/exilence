@@ -59,8 +59,5 @@ If you're interested in helping with development, contact us directly on discord
 ## Acknowledgements
 
 - https://poe.ninja for providing a great API, which lets us calculate net worth of players
-
 - https://github.com/klayveR for providing a great log-monitor to track the Client.txt
-
 - GGG for adding additional endpoints for us and for creating a great game!
-
