@@ -67,7 +67,8 @@
     },
     "MAPS": {
         "SEARCH": "Filter areas",
-        "RESET": "Clear areas"
+        "RESET": "Clear areas",
+        "EXPORT": "Export"
     },
     "CURRENCY": {
         "SEARCH": "Filter currency"
