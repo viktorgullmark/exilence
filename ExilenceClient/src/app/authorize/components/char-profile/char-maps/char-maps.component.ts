@@ -13,6 +13,7 @@ import { AccountService } from '../../../../shared/providers/account.service';
 import { AlertService } from '../../../../shared/providers/alert.service';
 import { InfoDialogComponent } from '../../info-dialog/info-dialog.component';
 import { MatDialog } from '@angular/material';
+import { ExportToCsv } from 'export-to-csv';
 
 @Component({
   selector: 'app-char-maps',
@@ -26,6 +27,7 @@ export class CharMapsComponent implements OnInit {
   averageTimeSpent = '';
   filteredArr = [];
   selfSelected = false;
+  dataSource = [];
   @ViewChild('table') table: MapTableComponent;
 
   constructor(@Inject(FormBuilder)
@@ -56,6 +58,47 @@ export class CharMapsComponent implements OnInit {
     this.analyticsService.sendScreenview('/authorized/party/player/maps');
   }
 
+  export() {
+    const options = {
+      fieldSeparator: ';',
+      quoteStrings: '"',
+      decimalseparator: '.',
+      showLabels: true,
+      showTitle: true,
+      title: 'Area-export',
+      useBom: true,
+      useKeysAsHeaders: true,
+      filename: 'Areas_' + moment(Date.now()).format('YYYY-MM-DD')
+      // headers: ['Column 1', 'Column 2', etc...] <-- Won't work with useKeysAsHeaders present!
+    };
+
+    const csvExporter = new ExportToCsv(options);
+    csvExporter.generateCsv(this.mapToExport(this.dataSource));
+  }
+
+  mapToExport(array) {
+    return array.map(x => {
+      const tier = x.name.substring(
+        x.name.lastIndexOf('(T') + 1,
+        x.name.lastIndexOf(')')
+      );
+      let name;
+      if (x.name.indexOf('(') !== -1) {
+        name = x.name.substring(
+          0,
+          x.name.indexOf('(') - 1
+        );
+      } else { name = x.name; }
+      return {
+        NAME: name,
+        TIER: tier,
+        LEVEL: x.tier,
+        DURATION: x.time,
+        DATE: moment(x.timestamp).format('YYYY-MM-DD HH:MM:SS')
+      };
+    });
+  }
+
   openMapDialog(): void {
     setTimeout(() => {
       if (!this.settingsService.get('diaShown_maps') && !this.settingsService.get('hideTooltips')) {
@@ -76,7 +119,9 @@ export class CharMapsComponent implements OnInit {
     });
   }
 
-  updateSummary(filteredArr) {
+  updateSummary(event) {
+    const filteredArr = event.filteredArr;
+    this.dataSource = event.dataSource;
     this.filteredArr = [];
     if (this.player.account === this.partyService.currentPlayer.account) {
       if (this.mapService.localPlayerAreas !== null) {

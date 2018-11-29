@@ -2,7 +2,7 @@
     <div class="map-summary-wrapper">
         <div class="stat-wrapper">
             <span class="title">Average time per area *</span>
-            <br/>
+            <br />
             <div class="stat-inner-wrapper">
                 <span class="stat-placeholder" *ngIf="filteredArr == null || filteredArr.length == 0">No data</span>
                 <span class="stat" *ngIf="filteredArr != null && filteredArr.length > 0">{{averageTimeSpent}}</span>
@@ -10,23 +10,27 @@
         </div>
         <div class="stat-wrapper">
             <span class="title">Areas entered *</span>
-            <br/>
+            <br />
             <div class="stat-inner-wrapper">
                 <span class="stat-placeholder" *ngIf="filteredArr == null || filteredArr.length == 0">No data</span>
                 <span class="stat" *ngIf="filteredArr != null && filteredArr.length > 0">{{filteredArr.length}}</span>
             </div>
         </div>
         <div class="flex-area">
-            <button mat-raised-button color="primary" *ngIf="selfSelected" (click)="resetAreaHistory()" type="button" class="right-aligned">{{'MAPS.RESET' | translate}}</button>
+            <button mat-raised-button color="primary" *ngIf="selfSelected" (click)="resetAreaHistory()" type="button"
+                class="right-aligned">{{'MAPS.RESET' | translate}}</button>
+            <button mat-raised-button color="primary" (click)="export()" type="button" class="right-aligned">{{'MAPS.EXPORT'
+                | translate}}</button>
         </div>
-        <br/>
+        <br />
         <span class="minor-info-right">* Excludes durations above 30min</span>
     </div>
     <div class="table-outer-wrapper">
         <div class="search-form-wrapper">
             <form class="form search-form" [formGroup]="form">
                 <mat-form-field>
-                    <input matInput formControlName="searchText" placeholder="{{'MAPS.SEARCH' | translate}}" class="search-text-input" (ngModelChange)="search()">
+                    <input matInput formControlName="searchText" placeholder="{{'MAPS.SEARCH' | translate}}" class="search-text-input"
+                        (ngModelChange)="search()">
                 </mat-form-field>
             </form>
         </div>

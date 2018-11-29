@@ -64,7 +64,7 @@ export class MapTableComponent implements OnInit {
       this.source = new MatTableDataSource(this.filteredArr);
       this.source.paginator = this.paginator;
       this.source.sort = this.sort;
-      this.filtered.emit(this.filteredArr);
+      this.filtered.emit({ filteredArr: this.filteredArr, dataSource: this.dataSource });
     }, 0);
 
   }
