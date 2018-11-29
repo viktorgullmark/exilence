@@ -1,9 +1,9 @@
 Exilence
 [![Github All Releases](https://img.shields.io/github/downloads/viktorgullmark/exilence/total.svg)](https://github.com/viktorgullmark/exilence/releases)
-[![Become a Patreon](https://img.shields.io/badge/patreon-%F0%9F%8E%AF-orange.svg)](https://www.patreon.com/exileparty)
 ===
-Path of Exile tracker-app used to track gear, currency, maps and more of partymembers with cross-league support.
+Path of Exile tool used to track gear, currency, maps and more of you and your party.
 
+It works just as good solo as it does in party. You could even group up with friends from different leagues to get a more social experience when not pla
 You could use this app to either improve the party-experience with your current party, or group up with your friends from different leagues while talking in discord with each other to share your character-data.
 
 Download latest release at https://github.com/viktorgullmark/exilence/releases/latest
@@ -42,18 +42,15 @@ Currently runs with:
 
 ## Help with development
 
-If you want to help with development we gladly accept pull-requests. To set up the project, install the latest angular-cli version globally. The following commands will help in setting up the client:
+If you want to help with development we gladly accept pull-requests. To set up the project, install the latest angular-cli and node version globally. The following commands will help in setting up the client:
 
 ```
 npm install -g @angular/cli
 npm install
 npm install -g --production windows-build-tools
-npm run rebuild (to bundle robot-js and node-ffi)
 npm start (to serve the project)
-npm run electron:windows (to build the installer)
+npm run electron:windows (to build the installer for production)
 ```
-
-See https://github.com/maximegris/angular-electron for additional commands.
 
 To run the API you'll need a local redis-server. 
 
