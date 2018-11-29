@@ -166,9 +166,11 @@ export class SettingsComponent implements OnInit {
   toggleResizable() {
     if (this.isResizable) {
       this.electronService.remote.getCurrentWindow().setResizable(true);
+      this.electronService.remote.getCurrentWindow().setMinimumSize(1344, 768);
       this.settingsService.set('isResizable', true);
     } else {
       this.electronService.remote.getCurrentWindow().setResizable(false);
+      this.electronService.remote.getCurrentWindow().setMinimumSize(1344, 768);
       this.settingsService.set('isResizable', false);
     }
 

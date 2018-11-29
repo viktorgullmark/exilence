@@ -8,6 +8,7 @@ All notable changes to this project will be documented in this file.
 - Now stores net worth history for two weeks until storage issues have been resolved
 - Fixed rounding of DPS-numbers
 - Fixed a bug where some areas would be missing when parsing the log
+- Fixed window-boundaries when using the resizable option
 - Added informative header in center of inspect-players page
 - Changed texts on some buttons in the login-process
 
