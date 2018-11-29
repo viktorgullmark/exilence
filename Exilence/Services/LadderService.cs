@@ -43,91 +43,115 @@ namespace Exilence.Services
 
         #region Ladder
 
-        public async Task<List<LadderPlayerModel>> GetLadderForPlayer(string league, string character)
+        public List<LadderPlayerModel> GetLadderForPlayer(string league, string character)
         {
-            TryUpdateLadder(league); //Not awaited with purpose
-
-            var leagueLadder = LadderStore.GetLadder(league);
-
-            var returnList = new List<LadderPlayerModel>();
-
-            var exists = leagueLadder.FirstOrDefault(t => t.Name == character);
-            if (exists != null)
+            if (LadderStore.GetLadderStatus(league) == null)
             {
-                var index = leagueLadder.IndexOf(exists);
+                LadderStore.SetLadderPending(league);
+            }
+            else
+            {
+                var leagueLadder = LadderStore.GetLadder(league);
+                var characterOnLadder = leagueLadder.FirstOrDefault(t => t.Name == character);
 
-                var before = leagueLadder.Where(t => t.Rank < exists.Rank && t.Rank >= (exists.Rank - 5));
-                var after = leagueLadder.Where(t => t.Rank > exists.Rank && t.Rank <= (exists.Rank + 5));
+                if (characterOnLadder != null)
+                {
+                    var index = leagueLadder.IndexOf(characterOnLadder);
+                    var before = leagueLadder.Where(t => t.Rank.Overall < characterOnLadder.Rank.Overall && t.Rank.Overall >= (characterOnLadder.Rank.Overall - 5));
+                    var after = leagueLadder.Where(t => t.Rank.Overall > characterOnLadder.Rank.Overall && t.Rank.Overall <= (characterOnLadder.Rank.Overall + 5));
 
-                returnList.AddRange(before);
-                returnList.AddRange(after);
-                returnList.Add(exists);
-
-                return returnList.OrderBy(t => t.Rank).ToList();
+                    var ladderList = new List<LadderPlayerModel>();
+                    ladderList.AddRange(before);
+                    ladderList.AddRange(after);
+                    ladderList.Add(characterOnLadder);
+                    return ladderList.OrderBy(t => t.Rank.Overall).ToList();
+                }
             }
 
             return null;
         }
 
-        public async Task TryUpdateLadder(string league)
+        public void UpdateLadders()
         {
-            var ladderStatus = LadderStore.GetLadderStatus(league);
             var anyRunning = LadderStore.AnyRunning();
-
-            if (!anyRunning && (ladderStatus == null || ladderStatus.Finished < DateTime.Now.AddMinutes(-5)))
+            if (!anyRunning)
             {
-                // Set league status to running for the current league
-                LadderStore.SetLadderRunning(league);
-
-                var oldLadder = LadderStore.GetLadder(league);
-                var newLadder = new List<LadderPlayerModel>();
-
-                var pages = Enumerable.Range(0, 25);
-                using (var rateGate = new RateGate(2, TimeSpan.FromSeconds(1)))
+                var pendingLeague = LadderStore.GetNextForUpdate();
+                if (pendingLeague != null)
                 {
-                    foreach (int page in pages)
+                    var pendingStatus = LadderStore.GetLadderStatus(pendingLeague);
+                    if (
+                        (pendingLeague == "Standard" && pendingLeague == "Hardcore" && pendingStatus.Finished < DateTime.Now.AddDays(-1)) ||
+                        (pendingLeague != "Standard" && pendingLeague != "Hardcore" && pendingStatus.Finished < DateTime.Now.AddMinutes(-5))
+                        )
                     {
-                        await rateGate.WaitToProceed();
-                        LadderApiResponse result = await FetchLadderApiPage(league, page);
-                        if (result != null)
-                        {
-                            var LadderPlayerList = result.Entries.Select(t => new LadderPlayerModel()
-                            {
-                                Name = t.Character.Name,
-                                Level = t.Character.Level,
-                                Online = t.Online,
-                                Dead = t.Dead,
-                                Account = t.Account.Name,
-                                Experience = t.Character.Experience,
-                                Experience_per_hour = 0,
-                                Rank = t.Rank,
-                                Twitch = t.Account.Twitch?.Name,
-                                Class = t.Character.Class,
-                                Class_rank = 0,
-                                Updated = DateTime.Now
-                            }).ToList();
-                            // Convert result to LadderPlayer model here
-                            newLadder.AddRange(LadderPlayerList);
-                            if (newLadder.Count == result.Total || result.Entries.Count == 0)
-                            {
-                                break;
-                            }
-                        }
-                        else
-                        {
-                            LadderStore.RemoveLadderStatus(league);
-                            break;
-                        }
+                        UpdateLadder(pendingLeague);
                     }
                 }
 
-                if (newLadder.Count > 0)
-                {
-                    newLadder = CalculateStatistics(oldLadder, newLadder);
 
-                    LadderStore.SetLadder(league, newLadder);
-                    LadderStore.SetLadderFinished(league);
+            }
+        }
+
+        private async void UpdateLadder(string league)
+        {
+            LadderStore.SetLadderRunning(league);
+
+            var oldLadder = LadderStore.GetLadder(league);
+            var newLadder = new List<LadderPlayerModel>();
+
+            var pages = Enumerable.Range(0, 5);
+            using (var rateGate = new RateGate(2, TimeSpan.FromSeconds(1)))
+            {
+                foreach (int page in pages)
+                {
+                    await rateGate.WaitToProceed();
+                    LadderApiResponse result = await FetchLadderApiPage(league, page);
+                    if (result != null)
+                    {
+                        var LadderPlayerList = result.Entries.Select(t => new LadderPlayerModel()
+                        {
+                            Name = t.Character.Name,
+                            Level = t.Character.Level,
+                            Online = t.Online,
+                            Dead = t.Dead,
+                            Account = t.Account.Name,
+                            Experience = t.Character.Experience,
+                            ExperiencePerHour = 0,
+                            Rank = new LadderPlayerRankModel()
+                            {
+                                Overall = t.Rank
+                            },
+                            Depth = new LadderPlayerDepthModel()
+                            {
+                                Solo = t.Character.Depth != null ? t.Character.Depth.Solo : 0,
+                                Group = t.Character.Depth != null ? t.Character.Depth.@default : 0
+                            },
+                            Twitch = t.Account.Twitch?.Name,
+                            Class = t.Character.Class,
+                            Updated = DateTime.Now
+                        }).ToList();
+                        // Convert result to LadderPlayer model here
+                        newLadder.AddRange(LadderPlayerList);
+                        if (newLadder.Count == result.Total || result.Entries.Count == 0)
+                        {
+                            break;
+                        }
+                    }
+                    else
+                    {
+                        LadderStore.RemoveLadderStatus(league);
+                        break;
+                    }
                 }
+            }
+
+            if (newLadder.Count > 0)
+            {
+                newLadder = CalculateStatistics(oldLadder, newLadder);
+
+                LadderStore.SetLadder(league, newLadder);
+                LadderStore.SetLadderFinished(league);
             }
         }
 
@@ -135,6 +159,10 @@ namespace Exilence.Services
         {
             foreach (var newEntry in newLadder)
             {
+                newEntry.Depth.Group = newLadder.Count(t => t.Depth.Group > newEntry.Depth.Group) + 1;
+                newEntry.Depth.Solo = newLadder.Count(t => t.Depth.Solo > newEntry.Depth.Solo) + 1;
+                newEntry.Rank.Class = newLadder.Where(t => t.Class == newEntry.Class).Where(x => x.Rank.Overall < newEntry.Rank.Overall).Count() + 1;
+
                 var oldLadderEntry = oldLadder.FirstOrDefault(t => t.Name == newEntry.Name);
                 if (oldLadderEntry != null && oldLadderEntry.Updated != DateTime.MinValue)
                 {
@@ -142,7 +170,7 @@ namespace Exilence.Services
                     var oneHour = (1 * 60 * 60);
                     var timeBetweenUpdates = newEntry.Updated.ToUnixTimeStamp() - oldLadderEntry.Updated.ToUnixTimeStamp();
                     var gainOverTime = (oneHour / timeBetweenUpdates) * expGain;
-                    newEntry.Experience_per_hour = (long)gainOverTime;
+                    newEntry.ExperiencePerHour = (long)gainOverTime;
                 }
             }
             return newLadder;

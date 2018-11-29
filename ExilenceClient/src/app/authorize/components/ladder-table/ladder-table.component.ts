@@ -52,11 +52,11 @@ export class LadderTableComponent implements OnInit {
           account: player.account,
           dead: player.dead,
           experience: player.experience,
-          rank: player.rank,
+          rank: player.rank.overall,
           twitch: player.twitch,
           class: player.class,
-          class_rank: player.class_rank,
-          experience_per_hour: this.numberWithSpaces(player.experience_per_hour)
+          class_rank: player.rank.class,
+          experiencePerHour: this.numberWithSpaces(player.experiencePerHour)
         };
 
         this.dataSource.push(newPlayerObj);

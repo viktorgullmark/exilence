@@ -13,7 +13,6 @@ import { PartyService } from './party.service';
 
 @Injectable()
 export class LadderService {
-  public url = 'http://poe-racing.com/api/ladder/';
   localPlayer: Player;
   isPolling = false;
   cooldown = false;
@@ -59,7 +58,7 @@ export class LadderService {
     this.logService.log(`Retriving ladder for league: ${league} and character: ${characterName}`);
     const parameters = `?character=${characterName}&league=${league}`;
     this.analyticsService.sendEvent('ladder', `GET LadderInfo`);
-    return this.http.get(AppConfig.url + 'api/stats/ladder' + parameters)
+    return this.http.get(AppConfig.url + 'api/ladder' + parameters)
       .catch(e => {
         return Observable.of(null);
       });

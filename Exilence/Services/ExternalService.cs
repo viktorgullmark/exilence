@@ -14,7 +14,7 @@ namespace Exilence.Services
 
         private readonly ILogger<ExternalService> _log;
         
-        private bool _rateLimited;
+        //private bool _rateLimited;
 
         public ExternalService(ILogger<ExternalService> log)
         {
@@ -39,15 +39,14 @@ namespace Exilence.Services
                                 return await content.ReadAsStringAsync();
                             }
                         }
-                        else
-                        {
-                            _log.LogError($"Response Error: {res.ReasonPhrase}");
-                            if (res.StatusCode == HttpStatusCode.TooManyRequests)
-                            {
-                                _rateLimited = true;
-                            }
-                            return null;
-                        }
+                        //else
+                        //{
+                        //    _log.LogError($"Response Error: {res.ReasonPhrase}");
+                        //    if (res.StatusCode == HttpStatusCode.TooManyRequests)
+                        //    {
+                        //    }
+                        //}
+                        return null;
                     }
                 }
             }

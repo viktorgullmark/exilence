@@ -21,7 +21,7 @@ namespace Exilence.Store
         {
             if (Ladders.ContainsKey(league))
             {
-                return Ladders[league].OrderBy(t => t.Rank).ToList();
+                return Ladders[league].OrderBy(t => t.Rank.Overall).ToList();
             }
 
             return new List<LadderPlayerModel>();
@@ -45,7 +45,20 @@ namespace Exilence.Store
                 {
                     Running = true,
                     Started = DateTime.Now,
-                    Finished = null
+                    Finished = DateTime.MinValue
+                });
+            }
+        }
+
+        public static void SetLadderPending(string league)
+        {
+            if (!LadderStatus.ContainsKey(league))
+            {
+                LadderStatus.Add(league, new LadderStatusModel()
+                {
+                    Running = false,
+                    Started = DateTime.MinValue,
+                    Finished = DateTime.MinValue
                 });
             }
         }
@@ -65,7 +78,7 @@ namespace Exilence.Store
 
         public static LadderStatusModel GetLadderStatus(string league)
         {
-            if(LadderStatus.ContainsKey(league))
+            if (LadderStatus.ContainsKey(league))
             {
                 return LadderStatus[league];
             }
@@ -80,6 +93,15 @@ namespace Exilence.Store
             {
                 LadderStatus.Remove(league);
             }
+        }
+
+        public static string GetNextForUpdate()
+        {
+            if (LadderStatus.Count > 0)
+            {
+                return LadderStatus.OrderByDescending(t => t.Value.Finished).Last().Key;
+            }
+            return null;
         }
 
         public static Dictionary<string, LadderStatusModel> GeAllLadderStatuses()

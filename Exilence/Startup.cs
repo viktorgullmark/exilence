@@ -72,7 +72,6 @@ namespace Exilence
                 app.UseDeveloperExceptionPage();
             }
 
-
             //Enable sessions
             app.UseSession();
             app.UseMvc();
@@ -83,6 +82,7 @@ namespace Exilence
             app.UseHangfireServer();
             app.UseHangfireDashboard();
 
+            RecurringJob.AddOrUpdate<ILadderService>(ls => ls.UpdateLadders(), Cron.MinuteInterval(1));
 
             //if (env.IsProduction())
             //{
