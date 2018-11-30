@@ -3,8 +3,7 @@ Exilence
 ===
 Path of Exile tool used to track gear, currency, maps and more of you and your party. Formerly known as ExileParty.
 
-It works just as good solo as it does in party. You could even group up with friends from different leagues to get a more social experience when not pla
-You could use this app to either improve the party-experience with your current party, or group up with your friends from different leagues while talking in discord with each other to share your character-data.
+It works just as good solo as it does in party. You could even group up with friends from different leagues to get a more social experience and staying up-to-date on each others progression.
 
 Download latest release at https://github.com/viktorgullmark/exilence/releases/latest
 
