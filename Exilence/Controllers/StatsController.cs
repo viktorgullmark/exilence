@@ -18,13 +18,11 @@ namespace Exilence
     {
         private IDistributedCache _cache;
         private ILogger<StatsController> _log;
-        private readonly ILadderService _ladderService;
 
-        public StatsController(IDistributedCache cache, ILadderService ladderService, ILogger<StatsController> log)
+        public StatsController(IDistributedCache cache, ILogger<StatsController> log)
         {
             _log = log;
             _cache = cache;
-            _ladderService = ladderService;
         }
 
         // GET: /<controller>/
@@ -37,11 +35,10 @@ namespace Exilence
             var parties = await _cache.GetAsync<Dictionary<string, string>>("ConnectionIndex") ?? new Dictionary<string, string>();
 
             foreach (var partyName in parties.Select(t => t.Value).Distinct().ToList())
-            {
-
-                var party = await _cache.GetAsync<PartyModel>($"party:{partyName}");
-                if (party != null)
+            {   
+                if (partyName != null)
                 {
+                    var party = await _cache.GetAsync<PartyModel>($"party:{partyName}");
                     PartyStatistics partyStats = new PartyStatistics { };
                     partyStats.Players = party.Players.Select(t => t.Character.Name).ToList();
                     partyList.Add(partyStats);
@@ -56,38 +53,18 @@ namespace Exilence
             {
                 totalParties = partyList.Count(),
                 totalPlayers = players,
-                Parties = partyList,
-                LeagueStatus = statuses.OrderByDescending(t => t.Value.Finished).Select(x => new {
+                parties = partyList,
+                leagues = statuses.OrderByDescending(t => t.Value.Finished).Select(x => new {
                     Name = x.Key,
                     Running = x.Value.Running,
                     Started = x.Value.Started.ToString("yyyy-MM-dd HH:mm:ss"),
-                    Finished = x.Value.Finished?.ToString("yyyy-MM-dd HH:mm:ss")
+                    Finished = x.Value.Finished.ToString("yyyy-MM-dd HH:mm:ss")
                 })
             };
 
             return Ok(response);
         }
 
-        [Route("Ladder")]
-        public async Task<IActionResult> Ladder(string league, string character)
-        {
-            var list = await _ladderService.GetLadderForPlayer(league, character);
 
-            return Ok(new { List = list });
-        }
-
-
-        [Route("Ladder/Reset")]
-        public async Task<IActionResult> LadderReset()
-        {
-            var statuses = LadderStore.GeAllLadderStatuses();
-            foreach (var status in statuses)
-            {
-                LadderStore.SetLadderFinished(status.Key);
-            }
-            statuses = LadderStore.GeAllLadderStatuses();
-
-            return Ok(new { LeagueStatus = statuses.OrderByDescending(t => t.Value.Started) });
-        }
     }
 }

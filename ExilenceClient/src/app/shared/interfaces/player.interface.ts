@@ -24,6 +24,17 @@ export interface RecentPlayer {
     name: string;
 }
 
+export interface Rank {
+    overall: number;
+    class: number;
+    depth: number;
+}
+
+export interface Depth {
+    solo: number;
+    group: number;
+}
+
 export interface LadderPlayer {
     name: string;
     level: number;
@@ -31,11 +42,11 @@ export interface LadderPlayer {
     dead: boolean;
     account: string;
     experience: number;
-    experience_per_hour: number;
-    rank: number;
+    experiencePerHour: number;
+    rank: Rank;
+    depth: Depth;
     twitch: string;
     class: string;
-    class_rank: number;
     updated: Date;
 }
 

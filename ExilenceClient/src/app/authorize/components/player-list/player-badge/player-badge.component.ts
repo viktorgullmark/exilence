@@ -1,4 +1,5 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
+
 import { Player } from '../../../../shared/interfaces/player.interface';
 import { PartyService } from '../../../../shared/providers/party.service';
 import { RobotService } from '../../../../shared/providers/robot.service';
@@ -42,7 +43,7 @@ export class PlayerBadgeComponent implements OnInit {
 
   getRanking() {
     if (this.player.ladderInfo !== null && !this.localPlayer) {
-      return this.player.ladderInfo.find(x => x.name === this.player.character.name).rank;
+      return this.player.ladderInfo.find(x => x.name === this.player.character.name).rank.overall;
     } else {
       return '';
     }

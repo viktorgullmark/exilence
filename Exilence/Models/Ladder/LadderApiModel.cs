@@ -13,7 +13,15 @@ namespace Exilence.Models.Ladder
         public string @Class { get; set; }
         public string Id { get; set; }
         public long Experience { get; set; }
+        public Depth Depth { get; set; }
     }
+
+    public class Depth
+    {
+        public int @default { get; set; }
+        public int Solo { get; set; }
+    }
+
     [Serializable]
     public class LadderApiGuild
     {
