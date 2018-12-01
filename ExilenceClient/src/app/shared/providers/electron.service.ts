@@ -90,12 +90,24 @@ export class ElectronService {
   }
 
 
-  private compress(object: any, callback: any) {
+  compress(object: any, callback: any) {
     const jsonString = JSON.stringify(object);
     this.zlib.gzip(jsonString, (err, buffer) => {
       if (!err) {
         const string = buffer.toString('base64');
         callback(string);
+      } else {
+        this.logService.log(err, null, true);
+      }
+    });
+  }
+
+  decompress(base64string: string, callback: any) {
+    const buffer = Buffer.from(base64string, 'base64');
+    this.zlib.gunzip(buffer, (err, jsonString) => {
+      if (!err) {
+        const obj = JSON.parse(jsonString);
+        callback(obj);
       } else {
         this.logService.log(err, null, true);
       }

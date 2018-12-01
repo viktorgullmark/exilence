@@ -22,6 +22,7 @@ export class SettingsComponent implements OnInit {
   hideTooltips = false;
   sessionId: string;
   sessionIdValid: boolean;
+  uploaded = false;
 
   // temporary arrays
   modifierKeys = [
@@ -191,7 +192,13 @@ export class SettingsComponent implements OnInit {
     this.settingsService.set('diaShown_partySummary', false);
   }
 
-  uploadLog() {
+  upload() {
     this.electronService.sendLog();
+    this.uploaded = true;
+  }
+
+  clearSettings() {
+    this.settingsService.deleteAll();
+    this.electronService.ipcRenderer.send('relaunch');
   }
 }

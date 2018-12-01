@@ -90,6 +90,7 @@
     },
     "SETTINGS": {
         "RESET_DIALOGS": "Reset tutorial-dialogs",
-        "UPLOAD_FILE": "Upload settings and log file."
+        "UPLOAD_FILE": "Upload settings and log file",
+        "CLEAR_SETINGS_RELAUNCH": "Clear settings and relaunch Exilence"
     }
 }

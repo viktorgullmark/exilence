@@ -23,7 +23,7 @@ namespace Exilence.Controllers
 
             var timestamp = DateTime.Now.ToString("yyyy-MM-dd_HH-mm");
 
-            var logPath = $"Logs\\{log.Account}\\{timestamp}\\";
+            var logPath = $"Logs\\Users\\{log.Account}\\{timestamp}\\";
 
             if (!Directory.Exists(logPath))
                 Directory.CreateDirectory(logPath);
