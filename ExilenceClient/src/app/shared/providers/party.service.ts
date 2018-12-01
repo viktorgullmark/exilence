@@ -91,8 +91,8 @@ export class PartyService {
     });
 
     this._hubConnection.on('EnteredParty', (partyData: string, playerData: string) => {
-      this.decompress(partyData, (party: Party) => {
-        this.decompress(playerData, (player: Player) => {
+      this.electronService.decompress(partyData, (party: Party) => {
+        this.electronService.decompress(playerData, (player: Player) => {
           // if player is self, set history based on local data
           const playerObj = Object.assign({}, player);
           if (playerObj.account === this.currentPlayer.account) {
@@ -120,7 +120,7 @@ export class PartyService {
     });
 
     this._hubConnection.on('PlayerUpdated', (data: string) => {
-      this.decompress(data, (player: Player) => {
+      this.electronService.decompress(data, (player: Player) => {
         const index = this.party.players.indexOf(this.party.players.find(x => x.account === player.account));
 
         this.party.players[index] = player;
@@ -150,7 +150,7 @@ export class PartyService {
     });
 
     this._hubConnection.on('PlayerJoined', (data: string) => {
-      this.decompress(data, (player: Player) => {
+      this.electronService.decompress(data, (player: Player) => {
         this.party.players = this.party.players.filter(x => x.character.name !== player.character.name);
         this.party.players.push(player);
         this.partyUpdated.next(this.party);
@@ -160,7 +160,7 @@ export class PartyService {
     });
 
     this._hubConnection.on('PlayerLeft', (data: string) => {
-      this.decompress(data, (player: Player) => {
+      this.electronService.decompress(data, (player: Player) => {
         this.party.players = this.party.players.filter(x => x.account !== player.account);
         this.partyUpdated.next(this.party);
         this.updatePlayerLists(this.party);
@@ -257,7 +257,7 @@ export class PartyService {
       .subscribe((equipment: EquipmentResponse) => {
         player = this.externalService.setCharacter(equipment, player);
         if (this._hubConnection) {
-          this.compress(player, (data) => this._hubConnection.invoke('UpdatePlayer', this.party.name, data).catch((e) => {
+          this.electronService.compress(player, (data) => this._hubConnection.invoke('UpdatePlayer', this.party.name, data).catch((e) => {
           }));
         }
       });
@@ -281,7 +281,7 @@ export class PartyService {
       const areasToSend = HistoryHelper.filterAreas(playerToSend.pastAreas, oneHourAgo);
       playerToSend.netWorthSnapshots = historyToSend;
       playerToSend.pastAreas = areasToSend;
-      this.compress(playerToSend, (data) => this._hubConnection.invoke('JoinParty', partyName, data));
+      this.electronService.compress(playerToSend, (data) => this._hubConnection.invoke('JoinParty', partyName, data));
     }
   }
 
@@ -289,7 +289,7 @@ export class PartyService {
     this.initParty();
     if (partyName !== '') {
       if (this._hubConnection) {
-        this.compress(player, (data) => this._hubConnection.invoke('LeaveParty', partyName, data));
+        this.electronService.compress(player, (data) => this._hubConnection.invoke('LeaveParty', partyName, data));
       }
     }
   }
@@ -410,31 +410,5 @@ export class PartyService {
       );
     }
   }
-
   //#endregion
-
-  compress(object: any, callback: any) {
-    const jsonString = JSON.stringify(object);
-    this.electronService.zlib.gzip(jsonString, (err, buffer) => {
-      if (!err) {
-        const string = buffer.toString('base64');
-        callback(string);
-      } else {
-        this.logService.log(err, null, true);
-      }
-    });
-  }
-
-  decompress(base64string: string, callback: any) {
-    const buffer = Buffer.from(base64string, 'base64');
-    this.electronService.zlib.gunzip(buffer, (err, jsonString) => {
-      if (!err) {
-        const obj = JSON.parse(jsonString);
-        callback(obj);
-      } else {
-        this.logService.log(err, null, true);
-      }
-    });
-  }
-
 }

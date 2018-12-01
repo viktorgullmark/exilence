@@ -1,13 +1,22 @@
 import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { SettingsComponent } from './settings.component';
-import { SharedModule } from '../../shared/shared.module';
-import {
-  MatDividerModule, MatInputModule, MatTabsModule, MatIconModule, MatCheckboxModule,
-  MatSelectModule, MatFormFieldModule, MatOptionModule, MatGridListModule, MatButtonModule
-} from '@angular/material';
-import { StashtabListModule } from '../components/stashtab-list/stashtab-list.module';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import {
+  MatButtonModule,
+  MatCheckboxModule,
+  MatDividerModule,
+  MatExpansionModule,
+  MatFormFieldModule,
+  MatGridListModule,
+  MatIconModule,
+  MatInputModule,
+  MatOptionModule,
+  MatSelectModule,
+  MatTabsModule,
+} from '@angular/material';
+
+import { SharedModule } from '../../shared/shared.module';
+import { StashtabListModule } from '../components/stashtab-list/stashtab-list.module';
+import { SettingsComponent } from './settings.component';
 
 @NgModule({
   imports: [
@@ -25,7 +34,8 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
     MatFormFieldModule,
     MatGridListModule,
     MatButtonModule,
-    MatDividerModule
+    MatDividerModule,
+    MatExpansionModule
   ],
   declarations: [SettingsComponent]
 })
