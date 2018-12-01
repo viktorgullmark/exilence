@@ -39,7 +39,7 @@ export class LadderService {
             .subscribe(data => {
               if (data !== null) {
                 const player = this.localPlayer;
-                player.ladderInfo = data.list;
+                player.ladderInfo = data.ladder;
                 this.partyService.updatePlayer(player);
               }
             });
@@ -58,7 +58,7 @@ export class LadderService {
     this.logService.log(`Retriving ladder for league: ${league} and character: ${characterName}`);
     const parameters = `?character=${characterName}&league=${league}`;
     this.analyticsService.sendEvent('ladder', `GET LadderInfo`);
-    return this.http.get(AppConfig.url + 'api/ladder' + parameters)
+    return this.http.get(AppConfig.url + 'api/ladder/character' + parameters)
       .catch(e => {
         this.logService.log(`Retriving ladder for league: ${league} and character: ${characterName}`, e, true);
         return Observable.of(null);
