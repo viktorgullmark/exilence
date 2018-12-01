@@ -25,7 +25,7 @@
     "GRAPH": {
         "SHOW": "Show graph",
         "HIDE": "Hide graph",
-        "RESET": "Reset graph",
+        "RESET": "Clear history",
         "REPORT": "Send net worth report",
         "POPOUT": "Pop out"
     },
