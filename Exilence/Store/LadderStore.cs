@@ -6,6 +6,12 @@ using System.Linq;
 
 namespace Exilence.Store
 {
+    /*
+     * This class is only used since redis for some reason decided to not work well with updating
+     * the running status of leagues. Meaning that leagues didn't get updated since one was stuck on running.
+     * Dosen't matter that much tho since both of the implementations are stored in memory, the bad part is
+     * that we lose all ladders when we re-deploy the API.
+     * */
     public class LadderStore
     {
         private static Dictionary<string, LadderStatusModel> LadderStatus { get; set; }

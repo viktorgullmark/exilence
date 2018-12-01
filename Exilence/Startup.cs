@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Timers;
 using Exilence.Hubs;
 using Exilence.Interfaces;
 using Exilence.Services;
@@ -21,9 +22,13 @@ namespace Exilence
 {
     public class Startup
     {
+        private Timer leagueTimer;
+
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
+            leagueTimer = new Timer((1000 * 15));
+            leagueTimer.Elapsed += LeagueTimer_Elapsed;
         }
 
         public IConfiguration Configuration { get; }
@@ -82,12 +87,7 @@ namespace Exilence
             app.UseHangfireServer();
             app.UseHangfireDashboard();
 
-            RecurringJob.AddOrUpdate<ILadderService>(ls => ls.UpdateLadders(), Cron.MinuteInterval(1));
-
-            //if (env.IsProduction())
-            //{
-                //BackgroundJob.Enqueue<ICharacterService>(cs => cs.StartTradeIndexing());
-            //}
+            //RecurringJob.AddOrUpdate<ILadderService>(ls => ls.UpdateLadders(), Cron.MinuteInterval(1));
 
             app.UseSignalR(routes =>
             {
@@ -99,6 +99,13 @@ namespace Exilence
             });
 
             LadderStore.Initialize();
+            leagueTimer.Start();
+        }
+
+        // Using a timer to trigger the event since hangfire does not go below 1 minute intervals.
+        private void LeagueTimer_Elapsed(object sender, ElapsedEventArgs e)
+        {
+            BackgroundJob.Enqueue<ILadderService>(ls => ls.UpdateLadders());
         }
     }
 }

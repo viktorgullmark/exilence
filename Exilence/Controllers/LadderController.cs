@@ -22,18 +22,18 @@ namespace Exilence.Controllers
             _log = log;
             _ladderService = ladderService;
         }
-        
-        [Route("")]
-        public IActionResult Index(string league, string character)
-        {
-            var list = _ladderService.GetLadderForPlayer(league, character);
-            return Ok(new { Ladder = list });
-        }
 
-        [Route("all")]
+        [Route("")]
         public IActionResult All(string league, bool full = false)
         {
             var list = _ladderService.GetLadderForLeague(league, full);
+            return Ok(new { Ladder = list });
+        }
+
+        [Route("character")]
+        public IActionResult Index(string league, string character)
+        {
+            var list = _ladderService.GetLadderForPlayer(league, character);
             return Ok(new { Ladder = list });
         }
 
