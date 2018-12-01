@@ -430,6 +430,7 @@ export class LoginComponent implements OnInit {
 
         const oneHourAgo = (Date.now() - (1 * 60 * 60 * 1000));
 
+        this.mapService.updateLocalPlayerAreas(this.areaHistory);
         this.player.pastAreas = HistoryHelper.filterAreas(this.areaHistory, oneHourAgo);
 
         this.externalService.validateSessionId(
