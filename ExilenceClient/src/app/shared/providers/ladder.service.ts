@@ -60,6 +60,7 @@ export class LadderService {
     this.analyticsService.sendEvent('ladder', `GET LadderInfo`);
     return this.http.get(AppConfig.url + 'api/ladder/character' + parameters)
       .catch(e => {
+        this.logService.log(`Retriving ladder for league: ${league} and character: ${characterName}`, e, true);
         return Observable.of(null);
       });
   }
