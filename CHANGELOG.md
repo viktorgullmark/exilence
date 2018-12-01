@@ -1,11 +1,12 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
-## [0.8.0] - 2018-11-30
+## [0.8.0] - 2018-12-XX
 - Renamed the app to Exilence (former ExileParty)
 - Improved performance for players with large area-history
 - Improved ladder-functionality
 - Added export-button(.csv) for areas
+- Added help-section under settings, with the ability to send your log-file to us
 - Added informative header in center of inspect-players page
 - Now stores net worth history for two weeks until storage issues have been resolved
 - Fixed rounding of DPS-numbers
