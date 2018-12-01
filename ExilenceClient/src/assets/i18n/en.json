@@ -30,8 +30,8 @@
         "POPOUT": "Pop out"
     },
     "ROBOT": {
-        "GAME":  "Game",
-        "CLIPBOARD":  "Clipboard"
+        "GAME": "Game",
+        "CLIPBOARD": "Clipboard"
     },
     "NOTIFICATION": {
         "UPDATE_AVAILABLE": "There is a new version of Exilence available. Please exit and restart the application to update."
@@ -89,6 +89,7 @@
         "SAVE": "Save keybinds"
     },
     "SETTINGS": {
-        "RESET_DIALOGS": "Reset tutorial-dialogs"
+        "RESET_DIALOGS": "Reset tutorial-dialogs",
+        "UPLOAD_FILE": "Upload settings and log file."
     }
 }

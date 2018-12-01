@@ -1,9 +1,12 @@
+import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import * as childProcess from 'child_process';
 import { ipcRenderer, remote, shell, webFrame } from 'electron';
 import * as fs from 'fs';
 
+import { AppConfig } from '../../../environments/environment';
 import { AnalyticsService } from './analytics.service';
+import { LogService } from './log.service';
 
 // If you import a module but never use any of the imported values other than as TypeScript types,
 // the resulting javascript file will look as if you never imported the module at all.
@@ -27,7 +30,9 @@ export class ElectronService {
   structType: any;
 
   constructor(
-    private analyticsService: AnalyticsService // Not used but instanciated here
+    private analyticsService: AnalyticsService, // Not used but instanciated here
+    private logService: LogService,
+    private http: HttpClient
   ) {
     // Conditional imports
     if (this.isElectron()) {
@@ -47,13 +52,54 @@ export class ElectronService {
       this.structType = window.require('ref-struct');
 
       this.robot = window.require('robot-js');
-
-      const process = this.robot.Process.getCurrent();
     }
   }
 
   isElectron = () => {
     return window && window.process && window.process.type;
+  }
+
+
+  sendLog() {
+
+    const path = this.remote.app.getPath('appData');
+    const logPath = path + '\\exilence\\log.log';
+
+    this.fs.readFile(logPath, 'utf8', (err, logData) => {
+      this.compress(logData, (compressedData) => {
+        this.sendLogToServer(compressedData).subscribe(res => {
+          this.logService.log('Log successfully sent log to server.');
+        }, (error) => {
+          this.logService.log('Could not send log to server.', error, true);
+        });
+      });
+    });
+  }
+
+  private sendLogToServer(log: string) {
+
+    const accountName = this.settings.get('account').accountName;
+    const settings = this.settings.getAll();
+    const stringSettings = JSON.stringify(settings);
+
+    return this.http.post(AppConfig.url + 'api/log/', {
+      account: accountName,
+      settings: stringSettings,
+      data: log
+    });
+  }
+
+
+  private compress(object: any, callback: any) {
+    const jsonString = JSON.stringify(object);
+    this.zlib.gzip(jsonString, (err, buffer) => {
+      if (!err) {
+        const string = buffer.toString('base64');
+        callback(string);
+      } else {
+        this.logService.log(err, null, true);
+      }
+    });
   }
 
 }

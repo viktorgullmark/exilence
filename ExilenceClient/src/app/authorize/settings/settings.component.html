@@ -20,10 +20,16 @@
         &nbsp;Window
       </ng-template>
     </mat-tab>
-    <mat-tab #generalsettings id="general">
+    <mat-tab #general settings id="general">
       <ng-template mat-tab-label>
         <mat-icon class="tab-icon">help</mat-icon>
         &nbsp;Tutorials
+      </ng-template>
+    </mat-tab>
+    <mat-tab #general settings id="debug">
+      <ng-template mat-tab-label>
+        <mat-icon class="tab-icon">cloud_upload</mat-icon>
+        &nbsp;Help
       </ng-template>
     </mat-tab>
   </mat-tab-group>
@@ -136,7 +142,8 @@
       <p class="setting-desc-text">
         Check this setting if you want Exilence to be resizable
       </p>
-      <mat-checkbox class="setting-checkbox" [(ngModel)]="isResizable" (ngModelChange)="toggleResizable()">Enable resize of window</mat-checkbox>
+      <mat-checkbox class="setting-checkbox" [(ngModel)]="isResizable" (ngModelChange)="toggleResizable()">Enable
+        resize of window</mat-checkbox>
     </div>
   </div>
 </div>
@@ -160,3 +167,21 @@
     </div>
   </div>
 </div>
+
+<div [hidden]="selectedIndex != 4">
+  <div class="setting-tab-content">
+    <h3 class="mat-h4 page-header">
+      This page allows you to upload your current settings and log file to the Exilence server.
+      <br /><br />
+      Only do this if you been asked to and don't forget to ping us with your Path of Exile account name on Discord
+      after so we can look into any issue you might have.
+    </h3>
+    <mat-divider class="divider"></mat-divider>
+    <div class="setting-inner-content">
+      <p class="setting-desc-text">
+        Press this button to upload.
+      </p>
+      <button mat-raised-button color="primary" (click)="uploadLog()" type="button">{{'SETTINGS.UPLOAD_FILE' |
+        translate}}</button>
+    </div>
+  </div>

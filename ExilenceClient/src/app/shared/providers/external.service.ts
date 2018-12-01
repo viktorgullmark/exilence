@@ -17,7 +17,6 @@ import { Stash } from '../interfaces/stash.interface';
 import { AnalyticsService } from './analytics.service';
 import { ElectronService } from './electron.service';
 import { LogService } from './log.service';
-import { Character } from '../interfaces/character.interface';
 
 @Injectable()
 export class ExternalService {

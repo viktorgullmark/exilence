@@ -2,13 +2,12 @@ import { Component, Inject, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 
 import { Keys } from '../../shared/interfaces/key.interface';
-import { Keybind } from '../../shared/interfaces/keybind.interface';
 import { AnalyticsService } from '../../shared/providers/analytics.service';
 import { ElectronService } from '../../shared/providers/electron.service';
 import { KeybindService } from '../../shared/providers/keybind.service';
+import { SessionService } from '../../shared/providers/session.service';
 import { SettingsService } from '../../shared/providers/settings.service';
 import { StashtabListComponent } from '../components/stashtab-list/stashtab-list.component';
-import { SessionService } from '../../shared/providers/session.service';
 
 @Component({
   selector: 'app-settings',
@@ -190,5 +189,9 @@ export class SettingsComponent implements OnInit {
     this.settingsService.set('diaShown_maps', false);
     this.settingsService.set('diaShown_loginfo', false);
     this.settingsService.set('diaShown_partySummary', false);
+  }
+
+  uploadLog() {
+    this.electronService.sendLog();
   }
 }
