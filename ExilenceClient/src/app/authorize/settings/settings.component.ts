@@ -2,9 +2,11 @@ import { Component, Inject, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 
 import { Keys } from '../../shared/interfaces/key.interface';
+import { AlertService } from '../../shared/providers/alert.service';
 import { AnalyticsService } from '../../shared/providers/analytics.service';
 import { ElectronService } from '../../shared/providers/electron.service';
 import { KeybindService } from '../../shared/providers/keybind.service';
+import { LogService } from '../../shared/providers/log.service';
 import { SessionService } from '../../shared/providers/session.service';
 import { SettingsService } from '../../shared/providers/settings.service';
 import { StashtabListComponent } from '../components/stashtab-list/stashtab-list.component';
@@ -80,7 +82,9 @@ export class SettingsComponent implements OnInit {
     private electronService: ElectronService,
     private settingsService: SettingsService,
     private keybindService: KeybindService,
-    private sessionService: SessionService
+    private sessionService: SessionService,
+    private alertService: AlertService,
+    private logService: LogService
   ) {
     this.form = fb.group({
       searchText: ['']
@@ -194,7 +198,14 @@ export class SettingsComponent implements OnInit {
 
   upload() {
     this.electronService.sendLog();
-    this.uploaded = true;
+    setTimeout(() => {
+      this.uploaded = true;
+      if (this.logService.lastError === false) {
+        this.alertService.showAlert({ message: 'Information sent to Exilence server.', action: 'OK' });
+      } else {
+        this.alertService.showAlert({ message: 'Could not send information to Exilence server.', action: 'OK' });
+      }
+    }, 1000);
   }
 
   clearSettings() {

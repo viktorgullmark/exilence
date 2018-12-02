@@ -172,12 +172,8 @@
   <div class="setting-tab-content">
     <h3 class="mat-h4 page-header">
       This page is aimed to help you resolve any problems you might have with Exilence.
-      <br /><br />
-      You can always contact us on Discord if you have any questions or problems using Exilence.
-      <br /><br />
-      The first step below will clear all saved data and settings you have and return Exilence to the state when you
-      first installed the application. The second step is used when the problem still persists after step 1. Make sure
-      to ping us on Discord after step 2 so we can investigate your issue further.
+      Know that you can always contact us on <a class="inline-link" (click)="openLink('https://discord.gg/ymr3VnA')">Discord</a>
+      if you have any questions or problems using Exilence.
     </h3>
     <mat-divider class="divider"></mat-divider>
     <div class="setting-inner-content">
@@ -185,13 +181,13 @@
         <mat-expansion-panel [expanded]="true">
           <mat-expansion-panel-header>
             <mat-panel-title>
-              <b>Step 1: </b>&nbsp; Clear all settings
+              <b>Step 1: </b>&nbsp; Clear all settings and saved data.
             </mat-panel-title>
           </mat-expansion-panel-header>
           <p class="setting-desc-text">
             This will clear all your saved data and settings including areas and networth.
           </p>
-          <button mat-raised-button color="primary" (click)="clearSettings()" [disabled]="uploaded" type="button">{{'SETTINGS.CLEAR_SETINGS_RELAUNCH'
+          <button mat-raised-button color="primary" (click)="clearSettings()" type="button">{{'SETTINGS.CLEAR_SETINGS_RELAUNCH'
             | translate}}</button>
         </mat-expansion-panel>
         <mat-expansion-panel>

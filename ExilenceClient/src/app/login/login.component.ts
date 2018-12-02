@@ -4,7 +4,9 @@ import { MatDialog, MatStep, MatStepper } from '@angular/material';
 import { Router } from '@angular/router';
 import { forkJoin } from 'rxjs';
 
+import { InfoDialogComponent } from '../authorize/components/info-dialog/info-dialog.component';
 import { LeagueChangedDialogComponent } from '../shared/components/league-changed-dialog/league-changed-dialog.component';
+import { HistoryHelper } from '../shared/helpers/history.helper';
 import { AccountInfo } from '../shared/interfaces/account-info.interface';
 import { ExtendedAreaInfo } from '../shared/interfaces/area.interface';
 import { Character } from '../shared/interfaces/character.interface';
@@ -17,12 +19,10 @@ import { AnalyticsService } from '../shared/providers/analytics.service';
 import { ElectronService } from '../shared/providers/electron.service';
 import { ExternalService } from '../shared/providers/external.service';
 import { LadderService } from '../shared/providers/ladder.service';
-import { SessionService } from '../shared/providers/session.service';
-import { SettingsService } from '../shared/providers/settings.service';
 import { LogMonitorService } from '../shared/providers/log-monitor.service';
 import { MapService } from '../shared/providers/map.service';
-import { InfoDialogComponent } from '../authorize/components/info-dialog/info-dialog.component';
-import { HistoryHelper } from '../shared/helpers/history.helper';
+import { SessionService } from '../shared/providers/session.service';
+import { SettingsService } from '../shared/providers/settings.service';
 
 @Component({
     selector: 'app-login',
@@ -376,15 +376,7 @@ export class LoginComponent implements OnInit {
 
                 const player = this.externalService.setCharacter(data, this.player);
                 this.player = player;
-                this.ladderService.getLadderInfoForCharacter(this.player.character.league, this.player.character.name).subscribe(
-                    res => {
-                        if (res !== null && res.list !== null) {
-                            this.player.ladderInfo = res.list;
-                        }
-                        this.completeLogin();
-                    },
-                    err => this.completeLogin()
-                );
+                this.completeLogin();
             });
     }
 
@@ -459,6 +451,7 @@ export class LoginComponent implements OnInit {
             this.sessionService.initSession(this.form.sessionId);
             this.isLoading = false;
             this.settingsService.set('lastLeague', this.leagueFormGroup.controls.leagueName.value);
+            this.ladderService.startPollingLadder();
             this.router.navigate(['/authorized/dashboard']);
         });
     }

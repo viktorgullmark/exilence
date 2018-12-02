@@ -33,20 +33,25 @@ export class LadderService {
   startPollingLadder() {
     if (!this.isPolling) {
       this.isPolling = true;
+      this.pollLadder();
       setInterval(x => {
         if (!this.cooldown) {
-          this.getLadderInfoForCharacter(this.localPlayer.character.league, this.localPlayer.character.name)
-            .subscribe(data => {
-              if (data !== null) {
-                const player = this.localPlayer;
-                player.ladderInfo = data.ladder;
-                this.partyService.updatePlayer(player);
-              }
-            });
+          this.pollLadder();
         }
       },
         1000 * 60 * 1); // fetch ladder every 5 minutes.
     }
+  }
+
+  pollLadder() {
+    this.getLadderInfoForCharacter(this.localPlayer.character.league, this.localPlayer.character.name)
+      .subscribe(data => {
+        if (data !== null) {
+          const player = this.localPlayer;
+          player.ladderInfo = data.ladder;
+          this.partyService.updatePlayer(player);
+        }
+      });
   }
 
   getLadderInfoForCharacter(league: string, characterName: string): Observable<any> {

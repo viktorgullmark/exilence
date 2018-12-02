@@ -4,6 +4,8 @@ import { Injectable } from '@angular/core';
 export class LogService {
 
   logger: any;
+  public lastMessage: string;
+  public lastError: boolean;
 
   constructor() {
     this.logger = window.require('electron-log');
@@ -12,6 +14,8 @@ export class LogService {
   }
 
   log(message: any, data: any = '', error: boolean = false) {
+    this.lastMessage = message;
+    this.lastError = error;
     if (!error) {
       this.logger.info(message);
       console.log(`[INFO] ${message}`, data);
