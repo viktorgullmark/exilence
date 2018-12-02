@@ -3,6 +3,7 @@ All notable changes to this project will be documented in this file.
 
 ## [0.8.0] - 2018-12-02
 - Renamed the app to Exilence (former ExileParty)
+- Changed logo for Exilence
 - Improved performance for players with large area-history
 - Improved ladder-functionality
 - Added export-button(.csv) for areas
