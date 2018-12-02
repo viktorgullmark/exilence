@@ -11,9 +11,9 @@ Report bugs at https://github.com/viktorgullmark/exilence/issues
 
 Communicate with us at our Discord https://discord.gg/ymr3VnA
 
-## Screenshots from 0.5.4b
+## Video-preview
 
-https://imgur.com/a/cpODf7I
+https://www.youtube.com/watch?v=3YdWM2kS4BA&t=2s
 
 ## Contents
 
