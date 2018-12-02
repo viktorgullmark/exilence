@@ -129,6 +129,10 @@ export class SettingsComponent implements OnInit {
     }
   }
 
+  openLink(link: string) {
+    this.electronService.shell.openExternal(link);
+  }
+
   resetKeybinds() {
     this.keybindService.resetKeybinds();
     this.settingsService.set('keybinds', undefined);
