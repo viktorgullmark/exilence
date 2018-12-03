@@ -117,7 +117,7 @@ namespace Exilence.Services
             var oldLadder = LadderStore.GetLadder(league);
             var newLadder = new List<LadderPlayerModel>();
 
-            var pages = Enumerable.Range(0, 5);
+            var pages = Enumerable.Range(0, 25);
             using (var rateGate = new RateGate(2, TimeSpan.FromSeconds(1)))
             {
                 foreach (int page in pages)
