@@ -99,6 +99,7 @@ namespace Exilence
             });
 
             LadderStore.Initialize();
+            ConnectionStore.Initialize();
             leagueTimer.Start();
         }
 

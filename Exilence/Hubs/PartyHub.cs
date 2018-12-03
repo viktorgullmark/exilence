@@ -9,6 +9,8 @@ using Exilence.Helper;
 using System.Linq;
 using Exilence.Interfaces;
 using Newtonsoft.Json;
+using Exilence.Store;
+using Exilence.Models.Connection;
 
 namespace Exilence.Hubs
 {
@@ -32,7 +34,7 @@ namespace Exilence.Hubs
             player.ConnectionID = Context.ConnectionId;
 
             //update ConnectionId:Partyname index
-            var success = await AddToIndex(partyName);
+            var success = AddToIndex(partyName);
 
             // look for party
             var party = await _cache.GetAsync<PartyModel>($"party:{partyName}");
@@ -85,9 +87,17 @@ namespace Exilence.Hubs
                 var foundPlayer = foundParty.Players.FirstOrDefault(x => x.ConnectionID == player.ConnectionID);
 
                 foundParty.Players.Remove(foundPlayer);                
-                var success = await RemoveFromIndex();
+                var success = RemoveFromIndex();
 
-                await _cache.SetAsync<PartyModel>($"party:{partyName}", foundParty);
+                if (foundParty.Players.Count != 0)
+                {
+                    await _cache.SetAsync<PartyModel>($"party:{partyName}", foundParty);
+                }
+                else
+                {
+                    await _cache.RemoveAsync($"party:{partyName}");
+                }
+
             }
 
             await Clients.OthersInGroup(partyName).SendAsync("PlayerLeft", CompressionHelper.Compress(player));
@@ -138,7 +148,7 @@ namespace Exilence.Hubs
 
         public override async Task OnDisconnectedAsync(Exception exception)
         {
-            var partyName = await GetPartynameFromIndex();
+            var partyName = GetPartynameFromIndex();
 
             if (partyName != null)
             {
@@ -147,48 +157,28 @@ namespace Exilence.Hubs
                 if (foundPlayer != null)
                 {   //This compression and then uncompression is ugly
                     await LeaveParty(partyName, CompressionHelper.Compress(foundPlayer));
-                    var success = await RemoveFromIndex();
+                    var success = RemoveFromIndex();
                 }
             }
             await base.OnDisconnectedAsync(exception);
         }
 
-
-        private async Task<Dictionary<string, string>> GetIndex()
+        private string GetPartynameFromIndex()
         {
-            return await _cache.GetAsync<Dictionary<string, string>>("ConnectionIndex") ?? new Dictionary<string, string>();
+            var result = ConnectionStore.ConnectionIndex.TryGetValue(ConnectionId, out var partyName);
+            return result ? partyName.PartyName : null;
         }
 
-        private async Task<string> GetPartynameFromIndex()
+        private bool RemoveFromIndex()
         {
-            var index = await GetIndex();
-            index.TryGetValue(ConnectionId, out var partyName);
-            return partyName;
-        }
-        
-        private async Task<bool> RemoveFromIndex()
-        {
-            var index = await GetIndex();
-            var success = index.Remove(ConnectionId);
-
-            if(success)
-                await _cache.SetAsync("ConnectionIndex", index, new DistributedCacheEntryOptions { });
-
+            var success = ConnectionStore.ConnectionIndex.Remove(ConnectionId);
             return success;
         }
 
-        private async Task<bool> AddToIndex(string partyName)
+        private bool AddToIndex(string partyName)
         {
-            var index = await GetIndex();
-            var success = index.TryAdd(ConnectionId, partyName);
-
-            if (success)
-                await _cache.SetAsync("ConnectionIndex", index, new DistributedCacheEntryOptions { });
-
+            var success = ConnectionStore.ConnectionIndex.TryAdd(ConnectionId, new ConnectionModel() { PartyName = partyName, ConnectedDate = DateTime.Now });
             return success;
         }
-
-        
-
     }
 }
