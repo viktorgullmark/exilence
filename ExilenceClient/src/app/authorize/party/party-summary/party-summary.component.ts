@@ -78,7 +78,7 @@ export class PartySummaryComponent implements OnInit {
   }
 
   report(toGame: boolean) {
-    this.messageValueService.updateMessages();
+    this.messageValueService.updatePartyMsg();
     if (toGame) {
       this.robotService.sendTextToPathWindow(this.messageValueService.partyNetworthMsg, true);
     } else {

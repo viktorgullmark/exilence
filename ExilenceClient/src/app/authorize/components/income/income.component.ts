@@ -128,7 +128,7 @@ export class IncomeComponent implements OnInit {
   }
 
   axisFormat(val) {
-    return moment(val).format('ddd, LT');
+    return moment(val).format('l, LT');
     // return moment(val).format('LT');
   }
 

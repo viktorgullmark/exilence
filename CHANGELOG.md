@@ -1,6 +1,12 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [0.8.1] - 2018-12-XX
+- Fixed net worth overlay (should now update properly)
+- Fixed macros (should now show correct values)
+- Improved formatting of net worth timestamps
+- Rewrote functionality of how connections are handles to reduce API load
+
 ## [0.8.0] - 2018-12-03
 - Renamed the app to Exilence (former ExileParty)
 - Improved performance for players with large area-history

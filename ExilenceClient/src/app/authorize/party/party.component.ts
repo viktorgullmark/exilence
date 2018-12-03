@@ -35,35 +35,47 @@ export class PartyComponent implements OnInit {
       if (res !== undefined) {
         this.player = res;
         this.messageValueService.playerValue = this.player.netWorthSnapshots[0].value;
+        const isCurrentPlayer = res.account === this.partyService.currentPlayer.account;
         this.updatePlayerGain(res, false);
       }
     });
     this.accountService.player.subscribe(res => {
       if (res !== undefined) {
-        // update msg-values based on current player
-        this.messageValueService.currentPlayerValue = res.netWorthSnapshots[0].value;
-        this.electronService.ipcRenderer.send('popout-window-update', {
-          event: 'networth',
-          data: {
-            networth: this.messageValueService.currentPlayerValue,
-            gain: this.messageValueService.currentPlayerGain
-          }
+
+        this.messageValueService.currentPlayerValueSubject.subscribe(value => {
+          this.updatePopout();
         });
-        this.updatePlayerGain(res, false);
+        this.messageValueService.currentPlayerGainSubject.subscribe(gain => {
+          this.updatePopout();
+        });
+        // update msg-values based on current player
+        this.messageValueService.currentPlayerValueSubject.next(res.netWorthSnapshots[0].value);
+        const isCurrentPlayer = res.account === this.partyService.currentPlayer.account;
+        this.updatePlayerGain(res, isCurrentPlayer);
       }
     });
     this.partyService.partyUpdated.subscribe(res => {
       if (res !== undefined) {
         this.oneHourAgo = (Date.now() - (1 * 60 * 60 * 1000));
         let networth = 0;
-        this.messageValueService.partyGain = 0;
+        this.messageValueService.partyGainSubject.next(0);
         res.players.forEach(p => {
           this.partyService.updatePartyGain(p);
           if (p.netWorthSnapshots[0] !== undefined) {
             networth = networth + p.netWorthSnapshots[0].value;
           }
         });
-        this.messageValueService.partyValue = networth;
+        this.messageValueService.partyValueSubject.next(networth);
+      }
+    });
+  }
+
+  updatePopout() {
+    this.electronService.ipcRenderer.send('popout-window-update', {
+      event: 'networth',
+      data: {
+        networth: this.messageValueService.currentPlayerValue,
+        gain: this.messageValueService.currentPlayerGain
       }
     });
   }
@@ -103,13 +115,13 @@ export class PartyComponent implements OnInit {
       const firstSnapshot = pastHoursSnapshots[pastHoursSnapshots.length - 1];
       const gainHour = ((1000 * 60 * 60)) / (lastSnapshot.timestamp - firstSnapshot.timestamp) * (lastSnapshot.value - firstSnapshot.value);
       if (current) {
-        this.messageValueService.currentPlayerGain = gainHour;
+        this.messageValueService.currentPlayerGainSubject.next(gainHour);
       } else {
         this.messageValueService.playerGain = gainHour;
       }
     } else {
       if (current) {
-        this.messageValueService.currentPlayerGain = 0;
+        this.messageValueService.currentPlayerGainSubject.next(0);
       } else {
         this.messageValueService.playerGain = 0;
       }
