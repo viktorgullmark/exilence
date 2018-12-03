@@ -66,7 +66,7 @@ namespace Exilence
             services.AddSignalR();
 
             services.AddScoped<ILadderService, LadderService>();
-            services.AddScoped<IExternalService, ExternalService>();
+            services.AddHttpClient<IExternalService, ExternalService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -97,6 +97,8 @@ namespace Exilence
                     options.ApplicationMaxBufferSize = 30 * 1024 * 1024;
                 });
             });
+            
+
 
             LadderStore.Initialize();
             ConnectionStore.Initialize();

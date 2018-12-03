@@ -43,6 +43,12 @@ export class LadderService {
     }
   }
 
+  stopPollingLadder() {
+    if (this.isPolling) {
+      this.isPolling = false;
+    }
+  }
+
   pollLadder() {
     this.getLadderInfoForCharacter(this.localPlayer.character.league, this.localPlayer.character.name)
       .subscribe(data => {

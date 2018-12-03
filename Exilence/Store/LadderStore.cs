@@ -73,7 +73,7 @@ namespace Exilence.Store
         {
             if (LadderStatus.ContainsKey(league))
             {
-                if (league == "Standard" || league == "Hardcore")
+                if (league.Contains("Standard") || league.Contains("Hardcore"))
                 {
                     LadderStatus[league].Running = false;
                     LadderStatus[league].Finished = DateTime.Now.AddDays(+1);

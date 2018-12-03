@@ -1,6 +1,8 @@
 export enum NinjaTypes {
     CURRENCY = 'Currency',
     FRAGMENT = 'Fragment',
+    FOSSILS = 'Fossil',
+    RESONATORS = 'Resonator',
     ESSENCE = 'Essence',
     DIVINATION_CARD = 'DivinationCard',
     PROPHECY = 'Prophecy',

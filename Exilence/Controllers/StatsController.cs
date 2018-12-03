@@ -10,6 +10,7 @@ using Exilence.Helper;
 using Microsoft.Extensions.Logging;
 using Exilence.Models.Ladder;
 using Exilence.Store;
+using Exilence.Models.Connection;
 
 namespace Exilence
 {
@@ -32,9 +33,9 @@ namespace Exilence
             var partyList = new List<PartyStatistics>();
             int players = 0;
 
-            var parties = await _cache.GetAsync<Dictionary<string, string>>("ConnectionIndex") ?? new Dictionary<string, string>();
+            var parties = ConnectionStore.ConnectionIndex ?? new Dictionary<string, ConnectionModel>();
 
-            foreach (var partyName in parties.Select(t => t.Value).Distinct().ToList())
+            foreach (var partyName in parties.Select(t => t.Value.PartyName).Distinct().ToList())
             {   
                 if (partyName != null)
                 {
@@ -44,7 +45,6 @@ namespace Exilence
                     partyList.Add(partyStats);
                     players += partyStats.Players.Count;
                 }
-
             }
 
             var statuses = LadderStore.GeAllLadderStatuses();

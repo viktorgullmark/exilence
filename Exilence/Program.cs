@@ -24,6 +24,8 @@ namespace Exilence
                 .UseKestrel(options =>
                 {
                     options.Listen(IPAddress.Any, 80);
+                    //options.Limits.KeepAliveTimeout = new TimeSpan(0, 0, 30);
+                    //options.Limits.MaxConcurrentConnections = ;
                 })
                 .ConfigureLogging((hostingContext, builder) =>
                 {
@@ -31,8 +33,6 @@ namespace Exilence
                     builder.AddFilter((provider, category, logLevel) =>
                     {
                         if (
-                        logLevel == LogLevel.Trace ||
-                        logLevel == LogLevel.Debug ||
                         category == "Hangfire.BackgroundJobServer" ||
                         category == " Hangfire.Processing.BackgroundExecution" || 
                         category == "Hangfire.Server.BackgroundServerProcess")

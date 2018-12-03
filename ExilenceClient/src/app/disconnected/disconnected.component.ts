@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ElectronService } from '../shared/providers/electron.service';
+import { LadderService } from '../shared/providers/ladder.service';
 
 @Component({
   selector: 'app-disconnected',
@@ -8,9 +9,13 @@ import { ElectronService } from '../shared/providers/electron.service';
 })
 export class DisconnectedComponent implements OnInit {
 
-  constructor(private electronService: ElectronService) { }
+  constructor(
+    private electronService: ElectronService,
+    private ladderService: LadderService
+  ) { }
 
   ngOnInit() {
+    this.ladderService.stopPollingLadder();
   }
 
   openLink(link: string) {
