@@ -146,7 +146,7 @@ export class CharWealthComponent implements OnInit {
   }
 
   report(toGame: boolean) {
-    this.messageValueService.updateMessages();
+    this.messageValueService.updateCurrentPlayerMsg();
     if (toGame) {
       this.robotService.sendTextToPathWindow(this.messageValueService.playerNetworthMsg, true);
     } else {
