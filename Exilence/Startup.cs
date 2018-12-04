@@ -42,8 +42,6 @@ namespace Exilence
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
             //.AddJsonOptions(opts => { opts.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver(); });
 
-            //Add services needed for sessions
-            services.AddSession();
             //Add distributed cache service backed by Redis cache
             services.AddDistributedRedisCache(options =>
             {
@@ -77,8 +75,6 @@ namespace Exilence
                 app.UseDeveloperExceptionPage();
             }
 
-            //Enable sessions
-            app.UseSession();
             app.UseMvc();
             app.UseCors("AllowAll");
 
@@ -97,8 +93,6 @@ namespace Exilence
                     options.ApplicationMaxBufferSize = 30 * 1024 * 1024;
                 });
             });
-            
-
 
             LadderStore.Initialize();
             ConnectionStore.Initialize();
