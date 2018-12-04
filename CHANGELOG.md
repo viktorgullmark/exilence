@@ -4,6 +4,7 @@ All notable changes to this project will be documented in this file.
 ## [0.8.3] - 2018-12-XX
 - Added a direct restart-link to updatenotification-toolbar
 - Added initial support for veiledmods
+- Added pricing for fossiles and resonators
 - Fixed a bug where export-button was visible even when you were not selected
 - Removed .NET Core sessions from API (to optimize requests)
 
