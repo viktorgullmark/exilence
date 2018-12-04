@@ -4,6 +4,7 @@ All notable changes to this project will be documented in this file.
 ## [0.8.3] - 2018-12-XX
 - Added a direct restart-link to updatenotification-toolbar
 - Added initial support for veiledmods
+- Fixed a bug where export-button was visible even when you were not selected
 - Removed .NET Core sessions from API (to optimize requests)
 
 ## [0.8.2] - 2018-12-04

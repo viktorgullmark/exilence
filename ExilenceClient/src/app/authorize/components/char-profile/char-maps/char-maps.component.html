@@ -19,7 +19,7 @@
         <div class="flex-area">
             <button mat-raised-button color="primary" *ngIf="selfSelected" (click)="resetAreaHistory()" type="button"
                 class="right-aligned">{{'MAPS.RESET' | translate}}</button>
-            <button mat-raised-button color="primary" (click)="export()" type="button" class="right-aligned">{{'MAPS.EXPORT'
+            <button mat-raised-button color="primary" *ngIf="selfSelected" (click)="export()" type="button" class="right-aligned">{{'MAPS.EXPORT'
                 | translate}}</button>
         </div>
         <br />
