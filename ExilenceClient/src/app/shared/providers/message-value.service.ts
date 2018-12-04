@@ -66,12 +66,12 @@ export class MessageValueService {
 
   updateCurrentPlayerMsg() {
     // tslint:disable-next-line:max-line-length
-    this.playerNetworthMsg = `@CojL [Exilence] My net worth: ${this.currentPlayerValue.toFixed(1)}c. Gain: ${this.currentPlayerGain.toFixed(1)}c / hour`;
+    this.playerNetworthMsg = `%[Exilence] My net worth: ${this.currentPlayerValue.toFixed(1)}c. Gain: ${this.currentPlayerGain.toFixed(1)}c / hour`;
   }
 
   updatePartyMsg() {
     // tslint:disable-next-line:max-line-length
-    this.partyNetworthMsg = `@CojL [Exilence] Grp net worth: ${this.partyValue.toFixed(1)}c. Gain: ${this.partyGain.toFixed(1)}c / hour`;
+    this.partyNetworthMsg = `%[Exilence] Grp net worth: ${this.partyValue.toFixed(1)}c. Gain: ${this.partyGain.toFixed(1)}c / hour`;
   }
 
   initKeybinds() {

@@ -1,6 +1,9 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [0.8.2] - 2018-12-04
+- Hotfix for messaging not being sent to party
+
 ## [0.8.1] - 2018-12-03
 - Fixed net worth overlay (should now update properly)
 - Fixed macros (should now show correct values)
