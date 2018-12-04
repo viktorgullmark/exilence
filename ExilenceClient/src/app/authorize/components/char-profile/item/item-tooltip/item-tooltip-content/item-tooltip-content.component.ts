@@ -58,6 +58,11 @@ export class ItemTooltipContentComponent implements OnInit {
     return modClass;
   }
 
+  formatVeiledMod(veiled) {
+      const mod = veiled.substring(0, 6);
+      return 'Veiled ' + mod;
+  }
+
   formatDivCard(text) {
 
     let localText = text;

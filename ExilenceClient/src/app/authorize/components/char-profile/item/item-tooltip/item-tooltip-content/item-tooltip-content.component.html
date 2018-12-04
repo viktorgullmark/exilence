@@ -131,6 +131,12 @@
                 </span>
                 <br />
             </ng-container>
+            <ng-container *ngFor="let veiledMod of item.veiledMods">
+                <span class="veiled-mod">
+                    {{formatVeiledMod(veiledMod)}}
+                </span>
+                <br />
+            </ng-container>
         </div>
         <ng-container *ngFor="let flav of item.flavourText">
             <span class="flavour-text mat-caption">
