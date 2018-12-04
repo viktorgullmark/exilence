@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Exilence.Interfaces;
-using Exilence.Store;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -15,45 +14,35 @@ namespace Exilence.Controllers
     public class LadderController : ControllerBase
     {
         private ILogger<LadderController> _log;
-        private readonly ILadderService _ladderService;
+        private ILadderService _ladderService;
+        private IStoreRepository _storeRepository;
 
-        public LadderController( ILadderService ladderService, ILogger<LadderController> log)
+        public LadderController( ILadderService ladderService, ILogger<LadderController> log, IStoreRepository storeRepository)
         {
             _log = log;
             _ladderService = ladderService;
+            _storeRepository = storeRepository;
         }
 
         [Route("")]
-        public IActionResult All(string league, bool full = false)
+        public async Task<IActionResult> All(string league, bool full = false)
         {
-            var list = _ladderService.GetLadderForLeague(league, full);
+            var list = await _ladderService.GetLadderForLeague(league, full);
             return Ok(new { Ladder = list });
         }
 
         [Route("character")]
-        public IActionResult Index(string league, string character)
+        public async Task<IActionResult> Index(string league, string character)
         {
-            var list = _ladderService.GetLadderForPlayer(league, character);
+            var list = await _ladderService.GetLadderForPlayer(league, character);
             return Ok(new { Ladder = list });
         }
 
         [Route("status")]
-        public IActionResult Status()
+        public async Task<IActionResult> Status()
         {
-            var statuses = LadderStore.GeAllLadderStatuses();
-            return Ok(new { leagues = statuses.OrderByDescending(t => t.Value.Started) });
-        }
-
-        [Route("reset")]
-        public IActionResult Reset()
-        {
-            var statuses = LadderStore.GeAllLadderStatuses();
-            foreach (var status in statuses)
-            {
-                LadderStore.SetLadderFinished(status.Key);
-            }
-            statuses = LadderStore.GeAllLadderStatuses();
-            return Ok(new { leagues = statuses.OrderByDescending(t => t.Value.Started) });
+            var statuses = await _storeRepository.GetAllLeagues();
+            return Ok(new { leagues = statuses.Select(t => new { t.Name, t.Running, t.Finished, t.Started }).OrderByDescending(t => t.Started) });
         }
     }
 }

@@ -2,7 +2,6 @@
 using Exilence.Interfaces;
 using Exilence.Models;
 using Exilence.Models.Ladder;
-using Exilence.Store;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
@@ -19,17 +18,24 @@ namespace Exilence.Services
         private readonly IHostingEnvironment _env;
         private readonly ILogger<LadderService> _log;
         private readonly IExternalService _externalService;
+        private IStoreRepository _storeRepository;
 
         private const string LadderUrl = "http://www.pathofexile.com/api/ladders";
         private const string LeagesUrl = "http://api.pathofexile.com/leagues?type=main&compact=1";
         private const string PoeNinjaStatsUrl = "http://poe.ninja/api/Data/GetStats";
         private const string TradeUrl = "http://api.pathofexile.com/public-stash-tabs";
 
-        public LadderService(ILogger<LadderService> log, IExternalService externalService, IHostingEnvironment env)
+        public LadderService(
+            ILogger<LadderService> log,
+            IExternalService externalService,
+            IHostingEnvironment env,
+            IStoreRepository storeRepository
+            )
         {
             _log = log;
             _env = env;
             _externalService = externalService;
+            _storeRepository = storeRepository;
         }
 
         #region Leagues
@@ -43,44 +49,47 @@ namespace Exilence.Services
 
         #region Ladder
 
-        public List<LadderPlayerModel> GetLadderForLeague(string league, bool full = false)
+        public async Task<List<LadderPlayerModel>> GetLadderForLeague(string leagueName, bool full = false)
         {
-            if (LadderStore.GetLadderStatus(league) == null)
+            var league = await _storeRepository.GetLeagueLadder(leagueName);
+            if (league == null)
             {
-                LadderStore.SetLadderPending(league);
+                await _storeRepository.SetLeagueLadderPending(leagueName);
             }
             else
             {
-                var leagueLadder = LadderStore.GetLadder(league);
-                if (full)
+                if (league.Ladder != null)
                 {
-                    return leagueLadder.OrderBy(t => t.Rank.Overall).ToList();
+                    if (full)
+                    {
+                        return league.Ladder.OrderBy(t => t.Rank.Overall).ToList();
+                    }
+                    else
+                    {
+                        return league.Ladder.OrderBy(t => t.Rank.Overall).Take(10).ToList();
+                    }
                 }
-                else
-                {
-                    return leagueLadder.OrderBy(t => t.Rank.Overall).Take(10).ToList();
-                }                
             }
 
             return null;
         }
 
-        public List<LadderPlayerModel> GetLadderForPlayer(string league, string character)
+        public async Task<List<LadderPlayerModel>> GetLadderForPlayer(string leagueName, string character)
         {
-            if (LadderStore.GetLadderStatus(league) == null)
+            var league = await _storeRepository.GetLeagueLadder(leagueName);
+            if (league == null)
             {
-                LadderStore.SetLadderPending(league);
+                await _storeRepository.SetLeagueLadderPending(league.Name);
             }
             else
             {
-                var leagueLadder = LadderStore.GetLadder(league);
-                var characterOnLadder = leagueLadder.FirstOrDefault(t => t.Name == character);
+                var characterOnLadder = league.Ladder.FirstOrDefault(t => t.Name == character);
 
                 if (characterOnLadder != null)
                 {
-                    var index = leagueLadder.IndexOf(characterOnLadder);
-                    var before = leagueLadder.Where(t => t.Rank.Overall < characterOnLadder.Rank.Overall && t.Rank.Overall >= (characterOnLadder.Rank.Overall - 5));
-                    var after = leagueLadder.Where(t => t.Rank.Overall > characterOnLadder.Rank.Overall && t.Rank.Overall <= (characterOnLadder.Rank.Overall + 5));
+                    var index = league.Ladder.IndexOf(characterOnLadder);
+                    var before = league.Ladder.Where(t => t.Rank.Overall < characterOnLadder.Rank.Overall && t.Rank.Overall >= (characterOnLadder.Rank.Overall - 5));
+                    var after = league.Ladder.Where(t => t.Rank.Overall > characterOnLadder.Rank.Overall && t.Rank.Overall <= (characterOnLadder.Rank.Overall + 5));
 
                     var ladderList = new List<LadderPlayerModel>();
                     ladderList.AddRange(before);
@@ -93,37 +102,38 @@ namespace Exilence.Services
             return null;
         }
 
-        public void UpdateLadders()
+        public async Task UpdateLadders()
         {
-            var anyRunning = LadderStore.AnyRunning();
+           var anyRunning = await _storeRepository.AnyLeageLadderRunning();
             if (!anyRunning)
             {
-                var pendingLeague = LadderStore.GetNextForUpdate();
+                var pendingLeague = await _storeRepository.GetLadderPendingUpdate();
                 if (pendingLeague != null)
                 {
-                    var pendingStatus = LadderStore.GetLadderStatus(pendingLeague);
-                    if (pendingStatus.Finished < DateTime.Now.AddMinutes(-5))
+                    var league = await _storeRepository.GetLeagueLadder(pendingLeague);
+                    if (league.Finished < DateTime.Now.AddMinutes(-5))
                     {
-                       UpdateLadder(pendingLeague);
+                        await UpdateLadder(pendingLeague);
                     }
                 }
             }
         }
 
-        private async void UpdateLadder(string league)
+        private async Task UpdateLadder(string leagueName)
         {
-            LadderStore.SetLadderRunning(league);
+            await _storeRepository.SetLeagueLadderRunning(leagueName);
 
-            var oldLadder = LadderStore.GetLadder(league);
+            var league = await _storeRepository.GetLeagueLadder(leagueName);
+            var oldLadder = league.Ladder;
             var newLadder = new List<LadderPlayerModel>();
 
-            var pages = Enumerable.Range(0, 25);
+            var pages = Enumerable.Range(0, 5);
             using (var rateGate = new RateGate(2, TimeSpan.FromSeconds(2))) // 1 second is ok but testing 2 for performance
             {
                 foreach (int page in pages)
                 {
                     await rateGate.WaitToProceed();
-                    LadderApiResponse result = await FetchLadderApiPage(league, page);
+                    LadderApiResponse result = await FetchLadderApiPage(leagueName, page);
                     if (result != null)
                     {
                         var LadderPlayerList = result.Entries.Select(t => new LadderPlayerModel()
@@ -157,7 +167,7 @@ namespace Exilence.Services
                     }
                     else
                     {
-                        LadderStore.RemoveLadderStatus(league);
+                        await _storeRepository.RemoveLeagueLadder(leagueName);
                         break;
                     }
                 }
@@ -166,9 +176,7 @@ namespace Exilence.Services
             if (newLadder.Count > 0)
             {
                 newLadder = CalculateStatistics(oldLadder, newLadder);
-
-                LadderStore.SetLadder(league, newLadder);
-                LadderStore.SetLadderFinished(league);
+              await _storeRepository.UpdateLeagueLadder(leagueName, newLadder);
             }
         }
 
@@ -180,14 +188,17 @@ namespace Exilence.Services
                 newEntry.Depth.Solo = newLadder.Count(t => t.Depth.Solo > newEntry.Depth.Solo) + 1;
                 newEntry.Rank.Class = newLadder.Where(t => t.Class == newEntry.Class).Where(x => x.Rank.Overall < newEntry.Rank.Overall).Count() + 1;
 
-                var oldLadderEntry = oldLadder.FirstOrDefault(t => t.Name == newEntry.Name);
-                if (oldLadderEntry != null && oldLadderEntry.Updated != DateTime.MinValue)
+                if (oldLadder != null)
                 {
-                    var expGain = newEntry.Experience - oldLadderEntry.Experience;
-                    var oneHour = (1 * 60 * 60);
-                    var timeBetweenUpdates = newEntry.Updated.ToUnixTimeStamp() - oldLadderEntry.Updated.ToUnixTimeStamp();
-                    var gainOverTime = (oneHour / timeBetweenUpdates) * expGain;
-                    newEntry.ExperiencePerHour = (long)gainOverTime;
+                    var oldLadderEntry = oldLadder.FirstOrDefault(t => t.Name == newEntry.Name);
+                    if (oldLadderEntry != null && oldLadderEntry.Updated != DateTime.MinValue)
+                    {
+                        var expGain = newEntry.Experience - oldLadderEntry.Experience;
+                        var oneHour = (1 * 60 * 60);
+                        var timeBetweenUpdates = newEntry.Updated.ToUnixTimeStamp() - oldLadderEntry.Updated.ToUnixTimeStamp();
+                        var gainOverTime = (oneHour / timeBetweenUpdates) * expGain;
+                        newEntry.ExperiencePerHour = (long)gainOverTime;
+                    }
                 }
             }
             return newLadder;
@@ -212,7 +223,6 @@ namespace Exilence.Services
             }
             return null;
         }
-
 
         #endregion
 

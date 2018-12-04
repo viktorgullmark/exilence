@@ -33,9 +33,10 @@ namespace Exilence
                     builder.AddFilter((provider, category, logLevel) =>
                     {
                         if (
-                        category == "Hangfire.BackgroundJobServer" ||
-                        category == " Hangfire.Processing.BackgroundExecution" || 
-                        category == "Hangfire.Server.BackgroundServerProcess")
+                        logLevel == LogLevel.Trace ||
+                        logLevel == LogLevel.Debug ||
+                        logLevel == LogLevel.Information
+                        )
                         {
                             return false;
                         }

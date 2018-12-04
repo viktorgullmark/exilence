@@ -6,8 +6,8 @@ using System.Timers;
 using Exilence.Contexts;
 using Exilence.Hubs;
 using Exilence.Interfaces;
+using Exilence.Repositories;
 using Exilence.Services;
-using Exilence.Store;
 using Hangfire;
 using Hangfire.MemoryStorage;
 using Microsoft.AspNetCore.Builder;
@@ -24,13 +24,9 @@ namespace Exilence
 {
     public class Startup
     {
-        private Timer leagueTimer;
-
-        public Startup(IConfiguration configuration)
+                public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
-            leagueTimer = new Timer((1000 * 15));
-            leagueTimer.Elapsed += LeagueTimer_Elapsed;
         }
 
         public IConfiguration Configuration { get; }
@@ -68,6 +64,7 @@ namespace Exilence
 
             services.AddScoped<ILadderService, LadderService>();
             services.AddHttpClient<IExternalService, ExternalService>();
+            services.AddScoped<IStoreRepository, StoreRepository>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -86,7 +83,7 @@ namespace Exilence
             app.UseHangfireServer();
             app.UseHangfireDashboard();
 
-            //RecurringJob.AddOrUpdate<ILadderService>(ls => ls.UpdateLadders(), Cron.MinuteInterval(1));
+            RecurringJob.AddOrUpdate<ILadderService>(ls => ls.UpdateLadders(), Cron.MinuteInterval(1));
 
             app.UseSignalR(routes =>
             {
@@ -97,15 +94,8 @@ namespace Exilence
                 });
             });
 
-            LadderStore.Initialize();
-            ConnectionStore.Initialize();
-            leagueTimer.Start();
+
         }
 
-        // Using a timer to trigger the event since hangfire does not go below 1 minute intervals.
-        private void LeagueTimer_Elapsed(object sender, ElapsedEventArgs e)
-        {
-            BackgroundJob.Enqueue<ILadderService>(ls => ls.UpdateLadders());
-        }
     }
 }

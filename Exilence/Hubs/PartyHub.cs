@@ -9,7 +9,6 @@ using Exilence.Helper;
 using System.Linq;
 using Exilence.Interfaces;
 using Newtonsoft.Json;
-using Exilence.Store;
 using Exilence.Models.Connection;
 
 namespace Exilence.Hubs
@@ -18,12 +17,14 @@ namespace Exilence.Hubs
     public class PartyHub : Hub
     {
         private IDistributedCache _cache;
+        private IStoreRepository _storeRepository;
 
         private string ConnectionId => Context.ConnectionId;
         
-        public PartyHub(IDistributedCache cache)
+        public PartyHub(IDistributedCache cache, IStoreRepository storeRepository)
         {
             _cache = cache;
+            _storeRepository = storeRepository;
         }
                 
         public async Task JoinParty(string partyName, string playerObj)
@@ -148,7 +149,7 @@ namespace Exilence.Hubs
 
         public override async Task OnDisconnectedAsync(Exception exception)
         {
-            var partyName = GetPartynameFromIndex();
+            var partyName = await GetPartynameFromIndex();
 
             if (partyName != null)
             {
@@ -163,22 +164,21 @@ namespace Exilence.Hubs
             await base.OnDisconnectedAsync(exception);
         }
 
-        private string GetPartynameFromIndex()
+        private async Task<string> GetPartynameFromIndex()
         {
-            var result = ConnectionStore.ConnectionIndex.TryGetValue(ConnectionId, out var partyName);
-            return result ? partyName.PartyName : null;
+            var result = await _storeRepository.GetPartyNameFromConnection(ConnectionId);
+            return result;
         }
 
-        private bool RemoveFromIndex()
+        private async Task<bool> RemoveFromIndex()
         {
-            var success = ConnectionStore.ConnectionIndex.Remove(ConnectionId);
+            var success = await _storeRepository.RemoveConnection(ConnectionId);
             return success;
         }
 
-        private bool AddToIndex(string partyName)
+        private async Task AddToIndex(string partyName)
         {
-            var success = ConnectionStore.ConnectionIndex.TryAdd(ConnectionId, new ConnectionModel() { PartyName = partyName, ConnectedDate = DateTime.Now });
-            return success;
+            await _storeRepository.AddConnection(ConnectionId, partyName);
         }
     }
 }

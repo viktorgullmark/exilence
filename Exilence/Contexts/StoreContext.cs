@@ -11,15 +11,19 @@ namespace Exilence.Contexts
 {
     public class StoreContext : DbContext
     {
+        public DbSet<LadderStoreModel> Ladders { get; set; }
+        public DbSet<ConnectionModel> Connections { get; set; }
+
         public StoreContext(DbContextOptions<StoreContext> options)
             : base(options)
         {
         }
 
-        public DbSet<Dictionary<string, LadderStatusModel>> LadderStatus { get; set; }
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
 
-        public DbSet<Dictionary<string, List<LadderPlayerModel>>> Ladders { get; set; }
+            base.OnModelCreating(modelBuilder);
 
-        public DbSet<Dictionary<string, ConnectionModel>> ConnectionIndex { get;set; } 
+        }
     }
 }

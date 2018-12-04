@@ -9,7 +9,6 @@ using Microsoft.Extensions.Caching.Distributed;
 using Exilence.Helper;
 using Microsoft.Extensions.Logging;
 using Exilence.Models.Ladder;
-using Exilence.Store;
 using Exilence.Models.Connection;
 
 namespace Exilence
@@ -19,11 +18,13 @@ namespace Exilence
     {
         private IDistributedCache _cache;
         private ILogger<StatsController> _log;
+        private IStoreRepository _storeRepository;
 
-        public StatsController(IDistributedCache cache, ILogger<StatsController> log)
+        public StatsController(IDistributedCache cache, ILogger<StatsController> log, IStoreRepository storeRepository)
         {
             _log = log;
             _cache = cache;
+            _storeRepository = storeRepository;
         }
 
         // GET: /<controller>/
@@ -33,9 +34,9 @@ namespace Exilence
             var partyList = new List<PartyStatistics>();
             int players = 0;
 
-            var parties = ConnectionStore.ConnectionIndex ?? new Dictionary<string, ConnectionModel>();
+            var parties = await _storeRepository.GetAllConnections();
 
-            foreach (var partyName in parties.Select(t => t.Value.PartyName).Distinct().ToList())
+            foreach (var partyName in parties.Select(t => t.PartyName).Distinct().ToList())
             {   
                 if (partyName != null)
                 {
@@ -47,18 +48,18 @@ namespace Exilence
                 }
             }
 
-            var statuses = LadderStore.GeAllLadderStatuses();
+            var statuses = await _storeRepository.GetAllLeagues();
 
             var response = new
             {
                 totalParties = partyList.Count(),
                 totalPlayers = players,
                 parties = partyList,
-                leagues = statuses.OrderByDescending(t => t.Value.Finished).Select(x => new {
-                    Name = x.Key,
-                    Running = x.Value.Running,
-                    Started = x.Value.Started.ToString("yyyy-MM-dd HH:mm:ss"),
-                    Finished = x.Value.Finished.ToString("yyyy-MM-dd HH:mm:ss")
+                leagues = statuses.Select(t => new { t.Name, t.Running, t.Finished, t.Started }).OrderByDescending(t => t.Finished).Select(x => new {
+                    Name = x.Name,
+                    Running = x.Running,
+                    Started = x.Started.ToString("yyyy-MM-dd HH:mm:ss"),
+                    Finished = x.Finished.ToString("yyyy-MM-dd HH:mm:ss")
                 })
             };
 
