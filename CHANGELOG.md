@@ -1,6 +1,9 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [0.8.3] - 2018-12-XX
+- Added a direct restart-link to updatenotification-toolbar
+
 ## [0.8.2] - 2018-12-04
 - Hotfix for messaging not being sent to party
 

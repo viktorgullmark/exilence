@@ -1,3 +1,5 @@
 <div class="notification-bar-wrapper">
-  <span class="notification" *ngIf="notifications[0] == 'NEW_VERSION'">{{'NOTIFICATION.UPDATE_AVAILABLE' | translate}}</span>
+  <span class="notification" *ngIf="notifications[0] == 'NEW_VERSION'">{{'NOTIFICATION.UPDATE_AVAILABLE' | translate}}&nbsp;
+    <a class="restart-link" (click)="relaunch()">Please click here to relaunch Exilence.</a>
+  </span>
 </div>

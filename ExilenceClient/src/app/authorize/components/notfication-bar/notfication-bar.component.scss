@@ -10,5 +10,9 @@
         align-content: center;
         background-color: rgba(255, 41, 113, 0.55);
         padding: 10px;
+        .restart-link {
+            font-weight: 500;
+            text-decoration: underline;
+        }
     }
 }

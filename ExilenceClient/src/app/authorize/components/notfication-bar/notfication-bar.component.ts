@@ -4,6 +4,7 @@ import { Subscription } from 'rxjs';
 import { GithubRelease } from '../../../shared/interfaces/github.interface';
 import { ExternalService } from '../../../shared/providers/external.service';
 import { LogService } from '../../../shared/providers/log.service';
+import { ElectronService } from '../../../shared/providers/electron.service';
 
 
 
@@ -22,7 +23,8 @@ export class NotficationBarComponent implements OnInit, OnDestroy {
   private releaseSub: Subscription;
   constructor(
     private externalService: ExternalService,
-    private logService: LogService
+    private logService: LogService,
+    private electronService: ElectronService
   ) {
     setTimeout(res => {
       setInterval(inner => this.checkForNewRelease(), 1000 * 60 * 10); // Check every 10 minutes.
@@ -46,6 +48,10 @@ export class NotficationBarComponent implements OnInit, OnDestroy {
 
       this.latestVersion = release.name;
     });
+  }
+
+  relaunch() {
+    this.electronService.ipcRenderer.send('relaunch');
   }
 
   ngOnDestroy() {
