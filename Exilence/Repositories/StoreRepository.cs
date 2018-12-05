@@ -23,14 +23,19 @@ namespace Exilence.Repositories
 
         public async Task<List<LadderStoreModel>> GetAllLeaguesLadders()
         {
-            var leagues = await _store.Ladders.ToListAsync();
+            var leagues = await _store.Ladders.Include(x => x.Ladder).ToListAsync();
             return leagues;
         }
 
         public async Task<LadderStoreModel> GetLeagueLadder(string League)
         {
-            var storeModel = await _store.Ladders.FirstOrDefaultAsync(t => t.Name == League);
-            return storeModel;
+            var storeModel = _store.Ladders
+                .Include(x => x.Ladder)
+                    .ThenInclude(player => player.Depth)
+                .Include(x => x.Ladder)
+                    .ThenInclude(player => player.Rank);
+
+            return await storeModel.FirstOrDefaultAsync(t => t.Name == League);
         }
 
         public async Task UpdateLeagueLadder(string league, List<LadderPlayerModel> ladder)
@@ -41,6 +46,7 @@ namespace Exilence.Repositories
                 leagueLadder.Finished = DateTime.Now;
                 leagueLadder.Running = false;
                 leagueLadder.Ladder = ladder;
+                _store.Entry(leagueLadder).State = EntityState.Modified;
                 await _store.SaveChangesAsync();
             }
             catch (Exception e)

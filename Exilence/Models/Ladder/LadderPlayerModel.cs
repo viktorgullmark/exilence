@@ -11,6 +11,8 @@ namespace Exilence.Models
     public class LadderPlayerModel
     {
         [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public int Id { get; set; }
         public string Name { get; set; }
         public int Level { get; set; }
         public bool Online { get; set; }
