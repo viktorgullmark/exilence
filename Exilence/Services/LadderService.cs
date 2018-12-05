@@ -79,11 +79,14 @@ namespace Exilence.Services
             var league = await _storeRepository.GetLeagueLadder(leagueName);
             if (league == null)
             {
-                await _storeRepository.SetLeagueLadderPending(league.Name);
+                await _storeRepository.SetLeagueLadderPending(leagueName);
             }
             else
             {
-                var characterOnLadder = league.Ladder.FirstOrDefault(t => t.Name == character);
+                LadderPlayerModel characterOnLadder = null;
+                if(league.Ladder != null) {  
+                    characterOnLadder = league.Ladder.FirstOrDefault(t => t.Name == character);
+                }
 
                 if (characterOnLadder != null)
                 {
