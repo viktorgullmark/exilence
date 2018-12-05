@@ -54,6 +54,11 @@ namespace Exilence
 
             var statuses = await _redisRepository.GetAllLeaguesLadders();
 
+            if (statuses == null)
+            {
+                statuses = new List<LadderStoreModel>();
+            }
+
             var response = new
             {
                 totalParties = partyList.Count(),
