@@ -23,9 +23,7 @@ namespace Exilence
             WebHost.CreateDefaultBuilder(args)
                 .UseKestrel(options =>
                 {
-                    options.Listen(IPAddress.Any, 5678);
-                    //options.Limits.KeepAliveTimeout = new TimeSpan(0, 0, 30);
-                    //options.Limits.MaxConcurrentConnections = ;
+                    options.Listen(IPAddress.Loopback, 5678);
                 })
                 .ConfigureLogging((hostingContext, builder) =>
                 {
@@ -43,7 +41,9 @@ namespace Exilence
 
                         return true;
                     });
-                    builder.AddFile("Logs/Exilence-{Date}.txt");
+
+
+                    builder.AddFile("Logs/Exilence-" + DateTime.Now + ".txt");
                 })
                 .UseStartup<Startup>();
     }
