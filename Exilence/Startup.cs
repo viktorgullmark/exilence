@@ -31,7 +31,7 @@ namespace Exilence
         {
             services.AddDbContext<StoreContext>(options => options.UseSqlite("Data Source=store.db"));
 
-            //services.AddHangfire(c => c.UseMemoryStorage());
+            services.AddHangfire(c => c.UseMemoryStorage());
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
             //.AddJsonOptions(opts => { opts.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver(); });
@@ -79,12 +79,12 @@ namespace Exilence
             app.UseMvc();
             app.UseCors("AllowAll");
 
-            //GlobalConfiguration.Configuration.UseActivator(new HangfireActivator(serviceProvider));
+            GlobalConfiguration.Configuration.UseActivator(new HangfireActivator(serviceProvider));
 
-            //app.UseHangfireServer();
-            //app.UseHangfireDashboard();
+            app.UseHangfireServer();
+            app.UseHangfireDashboard();
 
-            //RecurringJob.AddOrUpdate<ILadderService>(ls => ls.UpdateLadders(), Cron.MinuteInterval(1));
+            RecurringJob.AddOrUpdate<ILadderService>(ls => ls.UpdateLadders(), Cron.MinuteInterval(1));
 
             app.UseSignalR(routes =>
             {
