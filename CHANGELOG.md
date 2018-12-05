@@ -5,6 +5,7 @@ All notable changes to this project will be documented in this file.
 - Added a direct restart-link to updatenotification-toolbar
 - Added initial support for veiledmods
 - Added pricing for fossiles and resonators
+- Reworked how the API stores leagues with ladders
 - Fixed a bug where export-button was visible even when you were not selected
 - Removed .NET Core sessions from API (to optimize requests)
 
