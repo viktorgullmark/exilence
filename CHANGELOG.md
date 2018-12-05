@@ -1,7 +1,7 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
-## [0.8.3] - 2018-12-XX
+## [0.8.3] - 2018-12-06
 - Added a direct restart-link to updatenotification-toolbar
 - Added initial support for veiledmods
 - Added pricing for fossiles and resonators
