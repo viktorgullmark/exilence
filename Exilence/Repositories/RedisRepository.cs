@@ -26,11 +26,14 @@ namespace Exilence.Repositories
         {
             var leagues = new List<LadderStoreModel>();
             var ladders = await _cache.GetAsync<List<string>>($"ladder:index");
-            foreach (var ladder in ladders)
+            if (ladders != null)
             {
-                var compressedLeague = await _cache.GetAsync<string>($"ladder:{ladder}");
-                var league = CompressionHelper.Decompress<LadderStoreModel>(compressedLeague);
-                leagues.Add(league);
+                foreach (var ladder in ladders)
+                {
+                    var compressedLeague = await _cache.GetAsync<string>($"ladder:{ladder}");
+                    var league = CompressionHelper.Decompress<LadderStoreModel>(compressedLeague);
+                    leagues.Add(league);
+                }
             }
 
             return leagues;
