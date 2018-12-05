@@ -11,8 +11,6 @@ namespace Exilence.Services
         private readonly ILogger<ExternalService> _log;
         private readonly HttpClient _httpClient;
 
-        //private bool _rateLimited;
-
         public ExternalService(ILogger<ExternalService> log, HttpClient httpClient)
         {
             _log = log;
@@ -21,28 +19,18 @@ namespace Exilence.Services
 
         public async Task<string> ExecuteGetAsync(string url)
         {
-            //var handler = new HttpClientHandler() { AutomaticDecompression = DecompressionMethods.GZip | DecompressionMethods.Deflate, UseCookies = false, UseDefaultCredentials = false };
             try
             {
-                using (HttpResponseMessage res = await _httpClient.GetAsync(url))
+                HttpResponseMessage res = await _httpClient.GetAsync(url);
+                
+                if (res.IsSuccessStatusCode)
                 {
-                    if (res.IsSuccessStatusCode)
-                    {
-                        using (HttpContent content = res.Content)
-                        {
-                            return await content.ReadAsStringAsync();
-                        }
-                    }
-                    //else
-                    //{
-                    //    _log.LogError($"Response Error: {res.ReasonPhrase}");
-                    //    if (res.StatusCode == HttpStatusCode.TooManyRequests)
-                    //    {
-                    //    }
-                    //}
-                    return null;
+                    HttpContent content = res.Content;
+
+                    return await content.ReadAsStringAsync();
                 }
 
+                return null;
             }
             catch (Exception e)
             {
