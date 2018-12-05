@@ -148,19 +148,26 @@ namespace Exilence.Repositories
         public async Task<string> GetPartyNameFromConnection(string connectionId)
         {
             var connections = await GetAllConnections();
-            var connection = connections.FirstOrDefault(t => t.ConnectionId == connectionId);
-            return connection.PartyName;
+            if (connections != null)
+            {
+                var connection = connections.FirstOrDefault(t => t.ConnectionId == connectionId);
+                return connection.PartyName;
+            }
+            return null;
         }
 
         public async Task<bool> RemoveConnection(string connectionId)
         {
             var connections = await GetAllConnections();
-            var connection = connections.FirstOrDefault(t => t.ConnectionId == connectionId);
-            if (connection != null)
+            if (connections != null)
             {
-                connections.Remove(connection);
-                await _cache.SetAsync<List<ConnectionModel>>($"connections", connections);
-                return true;
+                var connection = connections.FirstOrDefault(t => t.ConnectionId == connectionId);
+                if (connection != null)
+                {
+                    connections.Remove(connection);
+                    await _cache.SetAsync<List<ConnectionModel>>($"connections", connections);
+                    return true;
+                }
             }
             return false;
         }
@@ -174,6 +181,12 @@ namespace Exilence.Repositories
                 ConnectedDate = DateTime.Now
             };
             var connections = await GetAllConnections();
+
+            if (connections == null)
+            {
+                connections = new List<ConnectionModel>();
+            }
+
             connections.Add(connectionModel);
             await _cache.SetAsync<List<ConnectionModel>>($"connections", connections);
         }
