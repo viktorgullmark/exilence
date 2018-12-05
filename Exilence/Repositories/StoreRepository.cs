@@ -21,7 +21,7 @@ namespace Exilence.Repositories
             _store = context;
         }
 
-        public async Task<List<LadderStoreModel>> GetAllLeagues()
+        public async Task<List<LadderStoreModel>> GetAllLeaguesLadders()
         {
             var leagues = await _store.Ladders.ToListAsync();
             return leagues;

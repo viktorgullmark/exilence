@@ -16,12 +16,14 @@ namespace Exilence.Controllers
         private ILogger<LadderController> _log;
         private ILadderService _ladderService;
         private IStoreRepository _storeRepository;
+        private IRedisRepository _redisRepository;
 
-        public LadderController( ILadderService ladderService, ILogger<LadderController> log, IStoreRepository storeRepository)
+        public LadderController( ILadderService ladderService, ILogger<LadderController> log, IStoreRepository storeRepository, IRedisRepository redisRepository)
         {
             _log = log;
             _ladderService = ladderService;
             _storeRepository = storeRepository;
+            _redisRepository = redisRepository;
         }
 
         [Route("")]
@@ -41,7 +43,7 @@ namespace Exilence.Controllers
         [Route("status")]
         public async Task<IActionResult> Status()
         {
-            var statuses = await _storeRepository.GetAllLeagues();
+            var statuses = await _redisRepository.GetAllLeaguesLadders();
             return Ok(new { leagues = statuses.Select(t => new { t.Name, t.Running, t.Finished, t.Started }).OrderByDescending(t => t.Started) });
         }
     }

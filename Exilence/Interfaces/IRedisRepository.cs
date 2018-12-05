@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Exilence.Interfaces
 {
-    public interface IStoreRepository
+    public interface IRedisRepository
     {
         Task<List<LadderStoreModel>> GetAllLeaguesLadders();
         Task<LadderStoreModel> GetLeagueLadder(string leagueName);

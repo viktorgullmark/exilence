@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using System.Timers;
-using Exilence.Contexts;
+﻿using Exilence.Contexts;
 using Exilence.Hubs;
 using Exilence.Interfaces;
 using Exilence.Repositories;
@@ -17,14 +12,13 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
-using Newtonsoft.Json.Serialization;
+using System;
 
 namespace Exilence
 {
     public class Startup
     {
-                public Startup(IConfiguration configuration)
+        public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
         }
@@ -35,7 +29,7 @@ namespace Exilence
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddDbContext<StoreContext>(options => options.UseSqlite("Data Source=store.db"));
- 
+
             services.AddHangfire(c => c.UseMemoryStorage());
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
@@ -65,6 +59,7 @@ namespace Exilence
             services.AddScoped<ILadderService, LadderService>();
             services.AddHttpClient<IExternalService, ExternalService>();
             services.AddScoped<IStoreRepository, StoreRepository>();
+            services.AddScoped<IRedisRepository, RedisRepository>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

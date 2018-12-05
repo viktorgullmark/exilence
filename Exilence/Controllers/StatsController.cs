@@ -19,12 +19,14 @@ namespace Exilence
         private IDistributedCache _cache;
         private ILogger<StatsController> _log;
         private IStoreRepository _storeRepository;
+        private IRedisRepository _redisRepository;
 
-        public StatsController(IDistributedCache cache, ILogger<StatsController> log, IStoreRepository storeRepository)
+        public StatsController(IDistributedCache cache, ILogger<StatsController> log, IStoreRepository storeRepository, IRedisRepository redisRepository)
         {
             _log = log;
             _cache = cache;
             _storeRepository = storeRepository;
+            _redisRepository = redisRepository;
         }
 
         // GET: /<controller>/
@@ -34,21 +36,23 @@ namespace Exilence
             var partyList = new List<PartyStatistics>();
             int players = 0;
 
-            var parties = await _storeRepository.GetAllConnections();
-
-            foreach (var partyName in parties.Select(t => t.PartyName).Distinct().ToList())
-            {   
-                if (partyName != null)
+            var parties = await _redisRepository.GetAllConnections();
+            if (parties != null)
+            {
+                foreach (var partyName in parties.Select(t => t.PartyName).Distinct().ToList())
                 {
-                    var party = await _cache.GetAsync<PartyModel>($"party:{partyName}");
-                    PartyStatistics partyStats = new PartyStatistics { };
-                    partyStats.Players = party.Players.Select(t => t.Character.Name).ToList();
-                    partyList.Add(partyStats);
-                    players += partyStats.Players.Count;
+                    if (partyName != null)
+                    {
+                        var party = await _cache.GetAsync<PartyModel>($"party:{partyName}");
+                        PartyStatistics partyStats = new PartyStatistics { };
+                        partyStats.Players = party.Players.Select(t => t.Character.Name).ToList();
+                        partyList.Add(partyStats);
+                        players += partyStats.Players.Count;
+                    }
                 }
             }
 
-            var statuses = await _storeRepository.GetAllLeagues();
+            var statuses = await _redisRepository.GetAllLeaguesLadders();
 
             var response = new
             {

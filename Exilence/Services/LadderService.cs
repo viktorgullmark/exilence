@@ -19,6 +19,7 @@ namespace Exilence.Services
         private readonly ILogger<LadderService> _log;
         private readonly IExternalService _externalService;
         private IStoreRepository _storeRepository;
+        private IRedisRepository _redisRepository;
 
         private const string LadderUrl = "http://www.pathofexile.com/api/ladders";
         private const string LeagesUrl = "http://api.pathofexile.com/leagues?type=main&compact=1";
@@ -29,13 +30,15 @@ namespace Exilence.Services
             ILogger<LadderService> log,
             IExternalService externalService,
             IHostingEnvironment env,
-            IStoreRepository storeRepository
+            IStoreRepository storeRepository,
+            IRedisRepository redisRepository
             )
         {
             _log = log;
             _env = env;
             _externalService = externalService;
             _storeRepository = storeRepository;
+            _redisRepository = redisRepository;
         }
 
         #region Leagues
@@ -51,10 +54,10 @@ namespace Exilence.Services
 
         public async Task<List<LadderPlayerModel>> GetLadderForLeague(string leagueName, bool full = false)
         {
-            var league = await _storeRepository.GetLeagueLadder(leagueName);
+            var league = await _redisRepository.GetLeagueLadder(leagueName);
             if (league == null)
             {
-                await _storeRepository.SetLeagueLadderPending(leagueName);
+                await _redisRepository.SetLeagueLadderPending(leagueName);
             }
             else
             {
@@ -76,10 +79,10 @@ namespace Exilence.Services
 
         public async Task<List<LadderPlayerModel>> GetLadderForPlayer(string leagueName, string character)
         {
-            var league = await _storeRepository.GetLeagueLadder(leagueName);
+            var league = await _redisRepository.GetLeagueLadder(leagueName);
             if (league == null)
             {
-                await _storeRepository.SetLeagueLadderPending(leagueName);
+                await _redisRepository.SetLeagueLadderPending(leagueName);
             }
             else
             {
@@ -107,13 +110,13 @@ namespace Exilence.Services
 
         public async Task UpdateLadders()
         {
-           var anyRunning = await _storeRepository.AnyLeageLadderRunning();
+           var anyRunning = await _redisRepository.AnyLeageLadderRunning();
             if (!anyRunning)
             {
-                var pendingLeague = await _storeRepository.GetLadderPendingUpdate();
+                var pendingLeague = await _redisRepository.GetLadderPendingUpdate();
                 if (pendingLeague != null)
                 {
-                    var league = await _storeRepository.GetLeagueLadder(pendingLeague);
+                    var league = await _redisRepository.GetLeagueLadder(pendingLeague);
                     if (league.Finished < DateTime.Now.AddMinutes(-5))
                     {
                         await UpdateLadder(pendingLeague);
@@ -124,9 +127,9 @@ namespace Exilence.Services
 
         private async Task UpdateLadder(string leagueName)
         {
-            await _storeRepository.SetLeagueLadderRunning(leagueName);
+            await _redisRepository.SetLeagueLadderRunning(leagueName);
 
-            var league = await _storeRepository.GetLeagueLadder(leagueName);
+            var league = await _redisRepository.GetLeagueLadder(leagueName);
             var oldLadder = league.Ladder;
             var newLadder = new List<LadderPlayerModel>();
 
@@ -170,7 +173,7 @@ namespace Exilence.Services
                     }
                     else
                     {
-                        await _storeRepository.RemoveLeagueLadder(leagueName);
+                        await _redisRepository.RemoveLeagueLadder(leagueName);
                         break;
                     }
                 }
@@ -179,7 +182,7 @@ namespace Exilence.Services
             if (newLadder.Count > 0)
             {
                 newLadder = CalculateStatistics(oldLadder, newLadder);
-              await _storeRepository.UpdateLeagueLadder(leagueName, newLadder);
+              await _redisRepository.UpdateLeagueLadder(leagueName, newLadder);
             }
         }
 
@@ -226,6 +229,7 @@ namespace Exilence.Services
             }
             return null;
         }
+
 
         #endregion
 
