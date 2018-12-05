@@ -106,7 +106,7 @@ namespace Exilence.Services
         }
 
         public async Task UpdateLadders()
-        {
+       {
            var anyRunning = await _storeRepository.AnyLeageLadderRunning();
             if (!anyRunning)
             {
@@ -162,6 +162,7 @@ namespace Exilence.Services
                             Updated = DateTime.Now
                         }).ToList();
                         // Convert result to LadderPlayer model here
+     
                         newLadder.AddRange(LadderPlayerList);
                         if (newLadder.Count == result.Total || result.Entries.Count == 0)
                         {

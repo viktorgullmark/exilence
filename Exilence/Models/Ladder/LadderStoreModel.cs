@@ -10,6 +10,8 @@ namespace Exilence.Models.Ladder
     public class LadderStoreModel
     {
         [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public int Id { get; set; }
         public string Name { get; set; }
         public bool Running { get; set; }
         public DateTime Started { get; set; }
