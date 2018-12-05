@@ -23,7 +23,7 @@ namespace Exilence
             WebHost.CreateDefaultBuilder(args)
                 .UseKestrel(options =>
                 {
-                    options.Listen(IPAddress.Any, 80);
+                    options.Listen(IPAddress.Any, 5678);
                     //options.Limits.KeepAliveTimeout = new TimeSpan(0, 0, 30);
                     //options.Limits.MaxConcurrentConnections = ;
                 })
