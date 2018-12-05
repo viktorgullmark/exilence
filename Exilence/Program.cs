@@ -43,7 +43,7 @@ namespace Exilence
                     });
 
 
-                    builder.AddFile("Logs/Exilence-" + DateTime.Now + ".txt");
+                    builder.AddFile("Logs/Exilence-{Date}.txt");
                 })
                 .UseStartup<Startup>();
     }
