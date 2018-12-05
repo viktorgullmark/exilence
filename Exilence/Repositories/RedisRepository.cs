@@ -151,7 +151,10 @@ namespace Exilence.Repositories
             if (connections != null)
             {
                 var connection = connections.FirstOrDefault(t => t.ConnectionId == connectionId);
-                return connection.PartyName;
+                if (connection != null)
+                {
+                    return connection.PartyName;
+                }
             }
             return null;
         }
