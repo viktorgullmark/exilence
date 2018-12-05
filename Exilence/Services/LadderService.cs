@@ -133,7 +133,7 @@ namespace Exilence.Services
             var oldLadder = league.Ladder;
             var newLadder = new List<LadderPlayerModel>();
 
-            var pages = Enumerable.Range(0, 5);
+            var pages = Enumerable.Range(0, 25);
             using (var rateGate = new RateGate(2, TimeSpan.FromSeconds(2))) // 1 second is ok but testing 2 for performance
             {
                 foreach (int page in pages)
