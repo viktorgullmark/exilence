@@ -55,11 +55,13 @@ export class DashboardComponent implements OnInit {
   joinParty(partyName: string) {
     if (partyName !== this.partyService.party.name) {
       this.partyService.leaveParty(this.partyService.party.name, this.player);
-      this.partyService.joinParty(partyName, this.player);
-      this.partyService.addPartyToRecent(partyName);
+      setTimeout(() => {
+        this.partyService.joinParty(partyName, this.player);
+        this.partyService.addPartyToRecent(partyName);
+        this.router.navigateByUrl('/404', { skipLocationChange: true }).then(() =>
+          this.router.navigate(['/authorized/party']));
+      }, 750);
     }
-    this.router.navigateByUrl('/404', { skipLocationChange: true }).then(() =>
-      this.router.navigate(['/authorized/party']));
   }
 }
 

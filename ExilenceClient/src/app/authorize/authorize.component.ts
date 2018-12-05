@@ -4,13 +4,13 @@ import { Router } from '@angular/router';
 
 import { Player } from '../shared/interfaces/player.interface';
 import { AccountService } from '../shared/providers/account.service';
+import { ElectronService } from '../shared/providers/electron.service';
+import { IncomeService } from '../shared/providers/income.service';
 import { KeybindService } from '../shared/providers/keybind.service';
 import { MapService } from '../shared/providers/map.service';
+import { MessageValueService } from '../shared/providers/message-value.service';
 import { PartyService } from '../shared/providers/party.service';
 import { RobotService } from '../shared/providers/robot.service';
-import { MessageValueService } from '../shared/providers/message-value.service';
-import { IncomeService } from '../shared/providers/income.service';
-import { ElectronService } from '../shared/providers/electron.service';
 
 @Component({
   selector: 'app-authorize',
@@ -63,6 +63,6 @@ export class AuthorizeComponent implements OnInit {
       this.partyService.addPartyToRecent(this.form.controls.partyCode.value.toUpperCase());
       this.router.navigateByUrl('/404', { skipLocationChange: true }).then(() =>
         this.router.navigate(['/authorized/party']));
-    }, 1500);
+    }, 750);
   }
 }
