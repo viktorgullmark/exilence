@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -8,6 +10,9 @@ namespace Exilence.Models
     [Serializable]
     public class LadderPlayerModel
     {
+        [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public int Id { get; set; }
         public string Name { get; set; }
         public int Level { get; set; }
         public bool Online { get; set; }
@@ -25,6 +30,9 @@ namespace Exilence.Models
     [Serializable]
     public class LadderPlayerDepthModel
     {
+        [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public int Id { get; set; }
         public int Solo { get; set; }
         public int Group { get; set; }
     }
@@ -32,6 +40,9 @@ namespace Exilence.Models
     [Serializable]
     public class LadderPlayerRankModel
     {
+        [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public int Id { get; set; }
         public int Overall { get; set; }
         public int Class { get; set; }
         public int Depth { get; set; }

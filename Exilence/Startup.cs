@@ -1,34 +1,27 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using System.Timers;
+﻿using Exilence.Contexts;
 using Exilence.Hubs;
 using Exilence.Interfaces;
+using Exilence.Repositories;
 using Exilence.Services;
-using Exilence.Store;
 using Hangfire;
 using Hangfire.MemoryStorage;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
-using Newtonsoft.Json.Serialization;
+using System;
 
 namespace Exilence
 {
     public class Startup
     {
-        private Timer leagueTimer;
-
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
-            leagueTimer = new Timer((1000 * 15));
-            leagueTimer.Elapsed += LeagueTimer_Elapsed;
         }
 
         public IConfiguration Configuration { get; }
@@ -36,6 +29,7 @@ namespace Exilence
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddDbContext<StoreContext>(options => options.UseSqlite("Data Source=store.db"));
 
             services.AddHangfire(c => c.UseMemoryStorage());
 
@@ -65,11 +59,18 @@ namespace Exilence
 
             services.AddScoped<ILadderService, LadderService>();
             services.AddHttpClient<IExternalService, ExternalService>();
+            services.AddScoped<IStoreRepository, StoreRepository>();
+            services.AddScoped<IRedisRepository, RedisRepository>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory, IServiceProvider serviceProvider)
         {
+            app.UseForwardedHeaders(new ForwardedHeadersOptions
+            {
+                ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto
+            });
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
@@ -83,7 +84,7 @@ namespace Exilence
             app.UseHangfireServer();
             app.UseHangfireDashboard();
 
-            //RecurringJob.AddOrUpdate<ILadderService>(ls => ls.UpdateLadders(), Cron.MinuteInterval(1));
+            RecurringJob.AddOrUpdate<ILadderService>(ls => ls.UpdateLadders(), Cron.MinuteInterval(1));
 
             app.UseSignalR(routes =>
             {
@@ -94,15 +95,8 @@ namespace Exilence
                 });
             });
 
-            LadderStore.Initialize();
-            ConnectionStore.Initialize();
-            leagueTimer.Start();
+
         }
 
-        // Using a timer to trigger the event since hangfire does not go below 1 minute intervals.
-        private void LeagueTimer_Elapsed(object sender, ElapsedEventArgs e)
-        {
-            BackgroundJob.Enqueue<ILadderService>(ls => ls.UpdateLadders());
-        }
     }
 }

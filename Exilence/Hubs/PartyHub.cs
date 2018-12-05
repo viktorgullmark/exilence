@@ -9,7 +9,6 @@ using Exilence.Helper;
 using System.Linq;
 using Exilence.Interfaces;
 using Newtonsoft.Json;
-using Exilence.Store;
 using Exilence.Models.Connection;
 
 namespace Exilence.Hubs
@@ -18,12 +17,16 @@ namespace Exilence.Hubs
     public class PartyHub : Hub
     {
         private IDistributedCache _cache;
+        private IStoreRepository _storeRepository;
+        private IRedisRepository _redisRepository;
 
         private string ConnectionId => Context.ConnectionId;
         
-        public PartyHub(IDistributedCache cache)
+        public PartyHub(IDistributedCache cache, IStoreRepository storeRepository, IRedisRepository redisRepository)
         {
             _cache = cache;
+            _storeRepository = storeRepository;
+            _redisRepository = redisRepository;
         }
                 
         public async Task JoinParty(string partyName, string playerObj)
@@ -148,7 +151,7 @@ namespace Exilence.Hubs
 
         public override async Task OnDisconnectedAsync(Exception exception)
         {
-            var partyName = GetPartynameFromIndex();
+            var partyName = await GetPartynameFromIndex();
 
             if (partyName != null)
             {
@@ -163,22 +166,21 @@ namespace Exilence.Hubs
             await base.OnDisconnectedAsync(exception);
         }
 
-        private string GetPartynameFromIndex()
+        private async Task<string> GetPartynameFromIndex()
         {
-            var result = ConnectionStore.ConnectionIndex.TryGetValue(ConnectionId, out var partyName);
-            return result ? partyName.PartyName : null;
+            var result = await _redisRepository.GetPartyNameFromConnection(ConnectionId);
+            return result;
         }
 
-        private bool RemoveFromIndex()
+        private async Task<bool> RemoveFromIndex()
         {
-            var success = ConnectionStore.ConnectionIndex.Remove(ConnectionId);
+            var success = await _redisRepository.RemoveConnection(ConnectionId);
             return success;
         }
 
-        private bool AddToIndex(string partyName)
+        private async Task AddToIndex(string partyName)
         {
-            var success = ConnectionStore.ConnectionIndex.TryAdd(ConnectionId, new ConnectionModel() { PartyName = partyName, ConnectedDate = DateTime.Now });
-            return success;
+            await _redisRepository.AddConnection(ConnectionId, partyName);
         }
     }
 }

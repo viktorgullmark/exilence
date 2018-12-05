@@ -23,9 +23,7 @@ namespace Exilence
             WebHost.CreateDefaultBuilder(args)
                 .UseKestrel(options =>
                 {
-                    options.Listen(IPAddress.Any, 80);
-                    //options.Limits.KeepAliveTimeout = new TimeSpan(0, 0, 30);
-                    //options.Limits.MaxConcurrentConnections = ;
+                    options.Listen(IPAddress.Loopback, 5678);
                 })
                 .ConfigureLogging((hostingContext, builder) =>
                 {
@@ -33,15 +31,18 @@ namespace Exilence
                     builder.AddFilter((provider, category, logLevel) =>
                     {
                         if (
-                        category == "Hangfire.BackgroundJobServer" ||
-                        category == " Hangfire.Processing.BackgroundExecution" || 
-                        category == "Hangfire.Server.BackgroundServerProcess")
+                        logLevel == LogLevel.Trace ||
+                        logLevel == LogLevel.Debug ||
+                        logLevel == LogLevel.Information
+                        )
                         {
                             return false;
                         }
 
                         return true;
                     });
+
+
                     builder.AddFile("Logs/Exilence-{Date}.txt");
                 })
                 .UseStartup<Startup>();

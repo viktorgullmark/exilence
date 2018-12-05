@@ -9,7 +9,6 @@ using Microsoft.Extensions.Caching.Distributed;
 using Exilence.Helper;
 using Microsoft.Extensions.Logging;
 using Exilence.Models.Ladder;
-using Exilence.Store;
 using Exilence.Models.Connection;
 
 namespace Exilence
@@ -19,11 +18,15 @@ namespace Exilence
     {
         private IDistributedCache _cache;
         private ILogger<StatsController> _log;
+        private IStoreRepository _storeRepository;
+        private IRedisRepository _redisRepository;
 
-        public StatsController(IDistributedCache cache, ILogger<StatsController> log)
+        public StatsController(IDistributedCache cache, ILogger<StatsController> log, IStoreRepository storeRepository, IRedisRepository redisRepository)
         {
             _log = log;
             _cache = cache;
+            _storeRepository = storeRepository;
+            _redisRepository = redisRepository;
         }
 
         // GET: /<controller>/
@@ -33,32 +36,39 @@ namespace Exilence
             var partyList = new List<PartyStatistics>();
             int players = 0;
 
-            var parties = ConnectionStore.ConnectionIndex ?? new Dictionary<string, ConnectionModel>();
-
-            foreach (var partyName in parties.Select(t => t.Value.PartyName).Distinct().ToList())
-            {   
-                if (partyName != null)
+            var parties = await _redisRepository.GetAllConnections();
+            if (parties != null)
+            {
+                foreach (var partyName in parties.Select(t => t.PartyName).Distinct().ToList())
                 {
-                    var party = await _cache.GetAsync<PartyModel>($"party:{partyName}");
-                    PartyStatistics partyStats = new PartyStatistics { };
-                    partyStats.Players = party.Players.Select(t => t.Character.Name).ToList();
-                    partyList.Add(partyStats);
-                    players += partyStats.Players.Count;
+                    if (partyName != null)
+                    {
+                        var party = await _cache.GetAsync<PartyModel>($"party:{partyName}");
+                        PartyStatistics partyStats = new PartyStatistics { };
+                        partyStats.Players = party.Players.Select(t => t.Character.Name).ToList();
+                        partyList.Add(partyStats);
+                        players += partyStats.Players.Count;
+                    }
                 }
             }
 
-            var statuses = LadderStore.GeAllLadderStatuses();
+            var statuses = await _redisRepository.GetAllLeaguesLadders();
+
+            if (statuses == null)
+            {
+                statuses = new List<LadderStoreModel>();
+            }
 
             var response = new
             {
                 totalParties = partyList.Count(),
                 totalPlayers = players,
                 parties = partyList,
-                leagues = statuses.OrderByDescending(t => t.Value.Finished).Select(x => new {
-                    Name = x.Key,
-                    Running = x.Value.Running,
-                    Started = x.Value.Started.ToString("yyyy-MM-dd HH:mm:ss"),
-                    Finished = x.Value.Finished.ToString("yyyy-MM-dd HH:mm:ss")
+                leagues = statuses.Select(t => new { t.Name, t.Running, t.Finished, t.Started }).OrderByDescending(t => t.Finished).Select(x => new {
+                    Name = x.Name,
+                    Running = x.Running,
+                    Started = x.Started.ToString("yyyy-MM-dd HH:mm:ss"),
+                    Finished = x.Finished.ToString("yyyy-MM-dd HH:mm:ss")
                 })
             };
 
