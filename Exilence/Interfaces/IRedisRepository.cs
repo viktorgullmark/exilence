@@ -24,5 +24,7 @@ namespace Exilence.Interfaces
         Task<string> GetPartyNameFromConnection(string connectionId);
         Task AddConnection(string connectionId, string partyName);
         Task<bool> RemoveConnection(string connectionId);
+
+        Task<PartyModel> GetParty(string partyName);
     }
 }

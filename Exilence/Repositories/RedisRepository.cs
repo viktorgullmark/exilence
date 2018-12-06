@@ -1,11 +1,9 @@
-﻿using Exilence.Contexts;
+﻿using Exilence.Helper;
 using Exilence.Interfaces;
 using Exilence.Models;
 using Exilence.Models.Connection;
 using Exilence.Models.Ladder;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Distributed;
-using Exilence.Helper;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -74,7 +72,7 @@ namespace Exilence.Repositories
             ladders.Remove(league);
             await _cache.SetAsync<List<string>>($"ladder:index", ladders);
             await _cache.RemoveAsync($"ladder:{league}");
-            
+
         }
 
         public async Task SetLeagueLadderRunning(string leagueName)
@@ -145,6 +143,8 @@ namespace Exilence.Repositories
             return connections;
         }
 
+        #region Connections
+
         public async Task<string> GetPartyNameFromConnection(string connectionId)
         {
             var connections = await GetAllConnections();
@@ -190,8 +190,24 @@ namespace Exilence.Repositories
                 connections = new List<ConnectionModel>();
             }
 
+            var existingConnection = connections.FirstOrDefault(t => t.ConnectionId == connectionId);
+            if (existingConnection != null)
+            {
+                connections.Remove(existingConnection);
+            }
+
             connections.Add(connectionModel);
             await _cache.SetAsync<List<ConnectionModel>>($"connections", connections);
         }
+
+        #endregion
+
+        #region Parties 
+        public async Task<PartyModel> GetParty(string partyName)
+        {
+            var party = await _cache.GetAsync<PartyModel>($"party:{partyName}");
+            return party;
+        }
+        #endregion
     }
 }

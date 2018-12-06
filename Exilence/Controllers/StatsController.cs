@@ -34,20 +34,30 @@ namespace Exilence
         public async Task<IActionResult> Index()
         {
             var partyList = new List<PartyStatistics>();
+            var connectionsWithoutParty = new List<string>();
+
             int players = 0;
 
-            var parties = await _redisRepository.GetAllConnections();
-            if (parties != null)
+            var connections = await _redisRepository.GetAllConnections();
+            if (connections != null)
             {
-                foreach (var partyName in parties.Select(t => t.PartyName).Distinct().ToList())
+                foreach (var connection in connections.Distinct().ToList())
                 {
-                    if (partyName != null)
+                    if (connection.PartyName != null)
                     {
-                        var party = await _cache.GetAsync<PartyModel>($"party:{partyName}");
-                        PartyStatistics partyStats = new PartyStatistics { };
-                        partyStats.Players = party.Players.Select(t => t.Character.Name).ToList();
-                        partyList.Add(partyStats);
-                        players += partyStats.Players.Count;
+                        var party = await _redisRepository.GetParty(connection.PartyName);
+                        if (party != null)
+                        {
+                            PartyStatistics partyStats = new PartyStatistics { };
+                            partyStats.Players = party.Players.Select(t => t.Character.Name).ToList();
+                            partyList.Add(partyStats);
+                            players += partyStats.Players.Count;
+                        }
+                        else
+                        {
+                            connectionsWithoutParty.Add(connection.ConnectionId);
+                            //await _redisRepository.RemoveConnection(connection.ConnectionId);
+                        }
                     }
                 }
             }
@@ -63,13 +73,15 @@ namespace Exilence
             {
                 totalParties = partyList.Count(),
                 totalPlayers = players,
-                parties = partyList,
                 leagues = statuses.Select(t => new { t.Name, t.Running, t.Finished, t.Started }).OrderByDescending(t => t.Finished).Select(x => new {
                     Name = x.Name,
                     Running = x.Running,
                     Started = x.Started.ToString("yyyy-MM-dd HH:mm:ss"),
                     Finished = x.Finished.ToString("yyyy-MM-dd HH:mm:ss")
-                })
+                }),
+                connectionsWithoutParty,
+                parties = partyList,
+
             };
 
             return Ok(response);

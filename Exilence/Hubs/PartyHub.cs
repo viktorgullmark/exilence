@@ -111,6 +111,14 @@ namespace Exilence.Hubs
         {
             var player = CompressionHelper.Decompress<PlayerModel>(playerObj);
 
+            // Look over this but seems to work for now?
+            var connectionParty = await _redisRepository.GetPartyNameFromConnection(ConnectionId);
+            if (connectionParty == null)
+            {
+                await JoinParty(partyName, playerObj);
+                return;
+            }            
+
             var party = await _cache.GetAsync<PartyModel>($"party:{partyName}");
             if (party != null)
             {
@@ -120,6 +128,7 @@ namespace Exilence.Hubs
                     party.Players[index] = player;
                     await _cache.SetAsync<PartyModel>($"party:{partyName}", party);
                     await Clients.Group(partyName).SendAsync("PlayerUpdated", CompressionHelper.Compress(player));
+
                 }
             }
             else
@@ -156,11 +165,14 @@ namespace Exilence.Hubs
             if (partyName != null)
             {
                 var foundParty = await _cache.GetAsync<PartyModel>($"party:{partyName}");
-                var foundPlayer = foundParty.Players.FirstOrDefault(x => x.ConnectionID == Context.ConnectionId);
-                if (foundPlayer != null)
-                {   //This compression and then uncompression is ugly
-                    await LeaveParty(partyName, CompressionHelper.Compress(foundPlayer));
-                    var success = RemoveFromIndex();
+                if (foundParty != null)
+                {
+                    var foundPlayer = foundParty.Players.FirstOrDefault(x => x.ConnectionID == Context.ConnectionId);
+                    if (foundPlayer != null)
+                    {   //This compression and then uncompression is ugly
+                        await LeaveParty(partyName, CompressionHelper.Compress(foundPlayer));
+                        var success = RemoveFromIndex();
+                    }
                 }
             }
             await base.OnDisconnectedAsync(exception);
