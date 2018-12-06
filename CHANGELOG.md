@@ -4,6 +4,7 @@ All notable changes to this project will be documented in this file.
 ## [0.8.4] - 2018-12-XX
 - Added option to include/exclude low confidence prices (excluded by default)
 - Reformatted timestamps for net worth graph
+- Improved tutorial-tooltips
 
 ## [0.8.3] - 2018-12-06
 - Added a direct restart-link to updatenotification-toolbar

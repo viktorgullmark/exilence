@@ -62,8 +62,7 @@ export class DashboardComponent implements OnInit, AfterViewInit {
             icon: 'info',
             title: 'Welcome to Exilence!',
             // tslint:disable-next-line:max-line-length
-            content: 'Start by selecting stashtabs in settings.<br/><br/>' +
-              'Then continue by entering a group-name in the top-left.'
+            content: 'To begin, enter a group-name in the top-left and tell your friends enter the same.'
           }
         });
         dialogRef.afterClosed().subscribe(result => {
