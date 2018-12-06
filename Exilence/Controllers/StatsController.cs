@@ -34,29 +34,23 @@ namespace Exilence
         public async Task<IActionResult> Index()
         {
             var partyList = new List<PartyStatistics>();
-            var connectionsWithoutParty = new List<string>();
 
             int players = 0;
 
             var connections = await _redisRepository.GetAllConnections();
             if (connections != null)
             {
-                foreach (var connection in connections.Distinct().ToList())
+                foreach (var connection in connections.GroupBy(t => t.PartyName).ToList())
                 {
-                    if (connection.PartyName != null)
+                    if (connection.Key != null)
                     {
-                        var party = await _redisRepository.GetParty(connection.PartyName);
+                        var party = await _redisRepository.GetParty(connection.Key);
                         if (party != null)
                         {
                             PartyStatistics partyStats = new PartyStatistics { };
                             partyStats.Players = party.Players.Select(t => t.Character.Name).ToList();
                             partyList.Add(partyStats);
                             players += partyStats.Players.Count;
-                        }
-                        else
-                        {
-                            connectionsWithoutParty.Add(connection.ConnectionId);
-                            //await _redisRepository.RemoveConnection(connection.ConnectionId);
                         }
                     }
                 }
@@ -79,7 +73,6 @@ namespace Exilence
                     Started = x.Started.ToString("yyyy-MM-dd HH:mm:ss"),
                     Finished = x.Finished.ToString("yyyy-MM-dd HH:mm:ss")
                 }),
-                connectionsWithoutParty,
                 parties = partyList,
 
             };
