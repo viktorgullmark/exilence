@@ -37,7 +37,7 @@ namespace Exilence.Hubs
             player.ConnectionID = Context.ConnectionId;
 
             //update ConnectionId:Partyname index
-            var success = AddToIndex(partyName);
+            await AddToIndex(partyName);
 
             // look for party
             var party = await _cache.GetAsync<PartyModel>($"party:{partyName}");
@@ -192,7 +192,10 @@ namespace Exilence.Hubs
 
         private async Task AddToIndex(string partyName)
         {
-            await _redisRepository.AddConnection(ConnectionId, partyName);
+            if (partyName != "")
+            {
+                await _redisRepository.AddConnection(ConnectionId, partyName);
+            }
         }
     }
 }
