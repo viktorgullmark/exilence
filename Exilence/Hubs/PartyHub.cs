@@ -110,16 +110,8 @@ namespace Exilence.Hubs
         public async Task UpdatePlayer(string partyName, string playerObj)
         {
             var player = CompressionHelper.Decompress<PlayerModel>(playerObj);
-
-            // Look over this but seems to work for now?
-            var connectionParty = await _redisRepository.GetPartyNameFromConnection(ConnectionId);
-            if (connectionParty == null)
-            {
-                await JoinParty(partyName, playerObj);
-                return;
-            }            
-
             var party = await _cache.GetAsync<PartyModel>($"party:{partyName}");
+
             if (party != null)
             {
                 var index = party.Players.IndexOf(party.Players.FirstOrDefault(x => x.ConnectionID == player.ConnectionID));
