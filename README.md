@@ -24,13 +24,13 @@ https://www.youtube.com/watch?v=3YdWM2kS4BA&t=2s
 - [Help with development](#help-with-development)
 - [Acknowledgements](#acknowledgements)
 
-## How to install
-
-https://imgur.com/a/cBibtoF
-
 ## Important
 
 We do not own a code-signing certificate for the application, which means you will receive a warning the first time you launch the .exe. To get around this, just press "More info" -> "Run anyway" when it pops up, and the warning won't be displayed for you again.
+
+## How to install
+
+https://imgur.com/a/cBibtoF
 
 ## Platform
 
