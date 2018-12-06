@@ -52,7 +52,7 @@ export class PartySummaryComponent implements OnInit {
           title: 'Currency summary',
           // tslint:disable-next-line:max-line-length
           content: 'This tab updates when a partymember changes area in game, at most once every 5 minutes.<br/><br/>' +
-          'We store all your parties net worth data one week back in time. This will be extended in the future.'
+          'We store all your parties net worth data two weeks back in time. This will be extended in the future.'
         }
       });
       dialogRef.afterClosed().subscribe(result => {

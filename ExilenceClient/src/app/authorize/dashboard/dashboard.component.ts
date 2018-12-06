@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, AfterViewChecked, AfterViewInit } from '@angular/core';
 import { Router } from '@angular/router';
 
 import { Player } from '../../shared/interfaces/player.interface';
@@ -6,6 +6,9 @@ import { AccountService } from '../../shared/providers/account.service';
 import { AnalyticsService } from '../../shared/providers/analytics.service';
 import { ElectronService } from '../../shared/providers/electron.service';
 import { PartyService } from '../../shared/providers/party.service';
+import { InfoDialogComponent } from '../components/info-dialog/info-dialog.component';
+import { MatDialog } from '@angular/material';
+import { SettingsService } from '../../shared/providers/settings.service';
 
 @Component({
   selector: 'app-dashboard',
@@ -13,7 +16,7 @@ import { PartyService } from '../../shared/providers/party.service';
   styleUrls: ['./dashboard.component.scss']
 })
 
-export class DashboardComponent implements OnInit {
+export class DashboardComponent implements OnInit, AfterViewInit {
 
   isLoading = true;
   recentParties: string[];
@@ -25,7 +28,9 @@ export class DashboardComponent implements OnInit {
     private partyService: PartyService,
     private accountService: AccountService,
     private analyticsService: AnalyticsService,
+    private settingsService: SettingsService,
     private router: Router,
+    private dialog: MatDialog
   ) {
 
     this.partyService.recentParties.subscribe(parties => {
@@ -42,6 +47,30 @@ export class DashboardComponent implements OnInit {
     setTimeout(() => {
       this.isLoading = false;
     }, 2000);
+  }
+
+  ngAfterViewInit() {
+    this.openDashboardDialog();
+  }
+
+  openDashboardDialog(): void {
+    setTimeout(() => {
+      if (!this.settingsService.get('diaShown_dashboard') && !this.settingsService.get('hideTooltips')) {
+        const dialogRef = this.dialog.open(InfoDialogComponent, {
+          width: '650px',
+          data: {
+            icon: 'info',
+            title: 'Welcome to Exilence!',
+            // tslint:disable-next-line:max-line-length
+            content: 'Start by selecting stashtabs in settings.<br/><br/>' +
+              'Then continue by entering a group-name in the top-left.'
+          }
+        });
+        dialogRef.afterClosed().subscribe(result => {
+          this.settingsService.set('diaShown_dashboard', true);
+        });
+      }
+    });
   }
 
   removePartyFromRecent(party: string) {

@@ -207,6 +207,7 @@ export class SettingsComponent implements OnInit {
 
   resetDialogs() {
     this.settingsService.set('diaShown_wealth', false);
+    this.settingsService.set('diaShown_dashboard', false);
     this.settingsService.set('diaShown_equipment', false);
     this.settingsService.set('diaShown_maps', false);
     this.settingsService.set('diaShown_loginfo', false);
