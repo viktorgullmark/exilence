@@ -241,12 +241,12 @@ export class IncomeService {
                 const receive = line.receive;
                 const pay = line.pay;
                 if (receive !== undefined && receive !== null) {
-                  if (receive.count < 5) {
+                  if (receive.count < 10) {
                     return;
                   }
                 }
                 if (pay !== undefined && pay !== null) {
-                  if (pay.count < 5) {
+                  if (pay.count < 10) {
                     return;
                   }
                 }

@@ -1,6 +1,9 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [0.8.5] - 2018-12-XX
+- Changed price-confidence to be more strict
+
 ## [0.8.4] - 2018-12-06
 - Added support for new atlas (3.5)
 - Added option to include/exclude low confidence prices (excluded by default)
