@@ -22,6 +22,7 @@ export class SettingsComponent implements OnInit {
   alwaysOnTop = false;
   isResizable = false;
   hideTooltips = false;
+  lowConfidencePricing = false;
   sessionId: string;
   sessionIdValid: boolean;
   uploaded = false;
@@ -123,9 +124,13 @@ export class SettingsComponent implements OnInit {
     }
 
     const hideTooltipsSetting = this.settingsService.get('hideTooltips');
-
     if (hideTooltipsSetting !== undefined) {
       this.hideTooltips = hideTooltipsSetting;
+    }
+
+    const lowConfidencePricingSetting = this.settingsService.get('lowConfidencePricing');
+    if (lowConfidencePricingSetting !== undefined) {
+      this.lowConfidencePricing = lowConfidencePricingSetting;
     }
   }
 
@@ -189,6 +194,14 @@ export class SettingsComponent implements OnInit {
       this.settingsService.set('hideTooltips', true);
     } else {
       this.settingsService.set('hideTooltips', false);
+    }
+  }
+
+  toggleLowConfidencePricing() {
+    if (this.lowConfidencePricing) {
+      this.settingsService.set('lowConfidencePricing', true);
+    } else {
+      this.settingsService.set('lowConfidencePricing', false);
     }
   }
 

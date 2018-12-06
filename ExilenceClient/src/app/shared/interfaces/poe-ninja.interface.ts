@@ -70,6 +70,8 @@ export interface NinjaLine {
     chaosValue?: number;
     exaltedValue?: number;
     links?: number;
+    receive?: any;
+    pay?: any;
 }
 
 export interface NinjaCurrencyDetail {

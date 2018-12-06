@@ -20,6 +20,12 @@
         &nbsp;Window
       </ng-template>
     </mat-tab>
+    <mat-tab #networth id="networth">
+      <ng-template mat-tab-label>
+        <mat-icon class="tab-icon">attach_money</mat-icon>
+        &nbsp;Net worth
+      </ng-template>
+    </mat-tab>
     <mat-tab #general settings id="general">
       <ng-template mat-tab-label>
         <mat-icon class="tab-icon">info</mat-icon>
@@ -150,6 +156,19 @@
 
 <div [hidden]="selectedIndex != 3">
   <div class="setting-tab-content">
+    <h3 class="mat-h4 page-header">Pricing</h3>
+    <mat-divider class="divider"></mat-divider>
+    <div class="setting-inner-content">
+      <p class="setting-desc-text">
+        Check this setting to include low confidence prices
+      </p>
+      <mat-checkbox class="setting-checkbox" [(ngModel)]="lowConfidencePricing" (ngModelChange)="toggleLowConfidencePricing()">Low confidence pricing</mat-checkbox>
+    </div>
+  </div>
+</div>
+
+<div [hidden]="selectedIndex != 4">
+  <div class="setting-tab-content">
     <h3 class="mat-h4 page-header">Visibility</h3>
     <mat-divider class="divider"></mat-divider>
     <div class="setting-inner-content">
@@ -168,7 +187,7 @@
   </div>
 </div>
 
-<div [hidden]="selectedIndex != 4">
+<div [hidden]="selectedIndex != 5">
   <div class="setting-tab-content">
     <h3 class="mat-h4 page-header">
       This page is aimed to help you resolve any problems you might have with Exilence.

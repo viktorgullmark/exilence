@@ -41,6 +41,8 @@ export class IncomeService {
   private fiveMinutes = 5 * 60 * 1000;
   private sessionIdValid = false;
 
+  private lowConfidencePricing = false;
+
   constructor(
     private ninjaService: NinjaService,
     private accountService: AccountService,
@@ -220,6 +222,11 @@ export class IncomeService {
       this.lastNinjaHit = Date.now();
       this.ninjaPrices = [];
 
+      const setting = this.settingsService.get('lowConfidencePricing');
+      if (setting !== undefined) {
+        this.lowConfidencePricing = setting;
+      }
+
       const enumTypes = Object.values(NinjaTypes);
       return Observable
         .from(enumTypes)
@@ -228,6 +235,22 @@ export class IncomeService {
         .do(typeResponse => {
           if (typeResponse !== null) {
             typeResponse.lines.forEach((line: NinjaLine) => {
+
+              // Exclude low-confidence prices
+              if (!this.lowConfidencePricing) {
+                const receive = line.receive;
+                const pay = line.pay;
+                if (receive !== undefined && receive !== null) {
+                  if (receive.count < 5) {
+                    return;
+                  }
+                }
+                if (pay !== undefined && pay !== null) {
+                  if (pay.count < 5) {
+                    return;
+                  }
+                }
+              }
 
               // Filter each line here, probably needs improvement
               // But the response differse for Currency & Fragments hence the if's
