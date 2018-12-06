@@ -87,7 +87,8 @@ namespace Exilence.Services
             else
             {
                 LadderPlayerModel characterOnLadder = null;
-                if(league.Ladder != null) {  
+                if (league.Ladder != null)
+                {
                     characterOnLadder = league.Ladder.FirstOrDefault(t => t.Name == character);
                 }
 
@@ -110,16 +111,20 @@ namespace Exilence.Services
 
         public async Task UpdateLadders()
         {
-           var anyRunning = await _redisRepository.AnyLeageLadderRunning();
-            if (!anyRunning)
+            var leagues = await _redisRepository.GetAllLeaguesLadders();
+            if (leagues != null)
             {
-                var pendingLeague = await _redisRepository.GetLadderPendingUpdate();
-                if (pendingLeague != null)
+                var anyRunning = leagues.Any(t => t.Running);
+                var pendingLeague = leagues.OrderByDescending(t => t.Finished).LastOrDefault();
+
+                if (!anyRunning)
                 {
-                    var league = await _redisRepository.GetLeagueLadder(pendingLeague);
-                    if (league.Finished < DateTime.Now.AddMinutes(-5))
+                    if (pendingLeague != null)
                     {
-                        await UpdateLadder(pendingLeague);
+                        if (pendingLeague.Finished < DateTime.Now.AddMinutes(-5))
+                        {
+                            await UpdateLadder(pendingLeague.Name);
+                        }
                     }
                 }
             }
@@ -182,7 +187,7 @@ namespace Exilence.Services
             if (newLadder.Count > 0)
             {
                 newLadder = CalculateStatistics(oldLadder, newLadder);
-              await _redisRepository.UpdateLeagueLadder(leagueName, newLadder);
+                await _redisRepository.UpdateLeagueLadder(leagueName, newLadder);
             }
         }
 
