@@ -1,7 +1,8 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
-## [0.8.4] - 2018-12-XX
+## [0.8.4] - 2018-12-06
+- Added support for new atlas (3.5)
 - Added option to include/exclude low confidence prices (excluded by default)
 - Reformatted timestamps for net worth graph
 - Changed the default stashtab-selection to the 10 first tabs, up from 5
