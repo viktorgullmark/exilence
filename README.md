@@ -19,9 +19,14 @@ https://www.youtube.com/watch?v=3YdWM2kS4BA&t=2s
 
 - [Changelog](https://github.com/viktorgullmark/exilence/blob/master/CHANGELOG.md)
 - [Important](#important)
+- [How to install](#how-to-install)
 - [Platform](#platform)
 - [Help with development](#help-with-development)
 - [Acknowledgements](#acknowledgements)
+
+## How to install
+
+https://imgur.com/a/cBibtoF
 
 ## Important
 
