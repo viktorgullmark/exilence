@@ -48,7 +48,7 @@ export class StashtabListComponent implements OnInit, OnDestroy {
 
     if (selectedStashTabs === undefined) {
       selectedStashTabs = [];
-      for (let i = 0; i < 6; i++) {
+      for (let i = 0; i < 11; i++) {
         selectedStashTabs.push({ name: '', position: i });
       }
     }
