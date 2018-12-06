@@ -6,6 +6,7 @@ All notable changes to this project will be documented in this file.
 - Reformatted timestamps for net worth graph
 - Changed the default stashtab-selection to the 10 first tabs, up from 5
 - Style-tweaks to disconnected-page
+- Fixed an error where Delve-leagues could still be selected
 - Improved tutorial-tooltips
 
 ## [0.8.3] - 2018-12-06

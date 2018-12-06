@@ -189,6 +189,20 @@ export class LoginComponent implements OnInit {
     }
 
     ngOnInit() {
+
+        // temporary clearing of settings if delve is still set
+        if (this.leagueName === 'Delve' ||
+            this.leagueName === 'Hardcore Delve' ||
+            this.leagueName === 'SSF Delve HC' ||
+            this.leagueName === 'SSF Delve' ||
+            this.tradeLeagueName === 'Delve' ||
+            this.tradeLeagueName === 'Hardcore Delve' ||
+            this.tradeLeagueName === 'SSF Delve HC' ||
+            this.tradeLeagueName === 'SSF Delve') {
+            this.settingsService.deleteAll();
+            this.stepper.selectedIndex = 0;
+        }
+
         this.accountService.loggingIn = true;
         this.accountService.characterList.subscribe(res => {
             if (res !== undefined) {
