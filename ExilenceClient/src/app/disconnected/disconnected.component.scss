@@ -9,10 +9,31 @@
 
 
     &.text-block {
-        width: 40%;
+        width: 47%;
     }
 }
 
 .relaunch-btn{
     float:right;
+}
+.discord-wrapper {
+    // width: 265px !important;
+    float: left;
+    display: flex;
+    .discord-logo {
+        flex: 1;
+        cursor: pointer;        
+        content:url("./../../assets/img/discord-logo-white.svg");
+    }
+}
+
+.contact-area {
+    display: flex;
+    width: 100%;
+    .contact-area-left, .contact-area-right {
+        width: 50%;
+        p {
+            float: right;
+        }
+    }
 }
