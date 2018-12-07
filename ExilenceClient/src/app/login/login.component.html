@@ -37,6 +37,7 @@
     <mat-step [stepControl]="leagueFormGroup" [editable]="!privateProfileError">
       <form [formGroup]="leagueFormGroup">
         <ng-template matStepLabel>{{'LEAGUE.LEAGUE_INFO' | translate}}</ng-template>
+        <span class="mat-body-1">We fetch leagues from your character-list, which means you will have to create a new character in the league for it to be displayed here if you don't already have a character in it.<br/><br/></span>
         <mat-form-field>
           <mat-select formControlName="leagueName" (selectionChange)="mapTradeLeague($event)" placeholder="{{'LEAGUE.NAME' | translate}}"
             required>

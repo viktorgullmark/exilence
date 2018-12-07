@@ -1,8 +1,9 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
-## [0.8.5] - 2018-12-XX
+## [0.8.5] - 2018-12-07
 - Changed price-confidence to be more strict
+- Minor QoL-improvements to login-process, with more descriptive text
 
 ## [0.8.4] - 2018-12-06
 - Added support for new atlas (3.5)
