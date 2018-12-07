@@ -213,9 +213,9 @@ export class IncomeService {
   }
 
   getValuesFromNinja(league: string) {
-    const oneHourAgo = (Date.now() - (1 * 60 * 60 * 1000));
+    const tenMinutesAgo = (Date.now() - (1 * 60 * 10 * 1000));
     const length = Object.values(this.ninjaPrices).length;
-    if (length > 0 && (this.lastNinjaHit > oneHourAgo && !this.externalService.tradeLeagueChanged)) {
+    if (length > 0 && (this.lastNinjaHit > tenMinutesAgo && !this.externalService.tradeLeagueChanged)) {
       return Observable.of(null);
     } else {
       this.logService.log('[INFO] Retriving prices from poe.ninja');

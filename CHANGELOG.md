@@ -3,6 +3,7 @@ All notable changes to this project will be documented in this file.
 
 ## [0.8.5] - 2018-12-07
 - Changed price-confidence to be more strict
+- Changed interval for fetching prices (now every 10 minutes, previously once every hour)
 - Minor QoL-improvements to login-process, with more descriptive text
 
 ## [0.8.4] - 2018-12-06
