@@ -3,7 +3,7 @@
     <mat-step [stepControl]="accFormGroup" editable="true" completed="true">
       <form [formGroup]="accFormGroup">
         <ng-template matStepLabel>{{'ACCOUNT.NAME_INFO' | translate}}</ng-template>
-        <span class="mat-body-1">This should be your actual accountname, not the email associated with your account.<br/><br/></span>
+        <span class="mat-body-1">Please make sure you type your accountname correctly. Note that this is not the same as the email-address associated with your account.<br/><br/></span>
         <mat-form-field>
           <input matInput formControlName="accountName" placeholder="{{'ACCOUNT.NAME' | translate}}" required>
         </mat-form-field>
