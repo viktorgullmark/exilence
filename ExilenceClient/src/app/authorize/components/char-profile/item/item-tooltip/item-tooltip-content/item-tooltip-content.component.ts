@@ -10,26 +10,9 @@ import { Property } from '../../../../../../shared/interfaces/property.interface
 })
 export class ItemTooltipContentComponent implements OnInit {
   @Input() item: Item;
-  physDmgProp: Property;
-  eleDmgProp: Property;
-  apsProp: Property;
-  physMinMax: Array<string>;
-  eleMinMax: Array<string>;
   constructor() { }
 
   ngOnInit() {
-    // check if the item is a weapon by identifying properties
-    if (this.item !== undefined && this.item.properties !== undefined && this.item.properties !== null) {
-      this.physDmgProp = this.item.properties.find(x => x.name === 'Physical Damage');
-      this.eleDmgProp = this.item.properties.find(x => x.name === 'Elemental Damage');
-      this.apsProp = this.item.properties.find(x => x.name === 'Attacks per Second');
-      if (this.physDmgProp !== undefined) {
-        this.physMinMax = this.physDmgProp.values[0][0].split('-');
-      }
-      if (this.eleDmgProp !== undefined) {
-        this.eleMinMax = this.eleDmgProp.values[0][0].split('-');
-      }
-    }
   }
 
   getExplicitModClass(explicit) {
@@ -59,8 +42,8 @@ export class ItemTooltipContentComponent implements OnInit {
   }
 
   formatVeiledMod(veiled) {
-      const mod = veiled.substring(0, 6);
-      return 'Veiled ' + mod;
+    const mod = veiled.substring(0, 6);
+    return 'Veiled ' + mod;
   }
 
   formatDivCard(text) {
@@ -107,26 +90,41 @@ export class ItemTooltipContentComponent implements OnInit {
     return result;
   }
 
-  isWeapon() {
-    if ((this.physDmgProp !== undefined || this.eleDmgProp !== undefined) && this.apsProp !== undefined) {
+  isWeapon(itemProps: any[]) {
+    const eleDmgProp = itemProps.find(x => x.name === 'Elemental Damage');
+    const apsProp = itemProps.find(x => x.name === 'Attacks per Second');
+    const physDmgProp = itemProps.find(x => x.name === 'Physical Damage');
+    if ((physDmgProp !== undefined || eleDmgProp !== undefined) && apsProp !== undefined) {
       return true;
     }
     return false;
   }
 
-  getTotalDps() {
-    return this.getEleDps() + this.getPhysDps();
+  getTotalDps(itemProps: any[]) {
+    return this.getEleDps(itemProps) + this.getPhysDps(itemProps);
   }
 
-  getEleDps() {
-    if (this.eleMinMax !== undefined) {
-      return (+this.eleMinMax[0] + +this.eleMinMax[1]) / 2 * + this.apsProp.values[0][0];
+  getEleDps(itemProps: any[]) {
+    const eleDmgProp = itemProps.find(x => x.name === 'Elemental Damage');
+    const apsProp = itemProps.find(x => x.name === 'Attacks per Second');
+    let eleMinMax;
+    if (eleDmgProp !== undefined) {
+      eleMinMax = eleDmgProp.values[0][0].split('-');
+    }
+    if (eleMinMax !== undefined) {
+      return (+eleMinMax[0] + +eleMinMax[1]) / 2 * + apsProp.values[0][0];
     } return 0;
   }
 
-  getPhysDps() {
-    if (this.physMinMax !== undefined) {
-      return (+this.physMinMax[0] + +this.physMinMax[1]) / 2 * + this.apsProp.values[0][0];
+  getPhysDps(itemProps: any[]) {
+    const physDmgProp = itemProps.find(x => x.name === 'Physical Damage');
+    const apsProp = itemProps.find(x => x.name === 'Attacks per Second');
+    let physMinMax;
+    if (physDmgProp !== undefined) {
+      physMinMax = physDmgProp.values[0][0].split('-');
+    }
+    if (physMinMax !== undefined) {
+      return (+physMinMax[0] + +physMinMax[1]) / 2 * + apsProp.values[0][0];
     } return 0;
   }
 }
