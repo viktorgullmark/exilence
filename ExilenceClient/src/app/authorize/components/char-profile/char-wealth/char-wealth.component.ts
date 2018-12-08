@@ -17,6 +17,7 @@ import { KeybindService } from '../../../../shared/providers/keybind.service';
 import { AlertService } from '../../../../shared/providers/alert.service';
 import { InfoDialogComponent } from '../../info-dialog/info-dialog.component';
 import { MatDialog } from '@angular/material';
+import * as moment from 'moment';
 
 @Component({
   selector: 'app-char-wealth',
@@ -82,6 +83,10 @@ export class CharWealthComponent implements OnInit {
 
   goToSettings() {
     this.router.navigate(['/authorized/settings']);
+  }
+
+  formatSnapshot(timestamp) {
+    return moment(timestamp).fromNow();
   }
 
   toggleGraph(event: boolean) {

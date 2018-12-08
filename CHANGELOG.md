@@ -6,6 +6,7 @@ All notable changes to this project will be documented in this file.
 - Ladders are now fetched 4 times as often as before
 - Added option to mask your groupname (for streamers etc), password-protection will be added in the future
 - Added better description for net worth tab if no history is present
+- Now shows when last the snapshot occurred, next to gain/net worth
 - Fixed a bug where DPS on weapons was not shown correctly
 - Fixed a bug where too much net worth history was being sent
 - Changed text for pop out button, now called 'Use overlay'

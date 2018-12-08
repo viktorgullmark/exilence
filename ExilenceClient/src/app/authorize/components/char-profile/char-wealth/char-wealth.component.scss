@@ -53,7 +53,7 @@
 
         .networth-wrapper {
             float: left;
-            width: 33.333%;
+            width: 25%;
 
             .title {
                 font-size: 14px;
@@ -73,6 +73,11 @@
                 }
 
                 .networth-placeholder {
+                    color: $networth-placeholder-color;
+                }
+
+                .networth-snapshot {
+                    font-size: 13px;
                     color: $networth-placeholder-color;
                 }
             }
