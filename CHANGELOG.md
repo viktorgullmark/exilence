@@ -5,11 +5,12 @@ All notable changes to this project will be documented in this file.
 - Now shares the past 24 hours of data with your group, up from 1 hour
 - Ladders are now fetched 4 times as often as before
 - Added option to mask your groupname (for streamers etc), password-protection will be added in the future
-- Added better description for net worth tab if no history is present
-- Now shows when last the snapshot occurred, next to gain/net worth
 - Fixed a bug where DPS on weapons was not shown correctly
 - Fixed a bug where too much net worth history was being sent
 - Fixed a bug where net worth snapshots would sometimes stop
+- Added better description for net worth tab if no history is present
+- Added changelog-link to dashboard
+- Now shows when last the snapshot occurred, next to gain/net worth
 - Changed text for pop out button, now called 'Use overlay'
 
 ## [0.8.6] - 2018-12-07
