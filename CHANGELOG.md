@@ -9,6 +9,7 @@ All notable changes to this project will be documented in this file.
 - Now shows when last the snapshot occurred, next to gain/net worth
 - Fixed a bug where DPS on weapons was not shown correctly
 - Fixed a bug where too much net worth history was being sent
+- Fixed a bug where net worth snapshots would sometimes stop
 - Changed text for pop out button, now called 'Use overlay'
 
 ## [0.8.6] - 2018-12-07

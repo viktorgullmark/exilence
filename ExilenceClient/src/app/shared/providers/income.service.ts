@@ -144,56 +144,58 @@ export class IncomeService {
     ).do(() => {
       this.logService.log('Finished retriving stashhtabs and value information.');
       this.playerStashTabs.forEach((tab: Stash, tabIndex: number) => {
-        tab.items.forEach((item: Item) => {
+        if (tab !== null) {
+          tab.items.forEach((item: Item) => {
 
-          let itemName = item.name;
+            let itemName = item.name;
 
-          if (item.typeLine) {
-            itemName += ' ' + item.typeLine;
-          }
-
-          itemName = itemName.replace('<<set:MS>><<set:M>><<set:S>>', '').trim();
-
-          if (typeof this.ninjaPrices[itemName] !== 'undefined' || itemName === 'Chaos Orb') {
-
-            let valueForItem = this.ninjaPrices[itemName];
-            if (itemName === 'Chaos Orb') {
-              valueForItem = 1;
+            if (item.typeLine) {
+              itemName += ' ' + item.typeLine;
             }
 
-            let stacksize = 1;
-            let totalValueForItem = valueForItem;
-            if (item.stackSize) {
-              stacksize = item.stackSize;
-              totalValueForItem = (valueForItem * stacksize);
-            }
+            itemName = itemName.replace('<<set:MS>><<set:M>><<set:S>>', '').trim();
 
-            // Hide items with a total value under 1 chaos
-            if (totalValueForItem >= 1) {
-              // If item already exists in array, update existing
-              const existingItem = this.totalNetWorthItems.find(x => x.name === itemName);
-              if (existingItem !== undefined) {
-                const indexOfItem = this.totalNetWorthItems.indexOf(existingItem);
-                // update existing item with new data
-                existingItem.stacksize = existingItem.stacksize + stacksize;
-                existingItem.value = existingItem.value + totalValueForItem;
-                this.totalNetWorthItems[indexOfItem] = existingItem;
-              } else {
-                // Add new item
-                const netWorthItem: NetWorthItem = {
-                  name: itemName,
-                  value: totalValueForItem,
-                  valuePerUnit: valueForItem,
-                  icon: item.icon.indexOf('?') >= 0
-                    ? item.icon.substring(0, item.icon.indexOf('?')) + '?scale=1&scaleIndex=3&w=1&h=1'
-                    : item.icon + '?scale=1&scaleIndex=3&w=1&h=1',
-                  stacksize
-                };
-                this.totalNetWorthItems.push(netWorthItem);
+            if (typeof this.ninjaPrices[itemName] !== 'undefined' || itemName === 'Chaos Orb') {
+
+              let valueForItem = this.ninjaPrices[itemName];
+              if (itemName === 'Chaos Orb') {
+                valueForItem = 1;
+              }
+
+              let stacksize = 1;
+              let totalValueForItem = valueForItem;
+              if (item.stackSize) {
+                stacksize = item.stackSize;
+                totalValueForItem = (valueForItem * stacksize);
+              }
+
+              // Hide items with a total value under 1 chaos
+              if (totalValueForItem >= 1) {
+                // If item already exists in array, update existing
+                const existingItem = this.totalNetWorthItems.find(x => x.name === itemName);
+                if (existingItem !== undefined) {
+                  const indexOfItem = this.totalNetWorthItems.indexOf(existingItem);
+                  // update existing item with new data
+                  existingItem.stacksize = existingItem.stacksize + stacksize;
+                  existingItem.value = existingItem.value + totalValueForItem;
+                  this.totalNetWorthItems[indexOfItem] = existingItem;
+                } else {
+                  // Add new item
+                  const netWorthItem: NetWorthItem = {
+                    name: itemName,
+                    value: totalValueForItem,
+                    valuePerUnit: valueForItem,
+                    icon: item.icon.indexOf('?') >= 0
+                      ? item.icon.substring(0, item.icon.indexOf('?')) + '?scale=1&scaleIndex=3&w=1&h=1'
+                      : item.icon + '?scale=1&scaleIndex=3&w=1&h=1',
+                    stacksize
+                  };
+                  this.totalNetWorthItems.push(netWorthItem);
+                }
               }
             }
-          }
-        });
+          });
+        }
       });
 
       for (let i = 0, _len = this.totalNetWorthItems; i < this.totalNetWorthItems.length; i++) {
