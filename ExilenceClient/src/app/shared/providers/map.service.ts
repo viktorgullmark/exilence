@@ -176,9 +176,9 @@ export class MapService {
       this.localPlayer.area = this.currentArea.eventArea.name;
       this.localPlayer.areaInfo = this.currentArea;
 
-      const oneHourAgo = (Date.now() - (1 * 60 * 60 * 1000));
+      const oneDayAgo = (Date.now() - (24 * 60 * 60 * 1000));
 
-      this.localPlayer.pastAreas = HistoryHelper.filterAreas(this.areaHistory, oneHourAgo);
+      this.localPlayer.pastAreas = HistoryHelper.filterAreas(this.areaHistory, oneDayAgo);
       this.accountService.player.next(this.localPlayer);
 
       // save updated areas to settings

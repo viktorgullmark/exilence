@@ -72,7 +72,7 @@ export class IncomeService {
   }
 
   Snapshot() {
-    const oneHourAgo = (Date.now() - (1 * 60 * 60 * 1000));
+    const oneDayAgo = (Date.now() - (24 * 60 * 60 * 1000));
 
     const twoWeeksAgo = (Date.now() - (1 * 60 * 60 * 24 * 14 * 1000));
 
@@ -112,7 +112,7 @@ export class IncomeService {
 
         this.netWorthHistory.history.unshift(snapShot);
 
-        const historyToSend = HistoryHelper.filterNetworth(this.netWorthHistory.history, oneHourAgo);
+        const historyToSend = HistoryHelper.filterNetworth(this.netWorthHistory.history, oneDayAgo);
 
         this.accountService.player.next(this.localPlayer);
 

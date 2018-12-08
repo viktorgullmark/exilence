@@ -20,8 +20,6 @@ export class CharLadderComponent implements OnInit {
   averageTimeSpent = '';
   filteredArr = [];
 
-  private oneHourAgo = (Date.now() - (1 * 60 * 60 * 1000));
-
   @ViewChild('table') table: LadderTableComponent;
 
   constructor(@Inject(FormBuilder)
