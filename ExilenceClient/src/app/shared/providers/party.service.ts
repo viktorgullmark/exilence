@@ -250,10 +250,10 @@ export class PartyService {
   }
 
   public updatePlayer(player: Player) {
-    const oneHourAgo = (Date.now() - (1 * 60 * 60 * 1000));
+    const oneDayAgo = (Date.now() - (24 * 60 * 60 * 1000));
     const objToSend = Object.assign({}, player);
-    objToSend.pastAreas = HistoryHelper.filterAreas(objToSend.pastAreas, oneHourAgo);
-    objToSend.netWorthSnapshots = HistoryHelper.filterNetworth(objToSend.netWorthSnapshots, oneHourAgo);
+    objToSend.pastAreas = HistoryHelper.filterAreas(objToSend.pastAreas, oneDayAgo);
+    objToSend.netWorthSnapshots = HistoryHelper.filterNetworth(objToSend.netWorthSnapshots, oneDayAgo);
     this.externalService.getCharacter(this.accountInfo)
       .subscribe((equipment: EquipmentResponse) => {
         player = this.externalService.setCharacter(equipment, player);
@@ -277,9 +277,9 @@ export class PartyService {
     this.party.players.push(player);
     this.party.name = partyName;
     if (this._hubConnection) {
-      const oneHourAgo = (Date.now() - (1 * 60 * 60 * 1000));
-      const historyToSend = HistoryHelper.filterNetworth(playerToSend.netWorthSnapshots, oneHourAgo);
-      const areasToSend = HistoryHelper.filterAreas(playerToSend.pastAreas, oneHourAgo);
+      const oneDayAgo = (Date.now() - (24 * 60 * 60 * 1000));
+      const historyToSend = HistoryHelper.filterNetworth(playerToSend.netWorthSnapshots, oneDayAgo);
+      const areasToSend = HistoryHelper.filterAreas(playerToSend.pastAreas, oneDayAgo);
       playerToSend.netWorthSnapshots = historyToSend;
       playerToSend.pastAreas = areasToSend;
       this.electronService.compress(playerToSend, (data) => this._hubConnection.invoke('JoinParty', partyName, data));

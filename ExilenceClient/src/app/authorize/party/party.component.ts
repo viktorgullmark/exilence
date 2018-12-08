@@ -23,7 +23,6 @@ export class PartyComponent implements OnInit {
   player: Player;
   @ViewChild('tabGroup') tabGroup: MatTabGroup;
   @ViewChild('tabSummary') tabSummary: PartySummaryComponent;
-  private oneHourAgo = (Date.now() - (1 * 60 * 60 * 1000));
   constructor(
     public partyService: PartyService,
     private accountService: AccountService,
@@ -56,7 +55,6 @@ export class PartyComponent implements OnInit {
     });
     this.partyService.partyUpdated.subscribe(res => {
       if (res !== undefined) {
-        this.oneHourAgo = (Date.now() - (1 * 60 * 60 * 1000));
         let networth = 0;
         this.messageValueService.partyGainSubject.next(0);
         res.players.forEach(p => {

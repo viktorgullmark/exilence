@@ -434,10 +434,10 @@ export class LoginComponent implements OnInit {
         this.player.account = this.form.accountName;
         this.player.netWorthSnapshots = this.netWorthHistory.history;
 
-        const oneHourAgo = (Date.now() - (1 * 60 * 60 * 1000));
+        const oneDayAgo = (Date.now() - (24 * 60 * 60 * 1000));
 
         this.mapService.updateLocalPlayerAreas(this.areaHistory);
-        this.player.pastAreas = HistoryHelper.filterAreas(this.areaHistory, oneHourAgo);
+        this.player.pastAreas = HistoryHelper.filterAreas(this.areaHistory, oneDayAgo);
 
         this.externalService.validateSessionId(
             this.form.sessionId,

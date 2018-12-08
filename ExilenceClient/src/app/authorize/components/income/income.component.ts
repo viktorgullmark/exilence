@@ -95,8 +95,8 @@ export class IncomeComponent implements OnInit {
     const playerObj = Object.assign({}, player);
 
     if (this.isSummary) {
-      const oneHourAgo = (Date.now() - (1 * 60 * 60 * 1000));
-      playerObj.netWorthSnapshots = playerObj.netWorthSnapshots.filter(x => x.timestamp > oneHourAgo);
+      const oneDayAgo = (Date.now() - (24 * 60 * 60 * 1000));
+      playerObj.netWorthSnapshots = playerObj.netWorthSnapshots.filter(x => x.timestamp > oneDayAgo);
       if (playerObj.netWorthSnapshots.length === 0) {
         playerObj.netWorthSnapshots = [{
           timestamp: 0,
