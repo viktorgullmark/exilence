@@ -2,9 +2,11 @@
   <mat-sidenav class="sidenav-container" mode="side" opened>
     <form class="form sidenav-form" [formGroup]="form" (ngSubmit)="enterParty()">
       <mat-form-field>
-        <input matInput formControlName="partyCode" placeholder="{{'PARTY.CODE' | translate}}" class="party-name-input">
+        <input matInput formControlName="partyCode" placeholder="{{'PARTY.CODE' | translate}}" class="party-name-input" [type]="partyService.maskedName ? 'password' : 'text'">
         <mat-hint>{{'PARTY.NAME_HINT' | translate}}</mat-hint>
       </mat-form-field>
+      <br/>
+      <mat-checkbox [disableRipple]="true" [(ngModel)]="partyService.maskedName" [ngModelOptions]="{standalone: true}">Mask groupname</mat-checkbox>
       <button class="top-margin" *ngIf="!form.valid || partyService.party.name == form.controls.partyCode.value"
         mat-raised-button color="primary" type="submit" disabled>{{'PARTY.ENTER' | translate}}</button>
       <button class="top-margin" *ngIf="form.valid && partyService.party.name != form.controls.partyCode.value"

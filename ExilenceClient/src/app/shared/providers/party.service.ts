@@ -50,6 +50,8 @@ export class PartyService {
   private reconnectAttempts: number;
   private forceClosed: boolean;
 
+  public maskedName = false;
+
   constructor(
     private router: Router,
     private accountService: AccountService,

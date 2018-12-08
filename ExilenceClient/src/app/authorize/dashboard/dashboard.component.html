@@ -10,7 +10,7 @@
             <div class="recent-party-badge-container" *ngFor="let party of recentParties, let i = index">
                 <mat-card class="recent-party-badge" (click)="joinParty(party)" *ngIf="i < 4">
                     <mat-icon (click)="$event.stopPropagation(); removePartyFromRecent(party)" class="close-icon">close</mat-icon>
-                    {{party}}
+                    {{checkMask(party, i)}}
                 </mat-card>
             </div>
         </div>

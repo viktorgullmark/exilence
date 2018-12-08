@@ -49,6 +49,17 @@ export class DashboardComponent implements OnInit, AfterViewInit {
     }, 2000);
   }
 
+  checkMask(partyName: string, index: number) {
+
+    if (index === 0 && this.partyService.maskedName && this.partyService.party.name === partyName) {
+      return '< MASKED >';
+    } else if ((index > 0 && !this.partyService.maskedName) || !this.partyService.maskedName) {
+      return partyName;
+    } else {
+      return partyName;
+    }
+  }
+
   ngAfterViewInit() {
     this.openDashboardDialog();
   }
