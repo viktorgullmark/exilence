@@ -1,6 +1,9 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [0.8.7] - 2018-12-08
+- Added better description for net worth tab if no history is present
+
 ## [0.8.6] - 2018-12-07
 - Added a line of text to disconnected-page that tells you to accept ToS at pathofexile.com
 
