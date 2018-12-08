@@ -5,6 +5,7 @@ All notable changes to this project will be documented in this file.
 - Now shares the past 24 hours of data with your group, up from 1 hour
 - Ladders are now fetched 4 times as often as before
 - Added option to mask your groupname (for streamers etc), password-protection will be added in the future
+- Fixed a bug with pricing, where many items were not included even though good confidence
 - Fixed a bug where DPS on weapons was not shown correctly
 - Fixed a bug where too much net worth history was being sent
 - Fixed a bug where net worth snapshots would sometimes stop

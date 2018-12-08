@@ -240,15 +240,10 @@ export class IncomeService {
 
               // Exclude low-confidence prices
               if (!this.lowConfidencePricing) {
+                console.log(line);
                 const receive = line.receive;
-                const pay = line.pay;
                 if (receive !== undefined && receive !== null) {
                   if (receive.count < 10) {
-                    return;
-                  }
-                }
-                if (pay !== undefined && pay !== null) {
-                  if (pay.count < 10) {
                     return;
                   }
                 }
