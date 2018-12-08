@@ -29,7 +29,7 @@ namespace Exilence
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddDbContext<StoreContext>(options => options.UseSqlite("Data Source=store.db"));
+            //services.AddDbContext<StoreContext>(options => options.UseSqlite("Data Source=store.db"));
 
             services.AddHangfire(c => c.UseMemoryStorage());
 
@@ -57,10 +57,10 @@ namespace Exilence
 
             services.AddSignalR();
 
-            services.AddScoped<ILadderService, LadderService>();
+            services.AddSingleton<ILadderService, LadderService>();
             services.AddHttpClient<IExternalService, ExternalService>();
-            services.AddScoped<IStoreRepository, StoreRepository>();
-            services.AddScoped<IRedisRepository, RedisRepository>();
+            //services.AddSingleton<IStoreRepository, StoreRepository>();
+            services.AddSingleton<IRedisRepository, RedisRepository>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -83,13 +83,13 @@ namespace Exilence
 
             var hangfireOpts = new BackgroundJobServerOptions
             {
-                SchedulePollingInterval = TimeSpan.FromMilliseconds(10000)
+                SchedulePollingInterval = TimeSpan.FromMilliseconds(1000)
             };
 
             app.UseHangfireServer(hangfireOpts);
             app.UseHangfireDashboard();
 
-            BackgroundJob.Schedule<ILadderService>(ls => ls.UpdateLadders(), TimeSpan.FromMilliseconds(10000));
+            BackgroundJob.Schedule<ILadderService>(ls => ls.UpdateLadders(), TimeSpan.FromMilliseconds(5000));
 
             app.UseSignalR(routes =>
             {

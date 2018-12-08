@@ -19,7 +19,6 @@ namespace Exilence.Services
         private readonly IHostingEnvironment _env;
         private readonly ILogger<LadderService> _log;
         private readonly IExternalService _externalService;
-        private IStoreRepository _storeRepository;
         private IRedisRepository _redisRepository;
 
         private const string LadderUrl = "http://www.pathofexile.com/api/ladders";
@@ -31,14 +30,12 @@ namespace Exilence.Services
             ILogger<LadderService> log,
             IExternalService externalService,
             IHostingEnvironment env,
-            IStoreRepository storeRepository,
             IRedisRepository redisRepository
             )
         {
             _log = log;
             _env = env;
             _externalService = externalService;
-            _storeRepository = storeRepository;
             _redisRepository = redisRepository;
         }
 

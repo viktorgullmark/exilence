@@ -18,14 +18,12 @@ namespace Exilence
     {
         private IDistributedCache _cache;
         private ILogger<StatsController> _log;
-        private IStoreRepository _storeRepository;
         private IRedisRepository _redisRepository;
 
-        public StatsController(IDistributedCache cache, ILogger<StatsController> log, IStoreRepository storeRepository, IRedisRepository redisRepository)
+        public StatsController(IDistributedCache cache, ILogger<StatsController> log, IRedisRepository redisRepository)
         {
             _log = log;
             _cache = cache;
-            _storeRepository = storeRepository;
             _redisRepository = redisRepository;
         }
 

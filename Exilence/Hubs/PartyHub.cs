@@ -17,15 +17,13 @@ namespace Exilence.Hubs
     public class PartyHub : Hub
     {
         private IDistributedCache _cache;
-        private IStoreRepository _storeRepository;
         private IRedisRepository _redisRepository;
 
         private string ConnectionId => Context.ConnectionId;
         
-        public PartyHub(IDistributedCache cache, IStoreRepository storeRepository, IRedisRepository redisRepository)
+        public PartyHub(IDistributedCache cache, IRedisRepository redisRepository)
         {
             _cache = cache;
-            _storeRepository = storeRepository;
             _redisRepository = redisRepository;
         }
                 
