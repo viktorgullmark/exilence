@@ -81,10 +81,15 @@ namespace Exilence
 
             GlobalConfiguration.Configuration.UseActivator(new HangfireActivator(serviceProvider));
 
-            app.UseHangfireServer();
+            var hangfireOpts = new BackgroundJobServerOptions
+            {
+                SchedulePollingInterval = TimeSpan.FromMilliseconds(10000)
+            };
+
+            app.UseHangfireServer(hangfireOpts);
             app.UseHangfireDashboard();
 
-            RecurringJob.AddOrUpdate<ILadderService>(ls => ls.UpdateLadders(), Cron.MinuteInterval(1));
+            BackgroundJob.Schedule<ILadderService>(ls => ls.UpdateLadders(), TimeSpan.FromMilliseconds(10000));
 
             app.UseSignalR(routes =>
             {

@@ -7,6 +7,7 @@ using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Web;
@@ -128,6 +129,7 @@ namespace Exilence.Services
                     }
                 }
             }
+            Hangfire.BackgroundJob.Schedule(() => UpdateLadders(), TimeSpan.FromMilliseconds(10000));
         }
 
         private async Task UpdateLadder(string leagueName)
