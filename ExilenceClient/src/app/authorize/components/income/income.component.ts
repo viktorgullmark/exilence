@@ -29,7 +29,7 @@ export class IncomeComponent implements OnInit {
   public visible = true;
   private data = [];
 
-  private isSummary = false;
+  public isSummary = false;
 
   // line interpolation
   curveType = 'Linear';
