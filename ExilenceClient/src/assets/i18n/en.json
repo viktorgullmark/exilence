@@ -27,7 +27,7 @@
         "HIDE": "Hide graph",
         "RESET": "Clear history",
         "REPORT": "Send net worth report",
-        "POPOUT": "Pop out"
+        "POPOUT": "Use overlay"
     },
     "ROBOT": {
         "GAME": "Game",
