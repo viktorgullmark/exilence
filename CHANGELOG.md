@@ -2,7 +2,7 @@
 All notable changes to this project will be documented in this file.
 
 ## [0.8.7] - 2018-12-08
-- Now shares the past 24 hours of data with your group, instead of only 1 hour
+- Now shares the past 24 hours of data with your group, up from 1 hour
 - Ladders are now fetched 4 times as often as before
 - Added option to mask your groupname (for streamers etc), password-protection will be added in the future
 - Added better description for net worth tab if no history is present
