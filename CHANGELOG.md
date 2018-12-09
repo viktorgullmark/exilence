@@ -3,6 +3,7 @@ All notable changes to this project will be documented in this file.
 
 ## [0.8.8] - 2018-12-09
 - Fixed a bug where some clients were sending too much data to the server
+- Fixed a bug where clients were requesting ladders too often
 - Fixed a bug where abyssal sockets were not displayed on items
 
 ## [0.8.7] - 2018-12-08

@@ -39,7 +39,7 @@ export class LadderService {
           this.pollLadder();
         }
       },
-        1000 * 60 * 1); // fetch ladder every 5 minutes.
+        1000 * 60 * 4); // fetch ladder every 4 minutes.
     }
   }
 
