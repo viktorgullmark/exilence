@@ -1,6 +1,10 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [0.8.9] - XXXX-XX-XX
+- Now flashes the taskbar icon when disconnected.
+
+
 ## [0.8.8] - 2018-12-09
 - Fixed a bug where some clients were sending too much data to the server
 - Fixed a bug where abyssal sockets were not displayed on items

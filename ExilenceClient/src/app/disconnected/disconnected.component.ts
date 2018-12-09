@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+
 import { ElectronService } from '../shared/providers/electron.service';
 import { LadderService } from '../shared/providers/ladder.service';
 
@@ -16,6 +17,7 @@ export class DisconnectedComponent implements OnInit {
 
   ngOnInit() {
     this.ladderService.stopPollingLadder();
+    this.electronService.ipcRenderer.send('disconnect');
   }
 
   openLink(link: string) {
