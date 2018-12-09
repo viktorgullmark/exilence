@@ -1,6 +1,9 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [0.8.8] - 2018-12-09
+- Fixed a bug where some clients were sending too much data to the server
+
 ## [0.8.7] - 2018-12-08
 - Now shares the past 24 hours of data with your group, up from 1 hour
 - Ladders are now fetched 4 times as often as before (in effect after next server maintenance)

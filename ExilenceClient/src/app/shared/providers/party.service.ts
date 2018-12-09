@@ -253,15 +253,16 @@ export class PartyService {
 
   public updatePlayer(player: Player) {
     const oneDayAgo = (Date.now() - (24 * 60 * 60 * 1000));
-    const objToSend = Object.assign({}, player);
-    objToSend.pastAreas = HistoryHelper.filterAreas(objToSend.pastAreas, oneDayAgo);
-    objToSend.netWorthSnapshots = HistoryHelper.filterNetworth(objToSend.netWorthSnapshots, oneDayAgo);
     this.externalService.getCharacter(this.accountInfo)
       .subscribe((equipment: EquipmentResponse) => {
         player = this.externalService.setCharacter(equipment, player);
+        const objToSend = Object.assign({}, player);
+        objToSend.pastAreas = HistoryHelper.filterAreas(objToSend.pastAreas, oneDayAgo);
+        objToSend.netWorthSnapshots = HistoryHelper.filterNetworth(objToSend.netWorthSnapshots, oneDayAgo);
         if (this._hubConnection) {
-          this.electronService.compress(player, (data) => this._hubConnection.invoke('UpdatePlayer', this.party.name, data).catch((e) => {
-          }));
+          this.electronService.compress(objToSend, (data) => this._hubConnection.invoke('UpdatePlayer', this.party.name, data)
+            .catch((e) => {
+            }));
         }
       });
   }
