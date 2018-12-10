@@ -43,6 +43,7 @@ export class IncomeService {
 
   private lowConfidencePricing = false;
   private characterPricing = true;
+  private itemValueTreshold = 0;
 
   constructor(
     private ninjaService: NinjaService,
@@ -177,6 +178,10 @@ export class IncomeService {
     });
   }
 
+  filterItems(items: NetWorthItem[]) {
+    return items.filter(x => x.value > this.itemValueTreshold);
+  }
+
   SnapshotPlayerNetWorth(sessionId: string) {
 
     const accountName = this.localPlayer.account;
@@ -187,6 +192,14 @@ export class IncomeService {
     this.playerStashTabs = [];
     this.totalNetWorthItems = [];
     this.totalNetWorth = 0;
+
+    const itemValueTresholdSetting = this.settingsService.get('itemValueTreshold');
+    if (itemValueTresholdSetting !== undefined) {
+      this.itemValueTreshold = itemValueTresholdSetting;
+    } else {
+      this.itemValueTreshold = 0;
+      this.settingsService.set('itemValueTreshold', 0);
+    }
 
     const characterPricing = this.settingsService.get('characterPricing');
     if (characterPricing !== undefined) {
@@ -209,6 +222,8 @@ export class IncomeService {
           this.PriceItems(tab.items);
         }
       });
+
+      this.totalNetWorthItems = this.filterItems(this.totalNetWorthItems);
 
       for (let i = 0, _len = this.totalNetWorthItems; i < this.totalNetWorthItems.length; i++) {
         this.totalNetWorth += this.totalNetWorthItems[i].value;

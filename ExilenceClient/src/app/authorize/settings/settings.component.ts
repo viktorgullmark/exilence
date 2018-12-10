@@ -27,6 +27,7 @@ export class SettingsComponent implements OnInit {
   sessionId: string;
   sessionIdValid: boolean;
   uploaded = false;
+  itemValueTreshold = 0;
 
   // temporary arrays
   modifierKeys = [
@@ -104,6 +105,8 @@ export class SettingsComponent implements OnInit {
 
     this.sessionId = this.sessionService.getSession();
     this.sessionIdValid = this.settingsService.get('account.sessionIdValid');
+    this.itemValueTreshold =
+      this.settingsService.get('itemValueTreshold') !== undefined ? this.settingsService.get('itemValueTreshold') : 0;
     if (!this.sessionIdValid || this.sessionId === '') {
       this.selectedIndex = 1;
     }
@@ -166,6 +169,10 @@ export class SettingsComponent implements OnInit {
 
   search() {
     this.table.doSearch(this.form.controls.searchText.value);
+  }
+
+  toggleItemValueTreshold(event) {
+    this.settingsService.set('itemValueTreshold', event.value);
   }
 
   toggleAlwaysOnTop() {

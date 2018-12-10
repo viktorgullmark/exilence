@@ -162,12 +162,31 @@
       <p class="setting-desc-text">
         Check this setting to include low confidence prices
       </p>
-      <mat-checkbox class="setting-checkbox" [(ngModel)]="lowConfidencePricing" (ngModelChange)="toggleLowConfidencePricing()">Low confidence pricing</mat-checkbox>
+      <mat-checkbox class="setting-checkbox" [(ngModel)]="lowConfidencePricing" (ngModelChange)="toggleLowConfidencePricing()">Low
+        confidence pricing</mat-checkbox>
       <p class="setting-desc-text">
         Check this setting to include the inventory and equipment for net worth
       </p>
-      <mat-checkbox class="setting-checkbox" [(ngModel)]="characterPricing" (ngModelChange)="toggleCharacterPricing()">Character-specific pricing</mat-checkbox>
+      <mat-checkbox class="setting-checkbox" [(ngModel)]="characterPricing" (ngModelChange)="toggleCharacterPricing()">Character-specific
+        pricing</mat-checkbox>
     </div>
+    <h3 class="mat-h4 page-header new-section">Calculations</h3>
+    <mat-divider class="divider"></mat-divider>
+    <p class="setting-desc-text">
+      Here you have the option to exclude items and stacks below a certain treshold
+    </p>
+    <mat-form-field>
+      <mat-label>Item value treshold</mat-label>
+      <mat-select #fontSize value="{{itemValueTreshold}}" (selectionChange)="toggleItemValueTreshold($event)">
+        <mat-option value="0">Include all items</mat-option>
+        <mat-option value="1">> 1c</mat-option>
+        <mat-option value="2">> 2c</mat-option>
+        <mat-option value="3">> 3c</mat-option>
+        <mat-option value="5">> 5c</mat-option>
+        <mat-option value="10">> 10c</mat-option>
+      </mat-select>
+    </mat-form-field>
+
   </div>
 </div>
 
