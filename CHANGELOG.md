@@ -5,6 +5,7 @@ All notable changes to this project will be documented in this file.
 - Now flashes the taskbar icon when disconnected
 - Added inventory to net worth calculations (with setting in Settings -> Net worth)
 - Added equipment to net worth calculations (with setting in Settings -> Net worth)
+- Now shows a separate disconnect-page if the cause is external (e.g if Path of Exile is down)
 - Fixed a bug where a default-setting was not properly set for some options
 
 ## [0.8.8] - 2018-12-09

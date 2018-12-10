@@ -100,7 +100,6 @@ export class PartyService {
           const playerObj = Object.assign({}, player);
           if (playerObj.account === this.currentPlayer.account) {
             playerObj.netWorthSnapshots = Object.assign([], this.currentPlayer.netWorthSnapshots);
-            // playerObj.pastAreas = Object.assign([], this.currentPlayer.pastAreas);
           }
           this.party = party;
           this.updatePlayerLists(this.party);
@@ -231,7 +230,7 @@ export class PartyService {
     this.logService.log(reason, null, true);
     this.accountService.clearCharacterList();
     localStorage.removeItem('sessionId');
-    this.router.navigate(['/disconnected']);
+    this.router.navigate(['/disconnected', false]);
   }
 
   updatePlayerLists(party: Party) {

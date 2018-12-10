@@ -1,24 +1,27 @@
 <div class="container">
   <div class="content-container">
     <div class="centered-content text-block">
-      <h1 class="mat-h1">An unexpected disconnection occurred</h1>
-      <div class="mat-body-1">
-        This can be caused for multiple reasons. But we listed the most probable ones below:
-        <ul>
-          <li>You have not accepted the terms of agreement by logging in at <a class="inline-link" (click)="openLink('https://www.pathofexile.com')">https://www.pathofexile.com</a></li>
-          <li>
-              <a class="inline-link" (click)="openLink('https://www.pathofexile.com')">https://www.pathofexile.com</a> is
-              down for maintenance</li>
-          <li>Exilence is down for maintenance (should be up within 30 minutes)</li>
-          <li>The connection to the server has timed out due to user inactivity (60 minutes)</li>
-          <li>We experienced some connectivity issues between our server and your client</li>
-        </ul>
-        We recommend that you close the application fully, and if prompted, install the new update to keep gaming!
-        <br />
-        <br />
-      </div>
+      <ng-container *ngIf="!external">
+        <h1 class="mat-h1">Could not connect to Exilence server</h1>
+        <div class="mat-body-1">
+          This can be caused for multiple reasons. But we listed the most probable ones below:
+          <ul>
+            <li>Exilence is down for maintenance (should be up within 30 minutes)</li>
+            <li>The connection to the server has timed out due to user inactivity (60 minutes)</li>
+            <li>We experienced some connectivity issues between our server and your client</li>
+          </ul>
+          Relaunch Exilence to reconnect, and install the update if prompted.
+        </div>
+      </ng-container>
+      <ng-container *ngIf="external == true">
+        <h1 class="mat-h1"><a class="inline-link" (click)="openLink('https://www.pathofexile.com')">https://www.pathofexile.com</a> could not be reached</h1>
+        <div class="mat-body-1">
+            Relaunch Exilence when the website is back online.
+        </div>
+      </ng-container>
+      <mat-divider class="divider"></mat-divider>
       <p class="mat-body-1">
-        Feel free to contact us on GitHub, Discord or directly in-game if you experiece any problems with Exilence:
+        Feel free to contact us on GitHub, Discord or directly in-game if you experiece any problems
       </p>
       <div class="contact-area">
         <div class="contact-area-left">

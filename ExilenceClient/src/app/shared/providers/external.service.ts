@@ -45,7 +45,7 @@ export class ExternalService {
     return this.http.get('https://www.pathofexile.com/character-window/get-items' + parameters, { withCredentials: true }).catch(e => {
       if (e.status !== 403 && e.status !== 404) {
         this.logService.log('Could not character items, disconnecting!', null, true);
-        this.router.navigate(['/disconnected']);
+        this.router.navigate(['/disconnected', true]);
       }
       return Observable.of(null);
     });
@@ -61,7 +61,7 @@ export class ExternalService {
       .catch(e => {
         if (e.status !== 403 && e.status !== 404) {
           this.logService.log('Could not fetch character list, disconnecting!', null, true);
-          this.router.navigate(['/disconnected']);
+          this.router.navigate(['/disconnected', true]);
         }
         return Observable.of(null);
       });
@@ -73,7 +73,7 @@ export class ExternalService {
       .catch(e => {
         if (e.status !== 403 && e.status !== 404) {
           this.logService.log('Could not fetch leagues, disconnecting!', null, true);
-          this.router.navigate(['/disconnected']);
+          this.router.navigate(['/disconnected', true]);
         }
         return Observable.of(null);
       });
@@ -86,7 +86,7 @@ export class ExternalService {
       .catch(e => {
         if (e.status !== 403 && e.status !== 404) {
           this.logService.log('Could not fetch stashtab list, disconnecting!', null, true);
-          this.router.navigate(['/disconnected']);
+          this.router.navigate(['/disconnected', true]);
         }
         return Observable.of(null);
       });
@@ -100,7 +100,7 @@ export class ExternalService {
       .catch(e => {
         if (e.status !== 403 && e.status !== 404) {
           this.logService.log('Could not fetch stashtabs, disconnecting!', null, true);
-          this.router.navigate(['/disconnected']);
+          this.router.navigate(['/disconnected', true]);
         }
         return Observable.of(null);
       });

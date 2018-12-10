@@ -190,7 +190,6 @@ export class LoginComponent implements OnInit {
     }
 
     ngOnInit() {
-
         // temporary clearing of settings if delve is still set
         if (this.leagueName === 'Delve' ||
             this.leagueName === 'Hardcore Delve' ||
