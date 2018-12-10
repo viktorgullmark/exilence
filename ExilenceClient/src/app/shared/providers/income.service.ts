@@ -154,29 +154,26 @@ export class IncomeService {
           totalValueForItem = (valueForItem * stacksize);
         }
 
-        // Hide items with a total value under 1 chaos
-        if (totalValueForItem >= 1) {
-          // If item already exists in array, update existing
-          const existingItem = this.totalNetWorthItems.find(x => x.name === itemName);
-          if (existingItem !== undefined) {
-            const indexOfItem = this.totalNetWorthItems.indexOf(existingItem);
-            // update existing item with new data
-            existingItem.stacksize = existingItem.stacksize + stacksize;
-            existingItem.value = existingItem.value + totalValueForItem;
-            this.totalNetWorthItems[indexOfItem] = existingItem;
-          } else {
-            // Add new item
-            const netWorthItem: NetWorthItem = {
-              name: itemName,
-              value: totalValueForItem,
-              valuePerUnit: valueForItem,
-              icon: item.icon.indexOf('?') >= 0
-                ? item.icon.substring(0, item.icon.indexOf('?')) + '?scale=1&scaleIndex=3&w=1&h=1'
-                : item.icon + '?scale=1&scaleIndex=3&w=1&h=1',
-              stacksize
-            };
-            this.totalNetWorthItems.push(netWorthItem);
-          }
+        // If item already exists in array, update existing
+        const existingItem = this.totalNetWorthItems.find(x => x.name === itemName);
+        if (existingItem !== undefined) {
+          const indexOfItem = this.totalNetWorthItems.indexOf(existingItem);
+          // update existing item with new data
+          existingItem.stacksize = existingItem.stacksize + stacksize;
+          existingItem.value = existingItem.value + totalValueForItem;
+          this.totalNetWorthItems[indexOfItem] = existingItem;
+        } else {
+          // Add new item
+          const netWorthItem: NetWorthItem = {
+            name: itemName,
+            value: totalValueForItem,
+            valuePerUnit: valueForItem,
+            icon: item.icon.indexOf('?') >= 0
+              ? item.icon.substring(0, item.icon.indexOf('?')) + '?scale=1&scaleIndex=3&w=1&h=1'
+              : item.icon + '?scale=1&scaleIndex=3&w=1&h=1',
+            stacksize
+          };
+          this.totalNetWorthItems.push(netWorthItem);
         }
       }
     });
