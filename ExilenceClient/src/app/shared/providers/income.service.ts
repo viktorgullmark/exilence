@@ -80,8 +80,6 @@ export class IncomeService {
     this.netWorthHistory = this.settingsService.get('networth');
     const selectedStashtabs = this.settingsService.get('selectedStashTabs');
 
-    debugger;
-
     this.sessionIdValid = this.settingsService.get('account.sessionIdValid');
     if (
       this.netWorthHistory.lastSnapshot < (Date.now() - this.fiveMinutes) &&
