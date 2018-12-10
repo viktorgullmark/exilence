@@ -67,28 +67,33 @@ export class CharProfileComponent implements OnInit {
 
     // update local index when tab is changed
     this.subTabGroup.selectedIndexChange.subscribe(res => {
-      if (res === 0) {
-        this.analyticsService.sendScreenview('/authorized/party/player/profile');
-      }
       this.selectedIndex = res;
     });
 
   }
-  openDialog() {
+  handleTabEvent() {
     switch (this.selectedIndex) {
       // equipment
       case 0: {
         this.charEquipment.openEquipmentDialog();
+        this.analyticsService.sendScreenview('/authorized/party/player/profile');
         break;
       }
       // wealth
       case 1: {
         this.charWealth.openCurrencyDialog();
+        this.analyticsService.sendScreenview('/authorized/party/player/wealth');
         break;
       }
       // maps
       case 2: {
         this.charMaps.openMapDialog();
+        this.analyticsService.sendScreenview('/authorized/party/player/maps');
+        break;
+      }
+      // ladder
+      case 3: {
+        this.analyticsService.sendScreenview('/authorized/party/player/ladder');
         break;
       }
     }

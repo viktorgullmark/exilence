@@ -1,5 +1,5 @@
 <div [hidden]="player == undefined">
-    <mat-tab-group #subTabGroup id="subTabGroup" [(selectedIndex)]="selectedIndex" (selectedTabChange)="openDialog()">
+    <mat-tab-group #subTabGroup id="subTabGroup" [(selectedIndex)]="selectedIndex" (selectedTabChange)="handleTabEvent()">
         <mat-tab #equipmentTab id="equipmentTab" class="active">
             <ng-template mat-tab-label>
                 <mat-icon class="tab-icon">accessibility</mat-icon>

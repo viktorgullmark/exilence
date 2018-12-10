@@ -25,8 +25,6 @@ export class CharLadderComponent implements OnInit {
   constructor(@Inject(FormBuilder)
   fb: FormBuilder,
     private partyService: PartyService,
-    private analyticsService: AnalyticsService,
-    private ladderService: LadderService,
     private electronService: ElectronService
   ) {
     this.form = fb.group({
@@ -38,7 +36,6 @@ export class CharLadderComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.analyticsService.sendScreenview('/authorized/party/player/ladder');
   }
   openLink(link: string) {
     this.electronService.shell.openExternal(link);

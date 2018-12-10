@@ -46,7 +46,6 @@ export class CharWealthComponent implements OnInit {
     private router: Router,
     private electronService: ElectronService,
     private partyService: PartyService,
-    private analyticsService: AnalyticsService,
     private settingService: SettingsService,
     private robotService: RobotService,
     private incomeService: IncomeService,
@@ -78,7 +77,6 @@ export class CharWealthComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.analyticsService.sendScreenview('/authorized/party/player/wealth');
   }
 
   goToSettings() {

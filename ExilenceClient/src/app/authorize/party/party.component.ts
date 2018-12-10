@@ -96,6 +96,7 @@ export class PartyComponent implements OnInit {
       }
       // summary
       case 1: {
+        this.analyticsService.sendScreenview('/authorized/party/summary');
         this.tabSummary.openSummaryDialog();
         break;
       }

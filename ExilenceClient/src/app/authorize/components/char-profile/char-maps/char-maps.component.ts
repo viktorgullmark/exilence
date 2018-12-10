@@ -33,7 +33,6 @@ export class CharMapsComponent implements OnInit {
   constructor(@Inject(FormBuilder)
   fb: FormBuilder,
     private partyService: PartyService,
-    private analyticsService: AnalyticsService,
     private settingsService: SettingsService,
     private mapService: MapService,
     private accountService: AccountService,
@@ -55,7 +54,6 @@ export class CharMapsComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.analyticsService.sendScreenview('/authorized/party/player/maps');
   }
 
   export() {

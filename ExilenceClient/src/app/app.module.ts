@@ -34,6 +34,7 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { AlertService } from './shared/providers/alert.service';
 import { LogMonitorService } from './shared/providers/log-monitor.service';
 import { MapService } from './shared/providers/map.service';
+import { AnalyticsService } from './shared/providers/analytics.service';
 
 // AoT requires an exported function for factories
 export function HttpLoaderFactory(http: HttpClient) {
@@ -70,6 +71,7 @@ export function HttpLoaderFactory(http: HttpClient) {
   ],
   providers: [
     ExternalService,
+    AnalyticsService,
     ElectronService,
     RobotService,
     LogService,

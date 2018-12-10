@@ -11,6 +11,8 @@ export class AnalyticsService {
   private version: string;
   private appName: string;
 
+  public isTracking = false;
+
   private pastScreens: string[] = [];
 
   constructor(private logService: LogService) {
@@ -19,12 +21,14 @@ export class AnalyticsService {
   }
 
   startTracking(account: string) {
-    this.visitor = ua('UA-121704803-1', account.toLowerCase(), { strictCidFormat: false });
-    this.visitor.set('uid', account);
-    this.visitor.set('ds', 'app');
-    this.visitor.set('an', this.appName);
-    this.visitor.set('av', this.version);
-
+    if (!this.isTracking) {
+      this.isTracking = true;
+      this.visitor = ua('UA-121704803-1', account.toLowerCase(), { strictCidFormat: false });
+      this.visitor.set('uid', account);
+      this.visitor.set('ds', 'app');
+      this.visitor.set('an', this.appName);
+      this.visitor.set('av', this.version);
+    }
   }
 
   sendPageview(page: string) {

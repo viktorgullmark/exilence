@@ -26,15 +26,12 @@ export class PartySummaryComponent implements OnInit {
   public reportKeybind: any;
   constructor(
     @Inject(FormBuilder) fb: FormBuilder,
-    private partyService: PartyService,
-    private analyticsService: AnalyticsService,
     public messageValueService: MessageValueService,
     private robotService: RobotService,
     private keybindService: KeybindService,
     private settingsService: SettingsService,
     private dialog: MatDialog
   ) {
-    this.analyticsService.sendScreenview('/authorized/party/summary');
     this.form = fb.group({
       searchText: ['']
     });
