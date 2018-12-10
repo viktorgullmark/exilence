@@ -2,7 +2,7 @@ import { Component, OnInit, Inject } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 import { SettingsService } from '../../providers/settings.service';
 
-export interface LeagueChangedDialogData {
+export interface ClearHistoryDialogData {
   icon: string;
   title: string;
   content: string;
@@ -14,15 +14,15 @@ export interface HistoryData {
 }
 
 @Component({
-  selector: 'app-league-changed-dialog',
-  templateUrl: './league-changed-dialog.component.html',
-  styleUrls: ['./league-changed-dialog.component.scss']
+  selector: 'app-clear-history-dialog',
+  templateUrl: './clear-history-dialog.component.html',
+  styleUrls: ['./clear-history-dialog.component.scss']
 })
-export class LeagueChangedDialogComponent implements OnInit {
+export class ClearHistoryDialogComponent implements OnInit {
   public historyObj = {} as HistoryData;
   constructor(
-    public dialogRef: MatDialogRef<LeagueChangedDialogComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: LeagueChangedDialogData, private settingsService: SettingsService) {}
+    public dialogRef: MatDialogRef<ClearHistoryDialogComponent>,
+    @Inject(MAT_DIALOG_DATA) public data: ClearHistoryDialogData, private settingsService: SettingsService) {}
 
   onNoClick(): void {
     this.dialogRef.close();

@@ -5,7 +5,7 @@ import { Router } from '@angular/router';
 import { forkJoin } from 'rxjs';
 
 import { InfoDialogComponent } from '../authorize/components/info-dialog/info-dialog.component';
-import { LeagueChangedDialogComponent } from '../shared/components/league-changed-dialog/league-changed-dialog.component';
+import { ClearHistoryDialogComponent } from '../shared/components/clear-history-dialog/clear-history-dialog.component';
 import { HistoryHelper } from '../shared/helpers/history.helper';
 import { AccountInfo } from '../shared/interfaces/account-info.interface';
 import { ExtendedAreaInfo } from '../shared/interfaces/area.interface';
@@ -59,6 +59,7 @@ export class LoginComponent implements OnInit {
     areaHistory: ExtendedAreaInfo[];
     form: any;
     needsValidation: boolean;
+    leagueChanged = false;
 
     private twelveHoursAgo = (Date.now() - (12 * 60 * 60 * 1000));
 
@@ -354,19 +355,21 @@ export class LoginComponent implements OnInit {
 
     checkLeagueChange(event) {
         if (event.selectedIndex === 4 &&
-            (this.settingsService.get('lastLeague') !== undefined
-                && (this.settingsService.get('lastLeague') !== this.leagueFormGroup.controls.leagueName.value)
+                (this.settingsService.get('lastLeague') !== undefined
+                    && (this.settingsService.get('lastLeague') !== this.leagueFormGroup.controls.leagueName.value)
                 ||
                 (this.settingsService.get('account.tradeLeagueName') !== undefined
-                    && this.settingsService.get('account.tradeLeagueName') !== this.leagueFormGroup.controls.tradeLeagueName.value))) {
-            // league changed since last log-in
-            const dialogRef = this.dialog.open(LeagueChangedDialogComponent, {
+                    && this.settingsService.get('account.tradeLeagueName') !== this.leagueFormGroup.controls.tradeLeagueName.value)
+                || (this.settingsService.get('account.characterName') !== undefined
+                    && this.settingsService.get('account.characterName') !== this.charFormGroup.controls.characterName.value))) {
+            // league or character changed since last log-in
+            const dialogRef = this.dialog.open(ClearHistoryDialogComponent, {
                 width: '650px',
                 data: {
                     icon: 'swap_horiz',
-                    title: 'League changed',
+                    title: 'League and/or character changed',
                     // tslint:disable-next-line:max-line-length
-                    content: 'We detected that you changed league-settings since your last login. Please note that your networth and area history will be mixed between leagues if you continue without clearing the history.<br/><br/>' +
+                    content: 'We detected that you changed league or character since your last login. Please note that your networth and area history will be mixed between the sessions if you continue without clearing the history.<br/><br/>' +
                         'Do you want to clear the history?'
                 }
             });

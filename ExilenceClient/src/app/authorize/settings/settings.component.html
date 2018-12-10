@@ -163,6 +163,10 @@
         Check this setting to include low confidence prices
       </p>
       <mat-checkbox class="setting-checkbox" [(ngModel)]="lowConfidencePricing" (ngModelChange)="toggleLowConfidencePricing()">Low confidence pricing</mat-checkbox>
+      <p class="setting-desc-text">
+        Check this setting to include the inventory and equipment for net worth
+      </p>
+      <mat-checkbox class="setting-checkbox" [(ngModel)]="characterPricing" (ngModelChange)="toggleCharacterPricing()">Character-specific pricing</mat-checkbox>
     </div>
   </div>
 </div>

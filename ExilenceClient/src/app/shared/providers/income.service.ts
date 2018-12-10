@@ -42,6 +42,7 @@ export class IncomeService {
   private sessionIdValid = false;
 
   private lowConfidencePricing = false;
+  private characterPricing = true;
 
   constructor(
     private ninjaService: NinjaService,
@@ -78,6 +79,8 @@ export class IncomeService {
 
     this.netWorthHistory = this.settingsService.get('networth');
     const selectedStashtabs = this.settingsService.get('selectedStashTabs');
+
+    debugger;
 
     this.sessionIdValid = this.settingsService.get('account.sessionIdValid');
     if (
@@ -127,6 +130,58 @@ export class IncomeService {
     }
   }
 
+  PriceItems(items: Item[]) {
+    items.forEach((item: Item) => {
+      let itemName = item.name;
+
+      if (item.typeLine) {
+        itemName += ' ' + item.typeLine;
+      }
+
+      itemName = itemName.replace('<<set:MS>><<set:M>><<set:S>>', '').trim();
+
+      if (typeof this.ninjaPrices[itemName] !== 'undefined' || itemName === 'Chaos Orb') {
+
+        let valueForItem = this.ninjaPrices[itemName];
+        if (itemName === 'Chaos Orb') {
+          valueForItem = 1;
+        }
+
+        let stacksize = 1;
+        let totalValueForItem = valueForItem;
+        if (item.stackSize) {
+          stacksize = item.stackSize;
+          totalValueForItem = (valueForItem * stacksize);
+        }
+
+        // Hide items with a total value under 1 chaos
+        if (totalValueForItem >= 1) {
+          // If item already exists in array, update existing
+          const existingItem = this.totalNetWorthItems.find(x => x.name === itemName);
+          if (existingItem !== undefined) {
+            const indexOfItem = this.totalNetWorthItems.indexOf(existingItem);
+            // update existing item with new data
+            existingItem.stacksize = existingItem.stacksize + stacksize;
+            existingItem.value = existingItem.value + totalValueForItem;
+            this.totalNetWorthItems[indexOfItem] = existingItem;
+          } else {
+            // Add new item
+            const netWorthItem: NetWorthItem = {
+              name: itemName,
+              value: totalValueForItem,
+              valuePerUnit: valueForItem,
+              icon: item.icon.indexOf('?') >= 0
+                ? item.icon.substring(0, item.icon.indexOf('?')) + '?scale=1&scaleIndex=3&w=1&h=1'
+                : item.icon + '?scale=1&scaleIndex=3&w=1&h=1',
+              stacksize
+            };
+            this.totalNetWorthItems.push(netWorthItem);
+          }
+        }
+      }
+    });
+  }
+
   SnapshotPlayerNetWorth(sessionId: string) {
 
     const accountName = this.localPlayer.account;
@@ -138,63 +193,25 @@ export class IncomeService {
     this.totalNetWorthItems = [];
     this.totalNetWorth = 0;
 
+    const characterPricing = this.settingsService.get('characterPricing');
+    if (characterPricing !== undefined) {
+      this.characterPricing = characterPricing;
+    } else {
+      this.characterPricing = true;
+      this.settingsService.set('characterPricing', true);
+    }
+
     return Observable.forkJoin(
       this.getPlayerStashTabs(sessionId, accountName, league),
       this.getValuesFromNinja(priceInfoLeague)
     ).do(() => {
       this.logService.log('Finished retriving stashhtabs and value information.');
+      if (this.characterPricing) {
+        this.PriceItems(this.localPlayer.character.items);
+      }
       this.playerStashTabs.forEach((tab: Stash, tabIndex: number) => {
         if (tab !== null) {
-          tab.items.forEach((item: Item) => {
-
-            let itemName = item.name;
-
-            if (item.typeLine) {
-              itemName += ' ' + item.typeLine;
-            }
-
-            itemName = itemName.replace('<<set:MS>><<set:M>><<set:S>>', '').trim();
-
-            if (typeof this.ninjaPrices[itemName] !== 'undefined' || itemName === 'Chaos Orb') {
-
-              let valueForItem = this.ninjaPrices[itemName];
-              if (itemName === 'Chaos Orb') {
-                valueForItem = 1;
-              }
-
-              let stacksize = 1;
-              let totalValueForItem = valueForItem;
-              if (item.stackSize) {
-                stacksize = item.stackSize;
-                totalValueForItem = (valueForItem * stacksize);
-              }
-
-              // Hide items with a total value under 1 chaos
-              if (totalValueForItem >= 1) {
-                // If item already exists in array, update existing
-                const existingItem = this.totalNetWorthItems.find(x => x.name === itemName);
-                if (existingItem !== undefined) {
-                  const indexOfItem = this.totalNetWorthItems.indexOf(existingItem);
-                  // update existing item with new data
-                  existingItem.stacksize = existingItem.stacksize + stacksize;
-                  existingItem.value = existingItem.value + totalValueForItem;
-                  this.totalNetWorthItems[indexOfItem] = existingItem;
-                } else {
-                  // Add new item
-                  const netWorthItem: NetWorthItem = {
-                    name: itemName,
-                    value: totalValueForItem,
-                    valuePerUnit: valueForItem,
-                    icon: item.icon.indexOf('?') >= 0
-                      ? item.icon.substring(0, item.icon.indexOf('?')) + '?scale=1&scaleIndex=3&w=1&h=1'
-                      : item.icon + '?scale=1&scaleIndex=3&w=1&h=1',
-                    stacksize
-                  };
-                  this.totalNetWorthItems.push(netWorthItem);
-                }
-              }
-            }
-          });
+          this.PriceItems(tab.items);
         }
       });
 
@@ -227,6 +244,9 @@ export class IncomeService {
       const setting = this.settingsService.get('lowConfidencePricing');
       if (setting !== undefined) {
         this.lowConfidencePricing = setting;
+      } else {
+        this.lowConfidencePricing = false;
+        this.settingsService.set('lowConfidencePricing', false);
       }
 
       const enumTypes = Object.values(NinjaTypes);

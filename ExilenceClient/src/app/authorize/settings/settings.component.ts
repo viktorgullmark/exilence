@@ -23,6 +23,7 @@ export class SettingsComponent implements OnInit {
   isResizable = false;
   hideTooltips = false;
   lowConfidencePricing = false;
+  characterPricing = true;
   sessionId: string;
   sessionIdValid: boolean;
   uploaded = false;
@@ -132,6 +133,11 @@ export class SettingsComponent implements OnInit {
     if (lowConfidencePricingSetting !== undefined) {
       this.lowConfidencePricing = lowConfidencePricingSetting;
     }
+
+    const characterePricingSetting = this.settingsService.get('characterPricing');
+    if (characterePricingSetting !== undefined) {
+      this.characterPricing = characterePricingSetting;
+    }
   }
 
   openLink(link: string) {
@@ -202,6 +208,14 @@ export class SettingsComponent implements OnInit {
       this.settingsService.set('lowConfidencePricing', true);
     } else {
       this.settingsService.set('lowConfidencePricing', false);
+    }
+  }
+
+  toggleCharacterPricing() {
+    if (this.characterPricing) {
+      this.settingsService.set('characterPricing', true);
+    } else {
+      this.settingsService.set('characterPricing', false);
     }
   }
 

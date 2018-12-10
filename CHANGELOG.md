@@ -2,8 +2,9 @@
 All notable changes to this project will be documented in this file.
 
 ## [0.8.9] - XXXX-XX-XX
-- Now flashes the taskbar icon when disconnected.
-
+- Now flashes the taskbar icon when disconnected
+- Added inventory to net worth calculations (with setting in Settings -> Net worth)
+- Added equipment to net worth calculations (with setting in Settings -> Net worth)
 
 ## [0.8.8] - 2018-12-09
 - Fixed a bug where some clients were sending too much data to the server

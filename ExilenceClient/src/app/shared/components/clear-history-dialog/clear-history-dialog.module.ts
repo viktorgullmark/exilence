@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { LeagueChangedDialogComponent } from './league-changed-dialog.component';
+import { ClearHistoryDialogComponent } from './clear-history-dialog.component';
 import { MatDialogModule, MatFormFieldModule, MatInputModule, MatButtonModule, MatIconModule } from '@angular/material';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
@@ -15,6 +15,6 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
     MatButtonModule,
     MatIconModule
   ],
-  declarations: [LeagueChangedDialogComponent]
+  declarations: [ClearHistoryDialogComponent]
 })
-export class LeagueChangedDialogModule { }
+export class ClearHistoryDialogModule { }
