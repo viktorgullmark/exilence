@@ -8,6 +8,7 @@ All notable changes to this project will be documented in this file.
 - Added equipment to net worth calculations (with setting in Settings -> Net worth)
 - Now shows a separate disconnect-page if the cause is external (e.g if Path of Exile is down)
 - Fixed a bug where a default-setting was not properly set for some options
+- Fixed a bug where analytics screen-views were improperly triggered
 
 ## [0.8.8] - 2018-12-09
 - Fixed a bug where some clients were sending too much data to the server
