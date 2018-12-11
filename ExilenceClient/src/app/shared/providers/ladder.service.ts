@@ -64,7 +64,7 @@ export class LadderService {
     this.cooldown = true;
     setTimeout(x => {
       this.cooldown = false;
-    }, 1000 * 60 * 1);
+    }, 1000 * 60 * 4);
     // tslint:disable-next-line:max-line-length
     this.logService.log(`Retriving ladder for league: ${league} and character: ${characterName}`);
     const parameters = `?character=${characterName}&league=${league}`;
