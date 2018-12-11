@@ -24,8 +24,8 @@
                 <span class="title">Last snapshot</span>
                 <br/>
                 <div class="networth-inner-wrapper">
-                    <span *ngIf="player && player.netWorthSnapshots[0].timestamp > 0" class="networth-snapshot">{{formatSnapshot(player.netWorthSnapshots[0].timestamp)}}</span>
-                    <span *ngIf="player && player.netWorthSnapshots[0].timestamp == 0" class="networth-placeholder">No data</span>
+                    <span *ngIf="player !== undefined && player.netWorthSnapshots[0].timestamp > 0" class="networth-snapshot">{{formatSnapshot(player.netWorthSnapshots[0].timestamp)}}</span>
+                    <span *ngIf="player !== undefined && player.netWorthSnapshots[0].timestamp == 0" class="networth-placeholder">No data</span>
                 </div>
             </div>
         <div class="networth-wrapper">
