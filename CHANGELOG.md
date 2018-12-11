@@ -1,7 +1,7 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
-## [0.8.9] - XXXX-XX-XX
+## [0.8.9] - 2018-12-11
 - Now flashes the taskbar icon when disconnected
 - Now includes items/stacks worth less than 1c in net worth (previously these were excluded)
 - Added inventory to net worth calculations (with setting in Settings -> Net worth)
