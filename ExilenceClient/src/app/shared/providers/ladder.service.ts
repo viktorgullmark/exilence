@@ -33,7 +33,6 @@ export class LadderService {
   startPollingLadder() {
     if (!this.isPolling) {
       this.isPolling = true;
-      this.pollLadder();
       setInterval(x => {
         if (!this.cooldown) {
           this.pollLadder();
