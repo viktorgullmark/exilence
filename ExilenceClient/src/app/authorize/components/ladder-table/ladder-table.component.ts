@@ -12,7 +12,7 @@ import { PartyService } from '../../../shared/providers/party.service';
 })
 export class LadderTableComponent implements OnInit {
   @Input() player: Player;
-  displayedColumns: string[] = ['online', 'rank', 'level', 'character', 'account', 'experience_per_hour'];
+  displayedColumns: string[] = ['online', 'rank', 'level', 'character', 'account', 'experiencePerHour'];
   dataSource = [];
   filteredArr = [];
   source: any;

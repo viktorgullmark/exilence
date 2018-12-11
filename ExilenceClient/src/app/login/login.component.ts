@@ -354,8 +354,8 @@ export class LoginComponent implements OnInit {
 
     checkLeagueChange(event) {
         if (event.selectedIndex === 4 &&
-                (this.settingsService.get('lastLeague') !== undefined
-                    && (this.settingsService.get('lastLeague') !== this.leagueFormGroup.controls.leagueName.value)
+            (this.settingsService.get('lastLeague') !== undefined
+                && (this.settingsService.get('lastLeague') !== this.leagueFormGroup.controls.leagueName.value)
                 ||
                 (this.settingsService.get('account.tradeLeagueName') !== undefined
                     && this.settingsService.get('account.tradeLeagueName') !== this.leagueFormGroup.controls.tradeLeagueName.value)
@@ -387,13 +387,18 @@ export class LoginComponent implements OnInit {
         this.isLoading = true;
         this.form = this.getFormObj();
         this.analyticsService.startTracking(this.form.accountName);
-        this.externalService.getCharacter(this.form)
-            .subscribe((data: EquipmentResponse) => {
 
-                const player = this.externalService.setCharacter(data, this.player);
-                this.player = player;
-                this.completeLogin();
-            });
+        const request = forkJoin(
+            this.externalService.getCharacter(this.form),
+            this.ladderService.getLadderInfoForCharacter(this.form.leagueName, this.form.characterName)
+        );
+
+        request.subscribe(res => {
+            const player = this.externalService.setCharacter(res[0], this.player);
+            player.ladderInfo = res[1].ladder;
+            this.player = player;
+            this.completeLogin();
+        });
     }
 
     validateSessionId() {
