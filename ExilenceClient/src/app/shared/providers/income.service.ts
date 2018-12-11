@@ -42,8 +42,8 @@ export class IncomeService {
   private sessionIdValid = false;
 
   private lowConfidencePricing = false;
-  private characterPricing = true;
-  private itemValueTreshold = 0;
+  private characterPricing = false;
+  private itemValueTreshold = 1;
 
   constructor(
     private ninjaService: NinjaService,
@@ -197,16 +197,16 @@ export class IncomeService {
     if (itemValueTresholdSetting !== undefined) {
       this.itemValueTreshold = itemValueTresholdSetting;
     } else {
-      this.itemValueTreshold = 0;
-      this.settingsService.set('itemValueTreshold', 0);
+      this.itemValueTreshold = 1;
+      this.settingsService.set('itemValueTreshold', 1);
     }
 
     const characterPricing = this.settingsService.get('characterPricing');
     if (characterPricing !== undefined) {
       this.characterPricing = characterPricing;
     } else {
-      this.characterPricing = true;
-      this.settingsService.set('characterPricing', true);
+      this.characterPricing = false;
+      this.settingsService.set('characterPricing', false);
     }
 
     return Observable.forkJoin(
