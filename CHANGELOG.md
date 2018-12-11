@@ -8,10 +8,12 @@ All notable changes to this project will be documented in this file.
 - Added equipment to net worth calculations (with setting in Settings -> Net worth)
 - Added ability to select item-value treshold (with setting Settings -> Net worth)
 - Now shows a separate disconnect-page if the cause is external (e.g if Path of Exile is down)
+- Changed the app-icon for Exilence
 - Fixed a bug where experience per hour was not displayed in the ladder-tab
 - Fixed a bug where the ladder-tab was not immediately updated when entering a party
 - Fixed a bug where a default-setting was not properly set for some options
-- Fixed a bug where analytics screen-views were improperly triggered
+- Fixed a bug where analytics screen-views were inproperly triggered
+- Fixed a problem that was causing memory to leak (taking too much memory in long sessions)
 
 ## [0.8.8] - 2018-12-09
 - Fixed a bug where some clients were sending too much data to the server

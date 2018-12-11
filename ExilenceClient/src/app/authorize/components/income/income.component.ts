@@ -1,13 +1,14 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output, OnDestroy } from '@angular/core';
 import { colorSets as ngxChartsColorsets } from '@swimlane/ngx-charts/release/utils/color-sets';
 import * as d3 from 'd3';
 import * as moment from 'moment';
+import { Subscription } from 'rxjs/internal/Subscription';
 
 import { ChartSeries, ChartSeriesEntry } from '../../../shared/interfaces/chart.interface';
 import { Player } from '../../../shared/interfaces/player.interface';
+import { AccountService } from '../../../shared/providers/account.service';
 import { IncomeService } from '../../../shared/providers/income.service';
 import { PartyService } from '../../../shared/providers/party.service';
-import { AccountService } from '../../../shared/providers/account.service';
 
 
 @Component({
@@ -17,7 +18,7 @@ import { AccountService } from '../../../shared/providers/account.service';
 })
 
 
-export class IncomeComponent implements OnInit {
+export class IncomeComponent implements OnInit, OnDestroy {
   dateData: ChartSeries[] = [];
   @Input() player: Player;
   @Input() view = [1000, 400];
@@ -30,6 +31,8 @@ export class IncomeComponent implements OnInit {
   private data = [];
 
   public isSummary = false;
+  private selectedPlayerSub: Subscription;
+  private partySubscription: Subscription;
 
   // line interpolation
   curveType = 'Linear';
@@ -43,16 +46,14 @@ export class IncomeComponent implements OnInit {
   selectedColorScheme: string;
 
   constructor(
-    private incomeService: IncomeService,
-    private partyService: PartyService,
-    private accountService: AccountService
+    private partyService: PartyService
   ) {
   }
 
   ngOnInit() {
     if (this.player !== undefined) {
       this.updateGraph(this.player);
-      this.partyService.selectedPlayer.subscribe(res => {
+      this.selectedPlayerSub = this.partyService.selectedPlayer.subscribe(res => {
         this.dateData = [];
         this.data = [];
         if (res.netWorthSnapshots !== null) {
@@ -67,7 +68,7 @@ export class IncomeComponent implements OnInit {
           this.updateGraph(p);
         }
       });
-      this.partyService.partyUpdated.subscribe(party => {
+      this.partySubscription = this.partyService.partyUpdated.subscribe(party => {
         if (party !== undefined) {
           this.dateData = [];
           this.data = [];
@@ -78,6 +79,15 @@ export class IncomeComponent implements OnInit {
           });
         }
       });
+    }
+  }
+
+  ngOnDestroy() {
+    if (this.selectedPlayerSub !== undefined) {
+      this.selectedPlayerSub.unsubscribe();
+    }
+    if (this.partySubscription !== undefined) {
+      this.partySubscription.unsubscribe();
     }
   }
 

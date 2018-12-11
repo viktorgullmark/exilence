@@ -1,4 +1,4 @@
-import { Component, Inject, Input, OnInit, ViewChild, AfterViewInit } from '@angular/core';
+import { Component, Inject, Input, OnInit, ViewChild, AfterViewInit, OnDestroy } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { Router } from '@angular/router';
 
@@ -18,13 +18,14 @@ import { AlertService } from '../../../../shared/providers/alert.service';
 import { InfoDialogComponent } from '../../info-dialog/info-dialog.component';
 import { MatDialog } from '@angular/material';
 import * as moment from 'moment';
+import { Subscription } from 'rxjs/internal/Subscription';
 
 @Component({
   selector: 'app-char-wealth',
   templateUrl: './char-wealth.component.html',
   styleUrls: ['./char-wealth.component.scss']
 })
-export class CharWealthComponent implements OnInit {
+export class CharWealthComponent implements OnInit, OnDestroy {
   form: FormGroup;
 
   @Input() player: Player;
@@ -40,6 +41,7 @@ export class CharWealthComponent implements OnInit {
   public sessionIdValid: boolean;
 
   public reportKeybind: any;
+  private selectedPlayerSub: Subscription;
 
   constructor(
     @Inject(FormBuilder) fb: FormBuilder,
@@ -60,7 +62,7 @@ export class CharWealthComponent implements OnInit {
     this.form = fb.group({
       searchText: ['']
     });
-    this.partyService.selectedPlayer.subscribe(res => {
+    this.selectedPlayerSub = this.partyService.selectedPlayer.subscribe(res => {
       if (res.account === this.partyService.currentPlayer.account) {
         res.netWorthSnapshots = this.partyService.currentPlayer.netWorthSnapshots;
         this.selfSelected = true;
@@ -77,6 +79,12 @@ export class CharWealthComponent implements OnInit {
   }
 
   ngOnInit() {
+  }
+
+  ngOnDestroy() {
+    if (this.selectedPlayerSub !== undefined) {
+      this.selectedPlayerSub.unsubscribe();
+    }
   }
 
   goToSettings() {

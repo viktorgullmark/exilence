@@ -1,30 +1,43 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, OnDestroy } from '@angular/core';
 
 import { Player } from '../../../../shared/interfaces/player.interface';
 import { PartyService } from '../../../../shared/providers/party.service';
 import { RobotService } from '../../../../shared/providers/robot.service';
+import { Subscription } from 'rxjs/internal/Subscription';
 
 @Component({
   selector: 'app-player-badge',
   templateUrl: './player-badge.component.html',
   styleUrls: ['./player-badge.component.scss']
 })
-export class PlayerBadgeComponent implements OnInit {
+export class PlayerBadgeComponent implements OnInit, OnDestroy {
   @Input() player: Player;
   @Input() localPlayer = false;
   selectedPlayer: Player;
   selectedGenericPlayer: Player;
+  private selectedPlayerSub: Subscription;
+  private selectedGenPlayerSub: Subscription;
+
   constructor(private partyService: PartyService, private robotService: RobotService) { }
 
   ngOnInit() {
     if (!this.localPlayer) {
-      this.partyService.selectedPlayer.subscribe(res => {
+      this.selectedPlayerSub = this.partyService.selectedPlayer.subscribe(res => {
         this.selectedPlayer = res;
       });
     } else {
-      this.partyService.selectedGenericPlayer.subscribe(res => {
+      this.selectedGenPlayerSub = this.partyService.selectedGenericPlayer.subscribe(res => {
         this.selectedGenericPlayer = res;
       });
+    }
+  }
+
+  ngOnDestroy() {
+    if (this.selectedPlayerSub !== undefined) {
+      this.selectedPlayerSub.unsubscribe();
+    }
+    if (this.selectedGenPlayerSub !== undefined) {
+      this.selectedGenPlayerSub.unsubscribe();
     }
   }
 

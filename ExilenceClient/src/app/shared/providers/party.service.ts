@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
 import * as signalR from '@aspnet/signalr';
 import { HubConnection } from '@aspnet/signalr';
@@ -23,9 +23,10 @@ import { ExtendedAreaInfo } from '../interfaces/area.interface';
 import { HistoryHelper } from '../helpers/history.helper';
 import { LeagueWithPlayers } from '../interfaces/league.interface';
 import { LadderService } from './ladder.service';
+import { Subscription } from 'rxjs';
 
 @Injectable()
-export class PartyService {
+export class PartyService implements OnDestroy {
   public _hubConnection: HubConnection | undefined;
   public async: any;
   public party: Party;
@@ -52,6 +53,11 @@ export class PartyService {
 
   public maskedName = false;
 
+  private playerSub: Subscription;
+  private selectedPlayerSub: Subscription;
+  private selectedGenPlayerSub: Subscription;
+  private accountInfoSub: Subscription;
+
   constructor(
     private router: Router,
     private accountService: AccountService,
@@ -68,16 +74,16 @@ export class PartyService {
 
     this.recentParties.next(this.settingService.get('recentParties') || []);
 
-    this.accountService.player.subscribe(res => {
+    this.playerSub = this.accountService.player.subscribe(res => {
       this.currentPlayer = res;
     });
-    this.selectedPlayer.subscribe(res => {
+    this.selectedPlayerSub = this.selectedPlayer.subscribe(res => {
       this.selectedPlayerObj = res;
     });
-    this.selectedGenericPlayer.subscribe(res => {
+    this.selectedGenPlayerSub = this.selectedGenericPlayer.subscribe(res => {
       this.selectedGenericPlayerObj = res;
     });
-    this.accountService.accountInfo.subscribe(res => {
+    this.accountInfoSub = this.accountService.accountInfo.subscribe(res => {
       this.accountInfo = res;
     });
     this.initParty();
@@ -186,6 +192,19 @@ export class PartyService {
       this.handleAreaEvent(msg);
     });
 
+  }
+
+  ngOnDestroy() {
+    console.log('partyservice destroyed');
+    if (this.playerSub !== undefined) {
+      this.playerSub.unsubscribe();
+    } if (this.selectedPlayerSub !== undefined) {
+      this.selectedPlayerSub.unsubscribe();
+    } if (this.selectedGenPlayerSub !== undefined) {
+      this.selectedGenPlayerSub.unsubscribe();
+    } if (this.accountInfoSub !== undefined) {
+      this.accountInfoSub.unsubscribe();
+    }
   }
 
   updatePartyGain(player: Player) {

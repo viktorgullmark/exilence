@@ -1,4 +1,4 @@
-import { Injectable, EventEmitter } from '@angular/core';
+import { Injectable, EventEmitter, OnDestroy } from '@angular/core';
 
 import { AreaEventType, AreaInfo, EventArea, ExtendedAreaInfo } from '../interfaces/area.interface';
 import { Player } from '../interfaces/player.interface';
@@ -10,9 +10,10 @@ import { NetWorthSnapshot } from '../interfaces/income.interface';
 import { SettingsService } from './settings.service';
 import { HistoryHelper } from '../helpers/history.helper';
 import { BehaviorSubject } from 'rxjs/internal/BehaviorSubject';
+import { Subscription } from 'rxjs';
 
 @Injectable()
-export class MapService {
+export class MapService implements OnDestroy {
 
   private areaHistory: ExtendedAreaInfo[] = [];
   public currentArea: ExtendedAreaInfo;
@@ -23,6 +24,10 @@ export class MapService {
   private durationSeconds = 0;
   private durationInterval: any;
   private localPlayer: Player;
+
+  private playerSub: Subscription;
+  private areasSub: Subscription;
+
   areasParsed: EventEmitter<any> = new EventEmitter();
 
   // areas specific to the local player (including the log if imported)
@@ -39,14 +44,14 @@ export class MapService {
 
     this.loadAreasFromSettings();
 
-    this.accountService.player.subscribe(player => {
+    this.playerSub = this.accountService.player.subscribe(player => {
       if (player !== undefined) {
         this.localPlayer = player;
         // this.localPlayer.pastAreas = this.areaHistory;
       }
     });
 
-    this.localPlayerAreaSubject.subscribe(res => {
+    this.areasSub = this.localPlayerAreaSubject.subscribe(res => {
       this.localPlayerAreas = res;
     });
 
@@ -86,6 +91,16 @@ export class MapService {
     this.logMonitorService.historicalAreaEvent.subscribe((e: EventArea) => {
       this.registerAreaEvent(e, false);
     });
+  }
+
+  ngOnDestroy() {
+    if (this.playerSub !== undefined) {
+      this.playerSub.unsubscribe();
+    }
+    if (this.areasSub !== undefined) {
+      this.areasSub.unsubscribe();
+    }
+    console.log('mapservice destroyed');
   }
 
   updateLocalPlayerAreas(areas: ExtendedAreaInfo[]) {

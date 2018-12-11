@@ -127,7 +127,9 @@ export class StashtabListComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    this.stashTabSub.unsubscribe();
+    if (this.stashTabSub !== undefined) {
+      this.stashTabSub.unsubscribe();
+    }
     this.settingsService.isChangingStash = false;
   }
 

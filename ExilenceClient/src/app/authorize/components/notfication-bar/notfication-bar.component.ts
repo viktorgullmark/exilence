@@ -55,7 +55,9 @@ export class NotficationBarComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    this.releaseSub.unsubscribe();
+    if (this.releaseSub !== undefined) {
+      this.releaseSub.unsubscribe();
+    }
   }
 
 }

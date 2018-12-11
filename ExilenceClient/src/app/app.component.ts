@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import * as moment from 'moment';
@@ -11,17 +11,19 @@ import { SettingsService } from './shared/providers/settings.service';
 import { AlertService } from './shared/providers/alert.service';
 import { AlertMessage } from './shared/interfaces/alert-message.interface';
 import { MatSnackBar } from '@angular/material';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss']
 })
-export class AppComponent {
+export class AppComponent implements OnDestroy {
   player: Player;
   alertMsg: AlertMessage;
   public appVersion;
   maximized = false;
+  private alertSub: Subscription;
   constructor(public electronService: ElectronService,
     private translate: TranslateService,
     public sessionService: SessionService,
@@ -47,7 +49,7 @@ export class AppComponent {
       // console.log('Mode web');
     }
 
-    this.alertService.alert.subscribe(res => {
+    this.alertSub = this.alertService.alert.subscribe(res => {
       if (res !== undefined) {
         this.alertMsg = res;
         this.displayAlert(this.alertMsg.message, this.alertMsg.action);
@@ -94,6 +96,12 @@ export class AppComponent {
     const resizableWindow = this.settingsService.get('isResizable');
     if (resizableWindow !== undefined) {
       this.electronService.remote.getCurrentWindow().setResizable(resizableWindow);
+    }
+  }
+
+  ngOnDestroy() {
+    if (this.alertSub !== undefined) {
+      this.alertSub.unsubscribe();
     }
   }
 }

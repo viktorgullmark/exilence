@@ -1,4 +1,4 @@
-import { Component, OnInit, AfterViewChecked, AfterViewInit } from '@angular/core';
+import { Component, OnInit, AfterViewChecked, AfterViewInit, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
 
 import { Player } from '../../shared/interfaces/player.interface';
@@ -9,6 +9,7 @@ import { PartyService } from '../../shared/providers/party.service';
 import { InfoDialogComponent } from '../components/info-dialog/info-dialog.component';
 import { MatDialog } from '@angular/material';
 import { SettingsService } from '../../shared/providers/settings.service';
+import { Subscription } from 'rxjs/internal/Subscription';
 
 @Component({
   selector: 'app-dashboard',
@@ -16,13 +17,13 @@ import { SettingsService } from '../../shared/providers/settings.service';
   styleUrls: ['./dashboard.component.scss']
 })
 
-export class DashboardComponent implements OnInit, AfterViewInit {
+export class DashboardComponent implements OnInit, OnDestroy, AfterViewInit {
 
   isLoading = true;
   recentParties: string[];
   player: Player;
   private count = 0;
-
+  private playerSub: Subscription;
   constructor(
     private electronService: ElectronService,
     private partyService: PartyService,
@@ -41,7 +42,7 @@ export class DashboardComponent implements OnInit, AfterViewInit {
   ngOnInit() {
     this.analyticsService.sendScreenview('/authorized/dashboard');
     // give the profile time to render
-    this.accountService.player.subscribe(res => {
+    this.playerSub = this.accountService.player.subscribe(res => {
       this.player = res;
     });
     setTimeout(() => {
@@ -100,6 +101,12 @@ export class DashboardComponent implements OnInit, AfterViewInit {
         this.router.navigateByUrl('/404', { skipLocationChange: true }).then(() =>
           this.router.navigate(['/authorized/party']));
       }, 750);
+    }
+  }
+
+  ngOnDestroy() {
+    if (this.playerSub !== undefined) {
+      this.playerSub.unsubscribe();
     }
   }
 }

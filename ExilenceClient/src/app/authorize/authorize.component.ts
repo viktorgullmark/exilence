@@ -1,4 +1,4 @@
-import { Component, Inject, OnInit } from '@angular/core';
+import { Component, Inject, OnInit, OnDestroy } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 
@@ -11,15 +11,17 @@ import { MapService } from '../shared/providers/map.service';
 import { MessageValueService } from '../shared/providers/message-value.service';
 import { PartyService } from '../shared/providers/party.service';
 import { RobotService } from '../shared/providers/robot.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-authorize',
   templateUrl: './authorize.component.html',
   styleUrls: ['./authorize.component.scss']
 })
-export class AuthorizeComponent implements OnInit {
+export class AuthorizeComponent implements OnInit, OnDestroy {
   form: FormGroup;
   player: Player;
+  private playerSub: Subscription;
   constructor(@Inject(FormBuilder) fb: FormBuilder,
     public partyService: PartyService,
     private mapService: MapService,
@@ -37,9 +39,15 @@ export class AuthorizeComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.accountService.player.subscribe(res => {
+    this.playerSub = this.accountService.player.subscribe(res => {
       this.player = res;
     });
+  }
+
+  ngOnDestroy() {
+    if (this.playerSub !== undefined) {
+      this.playerSub.unsubscribe();
+    }
   }
 
   openLink(link: string) {

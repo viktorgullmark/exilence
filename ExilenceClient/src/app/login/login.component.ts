@@ -1,8 +1,8 @@
-import { Component, Inject, OnInit, ViewChild } from '@angular/core';
+import { Component, Inject, OnInit, ViewChild, OnDestroy } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialog, MatStep, MatStepper } from '@angular/material';
 import { Router } from '@angular/router';
-import { forkJoin } from 'rxjs';
+import { forkJoin, Subscription } from 'rxjs';
 
 import { InfoDialogComponent } from '../authorize/components/info-dialog/info-dialog.component';
 import { ClearHistoryDialogComponent } from '../shared/components/clear-history-dialog/clear-history-dialog.component';
@@ -29,7 +29,7 @@ import { SettingsService } from '../shared/providers/settings.service';
     templateUrl: './login.component.html',
     styleUrls: ['./login.component.scss']
 })
-export class LoginComponent implements OnInit {
+export class LoginComponent implements OnInit, OnDestroy {
     accFormGroup: FormGroup;
     leagueFormGroup: FormGroup;
     sessFormGroup: FormGroup;
@@ -61,7 +61,8 @@ export class LoginComponent implements OnInit {
     needsValidation: boolean;
     leagueChanged = false;
 
-    private twelveHoursAgo = (Date.now() - (12 * 60 * 60 * 1000));
+    leaguesSub: Subscription;
+    characterListSub: Subscription;
 
     @ViewChild('stepper') stepper: MatStepper;
     @ViewChild('lastStep') lastStep: MatStep;
@@ -79,7 +80,7 @@ export class LoginComponent implements OnInit {
         private mapService: MapService,
         private dialog: MatDialog
     ) {
-        this.externalService.leagues.subscribe((res: League[]) => {
+        this.leaguesSub = this.externalService.leagues.subscribe((res: League[]) => {
             this.leagues = res;
         });
 
@@ -116,6 +117,15 @@ export class LoginComponent implements OnInit {
     checkPath() {
         this.pathValid = this.electronService.fs.existsSync(this.pathFormGroup.controls.filePath.value)
             && this.pathFormGroup.controls.filePath.value.toLowerCase().endsWith('client.txt');
+    }
+
+    ngOnDestroy() {
+        if (this.leaguesSub !== undefined) {
+            this.leaguesSub.unsubscribe();
+        }
+        if (this.characterListSub !== undefined) {
+            this.characterListSub.unsubscribe();
+        }
     }
 
     parseLog() {
@@ -204,7 +214,7 @@ export class LoginComponent implements OnInit {
         }
 
         this.accountService.loggingIn = true;
-        this.accountService.characterList.subscribe(res => {
+        this.characterListSub = this.accountService.characterList.subscribe(res => {
             if (res !== undefined) {
                 this.characterList = res;
             }

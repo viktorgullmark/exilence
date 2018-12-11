@@ -1,26 +1,34 @@
-import { Injectable } from '@angular/core';
+import { Injectable, OnDestroy } from '@angular/core';
 
 import { Player } from '../interfaces/player.interface';
 import { AccountService } from './account.service';
 import { IncomeService } from './income.service';
 import { PartyService } from './party.service';
 import { ExternalService } from './external.service';
+import { Subscription } from 'rxjs';
 
 @Injectable()
-export class SessionService {
+export class SessionService implements OnDestroy {
   player: Player;
+  private playerSub: Subscription;
   constructor(
     private accountService: AccountService,
     private partyService: PartyService,
     private incomeService: IncomeService,
     private externalService: ExternalService
   ) {
-    this.accountService.player.subscribe(res => {
+    this.playerSub = this.accountService.player.subscribe(res => {
       this.player = res;
     });
   }
   getSession() {
     return localStorage.getItem('sessionId');
+  }
+  ngOnDestroy() {
+    if (this.playerSub !== undefined) {
+      this.playerSub.unsubscribe();
+    }
+    console.log('sessionservice destroyed');
   }
   initSession(sessionId: string) {
     localStorage.setItem('sessionId', sessionId);

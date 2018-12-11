@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output, ViewChild, OnDestroy } from '@angular/core';
 import { MatSort, MatTableDataSource, MatPaginator } from '@angular/material';
 import * as moment from 'moment';
 
@@ -6,13 +6,14 @@ import { ExtendedAreaInfo } from '../../../shared/interfaces/area.interface';
 import { Player } from '../../../shared/interfaces/player.interface';
 import { PartyService } from '../../../shared/providers/party.service';
 import { MapService } from '../../../shared/providers/map.service';
+import { Subscription } from 'rxjs/internal/Subscription';
 
 @Component({
   selector: 'app-map-table',
   templateUrl: './map-table.component.html',
   styleUrls: ['./map-table.component.scss']
 })
-export class MapTableComponent implements OnInit {
+export class MapTableComponent implements OnInit, OnDestroy {
   @Input() player: Player;
   @Output() filtered: EventEmitter<any> = new EventEmitter;
   displayedColumns: string[] = ['timestamp', 'name', 'tier', 'time'];
@@ -20,6 +21,8 @@ export class MapTableComponent implements OnInit {
   searchText = '';
   filteredArr = [];
   source: any;
+  private selectedPlayerSub: Subscription;
+
   @ViewChild(MatSort) sort: MatSort;
   @ViewChild(MatPaginator) paginator: MatPaginator;
 
@@ -32,7 +35,7 @@ export class MapTableComponent implements OnInit {
     } else {
       this.updateTable(this.player.pastAreas);
     }
-    this.partyService.selectedPlayer.subscribe(res => {
+    this.selectedPlayerSub = this.partyService.selectedPlayer.subscribe(res => {
       if (res !== undefined) {
         this.player = res;
         this.dataSource = [];
@@ -44,6 +47,12 @@ export class MapTableComponent implements OnInit {
         this.filter();
       }
     });
+  }
+
+  ngOnDestroy() {
+    if (this.selectedPlayerSub !== undefined) {
+      this.selectedPlayerSub.unsubscribe();
+    }
   }
 
   doSearch(text: string) {

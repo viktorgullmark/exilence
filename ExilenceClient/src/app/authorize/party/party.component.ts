@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild, OnDestroy } from '@angular/core';
 import { MatTabGroup } from '@angular/material';
 
 import { AnalyticsService } from '../../shared/providers/analytics.service';
@@ -11,6 +11,7 @@ import { Player } from '../../shared/interfaces/player.interface';
 import { NetWorthSnapshot } from '../../shared/interfaces/income.interface';
 import { AccountService } from '../../shared/providers/account.service';
 import { PartySummaryComponent } from './party-summary/party-summary.component';
+import { Subscription } from 'rxjs';
 
 
 @Component({
@@ -18,11 +19,18 @@ import { PartySummaryComponent } from './party-summary/party-summary.component';
   templateUrl: './party.component.html',
   styleUrls: ['./party.component.scss']
 })
-export class PartyComponent implements OnInit {
+export class PartyComponent implements OnInit, OnDestroy {
   selectedIndex = 0;
   player: Player;
   @ViewChild('tabGroup') tabGroup: MatTabGroup;
   @ViewChild('tabSummary') tabSummary: PartySummaryComponent;
+
+  private selectedPlayerSub: Subscription;
+  private playerSub: Subscription;
+  private partySub: Subscription;
+  private currentPlayerValueSub: Subscription;
+  private currentPlayerGainSub: Subscription;
+
   constructor(
     public partyService: PartyService,
     private accountService: AccountService,
@@ -30,7 +38,7 @@ export class PartyComponent implements OnInit {
     private messageValueService: MessageValueService,
     private electronService: ElectronService
   ) {
-    this.partyService.selectedPlayer.subscribe(res => {
+    this.selectedPlayerSub = this.partyService.selectedPlayer.subscribe(res => {
       if (res !== undefined) {
         this.player = res;
         this.messageValueService.playerValue = this.player.netWorthSnapshots[0].value;
@@ -38,13 +46,13 @@ export class PartyComponent implements OnInit {
         this.updatePlayerGain(res, false);
       }
     });
-    this.accountService.player.subscribe(res => {
+    this.playerSub = this.accountService.player.subscribe(res => {
       if (res !== undefined) {
 
-        this.messageValueService.currentPlayerValueSubject.subscribe(value => {
+        this.currentPlayerValueSub = this.messageValueService.currentPlayerValueSubject.subscribe(value => {
           this.updatePopout();
         });
-        this.messageValueService.currentPlayerGainSubject.subscribe(gain => {
+        this.currentPlayerGainSub = this.messageValueService.currentPlayerGainSubject.subscribe(gain => {
           this.updatePopout();
         });
         // update msg-values based on current player
@@ -53,7 +61,7 @@ export class PartyComponent implements OnInit {
         this.updatePlayerGain(res, isCurrentPlayer);
       }
     });
-    this.partyService.partyUpdated.subscribe(res => {
+    this.partySub = this.partyService.partyUpdated.subscribe(res => {
       if (res !== undefined) {
         let networth = 0;
         this.messageValueService.partyGainSubject.next(0);
@@ -86,6 +94,24 @@ export class PartyComponent implements OnInit {
       }
       this.selectedIndex = res;
     });
+  }
+
+  ngOnDestroy() {
+    if (this.selectedPlayerSub !== undefined) {
+      this.selectedPlayerSub.unsubscribe();
+    }
+    if (this.playerSub !== undefined) {
+      this.playerSub.unsubscribe();
+    }
+    if (this.partySub !== undefined) {
+      this.partySub.unsubscribe();
+    }
+    if (this.currentPlayerValueSub !== undefined) {
+      this.currentPlayerValueSub.unsubscribe();
+    }
+    if (this.currentPlayerGainSub !== undefined) {
+      this.currentPlayerGainSub.unsubscribe();
+    }
   }
 
   openDialog() {

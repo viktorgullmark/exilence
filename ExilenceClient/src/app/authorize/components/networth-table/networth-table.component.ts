@@ -1,15 +1,16 @@
-import { Component, Input, OnInit, ViewChild } from '@angular/core';
+import { Component, Input, OnInit, ViewChild, OnDestroy } from '@angular/core';
 import { MatSort, MatTableDataSource } from '@angular/material';
 
 import { Player } from '../../../shared/interfaces/player.interface';
 import { PartyService } from '../../../shared/providers/party.service';
+import { Subscription } from 'rxjs/internal/Subscription';
 
 @Component({
   selector: 'app-networth-table',
   templateUrl: './networth-table.component.html',
   styleUrls: ['./networth-table.component.scss']
 })
-export class NetworthTableComponent implements OnInit {
+export class NetworthTableComponent implements OnInit, OnDestroy {
   @Input() player: Player;
   @Input() multiple = false;
   displayedColumns: string[] = ['position', 'name', 'stacksize', 'valuePerUnit', 'value'];
@@ -18,6 +19,9 @@ export class NetworthTableComponent implements OnInit {
   filteredArr = [];
   source: any;
   @ViewChild(MatSort) sort: MatSort;
+  private selectedPlayerSub: Subscription;
+  private partySub: Subscription;
+
   constructor(private partyService: PartyService) { }
 
   ngOnInit() {
@@ -26,7 +30,7 @@ export class NetworthTableComponent implements OnInit {
     }
     if (this.player !== undefined) {
       this.loadPlayerData(this.player);
-      this.partyService.selectedPlayer.subscribe(res => {
+      this.selectedPlayerSub = this.partyService.selectedPlayer.subscribe(res => {
         this.player = res;
         this.dataSource = [];
         if (res.netWorthSnapshots !== null) {
@@ -41,7 +45,7 @@ export class NetworthTableComponent implements OnInit {
       });
       this.filter();
 
-      this.partyService.partyUpdated.subscribe(party => {
+      this.partySub = this.partyService.partyUpdated.subscribe(party => {
         if (party !== undefined) {
           this.dataSource = [];
           party.players.forEach(p => {
@@ -52,6 +56,15 @@ export class NetworthTableComponent implements OnInit {
           this.filter();
         }
       });
+    }
+  }
+
+  ngOnDestroy() {
+    if (this.selectedPlayerSub !== undefined) {
+      this.selectedPlayerSub.unsubscribe();
+    }
+    if (this.partySub !== undefined) {
+      this.partySub.unsubscribe();
     }
   }
 

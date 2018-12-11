@@ -12,7 +12,7 @@ import { AnalyticsService } from '../shared/providers/analytics.service';
 })
 export class DisconnectedComponent implements OnInit {
   private sub: any;
-  private external: boolean;
+  public external: boolean;
   constructor(
     private electronService: ElectronService,
     private ladderService: LadderService,

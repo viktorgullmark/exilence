@@ -1,4 +1,4 @@
-import { Component, Inject, Input, OnInit, ViewChild, AfterViewInit } from '@angular/core';
+import { Component, Inject, Input, OnInit, ViewChild, AfterViewInit, OnDestroy } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 
 import { ExtendedAreaInfo } from '../../../../shared/interfaces/area.interface';
@@ -14,13 +14,14 @@ import { AlertService } from '../../../../shared/providers/alert.service';
 import { InfoDialogComponent } from '../../info-dialog/info-dialog.component';
 import { MatDialog } from '@angular/material';
 import { ExportToCsv } from 'export-to-csv';
+import { Subscription } from 'rxjs/internal/Subscription';
 
 @Component({
   selector: 'app-char-maps',
   templateUrl: './char-maps.component.html',
   styleUrls: ['./char-maps.component.scss']
 })
-export class CharMapsComponent implements OnInit {
+export class CharMapsComponent implements OnInit, OnDestroy {
   form: FormGroup;
   @Input() player: Player;
 
@@ -29,6 +30,7 @@ export class CharMapsComponent implements OnInit {
   selfSelected = false;
   dataSource = [];
   @ViewChild('table') table: MapTableComponent;
+  private selectedPlayerSub: Subscription;
 
   constructor(@Inject(FormBuilder)
   fb: FormBuilder,
@@ -42,7 +44,7 @@ export class CharMapsComponent implements OnInit {
     this.form = fb.group({
       searchText: ['']
     });
-    this.partyService.selectedPlayer.subscribe(res => {
+    this.selectedPlayerSub = this.partyService.selectedPlayer.subscribe(res => {
       if (res.account === this.partyService.currentPlayer.account) {
         res.pastAreas = this.partyService.currentPlayer.pastAreas;
         this.selfSelected = true;
@@ -54,6 +56,12 @@ export class CharMapsComponent implements OnInit {
   }
 
   ngOnInit() {
+  }
+
+  ngOnDestroy() {
+    if (this.selectedPlayerSub !== undefined) {
+      this.selectedPlayerSub.unsubscribe();
+    }
   }
 
   export() {

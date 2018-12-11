@@ -4,7 +4,8 @@ import 'rxjs/add/operator/concatMap';
 import 'rxjs/add/operator/delay';
 import 'rxjs/add/operator/do';
 
-import { Injectable } from '@angular/core';
+import { Injectable, OnDestroy } from '@angular/core';
+import { Subscription } from 'rxjs';
 import { Observable } from 'rxjs/Observable';
 
 import { HistoryHelper } from '../helpers/history.helper';
@@ -19,12 +20,9 @@ import { LogService } from './log.service';
 import { NinjaService } from './ninja.service';
 import { PartyService } from './party.service';
 import { SettingsService } from './settings.service';
-import { SessionService } from './session.service';
-
-
 
 @Injectable()
-export class IncomeService {
+export class IncomeService implements OnDestroy {
 
   private lastNinjaHit = 0;
   private ninjaPrices: any[] = [];
@@ -45,6 +43,8 @@ export class IncomeService {
   private characterPricing = false;
   private itemValueTreshold = 1;
 
+  private playerSub: Subscription;
+
   constructor(
     private ninjaService: NinjaService,
     private accountService: AccountService,
@@ -61,12 +61,19 @@ export class IncomeService {
 
     this.loadSnapshotsFromSettings();
 
-    this.accountService.player.subscribe(res => {
+    this.playerSub = this.accountService.player.subscribe(res => {
       if (res !== undefined) {
         this.localPlayer = res;
         this.localPlayer.netWorthSnapshots = this.netWorthHistory.history;
       }
     });
+  }
+
+  ngOnDestroy() {
+    if (this.playerSub !== undefined) {
+      this.playerSub.unsubscribe();
+    }
+    console.log('incomeservice destroyed');
   }
 
   loadSnapshotsFromSettings() {

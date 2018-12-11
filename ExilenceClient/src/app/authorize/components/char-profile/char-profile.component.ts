@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, ViewChild } from '@angular/core';
+import { Component, Input, OnInit, ViewChild, OnDestroy } from '@angular/core';
 import { MatTab, MatTabGroup } from '@angular/material';
 import { Router } from '@angular/router';
 
@@ -12,13 +12,14 @@ import { LadderService } from '../../../shared/providers/ladder.service';
 import { CharWealthComponent } from './char-wealth/char-wealth.component';
 import { CharMapsComponent } from './char-maps/char-maps.component';
 import { CharEquipmentComponent } from './char-equipment/char-equipment.component';
+import { Subscription } from 'rxjs/internal/Subscription';
 
 @Component({
   selector: 'app-char-profile',
   templateUrl: './char-profile.component.html',
   styleUrls: ['./char-profile.component.scss']
 })
-export class CharProfileComponent implements OnInit {
+export class CharProfileComponent implements OnInit, OnDestroy {
   player: Player;
 
   @Input() localProfile = false;
@@ -29,6 +30,8 @@ export class CharProfileComponent implements OnInit {
   @ViewChild('charEquipment') charEquipment: CharEquipmentComponent;
 
   selectedIndex = 0;
+  private selectedPlayerSub: Subscription;
+  private selectedGenPlayerSub: Subscription;
 
   constructor(
     private partyService: PartyService,
@@ -45,14 +48,14 @@ export class CharProfileComponent implements OnInit {
 
   ngOnInit() {
     if (!this.localProfile) {
-      this.partyService.selectedPlayer.subscribe(res => {
+      this.selectedPlayerSub = this.partyService.selectedPlayer.subscribe(res => {
         setTimeout(() => {
           window.dispatchEvent(new Event('resize'));
         }, 1000);
         this.player = res;
       });
     } else {
-      this.partyService.selectedGenericPlayer.subscribe(res => {
+      this.selectedGenPlayerSub = this.partyService.selectedGenericPlayer.subscribe(res => {
         setTimeout(() => {
           window.dispatchEvent(new Event('resize'));
         }, 1000);
@@ -69,8 +72,17 @@ export class CharProfileComponent implements OnInit {
     this.subTabGroup.selectedIndexChange.subscribe(res => {
       this.selectedIndex = res;
     });
-
   }
+
+  ngOnDestroy() {
+    if (this.selectedPlayerSub !== undefined) {
+      this.selectedPlayerSub.unsubscribe();
+    }
+    if (this.selectedGenPlayerSub !== undefined) {
+      this.selectedGenPlayerSub.unsubscribe();
+    }
+  }
+
   handleTabEvent() {
     switch (this.selectedIndex) {
       // equipment

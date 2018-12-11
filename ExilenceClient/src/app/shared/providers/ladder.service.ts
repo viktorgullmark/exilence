@@ -1,7 +1,7 @@
 import 'rxjs/add/operator/map';
 
 import { HttpClient } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import { Injectable, OnDestroy } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 
 import { AppConfig } from '../../../environments/environment';
@@ -10,12 +10,14 @@ import { AccountService } from './account.service';
 import { AnalyticsService } from './analytics.service';
 import { LogService } from './log.service';
 import { PartyService } from './party.service';
+import { Subscription } from 'rxjs/internal/Subscription';
 
 @Injectable()
-export class LadderService {
+export class LadderService implements OnDestroy {
   localPlayer: Player;
   isPolling = false;
   cooldown = false;
+  private playerSub: Subscription;
   constructor(
     private http: HttpClient,
     private accountService: AccountService,
@@ -23,11 +25,18 @@ export class LadderService {
     private analyticsService: AnalyticsService,
     private logService: LogService
   ) {
-    this.accountService.player.subscribe(res => {
+    this.playerSub = this.accountService.player.subscribe(res => {
       if (res !== undefined) {
         this.localPlayer = res;
       }
     });
+  }
+
+  ngOnDestroy() {
+    if (this.playerSub !== undefined) {
+      this.playerSub.unsubscribe();
+    }
+    console.log('ladderservice destroyed');
   }
 
   startPollingLadder() {
