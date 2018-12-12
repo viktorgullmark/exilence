@@ -57,10 +57,10 @@ namespace Exilence
 
             services.AddSignalR();
 
-            services.AddSingleton<ILadderService, LadderService>();
+            services.AddScoped<ILadderService, LadderService>();
             services.AddHttpClient<IExternalService, ExternalService>();
             //services.AddSingleton<IStoreRepository, StoreRepository>();
-            services.AddSingleton<IRedisRepository, RedisRepository>();
+            services.AddScoped<IRedisRepository, RedisRepository>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
