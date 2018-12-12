@@ -168,26 +168,6 @@ namespace Exilence.Hubs
             await base.OnDisconnectedAsync(exception);
         }
 
-        public override async Task OnConnectedAsync()
-        {
-            var partyName = await GetPartynameFromIndex();
-
-            if (partyName != null)
-            {
-                var foundParty = await _cache.GetAsync<PartyModel>($"party:{partyName}");
-                if (foundParty != null)
-                {
-                    var foundPlayer = foundParty.Players.FirstOrDefault(x => x.ConnectionID == Context.ConnectionId);
-                    if (foundPlayer != null)
-                    {   //This compression and then uncompression is ugly
-                        await JoinParty(partyName, CompressionHelper.Compress(foundPlayer));
-                        var success = RemoveFromIndex();
-                    }
-                }
-            }
-            await base.OnConnectedAsync();
-        }
-
         private async Task<string> GetPartynameFromIndex()
         {
             var result = await _redisRepository.GetPartyNameFromConnection(ConnectionId);
