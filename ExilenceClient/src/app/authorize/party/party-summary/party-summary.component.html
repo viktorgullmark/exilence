@@ -13,11 +13,24 @@
             </div>
         </div>
         <div class="networth-wrapper gain-wrapper">
-            <span class="title">Gain per hour (based on the past {{gainHours}} hour/s)</span>
+            <span class="title">Gain per hour</span>
             <br />
             <div class="networth-inner-wrapper">
                 <span class="networth">{{messageValueService.partyGain.toFixed(1)}}c</span>
             </div>
+        </div>
+        <div class="networth-wrapper">
+            <mat-form-field>
+                <mat-label>Gain-period</mat-label>
+                <mat-select #fontSize value="{{gainHours}}" (selectionChange)="toggleGainHours($event)">
+                    <mat-option value="1">1 hour</mat-option>
+                    <mat-option value="2">2 hours</mat-option>
+                    <mat-option value="3">3 hours</mat-option>
+                    <mat-option value="5">5 hours</mat-option>
+                    <mat-option value="10">10 hours</mat-option>
+                    <mat-option value="24">24 hours</mat-option>
+                </mat-select>
+            </mat-form-field>
         </div>
     </div>
     <div class="flex-area graph-btns">
@@ -71,8 +84,8 @@
         <div class="search-form-wrapper" [hidden]="selectedIndex != 1">
             <form class="form search-form" [formGroup]="form">
                 <mat-form-field>
-                    <input matInput formControlName="searchTextOverTime" placeholder="{{'CURRENCY.SEARCH' | translate}}" class="search-text-input"
-                        (ngModelChange)="searchOverTime()">
+                    <input matInput formControlName="searchTextOverTime" placeholder="{{'CURRENCY.SEARCH' | translate}}"
+                        class="search-text-input" (ngModelChange)="searchOverTime()">
                 </mat-form-field>
             </form>
         </div>

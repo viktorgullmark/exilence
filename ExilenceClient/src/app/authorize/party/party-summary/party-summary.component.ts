@@ -45,6 +45,14 @@ export class PartySummaryComponent implements OnInit {
   ngOnInit() {
   }
 
+  toggleGainHours(event) {
+    this.settingsService.set('gainHours', +event.value);
+    if (this.overTimeTable !== undefined) {
+      this.overTimeTable.updateGainHours(+event.value);
+    }
+    this.gainHours = +event.value;
+  }
+
   openSummaryDialog(): void {
     if (!this.settingsService.get('diaShown_partySummary') && !this.settingsService.get('hideTooltips')) {
       const dialogRef = this.dialog.open(InfoDialogComponent, {

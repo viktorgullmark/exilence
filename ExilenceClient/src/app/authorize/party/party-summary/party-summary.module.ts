@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { PartySummaryComponent } from './party-summary.component';
-import { MatButtonModule, MatInputModule, MatMenuModule, MatIconModule, MatTabsModule } from '@angular/material';
+import { MatButtonModule, MatInputModule, MatMenuModule, MatIconModule, MatTabsModule, MatFormFieldModule, MatSelectModule } from '@angular/material';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { NetworthTableModule } from '../../components/networth-table/networth-table.module';
 import { IncomeModule } from '../../components/income/income.module';
@@ -21,6 +21,8 @@ import { InfoDialogComponent } from '../../components/info-dialog/info-dialog.co
     MatMenuModule,
     MatIconModule,
     MatTabsModule,
+    MatFormFieldModule,
+    MatSelectModule,
     InfoDialogModule
   ],
   declarations: [PartySummaryComponent],

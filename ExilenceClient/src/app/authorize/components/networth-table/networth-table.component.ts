@@ -78,6 +78,16 @@ export class NetworthTableComponent implements OnInit, OnDestroy {
     this.filter();
   }
 
+  updateGainHours(hours: number) {
+    this.dataSource = [];
+    this.partyService.party.players.forEach(p => {
+      if (p.netWorthSnapshots !== null) {
+        this.loadPlayerData(p);
+      }
+    });
+    this.filter();
+  }
+
   filter() {
     this.filteredArr = [...this.dataSource];
     this.filteredArr = this.filteredArr.filter(item =>
