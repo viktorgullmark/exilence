@@ -34,6 +34,7 @@ namespace Exilence
                         if (
                         logLevel == LogLevel.Trace ||
                         logLevel == LogLevel.Debug ||
+                        logLevel == LogLevel.Warning ||
                         logLevel == LogLevel.Information
                         )
                         {
