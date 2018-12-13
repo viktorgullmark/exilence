@@ -1,10 +1,12 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
-## [0.8.11] - 2018-12-XX
+## [0.8.11] - 2018-12-13
 - Added setting for gain-hours (you can now choose how many hours back calculations for hourly gain are based on)
 - Added new table in currency summary, that displays the net worth change over time (based on gain-hours)
-- Minor styletweaks to currency summary
+- Optimizations for retrieval of ladder
+- Now shows time from last snapshot for each player in currency summary
+- Reworked currency and currency summary tabs (more improvements to come)
 
 ## [0.8.10] - 2018-12-13
 - Now rejoins your last group when reconnected after a disconnect (if they occurr within 25 seconds of each other)
