@@ -60,7 +60,10 @@
                     color: $networth-placeholder-color;
                 }
             }
-        }
+            &.gain-wrapper {
+                width: 35%;
+            }
+        } 
     }
 
     .table-outer-wrapper {

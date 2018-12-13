@@ -6,6 +6,7 @@ import { PartyService } from '../../../shared/providers/party.service';
 import { Subscription } from 'rxjs/internal/Subscription';
 import { ItemModule } from '../char-profile/item/item.module';
 import { NetWorthSnapshot } from '../../../shared/interfaces/income.interface';
+import { SettingsService } from '../../../shared/providers/settings.service';
 
 @Component({
   selector: 'app-networth-table',
@@ -25,7 +26,7 @@ export class NetworthTableComponent implements OnInit, OnDestroy {
   private selectedPlayerSub: Subscription;
   private partySub: Subscription;
 
-  constructor(private partyService: PartyService) { }
+  constructor(private partyService: PartyService, private settingsService: SettingsService) { }
 
   ngOnInit() {
     if (this.multiple && !this.showOverTime) {
@@ -92,9 +93,10 @@ export class NetworthTableComponent implements OnInit, OnDestroy {
   loadPlayerData(player: Player) {
     if (this.showOverTime) {
 
-      const oneHourAgo = (Date.now() - (1 * 60 * 60 * 1000));
+      const gainHours = this.settingsService.get('gainHours');
+      const xHoursAgo = (Date.now() - (gainHours * 60 * 60 * 1000));
       const pastHoursSnapshots = player.netWorthSnapshots
-        .filter((snaphot: NetWorthSnapshot) => snaphot.timestamp > oneHourAgo);
+        .filter((snaphot: NetWorthSnapshot) => snaphot.timestamp > xHoursAgo);
 
       if (pastHoursSnapshots.length > 1) {
         const firstSnapshot = pastHoursSnapshots[0];

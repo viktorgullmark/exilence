@@ -23,7 +23,7 @@ export class PartySummaryComponent implements OnInit {
   @ViewChild('table') table: NetworthTableComponent;
   @ViewChild('overTimeTable') overTimeTable: NetworthTableComponent;
   @ViewChild('networthTabs') networthTabs: MatTabGroup;
-
+  gainHours: number;
   selectedIndex = 0;
   public graphDimensions = [1000, 300];
   public reportKeybind: any;
@@ -40,6 +40,7 @@ export class PartySummaryComponent implements OnInit {
       searchTextOverTime: ['']
     });
     this.reportKeybind = this.keybindService.activeBinds.find(x => x.event === 'party-summary-networth');
+    this.gainHours = this.settingsService.get('gainHours');
   }
   ngOnInit() {
   }

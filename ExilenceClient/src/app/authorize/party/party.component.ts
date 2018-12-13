@@ -12,6 +12,7 @@ import { NetWorthSnapshot } from '../../shared/interfaces/income.interface';
 import { AccountService } from '../../shared/providers/account.service';
 import { PartySummaryComponent } from './party-summary/party-summary.component';
 import { Subscription } from 'rxjs';
+import { SettingsService } from '../../shared/providers/settings.service';
 
 
 @Component({
@@ -30,13 +31,15 @@ export class PartyComponent implements OnInit, OnDestroy {
   private partySub: Subscription;
   private currentPlayerValueSub: Subscription;
   private currentPlayerGainSub: Subscription;
+  private gainHours = 3;
 
   constructor(
     public partyService: PartyService,
     private accountService: AccountService,
     private analyticsService: AnalyticsService,
     private messageValueService: MessageValueService,
-    private electronService: ElectronService
+    private electronService: ElectronService,
+    private settingsService: SettingsService
   ) {
     this.selectedPlayerSub = this.partyService.selectedPlayer.subscribe(res => {
       if (res !== undefined) {
@@ -74,6 +77,14 @@ export class PartyComponent implements OnInit, OnDestroy {
         this.messageValueService.partyValueSubject.next(networth);
       }
     });
+    const gainHourSetting = this.settingsService.get('gainHours');
+    if (gainHourSetting !== undefined) {
+      this.gainHours = gainHourSetting;
+    } else {
+      this.gainHours = 3;
+      this.settingsService.set('gainHours', 3);
+    }
+
   }
 
   updatePopout() {
@@ -131,14 +142,16 @@ export class PartyComponent implements OnInit, OnDestroy {
   }
 
   updatePlayerGain(player: Player, current: boolean) {
-    const oneHourAgo = (Date.now() - (1 * 60 * 60 * 1000));
+    const gainHours = this.settingsService.get('gainHours');
+    const xHoursAgo = (Date.now() - (gainHours * 60 * 60 * 1000));
     const pastHoursSnapshots = player.netWorthSnapshots
-      .filter((snaphot: NetWorthSnapshot) => snaphot.timestamp > oneHourAgo);
+      .filter((snaphot: NetWorthSnapshot) => snaphot.timestamp > xHoursAgo);
 
     if (pastHoursSnapshots.length > 1) {
       const lastSnapshot = pastHoursSnapshots[0];
       const firstSnapshot = pastHoursSnapshots[pastHoursSnapshots.length - 1];
-      const gainHour = ((1000 * 60 * 60)) / (lastSnapshot.timestamp - firstSnapshot.timestamp) * (lastSnapshot.value - firstSnapshot.value);
+      const gainHour = (((1000 * 60 * 60)) / (lastSnapshot.timestamp - firstSnapshot.timestamp)
+        * (lastSnapshot.value - firstSnapshot.value)) / gainHours;
       if (current) {
         this.messageValueService.currentPlayerGainSubject.next(gainHour);
       } else {

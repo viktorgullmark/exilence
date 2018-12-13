@@ -66,7 +66,8 @@ export class PartyService implements OnDestroy {
     private settingService: SettingsService,
     private logService: LogService,
     private electronService: ElectronService,
-    private messageValueService: MessageValueService
+    private messageValueService: MessageValueService,
+    private settingsService: SettingsService
   ) {
 
     this.reconnectAttempts = 0;
@@ -208,14 +209,16 @@ export class PartyService implements OnDestroy {
   }
 
   updatePartyGain(player: Player) {
-    const oneHourAgo = (Date.now() - (1 * 60 * 60 * 1000));
+    const gainHours = this.settingsService.get('gainHours');
+    const xHoursAgo = (Date.now() - (gainHours * 60 * 60 * 1000));
     const pastHoursSnapshots = player.netWorthSnapshots
-      .filter((snaphot: NetWorthSnapshot) => snaphot.timestamp > oneHourAgo);
+      .filter((snaphot: NetWorthSnapshot) => snaphot.timestamp > xHoursAgo);
 
     if (pastHoursSnapshots.length > 1) {
       const lastSnapshot = pastHoursSnapshots[0];
       const firstSnapshot = pastHoursSnapshots[pastHoursSnapshots.length - 1];
-      const gainHour = ((1000 * 60 * 60)) / (lastSnapshot.timestamp - firstSnapshot.timestamp) * (lastSnapshot.value - firstSnapshot.value);
+      const gainHour = (((1000 * 60 * 60)) / (lastSnapshot.timestamp - firstSnapshot.timestamp)
+        * (lastSnapshot.value - firstSnapshot.value)) / gainHours;
       this.messageValueService.partyGain = this.messageValueService.partyGain + gainHour;
     }
   }
