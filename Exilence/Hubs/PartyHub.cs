@@ -18,18 +18,23 @@ namespace Exilence.Hubs
     {
         private IDistributedCache _cache;
         private IRedisRepository _redisRepository;
+        private ILadderService _ladderService;
 
         private string ConnectionId => Context.ConnectionId;
         
-        public PartyHub(IDistributedCache cache, IRedisRepository redisRepository)
+        public PartyHub(IDistributedCache cache, IRedisRepository redisRepository, ILadderService ladderService)
         {
             _cache = cache;
             _redisRepository = redisRepository;
+            _ladderService = ladderService;
         }
                 
         public async Task JoinParty(string partyName, string playerObj)
         {
             var player = CompressionHelper.Decompress<PlayerModel>(playerObj);
+
+            var ladder = await _ladderService.GetLadderForPlayer(player.Character.League, player.Character.Name);
+            player.LadderInfo = ladder;
 
             // set initial id of player
             player.ConnectionID = Context.ConnectionId;
@@ -112,6 +117,9 @@ namespace Exilence.Hubs
 
             if (party != null)
             {
+                var ladder = await _ladderService.GetLadderForPlayer(player.Character.League, player.Character.Name);
+                player.LadderInfo = ladder;
+
                 var index = party.Players.IndexOf(party.Players.FirstOrDefault(x => x.ConnectionID == player.ConnectionID));
                 if(index != -1)
                 {
