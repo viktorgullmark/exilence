@@ -17,6 +17,7 @@ export class MessageValueService {
 
   public currentPlayerGainSubject: BehaviorSubject<number> = new BehaviorSubject<number>(0);
   public currentPlayerValueSubject: BehaviorSubject<number> = new BehaviorSubject<number>(0);
+  public playerGainSubject: BehaviorSubject<number> = new BehaviorSubject<number>(0);
 
   public currentPlayerGain = 0;
   public currentPlayerValue = 0;
@@ -50,6 +51,11 @@ export class MessageValueService {
 
     this.currentPlayerValueSubject.subscribe(res => {
       this.currentPlayerValue = res;
+      this.updateCurrentPlayerMsg();
+    });
+
+    this.playerGainSubject.subscribe(res => {
+      this.playerGain = res;
       this.updateCurrentPlayerMsg();
     });
 

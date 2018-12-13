@@ -44,6 +44,7 @@ export class CharWealthComponent implements OnInit, OnDestroy {
   private selectedPlayerSub: Subscription;
 
   private currentPlayerGainSub: Subscription;
+  private playerGainSub: Subscription;
   public playerGain;
   public gainHours;
   constructor(
@@ -72,13 +73,18 @@ export class CharWealthComponent implements OnInit, OnDestroy {
         this.playerGain = this.partyService.currentPlayerGain;
       } else {
         this.selfSelected = false;
-        this.playerGain = this.messageValueService.playerGain;
+        this.playerGain = this.partyService.playerGain;
       }
       this.player = res;
       this.previousSnapshot = false;
     });
     this.currentPlayerGainSub = this.messageValueService.currentPlayerGainSubject.subscribe(res => {
       if (this.partyService.currentPlayer.account === this.player.account) {
+        this.playerGain = res;
+      }
+    });
+    this.playerGainSub = this.messageValueService.playerGainSubject.subscribe(res => {
+      if (this.partyService.currentPlayer.account !== this.player.account) {
         this.playerGain = res;
       }
     });
@@ -98,9 +104,7 @@ export class CharWealthComponent implements OnInit, OnDestroy {
 
     this.messageValueService.partyGain = 0;
     this.partyService.party.players.forEach(p => {
-      if (this.partyService.currentPlayer.account === p.account) {
-        this.partyService.updatePlayerGain(p, true);
-      }
+      this.partyService.updatePlayerGain(p, this.partyService.currentPlayer.account === p.account);
       this.partyService.updatePartyGain(p);
     });
   }
@@ -111,6 +115,9 @@ export class CharWealthComponent implements OnInit, OnDestroy {
     }
     if (this.currentPlayerGainSub !== undefined) {
       this.currentPlayerGainSub.unsubscribe();
+    }
+    if (this.playerGainSub !== undefined) {
+      this.playerGainSub.unsubscribe();
     }
   }
 

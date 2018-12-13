@@ -53,12 +53,13 @@ export class PartyService implements OnDestroy {
 
   public maskedName = false;
   public currentPlayerGain;
+  public playerGain;
   private playerSub: Subscription;
   private selectedPlayerSub: Subscription;
   private selectedGenPlayerSub: Subscription;
   private accountInfoSub: Subscription;
   private currentPlayerGainSub: Subscription;
-
+  private playerGainSub: Subscription;
   constructor(
     private router: Router,
     private accountService: AccountService,
@@ -81,6 +82,9 @@ export class PartyService implements OnDestroy {
     });
     this.currentPlayerGainSub = this.messageValueService.currentPlayerGainSubject.subscribe(gain => {
       this.currentPlayerGain = gain;
+    });
+    this.playerGainSub = this.messageValueService.playerGainSubject.subscribe(gain => {
+      this.playerGain = gain;
     });
     this.selectedPlayerSub = this.selectedPlayer.subscribe(res => {
       this.selectedPlayerObj = res;
@@ -211,6 +215,8 @@ export class PartyService implements OnDestroy {
       this.accountInfoSub.unsubscribe();
     } if (this.currentPlayerGainSub !== undefined) {
       this.currentPlayerGainSub.unsubscribe();
+    } if (this.playerGainSub !== undefined) {
+      this.playerGainSub.unsubscribe();
     }
   }
 
@@ -244,13 +250,13 @@ export class PartyService implements OnDestroy {
       if (current) {
         this.messageValueService.currentPlayerGainSubject.next(gainHour);
       } else {
-        this.messageValueService.playerGain = gainHour;
+        this.messageValueService.playerGainSubject.next(gainHour);
       }
     } else {
       if (current) {
         this.messageValueService.currentPlayerGainSubject.next(0);
       } else {
-        this.messageValueService.playerGain = 0;
+        this.messageValueService.playerGainSubject.next(0);
       }
     }
 

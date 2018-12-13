@@ -56,9 +56,7 @@ export class PartySummaryComponent implements OnInit {
 
     this.messageValueService.partyGain = 0;
     this.partyService.party.players.forEach(p => {
-      if (this.partyService.currentPlayer.account === p.account) {
-        this.partyService.updatePlayerGain(p, true);
-      }
+      this.partyService.updatePlayerGain(p, this.partyService.currentPlayer.account === p.account);
       this.partyService.updatePartyGain(p);
     });
   }
