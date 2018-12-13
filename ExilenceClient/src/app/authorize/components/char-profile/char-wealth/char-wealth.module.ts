@@ -4,7 +4,7 @@ import { SharedModule } from '../../../../shared/shared.module';
 import { IncomeModule } from '../../income/income.module';
 import { NetworthTableModule } from '../../networth-table/networth-table.module';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { MatInputModule, MatButtonModule, MatMenuModule, MatIconModule } from '@angular/material';
+import { MatInputModule, MatButtonModule, MatMenuModule, MatIconModule, MatSelectModule, MatFormFieldModule } from '@angular/material';
 import { InfoDialogModule } from '../../info-dialog/info-dialog.module';
 import { InfoDialogComponent } from '../../info-dialog/info-dialog.component';
 
@@ -19,6 +19,8 @@ import { InfoDialogComponent } from '../../info-dialog/info-dialog.component';
     MatMenuModule,
     MatButtonModule,
     MatIconModule,
+    MatSelectModule,
+    MatFormFieldModule,
     InfoDialogModule
   ],
   declarations: [CharWealthComponent],
