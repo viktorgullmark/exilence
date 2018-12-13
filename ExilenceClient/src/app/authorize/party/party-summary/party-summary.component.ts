@@ -21,6 +21,7 @@ export class PartySummaryComponent implements OnInit {
 
   isGraphHidden = false;
   @ViewChild('table') table: NetworthTableComponent;
+  @ViewChild('overTimeTable') overTimeTable: NetworthTableComponent;
   @ViewChild('networthTabs') networthTabs: MatTabGroup;
 
   selectedIndex = 0;
@@ -35,7 +36,8 @@ export class PartySummaryComponent implements OnInit {
     private dialog: MatDialog
   ) {
     this.form = fb.group({
-      searchText: ['']
+      searchText: [''],
+      searchTextOverTime: ['']
     });
     this.reportKeybind = this.keybindService.activeBinds.find(x => x.event === 'party-summary-networth');
   }
@@ -51,7 +53,7 @@ export class PartySummaryComponent implements OnInit {
           title: 'Currency summary',
           // tslint:disable-next-line:max-line-length
           content: 'This tab updates when a partymember changes area in game, at most once every 5 minutes.<br/><br/>' +
-          'We store all your parties net worth data two weeks back in time. This will be extended in the future.'
+            'We store all your parties net worth data two weeks back in time. This will be extended in the future.'
         }
       });
       dialogRef.afterClosed().subscribe(result => {
@@ -73,7 +75,15 @@ export class PartySummaryComponent implements OnInit {
   }
 
   search() {
-    this.table.doSearch(this.form.controls.searchText.value);
+    if (this.table !== undefined) {
+      this.table.doSearch(this.form.controls.searchText.value);
+    }
+  }
+
+  searchOverTime() {
+    if (this.overTimeTable !== undefined) {
+      this.overTimeTable.doSearch(this.form.controls.searchTextOverTime.value);
+    }
   }
 
   report(toGame: boolean) {
@@ -83,5 +93,11 @@ export class PartySummaryComponent implements OnInit {
     } else {
       this.robotService.setTextToClipboard(this.messageValueService.partyNetworthMsg);
     }
+  }
+
+  handleTabEvent() {
+    // clear filter-fields when tab is changed
+    this.form.controls.searchText.setValue('');
+    this.form.controls.searchTextOverTime.setValue('');
   }
 }

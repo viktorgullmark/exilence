@@ -41,7 +41,7 @@
         <app-income title="Net worth summary" (hidden)="toggleGraph($event)" [view]="graphDimensions"></app-income>
     </div>
     <div class="table-outer-wrapper" [ngClass]="{'full-height-table': isGraphHidden }">
-        <mat-tab-group #networthTabs id="networthTabs" [(selectedIndex)]="selectedIndex">
+        <mat-tab-group #networthTabs id="networthTabs" [(selectedIndex)]="selectedIndex" (selectedTabChange)="handleTabEvent()">
             <mat-tab #networthTab id="networthTab" class="active">
                 <ng-template mat-tab-label>
                     <mat-icon class="tab-icon">attach_money</mat-icon>
@@ -71,13 +71,13 @@
         <div class="search-form-wrapper" [hidden]="selectedIndex != 1">
             <form class="form search-form" [formGroup]="form">
                 <mat-form-field>
-                    <input matInput formControlName="searchText" placeholder="{{'CURRENCY.SEARCH' | translate}}" class="search-text-input"
-                        (ngModelChange)="search()">
+                    <input matInput formControlName="searchTextOverTime" placeholder="{{'CURRENCY.SEARCH' | translate}}" class="search-text-input"
+                        (ngModelChange)="searchOverTime()">
                 </mat-form-field>
             </form>
         </div>
         <div class="networth-table-wrapper" [hidden]="selectedIndex != 1">
-            <app-networth-table #table *ngIf="selectedIndex == 1" [multiple]="true" [showOverTime]="true"></app-networth-table>
+            <app-networth-table #overTimeTable *ngIf="selectedIndex == 1" [multiple]="true" [showOverTime]="true"></app-networth-table>
         </div>
 
     </div>
