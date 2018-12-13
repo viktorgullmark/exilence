@@ -31,7 +31,7 @@ export class PartyComponent implements OnInit, OnDestroy {
   private partySub: Subscription;
   private currentPlayerValueSub: Subscription;
   private currentPlayerGainSub: Subscription;
-  private gainHours = 3;
+  private gainHours = 1;
 
   constructor(
     public partyService: PartyService,
@@ -80,8 +80,8 @@ export class PartyComponent implements OnInit, OnDestroy {
     if (gainHourSetting !== undefined) {
       this.gainHours = gainHourSetting;
     } else {
-      this.gainHours = 3;
-      this.settingsService.set('gainHours', 3);
+      this.gainHours = 1;
+      this.settingsService.set('gainHours', 1);
     }
 
   }

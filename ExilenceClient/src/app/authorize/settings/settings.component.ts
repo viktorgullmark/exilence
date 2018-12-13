@@ -29,7 +29,7 @@ export class SettingsComponent implements OnInit, OnDestroy {
   sessionIdValid: boolean;
   uploaded = false;
   itemValueTreshold = 1;
-  gainHours = 3;
+  gainHours = 1;
 
   // temporary arrays
   modifierKeys = [
