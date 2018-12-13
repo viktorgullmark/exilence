@@ -1,6 +1,9 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [0.8.10] - 2018-12-XX
+- Now rejoins your last group when reconnected after a disconnect (if they occurr within 25 seconds of each other)
+
 ## [0.8.9] - 2018-12-11
 - Now flashes the taskbar icon when disconnected
 - Now includes items/stacks worth less than 1c in net worth (previously these were excluded)
