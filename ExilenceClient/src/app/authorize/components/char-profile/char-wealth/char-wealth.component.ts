@@ -43,6 +43,10 @@ export class CharWealthComponent implements OnInit, OnDestroy {
   public reportKeybind: any;
   private selectedPlayerSub: Subscription;
 
+  private currentPlayerGainSub: Subscription;
+  private playerGainSub: Subscription;
+  public playerGain;
+  public gainHours;
   constructor(
     @Inject(FormBuilder) fb: FormBuilder,
     private router: Router,
@@ -70,20 +74,47 @@ export class CharWealthComponent implements OnInit, OnDestroy {
         this.selfSelected = false;
       }
       this.player = res;
+      this.partyService.updatePlayerGain(this.player, this.selfSelected);
       this.previousSnapshot = false;
+    });
+    this.currentPlayerGainSub = this.messageValueService.currentPlayerGainSubject.subscribe(res => {
+      if (this.partyService.currentPlayer.account === this.player.account) {
+        this.playerGain = res;
+      }
+    });
+    this.playerGainSub = this.messageValueService.playerGainSubject.subscribe(res => {
+      if (this.partyService.currentPlayer.account !== this.player.account) {
+        this.playerGain = res;
+      }
     });
     this.sessionId = this.sessionService.getSession();
     this.sessionIdValid = this.settingsService.get('account.sessionIdValid');
-
+    this.gainHours = this.settingService.get('gainHours');
     this.reportKeybind = this.keybindService.activeBinds.find(x => x.event === 'party-personal-networth');
   }
 
   ngOnInit() {
   }
 
+  toggleGainHours(event) {
+    this.settingsService.set('gainHours', +event.value);
+    this.gainHours = +event.value;
+    this.partyService.updatePlayerGain(this.player, this.selfSelected);
+    this.messageValueService.partyGain = 0;
+    this.partyService.party.players.forEach(p => {
+      this.partyService.updatePartyGain(p);
+    });
+  }
+
   ngOnDestroy() {
     if (this.selectedPlayerSub !== undefined) {
       this.selectedPlayerSub.unsubscribe();
+    }
+    if (this.currentPlayerGainSub !== undefined) {
+      this.currentPlayerGainSub.unsubscribe();
+    }
+    if (this.playerGainSub !== undefined) {
+      this.playerGainSub.unsubscribe();
     }
   }
 

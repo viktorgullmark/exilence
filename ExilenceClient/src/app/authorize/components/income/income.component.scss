@@ -1,25 +1,25 @@
 @import "./../../../../assets/styles/_variables.scss";
 
 .chart-container {
-  fill: white;
+    fill: white;
 }
 
 .caption-text {
-  color: $link-font-color;
+    color: $link-font-color;
 }
 
 .graph-title {
-  margin-bottom: 30px !important;
+    margin-bottom: 30px !important;
 }
 
 .info-icon {
-  cursor: pointer;
-  float: right;
+    cursor: pointer;
+    float: right;
 }
 
 .mid-text-wrapper {
-  display: flex;
-  height: 300px;
-  justify-content: center;
-  align-items: center;
+    display: flex;
+    height: 300px;
+    justify-content: center;
+    align-items: center;
 }

@@ -51,12 +51,14 @@ export class PartyService implements OnDestroy {
   private forceClosed: boolean;
 
   public maskedName = false;
-
+  public currentPlayerGain;
+  public playerGain;
   private playerSub: Subscription;
   private selectedPlayerSub: Subscription;
   private selectedGenPlayerSub: Subscription;
   private accountInfoSub: Subscription;
-
+  private currentPlayerGainSub: Subscription;
+  private playerGainSub: Subscription;
   constructor(
     private router: Router,
     private accountService: AccountService,
@@ -65,7 +67,8 @@ export class PartyService implements OnDestroy {
     private settingService: SettingsService,
     private logService: LogService,
     private electronService: ElectronService,
-    private messageValueService: MessageValueService
+    private messageValueService: MessageValueService,
+    private settingsService: SettingsService
   ) {
 
     this.reconnectAttempts = 0;
@@ -75,6 +78,12 @@ export class PartyService implements OnDestroy {
 
     this.playerSub = this.accountService.player.subscribe(res => {
       this.currentPlayer = res;
+    });
+    this.currentPlayerGainSub = this.messageValueService.currentPlayerGainSubject.subscribe(gain => {
+      this.currentPlayerGain = gain;
+    });
+    this.playerGainSub = this.messageValueService.playerGainSubject.subscribe(gain => {
+      this.playerGain = gain;
     });
     this.selectedPlayerSub = this.selectedPlayer.subscribe(res => {
       this.selectedPlayerObj = res;
@@ -203,20 +212,53 @@ export class PartyService implements OnDestroy {
       this.selectedGenPlayerSub.unsubscribe();
     } if (this.accountInfoSub !== undefined) {
       this.accountInfoSub.unsubscribe();
+    } if (this.currentPlayerGainSub !== undefined) {
+      this.currentPlayerGainSub.unsubscribe();
+    } if (this.playerGainSub !== undefined) {
+      this.playerGainSub.unsubscribe();
     }
   }
 
   updatePartyGain(player: Player) {
-    const oneHourAgo = (Date.now() - (1 * 60 * 60 * 1000));
+    const gainHours = this.settingsService.get('gainHours');
+    const xHoursAgo = (Date.now() - (gainHours * 60 * 60 * 1000));
     const pastHoursSnapshots = player.netWorthSnapshots
-      .filter((snaphot: NetWorthSnapshot) => snaphot.timestamp > oneHourAgo);
+      .filter((snaphot: NetWorthSnapshot) => snaphot.timestamp > xHoursAgo);
 
     if (pastHoursSnapshots.length > 1) {
       const lastSnapshot = pastHoursSnapshots[0];
       const firstSnapshot = pastHoursSnapshots[pastHoursSnapshots.length - 1];
-      const gainHour = ((1000 * 60 * 60)) / (lastSnapshot.timestamp - firstSnapshot.timestamp) * (lastSnapshot.value - firstSnapshot.value);
+      const gainHour = (((1000 * 60 * 60)) / (lastSnapshot.timestamp - firstSnapshot.timestamp)
+        * (lastSnapshot.value - firstSnapshot.value)) / gainHours;
       this.messageValueService.partyGain = this.messageValueService.partyGain + gainHour;
     }
+  }
+
+
+  updatePlayerGain(player: Player, current: boolean) {
+    const gainHours = this.settingsService.get('gainHours');
+    const xHoursAgo = (Date.now() - (gainHours * 60 * 60 * 1000));
+    const pastHoursSnapshots = player.netWorthSnapshots
+      .filter((snaphot: NetWorthSnapshot) => snaphot.timestamp > xHoursAgo);
+
+    if (pastHoursSnapshots.length > 1) {
+      const lastSnapshot = pastHoursSnapshots[0];
+      const firstSnapshot = pastHoursSnapshots[pastHoursSnapshots.length - 1];
+      const gainHour = (((1000 * 60 * 60)) / (lastSnapshot.timestamp - firstSnapshot.timestamp)
+        * (lastSnapshot.value - firstSnapshot.value)) / gainHours;
+      if (current) {
+        this.messageValueService.currentPlayerGainSubject.next(gainHour);
+      } else {
+        this.messageValueService.playerGainSubject.next(gainHour);
+      }
+    } else {
+      if (current) {
+        this.messageValueService.currentPlayerGainSubject.next(0);
+      } else {
+        this.messageValueService.playerGainSubject.next(0);
+      }
+    }
+
   }
 
   initHubConnection() {

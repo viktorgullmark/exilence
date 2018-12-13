@@ -4,6 +4,9 @@ import { MatSort, MatTableDataSource } from '@angular/material';
 import { Player } from '../../../shared/interfaces/player.interface';
 import { PartyService } from '../../../shared/providers/party.service';
 import { Subscription } from 'rxjs/internal/Subscription';
+import { ItemModule } from '../char-profile/item/item.module';
+import { NetWorthSnapshot } from '../../../shared/interfaces/income.interface';
+import { SettingsService } from '../../../shared/providers/settings.service';
 
 @Component({
   selector: 'app-networth-table',
@@ -13,6 +16,7 @@ import { Subscription } from 'rxjs/internal/Subscription';
 export class NetworthTableComponent implements OnInit, OnDestroy {
   @Input() player: Player;
   @Input() multiple = false;
+  @Input() showOverTime = false;
   displayedColumns: string[] = ['position', 'name', 'stacksize', 'valuePerUnit', 'value'];
   dataSource = [];
   searchText = '';
@@ -22,10 +26,10 @@ export class NetworthTableComponent implements OnInit, OnDestroy {
   private selectedPlayerSub: Subscription;
   private partySub: Subscription;
 
-  constructor(private partyService: PartyService) { }
+  constructor(private partyService: PartyService, private settingsService: SettingsService) { }
 
   ngOnInit() {
-    if (this.multiple) {
+    if (this.multiple && !this.showOverTime) {
       this.displayedColumns.push('holdingPlayers');
     }
     if (this.player !== undefined) {
@@ -74,6 +78,16 @@ export class NetworthTableComponent implements OnInit, OnDestroy {
     this.filter();
   }
 
+  updateGainHours(hours: number) {
+    this.dataSource = [];
+    this.partyService.party.players.forEach(p => {
+      if (p.netWorthSnapshots !== null) {
+        this.loadPlayerData(p);
+      }
+    });
+    this.filter();
+  }
+
   filter() {
     this.filteredArr = [...this.dataSource];
     this.filteredArr = this.filteredArr.filter(item =>
@@ -87,7 +101,39 @@ export class NetworthTableComponent implements OnInit, OnDestroy {
   }
 
   loadPlayerData(player: Player) {
-    this.updateTable(player.netWorthSnapshots[0].items, player.character.name);
+    if (this.showOverTime) {
+
+      const gainHours = this.settingsService.get('gainHours');
+      const xHoursAgo = (Date.now() - (gainHours * 60 * 60 * 1000));
+      const pastHoursSnapshots = player.netWorthSnapshots
+        .filter((snaphot: NetWorthSnapshot) => snaphot.timestamp > xHoursAgo);
+
+      if (pastHoursSnapshots.length > 1) {
+        const firstSnapshot = pastHoursSnapshots[pastHoursSnapshots.length - 1];
+        const lastSnapshot = pastHoursSnapshots[0];
+        const difference = [];
+        lastSnapshot.items.forEach(item => {
+          // if item exists in first snapshot
+          const existingItem = firstSnapshot.items.find(x => x.name === item.name);
+          if (existingItem !== undefined) {
+            const recentItem = Object.assign({}, item);
+
+            recentItem.stacksize = recentItem.stacksize - existingItem.stacksize;
+
+            existingItem.value = recentItem.valuePerUnit * existingItem.stacksize;
+
+            recentItem.value = recentItem.value - existingItem.value;
+
+            if (recentItem.value !== 0) {
+              difference.push(recentItem);
+            }
+          }
+        });
+        this.updateOverTime(difference, player.character.name);
+      }
+    } else {
+      this.updateTable(player.netWorthSnapshots[0].items, player.character.name);
+    }
   }
 
   loadPreviousSnapshot(snapshot: any) {
@@ -95,6 +141,30 @@ export class NetworthTableComponent implements OnInit, OnDestroy {
     this.updateTable(snapshot.items, this.player.character.name);
 
     this.filter();
+  }
+
+  updateOverTime(items: any[], playerName: string) {
+    items.forEach(snapshot => {
+      const existingItem = this.dataSource.find(x => x.name === snapshot.name);
+      if (existingItem !== undefined) {
+        const indexOfItem = this.dataSource.indexOf(existingItem);
+        // update existing item with new data
+        existingItem.stacksize = snapshot.stacksize + existingItem.stacksize;
+        existingItem.value = snapshot.value + existingItem.value;
+        this.dataSource[indexOfItem] = existingItem;
+      } else {
+        const newObj = {
+          position: items.indexOf(snapshot) + 1,
+          name: snapshot.name,
+          stacksize: snapshot.stacksize,
+          value: snapshot.value,
+          valuePerUnit: snapshot.valuePerUnit,
+          icon: snapshot.icon,
+          holdingPlayers: [playerName]
+        };
+        this.dataSource.push(newObj);
+      }
+    });
   }
 
   updateTable(items: any[], playerName: string) {

@@ -2,7 +2,7 @@
     <div class="income-summary-wrapper">
         <div class="networth-wrapper">
             <span class="title">Current net worth</span>
-            <br/>
+            <br />
             <div class="networth-inner-wrapper">
                 <span class="networth" *ngIf="messageValueService.playerValue > 0">
                     {{messageValueService.playerValue.toFixed(1)}}c
@@ -14,56 +14,79 @@
         </div>
         <div class="networth-wrapper">
             <span class="title">Gain per hour</span>
-            <br/>
+            <br />
             <div class="networth-inner-wrapper">
-                <span class="networth" *ngIf="!previousSnapshot">{{messageValueService.playerGain.toFixed(1)}}c</span>
+                <span class="networth" *ngIf="!previousSnapshot">{{playerGain.toFixed(1)}}c</span>
                 <span class="networth-placeholder" *ngIf="previousSnapshot">No data</span>
             </div>
         </div>
         <div class="networth-wrapper">
+            <mat-form-field class="gain-dropdown">
+                <mat-label>Calculate gain over past</mat-label>
+                <mat-select #fontSize value="{{gainHours}}" (selectionChange)="toggleGainHours($event)">
+                    <mat-option value="1">1 hour</mat-option>
+                    <mat-option value="2">2 hours</mat-option>
+                    <mat-option value="3">3 hours</mat-option>
+                    <mat-option value="5">5 hours</mat-option>
+                    <mat-option value="10">10 hours</mat-option>
+                    <mat-option value="24">24 hours</mat-option>
+                </mat-select>
+            </mat-form-field>
+        </div>
+        <div class="networth-wrapper">
+            <div class="snapshot">
                 <span class="title">Last snapshot</span>
-                <br/>
+                <br />
                 <div class="networth-inner-wrapper">
                     <span *ngIf="player !== undefined && player.netWorthSnapshots[0].timestamp > 0" class="networth-snapshot">{{formatSnapshot(player.netWorthSnapshots[0].timestamp)}}</span>
-                    <span *ngIf="player !== undefined && player.netWorthSnapshots[0].timestamp == 0" class="networth-placeholder">No data</span>
+                    <span *ngIf="player !== undefined && player.netWorthSnapshots[0].timestamp == 0" class="networth-placeholder">No
+                        data</span>
                 </div>
             </div>
-        <div class="networth-wrapper">
-            <span class="title">Powered by
-                <a class="ninja-link" (click)="openLink('https://poe.ninja')">https://poe.ninja</a>
-            </span>
         </div>
     </div>
-    <div class="flex-area graph-btns">
-        <ng-container *ngIf="selfSelected">
-            <button mat-raised-button color="primary" type="button" [matMenuTriggerFor]="menu">
-                {{'GRAPH.REPORT' | translate}}
-                <mat-icon>arrow_drop_down</mat-icon>
-            </button>
-            <mat-menu #menu="matMenu">
-                <button (click)="report(false)" mat-menu-item>{{'ROBOT.CLIPBOARD' | translate}}</button>
-                <button (click)="report(true)" mat-menu-item>{{'ROBOT.GAME' | translate}} <span class="keybind-text">({{reportKeybind != undefined ? reportKeybind.keys : ''}})</span></button>
-            </mat-menu>
-        </ng-container>
+    <div class="button-area-wrapper">
+        <div class="flex-area graph-btns">
+            <ng-container *ngIf="selfSelected">
+                <button mat-raised-button color="primary" type="button" [matMenuTriggerFor]="menu">
+                    {{'GRAPH.REPORT' | translate}}
+                    <mat-icon>arrow_drop_down</mat-icon>
+                </button>
+                <mat-menu #menu="matMenu">
+                    <button (click)="report(false)" mat-menu-item>{{'ROBOT.CLIPBOARD' | translate}}</button>
+                    <button (click)="report(true)" mat-menu-item>{{'ROBOT.GAME' | translate}} <span class="keybind-text">({{reportKeybind
+                            != undefined ? reportKeybind.keys : ''}})</span></button>
+                </mat-menu>
+            </ng-container>
 
-        <button mat-raised-button color="primary" *ngIf="selfSelected" (click)="popout()" type="button" class="right-aligned extra-margin margin-left">{{'GRAPH.POPOUT' | translate}}</button>
+            <button mat-raised-button color="primary" *ngIf="selfSelected" (click)="popout()" type="button" class="right-aligned extra-margin margin-left">{{'GRAPH.POPOUT'
+                | translate}}</button>
 
-        <button mat-raised-button color="primary" *ngIf="selfSelected" (click)="resetNetWorth()" type="button" class="right-aligned extra-margin">{{'GRAPH.RESET' | translate}}</button>
+            <button mat-raised-button color="primary" *ngIf="selfSelected" (click)="resetNetWorth()" type="button"
+                class="right-aligned extra-margin">{{'GRAPH.RESET'
+                | translate}}</button>
 
-        <button mat-raised-button color="primary" *ngIf="!isGraphHidden" (click)="hideGraph()" type="button" [ngClass]="{'right-aligned': !selfSelected}">{{'GRAPH.HIDE' | translate}}</button>
-        <button mat-raised-button color="primary" *ngIf="isGraphHidden" (click)="showGraph()" type="button">{{'GRAPH.SHOW' | translate}}</button>
+            <button mat-raised-button color="primary" *ngIf="!isGraphHidden" (click)="hideGraph()" type="button"
+                [ngClass]="{'right-aligned': !selfSelected}">{{'GRAPH.HIDE'
+                | translate}}</button>
+            <button mat-raised-button color="primary" *ngIf="isGraphHidden" (click)="showGraph()" type="button">{{'GRAPH.SHOW'
+                | translate}}</button>
+        </div>
     </div>
     <div class="income-graph-wrapper" [hidden]="isGraphHidden">
-        <app-income (hidden)="toggleGraph($event)" (loadPrevious)="loadPreviousSnapshot($event)" [player]="player" [view]="graphDimensions"></app-income>
+        <app-income (hidden)="toggleGraph($event)" (loadPrevious)="loadPreviousSnapshot($event)" [player]="player"
+            [view]="graphDimensions"></app-income>
     </div>
     <div class="table-outer-wrapper" [ngClass]="{'full-height-table': isGraphHidden }">
-        <div class="flex-area wrapped">
-            <button mat-raised-button color="primary" [disabled]="sessionId == '' || !sessionIdValid" (click)="goToSettings()" type="button" class="right-aligned">{{'STASH.SELECT_TABS' | translate}}</button>
-        </div>
+        <!-- <div class="flex-area wrapped">
+            <button mat-raised-button color="primary" [disabled]="sessionId == '' || !sessionIdValid" (click)="goToSettings()"
+                type="button" class="right-aligned">{{'STASH.SELECT_TABS' | translate}}</button>
+        </div> -->
         <div class="search-form-wrapper">
             <form class="form search-form" [formGroup]="form">
                 <mat-form-field>
-                    <input matInput formControlName="searchText" placeholder="{{'CURRENCY.SEARCH' | translate}}" class="search-text-input" (ngModelChange)="search()">
+                    <input matInput formControlName="searchText" placeholder="{{'CURRENCY.SEARCH' | translate}}" class="search-text-input"
+                        (ngModelChange)="search()">
                 </mat-form-field>
             </form>
         </div>

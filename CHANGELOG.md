@@ -1,6 +1,11 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [0.8.11] - 2018-12-XX
+- Added setting for gain-hours (you can now choose how many hours back calculations for hourly gain are based on)
+- Added new table in currency summary, that displays the net worth change over time (based on gain-hours)
+- Minor styletweaks to currency summary
+
 ## [0.8.10] - 2018-12-13
 - Now rejoins your last group when reconnected after a disconnect (if they occurr within 25 seconds of each other)
 

@@ -17,6 +17,7 @@ export class MessageValueService {
 
   public currentPlayerGainSubject: BehaviorSubject<number> = new BehaviorSubject<number>(0);
   public currentPlayerValueSubject: BehaviorSubject<number> = new BehaviorSubject<number>(0);
+  public playerGainSubject: BehaviorSubject<number> = new BehaviorSubject<number>(0);
 
   public currentPlayerGain = 0;
   public currentPlayerValue = 0;
@@ -53,6 +54,11 @@ export class MessageValueService {
       this.updateCurrentPlayerMsg();
     });
 
+    this.playerGainSubject.subscribe(res => {
+      this.playerGain = res;
+      this.updateCurrentPlayerMsg();
+    });
+
     this.partyValueSubject.subscribe(res => {
       this.partyValue = res;
       this.updatePartyMsg();
@@ -66,12 +72,12 @@ export class MessageValueService {
 
   updateCurrentPlayerMsg() {
     // tslint:disable-next-line:max-line-length
-    this.playerNetworthMsg = `%[Exilence] My net worth: ${this.currentPlayerValue.toFixed(1)}c. Gain: ${this.currentPlayerGain.toFixed(1)}c / hour`;
+    this.playerNetworthMsg = `[Exilence] My net worth: ${this.currentPlayerValue.toFixed(1)}c. Gain: ${this.currentPlayerGain.toFixed(1)}c / hour`;
   }
 
   updatePartyMsg() {
     // tslint:disable-next-line:max-line-length
-    this.partyNetworthMsg = `%[Exilence] Grp net worth: ${this.partyValue.toFixed(1)}c. Gain: ${this.partyGain.toFixed(1)}c / hour`;
+    this.partyNetworthMsg = `[Exilence] Grp net worth: ${this.partyValue.toFixed(1)}c. Gain: ${this.partyGain.toFixed(1)}c / hour`;
   }
 
   initKeybinds() {
