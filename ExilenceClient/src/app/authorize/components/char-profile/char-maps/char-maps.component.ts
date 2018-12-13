@@ -115,7 +115,7 @@ export class CharMapsComponent implements OnInit, OnDestroy {
             title: 'Map tab',
             // tslint:disable-next-line:max-line-length
             content: 'This tab updates every time the selected player changes area in game.<br/><br/>' +
-              'You will only see data from the past hour for the rest of your group.'
+              'You will only see data from the past 24 hours for the rest of your group.'
           }
         });
         dialogRef.afterClosed().subscribe(result => {
