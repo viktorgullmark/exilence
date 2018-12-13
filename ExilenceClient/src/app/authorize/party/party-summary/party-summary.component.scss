@@ -64,22 +64,22 @@
     }
 
     .table-outer-wrapper {
-        height: 47%;
+        height: 44%;
         bottom: 0px;
         width: calc(100% - 50px);
         margin-top: 25px;
         position: absolute;
 
         @media screen and (min-height: 1200px) {
-            height: 55%;
+            height: 44%;
         }
 
         @media screen and (max-height: 950px) {
-            height: 80%;
+            height: 77%;
         }
         
         .networth-table-wrapper {
-            height: calc(100% - 95px);
+            height: calc(100% - 150px);
             overflow-y: scroll;
         }
 
@@ -89,6 +89,6 @@
     }
 
     .full-height-table {
-        height: 80%;
+        height: 77%;
     }
 }

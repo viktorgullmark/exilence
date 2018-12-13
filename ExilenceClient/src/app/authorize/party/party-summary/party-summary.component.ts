@@ -8,7 +8,7 @@ import { NetworthTableComponent } from '../../components/networth-table/networth
 import { RobotService } from '../../../shared/providers/robot.service';
 import { KeybindService } from '../../../shared/providers/keybind.service';
 import { SettingsService } from '../../../shared/providers/settings.service';
-import { MatDialog } from '@angular/material';
+import { MatDialog, MatTabGroup } from '@angular/material';
 import { InfoDialogComponent } from '../../components/info-dialog/info-dialog.component';
 
 @Component({
@@ -21,7 +21,9 @@ export class PartySummaryComponent implements OnInit {
 
   isGraphHidden = false;
   @ViewChild('table') table: NetworthTableComponent;
+  @ViewChild('networthTabs') networthTabs: MatTabGroup;
 
+  selectedIndex = 0;
   public graphDimensions = [1000, 300];
   public reportKeybind: any;
   constructor(
