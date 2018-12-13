@@ -5,6 +5,7 @@ import { Player } from '../../../shared/interfaces/player.interface';
 import { PartyService } from '../../../shared/providers/party.service';
 import { Subscription } from 'rxjs/internal/Subscription';
 import { ItemModule } from '../char-profile/item/item.module';
+import { NetWorthSnapshot } from '../../../shared/interfaces/income.interface';
 
 @Component({
   selector: 'app-networth-table',
@@ -90,8 +91,13 @@ export class NetworthTableComponent implements OnInit, OnDestroy {
 
   loadPlayerData(player: Player) {
     if (this.showOverTime) {
-      const firstSnapshot = player.netWorthSnapshots[0];
-      const lastSnapshot = player.netWorthSnapshots[player.netWorthSnapshots.length - 1];
+
+      const oneHourAgo = (Date.now() - (1 * 60 * 60 * 1000));
+      const pastHoursSnapshots = player.netWorthSnapshots
+        .filter((snaphot: NetWorthSnapshot) => snaphot.timestamp > oneHourAgo);
+
+      const firstSnapshot = pastHoursSnapshots[0];
+      const lastSnapshot = pastHoursSnapshots[pastHoursSnapshots.length - 1];
       const difference = [];
       lastSnapshot.items.forEach(item => {
         // if item exists in first snapshot
