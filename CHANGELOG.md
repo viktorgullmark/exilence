@@ -1,7 +1,7 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
-## [0.8.10] - 2018-12-XX
+## [0.8.10] - 2018-12-13
 - Now rejoins your last group when reconnected after a disconnect (if they occurr within 25 seconds of each other)
 
 ## [0.8.9] - 2018-12-11
