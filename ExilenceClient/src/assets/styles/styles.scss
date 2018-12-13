@@ -26,6 +26,12 @@ text {
     color: $external-link-color;
 }
 
+.summary-chart { 
+  .chart-legend .legend-labels {
+    width: 300px !important;
+  }
+}
+
 @keyframes fadein {
     from { opacity: 0; }
     to   { opacity: 1; }

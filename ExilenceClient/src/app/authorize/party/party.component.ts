@@ -45,8 +45,7 @@ export class PartyComponent implements OnInit, OnDestroy {
       if (res !== undefined) {
         this.player = res;
         this.messageValueService.playerValue = this.player.netWorthSnapshots[0].value;
-        const isCurrentPlayer = res.account === this.partyService.currentPlayer.account;
-        this.updatePlayerGain(res, false);
+        this.partyService.updatePlayerGain(res, false);
       }
     });
     this.playerSub = this.accountService.player.subscribe(res => {
@@ -61,7 +60,7 @@ export class PartyComponent implements OnInit, OnDestroy {
         // update msg-values based on current player
         this.messageValueService.currentPlayerValueSubject.next(res.netWorthSnapshots[0].value);
         const isCurrentPlayer = res.account === this.partyService.currentPlayer.account;
-        this.updatePlayerGain(res, isCurrentPlayer);
+        this.partyService.updatePlayerGain(res, isCurrentPlayer);
       }
     });
     this.partySub = this.partyService.partyUpdated.subscribe(res => {
@@ -140,32 +139,4 @@ export class PartyComponent implements OnInit, OnDestroy {
     }
 
   }
-
-  updatePlayerGain(player: Player, current: boolean) {
-    const gainHours = this.settingsService.get('gainHours');
-    const xHoursAgo = (Date.now() - (gainHours * 60 * 60 * 1000));
-    const pastHoursSnapshots = player.netWorthSnapshots
-      .filter((snaphot: NetWorthSnapshot) => snaphot.timestamp > xHoursAgo);
-
-    if (pastHoursSnapshots.length > 1) {
-      const lastSnapshot = pastHoursSnapshots[0];
-      const firstSnapshot = pastHoursSnapshots[pastHoursSnapshots.length - 1];
-      const gainHour = (((1000 * 60 * 60)) / (lastSnapshot.timestamp - firstSnapshot.timestamp)
-        * (lastSnapshot.value - firstSnapshot.value)) / gainHours;
-      if (current) {
-        this.messageValueService.currentPlayerGainSubject.next(gainHour);
-      } else {
-        this.messageValueService.playerGain = gainHour;
-      }
-    } else {
-      if (current) {
-        this.messageValueService.currentPlayerGainSubject.next(0);
-      } else {
-        this.messageValueService.playerGain = 0;
-      }
-    }
-
-  }
-
-
 }

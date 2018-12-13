@@ -13,6 +13,7 @@ import { CharWealthComponent } from './char-wealth/char-wealth.component';
 import { CharMapsComponent } from './char-maps/char-maps.component';
 import { CharEquipmentComponent } from './char-equipment/char-equipment.component';
 import { Subscription } from 'rxjs/internal/Subscription';
+import { AccountService } from '../../../shared/providers/account.service';
 
 @Component({
   selector: 'app-char-profile',
@@ -21,7 +22,7 @@ import { Subscription } from 'rxjs/internal/Subscription';
 })
 export class CharProfileComponent implements OnInit, OnDestroy {
   player: Player;
-
+  currentPlayer: Player;
   @Input() localProfile = false;
   @ViewChild('subTabGroup') subTabGroup: MatTabGroup;
   @ViewChild('equipmentTab') equipmentTab: MatTab;
@@ -32,6 +33,7 @@ export class CharProfileComponent implements OnInit, OnDestroy {
   selectedIndex = 0;
   private selectedPlayerSub: Subscription;
   private selectedGenPlayerSub: Subscription;
+  private playerSub: Subscription;
 
   constructor(
     private partyService: PartyService,
@@ -40,7 +42,8 @@ export class CharProfileComponent implements OnInit, OnDestroy {
     private router: Router,
     private electronService: ElectronService,
     private analyticsService: AnalyticsService,
-    private ladderService: LadderService
+    private ladderService: LadderService,
+    private accountService: AccountService
   ) {
     this.analyticsService.sendScreenview('/authorized/party/player/profile');
   }
@@ -53,6 +56,9 @@ export class CharProfileComponent implements OnInit, OnDestroy {
           window.dispatchEvent(new Event('resize'));
         }, 1000);
         this.player = res;
+      });
+      this.playerSub = this.accountService.player.subscribe(res => {
+        this.currentPlayer = res;
       });
     } else {
       this.selectedGenPlayerSub = this.partyService.selectedGenericPlayer.subscribe(res => {
@@ -95,6 +101,7 @@ export class CharProfileComponent implements OnInit, OnDestroy {
       case 1: {
         this.charWealth.openCurrencyDialog();
         this.analyticsService.sendScreenview('/authorized/party/player/wealth');
+        this.partyService.updatePlayerGain(this.player, this.currentPlayer.account === this.player.account);
         break;
       }
       // maps

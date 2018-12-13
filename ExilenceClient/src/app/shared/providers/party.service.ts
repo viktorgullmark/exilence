@@ -52,11 +52,12 @@ export class PartyService implements OnDestroy {
   private forceClosed: boolean;
 
   public maskedName = false;
-
+  public currentPlayerGain;
   private playerSub: Subscription;
   private selectedPlayerSub: Subscription;
   private selectedGenPlayerSub: Subscription;
   private accountInfoSub: Subscription;
+  private currentPlayerGainSub: Subscription;
 
   constructor(
     private router: Router,
@@ -77,6 +78,9 @@ export class PartyService implements OnDestroy {
 
     this.playerSub = this.accountService.player.subscribe(res => {
       this.currentPlayer = res;
+    });
+    this.currentPlayerGainSub = this.messageValueService.currentPlayerGainSubject.subscribe(gain => {
+      this.currentPlayerGain = gain;
     });
     this.selectedPlayerSub = this.selectedPlayer.subscribe(res => {
       this.selectedPlayerObj = res;
@@ -205,6 +209,8 @@ export class PartyService implements OnDestroy {
       this.selectedGenPlayerSub.unsubscribe();
     } if (this.accountInfoSub !== undefined) {
       this.accountInfoSub.unsubscribe();
+    } if (this.currentPlayerGainSub !== undefined) {
+      this.currentPlayerGainSub.unsubscribe();
     }
   }
 
@@ -221,6 +227,33 @@ export class PartyService implements OnDestroy {
         * (lastSnapshot.value - firstSnapshot.value)) / gainHours;
       this.messageValueService.partyGain = this.messageValueService.partyGain + gainHour;
     }
+  }
+
+
+  updatePlayerGain(player: Player, current: boolean) {
+    const gainHours = this.settingsService.get('gainHours');
+    const xHoursAgo = (Date.now() - (gainHours * 60 * 60 * 1000));
+    const pastHoursSnapshots = player.netWorthSnapshots
+      .filter((snaphot: NetWorthSnapshot) => snaphot.timestamp > xHoursAgo);
+
+    if (pastHoursSnapshots.length > 1) {
+      const lastSnapshot = pastHoursSnapshots[0];
+      const firstSnapshot = pastHoursSnapshots[pastHoursSnapshots.length - 1];
+      const gainHour = (((1000 * 60 * 60)) / (lastSnapshot.timestamp - firstSnapshot.timestamp)
+        * (lastSnapshot.value - firstSnapshot.value)) / gainHours;
+      if (current) {
+        this.messageValueService.currentPlayerGainSubject.next(gainHour);
+      } else {
+        this.messageValueService.playerGain = gainHour;
+      }
+    } else {
+      if (current) {
+        this.messageValueService.currentPlayerGainSubject.next(0);
+      } else {
+        this.messageValueService.playerGain = 0;
+      }
+    }
+
   }
 
   initHubConnection() {

@@ -10,6 +10,7 @@ import { KeybindService } from '../../../shared/providers/keybind.service';
 import { SettingsService } from '../../../shared/providers/settings.service';
 import { MatDialog, MatTabGroup } from '@angular/material';
 import { InfoDialogComponent } from '../../components/info-dialog/info-dialog.component';
+import { AccountService } from '../../../shared/providers/account.service';
 
 @Component({
   selector: 'app-party-summary',
@@ -25,7 +26,7 @@ export class PartySummaryComponent implements OnInit {
   @ViewChild('networthTabs') networthTabs: MatTabGroup;
   gainHours: number;
   selectedIndex = 0;
-  public graphDimensions = [1000, 300];
+  public graphDimensions = [950, 300];
   public reportKeybind: any;
   constructor(
     @Inject(FormBuilder) fb: FormBuilder,
@@ -33,7 +34,8 @@ export class PartySummaryComponent implements OnInit {
     private robotService: RobotService,
     private keybindService: KeybindService,
     private settingsService: SettingsService,
-    private dialog: MatDialog
+    private dialog: MatDialog,
+    private partyService: PartyService
   ) {
     this.form = fb.group({
       searchText: [''],
@@ -51,6 +53,14 @@ export class PartySummaryComponent implements OnInit {
       this.overTimeTable.updateGainHours(+event.value);
     }
     this.gainHours = +event.value;
+
+    this.messageValueService.partyGain = 0;
+    this.partyService.party.players.forEach(p => {
+      if (this.partyService.currentPlayer.account === p.account) {
+        this.partyService.updatePlayerGain(p, true);
+      }
+      this.partyService.updatePartyGain(p);
+    });
   }
 
   openSummaryDialog(): void {

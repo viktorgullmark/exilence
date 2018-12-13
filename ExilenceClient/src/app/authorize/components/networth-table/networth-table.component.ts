@@ -109,18 +109,23 @@ export class NetworthTableComponent implements OnInit, OnDestroy {
         .filter((snaphot: NetWorthSnapshot) => snaphot.timestamp > xHoursAgo);
 
       if (pastHoursSnapshots.length > 1) {
-        const firstSnapshot = pastHoursSnapshots[0];
-        const lastSnapshot = pastHoursSnapshots[pastHoursSnapshots.length - 1];
+        const firstSnapshot = pastHoursSnapshots[pastHoursSnapshots.length - 1];
+        const lastSnapshot = pastHoursSnapshots[0];
         const difference = [];
         lastSnapshot.items.forEach(item => {
           // if item exists in first snapshot
           const existingItem = firstSnapshot.items.find(x => x.name === item.name);
           if (existingItem !== undefined) {
-            const obj = Object.assign({}, item);
-            obj.stacksize = obj.stacksize - existingItem.stacksize;
-            obj.value = obj.value - existingItem.value;
-            if (obj.value !== 0) {
-              difference.push(obj);
+            const recentItem = Object.assign({}, item);
+
+            recentItem.stacksize = recentItem.stacksize - existingItem.stacksize;
+
+            existingItem.value = recentItem.valuePerUnit * existingItem.stacksize;
+
+            recentItem.value = recentItem.value - existingItem.value;
+
+            if (recentItem.value !== 0) {
+              difference.push(recentItem);
             }
           }
         });

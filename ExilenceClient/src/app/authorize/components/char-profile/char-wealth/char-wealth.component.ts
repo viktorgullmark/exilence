@@ -43,6 +43,9 @@ export class CharWealthComponent implements OnInit, OnDestroy {
   public reportKeybind: any;
   private selectedPlayerSub: Subscription;
 
+  private currentPlayerGainSub: Subscription;
+  public playerGain;
+
   constructor(
     @Inject(FormBuilder) fb: FormBuilder,
     private router: Router,
@@ -66,8 +69,10 @@ export class CharWealthComponent implements OnInit, OnDestroy {
       if (res.account === this.partyService.currentPlayer.account) {
         res.netWorthSnapshots = this.partyService.currentPlayer.netWorthSnapshots;
         this.selfSelected = true;
+        this.playerGain = this.partyService.currentPlayerGain;
       } else {
         this.selfSelected = false;
+        this.playerGain = this.messageValueService.playerGain;
       }
       this.player = res;
       this.previousSnapshot = false;
@@ -84,6 +89,9 @@ export class CharWealthComponent implements OnInit, OnDestroy {
   ngOnDestroy() {
     if (this.selectedPlayerSub !== undefined) {
       this.selectedPlayerSub.unsubscribe();
+    }
+    if(this.currentPlayerGainSub !== undefined){
+      this.currentPlayerGainSub.unsubscribe();
     }
   }
 

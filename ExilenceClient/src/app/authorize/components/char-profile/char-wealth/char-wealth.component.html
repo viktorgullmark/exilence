@@ -16,7 +16,7 @@
             <span class="title">Gain per hour</span>
             <br/>
             <div class="networth-inner-wrapper">
-                <span class="networth" *ngIf="!previousSnapshot">{{messageValueService.playerGain.toFixed(1)}}c</span>
+                <span class="networth" *ngIf="!previousSnapshot">{{playerGain.toFixed(1)}}c</span>
                 <span class="networth-placeholder" *ngIf="previousSnapshot">No data</span>
             </div>
         </div>
