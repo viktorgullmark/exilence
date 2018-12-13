@@ -4,6 +4,7 @@ import { MatSort, MatTableDataSource } from '@angular/material';
 import { Player } from '../../../shared/interfaces/player.interface';
 import { PartyService } from '../../../shared/providers/party.service';
 import { Subscription } from 'rxjs/internal/Subscription';
+import { ItemModule } from '../char-profile/item/item.module';
 
 @Component({
   selector: 'app-networth-table',
@@ -13,6 +14,7 @@ import { Subscription } from 'rxjs/internal/Subscription';
 export class NetworthTableComponent implements OnInit, OnDestroy {
   @Input() player: Player;
   @Input() multiple = false;
+  @Input() showOverTime = false;
   displayedColumns: string[] = ['position', 'name', 'stacksize', 'valuePerUnit', 'value'];
   dataSource = [];
   searchText = '';
@@ -25,7 +27,7 @@ export class NetworthTableComponent implements OnInit, OnDestroy {
   constructor(private partyService: PartyService) { }
 
   ngOnInit() {
-    if (this.multiple) {
+    if (this.multiple && !this.showOverTime) {
       this.displayedColumns.push('holdingPlayers');
     }
     if (this.player !== undefined) {
@@ -87,7 +89,26 @@ export class NetworthTableComponent implements OnInit, OnDestroy {
   }
 
   loadPlayerData(player: Player) {
-    this.updateTable(player.netWorthSnapshots[0].items, player.character.name);
+    if (this.showOverTime) {
+      const firstSnapshot = player.netWorthSnapshots[0];
+      const lastSnapshot = player.netWorthSnapshots[player.netWorthSnapshots.length - 1];
+      const difference = [];
+      lastSnapshot.items.forEach(item => {
+        // if item exists in first snapshot
+        const existingItem = firstSnapshot.items.find(x => x.name === item.name);
+        if (existingItem !== undefined) {
+          const obj = Object.assign({}, item);
+          obj.stacksize = obj.stacksize - existingItem.stacksize;
+          obj.value = obj.value - existingItem.value;
+          if (obj.value !== 0) {
+            difference.push(obj);
+          }
+        }
+      });
+      this.updateOverTime(difference, player.character.name);
+    } else {
+      this.updateTable(player.netWorthSnapshots[0].items, player.character.name);
+    }
   }
 
   loadPreviousSnapshot(snapshot: any) {
@@ -95,6 +116,30 @@ export class NetworthTableComponent implements OnInit, OnDestroy {
     this.updateTable(snapshot.items, this.player.character.name);
 
     this.filter();
+  }
+
+  updateOverTime(items: any[], playerName: string) {
+    items.forEach(snapshot => {
+      const existingItem = this.dataSource.find(x => x.name === snapshot.name);
+      if (existingItem !== undefined) {
+        const indexOfItem = this.dataSource.indexOf(existingItem);
+        // update existing item with new data
+        existingItem.stacksize = snapshot.stacksize + existingItem.stacksize;
+        existingItem.value = snapshot.value + existingItem.value;
+        this.dataSource[indexOfItem] = existingItem;
+      } else {
+        const newObj = {
+          position: items.indexOf(snapshot) + 1,
+          name: snapshot.name,
+          stacksize: snapshot.stacksize,
+          value: snapshot.value,
+          valuePerUnit: snapshot.valuePerUnit,
+          icon: snapshot.icon,
+          holdingPlayers: [playerName]
+        };
+        this.dataSource.push(newObj);
+      }
+    });
   }
 
   updateTable(items: any[], playerName: string) {

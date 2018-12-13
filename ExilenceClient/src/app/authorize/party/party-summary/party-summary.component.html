@@ -45,13 +45,13 @@
             <mat-tab #networthTab id="networthTab" class="active">
                 <ng-template mat-tab-label>
                     <mat-icon class="tab-icon">attach_money</mat-icon>
-                    Net worth
+                    &nbsp;Net worth
                 </ng-template>
             </mat-tab>
             <mat-tab #gainTab id="gainTab">
                 <ng-template mat-tab-label>
-                    <mat-icon class="tab-icon">attach_money</mat-icon>
-                    Change over time
+                    <mat-icon class="tab-icon">access_time</mat-icon>
+                    &nbsp;Change over time
                 </ng-template>
             </mat-tab>
         </mat-tab-group>
@@ -77,7 +77,7 @@
             </form>
         </div>
         <div class="networth-table-wrapper" [hidden]="selectedIndex != 1">
-            <app-networth-table #table *ngIf="selectedIndex == 1" [multiple]="true"></app-networth-table>
+            <app-networth-table #table *ngIf="selectedIndex == 1" [multiple]="true" [showOverTime]="true"></app-networth-table>
         </div>
 
     </div>
