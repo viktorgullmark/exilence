@@ -96,22 +96,24 @@ export class NetworthTableComponent implements OnInit, OnDestroy {
       const pastHoursSnapshots = player.netWorthSnapshots
         .filter((snaphot: NetWorthSnapshot) => snaphot.timestamp > oneHourAgo);
 
-      const firstSnapshot = pastHoursSnapshots[0];
-      const lastSnapshot = pastHoursSnapshots[pastHoursSnapshots.length - 1];
-      const difference = [];
-      lastSnapshot.items.forEach(item => {
-        // if item exists in first snapshot
-        const existingItem = firstSnapshot.items.find(x => x.name === item.name);
-        if (existingItem !== undefined) {
-          const obj = Object.assign({}, item);
-          obj.stacksize = obj.stacksize - existingItem.stacksize;
-          obj.value = obj.value - existingItem.value;
-          if (obj.value !== 0) {
-            difference.push(obj);
+      if (pastHoursSnapshots.length > 1) {
+        const firstSnapshot = pastHoursSnapshots[0];
+        const lastSnapshot = pastHoursSnapshots[pastHoursSnapshots.length - 1];
+        const difference = [];
+        lastSnapshot.items.forEach(item => {
+          // if item exists in first snapshot
+          const existingItem = firstSnapshot.items.find(x => x.name === item.name);
+          if (existingItem !== undefined) {
+            const obj = Object.assign({}, item);
+            obj.stacksize = obj.stacksize - existingItem.stacksize;
+            obj.value = obj.value - existingItem.value;
+            if (obj.value !== 0) {
+              difference.push(obj);
+            }
           }
-        }
-      });
-      this.updateOverTime(difference, player.character.name);
+        });
+        this.updateOverTime(difference, player.character.name);
+      }
     } else {
       this.updateTable(player.netWorthSnapshots[0].items, player.character.name);
     }
