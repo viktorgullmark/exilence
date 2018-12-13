@@ -1,8 +1,6 @@
 import { Component, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { MatTab, MatTabGroup } from '@angular/material';
 import { Router } from '@angular/router';
-import { Subscription } from 'rxjs/internal/Subscription';
-
 import { Player } from '../../../shared/interfaces/player.interface';
 import { AnalyticsService } from '../../../shared/providers/analytics.service';
 import { ElectronService } from '../../../shared/providers/electron.service';
@@ -42,7 +40,6 @@ export class CharProfileComponent implements OnInit, OnDestroy {
     private router: Router,
     private electronService: ElectronService,
     private analyticsService: AnalyticsService,
-    private ladderService: LadderService,
     private accountService: AccountService
   ) {
     this.analyticsService.sendScreenview('/authorized/party/player/profile');
