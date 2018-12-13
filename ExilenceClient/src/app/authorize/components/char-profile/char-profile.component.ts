@@ -1,6 +1,7 @@
-import { Component, Input, OnInit, ViewChild, OnDestroy } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { MatTab, MatTabGroup } from '@angular/material';
 import { Router } from '@angular/router';
+import { Subscription } from 'rxjs/internal/Subscription';
 
 import { Player } from '../../../shared/interfaces/player.interface';
 import { AnalyticsService } from '../../../shared/providers/analytics.service';
@@ -8,11 +9,9 @@ import { ElectronService } from '../../../shared/providers/electron.service';
 import { ExternalService } from '../../../shared/providers/external.service';
 import { PartyService } from '../../../shared/providers/party.service';
 import { SessionService } from '../../../shared/providers/session.service';
-import { LadderService } from '../../../shared/providers/ladder.service';
-import { CharWealthComponent } from './char-wealth/char-wealth.component';
-import { CharMapsComponent } from './char-maps/char-maps.component';
 import { CharEquipmentComponent } from './char-equipment/char-equipment.component';
-import { Subscription } from 'rxjs/internal/Subscription';
+import { CharMapsComponent } from './char-maps/char-maps.component';
+import { CharWealthComponent } from './char-wealth/char-wealth.component';
 
 @Component({
   selector: 'app-char-profile',
@@ -40,7 +39,6 @@ export class CharProfileComponent implements OnInit, OnDestroy {
     private router: Router,
     private electronService: ElectronService,
     private analyticsService: AnalyticsService,
-    private ladderService: LadderService
   ) {
     this.analyticsService.sendScreenview('/authorized/party/player/profile');
   }

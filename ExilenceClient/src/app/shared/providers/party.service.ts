@@ -22,7 +22,6 @@ import { MessageValueService } from './message-value.service';
 import { ExtendedAreaInfo } from '../interfaces/area.interface';
 import { HistoryHelper } from '../helpers/history.helper';
 import { LeagueWithPlayers } from '../interfaces/league.interface';
-import { LadderService } from './ladder.service';
 import { Subscription } from 'rxjs';
 
 @Injectable()

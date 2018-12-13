@@ -1,10 +1,9 @@
-import { Component, Input, OnInit, ViewChild, OnDestroy } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { MatSort, MatTableDataSource } from '@angular/material';
+import { Subscription } from 'rxjs/internal/Subscription';
 
 import { LadderPlayer, Player } from '../../../shared/interfaces/player.interface';
-import { LadderService } from '../../../shared/providers/ladder.service';
 import { PartyService } from '../../../shared/providers/party.service';
-import { Subscription } from 'rxjs/internal/Subscription';
 
 @Component({
   selector: 'app-ladder-table',
@@ -20,7 +19,7 @@ export class LadderTableComponent implements OnInit, OnDestroy {
   private selectedPlayerSub: Subscription;
 
   @ViewChild(MatSort) sort: MatSort;
-  constructor(private partyService: PartyService, private ladderService: LadderService) {
+  constructor(private partyService: PartyService) {
   }
 
   ngOnInit() {

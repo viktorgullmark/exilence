@@ -1,4 +1,4 @@
-import { Component, Inject, OnInit, ViewChild, OnDestroy } from '@angular/core';
+import { Component, Inject, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialog, MatStep, MatStepper } from '@angular/material';
 import { Router } from '@angular/router';
@@ -10,7 +10,6 @@ import { HistoryHelper } from '../shared/helpers/history.helper';
 import { AccountInfo } from '../shared/interfaces/account-info.interface';
 import { ExtendedAreaInfo } from '../shared/interfaces/area.interface';
 import { Character } from '../shared/interfaces/character.interface';
-import { EquipmentResponse } from '../shared/interfaces/equipment-response.interface';
 import { NetWorthHistory } from '../shared/interfaces/income.interface';
 import { League } from '../shared/interfaces/league.interface';
 import { Player } from '../shared/interfaces/player.interface';
@@ -18,7 +17,6 @@ import { AccountService } from '../shared/providers/account.service';
 import { AnalyticsService } from '../shared/providers/analytics.service';
 import { ElectronService } from '../shared/providers/electron.service';
 import { ExternalService } from '../shared/providers/external.service';
-import { LadderService } from '../shared/providers/ladder.service';
 import { LogMonitorService } from '../shared/providers/log-monitor.service';
 import { MapService } from '../shared/providers/map.service';
 import { SessionService } from '../shared/providers/session.service';
@@ -75,7 +73,6 @@ export class LoginComponent implements OnInit, OnDestroy {
         private sessionService: SessionService,
         private settingsService: SettingsService,
         private analyticsService: AnalyticsService,
-        private ladderService: LadderService,
         public logMonitorService: LogMonitorService,
         private mapService: MapService,
         private dialog: MatDialog
@@ -400,12 +397,10 @@ export class LoginComponent implements OnInit, OnDestroy {
 
         const request = forkJoin(
             this.externalService.getCharacter(this.form),
-            this.ladderService.getLadderInfoForCharacter(this.form.leagueName, this.form.characterName)
         );
 
         request.subscribe(res => {
             const player = this.externalService.setCharacter(res[0], this.player);
-            player.ladderInfo = res[1].ladder;
             this.player = player;
             this.completeLogin();
         });
@@ -482,7 +477,6 @@ export class LoginComponent implements OnInit, OnDestroy {
             this.sessionService.initSession(this.form.sessionId);
             this.isLoading = false;
             this.settingsService.set('lastLeague', this.leagueFormGroup.controls.leagueName.value);
-            this.ladderService.startPollingLadder();
             this.router.navigate(['/authorized/dashboard']);
         });
     }
