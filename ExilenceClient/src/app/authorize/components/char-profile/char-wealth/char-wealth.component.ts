@@ -70,12 +70,11 @@ export class CharWealthComponent implements OnInit, OnDestroy {
       if (res.account === this.partyService.currentPlayer.account) {
         res.netWorthSnapshots = this.partyService.currentPlayer.netWorthSnapshots;
         this.selfSelected = true;
-        this.playerGain = this.partyService.currentPlayerGain;
       } else {
         this.selfSelected = false;
-        this.playerGain = this.partyService.playerGain;
       }
       this.player = res;
+      this.partyService.updatePlayerGain(this.player, this.selfSelected);
       this.previousSnapshot = false;
     });
     this.currentPlayerGainSub = this.messageValueService.currentPlayerGainSubject.subscribe(res => {
@@ -99,12 +98,10 @@ export class CharWealthComponent implements OnInit, OnDestroy {
 
   toggleGainHours(event) {
     this.settingsService.set('gainHours', +event.value);
-
     this.gainHours = +event.value;
-
+    this.partyService.updatePlayerGain(this.player, this.selfSelected);
     this.messageValueService.partyGain = 0;
     this.partyService.party.players.forEach(p => {
-      this.partyService.updatePlayerGain(p, this.partyService.currentPlayer.account === p.account);
       this.partyService.updatePartyGain(p);
     });
   }
