@@ -224,7 +224,7 @@ export class PartyService implements OnDestroy {
     this.logService.log('Starting signalr connection');
     this._hubConnection.start().then(() => {
       console.log('Successfully established signalr connection!');
-      if (this.party !== undefined && this.currentPlayer !== undefined) {
+      if (this.party !== undefined && this.currentPlayer !== undefined && this.party.name !== '') {
         this.joinParty(this.party.name, this.currentPlayer);
       }
       this.reconnectAttempts = 0;
