@@ -77,10 +77,6 @@ export class LoginComponent implements OnInit, OnDestroy {
         private mapService: MapService,
         private dialog: MatDialog
     ) {
-
-        this.settingsService.deleteAll();
-
-
         this.leaguesSub = this.externalService.leagues.subscribe((res: League[]) => {
             this.leagues = res;
         });
