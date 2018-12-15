@@ -26,12 +26,15 @@
         "SHOW": "Show graph",
         "HIDE": "Hide graph",
         "RESET": "Clear history",
-        "REPORT": "Send net worth report",
+        "REPORT": "Net worth Report",
         "POPOUT": "Use overlay"
     },
     "ROBOT": {
-        "GAME": "Game",
-        "CLIPBOARD": "Clipboard"
+        "GAME": "To Game",
+        "CLIPBOARD": "To Clipboard"
+    },
+    "NETWORTH": {
+        "FULL_SOLO_REPORT": "Full Export"
     },
     "NOTIFICATION": {
         "UPDATE_AVAILABLE": "There is a new version of Exilence available."
