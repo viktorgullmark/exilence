@@ -77,6 +77,10 @@ export class LoginComponent implements OnInit, OnDestroy {
         private mapService: MapService,
         private dialog: MatDialog
     ) {
+
+        this.settingsService.deleteAll();
+
+
         this.leaguesSub = this.externalService.leagues.subscribe((res: League[]) => {
             this.leagues = res;
         });
@@ -97,8 +101,7 @@ export class LoginComponent implements OnInit, OnDestroy {
             characterName: [this.characterName !== undefined ? this.characterName : '', Validators.required]
         });
         this.pathFormGroup = fb.group({
-            filePath: [this.filePath !== undefined ? this.filePath :
-                'C:/Program Files (x86)/Steam/steamapps/common/Path of Exile/logs/Client.txt', Validators.required]
+            filePath: [this.filePath !== undefined ? this.filePath : '', Validators.required]
         });
 
         this.parsingEnabled = this.parsingEnabled !== undefined ? this.parsingEnabled : false;
