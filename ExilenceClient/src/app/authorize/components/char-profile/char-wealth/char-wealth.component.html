@@ -52,6 +52,9 @@
         <div class="flex-area graph-btns">
             <ng-container *ngIf="selfSelected">
                 <mat-menu #menu="matMenu">
+                    <button (click)="report(false)" mat-menu-item>{{'ROBOT.CLIPBOARD' | translate}}</button>
+                    <button (click)="report(true)" mat-menu-item>{{'ROBOT.GAME' | translate}} <span class="keybind-text">({{reportKeybind
+                            != undefined ? reportKeybind.keys : ''}})</span></button>
                     <button [disabled]="player.netWorthSnapshots[0]?.items.length == 0" (click)="export()"
                         mat-menu-item>{{'NETWORTH.FULL_SOLO_REPORT' | translate}}</button>
                 </mat-menu>
