@@ -57,6 +57,7 @@ ipcMain.on('popout-window', (event, data: ExileWindowEvent) => {
     minHeight: 75,
     maxHeight: 90,
     maxWidth: 230,
+    skipTaskbar: true,
     show: false,
     frame: false,
     resizable: true,
