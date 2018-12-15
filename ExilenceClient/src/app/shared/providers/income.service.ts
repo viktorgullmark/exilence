@@ -319,10 +319,13 @@ export class IncomeService implements OnDestroy {
 
     if (selectedStashTabs === undefined) {
       selectedStashTabs = [];
+<<<<<<< refs/remotes/valseria/master
     }
 
     if (selectedStashTabs.length > 21) {
       selectedStashTabs = selectedStashTabs.slice(0, 20);
+=======
+>>>>>>> #66 Removed default selecton of stashtabs
     }
 
     if (selectedStashTabs.length === 0) {

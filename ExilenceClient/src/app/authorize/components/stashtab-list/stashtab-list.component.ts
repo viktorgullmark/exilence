@@ -1,6 +1,6 @@
 import { SelectionModel } from '@angular/cdk/collections';
 import { Component, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { MatDialog, MatSort, MatTableDataSource } from '@angular/material';
+import { MatSort, MatTableDataSource } from '@angular/material';
 import { Subscription } from 'rxjs';
 
 import { Stash, Tab } from '../../../shared/interfaces/stash.interface';
@@ -8,7 +8,6 @@ import { AlertService } from '../../../shared/providers/alert.service';
 import { ExternalService } from '../../../shared/providers/external.service';
 import { PartyService } from '../../../shared/providers/party.service';
 import { SettingsService } from '../../../shared/providers/settings.service';
-import { MaptabInfoDialogComponent } from './maptab-info-dialog/maptab-info-dialog.component';
 
 @Component({
   selector: 'app-stashtab-list',
