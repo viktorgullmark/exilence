@@ -1,4 +1,10 @@
 import { Injectable, OnDestroy } from '@angular/core';
+
+import { Keys } from '../interfaces/key.interface';
+import { KeybindService } from './keybind.service';
+import { RobotService } from './robot.service';
+import { AccountService } from './account.service';
+import { Player } from '../interfaces/player.interface';
 import { BehaviorSubject, Subscription } from 'rxjs';
 
 @Injectable()
@@ -24,8 +30,26 @@ export class MessageValueService implements OnDestroy {
   private partyValueSub: Subscription;
   private partyGainSub: Subscription;
 
+  private currentPlayerGainSub: Subscription;
+  private currentPlayerValueSub: Subscription;
+  private playerGainSub: Subscription;
+  private partyValueSub: Subscription;
+  private partyGainSub: Subscription;
+
   constructor(
   ) {
+    this.initKeybinds();
+    this.keybindService.keybindEvent.subscribe(event => {
+      this.updateCurrentPlayerMsg();
+      this.updatePartyMsg();
+      if (event === 'party-personal-networth') {
+        this.robotService.sendTextToPathWindow(this.playerNetworthMsg, false);
+      }
+      if (event === 'party-summary-networth') {
+        this.robotService.sendTextToPathWindow(this.partyNetworthMsg, false);
+      }
+    });
+
     this.currentPlayerGainSub = this.currentPlayerGainSubject.subscribe(res => {
       this.currentPlayerGain = res;
     });
@@ -47,6 +71,29 @@ export class MessageValueService implements OnDestroy {
     });
   }
 
+
+  ngOnDestroy() {
+    if (this.currentPlayerGainSub !== undefined) {
+      this.currentPlayerGainSub.unsubscribe();
+    }
+    if (this.currentPlayerValueSub !== undefined) {
+      this.currentPlayerValueSub.unsubscribe();
+    }
+    if (this.playerGainSub !== undefined) {
+      this.playerGainSub.unsubscribe();
+    }
+    if (this.partyValueSub !== undefined) {
+      this.partyValueSub.unsubscribe();
+    }
+    if (this.partyGainSub !== undefined) {
+      this.partyGainSub.unsubscribe();
+    }
+  }
+
+  initKeybinds() {
+    this.keybindService.registerKeybind('Ctrl+Y', 'party-personal-networth', 'Report personal net worth to party');
+    this.keybindService.registerKeybind('Ctrl+H', 'party-summary-networth', 'Report summarized net worth to party');
+  }
 
   ngOnDestroy() {
     if (this.currentPlayerGainSub !== undefined) {
