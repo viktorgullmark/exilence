@@ -24,11 +24,11 @@ export class PlayerListComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     if (!this.localList) {
-      this.partyService.playerLeagues.subscribe(res => {
+      this.playerLeaguesSub = this.partyService.playerLeagues.subscribe(res => {
         this.playerLeagues = res;
       });
     } else {
-      this.partyService.genericPlayers.subscribe(res => {
+      this.genericPlayersSub = this.partyService.genericPlayers.subscribe(res => {
         if (res !== undefined) {
           this.genericPlayers = res;
           if (this.partyService.selectedGenericPlayerObj === undefined && this.genericPlayers.length > 0) {
