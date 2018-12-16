@@ -1,13 +1,13 @@
 import { SelectionModel } from '@angular/cdk/collections';
-import { Component, OnInit, OnDestroy, ViewChild, Input } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { MatSort, MatTableDataSource } from '@angular/material';
+import { Subscription } from 'rxjs';
 
 import { Stash, Tab } from '../../../shared/interfaces/stash.interface';
+import { AlertService } from '../../../shared/providers/alert.service';
 import { ExternalService } from '../../../shared/providers/external.service';
 import { PartyService } from '../../../shared/providers/party.service';
 import { SettingsService } from '../../../shared/providers/settings.service';
-import { Subscription } from 'rxjs';
-import { AlertService } from '../../../shared/providers/alert.service';
 
 @Component({
   selector: 'app-stashtab-list',
@@ -48,9 +48,6 @@ export class StashtabListComponent implements OnInit, OnDestroy {
 
     if (selectedStashTabs === undefined) {
       selectedStashTabs = [];
-      for (let i = 0; i < 11; i++) {
-        selectedStashTabs.push({ name: '', position: i });
-      }
     }
 
     this.stashTabSub = this.externalService.getStashTabs(sessionId, accountName, league)

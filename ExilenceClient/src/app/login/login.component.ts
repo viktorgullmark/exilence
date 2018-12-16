@@ -97,8 +97,7 @@ export class LoginComponent implements OnInit, OnDestroy {
             characterName: [this.characterName !== undefined ? this.characterName : '', Validators.required]
         });
         this.pathFormGroup = fb.group({
-            filePath: [this.filePath !== undefined ? this.filePath :
-                'C:/Program Files (x86)/Steam/steamapps/common/Path of Exile/logs/Client.txt', Validators.required]
+            filePath: [this.filePath !== undefined ? this.filePath : '', Validators.required]
         });
 
         this.parsingEnabled = this.parsingEnabled !== undefined ? this.parsingEnabled : false;

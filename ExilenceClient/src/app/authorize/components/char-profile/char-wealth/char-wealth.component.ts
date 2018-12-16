@@ -1,24 +1,25 @@
-import { Component, Inject, Input, OnInit, ViewChild, AfterViewInit, OnDestroy } from '@angular/core';
+import { Component, Inject, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
+import { MatDialog } from '@angular/material';
 import { Router } from '@angular/router';
+import { ExportToCsv } from 'export-to-csv';
+import * as moment from 'moment';
+import { Subscription } from 'rxjs/internal/Subscription';
 
+import { NetWorthSnapshot } from '../../../../shared/interfaces/income.interface';
 import { Player } from '../../../../shared/interfaces/player.interface';
 import { AccountService } from '../../../../shared/providers/account.service';
-import { AnalyticsService } from '../../../../shared/providers/analytics.service';
+import { AlertService } from '../../../../shared/providers/alert.service';
 import { ElectronService } from '../../../../shared/providers/electron.service';
 import { IncomeService } from '../../../../shared/providers/income.service';
+import { KeybindService } from '../../../../shared/providers/keybind.service';
 import { MessageValueService } from '../../../../shared/providers/message-value.service';
 import { PartyService } from '../../../../shared/providers/party.service';
 import { RobotService } from '../../../../shared/providers/robot.service';
-import { SettingsService } from '../../../../shared/providers/settings.service';
-import { NetworthTableComponent } from '../../networth-table/networth-table.component';
 import { SessionService } from '../../../../shared/providers/session.service';
-import { KeybindService } from '../../../../shared/providers/keybind.service';
-import { AlertService } from '../../../../shared/providers/alert.service';
+import { SettingsService } from '../../../../shared/providers/settings.service';
 import { InfoDialogComponent } from '../../info-dialog/info-dialog.component';
-import { MatDialog } from '@angular/material';
-import * as moment from 'moment';
-import { Subscription } from 'rxjs/internal/Subscription';
+import { NetworthTableComponent } from '../../networth-table/networth-table.component';
 
 @Component({
   selector: 'app-char-wealth',
@@ -216,4 +217,34 @@ export class CharWealthComponent implements OnInit, OnDestroy {
   openLink(link: string) {
     this.electronService.shell.openExternal(link);
   }
+
+  export() {
+    const options = {
+      fieldSeparator: ';',
+      quoteStrings: '"',
+      decimalseparator: '.',
+      showLabels: true,
+      showTitle: true,
+      title: 'Net worth export ' + moment(Date.now()).format('YYYY-MM-DD HH:MM'),
+      useBom: true,
+      useKeysAsHeaders: true,
+      filename: 'Networth_' + moment(Date.now()).format('YYYY-MM-DD')
+      // headers: ['Column 1', 'Column 2', etc...] <-- Won't work with useKeysAsHeaders present!
+    };
+
+    const csvExporter = new ExportToCsv(options);
+    csvExporter.generateCsv(this.mapToExport(this.player.netWorthSnapshots[0]));
+  }
+
+  mapToExport(snapshot: NetWorthSnapshot) {
+    return snapshot.items.map(x => {
+      return {
+        NAME: x.name,
+        QUANTITY: x.stacksize,
+        VALUE: x.valuePerUnit,
+        TOTAL: x.value
+      };
+    });
+  }
+
 }

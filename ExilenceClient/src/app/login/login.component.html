@@ -3,7 +3,8 @@
     <mat-step [stepControl]="accFormGroup" editable="true" completed="true">
       <form [formGroup]="accFormGroup">
         <ng-template matStepLabel>{{'ACCOUNT.NAME_INFO' | translate}}</ng-template>
-        <span class="mat-body-1">Please make sure you type your accountname correctly. Note that this is not the same as the email-address associated with your account.<br/><br/></span>
+        <span class="mat-body-1">Please make sure you type your accountname correctly. Note that this is not the same
+          as the email-address associated with your account.<br /><br /></span>
         <mat-form-field>
           <input matInput formControlName="accountName" placeholder="{{'ACCOUNT.NAME' | translate}}" required>
         </mat-form-field>
@@ -38,7 +39,8 @@
     <mat-step [stepControl]="leagueFormGroup" [editable]="!privateProfileError">
       <form [formGroup]="leagueFormGroup">
         <ng-template matStepLabel>{{'LEAGUE.LEAGUE_INFO' | translate}}</ng-template>
-        <span class="mat-body-1">We fetch leagues from your character-list, which means you will have to create a new character in the league for it to be displayed here if you don't already have a character in it.<br/><br/></span>
+        <span class="mat-body-1">We fetch leagues from your character-list, which means you will have to create a new
+          character in the league for it to be displayed here if you don't already have a character in it.<br /><br /></span>
         <mat-form-field>
           <mat-select formControlName="leagueName" (selectionChange)="mapTradeLeague($event)" placeholder="{{'LEAGUE.NAME' | translate}}"
             required>
@@ -78,7 +80,8 @@
     <mat-step [stepControl]="pathFormGroup">
       <form [formGroup]="pathFormGroup">
         <ng-template matStepLabel>{{'ACCOUNT.FILEPATH_INFO' | translate}}</ng-template>
-        <span class="mat-body-1">To find your Client.txt-file, browse to your PoE-installation and enter the logs-folder.<br/><br/></span>
+        <span class="mat-body-1">To find your Client.txt-file, browse to your PoE-installation and enter the
+          logs-folder.<br /><br /></span>
         <mat-form-field>
           <input matInput formControlName="filePath" placeholder="{{'ACCOUNT.FILEPATH' | translate}}" (focusout)="checkPath()"
             required>
@@ -87,7 +90,7 @@
         <mat-radio-group class="radio-group" [(ngModel)]="logMonitorService.trackMapsOnly" [ngModelOptions]="{standalone: true}"
           required>
           <mat-radio-button class="radio-button" [value]="true" [checked]="true">
-            Maps and hideouts only (recommended) 
+            Maps and hideouts only (recommended)
           </mat-radio-button>
           <mat-radio-button class="radio-button" [value]="false">
             All areas
@@ -108,7 +111,8 @@
             log</button>
           <button mat-raised-button color="primary" matStepperNext [disabled]="!pathValid || (!logMonitorService.parsingCompleted && parsingEnabled)">4.
             Continue</button>
-          <span class="mat-body-1" *ngIf="isParsing && parsingEnabled"><br/><br/>We're loading your Client.txt, please wait... (may take up to several minutes,
+          <span class="mat-body-1" *ngIf="isParsing && parsingEnabled"><br /><br />We're loading your Client.txt,
+            please wait... (may take up to several minutes,
             depending on the filesize)</span>
           <mat-progress-bar *ngIf="isParsing && parsingEnabled" class="progress-bar" color="primary" mode="indeterminate">
           </mat-progress-bar>
