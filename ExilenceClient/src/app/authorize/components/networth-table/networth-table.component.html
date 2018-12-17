@@ -28,12 +28,12 @@
 
   <ng-container matColumnDef="valuePerUnit">
     <th mat-header-cell *matHeaderCellDef mat-sort-header="valuePerUnit"> Value </th>
-    <td mat-cell *matCellDef="let element" class="networth-value"> {{element.valuePerUnit.toFixed(1)}}c </td>
+    <td mat-cell *matCellDef="let element" class="networth-value"> {{element.valuePerUnit.toFixed(2)}}c </td>
   </ng-container>
 
   <ng-container matColumnDef="value">
     <th mat-header-cell *matHeaderCellDef mat-sort-header="value"> Total </th>
-    <td mat-cell *matCellDef="let element" class="networth-value"> {{element.value.toFixed(1)}}c </td>
+    <td mat-cell *matCellDef="let element" class="networth-value"> {{element.value.toFixed(2)}}c </td>
   </ng-container>
 
   <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>

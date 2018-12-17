@@ -78,12 +78,12 @@ export class MessageValueService implements OnDestroy {
 
   updateCurrentPlayerMsg() {
     // tslint:disable-next-line:max-line-length
-    this.playerNetworthMsg = `[Exilence] My net worth: ${this.currentPlayerValue.toFixed(1)}c. Gain: ${this.currentPlayerGain.toFixed(1)}c / hour`;
+    this.playerNetworthMsg = `[Exilence] My net worth: ${this.currentPlayerValue.toFixed(2)}c. Gain: ${this.currentPlayerGain.toFixed(2)}c / hour`;
   }
 
   updatePartyMsg() {
     // tslint:disable-next-line:max-line-length
-    this.partyNetworthMsg = `[Exilence] Grp net worth: ${this.partyValue.toFixed(1)}c. Gain: ${this.partyGain.toFixed(1)}c / hour`;
+    this.partyNetworthMsg = `[Exilence] Grp net worth: ${this.partyValue.toFixed(2)}c. Gain: ${this.partyGain.toFixed(2)}c / hour`;
   }
 
   initKeybinds() {

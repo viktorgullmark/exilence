@@ -5,7 +5,7 @@
             <br />
             <div class="networth-inner-wrapper">
                 <span class="networth" *ngIf="messageValueService.partyValue > 0">
-                    {{messageValueService.partyValue.toFixed(1)}}c
+                    {{messageValueService.partyValue.toFixed(2)}}c
                 </span>
                 <span class="networth-placeholder" *ngIf="messageValueService.partyValue == 0">
                     No data
@@ -16,7 +16,7 @@
             <span class="title">Gain per hour</span>
             <br />
             <div class="networth-inner-wrapper">
-                <span class="networth">{{partyGain.toFixed(1)}}c</span>
+                <span class="networth">{{partyGain.toFixed(2)}}c</span>
             </div>
         </div>
         <div class="networth-wrapper">
