@@ -68,12 +68,13 @@ export class PartyComponent implements OnInit, OnDestroy {
       if (res !== undefined) {
         let networth = 0;
         this.messageValueService.partyGainSubject.next(0);
+        this.partyService.updatePartyGain(this.partyService.party.players);
         res.players.forEach(p => {
-          this.partyService.updatePartyGain(p);
           if (p.netWorthSnapshots[0] !== undefined) {
             networth = networth + p.netWorthSnapshots[0].value;
           }
         });
+        this.messageValueService.partyGainSubject.next(this.partyService.partyGain);
         this.messageValueService.partyValueSubject.next(networth);
       }
     });

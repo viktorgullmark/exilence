@@ -53,6 +53,7 @@ export class PartyService implements OnDestroy {
   public maskedName = false;
   public currentPlayerGain;
   public playerGain;
+  public partyGain;
   private playerSub: Subscription;
   private selectedPlayerSub: Subscription;
   private selectedGenPlayerSub: Subscription;
@@ -125,12 +126,12 @@ export class PartyService implements OnDestroy {
           // set initial values for party net worth
           let networth = 0;
           this.messageValueService.partyGainSubject.next(0);
+          this.updatePartyGain(this.party.players);
           this.party.players.forEach(p => {
-            this.updatePartyGain(p);
             networth = networth + p.netWorthSnapshots[0].value;
           });
           this.messageValueService.partyValueSubject.next(networth);
-
+          this.messageValueService.partyGainSubject.next(this.partyGain);
         });
       });
     });
@@ -219,7 +220,13 @@ export class PartyService implements OnDestroy {
     }
   }
 
-  updatePartyGain(player: Player) {
+  updatePartyGain(players: Player[]) {
+    players.forEach(x => {
+      this.updatePartyGainForPlayer(x);
+    });
+  }
+
+  updatePartyGainForPlayer(player: Player) {
     const gainHours = this.settingsService.get('gainHours');
     const xHoursAgo = (Date.now() - (gainHours * 60 * 60 * 1000));
     const pastHoursSnapshots = player.netWorthSnapshots
@@ -230,7 +237,7 @@ export class PartyService implements OnDestroy {
       const firstSnapshot = pastHoursSnapshots[pastHoursSnapshots.length - 1];
       const gainHour = (((1000 * 60 * 60)) / (lastSnapshot.timestamp - firstSnapshot.timestamp)
         * (lastSnapshot.value - firstSnapshot.value)) / gainHours;
-      this.messageValueService.partyGain = this.messageValueService.partyGain + gainHour;
+      this.partyGain = this.partyGain + gainHour;
     }
   }
 

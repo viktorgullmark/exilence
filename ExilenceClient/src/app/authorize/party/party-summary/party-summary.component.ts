@@ -1,4 +1,4 @@
-import { Component, Inject, OnInit, ViewChild } from '@angular/core';
+import { Component, Inject, OnInit, ViewChild, OnDestroy } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 
 import { AnalyticsService } from '../../../shared/providers/analytics.service';
@@ -11,13 +11,14 @@ import { SettingsService } from '../../../shared/providers/settings.service';
 import { MatDialog, MatTabGroup } from '@angular/material';
 import { InfoDialogComponent } from '../../components/info-dialog/info-dialog.component';
 import { AccountService } from '../../../shared/providers/account.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-party-summary',
   templateUrl: './party-summary.component.html',
   styleUrls: ['./party-summary.component.scss']
 })
-export class PartySummaryComponent implements OnInit {
+export class PartySummaryComponent implements OnInit, OnDestroy {
   form: FormGroup;
 
   isGraphHidden = false;
@@ -28,6 +29,8 @@ export class PartySummaryComponent implements OnInit {
   selectedIndex = 0;
   public graphDimensions = [950, 300];
   public reportKeybind: any;
+  private partyGainSub: Subscription;
+  public partyGain = 0;
   constructor(
     @Inject(FormBuilder) fb: FormBuilder,
     public messageValueService: MessageValueService,
@@ -43,8 +46,17 @@ export class PartySummaryComponent implements OnInit {
     });
     this.reportKeybind = this.keybindService.activeBinds.find(x => x.event === 'party-summary-networth');
     this.gainHours = this.settingsService.get('gainHours');
+
+    this.partyGainSub = this.messageValueService.partyGainSubject.subscribe(res => {
+      this.partyGain = res;
+    });
   }
   ngOnInit() {
+  }
+  ngOnDestroy() {
+    if (this.partyGainSub !== undefined) {
+      this.partyGainSub.unsubscribe();
+    }
   }
 
   toggleGainHours(event) {
@@ -54,10 +66,9 @@ export class PartySummaryComponent implements OnInit {
     }
     this.gainHours = +event.value;
 
-    this.messageValueService.partyGain = 0;
-    this.partyService.party.players.forEach(p => {
-      this.partyService.updatePartyGain(p);
-    });
+    this.messageValueService.partyGainSubject.next(0);
+    this.partyService.updatePartyGain(this.partyService.party.players);
+    this.messageValueService.partyGainSubject.next(this.partyService.partyGain);
   }
 
   openSummaryDialog(): void {
