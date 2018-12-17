@@ -48,6 +48,9 @@ export class StashtabListComponent implements OnInit, OnDestroy {
 
     if (selectedStashTabs === undefined) {
       selectedStashTabs = [];
+      for (let i = 0; i < 5; i++) {
+        selectedStashTabs.push({ name: '', position: i });
+      }
     }
 
     this.stashTabSub = this.externalService.getStashTabs(accountName, league)

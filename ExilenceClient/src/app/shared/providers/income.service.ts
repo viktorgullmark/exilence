@@ -319,7 +319,9 @@ export class IncomeService implements OnDestroy {
 
     if (selectedStashTabs === undefined) {
       selectedStashTabs = [];
-<<<<<<< refs/remotes/valseria/master
+      for (let i = 0; i < 5; i++) {
+        selectedStashTabs.push({ name: '', position: i });
+      }
     }
 
     if (selectedStashTabs.length > 21) {
