@@ -1,4 +1,4 @@
-import { Component, Inject, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, Inject, OnInit, ViewChild, OnDestroy } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { MatDialog, MatTabGroup } from '@angular/material';
 import { Subscription } from 'rxjs';
@@ -7,7 +7,8 @@ import { MessageValueService } from '../../../shared/providers/message-value.ser
 import { PartyService } from '../../../shared/providers/party.service';
 import { SettingsService } from '../../../shared/providers/settings.service';
 import { InfoDialogComponent } from '../../components/info-dialog/info-dialog.component';
-import { NetworthTableComponent } from '../../components/networth-table/networth-table.component';
+import { AccountService } from '../../../shared/providers/account.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-party-summary',
@@ -24,10 +25,9 @@ export class PartySummaryComponent implements OnInit, OnDestroy {
   gainHours: number;
   selectedIndex = 0;
   public graphDimensions = [950, 300];
+  public reportKeybind: any;
   private partyGainSub: Subscription;
   public partyGain = 0;
-  private partySub: Subscription;
-  public totalDifference = 0;
   constructor(
     @Inject(FormBuilder) fb: FormBuilder,
     public messageValueService: MessageValueService,
@@ -44,30 +44,12 @@ export class PartySummaryComponent implements OnInit, OnDestroy {
     this.partyGainSub = this.messageValueService.partyGainSubject.subscribe(res => {
       this.partyGain = res;
     });
-
-    this.partySub = this.partyService.partyUpdated.subscribe(res => {
-      if (res !== undefined) {
-        let networth = 0;
-        this.messageValueService.partyGainSubject.next(0);
-        this.partyService.updatePartyGain(this.partyService.party.players);
-        res.players.forEach(p => {
-          if (p.netWorthSnapshots[0] !== undefined) {
-            networth = networth + p.netWorthSnapshots[0].value;
-          }
-        });
-        this.messageValueService.partyGainSubject.next(this.partyService.partyGain);
-        this.messageValueService.partyValueSubject.next(networth);
-      }
-    });
   }
   ngOnInit() {
   }
   ngOnDestroy() {
     if (this.partyGainSub !== undefined) {
       this.partyGainSub.unsubscribe();
-    }
-    if (this.partySub !== undefined) {
-      this.partySub.unsubscribe();
     }
   }
 

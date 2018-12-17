@@ -57,7 +57,7 @@ export class PartyService implements OnDestroy {
   public maskedName = false;
   public currentPlayerGain;
   public playerGain;
-  public partyGain = 0;
+  public partyGain;
   private playerSub: Subscription;
   private selectedPlayerSub: Subscription;
   private selectedGenPlayerSub: Subscription;
@@ -137,8 +137,6 @@ export class PartyService implements OnDestroy {
           });
           this.messageValueService.partyValueSubject.next(networth);
           this.messageValueService.partyGainSubject.next(this.partyGain);
-
-          this.partyUpdated.next(this.party);
         });
       });
     });
@@ -234,7 +232,6 @@ export class PartyService implements OnDestroy {
   }
 
   updatePartyGain(players: Player[]) {
-    this.partyGain = 0;
     players.forEach(x => {
       this.updatePartyGainForPlayer(x);
     });
