@@ -92,16 +92,6 @@ All notable changes to this project will be documented in this file.
 ## [0.8.12] - 2018-12-18
 - Optimized memory usage by dropping disposing of unused objects
 - Fixed a bug where the gain per hour in the currancy summary tab wasn't updated properly
-- Fixed a bug where items with zero quantity were listed in the gain-over-time table
-- Now displays two decimals for all net worth values
-- Now logs screenviews for Google Analytics properly
-- Now defaults to first 4 stashtabs instead of 10 (to support players with fewer tabs)
-- Fixed a bug where area export would crash if no areas were present
-- Added the ability to resize the networth popout
-- The networth popout is now hidden from the taskbar
-- Added CSV-export for income (Send report -> Full export)
-- Removed the default path for client.txt during login to avoid confusion
-- Ladder now displays top 10 if the current character is not present.
 
 ## [0.8.11] - 2018-12-13
 - Added setting for gain-hours (you can now choose how many hours back calculations for hourly gain are based on)
