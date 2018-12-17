@@ -101,10 +101,9 @@ export class CharWealthComponent implements OnInit, OnDestroy {
     this.settingsService.set('gainHours', +event.value);
     this.gainHours = +event.value;
     this.partyService.updatePlayerGain(this.player, this.selfSelected);
-    this.messageValueService.partyGain = 0;
-    this.partyService.party.players.forEach(p => {
-      this.partyService.updatePartyGain(p);
-    });
+    this.messageValueService.partyGainSubject.next(0);
+    this.partyService.updatePartyGain(this.partyService.party.players);
+    this.messageValueService.partyGainSubject.next(this.partyService.partyGain);
   }
 
   ngOnDestroy() {
