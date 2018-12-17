@@ -9,3 +9,7 @@ Exilence/appsettings.Development.json
 Exilence/Properties/PublishProfiles/
 Exilence/Logs/
 ExilenceClient/networth.txt
+
+\.idea/\.idea\.Exilence/\.idea/
+
+\.idea/\.idea\.Exilence/riderModule\.iml
