@@ -319,7 +319,7 @@ export class IncomeService implements OnDestroy {
 
     if (selectedStashTabs === undefined) {
       selectedStashTabs = [];
-      for (let i = 0; i < 5; i++) {
+      for (let i = 0; i < 4; i++) {
         selectedStashTabs.push({ name: '', position: i });
       }
     }
