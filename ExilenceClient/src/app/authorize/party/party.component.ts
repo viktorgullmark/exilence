@@ -45,7 +45,8 @@ export class PartyComponent implements OnInit, OnDestroy {
       if (res !== undefined) {
         this.player = res;
         this.messageValueService.playerValue = this.player.netWorthSnapshots[0].value;
-        this.partyService.updatePlayerGain(res, false);
+        const isCurrentPlayer = res.account === this.partyService.currentPlayer.account;
+        this.partyService.updatePlayerGain(res, isCurrentPlayer);
       }
     });
     this.playerSub = this.accountService.player.subscribe(res => {
