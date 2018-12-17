@@ -124,7 +124,7 @@ export class NetworthTableComponent implements OnInit, OnDestroy {
 
             recentItem.value = recentItem.value - existingItem.value;
 
-            if (recentItem.value !== 0) {
+            if (recentItem.value !== 0 && recentItem.stacksize !== 0) {
               difference.push(recentItem);
             }
           }
