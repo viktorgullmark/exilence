@@ -4,6 +4,7 @@ All notable changes to this project will be documented in this file.
 ## [0.8.12] - 2018-12-XX
 - Optimized memory usage by dropping disposing of unused objects
 - Fixed a bug where the gain per hour in the currancy summary tab wasn't updated properly
+- Now logs screenviews for Google Analytics properly
 
 ## [0.8.11] - 2018-12-13
 - Added setting for gain-hours (you can now choose how many hours back calculations for hourly gain are based on)
