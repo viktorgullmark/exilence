@@ -53,6 +53,7 @@
   </ng-container>
 
   <ng-container matColumnDef="valuePerUnit">
+<<<<<<< refs/remotes/valseria/master
     <th mat-header-cell *matHeaderCellDef mat-sort-header="valuePerUnit"> Value&nbsp;&nbsp;<img class="chaos-icon" /></th>
     <td matTooltip="{{generateTooltip(element)}}" matTooltipPosition="after" mat-cell *matCellDef="let element" class="networth-value icon-hover with-icon in-table" [ngClass]="{'wide-cell': multiple }">
       <span>{{element.valuePerUnit.toFixed(2)}}</span>
@@ -62,6 +63,15 @@
   <ng-container matColumnDef="value">
     <th mat-header-cell *matHeaderCellDef mat-sort-header="value"> Total&nbsp;&nbsp;<img class="chaos-icon" /></th>
     <td mat-cell *matCellDef="let element" class="networth-value with-icon in-table" [ngClass]="{'wide-cell': multiple }"><span>{{element.value.toFixed(2)}}</span></td>
+=======
+    <th mat-header-cell *matHeaderCellDef mat-sort-header="valuePerUnit"> Value </th>
+    <td mat-cell *matCellDef="let element" class="networth-value"> {{element.valuePerUnit.toFixed(2)}}c </td>
+  </ng-container>
+
+  <ng-container matColumnDef="value">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header="value"> Total </th>
+    <td mat-cell *matCellDef="let element" class="networth-value"> {{element.value.toFixed(2)}}c </td>
+>>>>>>> Changed formatting of net worth values to use 2 decimals
   </ng-container>
 
   <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>

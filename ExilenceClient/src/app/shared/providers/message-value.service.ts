@@ -71,6 +71,7 @@ export class MessageValueService implements OnDestroy {
     });
   }
 
+<<<<<<< refs/remotes/valseria/master
 
   ngOnDestroy() {
     if (this.currentPlayerGainSub !== undefined) {
@@ -88,6 +89,16 @@ export class MessageValueService implements OnDestroy {
     if (this.partyGainSub !== undefined) {
       this.partyGainSub.unsubscribe();
     }
+=======
+  updateCurrentPlayerMsg() {
+    // tslint:disable-next-line:max-line-length
+    this.playerNetworthMsg = `[Exilence] My net worth: ${this.currentPlayerValue.toFixed(2)}c. Gain: ${this.currentPlayerGain.toFixed(2)}c / hour`;
+  }
+
+  updatePartyMsg() {
+    // tslint:disable-next-line:max-line-length
+    this.partyNetworthMsg = `[Exilence] Grp net worth: ${this.partyValue.toFixed(2)}c. Gain: ${this.partyGain.toFixed(2)}c / hour`;
+>>>>>>> Changed formatting of net worth values to use 2 decimals
   }
 
   initKeybinds() {

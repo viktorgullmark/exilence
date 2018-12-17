@@ -5,9 +5,7 @@
             <br />
             <div class="networth-inner-wrapper">
                 <span class="networth" *ngIf="messageValueService.playerValue > 0">
-                    <div class="with-icon">
-                        <span>{{messageValueService.playerValue.toFixed(2)}}&nbsp;&nbsp;</span><img class="chaos-icon" />
-                    </div>
+                    {{messageValueService.playerValue.toFixed(2)}}c
                 </span>
                 <span class="networth-placeholder" *ngIf="messageValueService.playerValue == 0">
                     No data
@@ -18,8 +16,7 @@
             <span class="title">Gain per hour</span>
             <br />
             <div class="networth-inner-wrapper">
-                <span class="networth with-icon" *ngIf="!previousSnapshot"><span>{{playerGain.toFixed(2)}}&nbsp;&nbsp;</span><img
-                        class="chaos-icon" /></span>
+                <span class="networth" *ngIf="!previousSnapshot">{{playerGain.toFixed(2)}}c</span>
                 <span class="networth-placeholder" *ngIf="previousSnapshot">No data</span>
             </div>
         </div>

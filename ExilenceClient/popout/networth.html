@@ -99,8 +99,8 @@
 
             ipcRenderer.on('popout-window-update', (event, window) => {
                 if (window.event === 'networth') {
-                    networthElement.innerText = +window.data.networth.toFixed(1) + 'c';
-                    gainElement.innerText = +window.data.gain.toFixed(1) + 'c';
+                    networthElement.innerText = +window.data.networth.toFixed(2) + 'c';
+                    gainElement.innerText = +window.data.gain.toFixed(2) + 'c';
                 }
             })
 
