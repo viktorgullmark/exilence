@@ -4,6 +4,7 @@ All notable changes to this project will be documented in this file.
 ## [0.8.12] - 2018-12-XX
 - Optimized memory usage by dropping disposing of unused objects
 - Fixed a bug where the gain per hour in the currancy summary tab wasn't updated properly
+- Now displays two decimals for all net worth values
 - Now logs screenviews for Google Analytics properly
 - Now defaults to first 4 stashtabs instead of 10 (to support players with fewer tabs)
 
