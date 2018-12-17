@@ -221,6 +221,7 @@ export class PartyService implements OnDestroy {
   }
 
   updatePartyGain(players: Player[]) {
+    this.partyGain = 0;
     players.forEach(x => {
       this.updatePartyGainForPlayer(x);
     });
