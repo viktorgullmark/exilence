@@ -53,7 +53,7 @@ export class PartyService implements OnDestroy {
   public maskedName = false;
   public currentPlayerGain;
   public playerGain;
-  public partyGain;
+  public partyGain = 0;
   private playerSub: Subscription;
   private selectedPlayerSub: Subscription;
   private selectedGenPlayerSub: Subscription;
