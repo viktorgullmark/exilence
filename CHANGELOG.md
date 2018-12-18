@@ -99,7 +99,7 @@ All notable changes to this project will be documented in this file.
 - Fixed a bug where area export would crash if no areas were present
 - Added the ability to resize the networth popout
 - The networth popout is now hidden from the taskbar
-- Added export for income
+- Added CSV-export for income (Send report -> Full export)
 - Removed the default path for client.txt during login to avoid confusion
 - Ladder now displays top 10 if the current character is not present.
 
