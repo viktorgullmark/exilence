@@ -58,6 +58,7 @@ export class LoginComponent implements OnInit, OnDestroy {
     form: any;
     needsValidation: boolean;
     leagueChanged = false;
+    shouldSetup = true;
 
     leaguesSub: Subscription;
     characterListSub: Subscription;
@@ -232,9 +233,11 @@ export class LoginComponent implements OnInit, OnDestroy {
             this.netWorthHistory !== undefined &&
             this.areaHistory !== undefined) {
 
-            for (let i = 0; i < 6; i++) {
-                this.stepper.selectedIndex = i;
-            }
+            this.shouldSetup = false;
+
+            // for (let i = 0; i < 6; i++) {
+            //     this.stepper.selectedIndex = i;
+            // }
 
             this.getLeagues(undefined, false);
             this.getCharacterList(undefined, false);
@@ -243,6 +246,10 @@ export class LoginComponent implements OnInit, OnDestroy {
                 this.parseLog();
             }
         }
+    }
+
+    initSetup() {
+        this.shouldSetup = true;
     }
 
     setSessionCookie(sessionId: string) {
@@ -470,6 +477,8 @@ export class LoginComponent implements OnInit, OnDestroy {
             }
 
             this.accountService.loggingIn = false;
+
+            this.sessionService.completedLogin = true;
 
             this.settingsService.set('account', this.form);
             this.settingsService.set('trackMapsOnly', this.logMonitorService.trackMapsOnly);

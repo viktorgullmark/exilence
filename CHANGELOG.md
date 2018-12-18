@@ -2,6 +2,7 @@
 All notable changes to this project will be documented in this file.
 
 ## [0.8.13] - 2018-12-XX
+- Added a new, simplified launch-screen for existing users
 - Added persistance between restarts to mask-setting for groupnames
 
 ## [0.8.12] - 2018-12-18

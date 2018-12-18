@@ -18,6 +18,14 @@ html, body {
     font-size: 15px;
 }
 
+.full-width {
+    width: 100%;
+}
+
+.half-width {
+    width: 50%;
+}
+
 text {
     font-size: 10px !important;
 }
@@ -136,6 +144,9 @@ a {
 
     &.login-form {
         width: 60%;
+    }
+    &.welcome-back-screen {
+        width: 50%;
     }
 
     .form-error {
