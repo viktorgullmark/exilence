@@ -1,7 +1,7 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
-## [0.8.12] - 2018-12-XX
+## [0.8.12] - 2018-12-18
 - Optimized memory usage by dropping disposing of unused objects
 - Fixed a bug where the gain per hour in the currancy summary tab wasn't updated properly
 - Fixed a bug where items with zero quantity were listed in the gain-over-time table
