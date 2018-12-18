@@ -77,6 +77,8 @@ export class PartyService implements OnDestroy {
 
     this.recentParties.next(this.settingService.get('recentParties') || []);
 
+    this.maskedName = this.settingsService.get('maskedGroupname') === true ? true : false;
+
     this.playerSub = this.accountService.player.subscribe(res => {
       this.currentPlayer = res;
     });

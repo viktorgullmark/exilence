@@ -12,6 +12,7 @@ import { MessageValueService } from '../shared/providers/message-value.service';
 import { PartyService } from '../shared/providers/party.service';
 import { RobotService } from '../shared/providers/robot.service';
 import { Subscription } from 'rxjs';
+import { SettingsService } from '../shared/providers/settings.service';
 
 @Component({
   selector: 'app-authorize',
@@ -31,6 +32,7 @@ export class AuthorizeComponent implements OnInit, OnDestroy {
     private messageValueService: MessageValueService,
     private incomeService: IncomeService,
     private electronService: ElectronService,
+    private settingsService: SettingsService,
     private router: Router) {
     this.form = fb.group({
       partyCode: [this.partyService.party.name !== '' ? this.partyService.party.name : this.generatePartyName(),
@@ -48,6 +50,10 @@ export class AuthorizeComponent implements OnInit, OnDestroy {
     if (this.playerSub !== undefined) {
       this.playerSub.unsubscribe();
     }
+  }
+
+  saveMaskedSetting() {
+    this.settingsService.set('maskedGroupname', this.partyService.maskedName);
   }
 
   openLink(link: string) {
