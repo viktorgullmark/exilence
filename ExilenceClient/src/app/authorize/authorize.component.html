@@ -6,7 +6,7 @@
         <mat-hint>{{'PARTY.NAME_HINT' | translate}}</mat-hint>
       </mat-form-field>
       <br/>
-      <mat-checkbox [disableRipple]="true" [(ngModel)]="partyService.maskedName" [ngModelOptions]="{standalone: true}">Mask groupname</mat-checkbox>
+      <mat-checkbox [disableRipple]="true" [(ngModel)]="partyService.maskedName" [ngModelOptions]="{standalone: true}" (ngModelChange)="saveMaskedSetting()">Mask groupname</mat-checkbox>
       <button class="top-margin" *ngIf="!form.valid || partyService.party.name == form.controls.partyCode.value"
         mat-raised-button color="primary" type="submit" disabled>{{'PARTY.ENTER' | translate}}</button>
       <button class="top-margin" *ngIf="form.valid && partyService.party.name != form.controls.partyCode.value"
