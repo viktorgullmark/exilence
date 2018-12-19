@@ -3,7 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 
-import { NinjaResponse, NinjaTypes, NinjaLine } from '../interfaces/poe-ninja.interface';
+import { NinjaResponse, NinjaTypes, NinjaLine, NinjaPriceInfo } from '../interfaces/poe-ninja.interface';
 import { AnalyticsService } from './analytics.service';
 import { LogService } from './log.service';
 import { SettingsService } from './settings.service';
@@ -16,7 +16,7 @@ export class NinjaService {
   private itemUrl = 'http://poe.ninja/api/data/itemoverview';
   private currencyUrl = 'http://poe.ninja/api/data/currencyoverview';
   private lastNinjaHit: number;
-  private ninjaPrices: any[];
+  private ninjaPrices: NinjaPriceInfo[] = [];
   private lowConfidencePricing = false;
 
   constructor(
@@ -37,13 +37,20 @@ export class NinjaService {
     return this.http.get<NinjaResponse>(url);
   }
 
+  findNinjaItemPriceInfo(name: string, gemQuality: number, gemLevel: number, links: number) {
+    return this.ninjaPrices.find(x => x.name === name
+      && x.gemLevel === gemLevel
+      && x.gemQuality === gemQuality
+      && x.links === links);
+  }
+
   getValuesFromNinja(league: string) {
     const tenMinutesAgo = (Date.now() - (1 * 60 * 10 * 1000));
-    const length = Object.values(this.ninjaPrices).length;
+    const length = this.ninjaPrices.length;
     if (length > 0 && (this.lastNinjaHit > tenMinutesAgo && !this.externalService.tradeLeagueChanged)) {
       return Observable.of(null);
     } else {
-      this.logService.log('[INFO] Retriving prices from poe.ninja');
+      this.logService.log('[INFO] Retrieving prices from poe.ninja');
       this.lastNinjaHit = Date.now();
       this.ninjaPrices = [];
 
@@ -63,7 +70,6 @@ export class NinjaService {
         .do(typeResponse => {
           if (typeResponse !== null) {
             typeResponse.lines.forEach((line: NinjaLine) => {
-
               // Exclude low-confidence prices
               if (!this.lowConfidencePricing) {
                 const receive = line.receive;
@@ -99,8 +105,15 @@ export class NinjaService {
               if ('links' in line) {
                 links = line.links;
               }
-              if (links === 0 && name !== '') {
-                this.ninjaPrices[name] = value;
+              if (name !== '') {
+                const ninjaPriceInfoObj = {
+                  value: value,
+                  name: name,
+                  links: links,
+                  gemQuality: line.gemQuality,
+                  gemLevel: line.gemLevel
+                } as NinjaPriceInfo;
+                this.ninjaPrices.push(ninjaPriceInfoObj);
               }
             });
           } else {

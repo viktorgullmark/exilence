@@ -72,7 +72,17 @@ export interface NinjaLine {
     exaltedValue?: number;
     links?: number;
     receive?: any;
+    gemLevel?: number;
+    gemQuality?: number;
     pay?: any;
+}
+
+export interface NinjaPriceInfo {
+    name: string;
+    value: number;
+    gemLevel: number;
+    gemQuality: number;
+    links: number;
 }
 
 export interface NinjaCurrencyDetail {
