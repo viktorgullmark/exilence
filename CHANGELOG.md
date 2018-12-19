@@ -4,6 +4,7 @@ All notable changes to this project will be documented in this file.
 ## [0.9.1] - 2018-12-20
 - Fixed a bug where the net worth pricing would stop when poe.watch is down
 - Fixed a bug where some bases would always be priced at 1 chaos
+- Fixed a bug where unidentified items were wrongly price
 
 ## [0.9.0] - 2018-12-19
 - Added support for pricing of scarabs
