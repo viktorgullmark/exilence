@@ -41,7 +41,6 @@ export class IncomeService implements OnDestroy {
   private fiveMinutes = 5 * 60 * 1000;
   private sessionIdValid = false;
 
-  private lowConfidencePricing = false;
   private characterPricing = false;
   private itemValueTreshold = 1;
 
@@ -235,80 +234,6 @@ export class IncomeService implements OnDestroy {
         return 0;
       });
     });
-  }
-
-  getValuesFromNinja(league: string) {
-    const tenMinutesAgo = (Date.now() - (1 * 60 * 10 * 1000));
-    const length = Object.values(this.ninjaPrices).length;
-    if (length > 0 && (this.lastNinjaHit > tenMinutesAgo && !this.externalService.tradeLeagueChanged)) {
-      return Observable.of(null);
-    } else {
-      this.logService.log('[INFO] Retriving prices from poe.ninja');
-      this.lastNinjaHit = Date.now();
-      this.ninjaPrices = [];
-
-      const setting = this.settingsService.get('lowConfidencePricing');
-      if (setting !== undefined) {
-        this.lowConfidencePricing = setting;
-      } else {
-        this.lowConfidencePricing = false;
-        this.settingsService.set('lowConfidencePricing', false);
-      }
-
-      const enumTypes = Object.values(NinjaTypes);
-      return Observable
-        .from(enumTypes)
-        .concatMap(type => this.ninjaService.getFromNinja(league, type)
-          .delay(750))
-        .do(typeResponse => {
-          if (typeResponse !== null) {
-            typeResponse.lines.forEach((line: NinjaLine) => {
-
-              // Exclude low-confidence prices
-              if (!this.lowConfidencePricing) {
-                const receive = line.receive;
-                if (receive !== undefined && receive !== null) {
-                  if (receive.count < 10) {
-                    return;
-                  }
-                }
-              }
-
-              // Filter each line here, probably needs improvement
-              // But the response differse for Currency & Fragments hence the if's
-
-              let links = 0;
-              let value = 0;
-              let name = '';
-
-              if ('chaosEquivalent' in line) {
-                value = line.chaosEquivalent;
-              }
-              if ('chaosValue' in line) {
-                value = line.chaosValue;
-              }
-              if ('currencyTypeName' in line) {
-                name = line.currencyTypeName;
-              }
-              if ('name' in line) {
-                name = line.name;
-                if (line.baseType && (line.name.indexOf(line.baseType) === -1)) {
-                  name += ' ' + line.baseType;
-                }
-                name.trim();
-              }
-              if ('links' in line) {
-                links = line.links;
-              }
-              if (links === 0 && name !== '') {
-                this.ninjaPrices[name] = value;
-              }
-            });
-          } else {
-            this.isSnapshotting = false;
-          }
-        });
-    }
   }
 
   getPlayerStashTabs(sessionId: string, accountName: string, league: string) {
