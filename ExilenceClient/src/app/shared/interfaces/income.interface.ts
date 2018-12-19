@@ -15,4 +15,7 @@ export interface NetWorthItem {
   valuePerUnit: number;
   name: string;
   stacksize: number;
+  quality: number;
+  gemLevel: number;
+  links: number;
 }
