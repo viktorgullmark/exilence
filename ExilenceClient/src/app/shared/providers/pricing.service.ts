@@ -43,8 +43,13 @@ export class PricingService {
 
     // todo: format remaining properties
 
-    // todo: fetch values from appropriate service and price the item
+    // parse item-quality
+    const quality =
+      item.properties.find(t => t.name === 'Quality') ?
+        item.properties.find(t => t.name === 'Quality').values[0][0] : '0';
+    itemPricingObj.quality = parseInt(quality, 10);
 
+    // price items based on type
     let price = 0;
     switch (item.frameType) {
       case 0: // Normal
@@ -59,10 +64,7 @@ export class PricingService {
         break;
       case 4: // Gem
         const level = item.properties.find(t => t.name === 'Level').values[0][0];
-        const quality =
-          item.properties.find(t => t.name === 'Quality') ?
-            item.properties.find(t => t.name === 'Quality').values[0][0] : '0';
-        price = this.pricecheckGem(itemPricingObj.name, parseInt(level, 10), parseInt(quality, 10));
+        price = this.pricecheckGem(itemPricingObj.name, parseInt(level, 10), itemPricingObj.quality);
         break;
       case 5: // Currency
         price = this.pricecheckByName(itemPricingObj.name);
