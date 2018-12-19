@@ -78,8 +78,8 @@ export class PricingService {
         let level = parseInt(levelStr, 10);
 
         // check if enlighten/enhance/empower, and re-format level + qual
-        const specialGem = this.specialGemCheck(item.name);
-        if (level < 20 && level > 0 && !specialGem) { level = 0; }
+        const specialGem = this.specialGemCheck(itemPricingObj.name);
+        if (level < 20 && level > 0 && !specialGem) { level = 1; }
         if (itemPricingObj.quality < 20 && itemPricingObj.quality > 0) { itemPricingObj.quality = 0; }
 
         price = this.pricecheckGem(itemPricingObj.name, level, itemPricingObj.quality);
