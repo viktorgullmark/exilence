@@ -16,7 +16,7 @@ export class NinjaService {
   private itemUrl = 'http://poe.ninja/api/data/itemoverview';
   private currencyUrl = 'http://poe.ninja/api/data/currencyoverview';
   private lastNinjaHit: number;
-  private ninjaPrices: NinjaPriceInfo[] = [];
+  public ninjaPrices: NinjaPriceInfo[] = [];
   private lowConfidencePricing = false;
 
   constructor(
@@ -35,13 +35,6 @@ export class NinjaService {
     const parameters = `?league=${league}&type=${type}&date=${date}`;
     const url = baseUrl + parameters;
     return this.http.get<NinjaResponse>(url);
-  }
-
-  findNinjaItemPriceInfo(name: string, gemQuality: number, gemLevel: number, links: number) {
-    return this.ninjaPrices.find(x => x.name === name
-      && x.gemLevel === gemLevel
-      && x.gemQuality === gemQuality
-      && x.links === links);
   }
 
   getValuesFromNinja() {
@@ -113,7 +106,9 @@ export class NinjaService {
                   name: name,
                   links: links,
                   gemQuality: line.gemQuality,
-                  gemLevel: line.gemLevel
+                  gemLevel: line.gemLevel,
+                  variation: line.variation,
+                  baseType: line.baseType
                 } as NinjaPriceInfo;
                 this.ninjaPrices.push(ninjaPriceInfoObj);
               }

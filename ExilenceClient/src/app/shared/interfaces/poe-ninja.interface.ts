@@ -75,6 +75,7 @@ export interface NinjaLine {
     gemLevel?: number;
     gemQuality?: number;
     pay?: any;
+    variation?: string;
 }
 
 export interface NinjaPriceInfo {
@@ -82,6 +83,9 @@ export interface NinjaPriceInfo {
     value: number;
     gemLevel: number;
     gemQuality: number;
+    variation: string;
+    itemlevel: number;
+    baseType: string;
     links: number;
 }
 

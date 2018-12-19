@@ -101,23 +101,37 @@ export class PricingService {
   }
 
   pricecheckByName(name: string) {
-    // todo: pricecheck ninja
-    return 0;
+    const priceInfoItem = this.ninjaService.ninjaPrices.find(x =>
+      x.name === name
+    );
+    return priceInfoItem !== undefined ? priceInfoItem.value : 0;
   }
   pricecheckUnique(name: string, links: number) {
-    // todo: pricecheck ninja
-    return 0;
+    const priceInfoItem = this.ninjaService.ninjaPrices.find(x =>
+      x.name === name
+      && x.links === links
+    );
+    return priceInfoItem !== undefined ? priceInfoItem.value : 0;
   }
   pricecheckRare(item: Item) {
     // todo: pricecheck towards new service for poeprices.info
     return 0;
   }
   pricecheckGem(name: string, level: number, quality: number) {
-    // todo: pricecheck ninja
-    return 0;
+    const priceInfoItem = this.ninjaService.ninjaPrices.find(x =>
+      x.name === name
+      && x.gemLevel === level
+      && x.gemQuality === quality
+    );
+    return priceInfoItem !== undefined ? priceInfoItem.value : 0;
   }
-  pricecheckBase(baseType: string, ilvl: number = null, variation: string = null) {
-    // todo: pricecheck ninja
-    return 0;
+  pricecheckBase(baseType: string, ilvl: number = 0, variation: string = null) {
+    const itemlevel = 0;
+    const priceInfoItem = this.ninjaService.ninjaPrices.find(x =>
+      x.baseType === baseType
+      && x.itemlevel === itemlevel
+      && x.variation === variation
+    );
+    return priceInfoItem !== undefined ? priceInfoItem.value : 0;
   }
 }
