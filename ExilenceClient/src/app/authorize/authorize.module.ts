@@ -17,6 +17,7 @@ import { FaqModule } from './faq/faq.module';
 import { InspectPlayersModule } from './inspect-players/inspect-players.module';
 import { PartyModule } from './party/party.module';
 import { SettingsModule } from './settings/settings.module';
+import { PricingService } from '../shared/providers/pricing.service';
 
 @NgModule({
   imports: [
@@ -42,6 +43,7 @@ import { SettingsModule } from './settings/settings.module';
     KeybindService,
     MessageValueService,
     PartyService,
+    PricingService,
     IncomeService,
     AnalyticsService
   ]

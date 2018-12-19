@@ -17,7 +17,7 @@ export class NetworthTableComponent implements OnInit, OnDestroy {
   @Input() player: Player;
   @Input() multiple = false;
   @Input() showOverTime = false;
-  displayedColumns: string[] = ['position', 'name', 'stacksize', 'valuePerUnit', 'value'];
+  displayedColumns: string[] = ['position', 'name', 'links', 'quality', 'stacksize', 'valuePerUnit', 'value'];
   dataSource = [];
   searchText = '';
   filteredArr = [];
@@ -114,7 +114,11 @@ export class NetworthTableComponent implements OnInit, OnDestroy {
         const difference = [];
         lastSnapshot.items.forEach(item => {
           // if item exists in first snapshot
-          const existingItem = firstSnapshot.items.find(x => x.name === item.name);
+          const existingItem = firstSnapshot.items.find(x =>
+            x.name === item.name
+            && x.quality === item.quality
+            && x.links === item.links
+          );
           if (existingItem !== undefined) {
             const recentItem = Object.assign({}, item);
 
@@ -145,12 +149,19 @@ export class NetworthTableComponent implements OnInit, OnDestroy {
 
   updateOverTime(items: any[], playerName: string) {
     items.forEach(snapshot => {
-      const existingItem = this.dataSource.find(x => x.name === snapshot.name);
+      const existingItem = this.dataSource.find(x =>
+        x.name === snapshot.name
+        && x.quality === snapshot.quality
+        && x.links === snapshot.links
+      );
       if (existingItem !== undefined) {
         const indexOfItem = this.dataSource.indexOf(existingItem);
         // update existing item with new data
         existingItem.stacksize = snapshot.stacksize + existingItem.stacksize;
         existingItem.value = snapshot.value + existingItem.value;
+        // fix for existing items not containing these props
+        existingItem.quality = snapshot.quality;
+        existingItem.links = snapshot.links;
         this.dataSource[indexOfItem] = existingItem;
       } else {
         const newObj = {
@@ -160,6 +171,8 @@ export class NetworthTableComponent implements OnInit, OnDestroy {
           value: snapshot.value,
           valuePerUnit: snapshot.valuePerUnit,
           icon: snapshot.icon,
+          links: snapshot.links,
+          quality: snapshot.quality,
           holdingPlayers: [playerName]
         };
         this.dataSource.push(newObj);
@@ -169,13 +182,20 @@ export class NetworthTableComponent implements OnInit, OnDestroy {
 
   updateTable(items: any[], playerName: string) {
     items.forEach(snapshot => {
-      const existingItem = this.dataSource.find(x => x.name === snapshot.name);
+      const existingItem = this.dataSource.find(x =>
+        x.name === snapshot.name
+        && x.quality === snapshot.quality
+        && x.links === snapshot.links
+      );
       if (existingItem !== undefined) {
         const indexOfItem = this.dataSource.indexOf(existingItem);
         // update existing item with new data
         existingItem.stacksize = existingItem.stacksize + snapshot.stacksize;
         existingItem.value = existingItem.value + snapshot.value;
         existingItem.holdingPlayers.push(playerName);
+        // fix for existing items not containing these props
+        existingItem.quality = snapshot.quality;
+        existingItem.links = snapshot.links;
         this.dataSource[indexOfItem] = existingItem;
       } else {
         const newObj = {
@@ -185,6 +205,8 @@ export class NetworthTableComponent implements OnInit, OnDestroy {
           value: snapshot.value,
           valuePerUnit: snapshot.valuePerUnit,
           icon: snapshot.icon,
+          links: snapshot.links,
+          quality: snapshot.quality,
           holdingPlayers: [playerName]
         };
         this.dataSource.push(newObj);
