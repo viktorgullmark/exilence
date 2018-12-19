@@ -1,8 +1,13 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
-## [0.8.13] - 2018-12-XX
+## [0.9.0] - 2018-12-XX
 - Added support for pricing of scarabs
+- Added support to price linked items
+- Added support to price 6-socketed items
+- Added support for pricing gems (with level and quality)
+- Added support to price basetypes (with and without elder/shaper)
+- Pricing of items should now be more accurate
 - Added a new, simplified launch-screen for existing users
 - Added persistance between restarts to mask-setting for groupnames
 
