@@ -31,6 +31,7 @@ export class PartySummaryComponent implements OnInit, OnDestroy {
   public reportKeybind: any;
   private partyGainSub: Subscription;
   public partyGain = 0;
+  private partySub: Subscription;
   constructor(
     @Inject(FormBuilder) fb: FormBuilder,
     public messageValueService: MessageValueService,
@@ -50,12 +51,30 @@ export class PartySummaryComponent implements OnInit, OnDestroy {
     this.partyGainSub = this.messageValueService.partyGainSubject.subscribe(res => {
       this.partyGain = res;
     });
+
+    this.partySub = this.partyService.partyUpdated.subscribe(res => {
+      if (res !== undefined) {
+        let networth = 0;
+        this.messageValueService.partyGainSubject.next(0);
+        this.partyService.updatePartyGain(this.partyService.party.players);
+        res.players.forEach(p => {
+          if (p.netWorthSnapshots[0] !== undefined) {
+            networth = networth + p.netWorthSnapshots[0].value;
+          }
+        });
+        this.messageValueService.partyGainSubject.next(this.partyService.partyGain);
+        this.messageValueService.partyValueSubject.next(networth);
+      }
+    });
   }
   ngOnInit() {
   }
   ngOnDestroy() {
     if (this.partyGainSub !== undefined) {
       this.partyGainSub.unsubscribe();
+    }
+    if (this.partySub !== undefined) {
+      this.partySub.unsubscribe();
     }
   }
 
