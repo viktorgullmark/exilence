@@ -13,6 +13,8 @@ namespace Exilence.Models
         public decimal ValuePerUnit { get; set; }
         public string Name { get; set; }
         public int Stacksize { get; set; }
+        public int? Links { get; set; }
+        public int? Quality { get; set; }
     }
 
     [Serializable]

@@ -22,11 +22,13 @@ export class PricingService {
     return {
       name: '',
       quality: 0,
+      gemlevel: 0,
       sockets: 0,
       links: 0,
       chaosequiv: 0,
       chaosequiv_average: 0,
-      chaosequiv_mean: 0
+      chaosequiv_mean: 0,
+      chaosequiv_mode: 0
     } as ItemPricing;
   }
 
@@ -89,9 +91,10 @@ export class PricingService {
         // check if enlighten/enhance/empower, and re-format level + qual
         const specialGem = this.specialGemCheck(itemPricingObj.name);
         if (level < 20 && level > 0 && !specialGem) { level = 1; }
+        itemPricingObj.gemlevel = level;
         if (itemPricingObj.quality < 20 && itemPricingObj.quality > 0) { itemPricingObj.quality = 0; }
 
-        price = this.pricecheckGem(itemPricingObj.name, level, itemPricingObj.quality);
+        price = this.pricecheckGem(itemPricingObj.name, itemPricingObj.gemlevel, itemPricingObj.quality);
         break;
       case 5: // Currency
         price = this.pricecheckByName(itemPricingObj.name);
@@ -112,6 +115,7 @@ export class PricingService {
   }
 
   pricecheckByName(name: string) {
+    if (name === 'Chaos Orb') { return 1; }
     const priceInfoItem = this.ninjaService.ninjaPrices.find(x =>
       x.name === name
     );
