@@ -4,4 +4,6 @@ export interface ItemPricing {
     sockets: number;
     links: number;
     chaosequiv: number;
+    chaosequiv_average: number;
+    chaosequiv_mean: number;
 }

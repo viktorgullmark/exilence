@@ -4,6 +4,7 @@ import { NinjaTypes } from '../interfaces/poe-ninja.interface';
 import { Item } from '../interfaces/item.interface';
 import { ItemPricing } from '../interfaces/item-pricing.interface';
 import { ItemHelper } from '../helpers/item.helper';
+import { Observable } from 'rxjs';
 
 @Injectable()
 
@@ -19,7 +20,17 @@ export class PricingService {
       sockets: -1,
       links: -1,
       chaosequiv: -1,
+      chaosequiv_average: -1,
+      chaosequiv_mean: -1
     } as ItemPricing;
+  }
+
+  specialGemCheck(name: string) {
+    return name.indexOf('Enhance') > -1 || name.indexOf('Enlighten') > -1 || name.indexOf('Empower') > -1;
+  }
+
+  retrieveExternalPrices(): Observable<any> {
+    return this.ninjaService.getValuesFromNinja();
   }
 
   priceItem(item: Item, league: string): ItemPricing {
@@ -32,7 +43,7 @@ export class PricingService {
     // calculate links & sockets for item
     let links = 0;
     if (item.sockets) { links = ItemHelper.getLinks(item.sockets.map(t => t.group)); }
-    if (links < 5) { links = null; }
+    if (links < 5) { links = 0; }
     itemPricingObj.links = links;
     itemPricingObj.sockets = item.sockets.length;
 
@@ -40,8 +51,6 @@ export class PricingService {
     let elderOrShaper = null;
     if (item.elder) { elderOrShaper = 'elder'; }
     if (item.shaper) { elderOrShaper = 'shaper'; }
-
-    // todo: format remaining properties
 
     // parse item-quality
     const quality =
@@ -63,8 +72,15 @@ export class PricingService {
         price = this.pricecheckUnique(itemPricingObj.name, links);
         break;
       case 4: // Gem
-        const level = item.properties.find(t => t.name === 'Level').values[0][0];
-        price = this.pricecheckGem(itemPricingObj.name, parseInt(level, 10), itemPricingObj.quality);
+        const levelStr = item.properties.find(t => t.name === 'Level').values[0][0];
+        let level = parseInt(levelStr, 10);
+
+        // check if enlighten/enhance/empower, and re-format level + qual
+        const specialGem = this.specialGemCheck(item.name);
+        if (level < 20 && level > 0 && !specialGem) { level = 0; }
+        if (itemPricingObj.quality < 20 && itemPricingObj.quality > 0) { itemPricingObj.quality = 0; }
+
+        price = this.pricecheckGem(itemPricingObj.name, level, itemPricingObj.quality);
         break;
       case 5: // Currency
         price = this.pricecheckByName(itemPricingObj.name);

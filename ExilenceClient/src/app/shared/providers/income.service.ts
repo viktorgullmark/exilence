@@ -207,7 +207,10 @@ export class IncomeService implements OnDestroy {
       this.settingsService.set('characterPricing', false);
     }
 
-    return this.getPlayerStashTabs(sessionId, accountName, league).do(() => {
+    return Observable.forkJoin(
+      this.pricingService.retrieveExternalPrices(),
+      this.getPlayerStashTabs(sessionId, accountName, league)
+    ).do(() => {
       this.logService.log('Finished retriving stashhtabs');
       if (this.characterPricing) {
         this.PriceItems(this.localPlayer.character.items);
