@@ -8,6 +8,8 @@ All notable changes to this project will be documented in this file.
 - Added support to price elder/shaper items
 - Added support for pricing gems (with level and quality)
 - Added support to price basetypes (with and without elder/shaper)
+- Added new column 'links' to net worth table
+- Added new column 'quality' to net worth table
 - Pricing of items should now be more accurate
 - Added a new, simplified launch-screen for existing users
 - Added persistance between restarts to mask-setting for groupnames
