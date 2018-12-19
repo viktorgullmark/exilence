@@ -20,6 +20,8 @@ import { LogService } from './log.service';
 import { NinjaService } from './ninja.service';
 import { PartyService } from './party.service';
 import { SettingsService } from './settings.service';
+import { PricingService } from './pricing.service';
+import { ItemPricing } from '../interfaces/item-pricing.interface';
 
 @Injectable()
 export class IncomeService implements OnDestroy {
@@ -51,7 +53,8 @@ export class IncomeService implements OnDestroy {
     private partyService: PartyService,
     private externalService: ExternalService,
     private settingsService: SettingsService,
-    private logService: LogService
+    private logService: LogService,
+    private pricingService: PricingService
   ) {
   }
 
@@ -137,50 +140,41 @@ export class IncomeService implements OnDestroy {
   }
 
   PriceItems(items: Item[]) {
-    items.forEach((item: Item) => {
-      let itemName = item.name;
 
-      if (item.typeLine) {
-        itemName += ' ' + item.typeLine;
+    // todo: base prices on this league
+    const priceInfoLeague = this.settingsService.get('account.tradeLeagueName');
+
+    items.forEach((item: Item) => {
+
+      const itemPriceInfoObj: ItemPricing = this.pricingService.priceItem(item, priceInfoLeague);
+
+      let stacksize = 1;
+      let totalValueForItem = itemPriceInfoObj.chaosequiv;
+      if (item.stackSize) {
+        stacksize = item.stackSize;
+        totalValueForItem = (itemPriceInfoObj.chaosequiv * stacksize);
       }
 
-      itemName = itemName.replace('<<set:MS>><<set:M>><<set:S>>', '').trim();
-
-      if (typeof this.ninjaPrices[itemName] !== 'undefined' || itemName === 'Chaos Orb') {
-
-        let valueForItem = this.ninjaPrices[itemName];
-        if (itemName === 'Chaos Orb') {
-          valueForItem = 1;
-        }
-
-        let stacksize = 1;
-        let totalValueForItem = valueForItem;
-        if (item.stackSize) {
-          stacksize = item.stackSize;
-          totalValueForItem = (valueForItem * stacksize);
-        }
-
-        // If item already exists in array, update existing
-        const existingItem = this.totalNetWorthItems.find(x => x.name === itemName);
-        if (existingItem !== undefined) {
-          const indexOfItem = this.totalNetWorthItems.indexOf(existingItem);
-          // update existing item with new data
-          existingItem.stacksize = existingItem.stacksize + stacksize;
-          existingItem.value = existingItem.value + totalValueForItem;
-          this.totalNetWorthItems[indexOfItem] = existingItem;
-        } else {
-          // Add new item
-          const netWorthItem: NetWorthItem = {
-            name: itemName,
-            value: totalValueForItem,
-            valuePerUnit: valueForItem,
-            icon: item.icon.indexOf('?') >= 0
-              ? item.icon.substring(0, item.icon.indexOf('?')) + '?scale=1&scaleIndex=3&w=1&h=1'
-              : item.icon + '?scale=1&scaleIndex=3&w=1&h=1',
-            stacksize
-          };
-          this.totalNetWorthItems.push(netWorthItem);
-        }
+      // If item already exists in array, update existing
+      const existingItem = this.totalNetWorthItems.find(x => x.name === itemPriceInfoObj.name);
+      if (existingItem !== undefined) {
+        const indexOfItem = this.totalNetWorthItems.indexOf(existingItem);
+        // update existing item with new data
+        existingItem.stacksize = existingItem.stacksize + stacksize;
+        existingItem.value = existingItem.value + totalValueForItem;
+        this.totalNetWorthItems[indexOfItem] = existingItem;
+      } else {
+        // Add new item
+        const netWorthItem: NetWorthItem = {
+          name: itemPriceInfoObj.name,
+          value: totalValueForItem,
+          valuePerUnit: itemPriceInfoObj.chaosequiv,
+          icon: item.icon.indexOf('?') >= 0
+            ? item.icon.substring(0, item.icon.indexOf('?')) + '?scale=1&scaleIndex=3&w=1&h=1'
+            : item.icon + '?scale=1&scaleIndex=3&w=1&h=1',
+          stacksize
+        };
+        this.totalNetWorthItems.push(netWorthItem);
       }
     });
   }
@@ -193,8 +187,6 @@ export class IncomeService implements OnDestroy {
 
     const accountName = this.localPlayer.account;
     const league = this.localPlayer.character.league;
-
-    const priceInfoLeague = this.settingsService.get('account.tradeLeagueName');
 
     this.playerStashTabs = [];
     this.totalNetWorthItems = [];
@@ -216,11 +208,8 @@ export class IncomeService implements OnDestroy {
       this.settingsService.set('characterPricing', false);
     }
 
-    return Observable.forkJoin(
-      this.getPlayerStashTabs(sessionId, accountName, league),
-      this.getValuesFromNinja(priceInfoLeague)
-    ).do(() => {
-      this.logService.log('Finished retriving stashhtabs and value information.');
+    return this.getPlayerStashTabs(sessionId, accountName, league).do(() => {
+      this.logService.log('Finished retriving stashhtabs');
       if (this.characterPricing) {
         this.PriceItems(this.localPlayer.character.items);
       }
