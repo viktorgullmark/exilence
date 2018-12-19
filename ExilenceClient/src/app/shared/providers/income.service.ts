@@ -10,15 +10,16 @@ import { Observable } from 'rxjs/Observable';
 
 import { HistoryHelper } from '../helpers/history.helper';
 import { NetWorthHistory, NetWorthItem, NetWorthSnapshot } from '../interfaces/income.interface';
+import { ItemPricing } from '../interfaces/item-pricing.interface';
 import { Item } from '../interfaces/item.interface';
 import { Player } from '../interfaces/player.interface';
-import { NinjaLine, NinjaTypes } from '../interfaces/poe-ninja.interface';
 import { Stash } from '../interfaces/stash.interface';
 import { AccountService } from './account.service';
 import { ExternalService } from './external.service';
 import { LogService } from './log.service';
 import { NinjaService } from './ninja.service';
 import { PartyService } from './party.service';
+import { PricingService } from './pricing.service';
 import { SettingsService } from './settings.service';
 
 @Injectable()
@@ -39,7 +40,6 @@ export class IncomeService implements OnDestroy {
   private fiveMinutes = 5 * 60 * 1000;
   private sessionIdValid = false;
 
-  private lowConfidencePricing = false;
   private characterPricing = false;
   private itemValueTreshold = 1;
 
@@ -51,7 +51,8 @@ export class IncomeService implements OnDestroy {
     private partyService: PartyService,
     private externalService: ExternalService,
     private settingsService: SettingsService,
-    private logService: LogService
+    private logService: LogService,
+    private pricingService: PricingService
   ) {
   }
 
@@ -137,50 +138,42 @@ export class IncomeService implements OnDestroy {
   }
 
   PriceItems(items: Item[]) {
-    items.forEach((item: Item) => {
-      let itemName = item.name;
 
-      if (item.typeLine) {
-        itemName += ' ' + item.typeLine;
+    // todo: base prices on this league
+    items.forEach((item: Item) => {
+      const itemPriceInfoObj: ItemPricing = this.pricingService.priceItem(item);
+      let stacksize = 1;
+      let totalValueForItem = itemPriceInfoObj.chaosequiv;
+      if (item.stackSize) {
+        stacksize = item.stackSize;
+        totalValueForItem = (itemPriceInfoObj.chaosequiv * stacksize);
       }
 
-      itemName = itemName.replace('<<set:MS>><<set:M>><<set:S>>', '').trim();
-
-      if (typeof this.ninjaPrices[itemName] !== 'undefined' || itemName === 'Chaos Orb') {
-
-        let valueForItem = this.ninjaPrices[itemName];
-        if (itemName === 'Chaos Orb') {
-          valueForItem = 1;
-        }
-
-        let stacksize = 1;
-        let totalValueForItem = valueForItem;
-        if (item.stackSize) {
-          stacksize = item.stackSize;
-          totalValueForItem = (valueForItem * stacksize);
-        }
-
-        // If item already exists in array, update existing
-        const existingItem = this.totalNetWorthItems.find(x => x.name === itemName);
-        if (existingItem !== undefined) {
-          const indexOfItem = this.totalNetWorthItems.indexOf(existingItem);
-          // update existing item with new data
-          existingItem.stacksize = existingItem.stacksize + stacksize;
-          existingItem.value = existingItem.value + totalValueForItem;
-          this.totalNetWorthItems[indexOfItem] = existingItem;
-        } else {
-          // Add new item
-          const netWorthItem: NetWorthItem = {
-            name: itemName,
-            value: totalValueForItem,
-            valuePerUnit: valueForItem,
-            icon: item.icon.indexOf('?') >= 0
-              ? item.icon.substring(0, item.icon.indexOf('?')) + '?scale=1&scaleIndex=3&w=1&h=1'
-              : item.icon + '?scale=1&scaleIndex=3&w=1&h=1',
-            stacksize
-          };
-          this.totalNetWorthItems.push(netWorthItem);
-        }
+      // If item already exists in array, update existing
+      const existingItem = this.totalNetWorthItems.find(x =>
+        x.name === itemPriceInfoObj.name
+      );
+      if (existingItem !== undefined) {
+        const indexOfItem = this.totalNetWorthItems.indexOf(existingItem);
+        // update existing item with new data
+        existingItem.stacksize = existingItem.stacksize + stacksize;
+        existingItem.value = existingItem.value + totalValueForItem;
+        this.totalNetWorthItems[indexOfItem] = existingItem;
+      } else {
+        // Add new item
+        const netWorthItem: NetWorthItem = {
+          name: itemPriceInfoObj.name,
+          value: totalValueForItem,
+          valuePerUnit: itemPriceInfoObj.chaosequiv,
+          icon: item.icon.indexOf('?') >= 0
+            ? item.icon.substring(0, item.icon.indexOf('?')) + '?scale=1&scaleIndex=3&w=1&h=1'
+            : item.icon + '?scale=1&scaleIndex=3&w=1&h=1',
+          stacksize,
+          links: itemPriceInfoObj.links,
+          gemLevel: itemPriceInfoObj.gemlevel,
+          quality: itemPriceInfoObj.quality
+        };
+        this.totalNetWorthItems.push(netWorthItem);
       }
     });
   }
@@ -193,8 +186,6 @@ export class IncomeService implements OnDestroy {
 
     const accountName = this.localPlayer.account;
     const league = this.localPlayer.character.league;
-
-    const priceInfoLeague = this.settingsService.get('account.tradeLeagueName');
 
     this.playerStashTabs = [];
     this.totalNetWorthItems = [];
@@ -217,10 +208,10 @@ export class IncomeService implements OnDestroy {
     }
 
     return Observable.forkJoin(
-      this.getPlayerStashTabs(sessionId, accountName, league),
-      this.getValuesFromNinja(priceInfoLeague)
+      this.pricingService.retrieveExternalPrices(),
+      this.getPlayerStashTabs(sessionId, accountName, league)
     ).do(() => {
-      this.logService.log('Finished retriving stashhtabs and value information.');
+      this.logService.log('Finished retriving stashhtabs');
       if (this.characterPricing) {
         this.PriceItems(this.localPlayer.character.items);
       }
@@ -246,80 +237,6 @@ export class IncomeService implements OnDestroy {
         return 0;
       });
     });
-  }
-
-  getValuesFromNinja(league: string) {
-    const tenMinutesAgo = (Date.now() - (1 * 60 * 10 * 1000));
-    const length = Object.values(this.ninjaPrices).length;
-    if (length > 0 && (this.lastNinjaHit > tenMinutesAgo && !this.externalService.tradeLeagueChanged)) {
-      return Observable.of(null);
-    } else {
-      this.logService.log('[INFO] Retriving prices from poe.ninja');
-      this.lastNinjaHit = Date.now();
-      this.ninjaPrices = [];
-
-      const setting = this.settingsService.get('lowConfidencePricing');
-      if (setting !== undefined) {
-        this.lowConfidencePricing = setting;
-      } else {
-        this.lowConfidencePricing = false;
-        this.settingsService.set('lowConfidencePricing', false);
-      }
-
-      const enumTypes = Object.values(NinjaTypes);
-      return Observable
-        .from(enumTypes)
-        .concatMap(type => this.ninjaService.getFromNinja(league, type)
-          .delay(750))
-        .do(typeResponse => {
-          if (typeResponse !== null) {
-            typeResponse.lines.forEach((line: NinjaLine) => {
-
-              // Exclude low-confidence prices
-              if (!this.lowConfidencePricing) {
-                const receive = line.receive;
-                if (receive !== undefined && receive !== null) {
-                  if (receive.count < 10) {
-                    return;
-                  }
-                }
-              }
-
-              // Filter each line here, probably needs improvement
-              // But the response differse for Currency & Fragments hence the if's
-
-              let links = 0;
-              let value = 0;
-              let name = '';
-
-              if ('chaosEquivalent' in line) {
-                value = line.chaosEquivalent;
-              }
-              if ('chaosValue' in line) {
-                value = line.chaosValue;
-              }
-              if ('currencyTypeName' in line) {
-                name = line.currencyTypeName;
-              }
-              if ('name' in line) {
-                name = line.name;
-                if (line.baseType && (line.name.indexOf(line.baseType) === -1)) {
-                  name += ' ' + line.baseType;
-                }
-                name.trim();
-              }
-              if ('links' in line) {
-                links = line.links;
-              }
-              if (links === 0 && name !== '') {
-                this.ninjaPrices[name] = value;
-              }
-            });
-          } else {
-            this.isSnapshotting = false;
-          }
-        });
-    }
   }
 
   getPlayerStashTabs(sessionId: string, accountName: string, league: string) {
