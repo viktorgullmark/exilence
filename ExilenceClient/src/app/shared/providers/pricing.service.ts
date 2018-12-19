@@ -1,16 +1,21 @@
 import { Injectable } from '@angular/core';
-import { NinjaService } from './ninja.service';
-import { NinjaTypes } from '../interfaces/poe-ninja.interface';
-import { Item } from '../interfaces/item.interface';
-import { ItemPricing } from '../interfaces/item-pricing.interface';
+import { forkJoin, Observable } from 'rxjs';
+
 import { ItemHelper } from '../helpers/item.helper';
-import { Observable } from 'rxjs';
+import { ItemPricing } from '../interfaces/item-pricing.interface';
+import { Item } from '../interfaces/item.interface';
+import { NinjaService } from './ninja.service';
+import { SettingsService } from './settings.service';
+import { WatchService } from './watch.service';
 
 @Injectable()
 
 export class PricingService {
 
-  constructor(private ninjaService: NinjaService
+  constructor(
+    private ninjaService: NinjaService,
+    private watchService: WatchService,
+    private settingsService: SettingsService
   ) { }
 
   initPricingObject(): ItemPricing {
@@ -30,7 +35,11 @@ export class PricingService {
   }
 
   retrieveExternalPrices(): Observable<any> {
-    return this.ninjaService.getValuesFromNinja();
+    const league = this.settingsService.get('account.tradeLeagueName');
+    return forkJoin(
+      this.ninjaService.getValuesFromNinja(league),
+      this.watchService.UpdateItemsAndPrices(league)
+    );
   }
 
   priceItem(item: Item, league: string): ItemPricing {

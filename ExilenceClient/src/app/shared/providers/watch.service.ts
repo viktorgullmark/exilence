@@ -24,9 +24,9 @@ export class WatchService {
     private logService: LogService
   ) { }
 
-  UpdateItemsAndPrices(league: string) {
+  UpdateItemsAndPrices(league: string): Observable<any> {
     this.logService.log('Starting to fetch items and prices from poe.watch');
-    forkJoin([this.fetchPrices(league), this.fetchItems()]).subscribe(res => {
+    return forkJoin([this.fetchPrices(league), this.fetchItems()]).map(res => {
       this.itemPrices = res[0];
       this.itemData = res[1];
       this.ItemsWithPrice = this.itemData.map(x => Object.assign(x, this.itemPrices.find(y => y.id === x.id)));

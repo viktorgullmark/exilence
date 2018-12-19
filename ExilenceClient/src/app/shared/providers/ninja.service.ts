@@ -3,11 +3,11 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 
-import { NinjaResponse, NinjaTypes, NinjaLine, NinjaPriceInfo } from '../interfaces/poe-ninja.interface';
+import { NinjaLine, NinjaPriceInfo, NinjaResponse, NinjaTypes } from '../interfaces/poe-ninja.interface';
 import { AnalyticsService } from './analytics.service';
+import { ExternalService } from './external.service';
 import { LogService } from './log.service';
 import { SettingsService } from './settings.service';
-import { ExternalService } from './external.service';
 
 @Injectable()
 
@@ -37,9 +37,8 @@ export class NinjaService {
     return this.http.get<NinjaResponse>(url);
   }
 
-  getValuesFromNinja() {
+  getValuesFromNinja(league: string) {
     // todo: make sure to test that proper league is fetched here
-    const league = this.settingsService.get('account.tradeLeagueName');
     const tenMinutesAgo = (Date.now() - (1 * 60 * 10 * 1000));
     const length = this.ninjaPrices.length;
     if (length > 0 && (this.lastNinjaHit > tenMinutesAgo && !this.externalService.tradeLeagueChanged)) {
