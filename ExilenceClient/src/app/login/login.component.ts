@@ -71,7 +71,7 @@ export class LoginComponent implements OnInit, OnDestroy {
         private externalService: ExternalService,
         private electronService: ElectronService,
         private accountService: AccountService,
-        private sessionService: SessionService,
+        public sessionService: SessionService,
         private settingsService: SettingsService,
         private analyticsService: AnalyticsService,
         public logMonitorService: LogMonitorService,
