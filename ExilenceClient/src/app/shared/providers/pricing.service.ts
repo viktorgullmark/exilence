@@ -128,10 +128,11 @@ export class PricingService {
     return priceInfoItem !== undefined ? priceInfoItem.value : 0;
   }
   pricecheckBase(baseType: string, ilvl: number = 0, variation: string = null) {
-    const itemlevel = 0;
+    if (ilvl < 82) { return 0; }
+    if (ilvl > 86) { ilvl = 86; }
     const priceInfoItem = this.ninjaService.ninjaPrices.find(x =>
       x.baseType === baseType
-      && x.itemlevel === itemlevel
+      && x.itemlevel === ilvl
       && x.variation === variation
     );
     return priceInfoItem !== undefined ? priceInfoItem.value : 0;
