@@ -8,6 +8,7 @@ export interface CombinedItemPriceInfo {
   exalted: number;
   count: number;
   quantity: number;
+  fullname?: string;
   name: string;
   type: string;
   frame: number;

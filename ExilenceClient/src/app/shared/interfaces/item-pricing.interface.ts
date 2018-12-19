@@ -5,7 +5,21 @@ export interface ItemPricing {
     sockets: number;
     links: number;
     chaosequiv: number;
-    chaosequiv_average: number;
-    chaosequiv_mean: number;
+    chaosequiv_min: number;
+    chaosequiv_max: number;
     chaosequiv_mode: number;
+    chaosequiv_median: number;
+    chaosequiv_average: number;
 }
+
+export interface SimpleItemPricing {
+    chaosequiv: number;
+    chaosequiv_min: number;
+    chaosequiv_max: number;
+    chaosequiv_mode: number;
+    chaosequiv_median: number;
+    chaosequiv_average: number;
+}
+
+
+

@@ -76,6 +76,7 @@ export interface NinjaLine {
     gemQuality?: number;
     pay?: any;
     variation?: string;
+    icon: string;
 }
 
 export interface NinjaPriceInfo {

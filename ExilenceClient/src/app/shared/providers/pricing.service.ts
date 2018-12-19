@@ -2,8 +2,10 @@ import { Injectable } from '@angular/core';
 import { forkJoin, Observable } from 'rxjs';
 
 import { ItemHelper } from '../helpers/item.helper';
-import { ItemPricing } from '../interfaces/item-pricing.interface';
+import { ItemPricing, SimpleItemPricing } from '../interfaces/item-pricing.interface';
 import { Item } from '../interfaces/item.interface';
+import { NinjaPriceInfo } from '../interfaces/poe-ninja.interface';
+import { CombinedItemPriceInfo } from '../interfaces/poe-watch/combined-item-price-info.interface';
 import { NinjaService } from './ninja.service';
 import { SettingsService } from './settings.service';
 import { WatchService } from './watch.service';
@@ -26,9 +28,12 @@ export class PricingService {
       sockets: 0,
       links: 0,
       chaosequiv: 0,
+      chaosequiv_min: 0,
+      chaosequiv_max: 0,
+      chaosequiv_mode: 0,
+      chaosequiv_median: 0,
       chaosequiv_average: 0,
-      chaosequiv_mean: 0,
-      chaosequiv_mode: 0
+      posted_daily: 0
     } as ItemPricing;
   }
 
@@ -44,7 +49,7 @@ export class PricingService {
     );
   }
 
-  priceItem(item: Item, league: string): ItemPricing {
+  priceItem(item: Item): ItemPricing {
 
     const itemPricingObj = this.initPricingObject();
 
@@ -72,7 +77,15 @@ export class PricingService {
     }
 
     // price items based on type
-    let price = 0;
+    let price = {
+      chaosequiv: 0,
+      chaosequiv_min: 0,
+      chaosequiv_max: 0,
+      chaosequiv_mode: 0,
+      chaosequiv_median: 0,
+      chaosequiv_average: 0
+    };
+
     switch (item.frameType) {
       case 0: // Normal
         price = this.pricecheckBase(item.typeLine, item.ilvl, elderOrShaper);
@@ -110,44 +123,62 @@ export class PricingService {
       default:
         price = this.pricecheckByName(itemPricingObj.name);
     }
-    itemPricingObj.chaosequiv = price;
+
+    itemPricingObj.chaosequiv = price.chaosequiv;
+    itemPricingObj.chaosequiv_min = price.chaosequiv_min;
+    itemPricingObj.chaosequiv_max = price.chaosequiv_max;
+    itemPricingObj.chaosequiv_mode = price.chaosequiv_mode;
+    itemPricingObj.chaosequiv_median = price.chaosequiv_median;
+    itemPricingObj.chaosequiv_average = price.chaosequiv_average;
+
     return itemPricingObj;
   }
 
-  pricecheckByName(name: string) {
-    if (name === 'Chaos Orb') { return 1; }
-    const priceInfoItem = this.ninjaService.ninjaPrices.find(x =>
-      x.name === name
-    );
-    return priceInfoItem !== undefined ? priceInfoItem.value : 0;
+  pricecheckByName(name: string): SimpleItemPricing {
+    if (name === 'Chaos Orb') {
+      return { chaosequiv: 1, chaosequiv_min: 1, chaosequiv_max: 1, chaosequiv_mode: 1, chaosequiv_median: 1, chaosequiv_average: 1 };
+    }
+    const ninjaPriceInfoItem = this.ninjaService.ninjaPrices.find(x => x.name === name);
+    const watchPriceInfoItem = this.watchService.watchPrices.find(x => x.fullname === name);
+    return this.combinePricesToSimpleObject(ninjaPriceInfoItem, watchPriceInfoItem);
   }
-  pricecheckUnique(name: string, links: number) {
-    const priceInfoItem = this.ninjaService.ninjaPrices.find(x =>
-      x.name === name
-      && x.links === links
-    );
-    return priceInfoItem !== undefined ? priceInfoItem.value : 0;
+  pricecheckUnique(name: string, links: number): SimpleItemPricing {
+    const ninjaPriceInfoItem = this.ninjaService.ninjaPrices.find(x => x.name === name && x.links === links);
+    const watchPriceInfoItem = this.watchService.watchPrices.find(x => x.fullname === name && x.links === links);
+    return this.combinePricesToSimpleObject(ninjaPriceInfoItem, watchPriceInfoItem);
   }
   pricecheckRare(item: Item) {
     // todo: pricecheck towards new service for poeprices.info
-    return 0;
+    return { chaosequiv: 0, chaosequiv_min: 0, chaosequiv_max: 0, chaosequiv_mode: 0, chaosequiv_median: 0, chaosequiv_average: 0 };
   }
-  pricecheckGem(name: string, level: number, quality: number) {
-    const priceInfoItem = this.ninjaService.ninjaPrices.find(x =>
-      x.name === name
-      && x.gemLevel === level
-      && x.gemQuality === quality
-    );
-    return priceInfoItem !== undefined ? priceInfoItem.value : 0;
+  pricecheckGem(name: string, level: number, quality: number): SimpleItemPricing {
+    const ninjaPriceInfoItem = this.ninjaService.ninjaPrices.find(x => x.name === name && x.gemLevel === level && x.gemQuality === quality);
+    const watchPriceInfoItem = this.watchService.watchPrices.find(x => x.fullname === name && x.lvl === level && x.quality === quality);
+    return this.combinePricesToSimpleObject(ninjaPriceInfoItem, watchPriceInfoItem);
   }
-  pricecheckBase(baseType: string, ilvl: number = 0, variation: string = null) {
-    if (ilvl < 82) { return 0; }
-    if (ilvl > 86) { ilvl = 86; }
-    const priceInfoItem = this.ninjaService.ninjaPrices.find(x =>
-      x.baseType === baseType
-      && x.itemlevel === ilvl
-      && x.variation === variation
-    );
-    return priceInfoItem !== undefined ? priceInfoItem.value : 0;
+  pricecheckBase(baseType: string, ilvl: number = 0, variation: string = null): SimpleItemPricing {
+    if (ilvl < 82) {
+      return { chaosequiv: 1, chaosequiv_min: 1, chaosequiv_max: 1, chaosequiv_mode: 1, chaosequiv_median: 1, chaosequiv_average: 1 };
+    }
+    if (ilvl > 86) {
+      ilvl = 86;
+    }
+    // tslint:disable-next-line:max-line-length
+    const ninjaPriceInfoItem = this.ninjaService.ninjaPrices.find(x => x.baseType === baseType && x.itemlevel === ilvl && x.variation === variation);
+    const watchPriceInfoItem = this.watchService.watchPrices.find(x => x.type === baseType && x.ilvl === ilvl && x.variation === variation);
+    return this.combinePricesToSimpleObject(ninjaPriceInfoItem, watchPriceInfoItem);
   }
+
+  combinePricesToSimpleObject(ninjaPrice: NinjaPriceInfo, watchPrice: CombinedItemPriceInfo): SimpleItemPricing {
+    const pricing: SimpleItemPricing = {
+      chaosequiv: ninjaPrice !== undefined ? ninjaPrice.value : 0,
+      chaosequiv_min: watchPrice !== undefined ? watchPrice.min : 0,
+      chaosequiv_max: watchPrice !== undefined ? watchPrice.max : 0,
+      chaosequiv_mode: watchPrice !== undefined ? watchPrice.mode : 0,
+      chaosequiv_average: watchPrice !== undefined ? watchPrice.mean : 0,
+      chaosequiv_median: watchPrice !== undefined ? watchPrice.median : 0,
+    };
+    return pricing;
+  }
+
 }

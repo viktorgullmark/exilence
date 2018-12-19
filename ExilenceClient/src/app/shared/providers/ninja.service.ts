@@ -65,6 +65,11 @@ export class NinjaService {
           if (typeResponse !== null) {
             typeResponse.lines.forEach((line: NinjaLine) => {
               // Exclude low-confidence prices
+
+              if (line.icon !== undefined && line.icon !== null && line.icon.indexOf('relic=1') > -1) {
+                return;
+              }
+
               if (!this.lowConfidencePricing) {
                 const receive = line.receive;
                 if (receive !== undefined && receive !== null) {
@@ -110,6 +115,7 @@ export class NinjaService {
                   baseType: line.baseType
                 } as NinjaPriceInfo;
                 this.ninjaPrices.push(ninjaPriceInfoObj);
+
               }
             });
           } else {

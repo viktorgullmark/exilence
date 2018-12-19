@@ -10,18 +10,17 @@ import { Observable } from 'rxjs/Observable';
 
 import { HistoryHelper } from '../helpers/history.helper';
 import { NetWorthHistory, NetWorthItem, NetWorthSnapshot } from '../interfaces/income.interface';
+import { ItemPricing } from '../interfaces/item-pricing.interface';
 import { Item } from '../interfaces/item.interface';
 import { Player } from '../interfaces/player.interface';
-import { NinjaLine, NinjaTypes } from '../interfaces/poe-ninja.interface';
 import { Stash } from '../interfaces/stash.interface';
 import { AccountService } from './account.service';
 import { ExternalService } from './external.service';
 import { LogService } from './log.service';
 import { NinjaService } from './ninja.service';
 import { PartyService } from './party.service';
-import { SettingsService } from './settings.service';
 import { PricingService } from './pricing.service';
-import { ItemPricing } from '../interfaces/item-pricing.interface';
+import { SettingsService } from './settings.service';
 
 @Injectable()
 export class IncomeService implements OnDestroy {
@@ -141,12 +140,8 @@ export class IncomeService implements OnDestroy {
   PriceItems(items: Item[]) {
 
     // todo: base prices on this league
-    const priceInfoLeague = this.settingsService.get('account.tradeLeagueName');
-
     items.forEach((item: Item) => {
-
-      const itemPriceInfoObj: ItemPricing = this.pricingService.priceItem(item, priceInfoLeague);
-
+      const itemPriceInfoObj: ItemPricing = this.pricingService.priceItem(item);
       let stacksize = 1;
       let totalValueForItem = itemPriceInfoObj.chaosequiv;
       if (item.stackSize) {
