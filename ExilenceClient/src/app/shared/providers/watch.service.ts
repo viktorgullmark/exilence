@@ -51,10 +51,6 @@ export class WatchService {
         item.links = item.links || 0;
         item.quality = item.quality || 0;
         item.variation = item.variation || undefined;
-
-        if (item.name.indexOf('Prism') > -1) {
-          console.log(item);
-        }
       }
     });
   }
