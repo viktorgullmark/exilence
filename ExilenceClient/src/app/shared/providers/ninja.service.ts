@@ -39,7 +39,7 @@ export class NinjaService {
 
   getValuesFromNinja() {
     // todo: make sure to test that proper league is fetched here
-    const league = this.settingsService.get('tradeLeague');
+    const league = this.settingsService.get('account.tradeLeagueName');
     const tenMinutesAgo = (Date.now() - (1 * 60 * 10 * 1000));
     const length = this.ninjaPrices.length;
     if (length > 0 && (this.lastNinjaHit > tenMinutesAgo && !this.externalService.tradeLeagueChanged)) {
