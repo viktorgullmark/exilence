@@ -1,6 +1,9 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [0.9.1] - 2018-12-20
+- Fixed a bug where the net worth pricing would stop when poe.watch is down
+
 ## [0.9.0] - 2018-12-19
 - Added support for pricing of scarabs
 - Added support to price linked items
