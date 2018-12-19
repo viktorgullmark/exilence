@@ -237,19 +237,6 @@ export class IncomeService implements OnDestroy {
     });
   }
 
-  getItemLinks(arr) { // Get mode frequency
-    const numMapping = {};
-    let greatestFreq = 0;
-    arr.forEach(function findMode(number) {
-      numMapping[number] = (numMapping[number] || 0) + 1;
-
-      if (greatestFreq < numMapping[number]) {
-        greatestFreq = numMapping[number];
-      }
-    });
-    return greatestFreq;
-  }
-
   getValuesFromNinja(league: string) {
     const tenMinutesAgo = (Date.now() - (1 * 60 * 10 * 1000));
     const length = Object.values(this.ninjaPrices).length;
