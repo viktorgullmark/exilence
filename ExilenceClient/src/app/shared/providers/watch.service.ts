@@ -26,33 +26,35 @@ export class WatchService {
 
   UpdateItemsAndPrices(league: string): Observable<any> {
     this.logService.log('Starting to fetch items and prices from poe.watch');
-    return forkJoin([this.fetchPrices(league), this.fetchItems()]).map(res => {
-      this.itemPrices = res[0];
-      this.itemData = res[1];
-      this.watchPrices = this.itemData.map(x => Object.assign(x, this.itemPrices.find(y => y.id === x.id)));
-      this.logService.log('Finished fetching items and prices from poe.watch');
+    return forkJoin([
+      this.fetchPrices(league),
+      this.fetchItems()]).map(res => {
+        this.itemPrices = res[0];
+        this.itemData = res[1];
+        this.watchPrices = this.itemData.map(x => Object.assign(x, this.itemPrices.find(y => y.id === x.id)));
+        this.logService.log('Finished fetching items and prices from poe.watch');
 
-      for (let index = this.watchPrices.length - 1; index >= 0; index--) {
+        for (let index = this.watchPrices.length - 1; index >= 0; index--) {
 
-        const item = this.watchPrices[index];
+          const item = this.watchPrices[index];
 
-        if (item.icon.indexOf('relic=1') > -1) {
-          this.watchPrices.splice(index, 1);
-          continue;
+          if (item.icon.indexOf('relic=1') > -1) {
+            this.watchPrices.splice(index, 1);
+            continue;
+          }
+
+          const name = item.name !== null ? item.name : '';
+          const type = item.type !== null ? item.type : '';
+          const fullname = `${name} ${type}`.trim();
+          item.fullname = fullname;
+
+          item.lvl = item.lvl || 0;
+          item.ilvl = item.ilvl || 0;
+          item.links = item.links || 0;
+          item.quality = item.quality || 0;
+          item.variation = item.variation || undefined;
         }
-
-        const name = item.name !== null ? item.name : '';
-        const type = item.type !== null ? item.type : '';
-        const fullname = `${name} ${type}`.trim();
-        item.fullname = fullname;
-
-        item.lvl = item.lvl || 0;
-        item.ilvl = item.ilvl || 0;
-        item.links = item.links || 0;
-        item.quality = item.quality || 0;
-        item.variation = item.variation || undefined;
-      }
-    });
+      }).catch(e => Observable.of(null));
   }
 
   //#region External Calls
