@@ -1,7 +1,7 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
-## [0.9.0] - 2018-12-XX
+## [0.9.0] - 2018-12-19
 - Added support for pricing of scarabs
 - Added support to price linked items
 - Added support to price 6-socketed items
@@ -13,6 +13,7 @@ All notable changes to this project will be documented in this file.
 - Pricing of items should now be more accurate
 - Added a new, simplified launch-screen for existing users
 - Added persistance between restarts to mask-setting for groupnames
+- Fixed a bug where gain for the group summary was not updated properly
 
 ## [0.8.12] - 2018-12-18
 - Optimized memory usage by dropping disposing of unused objects
