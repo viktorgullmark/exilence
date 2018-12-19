@@ -16,12 +16,12 @@ export class PricingService {
   initPricingObject(): ItemPricing {
     return {
       name: '',
-      quality: -1,
-      sockets: -1,
-      links: -1,
-      chaosequiv: -1,
-      chaosequiv_average: -1,
-      chaosequiv_mean: -1
+      quality: 0,
+      sockets: 0,
+      links: 0,
+      chaosequiv: 0,
+      chaosequiv_average: 0,
+      chaosequiv_mean: 0
     } as ItemPricing;
   }
 
@@ -45,7 +45,7 @@ export class PricingService {
     if (item.sockets) { links = ItemHelper.getLinks(item.sockets.map(t => t.group)); }
     if (links < 5) { links = 0; }
     itemPricingObj.links = links;
-    itemPricingObj.sockets = item.sockets.length;
+    itemPricingObj.sockets = item.sockets !== undefined && item.sockets !== null ? item.sockets.length : 0;
 
     // assign if elder or shaper
     let elderOrShaper = null;
@@ -53,10 +53,12 @@ export class PricingService {
     if (item.shaper) { elderOrShaper = 'shaper'; }
 
     // parse item-quality
-    const quality =
-      item.properties.find(t => t.name === 'Quality') ?
-        item.properties.find(t => t.name === 'Quality').values[0][0] : '0';
-    itemPricingObj.quality = parseInt(quality, 10);
+    if (item.properties !== null && item.properties !== undefined) {
+      const quality =
+        item.properties.find(t => t.name === 'Quality') ?
+          item.properties.find(t => t.name === 'Quality').values[0][0] : '0';
+      itemPricingObj.quality = parseInt(quality, 10);
+    }
 
     // price items based on type
     let price = 0;
