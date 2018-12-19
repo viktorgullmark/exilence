@@ -158,7 +158,7 @@ export class PricingService {
   }
   pricecheckBase(baseType: string, ilvl: number = 0, variation: string = null): SimpleItemPricing {
     if (ilvl < 82) {
-      return { chaosequiv: 1, chaosequiv_min: 1, chaosequiv_max: 1, chaosequiv_mode: 1, chaosequiv_median: 1, chaosequiv_average: 1 };
+      return { chaosequiv: 0, chaosequiv_min: 0, chaosequiv_max: 0, chaosequiv_mode: 0, chaosequiv_median: 0, chaosequiv_average: 0 };
     }
     if (ilvl > 86) {
       ilvl = 86;
