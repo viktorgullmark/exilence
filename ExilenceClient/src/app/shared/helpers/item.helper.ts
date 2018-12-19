@@ -11,4 +11,11 @@ export class ItemHelper {
         });
         return greatestFreq;
     }
+    public static getItemName(typeline: string, name: string) {
+        let itemName = name;
+        if (typeline) {
+            itemName += ' ' + typeline;
+        }
+        return itemName.replace('<<set:MS>><<set:M>><<set:S>>', '').trim();
+    }
 }

@@ -12,22 +12,22 @@ export class PricingService {
   constructor(private ninjaService: NinjaService
   ) { }
 
-  priceItem(item: Item, league: string): ItemPricing {
-    const itemPricingObj: ItemPricing = {
+  initPricingObject(): ItemPricing {
+    return {
       name: '',
       quality: -1,
       sockets: -1,
       links: -1,
       chaosequiv: -1,
-    };
+    } as ItemPricing;
+  }
+
+  priceItem(item: Item, league: string): ItemPricing {
+
+    const itemPricingObj = this.initPricingObject();
 
     // format itemname
-    let itemName = item.name;
-    if (item.typeLine) {
-      itemName += ' ' + item.typeLine;
-    }
-    itemName = itemName.replace('<<set:MS>><<set:M>><<set:S>>', '').trim();
-    itemPricingObj.name = itemName;
+    itemPricingObj.name = ItemHelper.getItemName(item.typeLine, item.name);
 
     // calculate links & sockets for item
     let links = 0;
