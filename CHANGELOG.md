@@ -5,6 +5,7 @@ All notable changes to this project will be documented in this file.
 - Added support for pricing of scarabs
 - Added support to price linked items
 - Added support to price 6-socketed items
+- Added support to price elder/shaper items
 - Added support for pricing gems (with level and quality)
 - Added support to price basetypes (with and without elder/shaper)
 - Pricing of items should now be more accurate
