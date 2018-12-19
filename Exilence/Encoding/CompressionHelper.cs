@@ -24,9 +24,9 @@ namespace Exilence.Helper
             //inputStream is the output of the jsonString object.
             using (var inputStream = new MemoryStream())
             {
-                var output = LZ4Stream.Encode(inputStream).ToString();
+                var output = LZ4Stream.Encode(inputStream);
 
-                return output;
+                return output.ToString();
             }
         }
 
@@ -36,10 +36,10 @@ namespace Exilence.Helper
 
             byte[] inputBytes = Convert.FromBase64String(input);
 
-            using (var inputStream = new MemoryStream(inputBytes))
+            var inputStream = new MemoryStream(inputBytes);
+            var output = LZ4Stream.Decode(inputStream);
 
-
-            using (var streamReader = new StreamReader(gZipStream))
+            using (var streamReader = new StreamReader(output))
             {
                 jsonString = streamReader.ReadToEnd();
 
