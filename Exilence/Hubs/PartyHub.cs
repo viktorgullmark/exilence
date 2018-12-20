@@ -11,6 +11,7 @@ using Exilence.Interfaces;
 using Newtonsoft.Json;
 using Exilence.Models.Connection;
 using Exilence.Models.Statistics;
+using Microsoft.ApplicationInsights;
 
 namespace Exilence.Hubs
 {
@@ -20,14 +21,16 @@ namespace Exilence.Hubs
         private IDistributedCache _cache;
         private IRedisRepository _redisRepository;
         private ILadderService _ladderService;
+        private TelemetryClient _telemetry;
 
         private string ConnectionId => Context.ConnectionId;
         
-        public PartyHub(IDistributedCache cache, IRedisRepository redisRepository, ILadderService ladderService)
+        public PartyHub(IDistributedCache cache, IRedisRepository redisRepository, ILadderService ladderService, TelemetryClient telemetry)
         {
             _cache = cache;
             _redisRepository = redisRepository;
             _ladderService = ladderService;
+            _telemetry = telemetry;
         }
                 
         public async Task JoinParty(string partyName, string playerObj)

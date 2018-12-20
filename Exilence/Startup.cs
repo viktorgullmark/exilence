@@ -5,6 +5,7 @@ using Exilence.Repositories;
 using Exilence.Services;
 using Hangfire;
 using Hangfire.MemoryStorage;
+using Microsoft.ApplicationInsights.Extensibility;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpOverrides;
@@ -29,6 +30,9 @@ namespace Exilence
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddSingleton<ITelemetryInitializer>();
+       
+            services.AddApplicationInsightsTelemetry();
             //services.AddDbContext<StoreContext>(options => options.UseSqlite("Data Source=store.db"));
 
             services.AddHangfire(c => c.UseMemoryStorage());
