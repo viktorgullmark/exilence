@@ -23,6 +23,7 @@ import { ExtendedAreaInfo } from '../interfaces/area.interface';
 import { HistoryHelper } from '../helpers/history.helper';
 import { LeagueWithPlayers } from '../interfaces/league.interface';
 import { Subscription } from 'rxjs';
+import { ServerMessage } from '../interfaces/server-message.interface';
 
 @Injectable()
 export class PartyService implements OnDestroy {
@@ -46,6 +47,8 @@ export class PartyService implements OnDestroy {
   public recentPrivatePlayers: string[] = [];
   public playerLeagues: BehaviorSubject<LeagueWithPlayers[]> = new BehaviorSubject<LeagueWithPlayers[]>([]);
   public genericPlayers: BehaviorSubject<Player[]> = new BehaviorSubject<Player[]>([]);
+
+  public serverMessageReceived: BehaviorSubject<ServerMessage> = new BehaviorSubject<ServerMessage>(undefined);
 
   private reconnectAttempts: number;
   private forceClosed: boolean;
@@ -71,7 +74,6 @@ export class PartyService implements OnDestroy {
     private messageValueService: MessageValueService,
     private settingsService: SettingsService
   ) {
-
     this.reconnectAttempts = 0;
     this.forceClosed = false;
 
@@ -188,6 +190,13 @@ export class PartyService implements OnDestroy {
         }
         this.logService.log('player left:', player);
       });
+    });
+
+    this._hubConnection.on('ServerMessageReceived', (data: ServerMessage) => {
+
+      this.serverMessageReceived.next(data);
+
+      this.logService.log('server message received:', data.body);
     });
 
     this._hubConnection.on('ForceDisconnect', () => {

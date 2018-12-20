@@ -13,6 +13,9 @@ import { PartyService } from '../shared/providers/party.service';
 import { RobotService } from '../shared/providers/robot.service';
 import { Subscription } from 'rxjs';
 import { SettingsService } from '../shared/providers/settings.service';
+import { MatDialog } from '@angular/material';
+import { ServerMessageDialogComponent } from './components/server-message-dialog/server-message-dialog.component';
+import { ServerMessage } from '../shared/interfaces/server-message.interface';
 
 @Component({
   selector: 'app-authorize',
@@ -23,6 +26,7 @@ export class AuthorizeComponent implements OnInit, OnDestroy {
   form: FormGroup;
   player: Player;
   private playerSub: Subscription;
+  private serverMsgSub: Subscription;
   constructor(@Inject(FormBuilder) fb: FormBuilder,
     public partyService: PartyService,
     private mapService: MapService,
@@ -33,6 +37,7 @@ export class AuthorizeComponent implements OnInit, OnDestroy {
     private incomeService: IncomeService,
     private electronService: ElectronService,
     private settingsService: SettingsService,
+    private dialog: MatDialog,
     private router: Router) {
     this.form = fb.group({
       partyCode: [this.partyService.party.name !== '' ? this.partyService.party.name : this.generatePartyName(),
@@ -44,11 +49,34 @@ export class AuthorizeComponent implements OnInit, OnDestroy {
     this.playerSub = this.accountService.player.subscribe(res => {
       this.player = res;
     });
+    this.serverMsgSub = this.partyService.serverMessageReceived.subscribe(res => {
+      if (res !== undefined) {
+        console.log(res);
+        this.openServerMsgDialog(res);
+      }
+    });
+  }
+
+  openServerMsgDialog(data: ServerMessage): void {
+    const dialogRef = this.dialog.open(ServerMessageDialogComponent, {
+      width: '650px',
+      data: {
+        icon: 'error',
+        title: data.title,
+        content: data.body
+      }
+    });
+    this.electronService.ipcRenderer.send('servermsg');
+    dialogRef.afterClosed().subscribe(result => {
+    });
   }
 
   ngOnDestroy() {
     if (this.playerSub !== undefined) {
       this.playerSub.unsubscribe();
+    }
+    if (this.serverMsgSub !== undefined) {
+      this.serverMsgSub.unsubscribe();
     }
   }
 
