@@ -158,9 +158,10 @@ export class PricingService {
     if (uniquename === '' || uniquename === undefined || uniquename === null) { // ignore unidentified uniques
       return { chaosequiv: 0, chaosequiv_min: 0, chaosequiv_max: 0, chaosequiv_mode: 0, chaosequiv_median: 0, chaosequiv_average: 0 };
     }
+
     const ninjaPriceInfoItem = this.ninjaService.ninjaPrices.find(x => x.name === name
       && x.links === links
-      && ((x.variation === undefined || x.variation === null || x.variation.indexOf('jewel') === -1)
+      && ((x.variation === undefined || x.variation === null || x.variation.indexOf('Jewel') === -1)
         || +x.variation.substring(0, 1) === abyssalsockets)
     );
     const watchPriceInfoItem = this.watchService.watchPrices.find(x => x.fullname === name && x.links === links);
