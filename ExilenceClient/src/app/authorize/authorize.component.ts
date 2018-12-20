@@ -51,24 +51,27 @@ export class AuthorizeComponent implements OnInit, OnDestroy {
     });
     this.serverMsgSub = this.partyService.serverMessageReceived.subscribe(res => {
       if (res !== undefined) {
-        console.log(res);
         this.openServerMsgDialog(res);
+        // clear message after it has been displayed
+        this.partyService.serverMessageReceived.next(undefined);
       }
     });
   }
 
   openServerMsgDialog(data: ServerMessage): void {
-    const dialogRef = this.dialog.open(ServerMessageDialogComponent, {
-      width: '650px',
-      data: {
-        icon: 'error',
-        title: data.title,
-        content: data.body
-      }
-    });
-    this.electronService.ipcRenderer.send('servermsg');
-    dialogRef.afterClosed().subscribe(result => {
-    });
+    setTimeout(() => {
+      const dialogRef = this.dialog.open(ServerMessageDialogComponent, {
+        width: '650px',
+        data: {
+          icon: 'error',
+          title: data.title,
+          content: data.body
+        }
+      });
+      this.electronService.ipcRenderer.send('servermsg');
+      dialogRef.afterClosed().subscribe(result => {
+      });
+    }, 0);
   }
 
   ngOnDestroy() {
