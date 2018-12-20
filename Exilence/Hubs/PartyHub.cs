@@ -10,6 +10,7 @@ using System.Linq;
 using Exilence.Interfaces;
 using Newtonsoft.Json;
 using Exilence.Models.Connection;
+using Exilence.Models.Statistics;
 
 namespace Exilence.Hubs
 {
@@ -53,6 +54,7 @@ namespace Exilence.Hubs
                 party = new PartyModel() { Name = partyName, Players = new List<PlayerModel> { player } };
                 await _cache.SetAsync<PartyModel>($"party:{partyName}", party);
                 await Clients.Caller.SendAsync("EnteredParty", CompressionHelper.Compress(party), CompressionHelper.Compress(player));
+                await _redisRepository.UpdateStatistics(StatisticsActionEnum.IncrementParty);
             }
             else
             {
@@ -74,6 +76,8 @@ namespace Exilence.Hubs
                 await Clients.Caller.SendAsync("EnteredParty", CompressionHelper.Compress(party), CompressionHelper.Compress(player));
             }
 
+
+            await _redisRepository.UpdateStatistics(StatisticsActionEnum.IncrementPlayer);
             await Groups.AddToGroupAsync(Context.ConnectionId, partyName);
             await Clients.OthersInGroup(partyName).SendAsync("PlayerJoined", CompressionHelper.Compress(player));
             await Clients.Group(partyName).SendAsync("PlayerUpdated", CompressionHelper.Compress(player));
@@ -96,6 +100,7 @@ namespace Exilence.Hubs
 
                 var foundPlayer = foundParty.Players.FirstOrDefault(x => x.ConnectionID == player.ConnectionID);
 
+                await _redisRepository.UpdateStatistics(StatisticsActionEnum.DecrementPlayer);
                 foundParty.Players.Remove(foundPlayer);                
                 var success = RemoveFromIndex();
 
@@ -105,6 +110,7 @@ namespace Exilence.Hubs
                 }
                 else
                 {
+                    await _redisRepository.UpdateStatistics(StatisticsActionEnum.DecrementParty);
                     await _cache.RemoveAsync($"party:{partyName}");
                 }
 
