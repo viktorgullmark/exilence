@@ -111,7 +111,7 @@ export class NinjaService {
                   links: links,
                   gemQuality: line.gemQuality,
                   gemLevel: line.gemLevel,
-                  variation: line.variation,
+                  variation: line.variant,
                   baseType: line.baseType
                 } as NinjaPriceInfo;
                 this.ninjaPrices.push(ninjaPriceInfoObj);

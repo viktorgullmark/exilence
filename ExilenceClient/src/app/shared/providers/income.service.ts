@@ -152,6 +152,10 @@ export class IncomeService implements OnDestroy {
       // If item already exists in array, update existing
       const existingItem = this.totalNetWorthItems.find(x =>
         x.name === itemPriceInfoObj.name
+        && x.quality === itemPriceInfoObj.quality
+        && x.links === itemPriceInfoObj.links
+        && x.gemLevel === itemPriceInfoObj.gemlevel
+        && x.variation === itemPriceInfoObj.variation
       );
       if (existingItem !== undefined) {
         const indexOfItem = this.totalNetWorthItems.indexOf(existingItem);
@@ -171,7 +175,8 @@ export class IncomeService implements OnDestroy {
           stacksize,
           links: itemPriceInfoObj.links,
           gemLevel: itemPriceInfoObj.gemlevel,
-          quality: itemPriceInfoObj.quality
+          quality: itemPriceInfoObj.quality,
+          variation: itemPriceInfoObj.variation
         };
         this.totalNetWorthItems.push(netWorthItem);
       }
