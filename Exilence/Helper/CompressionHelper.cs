@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Exilence.Models;
+using Microsoft.ApplicationInsights;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 
@@ -15,9 +17,13 @@ namespace Exilence.Helper
     {
         public static string Compress<T>(T input)
         {
+            var sw = new Stopwatch();
+            var _telemetry = new TelemetryClient();
+
             var jsonString = JsonConvert.SerializeObject(input, new JsonSerializerSettings { ContractResolver = new CamelCasePropertyNamesContractResolver() });
 
             var buffer = Encoding.UTF8.GetBytes(jsonString);
+            string base64String = null;
 
             using (var outputStream = new MemoryStream())
             {
@@ -26,16 +32,23 @@ namespace Exilence.Helper
 
                 var outputBytes = outputStream.ToArray();
 
-                var base64String = Convert.ToBase64String(outputBytes);
+                base64String = Convert.ToBase64String(outputBytes);
 
-                return base64String;
             }
+
+            var elapsed = sw.ElapsedMilliseconds * 1000;
+            _telemetry.GetMetric("CompressionHelper.Compress").TrackValue(elapsed);
+            
+            return base64String;
+
         }
 
         public static T Decompress<T>(string input)
         {
-            string jsonString = null;
+            var sw = new Stopwatch();
+            var _telemetry = new TelemetryClient(); 
 
+            string jsonString = null;
 
             byte[] inputBytes = Convert.FromBase64String(input);
 
@@ -46,6 +59,9 @@ namespace Exilence.Helper
                 jsonString = streamReader.ReadToEnd();
 
             }
+
+            var elapsed = sw.ElapsedMilliseconds * 1000;
+            _telemetry.GetMetric("CompressionHelper.Decompress").TrackValue(elapsed);
 
             return JsonConvert.DeserializeObject<T>(jsonString);
 
