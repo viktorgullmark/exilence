@@ -75,7 +75,7 @@ export interface NinjaLine {
     gemLevel?: number;
     gemQuality?: number;
     pay?: any;
-    variation?: string;
+    variant?: string;
     icon: string;
 }
 

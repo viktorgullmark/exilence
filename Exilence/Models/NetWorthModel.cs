@@ -15,6 +15,7 @@ namespace Exilence.Models
         public int Stacksize { get; set; }
         public int? Links { get; set; }
         public int? Quality { get; set; }
+        public int? Variation { get; set; }
     }
 
     [Serializable]

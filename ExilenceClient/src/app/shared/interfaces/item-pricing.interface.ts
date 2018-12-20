@@ -4,6 +4,7 @@ export interface ItemPricing {
     gemlevel: number;
     sockets: number;
     links: number;
+    variation: string;
     chaosequiv: number;
     chaosequiv_min: number;
     chaosequiv_max: number;

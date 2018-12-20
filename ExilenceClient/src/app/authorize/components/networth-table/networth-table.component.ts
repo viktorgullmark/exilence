@@ -118,6 +118,8 @@ export class NetworthTableComponent implements OnInit, OnDestroy {
             x.name === item.name
             && x.quality === item.quality
             && x.links === item.links
+            && x.gemLevel === item.gemLevel
+            && x.variation === item.variation
           );
           if (existingItem !== undefined) {
             const recentItem = Object.assign({}, item);
@@ -153,6 +155,8 @@ export class NetworthTableComponent implements OnInit, OnDestroy {
         x.name === snapshot.name
         && x.quality === snapshot.quality
         && x.links === snapshot.links
+        && x.gemLevel === snapshot.gemLevel
+        && x.variation === snapshot.variation
       );
       if (existingItem !== undefined) {
         const indexOfItem = this.dataSource.indexOf(existingItem);
@@ -186,6 +190,8 @@ export class NetworthTableComponent implements OnInit, OnDestroy {
         x.name === snapshot.name
         && x.quality === snapshot.quality
         && x.links === snapshot.links
+        && x.gemLevel === snapshot.gemLevel
+        && x.variation === snapshot.variation
       );
       if (existingItem !== undefined) {
         const indexOfItem = this.dataSource.indexOf(existingItem);

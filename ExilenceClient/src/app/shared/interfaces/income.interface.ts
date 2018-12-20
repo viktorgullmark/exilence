@@ -18,4 +18,5 @@ export interface NetWorthItem {
   quality: number;
   gemLevel: number;
   links: number;
+  variation: string;
 }

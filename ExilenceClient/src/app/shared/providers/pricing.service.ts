@@ -27,6 +27,7 @@ export class PricingService {
       gemlevel: 0,
       sockets: 0,
       links: 0,
+      variation: '',
       chaosequiv: 0,
       chaosequiv_min: 0,
       chaosequiv_max: 0,
@@ -68,6 +69,8 @@ export class PricingService {
     if (item.elder) { elderOrShaper = 'elder'; }
     if (item.shaper) { elderOrShaper = 'shaper'; }
 
+
+
     // parse item-quality
     if (item.properties !== null && item.properties !== undefined) {
       const quality =
@@ -86,6 +89,11 @@ export class PricingService {
       chaosequiv_average: 0
     };
 
+    let abyssalsockets;
+    if (item.sockets !== undefined && item.sockets !== null) {
+      abyssalsockets = item.sockets.filter(x => x.sColour === 'A' || x.sColour === 'a').length;
+    }
+
     switch (item.frameType) {
       case 0: // Normal
         price = this.pricecheckBase(item.typeLine, item.ilvl, elderOrShaper);
@@ -95,7 +103,7 @@ export class PricingService {
         price = this.pricecheckRare(item);
         break;
       case 3: // Unique
-        price = this.pricecheckUnique(itemPricingObj.name, links, item.name);
+        price = this.pricecheckUnique(itemPricingObj.name, links, item.name, abyssalsockets);
         break;
       case 4: // Gem
         const levelStr = item.properties.find(t => t.name === 'Level').values[0][0];
@@ -142,11 +150,15 @@ export class PricingService {
     const watchPriceInfoItem = this.watchService.watchPrices.find(x => x.fullname === name);
     return this.combinePricesToSimpleObject(ninjaPriceInfoItem, watchPriceInfoItem);
   }
-  pricecheckUnique(name: string, links: number, uniquename: string): SimpleItemPricing {
+  pricecheckUnique(name: string, links: number, uniquename: string, abyssalsockets: number = 0): SimpleItemPricing {
     if (uniquename === '' || uniquename === undefined || uniquename === null) { // ignore unidentified uniques
       return { chaosequiv: 0, chaosequiv_min: 0, chaosequiv_max: 0, chaosequiv_mode: 0, chaosequiv_median: 0, chaosequiv_average: 0 };
     }
-    const ninjaPriceInfoItem = this.ninjaService.ninjaPrices.find(x => x.name === name && x.links === links);
+    const ninjaPriceInfoItem = this.ninjaService.ninjaPrices.find(x => x.name === name
+      && x.links === links
+      && ((x.variation === undefined || x.variation === null || x.variation.indexOf('jewel') === -1)
+        || +x.variation.substring(0, 1) === abyssalsockets)
+    );
     const watchPriceInfoItem = this.watchService.watchPrices.find(x => x.fullname === name && x.links === links);
     return this.combinePricesToSimpleObject(ninjaPriceInfoItem, watchPriceInfoItem);
   }

@@ -1,6 +1,10 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [0.9.2] - 2018-12-20
+- Added support for abyssal sockets when pricing uniques
+- Fixed a bug where existing items would sometimes be mismatched
+
 ## [0.9.1] - 2018-12-20
 - Fixed a bug where the net worth pricing would stop when poe.watch is down
 - Fixed a bug where some bases would always be priced at 1 chaos
