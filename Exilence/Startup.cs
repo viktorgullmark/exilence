@@ -75,8 +75,8 @@ namespace Exilence
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
-                //var telemetryConfig = app.ApplicationServices.GetService<Microsoft.ApplicationInsights.Extensibility.TelemetryConfiguration>();
-                //telemetryConfig.DisableTelemetry = true;
+                var telemetryConfig = app.ApplicationServices.GetService<Microsoft.ApplicationInsights.Extensibility.TelemetryConfiguration>();
+                telemetryConfig.DisableTelemetry = true;
             }
 
             app.UseMvc();
