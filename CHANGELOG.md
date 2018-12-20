@@ -2,6 +2,7 @@
 All notable changes to this project will be documented in this file.
 
 ## [0.9.2] - 2018-12-20
+- Added support for scarabs/fragments/vessels and other common items in net worth
 - Added support for abyssal sockets when pricing uniques
 - Added proper backgrounds for elder/shaper items
 - Added a loading-indicator on the new login-screen

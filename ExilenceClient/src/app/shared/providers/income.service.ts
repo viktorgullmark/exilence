@@ -257,8 +257,8 @@ export class IncomeService implements OnDestroy {
       }
     }
 
-    if (selectedStashTabs.length > 20) {
-      selectedStashTabs = selectedStashTabs.slice(0, 19);
+    if (selectedStashTabs.length > 21) {
+      selectedStashTabs = selectedStashTabs.slice(0, 20);
     }
 
     return Observable.from(selectedStashTabs)

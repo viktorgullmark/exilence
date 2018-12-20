@@ -96,7 +96,11 @@ export class PricingService {
 
     switch (item.frameType) {
       case 0: // Normal
-        price = this.pricecheckBase(item.typeLine, item.ilvl, elderOrShaper);
+        if (item.ilvl > 0) {
+          price = this.pricecheckBase(item.typeLine, item.ilvl, elderOrShaper);
+        } else { // fragment or scarab
+          price = this.pricecheckByName(itemPricingObj.name);
+        }
         break;
       case 1: // Magic
       case 2: // Rare
@@ -172,7 +176,7 @@ export class PricingService {
     return this.combinePricesToSimpleObject(ninjaPriceInfoItem, watchPriceInfoItem);
   }
   pricecheckBase(baseType: string, ilvl: number = 0, variation: string = null): SimpleItemPricing {
-    if (ilvl < 82) {
+    if (ilvl < 82 && ilvl > 0) {
       return { chaosequiv: 0, chaosequiv_min: 0, chaosequiv_max: 0, chaosequiv_mode: 0, chaosequiv_median: 0, chaosequiv_average: 0 };
     }
     if (ilvl > 86) {
