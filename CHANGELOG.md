@@ -5,6 +5,7 @@ All notable changes to this project will be documented in this file.
 - Added support for abyssal sockets when pricing uniques
 - Added proper backgrounds for elder/shaper items
 - Added a loading-indicator on the new login-screen
+- Added a popup to display important server-notifications
 - Fixed a bug where existing items would sometimes be mismatched
 - Minor style-tweaks to net worth table
 
