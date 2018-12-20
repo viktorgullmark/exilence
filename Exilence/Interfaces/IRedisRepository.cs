@@ -1,6 +1,7 @@
 ﻿using Exilence.Models;
 using Exilence.Models.Connection;
 using Exilence.Models.Ladder;
+using Exilence.Models.Statistics;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -26,5 +27,8 @@ namespace Exilence.Interfaces
         Task<bool> RemoveConnection(string connectionId);
 
         Task<PartyModel> GetParty(string partyName);
+
+        Task<Statistics> GetStatistics();
+        Task UpdateStatistics(StatisticsActionEnum action);
     }
 }

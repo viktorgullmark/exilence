@@ -3,6 +3,7 @@ using Exilence.Interfaces;
 using Exilence.Models;
 using Exilence.Models.Connection;
 using Exilence.Models.Ladder;
+using Exilence.Models.Statistics;
 using Microsoft.Extensions.Caching.Distributed;
 using System;
 using System.Collections.Generic;
@@ -209,5 +210,49 @@ namespace Exilence.Repositories
             return party;
         }
         #endregion
+
+
+        #region Statistics
+
+        public async Task<Statistics> GetStatistics()
+        {
+            var statistics = await _cache.GetAsync<Statistics>($"statistics");
+            return statistics;
+        }
+
+        public async Task UpdateStatistics(StatisticsActionEnum action)
+        {
+
+            var statistics = await _cache.GetAsync<Statistics>($"statistics");
+
+            if (statistics == null)
+            {
+                statistics = new Statistics();
+            }
+
+            switch (action)
+            {
+                case StatisticsActionEnum.IncrementParty:
+                    statistics.PartyCount++;
+                    break;
+                case StatisticsActionEnum.DecrementParty:
+                    statistics.PartyCount--;
+                    break;
+                case StatisticsActionEnum.IncrementPlayer:
+                    statistics.PlayerCount++;
+                    break;
+                case StatisticsActionEnum.DecrementPlayer:
+                    statistics.PlayerCount--;
+                    break;
+                default:
+                    break;
+            }
+
+            await _cache.SetAsync($"statistics", statistics);
+        }
+
+
+        #endregion
+
     }
 }
