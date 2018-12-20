@@ -98,6 +98,10 @@ ipcMain.on('disconnect', function (event) {
   windows[ExileWindowEnum.Main].flashFrame(true);
 });
 
+ipcMain.on('servermsg', function (event) {
+  windows[ExileWindowEnum.Main].flashFrame(true);
+});
+
 autoUpdater.logger = log;
 autoUpdater.logger.transports.file.level = 'info';
 log.info('App starting...');
