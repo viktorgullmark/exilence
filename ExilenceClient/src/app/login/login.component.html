@@ -12,6 +12,10 @@
       <mat-grid-tile [colspan]="2" [rowspan]="1">
         <button class="full-width" mat-raised-button color="primary" (click)="login()">Log me in</button>
       </mat-grid-tile>
+      <mat-grid-tile [colspan]="4" [rowspan]="1">
+        <mat-progress-bar *ngIf="isLoading" class="progress-bar" color="primary" mode="indeterminate">
+        </mat-progress-bar>
+      </mat-grid-tile>
     </mat-grid-list>
   </div>
   <div [hidden]="!shouldSetup && !sessionService.completedLogin">
