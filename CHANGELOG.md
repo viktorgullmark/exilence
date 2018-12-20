@@ -3,6 +3,7 @@ All notable changes to this project will be documented in this file.
 
 ## [0.9.2] - 2018-12-20
 - Added support for abyssal sockets when pricing uniques
+- Added a loading-indicator on the new login-screen
 - Fixed a bug where existing items would sometimes be mismatched
 - Minor style-tweaks to net worth table
 
