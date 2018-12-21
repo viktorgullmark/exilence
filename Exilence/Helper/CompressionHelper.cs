@@ -17,8 +17,9 @@ namespace Exilence.Helper
     {
         public static string Compress<T>(T input)
         {
-            var sw = new Stopwatch();
             var _telemetry = new TelemetryClient();
+            var sw = new Stopwatch();
+            sw.Start();
 
             var jsonString = JsonConvert.SerializeObject(input, new JsonSerializerSettings { ContractResolver = new CamelCasePropertyNamesContractResolver() });
 
@@ -36,7 +37,7 @@ namespace Exilence.Helper
 
             }
 
-            var elapsed = sw.ElapsedMilliseconds * 1000;
+            var elapsed = sw.ElapsedMilliseconds / 1000;
             _telemetry.GetMetric("CompressionHelper.Compress").TrackValue(elapsed);
             
             return base64String;
@@ -45,8 +46,9 @@ namespace Exilence.Helper
 
         public static T Decompress<T>(string input)
         {
-            var sw = new Stopwatch();
             var _telemetry = new TelemetryClient(); 
+            var sw = new Stopwatch();
+            sw.Start();
 
             string jsonString = null;
 
@@ -60,7 +62,7 @@ namespace Exilence.Helper
 
             }
 
-            var elapsed = sw.ElapsedMilliseconds * 1000;
+            var elapsed = sw.ElapsedMilliseconds / 1000;
             _telemetry.GetMetric("CompressionHelper.Decompress").TrackValue(elapsed);
 
             return JsonConvert.DeserializeObject<T>(jsonString);
