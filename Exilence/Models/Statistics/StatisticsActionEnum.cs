@@ -10,6 +10,8 @@ namespace Exilence.Models.Statistics
         IncrementParty = 0,
         DecrementParty = 1,
         IncrementPlayer = 2,
-        DecrementPlayer = 3
+        DecrementPlayer = 3,
+        IncrementConnection = 4,
+        DecrementConnection = 5
     }
 }

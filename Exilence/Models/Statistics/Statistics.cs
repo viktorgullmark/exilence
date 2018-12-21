@@ -8,13 +8,15 @@ namespace Exilence.Models.Statistics
     [Serializable]
     public class Statistics
     {
-        public int PartyCount { get; set; }
-        public int PlayerCount { get; set; }
+        public int Parties { get; set; }
+        public int Players { get; set; }
+        public int Connections { get; set; }
 
         public Statistics()
         {
-            PartyCount = 0;
-            PlayerCount = 0;
+            Parties = 0;
+            Players = 0;
+            Connections = 0;
         }
     }
 }
