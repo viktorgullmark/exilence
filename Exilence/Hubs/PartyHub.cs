@@ -37,6 +37,7 @@ namespace Exilence.Hubs
         public async Task JoinParty(string partyName, string playerObj)
         {
             var sw = new Stopwatch();
+            sw.Start();
 
             var player = CompressionHelper.Decompress<PlayerModel>(playerObj);
 
@@ -88,7 +89,7 @@ namespace Exilence.Hubs
             await Clients.OthersInGroup(partyName).SendAsync("PlayerJoined", CompressionHelper.Compress(player));
             await Clients.Group(partyName).SendAsync("PlayerUpdated", CompressionHelper.Compress(player));
 
-            var elapsed = sw.ElapsedMilliseconds * 1000;
+            var elapsed = sw.ElapsedMilliseconds / 1000;
             _telemetry.GetMetric("PartyHub.JoinParty").TrackValue(elapsed);
         }
 
@@ -132,6 +133,8 @@ namespace Exilence.Hubs
         public async Task UpdatePlayer(string partyName, string playerObj)
         {
             var sw = new Stopwatch();
+            sw.Start();
+
             var player = CompressionHelper.Decompress<PlayerModel>(playerObj);
             var party = await _cache.GetAsync<PartyModel>($"party:{partyName}");
 
@@ -158,7 +161,7 @@ namespace Exilence.Hubs
                 await Clients.Group(partyName).SendAsync("ForceDisconnect");
             }
 
-            var elapsed = sw.ElapsedMilliseconds * 1000;
+            var elapsed = sw.ElapsedMilliseconds / 1000;
             _telemetry.GetMetric("PartyHub.UpdatePlayer").TrackValue(elapsed);
         }
         public async Task GenericUpdatePlayer(PlayerModel player, string partyName)
