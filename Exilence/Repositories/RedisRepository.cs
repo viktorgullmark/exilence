@@ -250,16 +250,22 @@ namespace Exilence.Repositories
             switch (action)
             {
                 case StatisticsActionEnum.IncrementParty:
-                    statistics.PartyCount++;
+                    statistics.Parties++;
                     break;
                 case StatisticsActionEnum.DecrementParty:
-                    statistics.PartyCount--;
+                    statistics.Parties--;
                     break;
                 case StatisticsActionEnum.IncrementPlayer:
-                    statistics.PlayerCount++;
+                    statistics.Players++;
                     break;
                 case StatisticsActionEnum.DecrementPlayer:
-                    statistics.PlayerCount--;
+                    statistics.Players--;
+                    break;
+                case StatisticsActionEnum.IncrementConnection:
+                    statistics.Connections++;
+                    break;
+                case StatisticsActionEnum.DecrementConnection:
+                    statistics.Connections--;
                     break;
                 default:
                     break;
