@@ -125,10 +125,10 @@ export class PricingService {
         price = this.pricecheckByName(itemPricingObj.name);
         break;
       case 6: // Divination Card
-        price = this.pricecheckByName(itemPricingObj.name);
+        price = this.priceCheckDivinationCard(itemPricingObj.name);
         break;
       case 8: // Prophecy
-        price = this.pricecheckByName(itemPricingObj.name);
+        price = this.priceCheckPropechy(itemPricingObj.name);
         break;
       case 9: // Relic
         break;
@@ -152,6 +152,16 @@ export class PricingService {
     }
     const ninjaPriceInfoItem = this.ninjaService.ninjaPrices.find(x => x.name === name);
     const watchPriceInfoItem = this.watchService.watchPrices.find(x => x.fullname === name);
+    return this.combinePricesToSimpleObject(ninjaPriceInfoItem, watchPriceInfoItem);
+  }
+  priceCheckPropechy(name: string): SimpleItemPricing {
+    const ninjaPriceInfoItem = this.ninjaService.ninjaPrices.find(x => x.name === name && x.icon.indexOf('Currency') > -1);
+    const watchPriceInfoItem = this.watchService.watchPrices.find(x => x.fullname === name && x.category === 'prophecy');
+    return this.combinePricesToSimpleObject(ninjaPriceInfoItem, watchPriceInfoItem);
+  }
+  priceCheckDivinationCard(name: string): SimpleItemPricing {
+    const ninjaPriceInfoItem = this.ninjaService.ninjaPrices.find(x => x.name === name && x.icon.indexOf('Divination') > -1);
+    const watchPriceInfoItem = this.watchService.watchPrices.find(x => x.fullname === name && x.category === 'card');
     return this.combinePricesToSimpleObject(ninjaPriceInfoItem, watchPriceInfoItem);
   }
   pricecheckUnique(name: string, links: number, uniquename: string, abyssalsockets: number = 0): SimpleItemPricing {

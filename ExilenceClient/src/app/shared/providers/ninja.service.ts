@@ -64,7 +64,6 @@ export class NinjaService {
         .do(typeResponse => {
           if (typeResponse !== null) {
             typeResponse.lines.forEach((line: NinjaLine) => {
-              // Exclude low-confidence prices
 
               if (line.icon !== undefined && line.icon !== null && line.icon.indexOf('relic=1') > -1) {
                 return;
@@ -112,7 +111,8 @@ export class NinjaService {
                   gemQuality: line.gemQuality,
                   gemLevel: line.gemLevel,
                   variation: line.variant,
-                  baseType: line.baseType
+                  baseType: line.baseType,
+                  icon: line.icon
                 } as NinjaPriceInfo;
                 this.ninjaPrices.push(ninjaPriceInfoObj);
 

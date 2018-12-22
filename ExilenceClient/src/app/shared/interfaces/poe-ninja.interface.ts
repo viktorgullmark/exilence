@@ -88,6 +88,7 @@ export interface NinjaPriceInfo {
     itemlevel: number;
     baseType: string;
     links: number;
+    icon: string;
 }
 
 export interface NinjaCurrencyDetail {
