@@ -30,5 +30,6 @@ namespace Exilence.Interfaces
 
         Task<Statistics> GetStatistics();
         Task UpdateStatistics(StatisticsActionEnum action);
+        Task ResetStatistics();
     }
 }

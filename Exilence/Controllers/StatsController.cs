@@ -49,5 +49,14 @@ namespace Exilence
         }
 
 
+        // GET: /<controller>/
+        [Route("Reset")]
+        public async Task<IActionResult> Reset()
+        {
+            await _redisRepository.ResetStatistics();
+            return Ok();
+        }
+
+
     }
 }

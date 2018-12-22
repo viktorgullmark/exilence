@@ -274,6 +274,12 @@ namespace Exilence.Repositories
             await _cache.SetAsync($"statistics", statistics);
         }
 
+        public async Task ResetStatistics()
+        {
+            var statistics = new Statistics();
+            await _cache.SetAsync($"statistics", statistics);
+        }
+
 
         #endregion
 
