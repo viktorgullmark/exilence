@@ -61,6 +61,7 @@ namespace Exilence.Hubs
                 party = new PartyModel() { Name = partyName, Players = new List<PlayerModel> { player } };
                 await _cache.SetAsync<PartyModel>($"party:{partyName}", party);
                 await Clients.Caller.SendAsync("EnteredParty", CompressionHelper.Compress(party), CompressionHelper.Compress(player));
+                await _redisRepository.UpdateStatistics(StatisticsActionEnum.IncrementParty);
             }
             else
             {
@@ -80,7 +81,6 @@ namespace Exilence.Hubs
 
                 await _cache.SetAsync<PartyModel>($"party:{partyName}", party);
                 await Clients.Caller.SendAsync("EnteredParty", CompressionHelper.Compress(party), CompressionHelper.Compress(player));
-                await _redisRepository.UpdateStatistics(StatisticsActionEnum.IncrementParty);
             }
 
             await Groups.AddToGroupAsync(Context.ConnectionId, partyName);
