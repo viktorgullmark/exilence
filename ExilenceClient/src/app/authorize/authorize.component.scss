@@ -26,7 +26,19 @@
             cursor: pointer;
             content:url("./../../assets/img/discord-logo-white.svg");
         }
-    }
+    } 
+    .patreon-btn-wrapper {
+        position: absolute;
+        bottom: 80px;
+        width: 265px !important;
+        display: flex;
+        justify-content: center;
+        .patron-button {    
+            height: 45px;
+            cursor: pointer;
+            content:url("./../../assets/img/become_a_patron.png");
+        }
+    } 
 }
 
 
