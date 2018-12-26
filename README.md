@@ -1,5 +1,6 @@
 Exilence
 [![Github All Releases](https://img.shields.io/github/downloads/viktorgullmark/exilence/total.svg)](https://github.com/viktorgullmark/exilence/releases)
+[![Become a Patreon](https://img.shields.io/badge/patreon-%F0%9F%8E%AF-orange.svg)](https://www.patreon.com/exilence)
 ===
 Path of Exile tool used to track gear, currency, maps and more of you and your party. Formerly known as ExileParty.
 
