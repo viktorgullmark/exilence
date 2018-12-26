@@ -30,6 +30,7 @@
     <PackageReference Include="Microsoft.ApplicationInsights.AspNetCore" Version="2.5.1" />
     <PackageReference Include="Microsoft.AspNetCore.App" Version="2.2.0" />
     <PackageReference Include="Microsoft.AspNetCore.SignalR" Version="1.1.0" />
+    <PackageReference Include="Microsoft.AspNetCore.SignalR.StackExchangeRedis" Version="1.1.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="2.2.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="2.2.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="2.2.0" />

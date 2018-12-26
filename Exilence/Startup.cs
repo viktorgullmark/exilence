@@ -56,11 +56,13 @@ namespace Exilence
                     });
             });
 
-            services.AddSignalR();
+            services.AddSignalR().AddStackExchangeRedis(Configuration.GetConnectionString("Redis"), options =>
+            {
+                options.Configuration.ChannelPrefix = "ExilenceSignalR";
+            });
 
             services.AddScoped<ILadderService, LadderService>();
             services.AddHttpClient<IExternalService, ExternalService>();
-            //services.AddSingleton<IStoreRepository, StoreRepository>();
             services.AddScoped<IRedisRepository, RedisRepository>();
         }
 
@@ -75,11 +77,12 @@ namespace Exilence
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
-                var telemetryConfig = app.ApplicationServices.GetService<Microsoft.ApplicationInsights.Extensibility.TelemetryConfiguration>();
+                var telemetryConfig = app.ApplicationServices.GetService<TelemetryConfiguration>();
                 telemetryConfig.DisableTelemetry = true;
             }
 
             app.UseMvc();
+            app.UseFileServer();
             app.UseCors("AllowAll");
 
             GlobalConfiguration.Configuration.UseActivator(new HangfireActivator(serviceProvider));
@@ -102,8 +105,6 @@ namespace Exilence
                     options.ApplicationMaxBufferSize = 30 * 1024 * 1024;
                 });
             });
-
-
         }
 
     }
