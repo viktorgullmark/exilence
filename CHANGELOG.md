@@ -1,6 +1,9 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [0.9.4] - XXXX-XX-XX
+- Opened up a Patreon to support server costs
+
 ## [0.9.3] - 2018-12-26
 - Reworked internal statistics endpoint to fix bug where the unintentionally prolonged party persistance
 - Added flashing of taskbar icon on new Exilence version
