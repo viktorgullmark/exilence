@@ -1,7 +1,7 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
-## [0.9.3] - XXXX-XX-XX
+## [0.9.3] - 2018-12-26
 - Reworked internal statistics endpoint to fix bug where the unintentionally prolonged party persistance
 - Added flashing of taskbar icon on new Exilence version
 - Fixed a bug where prices were wrong for prophecies and divination cards with the same name
