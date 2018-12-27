@@ -1,3 +1,6 @@
+import { Item } from '../interfaces/item.interface';
+
+
 export class ItemHelper {
     public static getLinks(array: any[]) {
         const numMapping = {};
@@ -17,5 +20,14 @@ export class ItemHelper {
             itemName += ' ' + typeline;
         }
         return itemName.replace('<<set:MS>><<set:M>><<set:S>>', '').trim();
+    }
+
+    public static getItemVariant(item: Item): string {
+
+        if (item.name === 'Atziri\'s Splendour') {
+            if (item.explicitMods.filter(s => s.includes('increased Armour, Evasion and Energy Shield'))) { return 'ar/ev/es'; }
+        }
+
+        return null;
     }
 }
