@@ -151,12 +151,6 @@ export class NetworthTableComponent implements OnInit, OnDestroy {
 
   updateOverTime(items: any[], playerName: string) {
     items.forEach(snapshot => {
-      if (snapshot.name === 'Chaos Orb') {
-        console.log('----');
-        console.log('ITEM: ', snapshot);
-        console.log('ARR: ', this.dataSource);
-        console.log('----');
-      }
       const existingItem = this.dataSource.find(x =>
         x.name === snapshot.name
         && x.quality === snapshot.quality
@@ -194,12 +188,6 @@ export class NetworthTableComponent implements OnInit, OnDestroy {
 
   updateTable(items: any[], playerName: string) {
     items.forEach(snapshot => {
-      if (snapshot.name === 'Chaos Orb') {
-        console.log('----');
-        console.log('ITEM: ', snapshot);
-        console.log('ARR: ', this.dataSource);
-        console.log('----');
-      }
       const existingItem = this.dataSource.find(x =>
         x.name === snapshot.name
         && x.quality === snapshot.quality
