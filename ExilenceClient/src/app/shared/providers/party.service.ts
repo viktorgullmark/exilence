@@ -136,6 +136,8 @@ export class PartyService implements OnDestroy {
           });
           this.messageValueService.partyValueSubject.next(networth);
           this.messageValueService.partyGainSubject.next(this.partyGain);
+
+          this.partyUpdated.next(this.party);
         });
       });
     });
