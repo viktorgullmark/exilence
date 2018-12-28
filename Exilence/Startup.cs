@@ -102,7 +102,8 @@ namespace Exilence
                 routes.MapHub<PartyHub>("/hubs/party", options =>
                 {
                     // 30Kb message buffer
-                    options.ApplicationMaxBufferSize = 30 * 1024 * 1024;
+                    options.ApplicationMaxBufferSize = 50 * 1024 * 1024;
+                    options.TransportMaxBufferSize = 50 * 1024 * 1024;
                 });
             });
         }
