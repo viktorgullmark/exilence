@@ -6,6 +6,7 @@ All notable changes to this project will be documented in this file.
 - Fixed a bug where group net worth was not summarized correctly in the list
 - Fixed a bug where group summary page was not updating properly
 - Added a chaos orb icon when displaying net worth and gain
+- Removed Application Insights from client
 
 ## [0.9.3] - 2018-12-26
 - Reworked internal statistics endpoint to fix bug where the unintentionally prolonged party persistance
