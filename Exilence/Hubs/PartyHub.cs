@@ -61,7 +61,6 @@ namespace Exilence.Hubs
                 party = new PartyModel() { Name = partyName, Players = new List<PlayerModel> { player } };
                 await _cache.SetAsync<PartyModel>($"party:{partyName}", party);
                 await Clients.Caller.SendAsync("EnteredParty", CompressionHelper.Compress(party), CompressionHelper.Compress(player));
-                await _redisRepository.UpdateStatistics(StatisticsActionEnum.IncrementParty);
             }
             else
             {
@@ -86,7 +85,6 @@ namespace Exilence.Hubs
             await Groups.AddToGroupAsync(Context.ConnectionId, partyName);
             await Clients.OthersInGroup(partyName).SendAsync("PlayerJoined", CompressionHelper.Compress(player));
             await Clients.Group(partyName).SendAsync("PlayerUpdated", CompressionHelper.Compress(player));
-            await _redisRepository.UpdateStatistics(StatisticsActionEnum.IncrementPlayer);
 
             var elapsed = sw.ElapsedMilliseconds / 1000;
             _telemetry.GetMetric("PartyHub.JoinParty").TrackValue(elapsed);
@@ -119,14 +117,12 @@ namespace Exilence.Hubs
                 else
                 {                    
                     await _cache.RemoveAsync($"party:{partyName}");
-                    await _redisRepository.UpdateStatistics(StatisticsActionEnum.DecrementParty);
                 }
 
             }
 
             await Clients.OthersInGroup(partyName).SendAsync("PlayerLeft", CompressionHelper.Compress(player));
             await Groups.RemoveFromGroupAsync(Context.ConnectionId, partyName);
-            await _redisRepository.UpdateStatistics(StatisticsActionEnum.DecrementPlayer);
         }
 
         public async Task UpdatePlayer(string partyName, string playerObj)
