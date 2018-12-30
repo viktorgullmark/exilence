@@ -69,7 +69,8 @@ export class PricingService {
     if (item.elder) { elderOrShaper = 'elder'; }
     if (item.shaper) { elderOrShaper = 'shaper'; }
 
-
+    // Check item veriant
+    const variation = ItemHelper.getItemVariant(item);
 
     // parse item-quality
     if (item.properties !== null && item.properties !== undefined) {
@@ -89,11 +90,6 @@ export class PricingService {
       chaosequiv_average: 0
     };
 
-    let abyssalsockets;
-    if (item.sockets !== undefined && item.sockets !== null) {
-      abyssalsockets = item.sockets.filter(x => x.sColour === 'A' || x.sColour === 'a').length;
-    }
-
     switch (item.frameType) {
       case 0: // Normal
         if (item.ilvl > 0) {
@@ -107,7 +103,7 @@ export class PricingService {
         price = this.pricecheckRare(item);
         break;
       case 3: // Unique
-        price = this.pricecheckUnique(itemPricingObj.name, links, item.name, abyssalsockets);
+        price = this.pricecheckUnique(itemPricingObj.name, links, item.name, variation);
         break;
       case 4: // Gem
         const levelStr = item.properties.find(t => t.name === 'Level').values[0][0];
@@ -164,17 +160,20 @@ export class PricingService {
     const watchPriceInfoItem = this.watchService.watchPrices.find(x => x.fullname === name && x.category === 'card');
     return this.combinePricesToSimpleObject(ninjaPriceInfoItem, watchPriceInfoItem);
   }
-  pricecheckUnique(name: string, links: number, uniquename: string, abyssalsockets: number = 0): SimpleItemPricing {
+  pricecheckUnique(name: string, links: number, uniquename: string, variation: string = ''): SimpleItemPricing {
     if (uniquename === '' || uniquename === undefined || uniquename === null) { // ignore unidentified uniques
       return { chaosequiv: 0, chaosequiv_min: 0, chaosequiv_max: 0, chaosequiv_mode: 0, chaosequiv_median: 0, chaosequiv_average: 0 };
     }
-
-    const ninjaPriceInfoItem = this.ninjaService.ninjaPrices.find(x => x.name === name
-      && x.links === links
-      && ((x.variation === undefined || x.variation === null || x.variation.indexOf('Jewel') === -1)
-        || +x.variation.substring(0, 1) === abyssalsockets)
+    const ninjaPriceInfoItem = this.ninjaService.ninjaPrices.find(x =>
+      x.name === name &&
+      x.links === links &&
+      (x.variation === variation || x.variation === undefined || x.variation === null)
     );
-    const watchPriceInfoItem = this.watchService.watchPrices.find(x => x.fullname === name && x.links === links);
+    const watchPriceInfoItem = this.watchService.watchPrices.find(x =>
+      x.fullname === name &&
+      x.links === links &&
+      (x.variation === variation || x.variation === undefined || x.variation === null)
+    );
     return this.combinePricesToSimpleObject(ninjaPriceInfoItem, watchPriceInfoItem);
   }
   pricecheckRare(item: Item) {
