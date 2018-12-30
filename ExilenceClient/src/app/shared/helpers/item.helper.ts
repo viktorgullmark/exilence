@@ -24,10 +24,40 @@ export class ItemHelper {
 
     public static getItemVariant(item: Item): string {
 
-        if (item.name === 'Atziri\'s Splendour') {
-            if (item.explicitMods.filter(s => s.includes('increased Armour, Evasion and Energy Shield'))) { return 'ar/ev/es'; }
+        if (item.name === 'Impresence') {
+            if (item.explicitMods.filter(s => s.includes('Lightning Damage'))) { return 'Lightning'; }
+            if (item.explicitMods.filter(s => s.includes('Fire Damage'))) { return 'Fire'; }
+            if (item.explicitMods.filter(s => s.includes('Cold Damage'))) { return 'Cold'; }
+            if (item.explicitMods.filter(s => s.includes('Physical Damage'))) { return 'Physical'; }
+            if (item.explicitMods.filter(s => s.includes('Chaos Damage'))) { return 'Chaos'; }
         }
 
-        return null;
+        // Abyssal
+        if (item.name === 'Lightpoacher') {
+            const count = item.sockets.filter(x => x.sColour === 'A' || x.sColour === 'a').length;
+            return count === 1 ? count + ' Jewel' : count + ' Jewels';
+        }
+        if (item.name === 'Shroud of the Lightless') {
+            const count = item.sockets.filter(x => x.sColour === 'A' || x.sColour === 'a').length;
+            return count === 1 ? count + ' Jewel' : count + ' Jewels';
+        }
+        if (item.name === 'Bubonic Trail') {
+            const count = item.sockets.filter(x => x.sColour === 'A' || x.sColour === 'a').length;
+            return count === 1 ? count + ' Jewel' : count + ' Jewels';
+        }
+        if (item.name === 'Tombfist') {
+            const count = item.sockets.filter(x => x.sColour === 'A' || x.sColour === 'a').length;
+            return count === 1 ? count + ' Jewel' : count + ' Jewels';
+        }
+        if (item.name === 'Hale Negator') {
+            const count = item.sockets.filter(x => x.sColour === 'A' || x.sColour === 'a').length;
+            return count === 1 ? count + ' Jewel' : count + ' Jewels';
+        }
+        if (item.name === 'Command of the Pit') {
+            const count = item.sockets.filter(x => x.sColour === 'A' || x.sColour === 'a').length;
+            return count === 1 ? count + ' Jewel' : count + ' Jewels';
+        }
+
+        return '';
     }
 }

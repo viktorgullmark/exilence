@@ -53,6 +53,12 @@ export class WatchService {
           item.links = item.links || 0;
           item.quality = item.quality || 0;
           item.variation = item.variation || undefined;
+          if (item.variation) {
+            item.variation = item.variation.charAt(0).toUpperCase() + item.variation.slice(1);
+            if (item.variation.indexOf('socket') > -1) {
+              item.variation = item.variation.replace('socket', 'Jewel');
+            }
+          }
         }
       }).catch(e => Observable.of(null));
   }
