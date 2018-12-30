@@ -25,6 +25,7 @@ export class DashboardComponent implements OnInit, OnDestroy, AfterViewInit {
   player: Player;
   private count = 0;
   private playerSub: Subscription;
+  private recentPartySub: Subscription;
   constructor(
     private electronService: ElectronService,
     private partyService: PartyService,
@@ -36,7 +37,7 @@ export class DashboardComponent implements OnInit, OnDestroy, AfterViewInit {
     private incomeService: IncomeService
   ) {
 
-    this.partyService.recentParties.subscribe(parties => {
+    this.recentPartySub = this.partyService.recentParties.subscribe(parties => {
       this.recentParties = parties;
     });
   }
@@ -110,6 +111,9 @@ export class DashboardComponent implements OnInit, OnDestroy, AfterViewInit {
   ngOnDestroy() {
     if (this.playerSub !== undefined) {
       this.playerSub.unsubscribe();
+    }
+    if (this.recentPartySub !== undefined) {
+      this.recentPartySub.unsubscribe();
     }
   }
 }
