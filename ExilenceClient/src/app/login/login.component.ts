@@ -159,8 +159,8 @@ export class LoginComponent implements OnInit, OnDestroy {
             this.settingsService.set('areas', this.areaHistory);
         } else {
             // temporary limit of arealength to fix RAM-issues
-            if (this.areaHistory.length > 3000) {
-                this.areaHistory = this.areaHistory.slice(0, 3000);
+            if (this.areaHistory.length > 1000) {
+                this.areaHistory = this.areaHistory.slice(0, 1000);
                 this.settingsService.set('areas', this.areaHistory);
             }
         }
