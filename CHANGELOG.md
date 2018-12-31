@@ -1,11 +1,11 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
-## [0.9.4] - XXXX-XX-XX
-- Opened up a Patreon to support server costs
+## [0.9.4] - 2018-12-31
+- Opened up a Patreon to allow support
 - Fixed a bug where group net worth was not summarized correctly in the list
 - Fixed a bug where group summary page was not updating properly
-- Area-count is now limited to 3000, and can not exceed this length
+- Area-count is now limited to 1000, and can not exceed this length
 - Added a chaos orb icon when displaying net worth and gain
 - Removed parsing of Client.txt to avoid RAM-issues (might be reworked later)
 - Removed Application Insights from client
