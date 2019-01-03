@@ -1,6 +1,9 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [0.9.5] - 2019-XX-XX
+- Updated SignalR package
+
 ## [0.9.4] - 2018-12-31
 - Opened up a Patreon to allow support
 - Fixed a bug where group net worth was not summarized correctly in the list
