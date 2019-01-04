@@ -1,11 +1,10 @@
-import { Component, Input, OnInit, ViewChild, OnDestroy } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { MatSort, MatTableDataSource } from '@angular/material';
+import { Subscription } from 'rxjs/internal/Subscription';
 
+import { NetWorthSnapshot } from '../../../shared/interfaces/income.interface';
 import { Player } from '../../../shared/interfaces/player.interface';
 import { PartyService } from '../../../shared/providers/party.service';
-import { Subscription } from 'rxjs/internal/Subscription';
-import { ItemModule } from '../char-profile/item/item.module';
-import { NetWorthSnapshot } from '../../../shared/interfaces/income.interface';
 import { SettingsService } from '../../../shared/providers/settings.service';
 
 @Component({
@@ -70,6 +69,10 @@ export class NetworthTableComponent implements OnInit, OnDestroy {
     if (this.partySub !== undefined) {
       this.partySub.unsubscribe();
     }
+  }
+
+  generateTooltip(element) {
+    return 'First line&#13;Second line';
   }
 
   doSearch(text: string) {
