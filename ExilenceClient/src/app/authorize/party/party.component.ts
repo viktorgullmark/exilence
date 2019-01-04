@@ -31,6 +31,7 @@ export class PartyComponent implements OnInit, OnDestroy {
   private partySub: Subscription;
   private currentPlayerValueSub: Subscription;
   private currentPlayerGainSub: Subscription;
+  private tabSubscription: any;
   private gainHours = 1;
 
   constructor(
@@ -100,7 +101,7 @@ export class PartyComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.partyService.selectedPlayer.next(this.partyService.party.players[0]);
-    this.tabGroup.selectedIndexChange.subscribe(res => {
+    this.tabSubscription = this.tabGroup.selectedIndexChange.subscribe(res => {
       if (res === 0) {
         this.analyticsService.sendLastPartyPlayerScreen();
       }
@@ -123,6 +124,9 @@ export class PartyComponent implements OnInit, OnDestroy {
     }
     if (this.currentPlayerGainSub !== undefined) {
       this.currentPlayerGainSub.unsubscribe();
+    }
+    if(this.tabSubscription !== undefined) {
+      this.tabSubscription.unsubscribe();
     }
   }
 

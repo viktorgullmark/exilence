@@ -80,11 +80,10 @@ namespace Exilence.Repositories
 
         public async Task RemoveLeagueLadder(string league)
         {
-            var ladders = await _cache.GetAsync<List<string>>($"ladder:index");
-            ladders.Remove(league);
-            await _cache.SetAsync<List<string>>($"ladder:index", ladders);
+            //var ladders = await _cache.GetAsync<List<string>>($"ladder:index");
+            //ladders.Remove(league);
+            //await _cache.SetAsync<List<string>>($"ladder:index", ladders);
             await _cache.RemoveAsync($"ladder:{league}");
-
         }
 
         public async Task SetLeagueLadderRunning(string leagueName)

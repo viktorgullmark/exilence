@@ -1,6 +1,6 @@
 {
   "name": "exilence",
-  "version": "0.9.3",
+  "version": "0.9.4",
   "author": {
     "name": "Viktor Gullmark",
     "email": "viktor.gullmark@hotmail.com"
@@ -70,7 +70,7 @@
     "@angular/platform-browser": "6.0.3",
     "@angular/platform-browser-dynamic": "6.0.3",
     "@angular/router": "6.0.3",
-    "@aspnet/signalr": "^1.0.0-rc1-update1",
+    "@aspnet/signalr": "1.1.0",
     "@ngx-translate/core": "10.0.1",
     "@ngx-translate/http-loader": "3.0.1",
     "@types/d3": "^5.0.0",

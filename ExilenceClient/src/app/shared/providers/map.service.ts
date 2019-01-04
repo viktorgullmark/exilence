@@ -170,12 +170,12 @@ export class MapService implements OnDestroy {
           if (shouldUpdateAreaHistory) {
             this.areaHistory[0].duration = diffSeconds;
             // push the new object to our area-history
-            this.areaHistory.unshift(eventArea);
+            this.updateAreaHistory(eventArea);
           }
         }
       } else {
         if (shouldUpdateAreaHistory) {
-          this.areaHistory.unshift(eventArea);
+          this.updateAreaHistory(eventArea);
         }
       }
 
@@ -202,6 +202,13 @@ export class MapService implements OnDestroy {
         this.updateLocalPlayerAreas(this.areaHistory);
       }
       this.partyService.updatePlayer(this.localPlayer);
+    }
+  }
+
+  updateAreaHistory(eventArea) {
+    this.areaHistory.unshift(eventArea);
+    if (this.areaHistory.length > 1000) {
+      this.areaHistory.pop();
     }
   }
 

@@ -119,37 +119,18 @@
           </mat-radio-group>
           <br />
           <br />
-          <mat-checkbox [(ngModel)]="parsingEnabled" [ngModelOptions]="{standalone: true}">Import Client.txt (will
-            include all your previous area-history)</mat-checkbox>
-          <br />
-          <br />
           <div class="btn-grp">
             <button mat-raised-button class="btn-back" matStepperPrevious>Back</button>
             <button mat-raised-button color="primary" (click)="browse()" type="button">1. Browse file</button>
             <button mat-raised-button color="primary" type="button">2. Validate</button>
-            <button mat-raised-button color="primary" [disabled]="!pathValid || (isParsing && parsingEnabled)|| !parsingEnabled"
-              (click)="openLogInfoDialog()">3. Parse
-              log</button>
-            <button mat-raised-button color="primary" matStepperNext [disabled]="!pathValid || (!logMonitorService.parsingCompleted && parsingEnabled)">4.
+            <button mat-raised-button color="primary" matStepperNext [disabled]="!pathValid">3.
               Continue</button>
-            <span class="mat-body-1" *ngIf="isParsing && parsingEnabled"><br /><br />We're loading your Client.txt,
-              please wait... (may take up to several minutes,
-              depending on the filesize)</span>
-            <mat-progress-bar *ngIf="isParsing && parsingEnabled" class="progress-bar" color="primary" mode="indeterminate">
-            </mat-progress-bar>
           </div>
           <span class="form-error" *ngIf="!pathValid">{{'ERROR.PATH_NOT_VALID' | translate}}</span>
         </form>
       </mat-step>
       <mat-step #lastStep>
         <ng-template matStepLabel>Complete</ng-template>
-        <ng-container *ngIf="(!logMonitorService.parsingCompleted && parsingEnabled)">
-          <span class="mat-body-1">We're loading your Client.txt, please wait... (may take up to several minutes,
-            depending on the filesize)</span>
-          <mat-progress-bar class="progress-bar" color="primary" mode="indeterminate">
-          </mat-progress-bar>
-          <br />
-        </ng-container>
         <span class="mat-body-1">We're using Google Analytics to track usage of our app in order to be able to improve
           it
           further.<br />
@@ -157,7 +138,7 @@
           items, only how you use Exilence.<br /><br />
           By clicking "Continue" you agree to this.</span><br /><br />
         <div class="btn-grp">
-          <button mat-raised-button color="primary" [disabled]="isLoading || (!logMonitorService.parsingCompleted && parsingEnabled)"
+          <button mat-raised-button color="primary" [disabled]="isLoading"
             (click)="login()">Continue</button>
           <mat-progress-bar *ngIf="isLoading" class="progress-bar" color="primary" mode="indeterminate">
           </mat-progress-bar>

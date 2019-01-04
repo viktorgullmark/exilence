@@ -37,8 +37,8 @@ https://imgur.com/a/cBibtoF
 
 Currently runs with:
 
-- .NET Core 2.1.0
-- SignalR (.NET Core) 1.0.0 w/ Redis caching
+- .NET Core 2.2.0
+- SignalR (.NET Core) 1.1.0 w/ Redis caching
 - Angular v6.0.3
 - Angular-CLI v6.0.3
 - Electron v2.0.1
@@ -52,7 +52,7 @@ If you want to help with development we gladly accept pull-requests. To set up t
 ```
 npm install -g @angular/cli
 npm install
-npm install -g --production windows-build-tools
+npm install -g --production windows-build-tools (need to be run with administrator privileges using powershell)
 npm start (to serve the project)
 npm run electron:windows (to build the installer for production)
 ```
