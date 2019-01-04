@@ -32,7 +32,7 @@ export class NinjaService {
     this.analyticsService.sendEvent('income', `GET Ninja: ${type}`);
     const baseUrl = (type === NinjaTypes.CURRENCY || type === NinjaTypes.FRAGMENT) ? this.currencyUrl : this.itemUrl;
     const date = this.datePipe.transform(new Date(), 'yyyy-MM-dd');
-    const parameters = `?league=${league}&type=${type}&date=${date}`;
+    const parameters = `?league=${league}&type=${type}`; // &date=${date}
     const url = baseUrl + parameters;
     return this.http.get<NinjaResponse>(url);
   }
@@ -112,7 +112,8 @@ export class NinjaService {
                   gemLevel: line.gemLevel,
                   variation: line.variant,
                   baseType: line.baseType,
-                  icon: line.icon
+                  icon: line.icon,
+                  mapTier: line.mapTier
                 } as NinjaPriceInfo;
                 this.ninjaPrices.push(ninjaPriceInfoObj);
 

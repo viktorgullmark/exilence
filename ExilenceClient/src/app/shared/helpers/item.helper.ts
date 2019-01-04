@@ -60,4 +60,15 @@ export class ItemHelper {
 
         return '';
     }
+
+    public static getMapTier(properties: any[]) {
+
+        for (let i = 0; i < properties.length; i++) {
+            const prop = properties[i];
+            if (prop.name === 'Map Tier') {
+                return +prop.values[0][0];
+            }
+        }
+        return 0;
+    }
 }
