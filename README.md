@@ -37,8 +37,8 @@ https://imgur.com/a/cBibtoF
 
 Currently runs with:
 
-- .NET Core 2.1.0
-- SignalR (.NET Core) 1.0.0 w/ Redis caching
+- .NET Core 2.2.0
+- SignalR (.NET Core) 1.1.0 w/ Redis caching
 - Angular v6.0.3
 - Angular-CLI v6.0.3
 - Electron v2.0.1
