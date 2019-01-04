@@ -3,9 +3,10 @@ import 'rxjs/add/observable/from';
 import 'rxjs/add/operator/concatMap';
 import 'rxjs/add/operator/delay';
 import 'rxjs/add/operator/do';
+import 'rxjs/add/operator/mergeMap';
 
 import { Injectable, OnDestroy } from '@angular/core';
-import { Subscription } from 'rxjs';
+import { of, Subscription } from 'rxjs';
 import { Observable } from 'rxjs/Observable';
 
 import { HistoryHelper } from '../helpers/history.helper';
@@ -27,7 +28,7 @@ export class IncomeService implements OnDestroy {
 
   private lastNinjaHit = 0;
   private ninjaPrices: any[] = [];
-  private playerStashTabs: any[] = [];
+  private playerStashTabs: Stash[] = [];
   private netWorthHistory: NetWorthHistory;
   private sessionId: string;
   private isSnapshotting = false;
@@ -165,13 +166,20 @@ export class IncomeService implements OnDestroy {
         this.totalNetWorthItems[indexOfItem] = existingItem;
       } else {
         // Add new item
+
+        let icon = item.icon.indexOf('?') >= 0
+          ? item.icon.substring(0, item.icon.indexOf('?')) + '?scale=1&scaleIndex=3&w=1&h=1'
+          : item.icon + '?scale=1&scaleIndex=3&w=1&h=1';
+
+        if (item.typeLine.indexOf(' Map') > -1) {
+          icon = item.icon;
+        }
+
         const netWorthItem: NetWorthItem = {
           name: itemPriceInfoObj.name,
           value: totalValueForItem,
           valuePerUnit: itemPriceInfoObj.chaosequiv,
-          icon: item.icon.indexOf('?') >= 0
-            ? item.icon.substring(0, item.icon.indexOf('?')) + '?scale=1&scaleIndex=3&w=1&h=1'
-            : item.icon + '?scale=1&scaleIndex=3&w=1&h=1',
+          icon: icon,
           stacksize,
           links: itemPriceInfoObj.links,
           gemLevel: itemPriceInfoObj.gemlevel,
@@ -184,7 +192,7 @@ export class IncomeService implements OnDestroy {
   }
 
   filterItems(items: NetWorthItem[]) {
-    return items.filter(x => x.value > this.itemValueTreshold);
+    return items.filter(x => x.value >= this.itemValueTreshold);
   }
 
   SnapshotPlayerNetWorth(sessionId: string) {
@@ -213,6 +221,7 @@ export class IncomeService implements OnDestroy {
     }
 
     return Observable.forkJoin(
+      this.getPlayerPublicMaps(accountName, league),
       this.pricingService.retrieveExternalPrices(),
       this.getPlayerStashTabs(sessionId, accountName, league)
     ).do(() => {
@@ -244,6 +253,37 @@ export class IncomeService implements OnDestroy {
     });
   }
 
+  getPlayerPublicMaps(accountName: string, league: string) {
+
+    const publicMapPricing: boolean = this.settingsService.get('publicMapPricing');
+    if (publicMapPricing === true) {
+      this.logService.log('Starting to fetch public maps');
+      return this.externalService.getPublicMapTradeGuids(accountName, league)
+        .flatMap((ids: any) => {
+          const subLines = this.splitIntoSubArray(ids.result, 10);
+          return this.externalService.getPublicMapsFromTradeIds(subLines, ids.id).map((pages: any) => {
+            let items = [];
+
+            pages.forEach((page: any) => {
+              const pageItems = page.result.map(x => x.item);
+              items = items.concat(pageItems);
+            });
+
+            const tab = {
+              items: items
+            } as Stash;
+
+            this.playerStashTabs.push(tab);
+
+            this.logService.log('Finished fetching public maps');
+
+          });
+        });
+    } else {
+      return of(null);
+    }
+  }
+
   getPlayerStashTabs(sessionId: string, accountName: string, league: string) {
 
     this.logService.log('[INFO] Retriving stashtabs from official site api');
@@ -269,6 +309,14 @@ export class IncomeService implements OnDestroy {
       .do(stashTab => {
         this.playerStashTabs.push(stashTab);
       });
+  }
+
+  splitIntoSubArray(arr, count) {
+    const newArray = [];
+    while (arr.length > 0) {
+      newArray.push(arr.splice(0, count));
+    }
+    return newArray;
   }
 
 }

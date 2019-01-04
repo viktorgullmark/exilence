@@ -80,6 +80,17 @@ export class PricingService {
       itemPricingObj.quality = parseInt(quality, 10);
     }
 
+    // replace map name (price all maps as white) except for unique
+    if ((item.frameType === 0 || item.frameType === 1 || item.frameType === 2) && item.typeLine.indexOf(' Map') > -1) {
+      const mapTier = ItemHelper.getMapTier(item.properties);
+      const ninjaPriceInfoItem = this.ninjaService.ninjaPrices.find(
+        x => (x.name === item.typeLine || item.typeLine.indexOf(x.name) > -1) && x.mapTier === mapTier
+      );
+      if (ninjaPriceInfoItem !== undefined) {
+        itemPricingObj.name = ninjaPriceInfoItem.name;
+      }
+    }
+
     // price items based on type
     let price = {
       chaosequiv: 0,
@@ -92,7 +103,9 @@ export class PricingService {
 
     switch (item.frameType) {
       case 0: // Normal
-        if (item.ilvl > 0) {
+        if (item.typeLine.indexOf(' Map') > -1) {
+          price = this.pricecheckMap(item.typeLine, item.properties);
+        } else if (item.ilvl > 0) {
           price = this.pricecheckBase(item.typeLine, item.ilvl, elderOrShaper);
         } else { // fragment or scarab
           price = this.pricecheckByName(itemPricingObj.name);
@@ -100,7 +113,11 @@ export class PricingService {
         break;
       case 1: // Magic
       case 2: // Rare
-        price = this.pricecheckRare(item);
+        if (item.typeLine.indexOf(' Map') > -1) {
+          price = this.pricecheckMap(item.typeLine, item.properties);
+        } else {
+          price = this.pricecheckRare(item);
+        }
         break;
       case 3: // Unique
         price = this.pricecheckUnique(itemPricingObj.name, links, item.name, variation);
@@ -142,6 +159,17 @@ export class PricingService {
     return itemPricingObj;
   }
 
+  pricecheckMap(name: string, properties: any[]): SimpleItemPricing { // (x.name === name || name.indexOf(x.name) > -1
+    const mapTier = ItemHelper.getMapTier(properties);
+
+    const ninjaPriceInfoItem = this.ninjaService.ninjaPrices.find(x =>
+      (x.name === name || name.indexOf(x.name) > -1) && x.mapTier === mapTier);
+
+    const watchPriceInfoItem = this.watchService.watchPrices.find(x =>
+      (x.name === name || name.indexOf(x.name) > -1) && x.tier === mapTier);
+
+    return this.combinePricesToSimpleObject(ninjaPriceInfoItem, watchPriceInfoItem);
+  }
   pricecheckByName(name: string): SimpleItemPricing {
     if (name === 'Chaos Orb') {
       return { chaosequiv: 1, chaosequiv_min: 1, chaosequiv_max: 1, chaosequiv_mode: 1, chaosequiv_median: 1, chaosequiv_average: 1 };
