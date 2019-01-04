@@ -3,6 +3,7 @@ All notable changes to this project will be documented in this file.
 
 ## [0.9.5] - 2019-XX-XX
 - Updated SignalR package
+- Minor style tweaks to net worth table
 
 ## [0.9.4] - 2018-12-31
 - Opened up a Patreon to allow support

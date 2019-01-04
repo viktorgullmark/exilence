@@ -9,13 +9,22 @@ table {
     align-items: center;
     justify-content: center;
     padding: 10px;
+
     .networth-icon {
-        max-height: 75px;
+        max-height: 40px;
     }
 }
 
 td {
-    min-height: 48px;
+    min-height: 40px;
+}
+
+.mat-cell {
+    font-size: 12px !important;
+    white-space: nowrap;
+    max-width: 140px;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .networth-value {
@@ -35,5 +44,5 @@ td {
 }
 
 .name-col {
-    padding: 0 5px 0 5px;
+    padding: 0 10px 0 10px;
 }
