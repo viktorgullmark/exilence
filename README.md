@@ -52,7 +52,7 @@ If you want to help with development we gladly accept pull-requests. To set up t
 ```
 npm install -g @angular/cli
 npm install
-npm install -g --production windows-build-tools
+npm install -g --production windows-build-tools (need to be run with administrator privileges using powershell)
 npm start (to serve the project)
 npm run electron:windows (to build the installer for production)
 ```
