@@ -2,7 +2,7 @@ import { Component, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { MatSort, MatTableDataSource } from '@angular/material';
 import { Subscription } from 'rxjs/internal/Subscription';
 
-import { NetWorthSnapshot } from '../../../shared/interfaces/income.interface';
+import { NetWorthItem, NetWorthSnapshot } from '../../../shared/interfaces/income.interface';
 import { Player } from '../../../shared/interfaces/player.interface';
 import { PartyService } from '../../../shared/providers/party.service';
 import { SettingsService } from '../../../shared/providers/settings.service';
@@ -71,8 +71,18 @@ export class NetworthTableComponent implements OnInit, OnDestroy {
     }
   }
 
-  generateTooltip(element) {
-    return 'First line&#13;Second line';
+  generateTooltip(item: NetWorthItem) {
+    // console.log(element);
+
+    const min = item.value_min !== undefined ? item.value_min.toFixed(2) : 0;
+    const max = item.value_max !== undefined ? item.value_max.toFixed(2) : 0;
+    const mode = item.value_mode !== undefined ? item.value_mode.toFixed(2) : 0;
+    const median = item.value_median !== undefined ? item.value_median.toFixed(2) : 0;
+    const average = item.value_average !== undefined ? item.value_average.toFixed(2) : 0;
+    const quantity = item.quantity !== undefined ? item.quantity.toFixed(2) : 0; // TODO: Check why quantity is 0
+
+    // tslint:disable-next-line:max-line-length
+    return `Min: ${min}\nMax: ${max}\nMode: ${mode}\nMedian: ${median}\nAverage: ${average}\n`;
   }
 
   doSearch(text: string) {
@@ -176,6 +186,12 @@ export class NetworthTableComponent implements OnInit, OnDestroy {
           name: snapshot.name,
           stacksize: snapshot.stacksize,
           value: snapshot.value,
+          value_min: snapshot.value_min,
+          quantity: snapshot.quantity,
+          value_max: snapshot.value_max,
+          value_mode: snapshot.value_mode,
+          value_median: snapshot.value_median,
+          value_average: snapshot.value_average,
           variation: snapshot.variation,
           valuePerUnit: snapshot.valuePerUnit,
           gemLevel: snapshot.gemLevel,
@@ -214,12 +230,18 @@ export class NetworthTableComponent implements OnInit, OnDestroy {
           name: snapshot.name,
           stacksize: snapshot.stacksize,
           value: snapshot.value,
+          value_min: snapshot.value_min,
+          quantity: snapshot.quantity,
+          value_max: snapshot.value_max,
+          value_mode: snapshot.value_mode,
+          value_median: snapshot.value_median,
+          value_average: snapshot.value_average,
           variation: snapshot.variation,
           valuePerUnit: snapshot.valuePerUnit,
+          gemLevel: snapshot.gemLevel,
           icon: snapshot.icon,
           links: snapshot.links,
           quality: snapshot.quality,
-          gemLevel: snapshot.gemLevel,
           holdingPlayers: [playerName]
         };
         this.dataSource.push(newObj);

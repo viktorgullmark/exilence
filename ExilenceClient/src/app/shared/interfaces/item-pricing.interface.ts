@@ -11,6 +11,7 @@ export interface ItemPricing {
     chaosequiv_mode: number;
     chaosequiv_median: number;
     chaosequiv_average: number;
+    quantity: number;
 }
 
 export interface SimpleItemPricing {
@@ -20,6 +21,7 @@ export interface SimpleItemPricing {
     chaosequiv_mode: number;
     chaosequiv_median: number;
     chaosequiv_average: number;
+    quantity: number;
 }
 
 

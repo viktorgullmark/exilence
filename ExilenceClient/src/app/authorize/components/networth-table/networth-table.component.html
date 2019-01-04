@@ -46,7 +46,8 @@
 
   <ng-container matColumnDef="valuePerUnit">
     <th mat-header-cell *matHeaderCellDef mat-sort-header="valuePerUnit"> Value&nbsp;&nbsp;<img class="chaos-icon" /></th>
-    <td matTooltip="{{generateTooltip(element)}}" mat-cell *matCellDef="let element" class="networth-value with-icon in-table"><span>{{element.valuePerUnit.toFixed(2)}}</span></td>
+    <td matTooltip="{{generateTooltip(element)}}" matTooltipClass="primary-tooltip" mat-cell *matCellDef="let element"
+      class="networth-value with-icon in-table"><span>{{element.valuePerUnit.toFixed(2)}}</span></td>
   </ng-container>
 
   <ng-container matColumnDef="value">
