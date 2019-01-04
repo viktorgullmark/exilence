@@ -178,6 +178,12 @@ export class IncomeService implements OnDestroy {
         const netWorthItem: NetWorthItem = {
           name: itemPriceInfoObj.name,
           value: totalValueForItem,
+          value_min: itemPriceInfoObj.chaosequiv_min,
+          value_max: itemPriceInfoObj.chaosequiv_max,
+          value_mode: itemPriceInfoObj.chaosequiv_mode,
+          value_median: itemPriceInfoObj.chaosequiv_median,
+          value_average: itemPriceInfoObj.chaosequiv_average,
+          quantity: itemPriceInfoObj.quantity,
           valuePerUnit: itemPriceInfoObj.chaosequiv,
           icon: icon,
           stacksize,
@@ -186,6 +192,8 @@ export class IncomeService implements OnDestroy {
           quality: itemPriceInfoObj.quality,
           variation: itemPriceInfoObj.variation
         };
+
+        console.log(JSON.stringify(netWorthItem));
         this.totalNetWorthItems.push(netWorthItem);
       }
     });

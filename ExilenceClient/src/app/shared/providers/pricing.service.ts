@@ -34,7 +34,7 @@ export class PricingService {
       chaosequiv_mode: 0,
       chaosequiv_median: 0,
       chaosequiv_average: 0,
-      posted_daily: 0
+      quantity: 0
     } as ItemPricing;
   }
 
@@ -99,7 +99,7 @@ export class PricingService {
       chaosequiv_mode: 0,
       chaosequiv_median: 0,
       chaosequiv_average: 0
-    };
+    } as SimpleItemPricing;
 
     switch (item.frameType) {
       case 0: // Normal
@@ -155,6 +155,7 @@ export class PricingService {
     itemPricingObj.chaosequiv_mode = price.chaosequiv_mode;
     itemPricingObj.chaosequiv_median = price.chaosequiv_median;
     itemPricingObj.chaosequiv_average = price.chaosequiv_average;
+    itemPricingObj.quantity = price.quantity;
 
     return itemPricingObj;
   }
@@ -172,7 +173,15 @@ export class PricingService {
   }
   pricecheckByName(name: string): SimpleItemPricing {
     if (name === 'Chaos Orb') {
-      return { chaosequiv: 1, chaosequiv_min: 1, chaosequiv_max: 1, chaosequiv_mode: 1, chaosequiv_median: 1, chaosequiv_average: 1 };
+      return {
+        chaosequiv: 0,
+        chaosequiv_min: 0,
+        chaosequiv_max: 0,
+        chaosequiv_mode: 0,
+        chaosequiv_median: 0,
+        chaosequiv_average: 0,
+        quantity: 0
+      };
     }
     const ninjaPriceInfoItem = this.ninjaService.ninjaPrices.find(x => x.name === name);
     const watchPriceInfoItem = this.watchService.watchPrices.find(x => x.fullname === name);
@@ -190,7 +199,15 @@ export class PricingService {
   }
   pricecheckUnique(name: string, links: number, uniquename: string, variation: string = ''): SimpleItemPricing {
     if (uniquename === '' || uniquename === undefined || uniquename === null) { // ignore unidentified uniques
-      return { chaosequiv: 0, chaosequiv_min: 0, chaosequiv_max: 0, chaosequiv_mode: 0, chaosequiv_median: 0, chaosequiv_average: 0 };
+      return {
+        chaosequiv: 0,
+        chaosequiv_min: 0,
+        chaosequiv_max: 0,
+        chaosequiv_mode: 0,
+        chaosequiv_median: 0,
+        chaosequiv_average: 0,
+        quantity: 0
+      };
     }
     const ninjaPriceInfoItem = this.ninjaService.ninjaPrices.find(x =>
       x.name === name &&
@@ -206,7 +223,15 @@ export class PricingService {
   }
   pricecheckRare(item: Item) {
     // todo: pricecheck towards new service for poeprices.info
-    return { chaosequiv: 0, chaosequiv_min: 0, chaosequiv_max: 0, chaosequiv_mode: 0, chaosequiv_median: 0, chaosequiv_average: 0 };
+    return {
+      chaosequiv: 0,
+      chaosequiv_min: 0,
+      chaosequiv_max: 0,
+      chaosequiv_mode: 0,
+      chaosequiv_median: 0,
+      chaosequiv_average: 0,
+      quantity: 0
+    };
   }
   pricecheckGem(name: string, level: number, quality: number): SimpleItemPricing {
     const ninjaPriceInfoItem = this.ninjaService.ninjaPrices.find(x => x.name === name && x.gemLevel === level && x.gemQuality === quality);
@@ -215,7 +240,15 @@ export class PricingService {
   }
   pricecheckBase(baseType: string, ilvl: number = 0, variation: string = null): SimpleItemPricing {
     if (ilvl < 82 && ilvl > 0) {
-      return { chaosequiv: 0, chaosequiv_min: 0, chaosequiv_max: 0, chaosequiv_mode: 0, chaosequiv_median: 0, chaosequiv_average: 0 };
+      return {
+        chaosequiv: 0,
+        chaosequiv_min: 0,
+        chaosequiv_max: 0,
+        chaosequiv_mode: 0,
+        chaosequiv_median: 0,
+        chaosequiv_average: 0,
+        quantity: 0
+      };
     }
     if (ilvl > 86) {
       ilvl = 86;
@@ -234,6 +267,7 @@ export class PricingService {
       chaosequiv_mode: watchPrice !== undefined ? watchPrice.mode : 0,
       chaosequiv_average: watchPrice !== undefined ? watchPrice.mean : 0,
       chaosequiv_median: watchPrice !== undefined ? watchPrice.median : 0,
+      quantity: watchPrice !== undefined ? watchPrice.quantity : 0,
     };
     return pricing;
   }

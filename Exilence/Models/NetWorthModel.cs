@@ -8,14 +8,21 @@ namespace Exilence.Models
     [Serializable]
     public class NetWorthItem
     {
-        public string Icon { get; set; }
-        public decimal Value { get; set; }
-        public decimal ValuePerUnit { get; set; }
         public string Name { get; set; }
+        public decimal Value { get; set; }
+        public decimal Value_min { get; set; }
+        public decimal Value_max { get; set; }
+        public decimal Value_mode { get; set; }
+        public decimal Value_median { get; set; }
+        public decimal Value_average { get; set; }
+        public decimal ValuePerUnit { get; set; }
+        public string Icon { get; set; }
         public int Stacksize { get; set; }
-        public int? Links { get; set; }
-        public int? Quality { get; set; }
-        public int? Variation { get; set; }
+        public int Links { get; set; }
+        public int GemLevel { get; set; }
+        public int Quality { get; set; }
+        public int Quantity { get; set; }
+        public string Variation { get; set; }
     }
 
     [Serializable]
