@@ -353,7 +353,11 @@ mat-vertical-stepper {
 
 mat-tooltip-component > .mat-tooltip {
     white-space: pre;
-    font-size: 13px;
+    font-size: 14px;
+    color: #d8b100;
+    background-color: #272727 !important;
+    margin-left: -40px !important;
+    border: #222222 4px solid;
 }
 
 
