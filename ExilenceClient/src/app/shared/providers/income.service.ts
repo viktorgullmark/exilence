@@ -262,7 +262,11 @@ export class IncomeService implements OnDestroy {
 
   getPlayerPublicMaps(accountName: string, league: string) {
 
-    const publicMapPricing: boolean = this.settingsService.get('publicMapPricing');
+    let publicMapPricing = this.settingsService.get('publicMapPricing');
+    // default to true
+    if (publicMapPricing === undefined) {
+      publicMapPricing = true;
+    }
     if (publicMapPricing === true) {
       this.logService.log('Starting to fetch public maps');
       return this.externalService.getPublicMapTradeGuids(accountName, league)

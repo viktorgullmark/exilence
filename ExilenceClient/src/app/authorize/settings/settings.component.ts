@@ -25,7 +25,7 @@ export class SettingsComponent implements OnInit, OnDestroy {
   hideTooltips = false;
   lowConfidencePricing = false;
   characterPricing = false;
-  publicMapPricing = false;
+  publicMapPricing = true;
   sessionId: string;
   sessionIdValid: boolean;
   uploaded = false;
@@ -244,7 +244,7 @@ export class SettingsComponent implements OnInit, OnDestroy {
   }
 
   togglePublicMapPricing() {
-    if (this.characterPricing) {
+    if (this.publicMapPricing) {
       this.settingsService.set('publicMapPricing', true);
     } else {
       this.settingsService.set('publicMapPricing', false);
