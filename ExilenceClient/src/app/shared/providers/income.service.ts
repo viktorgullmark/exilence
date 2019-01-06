@@ -193,7 +193,6 @@ export class IncomeService implements OnDestroy {
           variation: itemPriceInfoObj.variation
         };
 
-        console.log(JSON.stringify(netWorthItem));
         this.totalNetWorthItems.push(netWorthItem);
       }
     });
