@@ -146,6 +146,27 @@ export class NetworthTableComponent implements OnInit, OnDestroy {
             if (recentItem.value !== 0 && recentItem.stacksize !== 0) {
               difference.push(recentItem);
             }
+          } else {
+            const newObj = {
+              position: difference.length + 2,
+              name: item.name,
+              stacksize: item.stacksize,
+              value: item.value,
+              value_min: item.value_min,
+              quantity: item.quantity,
+              value_max: item.value_max,
+              value_mode: item.value_mode,
+              value_median: item.value_median,
+              value_average: item.value_average,
+              variation: item.variation,
+              valuePerUnit: item.valuePerUnit,
+              gemLevel: item.gemLevel,
+              icon: item.icon,
+              links: item.links,
+              quality: item.quality,
+              holdingPlayers: [player.character.name]
+            } as NetWorthItem;
+            difference.push(newObj);
           }
         });
         this.updateOverTime(difference, player.character.name);
