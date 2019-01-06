@@ -1,9 +1,10 @@
-import { Component, OnInit, Input, OnDestroy } from '@angular/core';
-import { PartyService } from '../../../shared/providers/party.service';
-import { Player } from '../../../shared/interfaces/player.interface';
-import { Observable } from 'rxjs/Observable';
-import { LeagueWithPlayers } from '../../../shared/interfaces/league.interface';
+import { Component, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { ContextMenuComponent } from 'ngx-contextmenu';
 import { Subscription } from 'rxjs/internal/Subscription';
+
+import { LeagueWithPlayers } from '../../../shared/interfaces/league.interface';
+import { Player } from '../../../shared/interfaces/player.interface';
+import { PartyService } from '../../../shared/providers/party.service';
 
 @Component({
   selector: 'app-player-list',
@@ -13,6 +14,8 @@ import { Subscription } from 'rxjs/internal/Subscription';
 export class PlayerListComponent implements OnInit, OnDestroy {
 
   @Input() localList = false;
+  @ViewChild(ContextMenuComponent) public badgeMenu: ContextMenuComponent;
+
   private playerLeaguesSub: Subscription;
   private genericPlayersSub: Subscription;
 
@@ -47,4 +50,9 @@ export class PlayerListComponent implements OnInit, OnDestroy {
       this.genericPlayersSub.unsubscribe();
     }
   }
+
+  showMessage(message: any) {
+    console.log(message);
+  }
+
 }
