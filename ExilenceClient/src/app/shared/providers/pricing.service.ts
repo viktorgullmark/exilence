@@ -174,12 +174,12 @@ export class PricingService {
   pricecheckByName(name: string): SimpleItemPricing {
     if (name === 'Chaos Orb') {
       return {
-        chaosequiv: 0,
-        chaosequiv_min: 0,
-        chaosequiv_max: 0,
-        chaosequiv_mode: 0,
-        chaosequiv_median: 0,
-        chaosequiv_average: 0,
+        chaosequiv: 1,
+        chaosequiv_min: 1,
+        chaosequiv_max: 1,
+        chaosequiv_mode: 1,
+        chaosequiv_median: 1,
+        chaosequiv_average: 1,
         quantity: 0
       };
     }
