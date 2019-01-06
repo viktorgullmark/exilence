@@ -61,19 +61,19 @@ export class ElectronService {
 
 
   sendLog() {
+    // temporarily disabled
+    // const path = this.remote.app.getPath('appData');
+    // const logPath = path + '\\exilence\\log.log';
 
-    const path = this.remote.app.getPath('appData');
-    const logPath = path + '\\exilence\\log.log';
-
-    this.fs.readFile(logPath, 'utf8', (err, logData) => {
-      this.compress(logData, (compressedData) => {
-        this.sendLogToServer(compressedData).subscribe(res => {
-          this.logService.log('Log successfully sent log to server.');
-        }, (error) => {
-          this.logService.log('Could not send log to server.', error, true);
-        });
-      });
-    });
+    // this.fs.readFile(logPath, 'utf8', (err, logData) => {
+    //   this.compress(logData, (compressedData) => {
+    //     this.sendLogToServer(compressedData).subscribe(res => {
+    //       this.logService.log('Log successfully sent log to server.');
+    //     }, (error) => {
+    //       this.logService.log('Could not send log to server.', error, true);
+    //     });
+    //   });
+    // });
   }
 
   private sendLogToServer(log: string) {
