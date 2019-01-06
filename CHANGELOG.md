@@ -2,6 +2,10 @@
 All notable changes to this project will be documented in this file.
 
 ## [0.9.5] - 2019-XX-XX
+- Fixed a bug where maps in regular tabs werent included in the pricing
+- Added support to price the maptab (by setting it to public)
+- Added tooltip to value in networth table to display more detailed data such as average, mode and mean
+- Added file-output for gain and networth values, making it available for import in OBS 
 - Updated SignalR package
 - Minor style tweaks to net worth table
 
