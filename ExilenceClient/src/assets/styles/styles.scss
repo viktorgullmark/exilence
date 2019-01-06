@@ -360,6 +360,30 @@ mat-tooltip-component > .mat-tooltip {
     border: #222222 4px solid;
 }
 
+.dropdown-menu {
+    border: #222222 4px solid;
+    background: #272727;
+    padding: 0px;
+    list-style-type: none;
+
+    :last-child {
+        border: 0px;
+    }
+
+    li {        
+        padding: 10px 25px 10px 25px;
+        border-bottom: #222222 2px solid;
+        &:hover {
+            background-color: #2f2f2f;
+        }
+
+        a{
+            color: white;
+            text-decoration: none;
+        }
+    }    
+}
+
 
 
 /* #endregion */
