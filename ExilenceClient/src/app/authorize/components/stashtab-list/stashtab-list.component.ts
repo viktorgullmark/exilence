@@ -48,21 +48,20 @@ export class StashtabListComponent implements OnInit, OnDestroy {
 
     if (selectedStashTabs === undefined) {
       selectedStashTabs = [];
-      for (let i = 0; i < 4; i++) {
-        selectedStashTabs.push({ name: '', position: i });
-      }
     }
 
     this.stashTabSub = this.externalService.getStashTabs(sessionId, accountName, league)
       .subscribe((res: Stash) => {
         if (res !== null) {
           this.dataSource = res.tabs.map((tab: Tab) => {
-            return { position: tab.i, name: tab.n };
+            return { position: tab.i, name: tab.n, isMapTab: tab.type === 'MapStash' };
           });
 
+          const fetchedMapStash = this.dataSource.find(x => x.isMapTab);
           this.dataSource.forEach(r => {
             selectedStashTabs.forEach(t => {
-              if (r.position === t.position) {
+              const shouldDeselectMaptab = fetchedMapStash !== undefined && t.position === fetchedMapStash.position && !t.isMapTab;
+              if (r.position === t.position && !shouldDeselectMaptab) {
                 this.toggle(this.selection, r);
               }
             });
@@ -101,7 +100,7 @@ export class StashtabListComponent implements OnInit, OnDestroy {
   }
 
   toggle(selection, row) {
-
+    console.log(row);
     this.selection.toggle(row);
     this.settingsService.set('selectedStashTabs', selection.selected);
   }
