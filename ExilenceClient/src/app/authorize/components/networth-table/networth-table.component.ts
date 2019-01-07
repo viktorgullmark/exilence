@@ -71,6 +71,11 @@ export class NetworthTableComponent implements OnInit, OnDestroy {
     }
   }
 
+  getIconLink(iconUrl: string) {
+    iconUrl = iconUrl.replace('w=1&h=1', 'w=3&h=3');
+    return iconUrl;
+  }
+
   generateTooltip(item: NetWorthItem) {
     // console.log(element);
 
@@ -197,7 +202,7 @@ export class NetworthTableComponent implements OnInit, OnDestroy {
           variation: snapshot.variation,
           valuePerUnit: snapshot.valuePerUnit,
           gemLevel: snapshot.gemLevel,
-          icon: snapshot.icon,
+          icon: this.getIconLink(snapshot.icon),
           links: snapshot.links,
           quality: snapshot.quality,
           holdingPlayers: [playerName]
@@ -241,7 +246,7 @@ export class NetworthTableComponent implements OnInit, OnDestroy {
           variation: snapshot.variation,
           valuePerUnit: snapshot.valuePerUnit,
           gemLevel: snapshot.gemLevel,
-          icon: snapshot.icon,
+          icon: this.getIconLink(snapshot.icon),
           links: snapshot.links,
           quality: snapshot.quality,
           holdingPlayers: [playerName]
