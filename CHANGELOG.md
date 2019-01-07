@@ -8,6 +8,7 @@ All notable changes to this project will be documented in this file.
 - Added tooltip to value in networth table to display more detailed data such as average, mode and mean
 - Added file-output for gain and networth values, making it available for import in OBS 
 - Updated SignalR package
+- Removed negotiate-step for websockets, now connects directly instead
 - Minor style tweaks to net worth table
 
 ## [0.9.4] - 2018-12-31
