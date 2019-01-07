@@ -71,9 +71,11 @@ export class NetworthTableComponent implements OnInit, OnDestroy {
     }
   }
 
-  getIconLink(iconUrl: string) {
-    iconUrl = iconUrl.replace('w=1&h=1', 'w=3&h=3');
-    return iconUrl;
+  getIconLink(snapshot: any) {
+    if (snapshot.name.indexOf(' Map') > -1) {
+      snapshot.icon = snapshot.icon.replace('w=1&h=1', 'w=2&h=2');
+    }
+    return snapshot.icon;
   }
 
   generateTooltip(item: NetWorthItem) {
@@ -202,7 +204,7 @@ export class NetworthTableComponent implements OnInit, OnDestroy {
           variation: snapshot.variation,
           valuePerUnit: snapshot.valuePerUnit,
           gemLevel: snapshot.gemLevel,
-          icon: this.getIconLink(snapshot.icon),
+          icon: this.getIconLink(snapshot),
           links: snapshot.links,
           quality: snapshot.quality,
           holdingPlayers: [playerName]
@@ -246,7 +248,7 @@ export class NetworthTableComponent implements OnInit, OnDestroy {
           variation: snapshot.variation,
           valuePerUnit: snapshot.valuePerUnit,
           gemLevel: snapshot.gemLevel,
-          icon: this.getIconLink(snapshot.icon),
+          icon: this.getIconLink(snapshot),
           links: snapshot.links,
           quality: snapshot.quality,
           holdingPlayers: [playerName]
