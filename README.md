@@ -47,7 +47,7 @@ Currently runs with:
 
 ## Help with development
 
-If you want to help with development we gladly accept pull-requests. To set up the project, install the latest angular-cli and node version globally. The following commands will help in setting up the client:
+If you want to help with development we gladly accept pull-requests. To set up the project, install the latest angular-cli and node version prior to 10. Exilence currently cannot runt on node 10+ because of dependencies we use. See here for more infomration https://github.com/Robot/robot-js/issues/66. The following commands will help in setting up the client:
 
 ```
 npm install -g @angular/cli
