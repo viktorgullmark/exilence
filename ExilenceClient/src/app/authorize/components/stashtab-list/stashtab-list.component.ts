@@ -100,7 +100,6 @@ export class StashtabListComponent implements OnInit, OnDestroy {
   }
 
   toggle(selection, row) {
-    console.log(row);
     this.selection.toggle(row);
     this.settingsService.set('selectedStashTabs', selection.selected);
   }
