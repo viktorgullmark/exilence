@@ -169,9 +169,6 @@ export class PricingService {
     const watchPriceInfoItem = this.watchService.watchPrices.find(x =>
       (x.name === name || name.indexOf(x.name) > -1) && x.tier === mapTier);
 
-    if(name === 'Courthouse Map') {
-      debugger;
-    }
     return this.combinePricesToSimpleObject(ninjaPriceInfoItem, watchPriceInfoItem);
   }
   pricecheckByName(name: string): SimpleItemPricing {
