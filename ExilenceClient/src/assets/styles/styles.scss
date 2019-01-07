@@ -24,6 +24,10 @@ html, body {
     content: url("./../img/chaos_orb.png");
 }
 
+.icon-hover {
+    cursor: pointer;
+}
+
 .with-icon {
     &.in-table {
         padding: 0 10px 0 10px;
