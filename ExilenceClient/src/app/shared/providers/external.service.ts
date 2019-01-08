@@ -1,9 +1,11 @@
+import 'rxjs/add/operator/delay';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/toArray';
 
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
+import { of } from 'rxjs';
 import { BehaviorSubject } from 'rxjs/internal/BehaviorSubject';
 import { Observable } from 'rxjs/Observable';
 
@@ -18,6 +20,7 @@ import { Stash } from '../interfaces/stash.interface';
 import { AnalyticsService } from './analytics.service';
 import { ElectronService } from './electron.service';
 import { LogService } from './log.service';
+
 
 
 @Injectable()
@@ -141,42 +144,46 @@ export class ExternalService {
 
   getPublicMapTradeGuids(account: string, league: string) {
 
-    const requestUrl = 'https://www.pathofexile.com/api/trade/search/' + league;
-    const requestJson = {
-      'query': {
-        'status': {
-          'option': 'any'
-        },
-        'stats': [{
-          'type': 'and',
-          'filters': [],
-          'disabled': true
-        }],
-        'filters': {
-          'trade_filters': {
-            'disabled': false,
+    const tierObservable = of([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17]);
+
+    return Observable.from(tierObservable)
+      .concatMap((tier: any) => {
+
+        const requestUrl = 'https://www.pathofexile.com/api/trade/search/' + league;
+        const requestJson = {
+          'query': {
+            'status': {
+              'option': 'any'
+            },
             'filters': {
-              'account': {
-                'input': account
+              'trade_filters': {
+                'disabled': false,
+                'filters': {
+                  'account': {
+                    'input': account
+                  }
+                }
+              },
+              'map_filters': {
+                'disabled': false,
+                'filters': {
+                  'map_tier': {
+                    'min': tier - 1,
+                    'max': tier
+                  }
+                }
               }
             }
           },
-          'map_filters': {
-            'disabled': false,
-            'filters': {
-              'map_tier': {
-                'min': 0
-              }
-            }
+          'sort': {
+            'price': 'asc'
           }
-        }
-      },
-      'sort': {
-        'price': 'asc'
-      }
-    };
+        };
+        return this.http.post(requestUrl, requestJson).delay(750);
+      });
 
-    return this.http.post(requestUrl, requestJson);
+
+
 
   }
 

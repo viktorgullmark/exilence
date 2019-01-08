@@ -271,6 +271,9 @@ export class IncomeService implements OnDestroy {
       this.logService.log('Starting to fetch public maps');
       return this.externalService.getPublicMapTradeGuids(accountName, league)
         .flatMap((ids: any) => {
+
+          console.log('njetski: ', ids);
+
           const subLines = this.splitIntoSubArray(ids.result, 10);
           return this.externalService.getPublicMapsFromTradeIds(subLines, ids.id).map((pages: any) => {
             let items = [];
