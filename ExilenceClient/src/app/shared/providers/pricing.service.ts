@@ -63,6 +63,7 @@ export class PricingService {
     if (links < 5) { links = 0; }
     itemPricingObj.links = links;
     itemPricingObj.sockets = item.sockets !== undefined && item.sockets !== null ? item.sockets.length : 0;
+    itemPricingObj.frameType = item.frameType;
 
     // assign if elder or shaper
     let elderOrShaper = null;
@@ -212,11 +213,13 @@ export class PricingService {
     const ninjaPriceInfoItem = this.ninjaService.ninjaPrices.find(x =>
       x.name === name &&
       x.links === links &&
+      x.frameType === 3 &&
       (x.variation === variation || x.variation === undefined || x.variation === null)
     );
     const watchPriceInfoItem = this.watchService.watchPrices.find(x =>
       x.fullname === name &&
       x.links === links &&
+      x.frame === 3 &&
       (x.variation === variation || x.variation === undefined || x.variation === null)
     );
     return this.combinePricesToSimpleObject(ninjaPriceInfoItem, watchPriceInfoItem);

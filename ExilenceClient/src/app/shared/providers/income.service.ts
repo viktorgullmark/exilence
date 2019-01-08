@@ -158,6 +158,7 @@ export class IncomeService implements OnDestroy {
         && x.links === itemPriceInfoObj.links
         && x.gemLevel === itemPriceInfoObj.gemlevel
         && x.variation === itemPriceInfoObj.variation
+        && x.frameType === itemPriceInfoObj.frameType
       );
       if (existingItem !== undefined) {
         const indexOfItem = this.totalNetWorthItems.indexOf(existingItem);
@@ -191,7 +192,8 @@ export class IncomeService implements OnDestroy {
           links: itemPriceInfoObj.links,
           gemLevel: itemPriceInfoObj.gemlevel,
           quality: itemPriceInfoObj.quality,
-          variation: itemPriceInfoObj.variation
+          variation: itemPriceInfoObj.variation,
+          frameType: itemPriceInfoObj.frameType
         };
 
         this.totalNetWorthItems.push(netWorthItem);
@@ -249,6 +251,7 @@ export class IncomeService implements OnDestroy {
         this.totalNetWorth += this.totalNetWorthItems[i].value;
       }
 
+      console.log(this.totalNetWorthItems);
       this.totalNetWorthItems.sort((a: any, b: any) => {
         if (a.value < b.value) {
           return 1;

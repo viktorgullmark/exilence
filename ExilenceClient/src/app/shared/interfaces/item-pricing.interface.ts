@@ -11,6 +11,7 @@ export interface ItemPricing {
     chaosequiv_mode: number;
     chaosequiv_median: number;
     chaosequiv_average: number;
+    frameType: number;
     quantity: number;
 }
 
