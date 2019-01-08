@@ -200,7 +200,7 @@ export class IncomeService implements OnDestroy {
   }
 
   filterItems(items: NetWorthItem[]) {
-    return items.filter(x => x.value >= this.itemValueTreshold);
+    return items.filter(x => x.value >= this.itemValueTreshold && x.value !== 0);
   }
 
   SnapshotPlayerNetWorth(sessionId: string) {
