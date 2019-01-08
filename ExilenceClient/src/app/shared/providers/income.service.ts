@@ -251,7 +251,6 @@ export class IncomeService implements OnDestroy {
         this.totalNetWorth += this.totalNetWorthItems[i].value;
       }
 
-      console.log(this.totalNetWorthItems);
       this.totalNetWorthItems.sort((a: any, b: any) => {
         if (a.value < b.value) {
           return 1;
