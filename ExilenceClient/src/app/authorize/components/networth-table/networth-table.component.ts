@@ -163,7 +163,6 @@ export class NetworthTableComponent implements OnInit, OnDestroy {
         this.updateOverTime(difference, player.character.name);
       }
     } else {
-      debugger;
       this.updateTable(player.netWorthSnapshots[0].items, player.character.name);
     }
   }

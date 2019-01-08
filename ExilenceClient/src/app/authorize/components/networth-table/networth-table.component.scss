@@ -27,6 +27,10 @@ td {
     text-overflow: ellipsis;
 }
 
+.wide-cell {
+    max-width: 300px;
+}
+
 .networth-value {
     color: $currency-chaos-color;
 }
