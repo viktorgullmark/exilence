@@ -16,7 +16,7 @@ export class NetworthTableComponent implements OnInit, OnDestroy {
   @Input() player: Player;
   @Input() multiple = false;
   @Input() showOverTime = false;
-  displayedColumns: string[] = ['position', 'name', 'links', 'quality', 'stacksize', 'valuePerUnit', 'value'];
+  displayedColumns: string[] = ['position', 'name', 'links', 'quality', 'gemLevel', 'stacksize', 'valuePerUnit', 'value'];
   dataSource = [];
   searchText = '';
   filteredArr = [];
