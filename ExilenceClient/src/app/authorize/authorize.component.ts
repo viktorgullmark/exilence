@@ -101,6 +101,7 @@ export class AuthorizeComponent implements OnInit, OnDestroy {
   }
 
   enterParty() {
+    this.partyService.joinInProgress = true;
     this.partyService.leaveParty(this.partyService.party.name, this.player);
     setTimeout(() => {
       this.partyService.joinParty(this.form.controls.partyCode.value.toUpperCase(), this.player);
@@ -108,6 +109,7 @@ export class AuthorizeComponent implements OnInit, OnDestroy {
       this.partyService.addPartyToRecent(this.form.controls.partyCode.value.toUpperCase());
       this.router.navigateByUrl('/404', { skipLocationChange: true }).then(() =>
         this.router.navigate(['/authorized/party']));
+      this.partyService.joinInProgress = false;
     }, 750);
   }
 }

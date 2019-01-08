@@ -15,9 +15,6 @@
     </mat-tab-group>
 </div>
 
-<mat-progress-bar *ngIf="partyService.isEntering" class="progress-bar top-margin" color="primary" mode="indeterminate">
-</mat-progress-bar>
-
 <div [hidden]="partyService.isEntering || selectedIndex != 0" class="group-wrapper">
     <div class="inner-content-container" *ngIf="!partyService.isEntering && selectedIndex == 0">
         <div class="player-list-container">

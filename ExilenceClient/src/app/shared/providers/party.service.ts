@@ -53,6 +53,7 @@ export class PartyService implements OnDestroy {
   private reconnectAttempts: number;
   private forceClosed: boolean;
 
+  public joinInProgress = false;
   public maskedName = false;
   public currentPlayerGain;
   public playerGain;
