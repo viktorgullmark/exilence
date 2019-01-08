@@ -14,7 +14,7 @@ import { NetWorthHistory, NetWorthItem, NetWorthSnapshot } from '../interfaces/i
 import { ItemPricing } from '../interfaces/item-pricing.interface';
 import { Item } from '../interfaces/item.interface';
 import { Player } from '../interfaces/player.interface';
-import { Stash } from '../interfaces/stash.interface';
+import { Stash, Tab } from '../interfaces/stash.interface';
 import { AccountService } from './account.service';
 import { ExternalService } from './external.service';
 import { LogService } from './log.service';
@@ -22,6 +22,7 @@ import { NinjaService } from './ninja.service';
 import { PartyService } from './party.service';
 import { PricingService } from './pricing.service';
 import { SettingsService } from './settings.service';
+import { select } from 'd3';
 
 @Injectable()
 export class IncomeService implements OnDestroy {
@@ -157,6 +158,7 @@ export class IncomeService implements OnDestroy {
         && x.links === itemPriceInfoObj.links
         && x.gemLevel === itemPriceInfoObj.gemlevel
         && x.variation === itemPriceInfoObj.variation
+        && x.frameType === itemPriceInfoObj.frameType
       );
       if (existingItem !== undefined) {
         const indexOfItem = this.totalNetWorthItems.indexOf(existingItem);
@@ -190,7 +192,8 @@ export class IncomeService implements OnDestroy {
           links: itemPriceInfoObj.links,
           gemLevel: itemPriceInfoObj.gemlevel,
           quality: itemPriceInfoObj.quality,
-          variation: itemPriceInfoObj.variation
+          variation: itemPriceInfoObj.variation,
+          frameType: itemPriceInfoObj.frameType
         };
 
         this.totalNetWorthItems.push(netWorthItem);
@@ -199,7 +202,7 @@ export class IncomeService implements OnDestroy {
   }
 
   filterItems(items: NetWorthItem[]) {
-    return items.filter(x => x.value >= this.itemValueTreshold);
+    return items.filter(x => x.value >= this.itemValueTreshold && x.value !== 0);
   }
 
   SnapshotPlayerNetWorth(sessionId: string) {
@@ -268,6 +271,10 @@ export class IncomeService implements OnDestroy {
       publicMapPricing = true;
     }
     if (publicMapPricing === true) {
+
+      const selectedStashTabs: any[] = this.settingsService.get('selectedStashTabs');
+      const mapTab = selectedStashTabs.find(x => x.isMapTab);
+
       this.logService.log('Starting to fetch public maps');
       return this.externalService.getPublicMapTradeGuids(accountName, league)
         .flatMap((ids: any) => {
@@ -279,16 +286,18 @@ export class IncomeService implements OnDestroy {
             let items = [];
 
             pages.forEach((page: any) => {
+              page.result = page.result.filter(x => mapTab !== undefined && x.listing.stash.name === mapTab.name);
               const pageItems = page.result.map(x => x.item);
               items = items.concat(pageItems);
             });
 
-            const tab = {
-              items: items
-            } as Stash;
+            if (items.length > 0) {
+              const tab = {
+                items: items
+              } as Stash;
 
-            this.playerStashTabs.push(tab);
-
+              this.playerStashTabs.push(tab);
+            }
             this.logService.log('Finished fetching public maps');
 
           });
@@ -306,9 +315,6 @@ export class IncomeService implements OnDestroy {
 
     if (selectedStashTabs === undefined) {
       selectedStashTabs = [];
-      for (let i = 0; i < 4; i++) {
-        selectedStashTabs.push({ name: '', position: i });
-      }
     }
 
     if (selectedStashTabs.length > 21) {

@@ -16,7 +16,7 @@ export class NetworthTableComponent implements OnInit, OnDestroy {
   @Input() player: Player;
   @Input() multiple = false;
   @Input() showOverTime = false;
-  displayedColumns: string[] = ['position', 'name', 'links', 'quality', 'stacksize', 'valuePerUnit', 'value'];
+  displayedColumns: string[] = ['position', 'name', 'links', 'quality', 'gemLevel', 'stacksize', 'valuePerUnit', 'value'];
   dataSource = [];
   searchText = '';
   filteredArr = [];
@@ -69,6 +69,13 @@ export class NetworthTableComponent implements OnInit, OnDestroy {
     if (this.partySub !== undefined) {
       this.partySub.unsubscribe();
     }
+  }
+
+  getIconLink(snapshot: any) {
+    if (snapshot.name.indexOf(' Map') > -1) {
+      snapshot.icon = snapshot.icon.replace('w=1&h=1', 'w=2&h=2');
+    }
+    return snapshot.icon;
   }
 
   generateTooltip(item: NetWorthItem) {
@@ -133,6 +140,7 @@ export class NetworthTableComponent implements OnInit, OnDestroy {
             && x.links === item.links
             && x.gemLevel === item.gemLevel
             && x.variation === item.variation
+            && x.frameType === item.frameType
           );
           if (existingItem !== undefined) {
             const recentItem = Object.assign({}, item);
@@ -147,7 +155,9 @@ export class NetworthTableComponent implements OnInit, OnDestroy {
               difference.push(recentItem);
             }
           } else {
-            difference.push(item);
+            if (item.value !== 0) {
+              difference.push(item);
+            }
           }
         });
         this.updateOverTime(difference, player.character.name);
@@ -172,6 +182,7 @@ export class NetworthTableComponent implements OnInit, OnDestroy {
         && x.links === snapshot.links
         && x.gemLevel === snapshot.gemLevel
         && x.variation === snapshot.variation
+        && x.frameType === snapshot.frameType
       );
       if (existingItem !== undefined) {
         const indexOfItem = this.dataSource.indexOf(existingItem);
@@ -197,12 +208,15 @@ export class NetworthTableComponent implements OnInit, OnDestroy {
           variation: snapshot.variation,
           valuePerUnit: snapshot.valuePerUnit,
           gemLevel: snapshot.gemLevel,
-          icon: snapshot.icon,
+          icon: this.getIconLink(snapshot),
           links: snapshot.links,
           quality: snapshot.quality,
-          holdingPlayers: [playerName]
+          holdingPlayers: [playerName],
+          frameType: snapshot.frameType
         };
-        this.dataSource.push(newObj);
+        if (snapshot.value !== 0) {
+          this.dataSource.push(newObj);
+        }
       }
     });
   }
@@ -215,6 +229,7 @@ export class NetworthTableComponent implements OnInit, OnDestroy {
         && x.links === snapshot.links
         && x.gemLevel === snapshot.gemLevel
         && x.variation === snapshot.variation
+        && x.frameType === snapshot.frameType
       );
       if (existingItem !== undefined) {
         const indexOfItem = this.dataSource.indexOf(existingItem);
@@ -241,12 +256,15 @@ export class NetworthTableComponent implements OnInit, OnDestroy {
           variation: snapshot.variation,
           valuePerUnit: snapshot.valuePerUnit,
           gemLevel: snapshot.gemLevel,
-          icon: snapshot.icon,
+          icon: this.getIconLink(snapshot),
           links: snapshot.links,
           quality: snapshot.quality,
-          holdingPlayers: [playerName]
+          holdingPlayers: [playerName],
+          frameType: snapshot.frameType
         };
-        this.dataSource.push(newObj);
+        if (snapshot.value !== 0) {
+          this.dataSource.push(newObj);
+        }
       }
     });
   }

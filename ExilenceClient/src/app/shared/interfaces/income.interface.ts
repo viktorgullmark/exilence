@@ -25,4 +25,5 @@ export interface NetWorthItem {
   gemLevel: number;
   links: number;
   variation: string;
+  frameType: number;
 }

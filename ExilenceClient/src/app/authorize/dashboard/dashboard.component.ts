@@ -1,6 +1,6 @@
 import { Component, OnInit, AfterViewChecked, AfterViewInit, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
-
+import * as pkg from '../../../../package.json';
 import { Player } from '../../shared/interfaces/player.interface';
 import { AccountService } from '../../shared/providers/account.service';
 import { AnalyticsService } from '../../shared/providers/analytics.service';
@@ -20,6 +20,7 @@ import { IncomeService } from '../../shared/providers/income.service';
 
 export class DashboardComponent implements OnInit, OnDestroy, AfterViewInit {
 
+  public appVersion;
   isLoading = true;
   recentParties: string[];
   player: Player;
@@ -43,6 +44,7 @@ export class DashboardComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   ngOnInit() {
+    this.appVersion = pkg['version'];
     this.analyticsService.sendScreenview('/authorized/dashboard');
     // give the profile time to render
     this.playerSub = this.accountService.player.subscribe(res => {
@@ -55,7 +57,7 @@ export class DashboardComponent implements OnInit, OnDestroy, AfterViewInit {
 
   checkMask(partyName: string, index: number) {
 
-    if (index === 0 && this.partyService.maskedName && this.partyService.party.name === partyName) {
+    if (index === 0 && this.partyService.maskedName) {
       return '< MASKED >';
     } else if ((index > 0 && !this.partyService.maskedName) || !this.partyService.maskedName) {
       return partyName;
@@ -97,6 +99,7 @@ export class DashboardComponent implements OnInit, OnDestroy, AfterViewInit {
 
   joinParty(partyName: string) {
     if (partyName !== this.partyService.party.name) {
+      this.partyService.joinInProgress = true;
       this.partyService.leaveParty(this.partyService.party.name, this.player);
       setTimeout(() => {
         this.partyService.joinParty(partyName, this.player);
@@ -104,6 +107,7 @@ export class DashboardComponent implements OnInit, OnDestroy, AfterViewInit {
         this.partyService.addPartyToRecent(partyName);
         this.router.navigateByUrl('/404', { skipLocationChange: true }).then(() =>
           this.router.navigate(['/authorized/party']));
+        this.partyService.joinInProgress = false;
       }, 750);
     }
   }

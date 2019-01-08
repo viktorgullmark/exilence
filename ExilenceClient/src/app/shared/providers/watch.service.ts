@@ -52,6 +52,7 @@ export class WatchService {
           item.ilvl = item.ilvl || 0;
           item.links = item.links || 0;
           item.quality = item.quality || 0;
+          item.frame = item.frame || 0;
           item.variation = item.variation || undefined;
           if (item.variation) {
             item.variation = item.variation.charAt(0).toUpperCase() + item.variation.slice(1);

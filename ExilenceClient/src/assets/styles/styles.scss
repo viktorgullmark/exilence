@@ -24,6 +24,10 @@ html, body {
     content: url("./../img/chaos_orb.png");
 }
 
+.icon-hover {
+    cursor: pointer;
+}
+
 .with-icon {
     &.in-table {
         padding: 0 10px 0 10px;
@@ -236,9 +240,14 @@ a {
         justify-content: flex-start;
         align-items: flex-start;
 
-        > *:not(router-outlet) {
+        > *:not(router-outlet):not(mat-progress-bar) {
             width: 100%;
             height: $content-height;
+        }
+        > mat-progress-bar {
+            position: absolute;
+            bottom: 30px;
+            width: calc(100% - 50px);
         }
     }
 }
@@ -309,6 +318,41 @@ a {
 
 /* #endregion */
 
+.rarity-0 {
+    //normal
+    color: $rarity-normal-color !important;
+}
+
+.rarity-1 {
+    // magic
+    color: $rarity-magic-color !important;
+}
+
+.rarity-2 {
+    // rare
+    color: $rarity-rare-color !important;
+}
+
+.rarity-3 {
+    // unique
+    color: $rarity-unique-color !important;
+}
+
+.rarity-4 {
+    // gem
+    color: $rarity-gem-color !important;
+}
+
+.rarity-5 {
+    // currency
+    color: $rarity-currency-color !important;
+}
+
+.rarity-7 {
+    // questitem
+    color: $rarity-questitem-color !important;
+}
+
 /* #region Override classes for Material */
 .legend-label:hover, .active, .legend-label-text, .chart-legend {
     color: #fff !important;
@@ -344,7 +388,7 @@ mat-vertical-stepper {
 }
 
 .mat-header-cell {
-    font-size: 14px !important;
+    font-size: 12px !important;
 }
 
 .mat-paginator {

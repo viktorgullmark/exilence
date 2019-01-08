@@ -113,8 +113,10 @@ export class NinjaService {
                   variation: line.variant,
                   baseType: line.baseType,
                   icon: line.icon,
-                  mapTier: line.mapTier
+                  mapTier: line.mapTier,
+                  frameType: line.itemClass
                 } as NinjaPriceInfo;
+
                 this.ninjaPrices.push(ninjaPriceInfoObj);
 
               }

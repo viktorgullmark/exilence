@@ -39,5 +39,7 @@
   </mat-sidenav>
   <mat-sidenav-content class="content-container">
     <router-outlet></router-outlet>
+    <mat-progress-bar *ngIf="partyService.joinInProgress || partyService.isEntering" class="progress-bar top-margin" color="primary" mode="indeterminate">
+    </mat-progress-bar>
   </mat-sidenav-content>
 </mat-sidenav-container>
