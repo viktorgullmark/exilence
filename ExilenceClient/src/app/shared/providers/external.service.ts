@@ -5,7 +5,6 @@ import 'rxjs/add/operator/toArray';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
-import { of } from 'rxjs';
 import { BehaviorSubject } from 'rxjs/internal/BehaviorSubject';
 import { Observable } from 'rxjs/Observable';
 
@@ -144,7 +143,7 @@ export class ExternalService {
 
   getPublicMapTradeGuids(account: string, league: string) {
 
-    const tierObservable = of([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17]);
+    const tierObservable = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17];
 
     return Observable.from(tierObservable)
       .concatMap((tier: any) => {
@@ -179,8 +178,8 @@ export class ExternalService {
             'price': 'asc'
           }
         };
-        return this.http.post(requestUrl, requestJson).delay(750);
-      });
+        return this.http.post(requestUrl, requestJson).delay(1000);
+      }).do(t => console.log(t));
 
 
 

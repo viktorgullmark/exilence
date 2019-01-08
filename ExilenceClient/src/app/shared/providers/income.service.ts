@@ -14,7 +14,7 @@ import { NetWorthHistory, NetWorthItem, NetWorthSnapshot } from '../interfaces/i
 import { ItemPricing } from '../interfaces/item-pricing.interface';
 import { Item } from '../interfaces/item.interface';
 import { Player } from '../interfaces/player.interface';
-import { Stash, Tab } from '../interfaces/stash.interface';
+import { Stash } from '../interfaces/stash.interface';
 import { AccountService } from './account.service';
 import { ExternalService } from './external.service';
 import { LogService } from './log.service';
@@ -22,7 +22,6 @@ import { NinjaService } from './ninja.service';
 import { PartyService } from './party.service';
 import { PricingService } from './pricing.service';
 import { SettingsService } from './settings.service';
-import { select } from 'd3';
 
 @Injectable()
 export class IncomeService implements OnDestroy {
@@ -232,8 +231,8 @@ export class IncomeService implements OnDestroy {
 
     return Observable.forkJoin(
       this.getPlayerPublicMaps(accountName, league),
-      this.pricingService.retrieveExternalPrices(),
-      this.getPlayerStashTabs(sessionId, accountName, league)
+      this.getPlayerStashTabs(sessionId, accountName, league),
+      this.pricingService.retrieveExternalPrices()
     ).do(() => {
       this.logService.log('Finished retriving stashhtabs');
       if (this.characterPricing) {
@@ -276,31 +275,38 @@ export class IncomeService implements OnDestroy {
       const mapTab = selectedStashTabs.find(x => x.isMapTab);
 
       this.logService.log('Starting to fetch public maps');
-      return this.externalService.getPublicMapTradeGuids(accountName, league)
-        .flatMap((ids: any) => {
+      return this.externalService.getPublicMapTradeGuids(accountName, league).toArray()
+        .flatMap((searchArrays: any[]) => {
 
-          console.log('njetski: ', ids);
+          console.log('Collected all search ids for all tiers: ', searchArrays);
 
-          const subLines = this.splitIntoSubArray(ids.result, 10);
-          return this.externalService.getPublicMapsFromTradeIds(subLines, ids.id).map((pages: any) => {
-            let items = [];
+          return Observable.from(searchArrays)
+            .concatMap((ids: any) => {
+              const subLines = this.splitIntoSubArray(ids.result, 10);
+              return this.externalService.getPublicMapsFromTradeIds(subLines, ids.id).map((pages: any) => {
 
-            pages.forEach((page: any) => {
-              page.result = page.result.filter(x => mapTab !== undefined && x.listing.stash.name === mapTab.name);
-              const pageItems = page.result.map(x => x.item);
-              items = items.concat(pageItems);
+                console.log('Pages for tier: ', pages);
+
+                let items = [];
+
+                pages.forEach((page: any) => {
+                  page.result = page.result.filter(x => mapTab !== undefined && x.listing.stash.name === mapTab.name);
+                  const pageItems = page.result.map(x => x.item);
+                  items = items.concat(pageItems);
+                });
+
+                if (items.length > 0) {
+                  const tab = {
+                    items: items
+                  } as Stash;
+
+                  this.playerStashTabs.push(tab);
+                }
+                this.logService.log('Finished fetching public maps');
+
+              })
+                .delay(1000);
             });
-
-            if (items.length > 0) {
-              const tab = {
-                items: items
-              } as Stash;
-
-              this.playerStashTabs.push(tab);
-            }
-            this.logService.log('Finished fetching public maps');
-
-          });
         });
     } else {
       return of(null);
@@ -324,7 +330,7 @@ export class IncomeService implements OnDestroy {
     return Observable.from(selectedStashTabs)
       .concatMap((tab: any) => {
         return this.externalService.getStashTab(sessionId, accountName, league, tab.position)
-          .delay(750);
+          .delay(1100);
       })
       .do(stashTab => {
         this.playerStashTabs.push(stashTab);
