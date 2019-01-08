@@ -5,6 +5,7 @@ All notable changes to this project will be documented in this file.
 - Fixed a bug where maps in regular tabs werent included in the pricing
 - Fixed a bug where the gain-table didn't display new items, only the difference between current ones
 - Added support to price the maptab (by setting it to public)
+- Added column for gem-level in the net worth table
 - Added tooltip to value in networth table to display more detailed data such as average, mode and mean
 - Added file-output for gain and networth values, making it available for import in OBS 
 - Updated SignalR package

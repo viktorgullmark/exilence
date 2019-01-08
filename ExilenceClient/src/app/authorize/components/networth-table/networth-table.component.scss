@@ -22,7 +22,7 @@ td {
 .mat-cell {
     font-size: 12px !important;
     white-space: nowrap;
-    max-width: 140px;
+    max-width: 85px;
     overflow: hidden;
     text-overflow: ellipsis;
 }
@@ -33,6 +33,10 @@ td {
 
 .item-quality {
     color: $item-quality-color;
+}
+
+.item-gemlevel {
+    color: $item-gemlevel-color;
 }
 
 .not-available {

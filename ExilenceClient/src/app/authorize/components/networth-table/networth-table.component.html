@@ -39,6 +39,14 @@
     </td>
   </ng-container>
 
+  <ng-container matColumnDef="gemLevel">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header="gemLevel"> Level </th>
+    <td mat-cell *matCellDef="let element">
+      <span *ngIf="element.gemLevel > 0" class="item-gemlevel">{{element.gemLevel}}</span>
+      <span *ngIf="element.gemLevel == 0 || element.gemLevel == undefined" class="not-available">n/a</span>
+    </td>
+  </ng-container>
+
   <ng-container matColumnDef="stacksize">
     <th mat-header-cell *matHeaderCellDef mat-sort-header="stacksize"> Quantity </th>
     <td mat-cell *matCellDef="let element"> {{element.stacksize}} </td>
