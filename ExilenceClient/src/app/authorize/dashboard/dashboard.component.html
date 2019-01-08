@@ -1,14 +1,14 @@
 <h3 class="mat-h3 page-header">{{'PAGES.DASHBOARD.TITLE' | translate}}</h3>
 <mat-divider class="divider"></mat-divider>
 <div class="dashboard-content-container">
-    <div class="recent-container" *ngIf="recentParties.length > 0 && !partyService.maskedName">
+    <div class="recent-container" *ngIf="recentParties.length > 0">
         <div class="recent-party-container">
             <div class="party-headline-container">
                 <h3 class="mat-h3 party-headline">Recent groups</h3>
                 <span> (click to join)</span>
             </div>
             <div class="recent-party-badge-container" *ngFor="let party of recentParties, let i = index">
-                <mat-card class="recent-party-badge" [ngClass]="{'current-party-badge': party === partyService.party.name }" (click)="joinParty(party)" *ngIf="i < 4">
+                <mat-card class="recent-party-badge" [ngClass]="{'current-party-badge': party === partyService.party.name }" (click)="joinParty(party)" *ngIf="i < 4 && !(i > 0 && partyService.maskedName)">
                     <mat-icon (click)="$event.stopPropagation(); removePartyFromRecent(party)" class="close-icon">close</mat-icon>
                     {{checkMask(party, i)}}
                 </mat-card>
