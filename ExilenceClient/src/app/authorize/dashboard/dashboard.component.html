@@ -8,7 +8,8 @@
                 <span> (click to join)</span>
             </div>
             <div class="recent-party-badge-container" *ngFor="let party of recentParties, let i = index">
-                <mat-card class="recent-party-badge" [ngClass]="{'current-party-badge': party === partyService.party.name }" (click)="joinParty(party)" *ngIf="i < 4 && !(i > 0 && partyService.maskedName)">
+                <mat-card class="recent-party-badge" [ngClass]="{'current-party-badge': party === partyService.party.name }"
+                    (click)="joinParty(party)" *ngIf="i < 4 && !(i > 0 && partyService.maskedName)">
                     <mat-icon (click)="$event.stopPropagation(); removePartyFromRecent(party)" class="close-icon">close</mat-icon>
                     {{checkMask(party, i)}}
                 </mat-card>
@@ -25,6 +26,8 @@
         <li>Fixed a bug where maps in regular tabs werent included in the pricing</li>
         <li>Fixed a bug where the gain-table didn't display new items, only the difference between current ones</li>
         <li>Fixed a bug where items of zero value would sometimes be included in pricing</li>
+        <li>Reworked dashboard (removed old sections and added changelog for current version)</li>
+        <li>Reworked how masking works, now always masks the first group if the setting is enabled</li>
         <li>Updated SignalR package</li>
         <li>Removed negotiate-step for websockets, now connects directly instead</li>
         <li>Minor style tweaks to net worth table</li>
