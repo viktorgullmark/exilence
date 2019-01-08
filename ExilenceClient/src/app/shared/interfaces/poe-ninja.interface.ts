@@ -78,6 +78,7 @@ export interface NinjaLine {
     variant?: string;
     icon: string;
     mapTier?: number;
+    itemClass?: number;
 }
 
 export interface NinjaPriceInfo {
@@ -91,6 +92,7 @@ export interface NinjaPriceInfo {
     links: number;
     icon: string;
     mapTier: number;
+    frameType: number;
 }
 
 export interface NinjaCurrencyDetail {
