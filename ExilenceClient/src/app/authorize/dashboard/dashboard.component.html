@@ -1,7 +1,7 @@
 <h3 class="mat-h3 page-header">{{'PAGES.DASHBOARD.TITLE' | translate}}</h3>
 <mat-divider class="divider"></mat-divider>
 <div class="dashboard-content-container">
-    <div class="recent-container" *ngIf="recentParties.length > 0">
+    <div class="recent-container" *ngIf="recentParties.length > 0 && !partyService.maskedName">
         <div class="recent-party-container">
             <div class="party-headline-container">
                 <h3 class="mat-h3 party-headline">Recent groups</h3>
