@@ -8,26 +8,31 @@
                 <span> (click to join)</span>
             </div>
             <div class="recent-party-badge-container" *ngFor="let party of recentParties, let i = index">
-                <mat-card class="recent-party-badge" (click)="joinParty(party)" *ngIf="i < 4">
+                <mat-card class="recent-party-badge" [ngClass]="{'current-party-badge': party === partyService.party.name }" (click)="joinParty(party)" *ngIf="i < 4">
                     <mat-icon (click)="$event.stopPropagation(); removePartyFromRecent(party)" class="close-icon">close</mat-icon>
                     {{checkMask(party, i)}}
                 </mat-card>
             </div>
         </div>
     </div>
-    <h3 class="mat-h3">Changelog</h3>
+    <h3 class="mat-h3">Changes included in version {{appVersion}}</h3>
+    <ul>
+        <li>Added support to price the maptab (by setting it to public)</li>
+        <li>Added column for gem-level in the net worth table</li>
+        <li>Added tooltip to value in networth table to display more detailed data such as average, mode and mean</li>
+        <li>Added colors to names for items in the net worth table, based on rarity</li>
+        <li>Added file-output for gain and networth values, making it available for import in OBS</li>
+        <li>Fixed a bug where maps in regular tabs werent included in the pricing</li>
+        <li>Fixed a bug where the gain-table didn't display new items, only the difference between current ones</li>
+        <li>Fixed a bug where items of zero value would sometimes be included in pricing</li>
+        <li>Updated SignalR package</li>
+        <li>Removed negotiate-step for websockets, now connects directly instead</li>
+        <li>Minor style tweaks to net worth table</li>
+    </ul>
     <p class="mat-body-1">
-        To see whats new in this version, please go to <a class="inline-link" (click)="openLink('https://github.com/viktorgullmark/exilence/blob/master/CHANGELOG.md')">this
+        To see the full changelog, please go to <a class="inline-link" (click)="openLink('https://github.com/viktorgullmark/exilence/blob/master/CHANGELOG.md')">this
             link
         </a>
-    </p>
-    <h3 class="mat-h3">Getting started</h3>
-    <p class="mat-body-1">
-        To start using the app, enter a group-name of your choice in the top-left corner and press 'Enter'. Then tell
-        your friends
-        to enter the same group-name as you, and you will be able to see each other. Note that each player updates
-        every
-        time they enter a new zone.
     </p>
     <h3 class="mat-h3">Beta information</h3>
     <p class="mat-body-1">
@@ -41,13 +46,9 @@
         application.
     </p>
     <p class="mat-body-1">
-        Feel free to contact us on GitHub, Discord or directly in-game for any questions/input.
+        Feel free to contact us on Discord or GitHub for any questions/input.
     </p>
     <p class="mat-body-1">
-        ign: CojL
-        <br />ign: Umaycry
-        <br />
-        <br />
         <a class="inline-link" (click)="openLink('https://github.com/viktorgullmark')">github.com/viktorgullmark</a>
         <br />
         <a class="inline-link" (click)="openLink('https://github.com/petterannerwall')">github.com/petterannerwall</a>
