@@ -23,6 +23,7 @@ namespace Exilence.Models
         public int Quality { get; set; }
         public int Quantity { get; set; }
         public string Variation { get; set; }
+        public int FrameType { get; set; }
     }
 
     [Serializable]

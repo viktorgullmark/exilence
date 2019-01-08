@@ -163,6 +163,7 @@ export class NetworthTableComponent implements OnInit, OnDestroy {
         this.updateOverTime(difference, player.character.name);
       }
     } else {
+      debugger;
       this.updateTable(player.netWorthSnapshots[0].items, player.character.name);
     }
   }
@@ -211,7 +212,8 @@ export class NetworthTableComponent implements OnInit, OnDestroy {
           icon: this.getIconLink(snapshot),
           links: snapshot.links,
           quality: snapshot.quality,
-          holdingPlayers: [playerName]
+          holdingPlayers: [playerName],
+          frameType: snapshot.frameType
         };
         if (snapshot.value !== 0) {
           this.dataSource.push(newObj);
@@ -258,7 +260,8 @@ export class NetworthTableComponent implements OnInit, OnDestroy {
           icon: this.getIconLink(snapshot),
           links: snapshot.links,
           quality: snapshot.quality,
-          holdingPlayers: [playerName]
+          holdingPlayers: [playerName],
+          frameType: snapshot.frameType
         };
         if (snapshot.value !== 0) {
           this.dataSource.push(newObj);

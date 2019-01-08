@@ -13,7 +13,7 @@
 
   <ng-container matColumnDef="name">
     <th mat-header-cell *matHeaderCellDef mat-sort-header="name"> Name </th>
-    <td mat-cell *matCellDef="let element" class="name-col"> {{element.name}} </td>
+    <td mat-cell *matCellDef="let element" class="name-col"><span class="rarity-{{element.frameType}}">{{element.name}}</span></td>
   </ng-container>
 
   <ng-container matColumnDef="holdingPlayers" *ngIf="multiple && !showOverTime">
