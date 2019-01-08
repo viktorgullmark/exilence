@@ -136,14 +136,13 @@ export class ExternalService {
     return Observable.from(subLines)
       .concatMap((lines: any) => {
         const url = `https://www.pathofexile.com/api/trade/fetch/${lines.join(',')}?query=${query}`;
-        return this.http.get(url)
-          .delay(1000);
+        return this.http.get(url).delay(1000);
       }).toArray();
   }
 
   getPublicMapTradeGuids(account: string, league: string) {
 
-    const tierObservable = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17];
+    const tierObservable = [1, 5, 9, 13, 17];
 
     return Observable.from(tierObservable)
       .concatMap((tier: any) => {
@@ -167,8 +166,8 @@ export class ExternalService {
                 'disabled': false,
                 'filters': {
                   'map_tier': {
-                    'min': tier - 1,
-                    'max': tier
+                    'min': tier,
+                    'max': tier + 3
                   }
                 }
               }
@@ -178,7 +177,7 @@ export class ExternalService {
             'price': 'asc'
           }
         };
-        return this.http.post(requestUrl, requestJson).delay(1000);
+        return this.http.post(requestUrl, requestJson).delay(0);
       }).do(t => console.log(t));
 
 
