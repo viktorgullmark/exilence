@@ -64,7 +64,7 @@
             <mat-tab #gainTab id="gainTab">
                 <ng-template mat-tab-label>
                     <mat-icon class="tab-icon">access_time</mat-icon>
-                    &nbsp;Change in the past {{gainHours}} hour/s
+                    &nbsp;Change in the past {{gainHours}} hour(s)
                 </ng-template>
             </mat-tab>
         </mat-tab-group>
@@ -90,7 +90,7 @@
             </form>
         </div>
         <div class="networth-table-wrapper" [hidden]="selectedIndex != 1">
-            <app-networth-table #overTimeTable *ngIf="selectedIndex == 1" [multiple]="true" [showOverTime]="true"></app-networth-table>
+            <app-networth-table #overTimeTable *ngIf="selectedIndex == 1" (differenceChanged)="updateDifference($event)" [multiple]="true" [showOverTime]="true"></app-networth-table>
         </div>
 
     </div>
