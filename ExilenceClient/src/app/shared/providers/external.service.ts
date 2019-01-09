@@ -183,7 +183,7 @@ export class ExternalService {
           }
         };
         // this.removeCookie();
-        return this.TradeSearchRequestLimit.limit(this.http.post(requestUrl, requestJson, { withCredentials: false }));
+        return this.TradeSearchRequestLimit.limit(this.http.post(requestUrl, requestJson));
         // return this.http.post(requestUrl, requestJson).delay(1000);
       });
   }
