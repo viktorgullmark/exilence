@@ -231,7 +231,7 @@ export class LoginComponent implements OnInit, OnDestroy {
     }
 
     setSessionCookie(sessionId: string) {
-        this.externalService.setCookie(sessionId);
+        this.externalService.setCookie(sessionId, this.electronService, () => { });
     }
 
     getLeagues(accountName?: string, skipStep?: boolean) {

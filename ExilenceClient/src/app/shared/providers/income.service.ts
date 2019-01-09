@@ -269,39 +269,39 @@ export class IncomeService implements OnDestroy {
 
     if (mapTab !== undefined && mapTab) {
       this.logService.log('Starting to fetch public maps');
-      return this.externalService.getPublicMapTradeGuids(accountName, league).toArray()
-        .flatMap((searchArrays: any[]) => {
+      return this.externalService.getPublicMapTradeGuids(accountName, league) // .toArray()
+        .flatMap((ids: any) => {
 
-          console.log('Collected all search ids for all tiers: ', searchArrays);
+          console.log('Collected all search ids for all tiers: ', ids);
 
-          return Observable.from(searchArrays)
-            .concatMap((ids: any) => {
-              const subLines = this.splitIntoSubArray(ids.result, 10);
-              return this.externalService.getPublicMapsFromTradeIds(subLines, ids.id).map((pages: any) => {
+          // return Observable.from(searchArrays)
+          //   .concatMap((ids: any) => {
+          const subLines = this.splitIntoSubArray(ids.result, 10);
+          return this.externalService.getPublicMapsFromTradeIds(subLines, ids.id).map((pages: any) => {
 
-                console.log('Pages for tier: ', pages);
+            console.log('Pages for tier: ', pages);
 
-                let items = [];
+            let items = [];
 
-                pages.forEach((page: any) => {
-                  page.result = page.result.filter(x => x.listing.stash.name === mapTab.name);
-                  const pageItems = page.result.map(x => x.item);
-                  items = items.concat(pageItems);
-                });
-
-                if (items.length > 0) {
-                  const tab = {
-                    items: items
-                  } as Stash;
-
-                  this.playerStashTabs.push(tab);
-                  console.log('tabs:', this.playerStashTabs);
-                }
-                this.logService.log('Finished fetching public maps');
-
-              })
-                .delay(1000);
+            pages.forEach((page: any) => {
+              page.result = page.result.filter(x => x.listing.stash.name === mapTab.name);
+              const pageItems = page.result.map(x => x.item);
+              items = items.concat(pageItems);
             });
+
+            if (items.length > 0) {
+              const tab = {
+                items: items
+              } as Stash;
+
+              this.playerStashTabs.push(tab);
+              console.log('tabs:', this.playerStashTabs);
+            }
+            this.logService.log('Finished fetching public maps');
+
+          })
+            .delay(1000);
+          // });
         });
     } else {
       return of(null);
