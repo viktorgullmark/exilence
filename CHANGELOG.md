@@ -9,10 +9,12 @@ All notable changes to this project will be documented in this file.
 - Added file-output for gain and networth values, making it available for import in OBS
 - Fixed a bug where maps in regular tabs werent included in the pricing
 - Fixed a bug where the gain-table didn't display new items, only the difference between current ones
+- Fixed a bug where the gain-table didn't display removed items properly
 - Fixed a bug where items of zero value would sometimes be included in pricing
 - Now displays a loading-bar when entering party
 - Reworked dashboard (removed old sections and added changelog for current version)
 - Reworked how masking works, now always masks the first group if the setting is enabled 
+- Updated the FAQ-page
 - Updated SignalR package
 - Removed negotiate-step for websockets, now connects directly instead
 - Minor style tweaks to net worth table

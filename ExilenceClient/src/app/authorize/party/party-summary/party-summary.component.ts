@@ -32,6 +32,7 @@ export class PartySummaryComponent implements OnInit, OnDestroy {
   private partyGainSub: Subscription;
   public partyGain = 0;
   private partySub: Subscription;
+  public totalDifference = 0;
   constructor(
     @Inject(FormBuilder) fb: FormBuilder,
     public messageValueService: MessageValueService,
@@ -76,6 +77,10 @@ export class PartySummaryComponent implements OnInit, OnDestroy {
     if (this.partySub !== undefined) {
       this.partySub.unsubscribe();
     }
+  }
+
+  updateDifference(event) {
+    this.totalDifference = event;
   }
 
   toggleGainHours(event) {
