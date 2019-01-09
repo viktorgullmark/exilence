@@ -264,16 +264,10 @@ export class IncomeService implements OnDestroy {
 
   getPlayerPublicMaps(accountName: string, league: string) {
 
-    let publicMapPricing = this.settingsService.get('publicMapPricing');
-    // default to true
-    if (publicMapPricing === undefined) {
-      publicMapPricing = true;
-    }
-    if (publicMapPricing === true) {
+    const selectedStashTabs: any[] = this.settingsService.get('selectedStashTabs');
+    const mapTab = selectedStashTabs.find(x => x.isMapTab);
 
-      const selectedStashTabs: any[] = this.settingsService.get('selectedStashTabs');
-      const mapTab = selectedStashTabs.find(x => x.isMapTab);
-
+    if (mapTab !== undefined && mapTab) {
       this.logService.log('Starting to fetch public maps');
       return this.externalService.getPublicMapTradeGuids(accountName, league).toArray()
         .flatMap((searchArrays: any[]) => {
@@ -290,7 +284,7 @@ export class IncomeService implements OnDestroy {
                 let items = [];
 
                 pages.forEach((page: any) => {
-                  page.result = page.result.filter(x => mapTab !== undefined && x.listing.stash.name === mapTab.name);
+                  page.result = page.result.filter(x => x.listing.stash.name === mapTab.name);
                   const pageItems = page.result.map(x => x.item);
                   items = items.concat(pageItems);
                 });
@@ -301,6 +295,7 @@ export class IncomeService implements OnDestroy {
                   } as Stash;
 
                   this.playerStashTabs.push(tab);
+                  console.log('tabs:', this.playerStashTabs);
                 }
                 this.logService.log('Finished fetching public maps');
 
