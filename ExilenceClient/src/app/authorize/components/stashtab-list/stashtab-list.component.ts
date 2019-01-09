@@ -1,6 +1,6 @@
 import { SelectionModel } from '@angular/cdk/collections';
 import { Component, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { MatSort, MatTableDataSource } from '@angular/material';
+import { MatSort, MatTableDataSource, MatDialog } from '@angular/material';
 import { Subscription } from 'rxjs';
 
 import { Stash, Tab } from '../../../shared/interfaces/stash.interface';
@@ -8,6 +8,7 @@ import { AlertService } from '../../../shared/providers/alert.service';
 import { ExternalService } from '../../../shared/providers/external.service';
 import { PartyService } from '../../../shared/providers/party.service';
 import { SettingsService } from '../../../shared/providers/settings.service';
+import { MaptabInfoDialogComponent } from './maptab-info-dialog/maptab-info-dialog.component';
 
 @Component({
   selector: 'app-stashtab-list',
@@ -30,7 +31,8 @@ export class StashtabListComponent implements OnInit, OnDestroy {
     private settingsService: SettingsService,
     private externalService: ExternalService,
     private partyService: PartyService,
-    private alertService: AlertService
+    private alertService: AlertService,
+    private maptabDialog: MatDialog
   ) { }
 
   ngOnInit() {
@@ -95,8 +97,24 @@ export class StashtabListComponent implements OnInit, OnDestroy {
     }
   }
 
+  openMaptabDialog(): void {
+    const dialogRef = this.maptabDialog.open(MaptabInfoDialogComponent, {
+      width: '850px'
+    });
+    dialogRef.afterClosed().subscribe(result => {
+    });
+  }
+
   showAlert() {
     this.alertService.showAlert({ message: 'You can select at most 20 stash tabs', action: 'OK' });
+  }
+
+  shouldToggle(selection, row) {
+    const mapTabSelected = selection.selected.find(x => x.position === row.position) !== undefined;
+    if (row.isMapTab && !mapTabSelected) {
+      this.openMaptabDialog();
+    }
+    this.toggle(selection, row);
   }
 
   toggle(selection, row) {
