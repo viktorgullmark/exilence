@@ -45,9 +45,6 @@ export class NetworthTableComponent implements OnInit, OnDestroy {
       });
     } else if (this.multiple) {
       // party logic
-      this.partyService.party.players.forEach(p => {
-        this.loadPlayerData(p);
-      });
       this.filter();
 
       this.partySub = this.partyService.partyUpdated.subscribe(party => {
