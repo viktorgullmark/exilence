@@ -155,7 +155,7 @@ export class NetworthTableComponent implements OnInit, OnDestroy {
               difference.push(recentItem);
             }
           } else {
-            if (item.value !== 0) {
+            if (item.value !== 0 && item.stacksize !== 0) {
               difference.push(item);
             }
           }
@@ -187,12 +187,15 @@ export class NetworthTableComponent implements OnInit, OnDestroy {
       if (existingItem !== undefined) {
         const indexOfItem = this.dataSource.indexOf(existingItem);
         // update existing item with new data
-        existingItem.stacksize = snapshot.stacksize + existingItem.stacksize;
-        existingItem.value = snapshot.value + existingItem.value;
-        // fix for existing items not containing these props
-        existingItem.quality = snapshot.quality;
-        existingItem.links = snapshot.links;
-        this.dataSource[indexOfItem] = existingItem;
+        if (snapshot.stacksize + existingItem.stacksize !== 0) {
+          existingItem.stacksize = snapshot.stacksize + existingItem.stacksize;
+          existingItem.value = snapshot.value + existingItem.value;
+          // fix for existing items not containing these props
+          existingItem.quality = snapshot.quality;
+          existingItem.links = snapshot.links;
+          existingItem.frameType = snapshot.frameType;
+          this.dataSource[indexOfItem] = existingItem;
+        }
       } else {
         const newObj = {
           position: items.indexOf(snapshot) + 1,
@@ -214,7 +217,7 @@ export class NetworthTableComponent implements OnInit, OnDestroy {
           holdingPlayers: [playerName],
           frameType: snapshot.frameType
         };
-        if (snapshot.value !== 0) {
+        if (snapshot.value !== 0 && snapshot.stacksize !== 0) {
           this.dataSource.push(newObj);
         }
       }
@@ -262,7 +265,7 @@ export class NetworthTableComponent implements OnInit, OnDestroy {
           holdingPlayers: [playerName],
           frameType: snapshot.frameType
         };
-        if (snapshot.value !== 0) {
+        if (snapshot.value !== 0 && snapshot.stacksize !== 0) {
           this.dataSource.push(newObj);
         }
       }
