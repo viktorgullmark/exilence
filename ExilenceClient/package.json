@@ -53,6 +53,7 @@
     "node-key-sender": "github:viktorgullmark/node-key-sender",
     "poe-log-monitor": "github:viktorgullmark/poe-log-monitor",
     "robot-js": "^2.0.0",
+    "rxjs-ratelimiter": "^1.0.1",
     "universal-analytics": "^0.4.20"
   },
   "devDependencies": {

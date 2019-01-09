@@ -1,6 +1,7 @@
 import 'rxjs/add/operator/delay';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/toArray';
+import RateLimiter from 'rxjs-ratelimiter';
 
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
@@ -28,6 +29,9 @@ export class ExternalService {
 
   public leagues: BehaviorSubject<League[]> = new BehaviorSubject<League[]>([]);
   public tradeLeagueChanged = false;
+
+  private TradeSearchRequestLimit = new RateLimiter(1, 1000);
+  private TradeFetchRequestLimit = new RateLimiter(1, 1000);
 
   constructor(
     private http: HttpClient,
@@ -136,13 +140,14 @@ export class ExternalService {
     return Observable.from(subLines)
       .concatMap((lines: any) => {
         const url = `https://www.pathofexile.com/api/trade/fetch/${lines.join(',')}?query=${query}`;
-        return this.http.get(url).delay(1000);
+        // return this.http.get(url).delay(500);
+        return this.TradeFetchRequestLimit.limit(this.http.get(url));
       }).toArray();
   }
 
   getPublicMapTradeGuids(account: string, league: string) {
 
-    const tierObservable = [1, 5, 9, 13, 17];
+    const tierObservable = [17, 16, 15, 14, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1];
 
     return Observable.from(tierObservable)
       .concatMap((tier: any) => {
@@ -167,7 +172,7 @@ export class ExternalService {
                 'filters': {
                   'map_tier': {
                     'min': tier,
-                    'max': tier + 3
+                    'max': tier
                   }
                 }
               }
@@ -177,12 +182,10 @@ export class ExternalService {
             'price': 'asc'
           }
         };
-        return this.http.post(requestUrl, requestJson).delay(0);
-      }).do(t => console.log(t));
-
-
-
-
+        // this.removeCookie();
+        return this.TradeSearchRequestLimit.limit(this.http.post(requestUrl, requestJson, { withCredentials: false }));
+        // return this.http.post(requestUrl, requestJson).delay(1000);
+      });
   }
 
   setCookie(sessionId: string) {
@@ -198,6 +201,14 @@ export class ExternalService {
     };
 
     this.electronService.remote.session.defaultSession.cookies.set(cookie, (error) => {
+      console.log('Cookie Set');
+      if (error) { console.error(error); }
+    });
+  }
+
+  removeCookie() {
+    this.electronService.remote.session.defaultSession.cookies.remove('http://www.pathofexile.com', 'POESESSID', (error) => {
+      console.log('Cookie Removed');
       if (error) { console.error(error); }
     });
   }
