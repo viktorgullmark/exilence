@@ -269,17 +269,10 @@ export class IncomeService implements OnDestroy {
 
     if (mapTab !== undefined && mapTab) {
       this.logService.log('Starting to fetch public maps');
-      return this.externalService.getPublicMapTradeGuids(accountName, league) // .toArray()
+      return this.externalService.SearchPublicMaps(accountName, league) // .toArray()
         .flatMap((ids: any) => {
-
-          console.log('Collected all search ids for all tiers: ', ids);
-
-          // return Observable.from(searchArrays)
-          //   .concatMap((ids: any) => {
           const subLines = this.splitIntoSubArray(ids.result, 10);
-          return this.externalService.getPublicMapsFromTradeIds(subLines, ids.id).map((pages: any) => {
-
-            console.log('Pages for tier: ', pages);
+          return this.externalService.FetchPublicMaps(subLines, ids.id).map((pages: any) => {
 
             let items = [];
 
@@ -295,10 +288,7 @@ export class IncomeService implements OnDestroy {
               } as Stash;
 
               this.playerStashTabs.push(tab);
-              console.log('tabs:', this.playerStashTabs);
             }
-            this.logService.log('Finished fetching public maps');
-
           })
             .delay(1000);
           // });
@@ -323,10 +313,9 @@ export class IncomeService implements OnDestroy {
     }
 
     return Observable.from(selectedStashTabs)
-      .concatMap((tab: any) => {
-        return this.externalService.getStashTab(sessionId, accountName, league, tab.position)
-          .delay(1100);
-      })
+      .mergeMap((tab: any) => {
+        return this.externalService.getStashTab(sessionId, accountName, league, tab.position);
+      }, 5)
       .do(stashTab => {
         this.playerStashTabs.push(stashTab);
       });

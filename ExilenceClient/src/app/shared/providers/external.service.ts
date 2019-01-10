@@ -21,8 +21,7 @@ import { Stash } from '../interfaces/stash.interface';
 import { AnalyticsService } from './analytics.service';
 import { ElectronService } from './electron.service';
 import { LogService } from './log.service';
-import { observable, bindCallback, pipe } from 'rxjs';
-import { async } from 'rxjs/internal/scheduler/async';
+import { bindCallback } from 'rxjs';
 
 
 
@@ -33,8 +32,8 @@ export class ExternalService {
   public leagues: BehaviorSubject<League[]> = new BehaviorSubject<League[]>([]);
   public tradeLeagueChanged = false;
 
-  private TradeSearchRequestLimit = new RateLimiter(1, 1100);
-  private TradeFetchRequestLimit = new RateLimiter(1, 550);
+  private TradeSearchRequestLimit = new RateLimiter(1, 1200);
+  private TradeFetchRequestLimit = new RateLimiter(1, 600);
 
   constructor(
     private http: HttpClient,
@@ -49,7 +48,7 @@ export class ExternalService {
   }
 
   getCharacter(data: AccountInfo): Observable<any> {
-    const setCookieAsync = bindCallback(this.setCookie, null, async);
+    const setCookieAsync = bindCallback(this.setCookie);
     return setCookieAsync(data.sessionId, this.electronService).mergeMap((error) => {
 
       const parameters = `?accountName=${data.accountName}&character=${data.characterName}`;
@@ -65,7 +64,7 @@ export class ExternalService {
   }
 
   getCharacterList(account: string, sessionId?: string) {
-    const setCookieAsync = bindCallback(this.setCookie, null, async);
+    const setCookieAsync = bindCallback(this.setCookie);
     return setCookieAsync(sessionId, this.electronService).mergeMap((error) => {
 
       const parameters = `?accountName=${account}`;
@@ -93,7 +92,7 @@ export class ExternalService {
   }
 
   getStashTabs(sessionId: string, account: string, league: string) {
-    const setCookieAsync = bindCallback(this.setCookie, null, async);
+    const setCookieAsync = bindCallback(this.setCookie);
     return setCookieAsync(sessionId, this.electronService).mergeMap((error) => {
       const parameters = `?league=${league}&accountName=${account}&tabs=1`;
       return this.http.get<Stash>('https://www.pathofexile.com/character-window/get-stash-items' + parameters)
@@ -109,7 +108,7 @@ export class ExternalService {
 
   getStashTab(sessionId: string, account: string, league: string, index: number): Observable<Stash> {
     this.analyticsService.sendEvent('income', `GET Stashtab`);
-    const setCookieAsync = bindCallback(this.setCookie, null, async);
+    const setCookieAsync = bindCallback(this.setCookie);
     return setCookieAsync(sessionId, this.electronService).mergeMap((error) => {
       const parameters = `?league=${league}&accountName=${account}&tabIndex=${index}&tabs=1`;
       return this.http.get<Stash>('https://www.pathofexile.com/character-window/get-stash-items' + parameters)
@@ -124,7 +123,7 @@ export class ExternalService {
   }
 
   validateSessionId(sessionId: string, account: string, league: string, index: number) {
-    const setCookieAsync = bindCallback(this.setCookie, null, async);
+    const setCookieAsync = bindCallback(this.setCookie);
     return setCookieAsync(sessionId, this.electronService).mergeMap((error) => {
       const parameters = `?league=${league}&accountName=${account}&tabIndex=${index}&tabs=1`;
       return this.http.get<Stash>('https://www.pathofexile.com/character-window/get-stash-items' + parameters)
@@ -146,16 +145,22 @@ export class ExternalService {
     return this.http.get('https://www.pathofexile.com/character-window/get-account-name-by-character' + parameters);
   }
 
-  getPublicMapsFromTradeIds(subLines: any[], query: string) {
+  FetchPublicMaps(subLines: any[], query: string) {
     return Observable.from(subLines)
       .concatMap((lines: any) => {
         const url = `https://www.pathofexile.com/api/trade/fetch/${lines.join(',')}?query=${query}`;
-        // return this.http.get(url).delay(500);
-        return this.TradeFetchRequestLimit.limit(this.http.get(url));
+        const removeCookieAsync = bindCallback(this.removeCookie);
+        return removeCookieAsync(this.electronService).mergeMap((error) => {
+          if (!error) {
+            return this.TradeFetchRequestLimit.limit(this.http.get(url));
+          }
+          return Observable.of(null);
+        }
+        );
       }).toArray();
   }
 
-  getPublicMapTradeGuids(account: string, league: string) {
+  SearchPublicMaps(account: string, league: string) {
 
     const tierObservable = [17, 16, 15, 14, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1];
 
@@ -192,7 +197,7 @@ export class ExternalService {
             'price': 'asc'
           }
         };
-        const removeCookieAsync = bindCallback(this.removeCookie, null, async);
+        const removeCookieAsync = bindCallback(this.removeCookie);
         return removeCookieAsync(this.electronService).mergeMap((error) => {
           if (error) { console.log(error); }
           return this.TradeSearchRequestLimit.limit(this.http.post(requestUrl, requestJson));
