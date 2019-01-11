@@ -4,6 +4,7 @@ export interface Stash {
     numTabs: number;
     tabs: Tab[];
     items: Item[];
+    mapLayout: any;
     [x: string]: any;
 }
 
