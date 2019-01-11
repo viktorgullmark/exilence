@@ -138,7 +138,7 @@ export class IncomeService implements OnDestroy {
     }
   }
 
-  PriceItems(items: Item[]) {
+  PriceItems(items: Item[], mapTabSelected: boolean = false, mapLayout: any) {
 
     // todo: base prices on this league
     items.forEach((item: Item) => {
@@ -195,7 +195,9 @@ export class IncomeService implements OnDestroy {
           frameType: itemPriceInfoObj.frameType
         };
 
-        this.totalNetWorthItems.push(netWorthItem);
+        if (netWorthItem.name.indexOf(' Map') === -1 || mapLayout || !mapTabSelected) {
+          this.totalNetWorthItems.push(netWorthItem);
+        }
       }
     });
   }
@@ -229,18 +231,21 @@ export class IncomeService implements OnDestroy {
       this.settingsService.set('characterPricing', false);
     }
 
+    const selectedStashTabs: any[] = this.settingsService.get('selectedStashTabs');
+    const mapTab = selectedStashTabs.find(x => x.isMapTab);
+
     return Observable.forkJoin(
-      this.getPlayerPublicMaps(accountName, league),
+      this.getPlayerPublicMaps(accountName, league, mapTab),
       this.getPlayerStashTabs(sessionId, accountName, league),
       this.pricingService.retrieveExternalPrices()
     ).do(() => {
       this.logService.log('Finished retriving stashhtabs');
       if (this.characterPricing) {
-        this.PriceItems(this.localPlayer.character.items);
+        this.PriceItems(this.localPlayer.character.items, mapTab, undefined);
       }
       this.playerStashTabs.forEach((tab: Stash, tabIndex: number) => {
         if (tab !== null) {
-          this.PriceItems(tab.items);
+          this.PriceItems(tab.items, mapTab, tab.mapLayout);
         }
       });
 
@@ -262,10 +267,7 @@ export class IncomeService implements OnDestroy {
     });
   }
 
-  getPlayerPublicMaps(accountName: string, league: string) {
-
-    const selectedStashTabs: any[] = this.settingsService.get('selectedStashTabs');
-    const mapTab = selectedStashTabs.find(x => x.isMapTab);
+  getPlayerPublicMaps(accountName: string, league: string, mapTab: any) {
 
     if (mapTab !== undefined && mapTab) {
       this.logService.log('Starting to fetch public maps');
@@ -284,7 +286,8 @@ export class IncomeService implements OnDestroy {
 
             if (items.length > 0) {
               const tab = {
-                items: items
+                items: items,
+                mapLayout: {}
               } as Stash;
 
               this.playerStashTabs.push(tab);
@@ -315,7 +318,7 @@ export class IncomeService implements OnDestroy {
     return Observable.from(selectedStashTabs)
       .mergeMap((tab: any) => {
         return this.externalService.getStashTab(sessionId, accountName, league, tab.position);
-      }, 5)
+      }, 1)
       .do(stashTab => {
         this.playerStashTabs.push(stashTab);
       });
