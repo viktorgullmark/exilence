@@ -2,6 +2,8 @@ import 'rxjs/add/operator/delay';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/toArray';
 import 'rxjs/operators/mergeMap';
+import 'rxjs/add/operator/retry';
+
 import RateLimiter from 'rxjs-ratelimiter';
 
 import { HttpClient } from '@angular/common/http';
@@ -9,7 +11,6 @@ import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { BehaviorSubject } from 'rxjs/internal/BehaviorSubject';
 import { Observable } from 'rxjs/Observable';
-
 import { AccountInfo } from '../interfaces/account-info.interface';
 import { EquipmentResponse } from '../interfaces/equipment-response.interface';
 import { Item } from '../interfaces/item.interface';
@@ -22,8 +23,6 @@ import { AnalyticsService } from './analytics.service';
 import { ElectronService } from './electron.service';
 import { LogService } from './log.service';
 import { bindCallback } from 'rxjs';
-
-
 
 @Injectable()
 export class ExternalService {
@@ -111,7 +110,7 @@ export class ExternalService {
     const setCookieAsync = bindCallback(this.setCookie);
     return setCookieAsync(sessionId, this.electronService).mergeMap((error) => {
       const parameters = `?league=${league}&accountName=${account}&tabIndex=${index}&tabs=1`;
-      return this.http.get<Stash>('https://www.pathofexile.com/character-window/get-stash-items' + parameters)
+      return this.http.get<Stash>('https://www.pathofexile.com/character-window/get-stash-items' + parameters).retry(5)
         .catch(e => {
           if (e.status !== 403 && e.status !== 404) {
             this.logService.log('Could not fetch stashtabs, disconnecting!', null, true);
