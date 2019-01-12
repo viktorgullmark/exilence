@@ -43,7 +43,6 @@ export class StashtabListComponent implements OnInit, OnDestroy {
   }
 
   init() {
-    const sessionId = this.settingsService.get('account.sessionId');
     const accountName = this.settingsService.get('account.accountName');
     const league = this.partyService.currentPlayer.character.league;
     let selectedStashTabs: any[] = this.settingsService.get('selectedStashTabs');
@@ -52,7 +51,7 @@ export class StashtabListComponent implements OnInit, OnDestroy {
       selectedStashTabs = [];
     }
 
-    this.stashTabSub = this.externalService.getStashTabs(sessionId, accountName, league)
+    this.stashTabSub = this.externalService.getStashTabs(accountName, league)
       .subscribe((res: Stash) => {
         if (res !== null) {
           this.dataSource = res.tabs.map((tab: Tab) => {
