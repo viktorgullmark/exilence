@@ -53,8 +53,8 @@ If you want to help with development we gladly accept pull-requests. To set up t
 npm install -g @angular/cli
 npm install -g --production windows-build-tools (needs to be run with administrator privileges using powershell)
 npm install
-npm start (to serve the project)
-npm run electron:windows (to build the installer for production)
+npm run start (to serve the project)
+npm run electron:windows (optional, to build the installer for production)
 ```
 
 To run the API you'll need a local redis-server. 
