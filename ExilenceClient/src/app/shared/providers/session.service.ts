@@ -29,7 +29,6 @@ export class SessionService implements OnDestroy {
     if (this.playerSub !== undefined) {
       this.playerSub.unsubscribe();
     }
-    console.log('sessionservice destroyed');
   }
   initSession(sessionId: string) {
     localStorage.setItem('sessionId', sessionId);

@@ -75,7 +75,6 @@ export class IncomeService implements OnDestroy {
     if (this.playerSub !== undefined) {
       this.playerSub.unsubscribe();
     }
-    console.log('incomeservice destroyed');
   }
 
   loadSnapshotsFromSettings() {

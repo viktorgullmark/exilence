@@ -67,19 +67,11 @@ export class MapService implements OnDestroy {
 
     this.logMonitorService.parsingStarted.subscribe((e: any) => {
       this.removeAreasFromSettings();
-
-      const currentDate = '[' + new Date().toUTCString() + '] ';
-      console.log(currentDate, 'parsing started...');
     });
 
     this.logMonitorService.parsingComplete.subscribe((e: any) => {
-      const currentDate = '[' + new Date().toUTCString() + '] ';
-      console.log(currentDate, 'parsing completed!');
-
       this.settingsService.set('areas', this.areaHistory);
-
       this.updateLocalPlayerAreas(this.areaHistory);
-
       this.areasParsed.emit();
     });
 
@@ -100,7 +92,6 @@ export class MapService implements OnDestroy {
     if (this.areasSub !== undefined) {
       this.areasSub.unsubscribe();
     }
-    console.log('mapservice destroyed');
   }
 
   updateLocalPlayerAreas(areas: ExtendedAreaInfo[]) {

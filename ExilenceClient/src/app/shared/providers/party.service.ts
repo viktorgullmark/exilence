@@ -221,7 +221,6 @@ export class PartyService implements OnDestroy {
   }
 
   ngOnDestroy() {
-    console.log('partyservice destroyed');
     if (this.playerSub !== undefined) {
       this.playerSub.unsubscribe();
     } if (this.selectedPlayerSub !== undefined) {
