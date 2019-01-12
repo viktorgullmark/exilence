@@ -96,7 +96,7 @@ namespace Exilence
             app.UseHangfireServer(hangfireOpts);
             app.UseHangfireDashboard();
 
-            BackgroundJob.Schedule<ILadderService>(ls => ls.UpdateLadders(), TimeSpan.FromMilliseconds(5000));
+            //BackgroundJob.Schedule<ILadderService>(ls => ls.UpdateLadders(), TimeSpan.FromMilliseconds(5000));
 
             app.UseSignalR(routes =>
             {
