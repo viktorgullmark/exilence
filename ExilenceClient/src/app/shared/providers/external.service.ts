@@ -31,8 +31,8 @@ export class ExternalService {
   public leagues: BehaviorSubject<League[]> = new BehaviorSubject<League[]>([]);
   public tradeLeagueChanged = false;
 
-  private TradeSearchRequestLimit = new RateLimiter(1, 1100);
-  private TradeFetchRequestLimit = new RateLimiter(1, 1100);
+  private TradeSearchRequestLimit = new RateLimiter(1, 1500);
+  private TradeFetchRequestLimit = new RateLimiter(1, 1500);
 
   constructor(
     private http: HttpClient,
