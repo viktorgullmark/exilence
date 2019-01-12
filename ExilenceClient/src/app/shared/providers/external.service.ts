@@ -31,8 +31,8 @@ export class ExternalService {
   public leagues: BehaviorSubject<League[]> = new BehaviorSubject<League[]>([]);
   public tradeLeagueChanged = false;
 
-  private TradeSearchRequestLimit = new RateLimiter(1, 1500);
-  private TradeFetchRequestLimit = new RateLimiter(1, 1500);
+  private TradeSearchRequestLimit = new RateLimiter(1, 1200);
+  private TradeFetchRequestLimit = new RateLimiter(1, 600);
 
   constructor(
     private http: HttpClient,
@@ -99,7 +99,7 @@ export class ExternalService {
     this.analyticsService.sendEvent('income', `GET Stashtab`);
     const parameters = `?league=${league}&accountName=${account}&tabIndex=${index}&tabs=1`;
     return this.http.get<Stash>('https://www.pathofexile.com/character-window/get-stash-items' + parameters)
-      .retryWhen(errors => errors.delay(50).take(5))
+      .retryWhen(error => error.delay(50).take(5))
       .catch(e => {
         if (e.status !== 403 && e.status !== 404) {
           this.logService.log('Could not fetch stashtabs, disconnecting!', null, true);
@@ -134,7 +134,16 @@ export class ExternalService {
     return Observable.from(subLines)
       .concatMap((lines: any) => {
         const url = `https://www.pathofexile.com/api/trade/fetch/${lines.join(',')}?query=${query}`;
-        return this.TradeFetchRequestLimit.limit(this.http.get(url));
+        return this.TradeFetchRequestLimit.limit(
+          this.http.get(url).retryWhen((err) => {
+            return err.flatMap((error: any) => {
+              if (error.status === 429) {
+                return Observable.of(error.status).delay(1000 * 10); // 10 second retry
+              }
+              return Observable.of(null);
+            }).take(2);
+          })
+        );
       }).toArray();
   }
 
@@ -175,7 +184,15 @@ export class ExternalService {
             'price': 'asc'
           }
         };
-        return this.TradeSearchRequestLimit.limit(this.http.post(requestUrl, requestJson));
+        return this.TradeSearchRequestLimit.limit(this.http.post(requestUrl, requestJson)
+          .retryWhen((err) => {
+            return err.flatMap((error: any) => {
+              if (error.status === 429) {
+                return Observable.of(error.status).delay(1000 * 60); // One minute retry
+              }
+              return Observable.of(null);
+            }).take(2);
+          }));
       });
   }
 
