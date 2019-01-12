@@ -152,7 +152,7 @@ export class CharWealthComponent implements OnInit, OnDestroy {
             icon: 'attach_money',
             title: 'Currency tab',
             // tslint:disable-next-line:max-line-length
-            content: 'Make sure to select the stashtabs you want to track by going to settings.<br/><br/>This tab updates when the selected player changes area in game, at most once every 5 minutes.<br/><br/>' +
+            content: 'Make sure to select the stashtabs you want to track by going to settings.<br/><br/>This tab updates when the selected player changes area in game, at most once every 3 minutes.<br/><br/>' +
               'We store all your net worth data one week back in time. This will be extended in the future.'
           }
         });
