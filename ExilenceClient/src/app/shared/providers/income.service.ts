@@ -100,6 +100,8 @@ export class IncomeService implements OnDestroy {
     ) {
       this.isSnapshotting = true;
       this.netWorthHistory.lastSnapshot = Date.now();
+
+      const startTime = Date.now();
       this.logService.log('Started snapshotting player net worth');
       this.SnapshotPlayerNetWorth().subscribe(() => {
 
@@ -131,7 +133,11 @@ export class IncomeService implements OnDestroy {
         const objToSend = Object.assign({}, this.localPlayer);
         objToSend.netWorthSnapshots = historyToSend;
         this.partyService.updatePlayer(objToSend);
-        this.logService.log('Finished Snapshotting player net worth');
+
+        const endTime = Date.now();
+        const timePassed = Math.round((endTime - startTime) / 1000);
+
+        this.logService.log(`Finished Snapshotting player net worth in ${timePassed} seconds`);
 
         this.isSnapshotting = false;
       });
