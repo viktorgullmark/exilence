@@ -6,5 +6,5 @@
 export const AppConfig = {
     production: false,
     environment: 'DEV',
-    url: 'http://localhost:61606/'
+    url: 'http://116.203.0.113/'
 };
