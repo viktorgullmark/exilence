@@ -78,8 +78,6 @@ export class NetworthTableComponent implements OnInit, OnDestroy {
   }
 
   generateTooltip(item: NetWorthItem) {
-    // console.log(element);
-
     const min = item.value_min !== undefined ? item.value_min.toFixed(2) : 0;
     const max = item.value_max !== undefined ? item.value_max.toFixed(2) : 0;
     const mode = item.value_mode !== undefined ? item.value_mode.toFixed(2) : 0;
@@ -161,9 +159,6 @@ export class NetworthTableComponent implements OnInit, OnDestroy {
           ) === undefined
         );
 
-        console.log('added', addedItems);
-        console.log('changed:', changedItems);
-        console.log('removed', removedItems);
         const changedOrAdded = changedItems.concat(addedItems);
         changedOrAdded.forEach(item => {
           // if item exists in first snapshot
@@ -212,9 +207,7 @@ export class NetworthTableComponent implements OnInit, OnDestroy {
             }
             difference.push(recentItem);
           }
-
         });
-        console.log(difference);
         this.updateOverTime(difference, player.character.name);
       }
     } else {

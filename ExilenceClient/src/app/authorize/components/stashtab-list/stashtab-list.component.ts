@@ -1,6 +1,6 @@
 import { SelectionModel } from '@angular/cdk/collections';
 import { Component, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { MatSort, MatTableDataSource, MatDialog } from '@angular/material';
+import { MatDialog, MatSort, MatTableDataSource } from '@angular/material';
 import { Subscription } from 'rxjs';
 
 import { Stash, Tab } from '../../../shared/interfaces/stash.interface';
@@ -43,7 +43,6 @@ export class StashtabListComponent implements OnInit, OnDestroy {
   }
 
   init() {
-    const sessionId = this.settingsService.get('account.sessionId');
     const accountName = this.settingsService.get('account.accountName');
     const league = this.partyService.currentPlayer.character.league;
     let selectedStashTabs: any[] = this.settingsService.get('selectedStashTabs');
@@ -52,7 +51,7 @@ export class StashtabListComponent implements OnInit, OnDestroy {
       selectedStashTabs = [];
     }
 
-    this.stashTabSub = this.externalService.getStashTabs(sessionId, accountName, league)
+    this.stashTabSub = this.externalService.getStashTabs(accountName, league)
       .subscribe((res: Stash) => {
         if (res !== null) {
           this.dataSource = res.tabs.map((tab: Tab) => {
@@ -99,7 +98,7 @@ export class StashtabListComponent implements OnInit, OnDestroy {
 
   openMaptabDialog(): void {
     const dialogRef = this.maptabDialog.open(MaptabInfoDialogComponent, {
-      width: '850px'
+      width: '1100px'
     });
     dialogRef.afterClosed().subscribe(result => {
     });

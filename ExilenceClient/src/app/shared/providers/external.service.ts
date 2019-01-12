@@ -1,16 +1,17 @@
 import 'rxjs/add/operator/delay';
 import 'rxjs/add/operator/map';
+import 'rxjs/add/operator/retryWhen';
+import 'rxjs/add/operator/take';
 import 'rxjs/add/operator/toArray';
 import 'rxjs/operators/mergeMap';
-import 'rxjs/add/operator/retry';
-
-import RateLimiter from 'rxjs-ratelimiter';
 
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
+import RateLimiter from 'rxjs-ratelimiter';
 import { BehaviorSubject } from 'rxjs/internal/BehaviorSubject';
 import { Observable } from 'rxjs/Observable';
+
 import { AccountInfo } from '../interfaces/account-info.interface';
 import { EquipmentResponse } from '../interfaces/equipment-response.interface';
 import { Item } from '../interfaces/item.interface';
@@ -22,7 +23,6 @@ import { Stash } from '../interfaces/stash.interface';
 import { AnalyticsService } from './analytics.service';
 import { ElectronService } from './electron.service';
 import { LogService } from './log.service';
-import { bindCallback } from 'rxjs';
 
 @Injectable()
 export class ExternalService {
@@ -47,35 +47,28 @@ export class ExternalService {
   }
 
   getCharacter(data: AccountInfo): Observable<any> {
-    const setCookieAsync = bindCallback(this.setCookie);
-    return setCookieAsync(data.sessionId, this.electronService).mergeMap((error) => {
+    const parameters = `?accountName=${data.accountName}&character=${data.characterName}`;
 
-      const parameters = `?accountName=${data.accountName}&character=${data.characterName}`;
-
-      return this.http.get('https://www.pathofexile.com/character-window/get-items' + parameters, { withCredentials: true }).catch(e => {
-        if (e.status !== 403 && e.status !== 404) {
-          this.logService.log('Could not character items, disconnecting!', null, true);
-          this.router.navigate(['/disconnected', true]);
-        }
-        return Observable.of(null);
-      });
+    return this.http.get('https://www.pathofexile.com/character-window/get-items' + parameters, { withCredentials: true }).catch(e => {
+      if (e.status !== 403 && e.status !== 404) {
+        this.logService.log('Could not character items, disconnecting!', null, true);
+        this.router.navigate(['/disconnected', true]);
+      }
+      return Observable.of(null);
     });
   }
 
   getCharacterList(account: string, sessionId?: string) {
-    const setCookieAsync = bindCallback(this.setCookie);
-    return setCookieAsync(sessionId, this.electronService).mergeMap((error) => {
 
-      const parameters = `?accountName=${account}`;
-      return this.http.get('https://www.pathofexile.com/character-window/get-characters' + parameters)
-        .catch(e => {
-          if (e.status !== 403 && e.status !== 404) {
-            this.logService.log('Could not fetch character list, disconnecting!', null, true);
-            this.router.navigate(['/disconnected', true]);
-          }
-          return Observable.of(null);
-        });
-    });
+    const parameters = `?accountName=${account}`;
+    return this.http.get('https://www.pathofexile.com/character-window/get-characters' + parameters)
+      .catch(e => {
+        if (e.status !== 403 && e.status !== 404) {
+          this.logService.log('Could not fetch character list, disconnecting!', null, true);
+          this.router.navigate(['/disconnected', true]);
+        }
+        return Observable.of(null);
+      });
   }
 
   getLeagues(type: string, compact: number) {
@@ -90,53 +83,46 @@ export class ExternalService {
       });
   }
 
-  getStashTabs(sessionId: string, account: string, league: string) {
-    const setCookieAsync = bindCallback(this.setCookie);
-    return setCookieAsync(sessionId, this.electronService).mergeMap((error) => {
-      const parameters = `?league=${league}&accountName=${account}&tabs=1`;
-      return this.http.get<Stash>('https://www.pathofexile.com/character-window/get-stash-items' + parameters)
-        .catch(e => {
-          if (e.status !== 403 && e.status !== 404) {
-            this.logService.log('Could not fetch stashtab list, disconnecting!', null, true);
-            this.router.navigate(['/disconnected', true]);
-          }
-          return Observable.of(null);
-        });
-    });
+  getStashTabs(account: string, league: string) {
+    const parameters = `?league=${league}&accountName=${account}&tabs=1`;
+    return this.http.get<Stash>('https://www.pathofexile.com/character-window/get-stash-items' + parameters)
+      .catch(e => {
+        if (e.status !== 403 && e.status !== 404) {
+          this.logService.log('Could not fetch stashtab list, disconnecting!', null, true);
+          this.router.navigate(['/disconnected', true]);
+        }
+        return Observable.of(null);
+      });
   }
 
-  getStashTab(sessionId: string, account: string, league: string, index: number): Observable<Stash> {
+  getStashTab(account: string, league: string, index: number): Observable<Stash> {
     this.analyticsService.sendEvent('income', `GET Stashtab`);
-    const setCookieAsync = bindCallback(this.setCookie);
-    return setCookieAsync(sessionId, this.electronService).mergeMap((error) => {
-      const parameters = `?league=${league}&accountName=${account}&tabIndex=${index}&tabs=1`;
-      return this.http.get<Stash>('https://www.pathofexile.com/character-window/get-stash-items' + parameters).retry(5)
-        .catch(e => {
-          if (e.status !== 403 && e.status !== 404) {
-            this.logService.log('Could not fetch stashtabs, disconnecting!', null, true);
-            this.router.navigate(['/disconnected', true]);
-          }
-          return Observable.of(null);
-        });
-    });
+    const parameters = `?league=${league}&accountName=${account}&tabIndex=${index}&tabs=1`;
+    return this.http.get<Stash>('https://www.pathofexile.com/character-window/get-stash-items' + parameters)
+      .retryWhen(error => error.delay(50).take(5))
+      .catch(e => {
+        if (e.status !== 403 && e.status !== 404) {
+          this.logService.log('Could not fetch stashtabs, disconnecting!', null, true);
+          this.router.navigate(['/disconnected', true]);
+        }
+        return Observable.of(null);
+      });
   }
 
   validateSessionId(sessionId: string, account: string, league: string, index: number) {
-    const setCookieAsync = bindCallback(this.setCookie);
-    return setCookieAsync(sessionId, this.electronService).mergeMap((error) => {
-      const parameters = `?league=${league}&accountName=${account}&tabIndex=${index}&tabs=1`;
-      return this.http.get<Stash>('https://www.pathofexile.com/character-window/get-stash-items' + parameters)
-        .catch(e => {
-          if (e.status === 500 || e.status === 502 || e.status === 503) {
-            this.logService.log('Could not validate, disconnecting!', null, true);
-            this.router.navigate(['/disconnected', true]);
-          }
-          if (e.status !== 200) {
-            return Observable.of(false);
-          }
-          return Observable.of(null);
-        });
-    });
+    this.setCookie(sessionId);
+    const parameters = `?league=${league}&accountName=${account}&tabIndex=${index}&tabs=1`;
+    return this.http.get<Stash>('https://www.pathofexile.com/character-window/get-stash-items' + parameters)
+      .catch(e => {
+        if (e.status === 500 || e.status === 502 || e.status === 503) {
+          this.logService.log('Could not validate, disconnecting!', null, true);
+          this.router.navigate(['/disconnected', true]);
+        }
+        if (e.status !== 200) {
+          return Observable.of(false);
+        }
+        return Observable.of(null);
+      });
   }
 
   getAccountForCharacter(character: string) {
@@ -148,13 +134,15 @@ export class ExternalService {
     return Observable.from(subLines)
       .concatMap((lines: any) => {
         const url = `https://www.pathofexile.com/api/trade/fetch/${lines.join(',')}?query=${query}`;
-        const removeCookieAsync = bindCallback(this.removeCookie);
-        return removeCookieAsync(this.electronService).mergeMap((error) => {
-          if (!error) {
-            return this.TradeFetchRequestLimit.limit(this.http.get(url));
-          }
-          return Observable.of(null);
-        }
+        return this.TradeFetchRequestLimit.limit(
+          this.http.get(url).retryWhen((err) => {
+            return err.flatMap((error: any) => {
+              if (error.status === 429) {
+                return Observable.of(error.status).delay(1000 * 10); // 10 second retry
+              }
+              return Observable.of(null);
+            }).take(2);
+          })
         );
       }).toArray();
   }
@@ -196,20 +184,19 @@ export class ExternalService {
             'price': 'asc'
           }
         };
-        const removeCookieAsync = bindCallback(this.removeCookie);
-        return removeCookieAsync(this.electronService).mergeMap((error) => {
-          if (error) { console.log(error); }
-          return this.TradeSearchRequestLimit.limit(this.http.post(requestUrl, requestJson));
-        }
-        );
+        return this.TradeSearchRequestLimit.limit(this.http.post(requestUrl, requestJson)
+          .retryWhen((err) => {
+            return err.flatMap((error: any) => {
+              if (error.status === 429) {
+                return Observable.of(error.status).delay(1000 * 60); // One minute retry
+              }
+              return Observable.of(null);
+            }).take(2);
+          }));
       });
   }
 
-  setCookie(sessionId: string, electronService, callback) {
-
-    if (sessionId === undefined) {
-      callback();
-    }
+  setCookie(sessionId: string) {
 
     const cookie = {
       url: 'http://www.pathofexile.com',
@@ -222,7 +209,11 @@ export class ExternalService {
       expirationDate: undefined
     };
 
-    electronService.remote.session.defaultSession.cookies.set(cookie, callback);
+    this.electronService.remote.session.defaultSession.cookies.set(cookie, (error) => {
+      if (error) {
+        this.logService.log('Could not set cookie', null, true);
+      }
+    });
   }
 
   removeCookie(electronService, callback) {

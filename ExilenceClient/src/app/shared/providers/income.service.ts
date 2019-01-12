@@ -38,7 +38,7 @@ export class IncomeService implements OnDestroy {
 
   private totalNetWorthItems: NetWorthItem[] = [];
   public totalNetWorth = 0;
-  private fiveMinutes = 5 * 60 * 1000;
+  private threeMinutes = 3 * 60 * 1000;
   private sessionIdValid = false;
 
   private characterPricing = false;
@@ -75,7 +75,6 @@ export class IncomeService implements OnDestroy {
     if (this.playerSub !== undefined) {
       this.playerSub.unsubscribe();
     }
-    console.log('incomeservice destroyed');
   }
 
   loadSnapshotsFromSettings() {
@@ -92,7 +91,7 @@ export class IncomeService implements OnDestroy {
 
     this.sessionIdValid = this.settingsService.get('account.sessionIdValid');
     if (
-      this.netWorthHistory.lastSnapshot < (Date.now() - this.fiveMinutes) &&
+      this.netWorthHistory.lastSnapshot < (Date.now() - this.threeMinutes) &&
       this.localPlayer !== undefined &&
       (this.sessionId !== undefined && this.sessionId !== '' && this.sessionIdValid) &&
       !this.isSnapshotting && !this.accountService.loggingIn && !this.settingsService.isChangingStash &&
@@ -100,8 +99,10 @@ export class IncomeService implements OnDestroy {
     ) {
       this.isSnapshotting = true;
       this.netWorthHistory.lastSnapshot = Date.now();
+
+      const startTime = Date.now();
       this.logService.log('Started snapshotting player net worth');
-      this.SnapshotPlayerNetWorth(this.sessionId).subscribe(() => {
+      this.SnapshotPlayerNetWorth().subscribe(() => {
 
         this.netWorthHistory.history = this.netWorthHistory.history
           .filter((snaphot: NetWorthSnapshot) => snaphot.timestamp > twoWeeksAgo);
@@ -131,7 +132,11 @@ export class IncomeService implements OnDestroy {
         const objToSend = Object.assign({}, this.localPlayer);
         objToSend.netWorthSnapshots = historyToSend;
         this.partyService.updatePlayer(objToSend);
-        this.logService.log('Finished Snapshotting player net worth');
+
+        const endTime = Date.now();
+        const timePassed = Math.round((endTime - startTime) / 1000);
+
+        this.logService.log(`Finished Snapshotting player net worth in ${timePassed} seconds`);
 
         this.isSnapshotting = false;
       });
@@ -206,7 +211,7 @@ export class IncomeService implements OnDestroy {
     return items.filter(x => x.value >= this.itemValueTreshold && x.value !== 0);
   }
 
-  SnapshotPlayerNetWorth(sessionId: string) {
+  SnapshotPlayerNetWorth() {
 
     const accountName = this.localPlayer.account;
     const league = this.localPlayer.character.league;
@@ -232,11 +237,15 @@ export class IncomeService implements OnDestroy {
     }
 
     const selectedStashTabs: any[] = this.settingsService.get('selectedStashTabs');
-    const mapTab = selectedStashTabs.find(x => x.isMapTab);
+
+    let mapTab;
+    if (selectedStashTabs !== undefined) {
+      mapTab = selectedStashTabs.find(x => x.isMapTab);
+    }
 
     return Observable.forkJoin(
       this.getPlayerPublicMaps(accountName, league, mapTab),
-      this.getPlayerStashTabs(sessionId, accountName, league),
+      this.getPlayerStashTabs(accountName, league),
       this.pricingService.retrieveExternalPrices()
     ).do(() => {
       this.logService.log('Finished retriving stashhtabs');
@@ -301,7 +310,7 @@ export class IncomeService implements OnDestroy {
     }
   }
 
-  getPlayerStashTabs(sessionId: string, accountName: string, league: string) {
+  getPlayerStashTabs(accountName: string, league: string) {
 
     this.logService.log('[INFO] Retriving stashtabs from official site api');
 
@@ -315,10 +324,14 @@ export class IncomeService implements OnDestroy {
       selectedStashTabs = selectedStashTabs.slice(0, 20);
     }
 
+    if (selectedStashTabs.length === 0) {
+      return Observable.of(null);
+    }
+
     return Observable.from(selectedStashTabs)
       .mergeMap((tab: any) => {
-        return this.externalService.getStashTab(sessionId, accountName, league, tab.position);
-      }, 1)
+        return this.externalService.getStashTab(accountName, league, tab.position);
+      }, 5)
       .do(stashTab => {
         this.playerStashTabs.push(stashTab);
       });

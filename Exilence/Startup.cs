@@ -59,6 +59,7 @@ namespace Exilence
             services.AddSignalR().AddStackExchangeRedis(Configuration.GetConnectionString("Redis"), options =>
             {
                 options.Configuration.ChannelPrefix = "ExilenceSignalR";
+                options.Configuration.ConnectTimeout = 30000;
             });
 
             services.AddScoped<ILadderService, LadderService>();

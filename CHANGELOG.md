@@ -1,8 +1,8 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
-## [0.9.5] - 2019-XX-XX
-- Added support to price the maptab (by setting it to public)
+## [0.9.5] - 2019-01-12
+- Added support to price the maptab (requires it to be public)
 - Added column for gem-level in the net worth table
 - Added tooltip to value in networth table to display more detailed data such as average, mode and mean
 - Added colors to names for items in the net worth table, based on rarity
@@ -11,6 +11,7 @@ All notable changes to this project will be documented in this file.
 - Fixed a bug where the gain-table didn't display new items, only the difference between current ones
 - Fixed a bug where the gain-table didn't display removed items properly
 - Fixed a bug where items of zero value would sometimes be included in pricing
+- Now starts pricing every three minutes, down from five, to counter increased snapshot-times with the maptab
 - Now displays a loading-bar when entering party
 - Reworked dashboard (removed old sections and added changelog for current version)
 - Reworked how masking works, now always masks the first group if the setting is enabled 
