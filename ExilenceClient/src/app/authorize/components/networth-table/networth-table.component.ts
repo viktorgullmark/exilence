@@ -161,9 +161,6 @@ export class NetworthTableComponent implements OnInit, OnDestroy {
           ) === undefined
         );
 
-        console.log('added', addedItems);
-        console.log('changed:', changedItems);
-        console.log('removed', removedItems);
         const changedOrAdded = changedItems.concat(addedItems);
         changedOrAdded.forEach(item => {
           // if item exists in first snapshot
@@ -212,9 +209,7 @@ export class NetworthTableComponent implements OnInit, OnDestroy {
             }
             difference.push(recentItem);
           }
-
         });
-        console.log(difference);
         this.updateOverTime(difference, player.character.name);
       }
     } else {
