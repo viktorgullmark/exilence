@@ -1,8 +1,8 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
-## [0.9.5] - 2019-XX-XX
-- Added support to price the maptab (by setting it to public)
+## [0.9.5] - 2019-01-12
+- Added support to price the maptab (requires it to be public)
 - Added column for gem-level in the net worth table
 - Added tooltip to value in networth table to display more detailed data such as average, mode and mean
 - Added colors to names for items in the net worth table, based on rarity
