@@ -232,7 +232,11 @@ export class IncomeService implements OnDestroy {
     }
 
     const selectedStashTabs: any[] = this.settingsService.get('selectedStashTabs');
-    const mapTab = selectedStashTabs.find(x => x.isMapTab);
+
+    let mapTab;
+    if (selectedStashTabs !== undefined) {
+      mapTab = selectedStashTabs.find(x => x.isMapTab);
+    }
 
     return Observable.forkJoin(
       this.getPlayerPublicMaps(accountName, league, mapTab),
