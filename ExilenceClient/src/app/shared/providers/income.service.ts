@@ -319,10 +319,14 @@ export class IncomeService implements OnDestroy {
       selectedStashTabs = selectedStashTabs.slice(0, 20);
     }
 
+    if (selectedStashTabs.length === 0) {
+      return Observable.of(null);
+    }
+
     return Observable.from(selectedStashTabs)
       .mergeMap((tab: any) => {
         return this.externalService.getStashTab(sessionId, accountName, league, tab.position);
-      }, 1)
+      }, 5)
       .do(stashTab => {
         this.playerStashTabs.push(stashTab);
       });

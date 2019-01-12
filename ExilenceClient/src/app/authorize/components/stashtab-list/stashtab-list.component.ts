@@ -1,6 +1,6 @@
 import { SelectionModel } from '@angular/cdk/collections';
 import { Component, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { MatSort, MatTableDataSource, MatDialog } from '@angular/material';
+import { MatDialog, MatSort, MatTableDataSource } from '@angular/material';
 import { Subscription } from 'rxjs';
 
 import { Stash, Tab } from '../../../shared/interfaces/stash.interface';
@@ -99,7 +99,7 @@ export class StashtabListComponent implements OnInit, OnDestroy {
 
   openMaptabDialog(): void {
     const dialogRef = this.maptabDialog.open(MaptabInfoDialogComponent, {
-      width: '850px'
+      width: '1100px'
     });
     dialogRef.afterClosed().subscribe(result => {
     });
