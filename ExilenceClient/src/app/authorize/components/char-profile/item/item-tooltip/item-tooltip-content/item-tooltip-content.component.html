@@ -50,31 +50,14 @@
         <div class="properties">
             <!-- properties -->
             <ng-container *ngFor="let prop of item.properties">
-                <ng-container *ngIf="item.inventoryId != 'Flask'">
+                <ng-container>
                     <span class="property">
                         <span class="property-tag">
-                            {{prop.name}}
+                            {{formatItemProperties(prop)}}
                         </span>
                         <ng-container *ngIf="prop.values[0] != undefined">
                             :&nbsp;
                             <span [ngClass]="{'generic-mod': prop.name == 'Quality' || prop.name == 'Energy Shield' || prop.name == 'Armour' || prop.name == 'Evasion Rating'}">{{prop.values[0][0]}}</span>
-                        </ng-container>
-                    </span>
-                    <br />
-                </ng-container>
-                <ng-container *ngIf="item.inventoryId == 'Flask' && prop.values[0] != undefined">
-                    <span class="property">
-                        <span class="property-tag flask-property" *ngIf="prop.name != 'Quality'">
-                            {{formatFlaskProperties(prop.name, prop.values[0][0], prop.values[1])}}
-                        </span>
-                        <ng-container *ngIf="prop.name == 'Quality'">
-                            <span class="property-tag">
-                                {{prop.name}}
-                            </span>
-                            <ng-container *ngIf="prop.values[0] != undefined">
-                                :&nbsp;
-                                <span class="generic-mod">{{prop.values[0][0]}}</span>
-                            </ng-container>
                         </ng-container>
                     </span>
                     <br />
