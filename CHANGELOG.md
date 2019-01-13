@@ -1,6 +1,13 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [0.9.7] - 2019-01-12
+- Fixed a bug related to rate-limit when fetching stash-tabs
+- Temporarily disabled networth file-output until further investigation
+
+## [0.9.6] - 2019-01-12
+- Fixed a bug where connection wasn't re-established on disconnect
+
 ## [0.9.5] - 2019-01-12
 - Added support to price the maptab (requires it to be public)
 - Added column for gem-level in the net worth table

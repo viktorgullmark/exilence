@@ -331,7 +331,7 @@ export class IncomeService implements OnDestroy {
     return Observable.from(selectedStashTabs)
       .mergeMap((tab: any) => {
         return this.externalService.getStashTab(accountName, league, tab.position);
-      }, 5)
+      }, 1)
       .do(stashTab => {
         this.playerStashTabs.push(stashTab);
       });

@@ -294,7 +294,6 @@ export class PartyService implements OnDestroy {
       }
       this.reconnectAttempts = 0;
     }).catch((err) => {
-      console.error(err.toString());
       this.logService.log('Could not connect to signalr');
       this.reconnect();
     });

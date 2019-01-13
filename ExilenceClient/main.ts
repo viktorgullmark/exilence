@@ -1,7 +1,6 @@
 import { app, BrowserWindow, dialog, globalShortcut } from 'electron';
 import * as path from 'path';
 import * as url from 'url';
-import * as fs from 'fs';
 
 
 export interface ExileWindowEvent {
@@ -49,14 +48,14 @@ ipcMain.on('popout-window-update', (event, window: ExileWindowEvent) => {
     windows[window.event].webContents.send('popout-window-update', window);
   }
 
-  if (window.event === ExileWindowEnum.Networth) {
-    const stream = fs.createWriteStream('networth.txt');
-    stream.once('open', function () {
-      stream.write(`Networth: ${Math.round(window.data.networth * 10) / 10}\r\n`);
-      stream.write(`Gain: ${Math.round(window.data.gain * 10) / 10}\r\n`);
-      stream.end();
-    });
-  }
+  // if (window.event === ExileWindowEnum.Networth) {
+  //   const stream = fs.createWriteStream('networth.txt');
+  //   stream.once('open', function () {
+  //     stream.write(`Networth: ${Math.round(window.data.networth * 10) / 10}\r\n`);
+  //     stream.write(`Gain: ${Math.round(window.data.gain * 10) / 10}\r\n`);
+  //     stream.end();
+  //   });
+  // }
 
 });
 

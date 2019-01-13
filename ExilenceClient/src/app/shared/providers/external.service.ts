@@ -33,6 +33,7 @@ export class ExternalService {
 
   private TradeSearchRequestLimit = new RateLimiter(1, 1200);
   private TradeFetchRequestLimit = new RateLimiter(1, 600);
+  private StashTabRequestRateLimit = new RateLimiter(1, 1000);
 
   constructor(
     private http: HttpClient,
@@ -98,8 +99,9 @@ export class ExternalService {
   getStashTab(account: string, league: string, index: number): Observable<Stash> {
     this.analyticsService.sendEvent('income', `GET Stashtab`);
     const parameters = `?league=${league}&accountName=${account}&tabIndex=${index}&tabs=1`;
-    return this.http.get<Stash>('https://www.pathofexile.com/character-window/get-stash-items' + parameters)
-      .retryWhen(error => error.delay(50).take(5))
+    return this.StashTabRequestRateLimit.limit(
+      this.http.get<Stash>('https://www.pathofexile.com/character-window/get-stash-items' + parameters))
+      .retryWhen(error => error.delay(1000).take(3))
       .catch(e => {
         if (e.status !== 403 && e.status !== 404) {
           this.logService.log('Could not fetch stashtabs, disconnecting!', null, true);
