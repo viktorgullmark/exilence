@@ -1,6 +1,7 @@
 import { app, BrowserWindow, dialog, globalShortcut } from 'electron';
 import * as path from 'path';
 import * as url from 'url';
+import * as Sentry from '@sentry/electron';
 
 
 export interface ExileWindowEvent {
@@ -15,6 +16,10 @@ export enum ExileWindowEnum {
   Areas = 'areas',
   Trade = 'trade'
 }
+
+Sentry.init({
+  dsn: 'https://0db02ec6abdd490d8e749491dcaf2a96@sentry.io/1370601'
+});
 
 const ipcMain = require('electron').ipcMain;
 const log = require('electron-log');
@@ -218,7 +223,6 @@ try {
   // initialization and is ready to create browser windows.
   // Some APIs can only be used after this event occurs.
   app.on('ready', () => {
-
     createWindow();
 
     autoUpdater.checkForUpdates();

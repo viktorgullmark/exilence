@@ -21,6 +21,7 @@ import { MapService } from '../shared/providers/map.service';
 import { SessionService } from '../shared/providers/session.service';
 import { SettingsService } from '../shared/providers/settings.service';
 
+
 @Component({
     selector: 'app-login',
     templateUrl: './login.component.html',

@@ -2,6 +2,7 @@ import { Injectable, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
 import * as signalR from '@aspnet/signalr';
 import { HubConnection } from '@aspnet/signalr';
+import * as Sentry from '@sentry/browser';
 import { BehaviorSubject } from 'rxjs/internal/BehaviorSubject';
 
 import { AppConfig } from '../../../environments/environment';
@@ -294,6 +295,7 @@ export class PartyService implements OnDestroy {
       }
       this.reconnectAttempts = 0;
     }).catch((err) => {
+      Sentry.captureException(err);
       this.logService.log('Could not connect to signalr');
       this.reconnect();
     });
