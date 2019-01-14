@@ -1,6 +1,9 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [0.9.8] - 2019-XX-XX
+- Reworked how connections are initiated on the server
+
 ## [0.9.7] - 2019-01-12
 - Fixed a bug related to rate-limit when fetching stash-tabs
 - Temporarily disabled networth file-output until further investigation
