@@ -199,6 +199,21 @@
         <mat-option value="24">24 hours</mat-option>
       </mat-select>
     </mat-form-field>
+    <h3 class="mat-h4 page-header new-section">History</h3>
+    <mat-divider class="divider"></mat-divider>
+    <p class="setting-desc-text">
+      Choose how much days back in history the "Net worth graph" shows
+    </p>
+    <mat-form-field>
+      <mat-label>Net worth history for</mat-label>
+      <mat-select #fontSize value="{{netWorthHistoryDays}}" (selectionChange)="toggleNetWorthHistoryDays($event)">
+        <mat-option value="1">1 day</mat-option>
+        <mat-option value="2">2 days</mat-option>
+        <mat-option value="3">3 days</mat-option>
+        <mat-option value="7">7 days</mat-option>
+        <mat-option value="14">14 days</mat-option>
+      </mat-select>
+    </mat-form-field>
   </div>
 </div>
 

@@ -30,6 +30,7 @@ export class SettingsComponent implements OnInit, OnDestroy {
   uploaded = false;
   itemValueTreshold = 1;
   gainHours = 1;
+  netWorthHistoryDays = 14;
 
   // temporary arrays
   modifierKeys = [
@@ -113,6 +114,8 @@ export class SettingsComponent implements OnInit, OnDestroy {
       this.settingsService.get('itemValueTreshold') !== undefined ? this.settingsService.get('itemValueTreshold') : 1;
     this.gainHours =
       this.settingsService.get('gainHours') !== undefined ? this.settingsService.get('gainHours') : 3;
+    this.netWorthHistoryDays =
+      this.settingsService.get('netWorthHistoryDays') !== undefined ? this.settingsService.get('netWorthHistoryDays') : 14;
     if (!this.sessionIdValid || this.sessionId === '') {
       this.selectedIndex = 1;
     }
@@ -189,6 +192,10 @@ export class SettingsComponent implements OnInit, OnDestroy {
 
   toggleGainHours(event) {
     this.settingsService.set('gainHours', +event.value);
+  }
+
+  toggleNetWorthHistoryDays(event) {
+    this.settingsService.set('netWorthHistoryDays', +event.value);
   }
 
   toggleAlwaysOnTop() {

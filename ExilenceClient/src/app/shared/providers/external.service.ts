@@ -23,6 +23,7 @@ import { Stash } from '../interfaces/stash.interface';
 import { AnalyticsService } from './analytics.service';
 import { ElectronService } from './electron.service';
 import { LogService } from './log.service';
+import { RequestHelper } from '../helpers/request.helper';
 
 @Injectable()
 export class ExternalService {
@@ -33,7 +34,7 @@ export class ExternalService {
 
   private TradeSearchRequestLimit = new RateLimiter(1, 1200);
   private TradeFetchRequestLimit = new RateLimiter(1, 600);
-  private StashTabRequestRateLimit = new RateLimiter(1, 1000);
+  private StashTabRequestRateLimit = new RateLimiter(1, 100);
 
   constructor(
     private http: HttpClient,
@@ -101,7 +102,9 @@ export class ExternalService {
     const parameters = `?league=${league}&accountName=${account}&tabIndex=${index}&tabs=1`;
     return this.StashTabRequestRateLimit.limit(
       this.http.get<Stash>('https://www.pathofexile.com/character-window/get-stash-items' + parameters))
-      .retryWhen(error => error.delay(1000).take(3))
+      .retryWhen((error) => {
+        return error.delay(1000).take(3);
+      })
       .catch(e => {
         if (e.status !== 403 && e.status !== 404) {
           this.logService.log('Could not fetch stashtabs, disconnecting!', null, true);

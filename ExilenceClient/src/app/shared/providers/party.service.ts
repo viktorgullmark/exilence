@@ -103,10 +103,7 @@ export class PartyService implements OnDestroy {
     });
     this.initParty();
     this._hubConnection = new signalR.HubConnectionBuilder()
-      .withUrl(AppConfig.url + 'hubs/party', {
-        skipNegotiation: true,
-        transport: signalR.HttpTransportType.WebSockets
-      })
+      .withUrl(AppConfig.url + 'hubs/party')
       .configureLogging(signalR.LogLevel.Information)
       .build();
 
