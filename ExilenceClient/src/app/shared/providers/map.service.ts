@@ -174,10 +174,8 @@ export class MapService implements OnDestroy {
     }
     // if live-parsing, update data now
     if (live) {
-      // delay snapshot by 25 seconds, to make room for stashing/vendoring
-      setTimeout(x => {
-        this.incomeService.Snapshot();
-      }, 1000 * 25);
+      this.incomeService.Snapshot();
+
       // update current player and send information to party
       this.localPlayer.area = this.currentArea.eventArea.name;
       this.localPlayer.areaInfo = this.currentArea;
