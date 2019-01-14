@@ -8,6 +8,7 @@ import { ChartSeries, ChartSeriesEntry } from '../../../shared/interfaces/chart.
 import { Player } from '../../../shared/interfaces/player.interface';
 import { AccountService } from '../../../shared/providers/account.service';
 import { IncomeService } from '../../../shared/providers/income.service';
+import { SettingsService } from '../../../shared/providers/settings.service';
 import { PartyService } from '../../../shared/providers/party.service';
 
 
@@ -46,7 +47,8 @@ export class IncomeComponent implements OnInit, OnDestroy {
   selectedColorScheme: string;
 
   constructor(
-    private partyService: PartyService
+    private partyService: PartyService,
+    private settingService: SettingsService,
   ) {
   }
 
@@ -104,17 +106,17 @@ export class IncomeComponent implements OnInit, OnDestroy {
   updateGraph(player: Player) {
     const playerObj = Object.assign({}, player);
 
-    if (this.isSummary) {
-      const oneDayAgo = (Date.now() - (24 * 60 * 60 * 1000));
-      playerObj.netWorthSnapshots = playerObj.netWorthSnapshots.filter(x => x.timestamp > oneDayAgo);
-      if (playerObj.netWorthSnapshots.length === 0) {
-        playerObj.netWorthSnapshots = [{
-          timestamp: 0,
-          value: 0,
-          items: []
-        }];
-      }
+    const netWorthHistoryDays = this.settingService.get('netWorthHistoryDays');
+    const daysAgo = (Date.now() - (netWorthHistoryDays * 24 * 60 * 60 * 1000));
+    playerObj.netWorthSnapshots = playerObj.netWorthSnapshots.filter(x => x.timestamp > daysAgo);
+    if (playerObj.netWorthSnapshots.length === 0) {
+      playerObj.netWorthSnapshots = [{
+        timestamp: 0,
+        value: 0,
+        items: []
+      }];
     }
+
     const entry: ChartSeries = {
       name: playerObj.character.name + ' (' + moment(playerObj.netWorthSnapshots[0].timestamp).fromNow() + ')',
       series: playerObj.netWorthSnapshots.map(snapshot => {
