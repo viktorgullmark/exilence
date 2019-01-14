@@ -77,17 +77,12 @@ export class ItemTooltipContentComponent implements OnInit {
     return html;
   }
 
-  formatFlaskProperties(prop, firstVal, secondVal) {
-    const ex = /(%0)/g;
-    let result = prop.replace(ex, firstVal);
-
-    if (secondVal !== undefined && secondVal[0] !== undefined) {
-      // use second value as well
-      const ex2 = /(%1)/g;
-      result = result.replace(ex2, secondVal[0]);
+  formatItemProperties(property) {
+    let name = property.name;
+    for (let i = 0; i <  property.values.length; i++) {
+      name = name.replace('%' + i, property.values[i][0]);
     }
-
-    return result;
+    return name.replace(/[{}]|\<[\S\s]*?\>/g, '');
   }
 
   isWeapon(itemProps: any[]) {
