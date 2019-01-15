@@ -1,6 +1,10 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [0.9.8] - 2019-XX-XX
+- Updated Electron framework
+- Removed functionality for sending messages
+
 ## [0.9.8] - 2019-01-15
 - Added a setting for chosing how many days to track net worth history for
 - Reworked how connections are initiated on the server
