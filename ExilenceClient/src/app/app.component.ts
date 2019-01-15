@@ -2,7 +2,7 @@ import { Component, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import * as moment from 'moment';
-import * as Sentry from '@sentry/browser';
+import * as Sentry from '@sentry/electron';
 
 
 import * as pkg from '../../package.json';
