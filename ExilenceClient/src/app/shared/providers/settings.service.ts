@@ -1,22 +1,34 @@
 import { Injectable } from '@angular/core';
 
 import { ElectronService } from './electron.service';
+import { LogService } from './log.service';
 
 @Injectable()
 export class SettingsService {
   isChangingStash = false;
-  constructor(private electronService: ElectronService) {
-
+  constructor(private electronService: ElectronService, private logService: LogService) {
   }
 
   set(key: string, object: any) {
-    this.electronService.settings.set(key, object);
+    try {
+      this.electronService.settings.set(key, object);
+    } catch (e) {
+      this.logService.log(e);
+    }
   }
   get(key: string) {
-    return this.electronService.settings.get(key);
+    try {
+      return this.electronService.settings.get(key);
+    } catch (e) {
+      this.logService.log(e);
+    }
   }
   deleteAll() {
-    this.electronService.settings.deleteAll();
+    try {
+      this.electronService.settings.deleteAll();
+    } catch (e) {
+      this.logService.log(e);
+    }
   }
   deleteNetWorth() {
     const netWorthHistory = {
@@ -27,12 +39,20 @@ export class SettingsService {
         items: []
       }]
     };
-    this.electronService.settings.set('networth', netWorthHistory);
+    try {
+      this.electronService.settings.set('networth', netWorthHistory);
+    } catch (e) {
+      this.logService.log(e);
+    }
     return netWorthHistory;
   }
   deleteAreas() {
     const areas = [];
-    this.electronService.settings.set('areas', areas);
+    try {
+      this.electronService.settings.set('areas', areas);
+    } catch (e) {
+      this.logService.log(e);
+    }
     return areas;
   }
 }
