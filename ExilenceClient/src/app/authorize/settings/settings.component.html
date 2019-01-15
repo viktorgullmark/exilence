@@ -8,12 +8,6 @@
         &nbsp;Stashtabs
       </ng-template>
     </mat-tab>
-    <mat-tab #general id="keybinds">
-      <ng-template mat-tab-label>
-        <mat-icon class="tab-icon">keyboard</mat-icon>
-        &nbsp;Keybinds
-      </ng-template>
-    </mat-tab>
     <mat-tab #window id="window">
       <ng-template mat-tab-label>
         <mat-icon class="tab-icon">laptop</mat-icon>
@@ -61,81 +55,6 @@
 </div>
 
 <div [hidden]="selectedIndex != 1">
-  <div class="keybinds-info-text">
-    <p class="mat-body-1">
-      This page lets you select custom keybindings for functions in the app, e.g reporting the current gain for your
-      group.
-      <br /> These keybinds will only be active when either Path of Exile or Exilence is in focus.
-    </p>
-    <p class="mat-body-1">
-      To avoid any conflicts with the keybinds, make sure the combination you select does not interfere with other
-      macros or in-game
-      binds.
-    </p>
-  </div>
-  <div class="setting-tab-content">
-    <mat-grid-list cols="9" rowHeight="50px">
-      <!-- col-headers -->
-      <mat-grid-tile [colspan]="3" [rowspan]="1" class="grid-header">
-        <span class="grid-header-title">
-          Event name
-        </span>
-      </mat-grid-tile>
-      <mat-grid-tile [colspan]="2" [rowspan]="1" class="grid-header">
-        <span class="grid-header-title">
-          Modifier-key
-        </span>
-      </mat-grid-tile>
-      <mat-grid-tile [colspan]="2" [rowspan]="1" class="grid-header">
-        <span class="grid-header-title">
-          Trigger-key
-        </span>
-      </mat-grid-tile>
-      <mat-grid-tile [colspan]="2" [rowspan]="1" class="grid-header">
-        <span class="grid-header-title">
-          Enabled
-        </span>
-      </mat-grid-tile>
-      <!-- keybinds -->
-      <ng-container *ngFor="let keybind of keybinds">
-        <mat-grid-tile [colspan]="3" [rowspan]="1">
-          {{keybind.title}}
-        </mat-grid-tile>
-        <mat-grid-tile [colspan]="2" [rowspan]="1">
-          <mat-form-field>
-            <mat-select [(value)]="keybind.modifierKeyCode" [disabled]="!keybind.enabled">
-              <mat-option value="None">None</mat-option>
-              <mat-option *ngFor="let key of modifierKeys" value="{{key.name}}">{{key.name}}</mat-option>
-            </mat-select>
-          </mat-form-field>
-        </mat-grid-tile>
-        <mat-grid-tile [colspan]="2" [rowspan]="1">
-          <mat-form-field>
-            <mat-select [(value)]="keybind.triggerKeyCode" [disabled]="!keybind.enabled">
-              <!-- <mat-option>None</mat-option> -->
-              <mat-option *ngFor="let key of triggerKeys" value="{{key.name}}">{{key.name}}</mat-option>
-            </mat-select>
-          </mat-form-field>
-        </mat-grid-tile>
-        <mat-grid-tile [colspan]="2" [rowspan]="1">
-          <mat-checkbox [(ngModel)]="keybind.enabled"></mat-checkbox>
-        </mat-grid-tile>
-      </ng-container>
-    </mat-grid-list>
-    <mat-divider class="divider btn-area-divider"></mat-divider>
-    <div class="flex-area">
-      <div class="right-aligned">
-        <button mat-raised-button color="primary" (click)="resetKeybinds()" type="button">{{'KEYBINDS.RESET' |
-          translate}}</button>
-        <button mat-raised-button color="primary" (click)="saveKeybinds()" type="button">{{'KEYBINDS.SAVE' |
-          translate}}</button>
-      </div>
-    </div>
-
-  </div>
-</div>
-
-<div [hidden]="selectedIndex != 2">
   <div class="setting-tab-content">
     <h3 class="mat-h4 page-header">Misc</h3>
     <mat-divider class="divider"></mat-divider>
@@ -154,7 +73,7 @@
   </div>
 </div>
 
-<div [hidden]="selectedIndex != 3">
+<div [hidden]="selectedIndex != 2">
   <div class="setting-tab-content">
     <h3 class="mat-h4 page-header">Pricing</h3>
     <mat-divider class="divider"></mat-divider>
@@ -217,7 +136,7 @@
   </div>
 </div>
 
-<div [hidden]="selectedIndex != 4">
+<div [hidden]="selectedIndex != 3">
   <div class="setting-tab-content">
     <h3 class="mat-h4 page-header">Visibility</h3>
     <mat-divider class="divider"></mat-divider>
@@ -237,7 +156,7 @@
   </div>
 </div>
 
-<div [hidden]="selectedIndex != 5">
+<div [hidden]="selectedIndex != 4">
   <div class="setting-tab-content">
     <h3 class="mat-h4 page-header">
       This page is aimed to help you resolve any problems you might have with Exilence.

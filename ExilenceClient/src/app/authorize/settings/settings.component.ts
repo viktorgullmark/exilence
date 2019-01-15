@@ -1,12 +1,9 @@
 import { Component, Inject, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
-import { Subscription } from 'rxjs';
 
-import { Keys } from '../../shared/interfaces/key.interface';
 import { AlertService } from '../../shared/providers/alert.service';
 import { AnalyticsService } from '../../shared/providers/analytics.service';
 import { ElectronService } from '../../shared/providers/electron.service';
-import { KeybindService } from '../../shared/providers/keybind.service';
 import { LogService } from '../../shared/providers/log.service';
 import { SessionService } from '../../shared/providers/session.service';
 import { SettingsService } from '../../shared/providers/settings.service';
@@ -32,80 +29,19 @@ export class SettingsComponent implements OnInit, OnDestroy {
   gainHours = 1;
   netWorthHistoryDays = 14;
 
-  // temporary arrays
-  modifierKeys = [
-    { name: 'Shift', code: Keys.Shift },
-    { name: 'Ctrl', code: Keys.Ctrl },
-    { name: 'Alt', code: Keys.Alt }
-  ];
-  triggerKeys = [
-    { name: 'A', code: Keys.A },
-    { name: 'B', code: Keys.B },
-    { name: 'C', code: Keys.C },
-    { name: 'D', code: Keys.D },
-    { name: 'E', code: Keys.E },
-    { name: 'F', code: Keys.F },
-    { name: 'G', code: Keys.G },
-    { name: 'H', code: Keys.H },
-    { name: 'I', code: Keys.I },
-    { name: 'J', code: Keys.J },
-    { name: 'K', code: Keys.K },
-    { name: 'L', code: Keys.L },
-    { name: 'M', code: Keys.M },
-    { name: 'N', code: Keys.N },
-    { name: 'O', code: Keys.O },
-    { name: 'P', code: Keys.P },
-    { name: 'Q', code: Keys.Q },
-    { name: 'R', code: Keys.R },
-    { name: 'S', code: Keys.S },
-    { name: 'T', code: Keys.T },
-    { name: 'U', code: Keys.U },
-    { name: 'V', code: Keys.V },
-    { name: 'W', code: Keys.W },
-    { name: 'X', code: Keys.X },
-    { name: 'Y', code: Keys.Y },
-    { name: 'Z', code: Keys.Z },
-    { name: 'F1', code: Keys.F1 },
-    { name: 'F2', code: Keys.F2 },
-    { name: 'F3', code: Keys.F3 },
-    { name: 'F4', code: Keys.F4 },
-    { name: 'F5', code: Keys.F5 },
-    { name: 'F6', code: Keys.F6 },
-    { name: 'F7', code: Keys.F7 },
-    { name: 'F8', code: Keys.F8 },
-    { name: 'F9', code: Keys.F9 },
-    { name: 'F10', code: Keys.F10 },
-    { name: 'F11', code: Keys.F11 },
-    { name: 'F12', code: Keys.F12 },
-  ];
-  keybinds: any[];
-
   @ViewChild('table') table: StashtabListComponent;
-
-  private keybindSub: Subscription;
 
   constructor(@Inject(FormBuilder)
   fb: FormBuilder,
     private analyticsService: AnalyticsService,
     private electronService: ElectronService,
     private settingsService: SettingsService,
-    private keybindService: KeybindService,
     private sessionService: SessionService,
     private alertService: AlertService,
     private logService: LogService
   ) {
     this.form = fb.group({
       searchText: ['']
-    });
-
-    this.keybindSub = this.keybindService.keybinds.subscribe((binds: any[]) => {
-      this.keybinds = binds.map(bind => ({
-        triggerKeyCode: bind.keys.split('+')[1],
-        modifierKeyCode: bind.keys.split('+')[0],
-        event: bind.event,
-        title: bind.title,
-        enabled: bind.enabled
-      }));
     });
 
     this.sessionId = this.sessionService.getSession();
@@ -153,33 +89,10 @@ export class SettingsComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    if (this.keybindSub !== undefined) {
-      this.keybindSub.unsubscribe();
-    }
   }
 
   openLink(link: string) {
     this.electronService.shell.openExternal(link);
-  }
-
-  resetKeybinds() {
-    this.keybindService.resetKeybinds();
-    this.settingsService.set('keybinds', undefined);
-  }
-
-  saveKeybinds() {
-    this.keybindService.updateKeybinds(this.mapBindings(this.keybinds));
-    this.settingsService.set('keybinds', this.mapBindings(this.keybinds));
-  }
-
-  // map bindings back to proper format
-  mapBindings(binds: any[]) {
-    return this.keybinds.map(bind => ({
-      keys: bind.modifierKeyode !== 'None' ? bind.modifierKeyCode + '+' + bind.triggerKeyCode : bind.triggerKeyCode,
-      event: bind.event,
-      title: bind.title,
-      enabled: bind.enabled
-    }));
   }
 
   search() {
