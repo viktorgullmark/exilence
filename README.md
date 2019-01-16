@@ -12,6 +12,10 @@ Report bugs at https://github.com/viktorgullmark/exilence/issues
 
 Communicate with us at our Discord https://discord.gg/ymr3VnA
 
+## Supporting us
+
+We want to deliver the best functionality and experience for you that we possibly can. We always strive to achieve this, both by development directly and with the help of powerful servers. Servers cost money, and your support helps us maintain these servers in the future as well as speed up the development process. If you feel like chiming in with something, here's our Patreon: https://www.patreon.com/exilence
+
 ## Video-preview
 
 https://www.youtube.com/watch?v=3YdWM2kS4BA&t=2s
@@ -19,16 +23,11 @@ https://www.youtube.com/watch?v=3YdWM2kS4BA&t=2s
 ## Contents
 
 - [Changelog](https://github.com/viktorgullmark/exilence/blob/master/CHANGELOG.md)
-- [Supporting us](#supporting-us)
 - [Important](#important)
 - [How to install](#how-to-install)
 - [Platform](#platform)
 - [Help with development](#help-with-development)
 - [Acknowledgements](#acknowledgements)
-
-## Supporting us
-
-We want to deliver the best functionality and experience for you that we possibly can. We always strive to achieve this, both by development directly and with the help of powerful servers. Servers cost money, and your support helps us maintain these servers in the future as well as speed up the development process. If you feel like chiming in with something, here's our Patreon: https://www.patreon.com/exilence
 
 ## Important
 
