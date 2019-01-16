@@ -1,8 +1,9 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
-## [0.9.9] - 2019-XX-XX
+## [0.9.9] - 2019-01-16
 - Updated Electron framework to improve performance (now runs on a newer Chromium version)
+- Now shows max-size for for divination card stacks, to easier see how many stacks you've got
 - Fixed a bug where the time since last snapshot wasn't shown correctly on labels in the graph
 - Removed functionality for sending messages to increase stability
 - Removed old dependencies
