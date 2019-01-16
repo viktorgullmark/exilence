@@ -22,23 +22,18 @@ namespace Exilence.Hubs
         private IDistributedCache _cache;
         private IRedisRepository _redisRepository;
         private ILadderService _ladderService;
-        private TelemetryClient _telemetry;
 
         private string ConnectionId => Context.ConnectionId;
         
-        public PartyHub(IDistributedCache cache, IRedisRepository redisRepository, ILadderService ladderService, TelemetryClient telemetry)
+        public PartyHub(IDistributedCache cache, IRedisRepository redisRepository, ILadderService ladderService)
         {
             _cache = cache;
             _redisRepository = redisRepository;
             _ladderService = ladderService;
-            _telemetry = telemetry;
         }
                 
         public async Task JoinParty(string partyName, string playerObj)
         {
-            var sw = new Stopwatch();
-            sw.Start();
-
             var player = CompressionHelper.Decompress<PlayerModel>(playerObj);
 
             var ladder = await _ladderService.GetLadderForPlayer(player.Character.League, player.Character.Name);
@@ -85,9 +80,6 @@ namespace Exilence.Hubs
             await Groups.AddToGroupAsync(Context.ConnectionId, partyName);
             await Clients.OthersInGroup(partyName).SendAsync("PlayerJoined", CompressionHelper.Compress(player));
             await Clients.Group(partyName).SendAsync("PlayerUpdated", CompressionHelper.Compress(player));
-
-            var elapsed = sw.ElapsedMilliseconds / 1000;
-            _telemetry.GetMetric("PartyHub.JoinParty").TrackValue(elapsed);
         }
 
         public async Task LeaveParty(string partyName, string playerObj)
@@ -127,9 +119,6 @@ namespace Exilence.Hubs
 
         public async Task UpdatePlayer(string partyName, string playerObj)
         {
-            var sw = new Stopwatch();
-            sw.Start();
-
             var player = CompressionHelper.Decompress<PlayerModel>(playerObj);
             var party = await _cache.GetAsync<PartyModel>($"party:{partyName}");
 
@@ -155,9 +144,6 @@ namespace Exilence.Hubs
             {
                 await Clients.Group(partyName).SendAsync("ForceDisconnect");
             }
-
-            var elapsed = sw.ElapsedMilliseconds / 1000;
-            _telemetry.GetMetric("PartyHub.UpdatePlayer").TrackValue(elapsed);
         }
         public async Task GenericUpdatePlayer(PlayerModel player, string partyName)
         {

@@ -30,12 +30,9 @@ namespace Exilence
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddApplicationInsightsTelemetry(Configuration);
-
             services.AddHangfire(c => c.UseMemoryStorage());
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
-            //.AddJsonOptions(opts => { opts.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver(); });
 
             //Add distributed cache service backed by Redis cache
             services.AddDistributedRedisCache(options =>
@@ -82,8 +79,6 @@ namespace Exilence
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
-                var telemetryConfig = app.ApplicationServices.GetService<TelemetryConfiguration>();
-                telemetryConfig.DisableTelemetry = true;
             }
 
             app.UseMvc();

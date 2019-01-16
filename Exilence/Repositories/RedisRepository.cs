@@ -16,13 +16,11 @@ namespace Exilence.Repositories
 {
     public class RedisRepository : IRedisRepository
     {
-        private TelemetryClient _telemetry;
         private readonly IDistributedCache _cache;
 
-        public RedisRepository(IDistributedCache context, TelemetryClient telemetry)
+        public RedisRepository(IDistributedCache context)
         {
             _cache = context;
-            _telemetry = telemetry;
         }
 
         public async Task<List<LadderStoreModel>> GetAllLeaguesLadders()
@@ -44,13 +42,7 @@ namespace Exilence.Repositories
 
         public async Task<LadderStoreModel> GetLeagueLadder(string leagueName)
         {
-            var sw = new Stopwatch();
-            sw.Start();
-
             var compressedLeague = await _cache.GetAsync<string>($"ladder:{leagueName}");
-
-            var elapsed = sw.ElapsedMilliseconds / 1000;
-            _telemetry.GetMetric("RedisRepository.GetLeagueLadder").TrackValue(elapsed);
 
             if (compressedLeague != null)
             {
@@ -188,9 +180,6 @@ namespace Exilence.Repositories
 
         public async Task AddConnection(string connectionId, string partyName)
         {
-            var sw = new Stopwatch();
-            sw.Start();
-
             var connectionModel = new ConnectionModel()
             {
                 PartyName = partyName,
@@ -212,9 +201,6 @@ namespace Exilence.Repositories
 
             connections.Add(connectionModel);
             await _cache.SetAsync<List<ConnectionModel>>($"connections", connections);
-
-            var elapsed = sw.ElapsedMilliseconds / 1000;
-            _telemetry.GetMetric("RedisRepository.AddConnection").TrackValue(elapsed);
         }
 
         #endregion
