@@ -1,6 +1,11 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [0.9.11] - 2019-01-17
+- Fixed a bug where sessionId could not be validated
+- Fixed a bug where endless reconnection loops could occurr
+- Added a combined ratelimiter for characters and stashtabs (should reduce the amount of disconnects)
+
 ## [0.9.10] - 2019-01-16
 - Fixed a bug where group-summary graph was hiding some players
 
