@@ -63,9 +63,7 @@ namespace Exilence.Hubs
                 }
                 else
                 {
-                    // index of old player
                     var index = party.Players.IndexOf(oldPlayer);
-                    await Groups.RemoveFromGroupAsync(oldPlayer.ConnectionID, partyName);
                     party.Players[index] = player;
                 }
 
