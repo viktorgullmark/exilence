@@ -19,11 +19,16 @@ https://www.youtube.com/watch?v=3YdWM2kS4BA&t=2s
 ## Contents
 
 - [Changelog](https://github.com/viktorgullmark/exilence/blob/master/CHANGELOG.md)
+- [Supporting us](#supporting-us)
 - [Important](#important)
 - [How to install](#how-to-install)
 - [Platform](#platform)
 - [Help with development](#help-with-development)
 - [Acknowledgements](#acknowledgements)
+
+## Supporting us
+
+We want to deliver the best functionality and experience for you that we possibly can. We always strive to achieve this, both by development directly and with the help of powerful servers. Servers cost money, and your support helps us maintain these servers in the future as well as speed up the development process. If you feel like chiming in with something, here's our Patreon: https://www.patreon.com/exilence
 
 ## Important
 
@@ -47,7 +52,7 @@ Currently runs with:
 
 ## Help with development
 
-If you want to help with development we gladly accept pull-requests. To set up the project, install the latest angular-cli and node version prior to 10. Exilence currently cannot run on node 10+ because of dependencies. See here for more information https://github.com/Robot/robot-js/issues/66. The following commands will help in setting up the client:
+If you want to help with development we gladly accept pull-requests. To set up the project, install the latest angular-cli and node version.
 
 ```
 npm install -g @angular/cli
