@@ -1,6 +1,9 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [0.9.10] - 2019-01-16
+- Fixed a bug where group-summary graph was hiding some players
+
 ## [0.9.9] - 2019-01-16
 - Updated Electron framework to improve performance (now runs on a newer Chromium version)
 - Now shows max-size for for divination card stacks, to easier see how many stacks you've got
