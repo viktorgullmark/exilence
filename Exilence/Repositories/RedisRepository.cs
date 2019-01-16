@@ -4,7 +4,6 @@ using Exilence.Models;
 using Exilence.Models.Connection;
 using Exilence.Models.Ladder;
 using Exilence.Models.Statistics;
-using Microsoft.ApplicationInsights;
 using Microsoft.Extensions.Caching.Distributed;
 using System;
 using System.Collections.Generic;

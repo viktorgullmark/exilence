@@ -2,7 +2,6 @@
 using Exilence.Interfaces;
 using Exilence.Models;
 using Exilence.Models.Ladder;
-using Microsoft.ApplicationInsights;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;

@@ -8,11 +8,7 @@ using System.Collections.Generic;
 using Exilence.Helper;
 using System.Linq;
 using Exilence.Interfaces;
-using Newtonsoft.Json;
-using Exilence.Models.Connection;
 using Exilence.Models.Statistics;
-using Microsoft.ApplicationInsights;
-using System.Diagnostics;
 
 namespace Exilence.Hubs
 {
