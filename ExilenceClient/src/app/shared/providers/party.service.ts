@@ -2,7 +2,7 @@ import { Injectable, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
 import * as signalR from '@aspnet/signalr';
 import { HubConnection } from '@aspnet/signalr';
-import * as Sentry from '@sentry/electron';
+const { Sentry } = require('@sentry/electron');
 import { BehaviorSubject } from 'rxjs/internal/BehaviorSubject';
 
 import { AppConfig } from '../../../environments/environment';

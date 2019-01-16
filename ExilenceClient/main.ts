@@ -1,7 +1,7 @@
 import { app, BrowserWindow, dialog, globalShortcut } from 'electron';
 import * as path from 'path';
 import * as url from 'url';
-import * as Sentry from '@sentry/electron';
+const { init } = require('@sentry/electron');
 
 
 export interface ExileWindowEvent {
@@ -17,7 +17,7 @@ export enum ExileWindowEnum {
   Trade = 'trade'
 }
 
-Sentry.init({
+init({
   dsn: 'https://0db02ec6abdd490d8e749491dcaf2a96@sentry.io/1370601'
 });
 

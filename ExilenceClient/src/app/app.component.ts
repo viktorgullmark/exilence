@@ -2,7 +2,7 @@ import { Component, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import * as moment from 'moment';
-import * as Sentry from '@sentry/electron';
+// import * as Sentry from '@sentry/electron';
 
 
 import * as pkg from '../../package.json';
@@ -16,9 +16,9 @@ import { MatSnackBar } from '@angular/material';
 import { Subscription } from 'rxjs';
 import { AppConfig } from '../environments/environment';
 
-Sentry.init({
-  dsn: AppConfig.sentryDsn
-});
+// Sentry.init({
+//   dsn: AppConfig.sentryDsn
+// });
 
 
 @Component({
