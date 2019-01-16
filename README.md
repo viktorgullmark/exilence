@@ -10,7 +10,7 @@ Download latest release at https://github.com/viktorgullmark/exilence/releases/l
 
 Report bugs at https://github.com/viktorgullmark/exilence/issues
 
-Communicate with us at our Discord https://discord.gg/ymr3VnA
+Communicate with us at our Discord https://discord.gg/4A5Bb7
 
 ## Supporting us
 
