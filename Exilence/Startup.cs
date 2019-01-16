@@ -95,13 +95,14 @@ namespace Exilence
             app.UseHangfireServer(hangfireOpts);
             app.UseHangfireDashboard();
 
-            //BackgroundJob.Schedule<ILadderService>(ls => ls.UpdateLadders(), TimeSpan.FromMilliseconds(5000));
+            if (Configuration.GetValue<bool>("Ladder:PollingEnabled")) { 
+                BackgroundJob.Schedule<ILadderService>(ls => ls.UpdateLadders(), TimeSpan.FromMilliseconds(5000));
+            }
 
             app.UseSignalR(routes =>
             {
                 routes.MapHub<PartyHub>("/hubs/party", options =>
                 {
-                    // 30Kb message buffer
                     options.ApplicationMaxBufferSize = 50 * 1024 * 1024;
                     options.TransportMaxBufferSize = 50 * 1024 * 1024;
                 });
