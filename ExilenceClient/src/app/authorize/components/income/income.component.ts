@@ -65,11 +65,16 @@ export class IncomeComponent implements OnInit, OnDestroy {
     } else {
       // party logic
       this.isSummary = true;
-      this.partyService.party.players.forEach(p => {
-        if (p.netWorthSnapshots !== null) {
-          this.updateGraph(p);
-        }
-      });
+      // update the graph every minute, to update labels
+      setInterval(() => {
+        this.partyService.party.players.forEach(p => {
+          this.dateData = [];
+          this.data = [];
+          if (p.netWorthSnapshots !== null) {
+            this.updateGraph(p);
+          }
+        });
+      }, 60 * 1000);
       this.partySubscription = this.partyService.partyUpdated.subscribe(party => {
         if (party !== undefined) {
           this.dateData = [];
