@@ -67,9 +67,9 @@ export class IncomeComponent implements OnInit, OnDestroy {
       this.isSummary = true;
       // update the graph every minute, to update labels
       setInterval(() => {
+        this.dateData = [];
+        this.data = [];
         this.partyService.party.players.forEach(p => {
-          this.dateData = [];
-          this.data = [];
           if (p.netWorthSnapshots !== null) {
             this.updateGraph(p);
           }
