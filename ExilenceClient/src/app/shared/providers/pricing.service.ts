@@ -9,6 +9,7 @@ import { CombinedItemPriceInfo } from '../interfaces/poe-watch/combined-item-pri
 import { NinjaService } from './ninja.service';
 import { SettingsService } from './settings.service';
 import { WatchService } from './watch.service';
+import { stack } from 'd3';
 
 @Injectable()
 
@@ -64,6 +65,7 @@ export class PricingService {
     itemPricingObj.links = links;
     itemPricingObj.sockets = item.sockets !== undefined && item.sockets !== null ? item.sockets.length : 0;
     itemPricingObj.frameType = item.frameType;
+    itemPricingObj.totalStacksize = item.stackSize;
 
     // assign if elder or shaper
     let elderOrShaper = null;
@@ -139,6 +141,7 @@ export class PricingService {
         price = this.pricecheckByName(itemPricingObj.name);
         break;
       case 6: // Divination Card
+        itemPricingObj.totalStacksize = this.getTotalStacksize(itemPricingObj.name);
         price = this.priceCheckDivinationCard(itemPricingObj.name);
         break;
       case 8: // Prophecy
@@ -197,6 +200,14 @@ export class PricingService {
     const ninjaPriceInfoItem = this.ninjaService.ninjaPrices.find(x => x.name === name && x.icon.indexOf('Divination') > -1);
     const watchPriceInfoItem = this.watchService.watchPrices.find(x => x.fullname === name && x.category === 'card');
     return this.combinePricesToSimpleObject(ninjaPriceInfoItem, watchPriceInfoItem);
+  }
+  getTotalStacksize(name: string) {
+    const card = this.ninjaService.ninjaPrices.find(x => x.name === name && x.icon.indexOf('Divination') > -1);
+    let stacksize = 1;
+    if (card !== undefined && card.totalStacksize !== undefined && card.totalStacksize !== 0) {
+      stacksize = card.totalStacksize;
+    }
+    return stacksize;
   }
   pricecheckUnique(name: string, links: number, uniquename: string, variation: string = ''): SimpleItemPricing {
     if (uniquename === '' || uniquename === undefined || uniquename === null) { // ignore unidentified uniques

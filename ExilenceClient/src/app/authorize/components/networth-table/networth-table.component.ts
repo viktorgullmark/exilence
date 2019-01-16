@@ -222,6 +222,10 @@ export class NetworthTableComponent implements OnInit, OnDestroy {
     this.filter();
   }
 
+  isDivinationCard(icon: string) {
+    return icon.indexOf('/Divination/') > -1;
+  }
+
   updateOverTime(items: any[], playerName: string) {
     items.forEach(snapshot => {
       const existingItem = this.dataSource.find(x =>
@@ -263,7 +267,8 @@ export class NetworthTableComponent implements OnInit, OnDestroy {
           links: snapshot.links,
           quality: snapshot.quality,
           holdingPlayers: [playerName],
-          frameType: snapshot.frameType
+          frameType: snapshot.frameType,
+          totalStacksize: snapshot.totalStacksize
         };
         if (snapshot.value !== 0 && snapshot.stacksize !== 0) {
           this.dataSource.push(newObj);
@@ -311,7 +316,8 @@ export class NetworthTableComponent implements OnInit, OnDestroy {
           links: snapshot.links,
           quality: snapshot.quality,
           holdingPlayers: [playerName],
-          frameType: snapshot.frameType
+          frameType: snapshot.frameType,
+          totalStacksize: snapshot.totalStacksize
         };
         if (snapshot.value !== 0 && snapshot.stacksize !== 0) {
           this.dataSource.push(newObj);

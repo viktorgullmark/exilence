@@ -12,8 +12,7 @@
         "SETTINGS": {
             "TITLE": "Settings",
             "STASHTAB_LIST_HEADER": "Select which stash-tabs to include",
-            "WINDOW": "Window",
-            "KEYBINDS": "Keybinds"
+            "WINDOW": "Window"
         },
         "FAQ": {
             "TITLE": "FAQ"
@@ -86,10 +85,6 @@
     "STASH": {
         "SEARCH": "Filter tabs",
         "SELECT_TABS": "Select stashtabs"
-    },
-    "KEYBINDS": {
-        "RESET": "Reset keybinds",
-        "SAVE": "Save keybinds"
     },
     "SETTINGS": {
         "RESET_DIALOGS": "Reset tutorial-dialogs",

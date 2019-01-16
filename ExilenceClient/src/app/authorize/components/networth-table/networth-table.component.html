@@ -49,7 +49,7 @@
 
   <ng-container matColumnDef="stacksize">
     <th mat-header-cell *matHeaderCellDef mat-sort-header="stacksize"> Quantity </th>
-    <td mat-cell *matCellDef="let element" [ngClass]="{'wide-cell': multiple }"> {{element.stacksize}} </td>
+    <td mat-cell *matCellDef="let element" [ngClass]="{'wide-cell': multiple }"> {{element.stacksize}}<ng-container *ngIf="isDivinationCard(element.icon) && !showOverTime">/{{element.totalStacksize}}</ng-container> </td>
   </ng-container>
 
   <ng-container matColumnDef="valuePerUnit">

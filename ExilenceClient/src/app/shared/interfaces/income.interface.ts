@@ -26,4 +26,5 @@ export interface NetWorthItem {
   links: number;
   variation: string;
   frameType: number;
+  totalStacksize: number;
 }

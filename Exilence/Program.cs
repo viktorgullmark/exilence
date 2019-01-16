@@ -21,7 +21,6 @@ namespace Exilence
 
         public static IWebHostBuilder CreateWebHostBuilder(string[] args) =>
             WebHost.CreateDefaultBuilder(args)
-                .UseApplicationInsights()
                 .UseKestrel(options =>
                 {
                     options.Listen(IPAddress.Loopback, 5678);

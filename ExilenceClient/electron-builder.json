@@ -23,9 +23,6 @@
   "win": {
     "icon": "dist/assets/img/app-icon.png",
     "asar": true,
-    "asarUnpack": [
-      "node_modules/node-key-sender"
-    ],
     "publish": [
       "github"
     ],

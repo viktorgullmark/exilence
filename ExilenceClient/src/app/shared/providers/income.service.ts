@@ -197,7 +197,8 @@ export class IncomeService implements OnDestroy {
           gemLevel: itemPriceInfoObj.gemlevel,
           quality: itemPriceInfoObj.quality,
           variation: itemPriceInfoObj.variation,
-          frameType: itemPriceInfoObj.frameType
+          frameType: itemPriceInfoObj.frameType,
+          totalStacksize: itemPriceInfoObj.totalStacksize
         };
 
         if (netWorthItem.name.indexOf(' Map') === -1 || mapLayout || !mapTabSelected) {

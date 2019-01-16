@@ -13,6 +13,7 @@ export interface ItemPricing {
     chaosequiv_average: number;
     frameType: number;
     quantity: number;
+    totalStacksize: number;
 }
 
 export interface SimpleItemPricing {
