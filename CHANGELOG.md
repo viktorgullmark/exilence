@@ -1,9 +1,10 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
-## [0.9.8] - 2019-XX-XX
-- Updated Electron framework
-- Removed functionality for sending messages
+## [0.9.9] - 2019-XX-XX
+- Updated Electron framework to improve performance (now runs on a newer Chromium version)
+- Removed functionality for sending messages to increase stability
+- Removed old dependencies
 
 ## [0.9.8] - 2019-01-15
 - Added a setting for chosing how many days to track net worth history for
