@@ -14,7 +14,9 @@ Communicate with us at our Discord https://discord.gg/ymr3VnA
 
 ## Supporting us
 
-We want to deliver the best functionality and experience for you that we possibly can. We always strive to achieve this, both by development directly and with the help of powerful servers. Servers cost money, and your support helps us maintain these servers in the future as well as speed up the development process. If you feel like chiming in with something, here's our Patreon: https://www.patreon.com/exilence
+We want to deliver the best functionality and experience for you that we possibly can. We always strive to achieve this, both by development directly and with the help of powerful servers. Servers cost money, and your support helps us maintain these servers in the future as well as speed up the development process. 
+
+If you feel like chiming in with something, here's our Patreon: https://www.patreon.com/exilence
 
 ## Video-preview
 
@@ -45,9 +47,8 @@ Currently runs with:
 - SignalR (.NET Core) 1.1.0 w/ Redis caching
 - Angular v6.0.3
 - Angular-CLI v6.0.3
-- Electron v2.0.1
-- Electron Builder v20.13.4
-- Robot-JS v.2.0.0
+- Electron v4.0.1
+- Electron Builder v20.36.2
 
 ## Help with development
 
@@ -55,7 +56,6 @@ If you want to help with development we gladly accept pull-requests. To set up t
 
 ```
 npm install -g @angular/cli
-npm install -g --production windows-build-tools (needs to be run with administrator privileges using powershell)
 npm install
 npm run start (to serve the project)
 npm run electron:windows (optional, to build the installer for production)
