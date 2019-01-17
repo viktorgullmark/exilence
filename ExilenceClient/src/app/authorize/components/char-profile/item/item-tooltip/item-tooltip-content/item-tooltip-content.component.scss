@@ -17,41 +17,6 @@ hr {
             padding-bottom: 5px;
         }
     }
-
-    .rarity-0 {
-        //normal
-        color: $rarity-normal-color !important;
-    }
-
-    .rarity-1 {
-        // magic
-        color: $rarity-magic-color !important;
-    }
-
-    .rarity-2 {
-        // rare
-        color: $rarity-rare-color !important;
-    }
-
-    .rarity-3 {
-        // unique
-        color: $rarity-unique-color !important;
-    }
-
-    .rarity-4 {
-        // gem
-        color: $rarity-gem-color !important;
-    }
-
-    .rarity-5 {
-        // currency
-        color: $rarity-currency-color !important;
-    }
-
-    .rarity-7 {
-        // questitem
-        color: $rarity-questitem-color !important;
-    }
 }
 
 .flavour-text {

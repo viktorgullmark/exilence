@@ -24,4 +24,13 @@ export class ItemComponent implements OnInit {
       this.tooltip.reposition(this.el);
     }
   }
+
+  getBackgroundUrl(item) {
+    if (item.shaper) {
+      return `https://www.pathofexile.com/image/inventory/ShaperBackground.png?w=${item.w}&h=${item.h}&x=180&y=249`;
+    }
+    if (item.elder) {
+      return `https://www.pathofexile.com/image/inventory/ElderBackground.png?w=${item.w}&h=${item.h}`;
+    }
+  }
 }

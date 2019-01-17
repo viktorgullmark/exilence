@@ -3,30 +3,33 @@ import 'rxjs/add/observable/from';
 import 'rxjs/add/operator/concatMap';
 import 'rxjs/add/operator/delay';
 import 'rxjs/add/operator/do';
+import 'rxjs/add/operator/mergeMap';
 
 import { Injectable, OnDestroy } from '@angular/core';
-import { Subscription } from 'rxjs';
+import { of, Subscription } from 'rxjs';
 import { Observable } from 'rxjs/Observable';
 
 import { HistoryHelper } from '../helpers/history.helper';
 import { NetWorthHistory, NetWorthItem, NetWorthSnapshot } from '../interfaces/income.interface';
+import { ItemPricing } from '../interfaces/item-pricing.interface';
 import { Item } from '../interfaces/item.interface';
 import { Player } from '../interfaces/player.interface';
-import { NinjaLine, NinjaTypes } from '../interfaces/poe-ninja.interface';
-import { Stash } from '../interfaces/stash.interface';
+import { Stash, Tab } from '../interfaces/stash.interface';
 import { AccountService } from './account.service';
 import { ExternalService } from './external.service';
 import { LogService } from './log.service';
 import { NinjaService } from './ninja.service';
 import { PartyService } from './party.service';
+import { PricingService } from './pricing.service';
 import { SettingsService } from './settings.service';
+import { select } from 'd3';
 
 @Injectable()
 export class IncomeService implements OnDestroy {
 
   private lastNinjaHit = 0;
   private ninjaPrices: any[] = [];
-  private playerStashTabs: any[] = [];
+  private playerStashTabs: Stash[] = [];
   private netWorthHistory: NetWorthHistory;
   private sessionId: string;
   private isSnapshotting = false;
@@ -39,7 +42,6 @@ export class IncomeService implements OnDestroy {
   private fiveMinutes = 5 * 60 * 1000;
   private sessionIdValid = false;
 
-  private lowConfidencePricing = false;
   private characterPricing = false;
   private itemValueTreshold = 1;
 
@@ -51,7 +53,8 @@ export class IncomeService implements OnDestroy {
     private partyService: PartyService,
     private externalService: ExternalService,
     private settingsService: SettingsService,
-    private logService: LogService
+    private logService: LogService,
+    private pricingService: PricingService
   ) {
   }
 
@@ -137,64 +140,75 @@ export class IncomeService implements OnDestroy {
   }
 
   PriceItems(items: Item[]) {
-    items.forEach((item: Item) => {
-      let itemName = item.name;
 
-      if (item.typeLine) {
-        itemName += ' ' + item.typeLine;
+    // todo: base prices on this league
+    items.forEach((item: Item) => {
+      const itemPriceInfoObj: ItemPricing = this.pricingService.priceItem(item);
+      let stacksize = 1;
+      let totalValueForItem = itemPriceInfoObj.chaosequiv;
+      if (item.stackSize) {
+        stacksize = item.stackSize;
+        totalValueForItem = (itemPriceInfoObj.chaosequiv * stacksize);
       }
 
-      itemName = itemName.replace('<<set:MS>><<set:M>><<set:S>>', '').trim();
+      // If item already exists in array, update existing
+      const existingItem = this.totalNetWorthItems.find(x =>
+        x.name === itemPriceInfoObj.name
+        && x.quality === itemPriceInfoObj.quality
+        && x.links === itemPriceInfoObj.links
+        && x.gemLevel === itemPriceInfoObj.gemlevel
+        && x.variation === itemPriceInfoObj.variation
+        && x.frameType === itemPriceInfoObj.frameType
+      );
+      if (existingItem !== undefined) {
+        const indexOfItem = this.totalNetWorthItems.indexOf(existingItem);
+        // update existing item with new data
+        existingItem.stacksize = existingItem.stacksize + stacksize;
+        existingItem.value = existingItem.value + totalValueForItem;
+        this.totalNetWorthItems[indexOfItem] = existingItem;
+      } else {
+        // Add new item
 
-      if (typeof this.ninjaPrices[itemName] !== 'undefined' || itemName === 'Chaos Orb') {
+        let icon = item.icon.indexOf('?') >= 0
+          ? item.icon.substring(0, item.icon.indexOf('?')) + '?scale=1&scaleIndex=3&w=1&h=1'
+          : item.icon + '?scale=1&scaleIndex=3&w=1&h=1';
 
-        let valueForItem = this.ninjaPrices[itemName];
-        if (itemName === 'Chaos Orb') {
-          valueForItem = 1;
+        if (item.typeLine.indexOf(' Map') > -1) {
+          icon = item.icon;
         }
 
-        let stacksize = 1;
-        let totalValueForItem = valueForItem;
-        if (item.stackSize) {
-          stacksize = item.stackSize;
-          totalValueForItem = (valueForItem * stacksize);
-        }
+        const netWorthItem: NetWorthItem = {
+          name: itemPriceInfoObj.name,
+          value: totalValueForItem,
+          value_min: itemPriceInfoObj.chaosequiv_min,
+          value_max: itemPriceInfoObj.chaosequiv_max,
+          value_mode: itemPriceInfoObj.chaosequiv_mode,
+          value_median: itemPriceInfoObj.chaosequiv_median,
+          value_average: itemPriceInfoObj.chaosequiv_average,
+          quantity: itemPriceInfoObj.quantity,
+          valuePerUnit: itemPriceInfoObj.chaosequiv,
+          icon: icon,
+          stacksize,
+          links: itemPriceInfoObj.links,
+          gemLevel: itemPriceInfoObj.gemlevel,
+          quality: itemPriceInfoObj.quality,
+          variation: itemPriceInfoObj.variation,
+          frameType: itemPriceInfoObj.frameType
+        };
 
-        // If item already exists in array, update existing
-        const existingItem = this.totalNetWorthItems.find(x => x.name === itemName);
-        if (existingItem !== undefined) {
-          const indexOfItem = this.totalNetWorthItems.indexOf(existingItem);
-          // update existing item with new data
-          existingItem.stacksize = existingItem.stacksize + stacksize;
-          existingItem.value = existingItem.value + totalValueForItem;
-          this.totalNetWorthItems[indexOfItem] = existingItem;
-        } else {
-          // Add new item
-          const netWorthItem: NetWorthItem = {
-            name: itemName,
-            value: totalValueForItem,
-            valuePerUnit: valueForItem,
-            icon: item.icon.indexOf('?') >= 0
-              ? item.icon.substring(0, item.icon.indexOf('?')) + '?scale=1&scaleIndex=3&w=1&h=1'
-              : item.icon + '?scale=1&scaleIndex=3&w=1&h=1',
-            stacksize
-          };
-          this.totalNetWorthItems.push(netWorthItem);
-        }
+        this.totalNetWorthItems.push(netWorthItem);
       }
     });
   }
 
   filterItems(items: NetWorthItem[]) {
-    return items.filter(x => x.value > this.itemValueTreshold);
+    return items.filter(x => x.value >= this.itemValueTreshold && x.value !== 0);
   }
 
   SnapshotPlayerNetWorth(sessionId: string) {
 
     const accountName = this.localPlayer.account;
     const league = this.localPlayer.character.league;
-
-    const priceInfoLeague = this.settingsService.get('account.tradeLeagueName');
 
     this.playerStashTabs = [];
     this.totalNetWorthItems = [];
@@ -217,10 +231,11 @@ export class IncomeService implements OnDestroy {
     }
 
     return Observable.forkJoin(
-      this.getPlayerStashTabs(sessionId, accountName, league),
-      this.getValuesFromNinja(priceInfoLeague)
+      this.getPlayerPublicMaps(accountName, league),
+      this.pricingService.retrieveExternalPrices(),
+      this.getPlayerStashTabs(sessionId, accountName, league)
     ).do(() => {
-      this.logService.log('Finished retriving stashhtabs and value information.');
+      this.logService.log('Finished retriving stashhtabs');
       if (this.characterPricing) {
         this.PriceItems(this.localPlayer.character.items);
       }
@@ -248,77 +263,44 @@ export class IncomeService implements OnDestroy {
     });
   }
 
-  getValuesFromNinja(league: string) {
-    const tenMinutesAgo = (Date.now() - (1 * 60 * 10 * 1000));
-    const length = Object.values(this.ninjaPrices).length;
-    if (length > 0 && (this.lastNinjaHit > tenMinutesAgo && !this.externalService.tradeLeagueChanged)) {
-      return Observable.of(null);
-    } else {
-      this.logService.log('[INFO] Retriving prices from poe.ninja');
-      this.lastNinjaHit = Date.now();
-      this.ninjaPrices = [];
+  getPlayerPublicMaps(accountName: string, league: string) {
 
-      const setting = this.settingsService.get('lowConfidencePricing');
-      if (setting !== undefined) {
-        this.lowConfidencePricing = setting;
-      } else {
-        this.lowConfidencePricing = false;
-        this.settingsService.set('lowConfidencePricing', false);
-      }
+    let publicMapPricing = this.settingsService.get('publicMapPricing');
+    // default to true
+    if (publicMapPricing === undefined) {
+      publicMapPricing = true;
+    }
+    if (publicMapPricing === true) {
 
-      const enumTypes = Object.values(NinjaTypes);
-      return Observable
-        .from(enumTypes)
-        .concatMap(type => this.ninjaService.getFromNinja(league, type)
-          .delay(750))
-        .do(typeResponse => {
-          if (typeResponse !== null) {
-            typeResponse.lines.forEach((line: NinjaLine) => {
+      const selectedStashTabs: any[] = this.settingsService.get('selectedStashTabs');
+      const mapTab = selectedStashTabs.find(x => x.isMapTab);
 
-              // Exclude low-confidence prices
-              if (!this.lowConfidencePricing) {
-                const receive = line.receive;
-                if (receive !== undefined && receive !== null) {
-                  if (receive.count < 10) {
-                    return;
-                  }
-                }
-              }
+      this.logService.log('Starting to fetch public maps');
+      return this.externalService.getPublicMapTradeGuids(accountName, league)
+        .flatMap((ids: any) => {
+          const subLines = this.splitIntoSubArray(ids.result, 10);
+          return this.externalService.getPublicMapsFromTradeIds(subLines, ids.id).map((pages: any) => {
+            let items = [];
 
-              // Filter each line here, probably needs improvement
-              // But the response differse for Currency & Fragments hence the if's
-
-              let links = 0;
-              let value = 0;
-              let name = '';
-
-              if ('chaosEquivalent' in line) {
-                value = line.chaosEquivalent;
-              }
-              if ('chaosValue' in line) {
-                value = line.chaosValue;
-              }
-              if ('currencyTypeName' in line) {
-                name = line.currencyTypeName;
-              }
-              if ('name' in line) {
-                name = line.name;
-                if (line.baseType && (line.name.indexOf(line.baseType) === -1)) {
-                  name += ' ' + line.baseType;
-                }
-                name.trim();
-              }
-              if ('links' in line) {
-                links = line.links;
-              }
-              if (links === 0 && name !== '') {
-                this.ninjaPrices[name] = value;
-              }
+            pages.forEach((page: any) => {
+              page.result = page.result.filter(x => mapTab !== undefined && x.listing.stash.name === mapTab.name);
+              const pageItems = page.result.map(x => x.item);
+              items = items.concat(pageItems);
             });
-          } else {
-            this.isSnapshotting = false;
-          }
+
+            if (items.length > 0) {
+              const tab = {
+                items: items
+              } as Stash;
+
+              this.playerStashTabs.push(tab);
+            }
+            this.logService.log('Finished fetching public maps');
+
+          });
         });
+    } else {
+      return of(null);
     }
   }
 
@@ -330,14 +312,10 @@ export class IncomeService implements OnDestroy {
 
     if (selectedStashTabs === undefined) {
       selectedStashTabs = [];
-
-      for (let i = 0; i < 5; i++) {
-        selectedStashTabs.push({ name: '', position: i });
-      }
     }
 
-    if (selectedStashTabs.length > 20) {
-      selectedStashTabs = selectedStashTabs.slice(0, 19);
+    if (selectedStashTabs.length > 21) {
+      selectedStashTabs = selectedStashTabs.slice(0, 20);
     }
 
     return Observable.from(selectedStashTabs)
@@ -348,6 +326,14 @@ export class IncomeService implements OnDestroy {
       .do(stashTab => {
         this.playerStashTabs.push(stashTab);
       });
+  }
+
+  splitIntoSubArray(arr, count) {
+    const newArray = [];
+    while (arr.length > 0) {
+      newArray.push(arr.splice(0, count));
+    }
+    return newArray;
   }
 
 }

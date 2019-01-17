@@ -17,6 +17,9 @@ import { FaqModule } from './faq/faq.module';
 import { InspectPlayersModule } from './inspect-players/inspect-players.module';
 import { PartyModule } from './party/party.module';
 import { SettingsModule } from './settings/settings.module';
+import { PricingService } from '../shared/providers/pricing.service';
+import { ServerMessageDialogComponent } from './components/server-message-dialog/server-message-dialog.component';
+import { ServerMessageDialogModule } from './components/server-message-dialog/server-message-dialog.module';
 
 @NgModule({
   imports: [
@@ -35,15 +38,18 @@ import { SettingsModule } from './settings/settings.module';
     MatSidenavModule,
     SettingsModule,
     FaqModule,
-    MatCheckboxModule
+    MatCheckboxModule,
+    ServerMessageDialogModule
   ],
   declarations: [AuthorizeComponent],
   providers: [
     KeybindService,
     MessageValueService,
     PartyService,
+    PricingService,
     IncomeService,
     AnalyticsService
-  ]
+  ],
+  entryComponents: [ServerMessageDialogComponent]
 })
 export class AuthorizeModule { }

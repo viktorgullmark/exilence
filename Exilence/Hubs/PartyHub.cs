@@ -10,6 +10,9 @@ using System.Linq;
 using Exilence.Interfaces;
 using Newtonsoft.Json;
 using Exilence.Models.Connection;
+using Exilence.Models.Statistics;
+using Microsoft.ApplicationInsights;
+using System.Diagnostics;
 
 namespace Exilence.Hubs
 {
@@ -19,21 +22,30 @@ namespace Exilence.Hubs
         private IDistributedCache _cache;
         private IRedisRepository _redisRepository;
         private ILadderService _ladderService;
+        private TelemetryClient _telemetry;
 
         private string ConnectionId => Context.ConnectionId;
         
-        public PartyHub(IDistributedCache cache, IRedisRepository redisRepository, ILadderService ladderService)
+        public PartyHub(IDistributedCache cache, IRedisRepository redisRepository, ILadderService ladderService, TelemetryClient telemetry)
         {
             _cache = cache;
             _redisRepository = redisRepository;
             _ladderService = ladderService;
+            _telemetry = telemetry;
         }
                 
         public async Task JoinParty(string partyName, string playerObj)
         {
+            var sw = new Stopwatch();
+            sw.Start();
+
             var player = CompressionHelper.Decompress<PlayerModel>(playerObj);
 
             var ladder = await _ladderService.GetLadderForPlayer(player.Character.League, player.Character.Name);
+            if (ladder == null)
+            {
+                ladder = await _ladderService.GetLadderForLeague(player.Character.League);
+            }
             player.LadderInfo = ladder;
 
             // set initial id of player
@@ -73,6 +85,9 @@ namespace Exilence.Hubs
             await Groups.AddToGroupAsync(Context.ConnectionId, partyName);
             await Clients.OthersInGroup(partyName).SendAsync("PlayerJoined", CompressionHelper.Compress(player));
             await Clients.Group(partyName).SendAsync("PlayerUpdated", CompressionHelper.Compress(player));
+
+            var elapsed = sw.ElapsedMilliseconds / 1000;
+            _telemetry.GetMetric("PartyHub.JoinParty").TrackValue(elapsed);
         }
 
         public async Task LeaveParty(string partyName, string playerObj)
@@ -100,7 +115,7 @@ namespace Exilence.Hubs
                     await _cache.SetAsync<PartyModel>($"party:{partyName}", foundParty);
                 }
                 else
-                {
+                {                    
                     await _cache.RemoveAsync($"party:{partyName}");
                 }
 
@@ -112,12 +127,19 @@ namespace Exilence.Hubs
 
         public async Task UpdatePlayer(string partyName, string playerObj)
         {
+            var sw = new Stopwatch();
+            sw.Start();
+
             var player = CompressionHelper.Decompress<PlayerModel>(playerObj);
             var party = await _cache.GetAsync<PartyModel>($"party:{partyName}");
 
             if (party != null)
             {
                 var ladder = await _ladderService.GetLadderForPlayer(player.Character.League, player.Character.Name);
+                if (ladder == null)
+                {
+                    ladder = await _ladderService.GetLadderForLeague(player.Character.League);
+                }
                 player.LadderInfo = ladder;
 
                 var index = party.Players.IndexOf(party.Players.FirstOrDefault(x => x.ConnectionID == player.ConnectionID));
@@ -133,6 +155,9 @@ namespace Exilence.Hubs
             {
                 await Clients.Group(partyName).SendAsync("ForceDisconnect");
             }
+
+            var elapsed = sw.ElapsedMilliseconds / 1000;
+            _telemetry.GetMetric("PartyHub.UpdatePlayer").TrackValue(elapsed);
         }
         public async Task GenericUpdatePlayer(PlayerModel player, string partyName)
         {
@@ -156,6 +181,13 @@ namespace Exilence.Hubs
             }
         }
 
+        public override async Task OnConnectedAsync()
+        {
+            await _redisRepository.UpdateStatistics(StatisticsActionEnum.IncrementConnection);
+
+            await base.OnConnectedAsync(); 
+        }
+
         public override async Task OnDisconnectedAsync(Exception exception)
         {
             var partyName = await GetPartynameFromIndex();
@@ -173,6 +205,8 @@ namespace Exilence.Hubs
                     }
                 }
             }
+
+            await _redisRepository.UpdateStatistics(StatisticsActionEnum.DecrementConnection);
             await base.OnDisconnectedAsync(exception);
         }
 

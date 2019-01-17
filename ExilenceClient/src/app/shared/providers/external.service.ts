@@ -1,4 +1,5 @@
 import 'rxjs/add/operator/map';
+import 'rxjs/add/operator/toArray';
 
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
@@ -17,6 +18,7 @@ import { Stash } from '../interfaces/stash.interface';
 import { AnalyticsService } from './analytics.service';
 import { ElectronService } from './electron.service';
 import { LogService } from './log.service';
+
 
 @Injectable()
 export class ExternalService {
@@ -81,6 +83,7 @@ export class ExternalService {
 
   getStashTabs(sessionId: string, account: string, league: string) {
     this.setCookie(sessionId);
+
     const parameters = `?league=${league}&accountName=${account}&tabs=1`;
     return this.http.get<Stash>('https://www.pathofexile.com/character-window/get-stash-items' + parameters)
       .catch(e => {
@@ -111,6 +114,10 @@ export class ExternalService {
     const parameters = `?league=${league}&accountName=${account}&tabIndex=${index}&tabs=1`;
     return this.http.get<Stash>('https://www.pathofexile.com/character-window/get-stash-items' + parameters)
       .catch(e => {
+        if (e.status === 500 || e.status === 502 || e.status === 503) {
+          this.logService.log('Could not validate, disconnecting!', null, true);
+          this.router.navigate(['/disconnected', true]);
+        }
         if (e.status !== 200) {
           return Observable.of(false);
         }
@@ -121,6 +128,56 @@ export class ExternalService {
   getAccountForCharacter(character: string) {
     const parameters = `?character=${encodeURIComponent(character)}`;
     return this.http.get('https://www.pathofexile.com/character-window/get-account-name-by-character' + parameters);
+  }
+
+  getPublicMapsFromTradeIds(subLines: any[], query: string) {
+    return Observable.from(subLines)
+      .concatMap((lines: any) => {
+        const url = `https://www.pathofexile.com/api/trade/fetch/${lines.join(',')}?query=${query}`;
+        return this.http.get(url)
+          .delay(1000);
+      }).toArray();
+  }
+
+  getPublicMapTradeGuids(account: string, league: string) {
+
+    const requestUrl = 'https://www.pathofexile.com/api/trade/search/' + league;
+    const requestJson = {
+      'query': {
+        'status': {
+          'option': 'any'
+        },
+        'stats': [{
+          'type': 'and',
+          'filters': [],
+          'disabled': true
+        }],
+        'filters': {
+          'trade_filters': {
+            'disabled': false,
+            'filters': {
+              'account': {
+                'input': account
+              }
+            }
+          },
+          'map_filters': {
+            'disabled': false,
+            'filters': {
+              'map_tier': {
+                'min': 0
+              }
+            }
+          }
+        }
+      },
+      'sort': {
+        'price': 'asc'
+      }
+    };
+
+    return this.http.post(requestUrl, requestJson);
+
   }
 
   setCookie(sessionId: string) {

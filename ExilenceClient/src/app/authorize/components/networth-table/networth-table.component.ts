@@ -1,11 +1,10 @@
-import { Component, Input, OnInit, ViewChild, OnDestroy } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { MatSort, MatTableDataSource } from '@angular/material';
+import { Subscription } from 'rxjs/internal/Subscription';
 
+import { NetWorthItem, NetWorthSnapshot } from '../../../shared/interfaces/income.interface';
 import { Player } from '../../../shared/interfaces/player.interface';
 import { PartyService } from '../../../shared/providers/party.service';
-import { Subscription } from 'rxjs/internal/Subscription';
-import { ItemModule } from '../char-profile/item/item.module';
-import { NetWorthSnapshot } from '../../../shared/interfaces/income.interface';
 import { SettingsService } from '../../../shared/providers/settings.service';
 
 @Component({
@@ -17,7 +16,7 @@ export class NetworthTableComponent implements OnInit, OnDestroy {
   @Input() player: Player;
   @Input() multiple = false;
   @Input() showOverTime = false;
-  displayedColumns: string[] = ['position', 'name', 'stacksize', 'valuePerUnit', 'value'];
+  displayedColumns: string[] = ['position', 'name', 'links', 'quality', 'gemLevel', 'stacksize', 'valuePerUnit', 'value'];
   dataSource = [];
   searchText = '';
   filteredArr = [];
@@ -72,6 +71,27 @@ export class NetworthTableComponent implements OnInit, OnDestroy {
     }
   }
 
+  getIconLink(snapshot: any) {
+    if (snapshot.name.indexOf(' Map') > -1) {
+      snapshot.icon = snapshot.icon.replace('w=1&h=1', 'w=2&h=2');
+    }
+    return snapshot.icon;
+  }
+
+  generateTooltip(item: NetWorthItem) {
+    // console.log(element);
+
+    const min = item.value_min !== undefined ? item.value_min.toFixed(2) : 0;
+    const max = item.value_max !== undefined ? item.value_max.toFixed(2) : 0;
+    const mode = item.value_mode !== undefined ? item.value_mode.toFixed(2) : 0;
+    const median = item.value_median !== undefined ? item.value_median.toFixed(2) : 0;
+    const average = item.value_average !== undefined ? item.value_average.toFixed(2) : 0;
+    const quantity = item.quantity !== undefined ? item.quantity.toFixed(2) : 0; // TODO: Check why quantity is 0
+
+    // tslint:disable-next-line:max-line-length
+    return `Min: ${min}\nMax: ${max}\nMode: ${mode}\nMedian: ${median}\nAverage: ${average}\n`;
+  }
+
   doSearch(text: string) {
     this.searchText = text;
 
@@ -114,7 +134,14 @@ export class NetworthTableComponent implements OnInit, OnDestroy {
         const difference = [];
         lastSnapshot.items.forEach(item => {
           // if item exists in first snapshot
-          const existingItem = firstSnapshot.items.find(x => x.name === item.name);
+          const existingItem = firstSnapshot.items.find(x =>
+            x.name === item.name
+            && x.quality === item.quality
+            && x.links === item.links
+            && x.gemLevel === item.gemLevel
+            && x.variation === item.variation
+            && x.frameType === item.frameType
+          );
           if (existingItem !== undefined) {
             const recentItem = Object.assign({}, item);
 
@@ -124,14 +151,19 @@ export class NetworthTableComponent implements OnInit, OnDestroy {
 
             recentItem.value = recentItem.value - existingItem.value;
 
-            if (recentItem.value !== 0) {
+            if (recentItem.value !== 0 && recentItem.stacksize !== 0) {
               difference.push(recentItem);
+            }
+          } else {
+            if (item.value !== 0) {
+              difference.push(item);
             }
           }
         });
         this.updateOverTime(difference, player.character.name);
       }
     } else {
+      debugger;
       this.updateTable(player.netWorthSnapshots[0].items, player.character.name);
     }
   }
@@ -145,12 +177,22 @@ export class NetworthTableComponent implements OnInit, OnDestroy {
 
   updateOverTime(items: any[], playerName: string) {
     items.forEach(snapshot => {
-      const existingItem = this.dataSource.find(x => x.name === snapshot.name);
+      const existingItem = this.dataSource.find(x =>
+        x.name === snapshot.name
+        && x.quality === snapshot.quality
+        && x.links === snapshot.links
+        && x.gemLevel === snapshot.gemLevel
+        && x.variation === snapshot.variation
+        && x.frameType === snapshot.frameType
+      );
       if (existingItem !== undefined) {
         const indexOfItem = this.dataSource.indexOf(existingItem);
         // update existing item with new data
         existingItem.stacksize = snapshot.stacksize + existingItem.stacksize;
         existingItem.value = snapshot.value + existingItem.value;
+        // fix for existing items not containing these props
+        existingItem.quality = snapshot.quality;
+        existingItem.links = snapshot.links;
         this.dataSource[indexOfItem] = existingItem;
       } else {
         const newObj = {
@@ -158,24 +200,47 @@ export class NetworthTableComponent implements OnInit, OnDestroy {
           name: snapshot.name,
           stacksize: snapshot.stacksize,
           value: snapshot.value,
+          value_min: snapshot.value_min,
+          quantity: snapshot.quantity,
+          value_max: snapshot.value_max,
+          value_mode: snapshot.value_mode,
+          value_median: snapshot.value_median,
+          value_average: snapshot.value_average,
+          variation: snapshot.variation,
           valuePerUnit: snapshot.valuePerUnit,
-          icon: snapshot.icon,
-          holdingPlayers: [playerName]
+          gemLevel: snapshot.gemLevel,
+          icon: this.getIconLink(snapshot),
+          links: snapshot.links,
+          quality: snapshot.quality,
+          holdingPlayers: [playerName],
+          frameType: snapshot.frameType
         };
-        this.dataSource.push(newObj);
+        if (snapshot.value !== 0) {
+          this.dataSource.push(newObj);
+        }
       }
     });
   }
 
   updateTable(items: any[], playerName: string) {
     items.forEach(snapshot => {
-      const existingItem = this.dataSource.find(x => x.name === snapshot.name);
+      const existingItem = this.dataSource.find(x =>
+        x.name === snapshot.name
+        && x.quality === snapshot.quality
+        && x.links === snapshot.links
+        && x.gemLevel === snapshot.gemLevel
+        && x.variation === snapshot.variation
+        && x.frameType === snapshot.frameType
+      );
       if (existingItem !== undefined) {
         const indexOfItem = this.dataSource.indexOf(existingItem);
         // update existing item with new data
         existingItem.stacksize = existingItem.stacksize + snapshot.stacksize;
         existingItem.value = existingItem.value + snapshot.value;
         existingItem.holdingPlayers.push(playerName);
+        // fix for existing items not containing these props
+        existingItem.quality = snapshot.quality;
+        existingItem.links = snapshot.links;
         this.dataSource[indexOfItem] = existingItem;
       } else {
         const newObj = {
@@ -183,11 +248,24 @@ export class NetworthTableComponent implements OnInit, OnDestroy {
           name: snapshot.name,
           stacksize: snapshot.stacksize,
           value: snapshot.value,
+          value_min: snapshot.value_min,
+          quantity: snapshot.quantity,
+          value_max: snapshot.value_max,
+          value_mode: snapshot.value_mode,
+          value_median: snapshot.value_median,
+          value_average: snapshot.value_average,
+          variation: snapshot.variation,
           valuePerUnit: snapshot.valuePerUnit,
-          icon: snapshot.icon,
-          holdingPlayers: [playerName]
+          gemLevel: snapshot.gemLevel,
+          icon: this.getIconLink(snapshot),
+          links: snapshot.links,
+          quality: snapshot.quality,
+          holdingPlayers: [playerName],
+          frameType: snapshot.frameType
         };
-        this.dataSource.push(newObj);
+        if (snapshot.value !== 0) {
+          this.dataSource.push(newObj);
+        }
       }
     });
   }

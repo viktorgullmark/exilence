@@ -1,5 +1,6 @@
 Exilence
 [![Github All Releases](https://img.shields.io/github/downloads/viktorgullmark/exilence/total.svg)](https://github.com/viktorgullmark/exilence/releases)
+[![Become a Patreon](https://img.shields.io/badge/patreon-%F0%9F%8E%AF-orange.svg)](https://www.patreon.com/exilence)
 ===
 Path of Exile tool used to track gear, currency, maps and more of you and your party. Formerly known as ExileParty.
 
@@ -36,8 +37,8 @@ https://imgur.com/a/cBibtoF
 
 Currently runs with:
 
-- .NET Core 2.1.0
-- SignalR (.NET Core) 1.0.0 w/ Redis caching
+- .NET Core 2.2.0
+- SignalR (.NET Core) 1.1.0 w/ Redis caching
 - Angular v6.0.3
 - Angular-CLI v6.0.3
 - Electron v2.0.1
@@ -46,12 +47,12 @@ Currently runs with:
 
 ## Help with development
 
-If you want to help with development we gladly accept pull-requests. To set up the project, install the latest angular-cli and node version globally. The following commands will help in setting up the client:
+If you want to help with development we gladly accept pull-requests. To set up the project, install the latest angular-cli and node version prior to 10. Exilence currently cannot run on node 10+ because of dependencies. See here for more information https://github.com/Robot/robot-js/issues/66. The following commands will help in setting up the client:
 
 ```
 npm install -g @angular/cli
 npm install
-npm install -g --production windows-build-tools
+npm install -g --production windows-build-tools (needs to be run with administrator privileges using powershell)
 npm start (to serve the project)
 npm run electron:windows (to build the installer for production)
 ```

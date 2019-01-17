@@ -169,37 +169,41 @@
       </p>
       <mat-checkbox class="setting-checkbox" [(ngModel)]="characterPricing" (ngModelChange)="toggleCharacterPricing()">Character-specific
         pricing</mat-checkbox>
+      <p class="setting-desc-text">
+        Check this setting to include public maps for net worth
+      </p>
+      <mat-checkbox class="setting-checkbox" [(ngModel)]="publicMapPricing" (ngModelChange)="togglePublicMapPricing()">Public
+        map pricing</mat-checkbox>
     </div>
     <h3 class="mat-h4 page-header new-section">Calculations</h3>
     <mat-divider class="divider"></mat-divider>
     <p class="setting-desc-text">
-      Here you have the option to exclude items and stacks below a certain treshold
     </p>
     <mat-form-field>
       <mat-label>Item value treshold</mat-label>
       <mat-select #fontSize value="{{itemValueTreshold}}" (selectionChange)="toggleItemValueTreshold($event)">
         <mat-option value="0">Include all items</mat-option>
-        <mat-option value="1">> 1c</mat-option>
-        <mat-option value="2">> 2c</mat-option>
-        <mat-option value="3">> 3c</mat-option>
-        <mat-option value="5">> 5c</mat-option>
-        <mat-option value="10">> 10c</mat-option>
+        <mat-option value="1">>= 1c</mat-option>
+        <mat-option value="2">>= 2c</mat-option>
+        <mat-option value="3">>= 3c</mat-option>
+        <mat-option value="5">>= 5c</mat-option>
+        <mat-option value="10">>= 10c</mat-option>
       </mat-select>
     </mat-form-field>
     <p class="setting-desc-text">
-        Choose how many hours back in history that should be used for "Gain per hour"
-      </p>
-      <mat-form-field>
-        <mat-label>Calculate gain over past</mat-label>
-        <mat-select #fontSize value="{{gainHours}}" (selectionChange)="toggleGainHours($event)">
-          <mat-option value="1">1 hour</mat-option>
-          <mat-option value="2">2 hours</mat-option>
-          <mat-option value="3">3 hours</mat-option>
-          <mat-option value="5">5 hours</mat-option>
-          <mat-option value="10">10 hours</mat-option>
-          <mat-option value="24">24 hours</mat-option>
-        </mat-select>
-      </mat-form-field>
+      Choose how many hours back in history that should be used for "Gain per hour"
+    </p>
+    <mat-form-field>
+      <mat-label>Calculate gain over past</mat-label>
+      <mat-select #fontSize value="{{gainHours}}" (selectionChange)="toggleGainHours($event)">
+        <mat-option value="1">1 hour</mat-option>
+        <mat-option value="2">2 hours</mat-option>
+        <mat-option value="3">3 hours</mat-option>
+        <mat-option value="5">5 hours</mat-option>
+        <mat-option value="10">10 hours</mat-option>
+        <mat-option value="24">24 hours</mat-option>
+      </mat-select>
+    </mat-form-field>
   </div>
 </div>
 

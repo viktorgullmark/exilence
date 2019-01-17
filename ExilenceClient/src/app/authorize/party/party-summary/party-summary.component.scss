@@ -54,6 +54,9 @@
 
                 .networth {
                     color: $currency-chaos-color;
+                    > * {
+                        color: $currency-chaos-color;
+                    }
                 }
 
                 .networth-placeholder {

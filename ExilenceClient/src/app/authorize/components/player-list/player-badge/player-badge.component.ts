@@ -1,9 +1,9 @@
-import { Component, Input, OnInit, OnDestroy } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { Subscription } from 'rxjs/internal/Subscription';
 
 import { Player } from '../../../../shared/interfaces/player.interface';
 import { PartyService } from '../../../../shared/providers/party.service';
 import { RobotService } from '../../../../shared/providers/robot.service';
-import { Subscription } from 'rxjs/internal/Subscription';
 
 @Component({
   selector: 'app-player-badge',
@@ -55,8 +55,13 @@ export class PlayerBadgeComponent implements OnInit, OnDestroy {
   }
 
   getRanking() {
-    if (this.player.ladderInfo !== null && !this.localPlayer) {
+    if (
+      this.player.ladderInfo !== null &&
+      !this.localPlayer &&
+      this.player.ladderInfo.find(t => t.name === this.player.character.name) // Since we fetch top 10 if player is not on ladder.
+    ) {
       return this.player.ladderInfo.find(x => x.name === this.player.character.name).rank.overall;
+
     } else {
       return '';
     }

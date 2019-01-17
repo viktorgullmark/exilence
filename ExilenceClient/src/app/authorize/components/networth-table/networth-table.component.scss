@@ -9,15 +9,44 @@ table {
     align-items: center;
     justify-content: center;
     padding: 10px;
+
     .networth-icon {
-        max-height: 75px;
+        max-height: 40px;
     }
 }
 
 td {
-    min-height: 48px;
+    min-height: 40px;
+}
+
+.mat-cell {
+    font-size: 12px !important;
+    white-space: nowrap;
+    max-width: 85px;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .networth-value {
     color: $currency-chaos-color;
+}
+
+.item-quality {
+    color: $item-quality-color;
+}
+
+.item-gemlevel {
+    color: $item-gemlevel-color;
+}
+
+.not-available {
+    color: $not-available-color;
+}
+
+.item-links {
+    color: $item-links-color;
+}
+
+.name-col {
+    padding: 0 10px 0 10px;
 }

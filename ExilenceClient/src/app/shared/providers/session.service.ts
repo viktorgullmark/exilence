@@ -11,6 +11,7 @@ import { Subscription } from 'rxjs';
 export class SessionService implements OnDestroy {
   player: Player;
   private playerSub: Subscription;
+  public completedLogin = false;
   constructor(
     private accountService: AccountService,
     private partyService: PartyService,

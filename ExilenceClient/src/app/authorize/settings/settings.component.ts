@@ -1,5 +1,6 @@
-import { Component, Inject, OnInit, ViewChild, OnDestroy } from '@angular/core';
+import { Component, Inject, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
+import { Subscription } from 'rxjs';
 
 import { Keys } from '../../shared/interfaces/key.interface';
 import { AlertService } from '../../shared/providers/alert.service';
@@ -10,7 +11,6 @@ import { LogService } from '../../shared/providers/log.service';
 import { SessionService } from '../../shared/providers/session.service';
 import { SettingsService } from '../../shared/providers/settings.service';
 import { StashtabListComponent } from '../components/stashtab-list/stashtab-list.component';
-import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-settings',
@@ -25,6 +25,7 @@ export class SettingsComponent implements OnInit, OnDestroy {
   hideTooltips = false;
   lowConfidencePricing = false;
   characterPricing = false;
+  publicMapPricing = true;
   sessionId: string;
   sessionIdValid: boolean;
   uploaded = false;
@@ -239,6 +240,14 @@ export class SettingsComponent implements OnInit, OnDestroy {
       this.settingsService.set('characterPricing', true);
     } else {
       this.settingsService.set('characterPricing', false);
+    }
+  }
+
+  togglePublicMapPricing() {
+    if (this.publicMapPricing) {
+      this.settingsService.set('publicMapPricing', true);
+    } else {
+      this.settingsService.set('publicMapPricing', false);
     }
   }
 

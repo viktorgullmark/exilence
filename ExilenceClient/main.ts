@@ -1,6 +1,7 @@
 import { app, BrowserWindow, dialog, globalShortcut } from 'electron';
 import * as path from 'path';
 import * as url from 'url';
+import * as fs from 'fs';
 
 
 export interface ExileWindowEvent {
@@ -47,6 +48,16 @@ ipcMain.on('popout-window-update', (event, window: ExileWindowEvent) => {
   if (windows[window.event] && !windows[window.event].isDestroyed()) {
     windows[window.event].webContents.send('popout-window-update', window);
   }
+
+  if (window.event === ExileWindowEnum.Networth) {
+    const stream = fs.createWriteStream('networth.txt');
+    stream.once('open', function () {
+      stream.write(`Networth: ${Math.round(window.data.networth * 10) / 10}\r\n`);
+      stream.write(`Gain: ${Math.round(window.data.gain * 10) / 10}\r\n`);
+      stream.end();
+    });
+  }
+
 });
 
 ipcMain.on('popout-window', (event, data: ExileWindowEvent) => {
@@ -57,13 +68,18 @@ ipcMain.on('popout-window', (event, data: ExileWindowEvent) => {
     windows[window].destroy();
   }
   windows[window] = new BrowserWindow({
-    x: 100,
-    y: 100,
-    height: 85,
-    width: 220,
+    x: 200,
+    y: 200,
+    height: 80,
+    width: 200,
+    minWidth: 150,
+    minHeight: 75,
+    maxHeight: 90,
+    maxWidth: 230,
+    skipTaskbar: true,
     show: false,
     frame: false,
-    resizable: false,
+    resizable: true,
     alwaysOnTop: true,
     icon: path.join(__dirname, 'dist/assets/img/app-icon.png'),
   });
@@ -90,6 +106,10 @@ ipcMain.on('relaunch', (event, window: ExileWindowEvent) => {
 });
 
 ipcMain.on('disconnect', function (event) {
+  windows[ExileWindowEnum.Main].flashFrame(true);
+});
+
+ipcMain.on('servermsg', function (event) {
   windows[ExileWindowEnum.Main].flashFrame(true);
 });
 

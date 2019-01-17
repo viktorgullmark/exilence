@@ -81,6 +81,9 @@ export class CharProfileComponent implements OnInit, OnDestroy {
     if (this.selectedPlayerSub !== undefined) {
       this.selectedPlayerSub.unsubscribe();
     }
+    if (this.playerSub !== undefined) {
+      this.playerSub.unsubscribe();
+    }
     if (this.selectedGenPlayerSub !== undefined) {
       this.selectedGenPlayerSub.unsubscribe();
     }

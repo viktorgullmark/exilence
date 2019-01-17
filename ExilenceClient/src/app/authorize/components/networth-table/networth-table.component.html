@@ -7,18 +7,44 @@
   <ng-container matColumnDef="position">
     <th mat-header-cell *matHeaderCellDef> &nbsp; </th>
     <td mat-cell *matCellDef="let element" class="icon-cell">
-      <img class="networth-icon" src="{{element.icon}}" />
+      <img class="networth-icon icon-hover" alt="{{element.name}}" title="{{element.name}}" src="{{element.icon}}" />
     </td>
   </ng-container>
 
   <ng-container matColumnDef="name">
     <th mat-header-cell *matHeaderCellDef mat-sort-header="name"> Name </th>
-    <td mat-cell *matCellDef="let element"> {{element.name}} </td>
+    <td mat-cell *matCellDef="let element" class="name-col"><span class="rarity-{{element.frameType}}">{{element.name}}</span></td>
   </ng-container>
 
   <ng-container matColumnDef="holdingPlayers" *ngIf="multiple && !showOverTime">
     <th mat-header-cell *matHeaderCellDef mat-sort-header="holdingPlayers"> Owned by </th>
-    <td mat-cell *matCellDef="let element"> <ng-container></ng-container> {{element.holdingPlayers.join(', ')}} </td>
+    <td mat-cell *matCellDef="let element">
+      <ng-container></ng-container> {{element.holdingPlayers.join(', ')}}
+    </td>
+  </ng-container>
+
+  <ng-container matColumnDef="links">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header="links"> Links </th>
+    <td mat-cell *matCellDef="let element">
+      <span *ngIf="element.links > 0" class="item-links">{{element.links}} L</span>
+      <span *ngIf="element.links == 0 || element.links == undefined" class="not-available">n/a</span>
+    </td>
+  </ng-container>
+
+  <ng-container matColumnDef="quality">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header="quality"> Quality </th>
+    <td mat-cell *matCellDef="let element">
+      <span *ngIf="element.quality > 0" class="item-quality">{{element.quality}} %</span>
+      <span *ngIf="element.quality == 0 || element.quality == undefined" class="not-available">n/a</span>
+    </td>
+  </ng-container>
+
+  <ng-container matColumnDef="gemLevel">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header="gemLevel"> Level </th>
+    <td mat-cell *matCellDef="let element">
+      <span *ngIf="element.gemLevel > 0" class="item-gemlevel">{{element.gemLevel}}</span>
+      <span *ngIf="element.gemLevel == 0 || element.gemLevel == undefined" class="not-available">n/a</span>
+    </td>
   </ng-container>
 
   <ng-container matColumnDef="stacksize">
@@ -27,13 +53,15 @@
   </ng-container>
 
   <ng-container matColumnDef="valuePerUnit">
-    <th mat-header-cell *matHeaderCellDef mat-sort-header="valuePerUnit"> Value </th>
-    <td mat-cell *matCellDef="let element" class="networth-value"> {{element.valuePerUnit.toFixed(1)}}c </td>
+    <th mat-header-cell *matHeaderCellDef mat-sort-header="valuePerUnit"> Value&nbsp;&nbsp;<img class="chaos-icon" /></th>
+    <td matTooltip="{{generateTooltip(element)}}" matTooltipPosition="after" mat-cell *matCellDef="let element" class="networth-value icon-hover with-icon in-table">
+      <span>{{element.valuePerUnit.toFixed(2)}}</span>
+    </td>
   </ng-container>
 
   <ng-container matColumnDef="value">
-    <th mat-header-cell *matHeaderCellDef mat-sort-header="value"> Total </th>
-    <td mat-cell *matCellDef="let element" class="networth-value"> {{element.value.toFixed(1)}}c </td>
+    <th mat-header-cell *matHeaderCellDef mat-sort-header="value"> Total&nbsp;&nbsp;<img class="chaos-icon" /></th>
+    <td mat-cell *matCellDef="let element" class="networth-value with-icon in-table"><span>{{element.value.toFixed(2)}}</span></td>
   </ng-container>
 
   <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>

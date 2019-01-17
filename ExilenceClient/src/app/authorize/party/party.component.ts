@@ -31,6 +31,7 @@ export class PartyComponent implements OnInit, OnDestroy {
   private partySub: Subscription;
   private currentPlayerValueSub: Subscription;
   private currentPlayerGainSub: Subscription;
+  private tabSubscription: any;
   private gainHours = 1;
 
   constructor(
@@ -45,7 +46,8 @@ export class PartyComponent implements OnInit, OnDestroy {
       if (res !== undefined) {
         this.player = res;
         this.messageValueService.playerValue = this.player.netWorthSnapshots[0].value;
-        this.partyService.updatePlayerGain(res, false);
+        const isCurrentPlayer = res.account === this.partyService.currentPlayer.account;
+        this.partyService.updatePlayerGain(res, isCurrentPlayer);
       }
     });
     this.playerSub = this.accountService.player.subscribe(res => {
@@ -67,12 +69,13 @@ export class PartyComponent implements OnInit, OnDestroy {
       if (res !== undefined) {
         let networth = 0;
         this.messageValueService.partyGainSubject.next(0);
+        this.partyService.updatePartyGain(this.partyService.party.players);
         res.players.forEach(p => {
-          this.partyService.updatePartyGain(p);
           if (p.netWorthSnapshots[0] !== undefined) {
             networth = networth + p.netWorthSnapshots[0].value;
           }
         });
+        this.messageValueService.partyGainSubject.next(this.partyService.partyGain);
         this.messageValueService.partyValueSubject.next(networth);
       }
     });
@@ -98,7 +101,7 @@ export class PartyComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.partyService.selectedPlayer.next(this.partyService.party.players[0]);
-    this.tabGroup.selectedIndexChange.subscribe(res => {
+    this.tabSubscription = this.tabGroup.selectedIndexChange.subscribe(res => {
       if (res === 0) {
         this.analyticsService.sendLastPartyPlayerScreen();
       }
@@ -121,6 +124,9 @@ export class PartyComponent implements OnInit, OnDestroy {
     }
     if (this.currentPlayerGainSub !== undefined) {
       this.currentPlayerGainSub.unsubscribe();
+    }
+    if(this.tabSubscription !== undefined) {
+      this.tabSubscription.unsubscribe();
     }
   }
 

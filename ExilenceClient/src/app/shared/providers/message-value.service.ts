@@ -1,14 +1,14 @@
-import { Injectable } from '@angular/core';
+import { Injectable, OnDestroy } from '@angular/core';
 
 import { Keys } from '../interfaces/key.interface';
 import { KeybindService } from './keybind.service';
 import { RobotService } from './robot.service';
 import { AccountService } from './account.service';
 import { Player } from '../interfaces/player.interface';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, Subscription } from 'rxjs';
 
 @Injectable()
-export class MessageValueService {
+export class MessageValueService implements OnDestroy {
   public partyGainSubject: BehaviorSubject<number> = new BehaviorSubject<number>(0);
   public partyValueSubject: BehaviorSubject<number> = new BehaviorSubject<number>(0);
 
@@ -28,6 +28,12 @@ export class MessageValueService {
   public playerNetworthMsg = this.defaultMsg;
   public partyNetworthMsg = this.defaultMsg;
 
+  private currentPlayerGainSub: Subscription;
+  private currentPlayerValueSub: Subscription;
+  private playerGainSub: Subscription;
+  private partyValueSub: Subscription;
+  private partyGainSub: Subscription;
+
   constructor(
     private keybindService: KeybindService,
     private robotService: RobotService
@@ -44,27 +50,27 @@ export class MessageValueService {
       }
     });
 
-    this.currentPlayerGainSubject.subscribe(res => {
+    this.currentPlayerGainSub = this.currentPlayerGainSubject.subscribe(res => {
       this.currentPlayerGain = res;
       this.updateCurrentPlayerMsg();
     });
 
-    this.currentPlayerValueSubject.subscribe(res => {
+    this.currentPlayerValueSub = this.currentPlayerValueSubject.subscribe(res => {
       this.currentPlayerValue = res;
       this.updateCurrentPlayerMsg();
     });
 
-    this.playerGainSubject.subscribe(res => {
+    this.playerGainSub = this.playerGainSubject.subscribe(res => {
       this.playerGain = res;
       this.updateCurrentPlayerMsg();
     });
 
-    this.partyValueSubject.subscribe(res => {
+    this.partyValueSub = this.partyValueSubject.subscribe(res => {
       this.partyValue = res;
       this.updatePartyMsg();
     });
 
-    this.partyGainSubject.subscribe(res => {
+    this.partyGainSub = this.partyGainSubject.subscribe(res => {
       this.partyGain = res;
       this.updatePartyMsg();
     });
@@ -72,16 +78,34 @@ export class MessageValueService {
 
   updateCurrentPlayerMsg() {
     // tslint:disable-next-line:max-line-length
-    this.playerNetworthMsg = `[Exilence] My net worth: ${this.currentPlayerValue.toFixed(1)}c. Gain: ${this.currentPlayerGain.toFixed(1)}c / hour`;
+    this.playerNetworthMsg = `[Exilence] My net worth: ${this.currentPlayerValue.toFixed(2)}c. Gain: ${this.currentPlayerGain.toFixed(2)}c / hour`;
   }
 
   updatePartyMsg() {
     // tslint:disable-next-line:max-line-length
-    this.partyNetworthMsg = `[Exilence] Grp net worth: ${this.partyValue.toFixed(1)}c. Gain: ${this.partyGain.toFixed(1)}c / hour`;
+    this.partyNetworthMsg = `[Exilence] Grp net worth: ${this.partyValue.toFixed(2)}c. Gain: ${this.partyGain.toFixed(2)}c / hour`;
   }
 
   initKeybinds() {
     this.keybindService.registerKeybind('Ctrl+Y', 'party-personal-networth', 'Report personal net worth to party');
     this.keybindService.registerKeybind('Ctrl+H', 'party-summary-networth', 'Report summarized net worth to party');
+  }
+
+  ngOnDestroy() {
+    if (this.currentPlayerGainSub !== undefined) {
+      this.currentPlayerGainSub.unsubscribe();
+    }
+    if (this.currentPlayerValueSub !== undefined) {
+      this.currentPlayerValueSub.unsubscribe();
+    }
+    if (this.playerGainSub !== undefined) {
+      this.playerGainSub.unsubscribe();
+    }
+    if (this.partyValueSub !== undefined) {
+      this.partyValueSub.unsubscribe();
+    }
+    if (this.partyGainSub !== undefined) {
+      this.partyGainSub.unsubscribe();
+    }
   }
 }

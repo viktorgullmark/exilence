@@ -1,6 +1,6 @@
 {
   "name": "exilence",
-  "version": "0.8.11",
+  "version": "0.9.4",
   "author": {
     "name": "Viktor Gullmark",
     "email": "viktor.gullmark@hotmail.com"
@@ -49,15 +49,16 @@
     "export-to-csv": "^0.1.2",
     "ffi": "^2.2.0",
     "moment": "^2.22.2",
+    "ngx-contextmenu": "^5.1.1",
     "node-key-sender": "github:viktorgullmark/node-key-sender",
     "poe-log-monitor": "github:viktorgullmark/poe-log-monitor",
     "robot-js": "^2.0.0",
-    "universal-analytics": "^0.4.17"
+    "universal-analytics": "^0.4.20"
   },
   "devDependencies": {
     "@angular-devkit/build-angular": "0.6.3",
     "@angular/animations": "6.0.3",
-    "@angular/cdk": "6.1.0",
+    "@angular/cdk": "^6.4.7",
     "@angular/cli": "6.0.3",
     "@angular/common": "6.0.3",
     "@angular/compiler": "6.0.3",
@@ -70,7 +71,7 @@
     "@angular/platform-browser": "6.0.3",
     "@angular/platform-browser-dynamic": "6.0.3",
     "@angular/router": "6.0.3",
-    "@aspnet/signalr": "^1.0.0-rc1-update1",
+    "@aspnet/signalr": "1.1.0",
     "@ngx-translate/core": "10.0.1",
     "@ngx-translate/http-loader": "3.0.1",
     "@types/d3": "^5.0.0",

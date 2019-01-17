@@ -4,8 +4,8 @@
             <span class="title">Current net worth</span>
             <br />
             <div class="networth-inner-wrapper">
-                <span class="networth" *ngIf="messageValueService.partyValue > 0">
-                    {{messageValueService.partyValue.toFixed(1)}}c
+                <span class="networth with-icon" *ngIf="messageValueService.partyValue > 0">
+                    <span>{{messageValueService.partyValue.toFixed(2)}}&nbsp;&nbsp;</span><img class="chaos-icon" />
                 </span>
                 <span class="networth-placeholder" *ngIf="messageValueService.partyValue == 0">
                     No data
@@ -15,8 +15,8 @@
         <div class="networth-wrapper gain-wrapper">
             <span class="title">Gain per hour</span>
             <br />
-            <div class="networth-inner-wrapper">
-                <span class="networth">{{messageValueService.partyGain.toFixed(1)}}c</span>
+            <div class="networth-inner-wrapper with-icon">
+                <span class="networth">{{partyGain.toFixed(2)}}&nbsp;&nbsp;</span><img class="chaos-icon" />
             </div>
         </div>
         <div class="networth-wrapper">

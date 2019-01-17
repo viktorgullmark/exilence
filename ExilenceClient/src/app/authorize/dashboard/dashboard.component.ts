@@ -10,6 +10,7 @@ import { InfoDialogComponent } from '../components/info-dialog/info-dialog.compo
 import { MatDialog } from '@angular/material';
 import { SettingsService } from '../../shared/providers/settings.service';
 import { Subscription } from 'rxjs/internal/Subscription';
+import { IncomeService } from '../../shared/providers/income.service';
 
 @Component({
   selector: 'app-dashboard',
@@ -24,6 +25,7 @@ export class DashboardComponent implements OnInit, OnDestroy, AfterViewInit {
   player: Player;
   private count = 0;
   private playerSub: Subscription;
+  private recentPartySub: Subscription;
   constructor(
     private electronService: ElectronService,
     private partyService: PartyService,
@@ -31,10 +33,11 @@ export class DashboardComponent implements OnInit, OnDestroy, AfterViewInit {
     private analyticsService: AnalyticsService,
     private settingsService: SettingsService,
     private router: Router,
-    private dialog: MatDialog
+    private dialog: MatDialog,
+    private incomeService: IncomeService
   ) {
 
-    this.partyService.recentParties.subscribe(parties => {
+    this.recentPartySub = this.partyService.recentParties.subscribe(parties => {
       this.recentParties = parties;
     });
   }
@@ -97,6 +100,7 @@ export class DashboardComponent implements OnInit, OnDestroy, AfterViewInit {
       this.partyService.leaveParty(this.partyService.party.name, this.player);
       setTimeout(() => {
         this.partyService.joinParty(partyName, this.player);
+        this.incomeService.Snapshot();
         this.partyService.addPartyToRecent(partyName);
         this.router.navigateByUrl('/404', { skipLocationChange: true }).then(() =>
           this.router.navigate(['/authorized/party']));
@@ -107,6 +111,9 @@ export class DashboardComponent implements OnInit, OnDestroy, AfterViewInit {
   ngOnDestroy() {
     if (this.playerSub !== undefined) {
       this.playerSub.unsubscribe();
+    }
+    if (this.recentPartySub !== undefined) {
+      this.recentPartySub.unsubscribe();
     }
   }
 }

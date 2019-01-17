@@ -10,11 +10,11 @@
       showYAxisLabel="true" xAxisLabel="Time" [xAxisTickFormatting]="axisFormat" animations="true" yAxisLabel="Net worth in Chaos"
       autoScale="true" showGridLines="true" [curve]="curve" (select)="select($event)">
       <ng-template #tooltipTemplate let-model="model">
-        Net worth: {{ model?.value.toFixed(1) }} chaos
+        Net worth: {{ model?.value.toFixed(2) }} chaos
         <br> Time: {{ axisFormat(model?.name) }}
       </ng-template>
       <ng-template #seriesTooltipTemplate let-model="model">
-        Net worth: {{ model[0]?.value.toFixed(1) }} chaos
+        Net worth: {{ model[0]?.value.toFixed(2) }} chaos
         <br> Time: {{ axisFormat(model[0]?.name) }}
       </ng-template>
     </ngx-charts-line-chart>

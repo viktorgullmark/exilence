@@ -23,6 +23,7 @@ import { ExtendedAreaInfo } from '../interfaces/area.interface';
 import { HistoryHelper } from '../helpers/history.helper';
 import { LeagueWithPlayers } from '../interfaces/league.interface';
 import { Subscription } from 'rxjs';
+import { ServerMessage } from '../interfaces/server-message.interface';
 
 @Injectable()
 export class PartyService implements OnDestroy {
@@ -47,12 +48,15 @@ export class PartyService implements OnDestroy {
   public playerLeagues: BehaviorSubject<LeagueWithPlayers[]> = new BehaviorSubject<LeagueWithPlayers[]>([]);
   public genericPlayers: BehaviorSubject<Player[]> = new BehaviorSubject<Player[]>([]);
 
+  public serverMessageReceived: BehaviorSubject<ServerMessage> = new BehaviorSubject<ServerMessage>(undefined);
+
   private reconnectAttempts: number;
   private forceClosed: boolean;
 
   public maskedName = false;
   public currentPlayerGain;
   public playerGain;
+  public partyGain = 0;
   private playerSub: Subscription;
   private selectedPlayerSub: Subscription;
   private selectedGenPlayerSub: Subscription;
@@ -70,11 +74,12 @@ export class PartyService implements OnDestroy {
     private messageValueService: MessageValueService,
     private settingsService: SettingsService
   ) {
-
     this.reconnectAttempts = 0;
     this.forceClosed = false;
 
     this.recentParties.next(this.settingService.get('recentParties') || []);
+
+    this.maskedName = this.settingsService.get('maskedGroupname') === true ? true : false;
 
     this.playerSub = this.accountService.player.subscribe(res => {
       this.currentPlayer = res;
@@ -96,7 +101,10 @@ export class PartyService implements OnDestroy {
     });
     this.initParty();
     this._hubConnection = new signalR.HubConnectionBuilder()
-      .withUrl(AppConfig.url + 'hubs/party')
+      .withUrl(AppConfig.url + 'hubs/party', {
+        skipNegotiation: true,
+        transport: signalR.HttpTransportType.WebSockets
+      })
       .configureLogging(signalR.LogLevel.Information)
       .build();
 
@@ -125,12 +133,14 @@ export class PartyService implements OnDestroy {
           // set initial values for party net worth
           let networth = 0;
           this.messageValueService.partyGainSubject.next(0);
+          this.updatePartyGain(this.party.players);
           this.party.players.forEach(p => {
-            this.updatePartyGain(p);
             networth = networth + p.netWorthSnapshots[0].value;
           });
           this.messageValueService.partyValueSubject.next(networth);
+          this.messageValueService.partyGainSubject.next(this.partyGain);
 
+          this.partyUpdated.next(this.party);
         });
       });
     });
@@ -187,6 +197,13 @@ export class PartyService implements OnDestroy {
       });
     });
 
+    this._hubConnection.on('ServerMessageReceived', (data: ServerMessage) => {
+
+      this.serverMessageReceived.next(data);
+
+      this.logService.log('server message received:', data.body);
+    });
+
     this._hubConnection.on('ForceDisconnect', () => {
       this.disconnect('Recived force disconnect command from server.');
     });
@@ -219,7 +236,14 @@ export class PartyService implements OnDestroy {
     }
   }
 
-  updatePartyGain(player: Player) {
+  updatePartyGain(players: Player[]) {
+    this.partyGain = 0;
+    players.forEach(x => {
+      this.updatePartyGainForPlayer(x);
+    });
+  }
+
+  updatePartyGainForPlayer(player: Player) {
     const gainHours = this.settingsService.get('gainHours');
     const xHoursAgo = (Date.now() - (gainHours * 60 * 60 * 1000));
     const pastHoursSnapshots = player.netWorthSnapshots
@@ -230,7 +254,7 @@ export class PartyService implements OnDestroy {
       const firstSnapshot = pastHoursSnapshots[pastHoursSnapshots.length - 1];
       const gainHour = (((1000 * 60 * 60)) / (lastSnapshot.timestamp - firstSnapshot.timestamp)
         * (lastSnapshot.value - firstSnapshot.value)) / gainHours;
-      this.messageValueService.partyGain = this.messageValueService.partyGain + gainHour;
+      this.partyGain = this.partyGain + gainHour;
     }
   }
 

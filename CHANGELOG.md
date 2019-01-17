@@ -1,6 +1,74 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [0.9.5] - 2019-XX-XX
+- Added support to price the maptab (by setting it to public)
+- Added column for gem-level in the net worth table
+- Added tooltip to value in networth table to display more detailed data such as average, mode and mean
+- Added file-output for gain and networth values, making it available for import in OBS
+- Fixed a bug where maps in regular tabs werent included in the pricing
+- Fixed a bug where the gain-table didn't display new items, only the difference between current ones
+- Fixed a bug where items of zero value would sometimes be included in pricing 
+- Updated SignalR package
+- Removed negotiate-step for websockets, now connects directly instead
+- Minor style tweaks to net worth table
+
+## [0.9.4] - 2018-12-31
+- Opened up a Patreon to allow support
+- Fixed a bug where group net worth was not summarized correctly in the list
+- Fixed a bug where group summary page was not updating properly
+- Area-count is now limited to 1000, and can not exceed this length
+- Added a chaos orb icon when displaying net worth and gain
+- Removed parsing of Client.txt to avoid RAM-issues (might be reworked later)
+- Removed Application Insights from client
+
+## [0.9.3] - 2018-12-26
+- Reworked internal statistics endpoint to fix bug where the unintentionally prolonged party persistance
+- Added flashing of taskbar icon on new Exilence version
+- Fixed a bug where prices were wrong for prophecies and divination cards with the same name
+
+## [0.9.2] - 2018-12-20
+- Added support for scarabs/fragments/vessels and other common items in net worth
+- Added support for abyssal sockets when pricing uniques
+- Added proper backgrounds for elder/shaper items
+- Added a loading-indicator on the new login-screen
+- Added a popup to display important server-notifications
+- Fixed a bug where existing items would sometimes be mismatched
+- Minor style-tweaks to net worth table
+
+## [0.9.1] - 2018-12-20
+- Fixed a bug where the net worth pricing would stop when poe.watch is down
+- Fixed a bug where some bases would always be priced at 1 chaos
+- Fixed a bug where unidentified items were wrongly price
+
+## [0.9.0] - 2018-12-19
+- Added support for pricing of scarabs
+- Added support to price linked items
+- Added support to price 6-socketed items
+- Added support to price elder/shaper items
+- Added support for pricing gems (with level and quality)
+- Added support to price basetypes (with and without elder/shaper)
+- Added new column 'links' to net worth table
+- Added new column 'quality' to net worth table
+- Pricing of items should now be more accurate
+- Added a new, simplified launch-screen for existing users
+- Added persistance between restarts to mask-setting for groupnames
+- Fixed a bug where gain for the group summary was not updated properly
+
+## [0.8.12] - 2018-12-18
+- Optimized memory usage by dropping disposing of unused objects
+- Fixed a bug where the gain per hour in the currancy summary tab wasn't updated properly
+- Fixed a bug where items with zero quantity were listed in the gain-over-time table
+- Now displays two decimals for all net worth values
+- Now logs screenviews for Google Analytics properly
+- Now defaults to first 4 stashtabs instead of 10 (to support players with fewer tabs)
+- Fixed a bug where area export would crash if no areas were present
+- Added the ability to resize the networth popout
+- The networth popout is now hidden from the taskbar
+- Added CSV-export for income (Send report -> Full export)
+- Removed the default path for client.txt during login to avoid confusion
+- Ladder now displays top 10 if the current character is not present.
+
 ## [0.8.11] - 2018-12-13
 - Added setting for gain-hours (you can now choose how many hours back calculations for hourly gain are based on)
 - Added new table in currency summary, that displays the net worth change over time (based on gain-hours)

@@ -2,9 +2,9 @@ import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { Subscription } from 'rxjs';
 
 import { GithubRelease } from '../../../shared/interfaces/github.interface';
+import { ElectronService } from '../../../shared/providers/electron.service';
 import { ExternalService } from '../../../shared/providers/external.service';
 import { LogService } from '../../../shared/providers/log.service';
-import { ElectronService } from '../../../shared/providers/electron.service';
 
 
 
@@ -27,7 +27,7 @@ export class NotficationBarComponent implements OnInit, OnDestroy {
     private electronService: ElectronService
   ) {
     setTimeout(res => {
-      setInterval(inner => this.checkForNewRelease(), 1000 * 60 * 10); // Check every 10 minutes.
+      setInterval(inner => this.checkForNewRelease(), 1000 * 60 * 5); // Check every 5 minutes.
     }, 60 * 2 * 1000);
   }
 
@@ -43,6 +43,7 @@ export class NotficationBarComponent implements OnInit, OnDestroy {
       if (this.appVersion !== release.name) {
         if (this.notifications.indexOf('NEW_VERSION') === -1) {
           this.notifications.push('NEW_VERSION');
+          this.electronService.ipcRenderer.send('servermsg');
         }
       }
 

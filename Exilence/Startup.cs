@@ -5,6 +5,7 @@ using Exilence.Repositories;
 using Exilence.Services;
 using Hangfire;
 using Hangfire.MemoryStorage;
+using Microsoft.ApplicationInsights.Extensibility;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpOverrides;
@@ -29,7 +30,7 @@ namespace Exilence
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            //services.AddDbContext<StoreContext>(options => options.UseSqlite("Data Source=store.db"));
+            services.AddApplicationInsightsTelemetry(Configuration);
 
             services.AddHangfire(c => c.UseMemoryStorage());
 
@@ -55,11 +56,13 @@ namespace Exilence
                     });
             });
 
-            services.AddSignalR();
+            services.AddSignalR().AddStackExchangeRedis(Configuration.GetConnectionString("Redis"), options =>
+            {
+                options.Configuration.ChannelPrefix = "ExilenceSignalR";
+            });
 
             services.AddScoped<ILadderService, LadderService>();
             services.AddHttpClient<IExternalService, ExternalService>();
-            //services.AddSingleton<IStoreRepository, StoreRepository>();
             services.AddScoped<IRedisRepository, RedisRepository>();
         }
 
@@ -74,11 +77,12 @@ namespace Exilence
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
-                var telemetryConfig = app.ApplicationServices.GetService<Microsoft.ApplicationInsights.Extensibility.TelemetryConfiguration>();
+                var telemetryConfig = app.ApplicationServices.GetService<TelemetryConfiguration>();
                 telemetryConfig.DisableTelemetry = true;
             }
 
             app.UseMvc();
+            app.UseFileServer();
             app.UseCors("AllowAll");
 
             GlobalConfiguration.Configuration.UseActivator(new HangfireActivator(serviceProvider));
@@ -98,11 +102,10 @@ namespace Exilence
                 routes.MapHub<PartyHub>("/hubs/party", options =>
                 {
                     // 30Kb message buffer
-                    options.ApplicationMaxBufferSize = 30 * 1024 * 1024;
+                    options.ApplicationMaxBufferSize = 50 * 1024 * 1024;
+                    options.TransportMaxBufferSize = 50 * 1024 * 1024;
                 });
             });
-
-
         }
 
     }

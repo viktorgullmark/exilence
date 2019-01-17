@@ -18,6 +18,33 @@ html, body {
     font-size: 15px;
 }
 
+.chaos-icon {
+    height: 21px;
+    width: 21px;
+    content: url("./../img/chaos_orb.png");
+}
+
+.icon-hover {
+    cursor: pointer;
+}
+
+.with-icon {
+    &.in-table {
+        padding: 0 10px 0 10px;
+    }
+    > * {
+        vertical-align: middle;
+    }
+}
+
+.full-width {
+    width: 100%;
+}
+
+.half-width {
+    width: 50%;
+}
+
 text {
     font-size: 10px !important;
 }
@@ -26,21 +53,31 @@ text {
     color: $external-link-color;
 }
 
-.summary-chart { 
-  .chart-legend .legend-labels {
-    width: 300px !important;
-  }
+.summary-chart {
+    .chart-legend .legend-labels {
+        width: 300px !important;
+    }
 }
 
 @keyframes fadein {
-    from { opacity: 0; }
-    to   { opacity: 1; }
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
 }
 
 /* Safari, Chrome and Opera > 12.1 */
 @-webkit-keyframes fadein {
-    from { opacity: 0; }
-    to   { opacity: 1; }
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
 }
 
 .no-margin {
@@ -136,6 +173,10 @@ a {
 
     &.login-form {
         width: 60%;
+    }
+
+    &.welcome-back-screen {
+        width: 50%;
     }
 
     .form-error {
@@ -272,6 +313,41 @@ a {
 
 /* #endregion */
 
+.rarity-0 {
+    //normal
+    color: $rarity-normal-color !important;
+}
+
+.rarity-1 {
+    // magic
+    color: $rarity-magic-color !important;
+}
+
+.rarity-2 {
+    // rare
+    color: $rarity-rare-color !important;
+}
+
+.rarity-3 {
+    // unique
+    color: $rarity-unique-color !important;
+}
+
+.rarity-4 {
+    // gem
+    color: $rarity-gem-color !important;
+}
+
+.rarity-5 {
+    // currency
+    color: $rarity-currency-color !important;
+}
+
+.rarity-7 {
+    // questitem
+    color: $rarity-questitem-color !important;
+}
+
 /* #region Override classes for Material */
 .legend-label:hover, .active, .legend-label-text, .chart-legend {
     color: #fff !important;
@@ -307,11 +383,46 @@ mat-vertical-stepper {
 }
 
 .mat-header-cell {
-    font-size: 14px !important;
+    font-size: 12px !important;
 }
 
 .mat-paginator {
     background: #2f2f2f !important;
 }
+
+mat-tooltip-component > .mat-tooltip {
+    white-space: pre;
+    font-size: 14px;
+    color: #d8b100;
+    background-color: #272727 !important;
+    margin-left: -40px !important;
+    border: #222222 4px solid;
+}
+
+.dropdown-menu {
+    border: #222222 4px solid;
+    background: #272727;
+    padding: 0px;
+    list-style-type: none;
+
+    :last-child {
+        border: 0px;
+    }
+
+    li {        
+        padding: 10px 25px 10px 25px;
+        border-bottom: #222222 2px solid;
+        &:hover {
+            background-color: #2f2f2f;
+        }
+
+        a{
+            color: white;
+            text-decoration: none;
+        }
+    }    
+}
+
+
 
 /* #endregion */

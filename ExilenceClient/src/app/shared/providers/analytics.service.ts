@@ -34,7 +34,7 @@ export class AnalyticsService {
   sendPageview(page: string) {
     this.visitor.pageview(page).send((err) => {
       if (err) {
-        this.logService.log('Sending pageview: ', err, true);
+        this.logService.log('Sending pageview: ', err, false);
       }
     });
   }
@@ -48,7 +48,7 @@ export class AnalyticsService {
 
     this.visitor.event(params).send((err) => {
       if (err) {
-        this.logService.log('Sending event: ', err, true);
+        this.logService.log('Sending event: ', err, false);
       }
     });
 
@@ -67,10 +67,8 @@ export class AnalyticsService {
   sendScreenview(screenName: string) {
     this.pastScreens.unshift(screenName);
 
-    this.visitor.screenview(screenName, this.appName, this.version, (err) => {
-      if (err) {
-        this.logService.log('Sending screenview: ', err, true);
-      }
-    }).send();
+    this.visitor.screenview(screenName, this.appName, this.version).send((err) => {
+      this.logService.log('Sending screenview: ', screenName, false);
+    });
   }
 }
