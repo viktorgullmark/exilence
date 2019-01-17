@@ -21,7 +21,7 @@ export class LogService {
       console.log(`[INFO] ${message}`, data);
     } else {
       this.logger.error(message);
-      console.log(`[WARNING] ${message}`, data);
+      console.log(`[ERROR] ${message}`, data);
     }
   }
 }

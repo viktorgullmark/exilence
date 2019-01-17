@@ -1,0 +1,27 @@
+<h1 mat-dialog-title>
+  <mat-icon class="dialog-icon-right">error</mat-icon>Important information
+</h1>
+<div mat-dialog-content>
+
+  <p>
+    We detected that the the selected tab is a maptab. There are some special rules applying to the maptab. Please see
+    below.
+  </p>
+
+  <li>While the maptab is selected no maps outside of the maptab will count towards your networth. </li>
+  <li>While the maptab is selected the time it takes to snapshot your networth may increase. Especially if you have
+    many maps.</li>
+  <li>You may also experience delays in updating your maps, this is most likely due to GGG's trade API being slow or
+    not
+    updated yet, please be patient </li>
+
+  <!-- <ul>
+    <li>If you select the maptab, we assume all of your maps is in the maptab, and will not count maps from other tabs</li>
+    <li>If you have many maps, your net worth will update more slowly with the maptab enabled</li>
+    <li>Note that the maptab itself will update more seldom than the rest of your stash!</li>
+    <li>The maptab is not included by GGG, and instead we have to go through the trade API, which may cause delays</li>
+  </ul> -->
+</div>
+<div mat-dialog-actions class="button-area">
+  <button mat-raised-button color="primary" mat-dialog-close cdkFocusInitial>Ok</button>
+</div>

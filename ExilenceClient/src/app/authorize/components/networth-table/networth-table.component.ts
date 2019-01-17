@@ -1,4 +1,4 @@
-import { Component, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit, ViewChild, EventEmitter, Output } from '@angular/core';
 import { MatSort, MatTableDataSource } from '@angular/material';
 import { Subscription } from 'rxjs/internal/Subscription';
 
@@ -16,10 +16,12 @@ export class NetworthTableComponent implements OnInit, OnDestroy {
   @Input() player: Player;
   @Input() multiple = false;
   @Input() showOverTime = false;
+  @Output() differenceChanged: EventEmitter<any> = new EventEmitter;
   displayedColumns: string[] = ['position', 'name', 'links', 'quality', 'gemLevel', 'stacksize', 'valuePerUnit', 'value'];
   dataSource = [];
   searchText = '';
   filteredArr = [];
+  public totalDifference = 0;
   source: any;
   @ViewChild(MatSort) sort: MatSort;
   private selectedPlayerSub: Subscription;
@@ -41,11 +43,8 @@ export class NetworthTableComponent implements OnInit, OnDestroy {
         }
         this.filter();
       });
-    } else {
+    } else if (this.multiple) {
       // party logic
-      this.partyService.party.players.forEach(p => {
-        this.loadPlayerData(p);
-      });
       this.filter();
 
       this.partySub = this.partyService.partyUpdated.subscribe(party => {
@@ -79,8 +78,6 @@ export class NetworthTableComponent implements OnInit, OnDestroy {
   }
 
   generateTooltip(item: NetWorthItem) {
-    // console.log(element);
-
     const min = item.value_min !== undefined ? item.value_min.toFixed(2) : 0;
     const max = item.value_max !== undefined ? item.value_max.toFixed(2) : 0;
     const mode = item.value_mode !== undefined ? item.value_mode.toFixed(2) : 0;
@@ -132,7 +129,38 @@ export class NetworthTableComponent implements OnInit, OnDestroy {
         const firstSnapshot = pastHoursSnapshots[pastHoursSnapshots.length - 1];
         const lastSnapshot = pastHoursSnapshots[0];
         const difference = [];
-        lastSnapshot.items.forEach(item => {
+
+        const removedItems = firstSnapshot.items.filter(x => lastSnapshot.items.find(y =>
+          y.name === x.name
+          && y.quality === x.quality
+          && y.links === x.links
+          && y.gemLevel === x.gemLevel
+          && y.variation === x.variation
+          && y.frameType === x.frameType)
+          === undefined);
+        const changedItems = lastSnapshot.items.filter(x =>
+          firstSnapshot.items.find(y =>
+            y.name === x.name
+            && y.quality === x.quality
+            && y.links === x.links
+            && y.gemLevel === x.gemLevel
+            && y.variation === x.variation
+            && y.frameType === x.frameType
+          ) !== undefined
+        );
+        const addedItems = lastSnapshot.items.filter(x =>
+          firstSnapshot.items.find(y =>
+            y.name === x.name
+            && y.quality === x.quality
+            && y.links === x.links
+            && y.gemLevel === x.gemLevel
+            && y.variation === x.variation
+            && y.frameType === x.frameType
+          ) === undefined
+        );
+
+        const changedOrAdded = changedItems.concat(addedItems);
+        changedOrAdded.forEach(item => {
           // if item exists in first snapshot
           const existingItem = firstSnapshot.items.find(x =>
             x.name === item.name
@@ -142,28 +170,47 @@ export class NetworthTableComponent implements OnInit, OnDestroy {
             && x.variation === item.variation
             && x.frameType === item.frameType
           );
+
           if (existingItem !== undefined) {
             const recentItem = Object.assign({}, item);
-
             recentItem.stacksize = recentItem.stacksize - existingItem.stacksize;
-
             existingItem.value = recentItem.valuePerUnit * existingItem.stacksize;
-
             recentItem.value = recentItem.value - existingItem.value;
-
             if (recentItem.value !== 0 && recentItem.stacksize !== 0) {
               difference.push(recentItem);
             }
           } else {
-            if (item.value !== 0) {
+            if (item.value !== 0 && item.stacksize !== 0) {
               difference.push(item);
             }
+          }
+        });
+
+        removedItems.forEach(item => {
+          const existingItem = lastSnapshot.items.find(x =>
+            x.name === item.name
+            && x.quality === item.quality
+            && x.links === item.links
+            && x.gemLevel === item.gemLevel
+            && x.variation === item.variation
+            && x.frameType === item.frameType
+          );
+          const recentItem = Object.assign({}, item);
+          if (recentItem.value !== 0 && recentItem.stacksize !== 0) {
+            if (existingItem !== undefined) {
+              recentItem.stacksize = existingItem.stacksize - recentItem.stacksize;
+              existingItem.value = recentItem.valuePerUnit * existingItem.stacksize;
+              recentItem.value = existingItem.value - recentItem.value;
+            } else {
+              recentItem.value = -Math.abs(recentItem.value);
+              recentItem.stacksize = -Math.abs(recentItem.stacksize);
+            }
+            difference.push(recentItem);
           }
         });
         this.updateOverTime(difference, player.character.name);
       }
     } else {
-      debugger;
       this.updateTable(player.netWorthSnapshots[0].items, player.character.name);
     }
   }
@@ -173,6 +220,10 @@ export class NetworthTableComponent implements OnInit, OnDestroy {
     this.updateTable(snapshot.items, this.player.character.name);
 
     this.filter();
+  }
+
+  isDivinationCard(icon: string) {
+    return icon.indexOf('/Divination/') > -1;
   }
 
   updateOverTime(items: any[], playerName: string) {
@@ -188,12 +239,15 @@ export class NetworthTableComponent implements OnInit, OnDestroy {
       if (existingItem !== undefined) {
         const indexOfItem = this.dataSource.indexOf(existingItem);
         // update existing item with new data
-        existingItem.stacksize = snapshot.stacksize + existingItem.stacksize;
-        existingItem.value = snapshot.value + existingItem.value;
-        // fix for existing items not containing these props
-        existingItem.quality = snapshot.quality;
-        existingItem.links = snapshot.links;
-        this.dataSource[indexOfItem] = existingItem;
+        if (snapshot.stacksize + existingItem.stacksize !== 0) {
+          existingItem.stacksize = snapshot.stacksize + existingItem.stacksize;
+          existingItem.value = snapshot.value + existingItem.value;
+          // fix for existing items not containing these props
+          existingItem.quality = snapshot.quality;
+          existingItem.links = snapshot.links;
+          existingItem.frameType = snapshot.frameType;
+          this.dataSource[indexOfItem] = existingItem;
+        }
       } else {
         const newObj = {
           position: items.indexOf(snapshot) + 1,
@@ -213,9 +267,10 @@ export class NetworthTableComponent implements OnInit, OnDestroy {
           links: snapshot.links,
           quality: snapshot.quality,
           holdingPlayers: [playerName],
-          frameType: snapshot.frameType
+          frameType: snapshot.frameType,
+          totalStacksize: snapshot.totalStacksize
         };
-        if (snapshot.value !== 0) {
+        if (snapshot.value !== 0 && snapshot.stacksize !== 0) {
           this.dataSource.push(newObj);
         }
       }
@@ -261,9 +316,10 @@ export class NetworthTableComponent implements OnInit, OnDestroy {
           links: snapshot.links,
           quality: snapshot.quality,
           holdingPlayers: [playerName],
-          frameType: snapshot.frameType
+          frameType: snapshot.frameType,
+          totalStacksize: snapshot.totalStacksize
         };
-        if (snapshot.value !== 0) {
+        if (snapshot.value !== 0 && snapshot.stacksize !== 0) {
           this.dataSource.push(newObj);
         }
       }

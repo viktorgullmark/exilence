@@ -33,7 +33,6 @@ import { LogMonitorService } from './shared/providers/log-monitor.service';
 import { LogService } from './shared/providers/log.service';
 import { MapService } from './shared/providers/map.service';
 import { NinjaService } from './shared/providers/ninja.service';
-import { RobotService } from './shared/providers/robot.service';
 import { SessionService } from './shared/providers/session.service';
 import { SettingsService } from './shared/providers/settings.service';
 
@@ -75,7 +74,6 @@ export function HttpLoaderFactory(http: HttpClient) {
     ExternalService,
     AnalyticsService,
     ElectronService,
-    RobotService,
     LogService,
     CanActivateAuthorized,
     AccountService,

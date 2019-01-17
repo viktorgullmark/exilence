@@ -8,6 +8,7 @@ import { ChartSeries, ChartSeriesEntry } from '../../../shared/interfaces/chart.
 import { Player } from '../../../shared/interfaces/player.interface';
 import { AccountService } from '../../../shared/providers/account.service';
 import { IncomeService } from '../../../shared/providers/income.service';
+import { SettingsService } from '../../../shared/providers/settings.service';
 import { PartyService } from '../../../shared/providers/party.service';
 
 
@@ -46,7 +47,8 @@ export class IncomeComponent implements OnInit, OnDestroy {
   selectedColorScheme: string;
 
   constructor(
-    private partyService: PartyService
+    private partyService: PartyService,
+    private settingService: SettingsService,
   ) {
   }
 
@@ -63,11 +65,16 @@ export class IncomeComponent implements OnInit, OnDestroy {
     } else {
       // party logic
       this.isSummary = true;
-      this.partyService.party.players.forEach(p => {
-        if (p.netWorthSnapshots !== null) {
-          this.updateGraph(p);
-        }
-      });
+      // update the graph every minute, to update labels
+      setInterval(() => {
+        this.dateData = [];
+        this.data = [];
+        this.partyService.party.players.forEach(p => {
+          if (p.netWorthSnapshots !== null) {
+            this.updateGraph(p);
+          }
+        });
+      }, 60 * 1000);
       this.partySubscription = this.partyService.partyUpdated.subscribe(party => {
         if (party !== undefined) {
           this.dateData = [];
@@ -104,17 +111,22 @@ export class IncomeComponent implements OnInit, OnDestroy {
   updateGraph(player: Player) {
     const playerObj = Object.assign({}, player);
 
-    if (this.isSummary) {
-      const oneDayAgo = (Date.now() - (24 * 60 * 60 * 1000));
-      playerObj.netWorthSnapshots = playerObj.netWorthSnapshots.filter(x => x.timestamp > oneDayAgo);
-      if (playerObj.netWorthSnapshots.length === 0) {
-        playerObj.netWorthSnapshots = [{
-          timestamp: 0,
-          value: 0,
-          items: []
-        }];
-      }
+
+    let netWorthHistoryDays = this.settingService.get('netWorthHistoryDays');
+    if (netWorthHistoryDays === undefined) {
+      netWorthHistoryDays = 14;
+      this.settingService.set('netWorthHistoryDays', netWorthHistoryDays);
     }
+    const daysAgo = (Date.now() - (netWorthHistoryDays * 24 * 60 * 60 * 1000));
+    playerObj.netWorthSnapshots = playerObj.netWorthSnapshots.filter(x => x.timestamp > daysAgo);
+    if (playerObj.netWorthSnapshots.length === 0) {
+      playerObj.netWorthSnapshots = [{
+        timestamp: 0,
+        value: 0,
+        items: []
+      }];
+    }
+
     const entry: ChartSeries = {
       name: playerObj.character.name + ' (' + moment(playerObj.netWorthSnapshots[0].timestamp).fromNow() + ')',
       series: playerObj.netWorthSnapshots.map(snapshot => {

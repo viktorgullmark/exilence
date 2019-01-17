@@ -114,7 +114,8 @@ export class NinjaService {
                   baseType: line.baseType,
                   icon: line.icon,
                   mapTier: line.mapTier,
-                  frameType: line.itemClass
+                  frameType: line.itemClass,
+                  totalStacksize: line.stackSize
                 } as NinjaPriceInfo;
 
                 this.ninjaPrices.push(ninjaPriceInfoObj);

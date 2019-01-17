@@ -53,6 +53,7 @@ export class PartyService implements OnDestroy {
   private reconnectAttempts: number;
   private forceClosed: boolean;
 
+  public joinInProgress = false;
   public maskedName = false;
   public currentPlayerGain;
   public playerGain;
@@ -101,10 +102,7 @@ export class PartyService implements OnDestroy {
     });
     this.initParty();
     this._hubConnection = new signalR.HubConnectionBuilder()
-      .withUrl(AppConfig.url + 'hubs/party', {
-        skipNegotiation: true,
-        transport: signalR.HttpTransportType.WebSockets
-      })
+      .withUrl(AppConfig.url + 'hubs/party')
       .configureLogging(signalR.LogLevel.Information)
       .build();
 
@@ -220,7 +218,6 @@ export class PartyService implements OnDestroy {
   }
 
   ngOnDestroy() {
-    console.log('partyservice destroyed');
     if (this.playerSub !== undefined) {
       this.playerSub.unsubscribe();
     } if (this.selectedPlayerSub !== undefined) {
@@ -286,18 +283,20 @@ export class PartyService implements OnDestroy {
   }
 
   initHubConnection() {
-    this.logService.log('Starting signalr connection');
-    this._hubConnection.start().then(() => {
-      console.log('Successfully established signalr connection!');
-      if (this.party !== undefined && this.currentPlayer !== undefined && this.party.name !== '') {
-        this.joinParty(this.party.name, this.currentPlayer);
-      }
-      this.reconnectAttempts = 0;
-    }).catch((err) => {
-      console.error(err.toString());
-      this.logService.log('Could not connect to signalr');
-      this.reconnect();
-    });
+    // only initiate connection, when there is no connection running
+    if (this._hubConnection.state === 0) {
+      this.logService.log('Starting signalr connection');
+      this._hubConnection.start().then(() => {
+        console.log('Successfully established signalr connection!');
+        if (this.party !== undefined && this.currentPlayer !== undefined && this.party.name !== '') {
+          this.joinParty(this.party.name, this.currentPlayer);
+        }
+        this.reconnectAttempts = 0;
+      }).catch((err) => {
+        this.logService.log('Could not connect to signalr');
+        this.reconnect();
+      });
+    }
   }
 
   reconnect() {

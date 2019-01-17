@@ -1,17 +1,13 @@
-import { Component, Inject, OnInit, ViewChild, OnDestroy } from '@angular/core';
+import { Component, Inject, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
+import { MatDialog, MatTabGroup } from '@angular/material';
+import { Subscription } from 'rxjs';
 
-import { AnalyticsService } from '../../../shared/providers/analytics.service';
 import { MessageValueService } from '../../../shared/providers/message-value.service';
 import { PartyService } from '../../../shared/providers/party.service';
-import { NetworthTableComponent } from '../../components/networth-table/networth-table.component';
-import { RobotService } from '../../../shared/providers/robot.service';
-import { KeybindService } from '../../../shared/providers/keybind.service';
 import { SettingsService } from '../../../shared/providers/settings.service';
-import { MatDialog, MatTabGroup } from '@angular/material';
 import { InfoDialogComponent } from '../../components/info-dialog/info-dialog.component';
-import { AccountService } from '../../../shared/providers/account.service';
-import { Subscription } from 'rxjs';
+import { NetworthTableComponent } from '../../components/networth-table/networth-table.component';
 
 @Component({
   selector: 'app-party-summary',
@@ -28,15 +24,13 @@ export class PartySummaryComponent implements OnInit, OnDestroy {
   gainHours: number;
   selectedIndex = 0;
   public graphDimensions = [950, 300];
-  public reportKeybind: any;
   private partyGainSub: Subscription;
   public partyGain = 0;
   private partySub: Subscription;
+  public totalDifference = 0;
   constructor(
     @Inject(FormBuilder) fb: FormBuilder,
     public messageValueService: MessageValueService,
-    private robotService: RobotService,
-    private keybindService: KeybindService,
     private settingsService: SettingsService,
     private dialog: MatDialog,
     private partyService: PartyService
@@ -45,7 +39,6 @@ export class PartySummaryComponent implements OnInit, OnDestroy {
       searchText: [''],
       searchTextOverTime: ['']
     });
-    this.reportKeybind = this.keybindService.activeBinds.find(x => x.event === 'party-summary-networth');
     this.gainHours = this.settingsService.get('gainHours');
 
     this.partyGainSub = this.messageValueService.partyGainSubject.subscribe(res => {
@@ -78,6 +71,10 @@ export class PartySummaryComponent implements OnInit, OnDestroy {
     }
   }
 
+  updateDifference(event) {
+    this.totalDifference = event;
+  }
+
   toggleGainHours(event) {
     this.settingsService.set('gainHours', +event.value);
     if (this.overTimeTable !== undefined) {
@@ -98,7 +95,7 @@ export class PartySummaryComponent implements OnInit, OnDestroy {
           icon: 'attach_money',
           title: 'Currency summary',
           // tslint:disable-next-line:max-line-length
-          content: 'This tab updates when a partymember changes area in game, at most once every 5 minutes.<br/><br/>' +
+          content: 'This tab updates when a partymember changes area in game, at most once every 3 minutes.<br/><br/>' +
             'We store all your parties net worth data two weeks back in time. This will be extended in the future.'
         }
       });
@@ -129,15 +126,6 @@ export class PartySummaryComponent implements OnInit, OnDestroy {
   searchOverTime() {
     if (this.overTimeTable !== undefined) {
       this.overTimeTable.doSearch(this.form.controls.searchTextOverTime.value);
-    }
-  }
-
-  report(toGame: boolean) {
-    this.messageValueService.updatePartyMsg();
-    if (toGame) {
-      this.robotService.sendTextToPathWindow(this.messageValueService.partyNetworthMsg, true);
-    } else {
-      this.robotService.setTextToClipboard(this.messageValueService.partyNetworthMsg);
     }
   }
 

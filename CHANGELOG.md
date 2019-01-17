@@ -1,14 +1,48 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
-## [0.9.5] - 2019-XX-XX
-- Added support to price the maptab (by setting it to public)
+## [0.9.11] - 2019-01-17
+- Fixed a bug where sessionId could not be validated
+- Fixed a bug where endless reconnection loops could occurr
+- Added a combined ratelimiter for characters and stashtabs (should reduce the amount of disconnects)
+
+## [0.9.10] - 2019-01-16
+- Fixed a bug where group-summary graph was hiding some players
+
+## [0.9.9] - 2019-01-16
+- Updated Electron framework to improve performance (now runs on a newer Chromium version)
+- Now shows max-size for for divination card stacks, to easier see how many stacks you've got
+- Fixed a bug where the time since last snapshot wasn't shown correctly on labels in the graph
+- Removed functionality for sending messages to increase stability
+- Removed old dependencies
+
+## [0.9.8] - 2019-01-15
+- Added a setting for chosing how many days to track net worth history for
+- Reworked how connections are initiated on the server
+- Fixed a bug where flasks weren't properly displayed when in inventory
+
+## [0.9.7] - 2019-01-12
+- Fixed a bug related to rate-limit when fetching stash-tabs
+- Temporarily disabled networth file-output until further investigation
+
+## [0.9.6] - 2019-01-12
+- Fixed a bug where connection wasn't re-established on disconnect
+
+## [0.9.5] - 2019-01-12
+- Added support to price the maptab (requires it to be public)
 - Added column for gem-level in the net worth table
 - Added tooltip to value in networth table to display more detailed data such as average, mode and mean
+- Added colors to names for items in the net worth table, based on rarity
 - Added file-output for gain and networth values, making it available for import in OBS
 - Fixed a bug where maps in regular tabs werent included in the pricing
 - Fixed a bug where the gain-table didn't display new items, only the difference between current ones
-- Fixed a bug where items of zero value would sometimes be included in pricing 
+- Fixed a bug where the gain-table didn't display removed items properly
+- Fixed a bug where items of zero value would sometimes be included in pricing
+- Now starts pricing every three minutes, down from five, to counter increased snapshot-times with the maptab
+- Now displays a loading-bar when entering party
+- Reworked dashboard (removed old sections and added changelog for current version)
+- Reworked how masking works, now always masks the first group if the setting is enabled 
+- Updated the FAQ-page
 - Updated SignalR package
 - Removed negotiate-step for websockets, now connects directly instead
 - Minor style tweaks to net worth table

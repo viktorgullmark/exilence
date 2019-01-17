@@ -79,6 +79,7 @@ export interface NinjaLine {
     icon: string;
     mapTier?: number;
     itemClass?: number;
+    stackSize?: number;
 }
 
 export interface NinjaPriceInfo {
@@ -93,6 +94,7 @@ export interface NinjaPriceInfo {
     icon: string;
     mapTier: number;
     frameType: number;
+    totalStacksize: number;
 }
 
 export interface NinjaCurrencyDetail {

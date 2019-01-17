@@ -14,7 +14,7 @@ import { NetWorthHistory, NetWorthItem, NetWorthSnapshot } from '../interfaces/i
 import { ItemPricing } from '../interfaces/item-pricing.interface';
 import { Item } from '../interfaces/item.interface';
 import { Player } from '../interfaces/player.interface';
-import { Stash, Tab } from '../interfaces/stash.interface';
+import { Stash } from '../interfaces/stash.interface';
 import { AccountService } from './account.service';
 import { ExternalService } from './external.service';
 import { LogService } from './log.service';
@@ -22,7 +22,6 @@ import { NinjaService } from './ninja.service';
 import { PartyService } from './party.service';
 import { PricingService } from './pricing.service';
 import { SettingsService } from './settings.service';
-import { select } from 'd3';
 
 @Injectable()
 export class IncomeService implements OnDestroy {
@@ -39,7 +38,7 @@ export class IncomeService implements OnDestroy {
 
   private totalNetWorthItems: NetWorthItem[] = [];
   public totalNetWorth = 0;
-  private fiveMinutes = 5 * 60 * 1000;
+  private threeMinutes = 3 * 60 * 1000;
   private sessionIdValid = false;
 
   private characterPricing = false;
@@ -76,7 +75,6 @@ export class IncomeService implements OnDestroy {
     if (this.playerSub !== undefined) {
       this.playerSub.unsubscribe();
     }
-    console.log('incomeservice destroyed');
   }
 
   loadSnapshotsFromSettings() {
@@ -93,7 +91,7 @@ export class IncomeService implements OnDestroy {
 
     this.sessionIdValid = this.settingsService.get('account.sessionIdValid');
     if (
-      this.netWorthHistory.lastSnapshot < (Date.now() - this.fiveMinutes) &&
+      this.netWorthHistory.lastSnapshot < (Date.now() - this.threeMinutes) &&
       this.localPlayer !== undefined &&
       (this.sessionId !== undefined && this.sessionId !== '' && this.sessionIdValid) &&
       !this.isSnapshotting && !this.accountService.loggingIn && !this.settingsService.isChangingStash &&
@@ -101,8 +99,10 @@ export class IncomeService implements OnDestroy {
     ) {
       this.isSnapshotting = true;
       this.netWorthHistory.lastSnapshot = Date.now();
+
+      const startTime = Date.now();
       this.logService.log('Started snapshotting player net worth');
-      this.SnapshotPlayerNetWorth(this.sessionId).subscribe(() => {
+      this.SnapshotPlayerNetWorth().subscribe(() => {
 
         this.netWorthHistory.history = this.netWorthHistory.history
           .filter((snaphot: NetWorthSnapshot) => snaphot.timestamp > twoWeeksAgo);
@@ -132,14 +132,18 @@ export class IncomeService implements OnDestroy {
         const objToSend = Object.assign({}, this.localPlayer);
         objToSend.netWorthSnapshots = historyToSend;
         this.partyService.updatePlayer(objToSend);
-        this.logService.log('Finished Snapshotting player net worth');
+
+        const endTime = Date.now();
+        const timePassed = Math.round((endTime - startTime) / 1000);
+
+        this.logService.log(`Finished Snapshotting player net worth in ${timePassed} seconds`);
 
         this.isSnapshotting = false;
       });
     }
   }
 
-  PriceItems(items: Item[]) {
+  PriceItems(items: Item[], mapTabSelected: boolean = false, mapLayout: any) {
 
     // todo: base prices on this league
     items.forEach((item: Item) => {
@@ -193,10 +197,13 @@ export class IncomeService implements OnDestroy {
           gemLevel: itemPriceInfoObj.gemlevel,
           quality: itemPriceInfoObj.quality,
           variation: itemPriceInfoObj.variation,
-          frameType: itemPriceInfoObj.frameType
+          frameType: itemPriceInfoObj.frameType,
+          totalStacksize: itemPriceInfoObj.totalStacksize
         };
 
-        this.totalNetWorthItems.push(netWorthItem);
+        if (netWorthItem.name.indexOf(' Map') === -1 || mapLayout || !mapTabSelected) {
+          this.totalNetWorthItems.push(netWorthItem);
+        }
       }
     });
   }
@@ -205,7 +212,7 @@ export class IncomeService implements OnDestroy {
     return items.filter(x => x.value >= this.itemValueTreshold && x.value !== 0);
   }
 
-  SnapshotPlayerNetWorth(sessionId: string) {
+  SnapshotPlayerNetWorth() {
 
     const accountName = this.localPlayer.account;
     const league = this.localPlayer.character.league;
@@ -230,18 +237,25 @@ export class IncomeService implements OnDestroy {
       this.settingsService.set('characterPricing', false);
     }
 
+    const selectedStashTabs: any[] = this.settingsService.get('selectedStashTabs');
+
+    let mapTab;
+    if (selectedStashTabs !== undefined) {
+      mapTab = selectedStashTabs.find(x => x.isMapTab);
+    }
+
     return Observable.forkJoin(
-      this.getPlayerPublicMaps(accountName, league),
-      this.pricingService.retrieveExternalPrices(),
-      this.getPlayerStashTabs(sessionId, accountName, league)
+      this.getPlayerPublicMaps(accountName, league, mapTab),
+      this.getPlayerStashTabs(accountName, league),
+      this.pricingService.retrieveExternalPrices()
     ).do(() => {
       this.logService.log('Finished retriving stashhtabs');
       if (this.characterPricing) {
-        this.PriceItems(this.localPlayer.character.items);
+        this.PriceItems(this.localPlayer.character.items, mapTab, undefined);
       }
       this.playerStashTabs.forEach((tab: Stash, tabIndex: number) => {
         if (tab !== null) {
-          this.PriceItems(tab.items);
+          this.PriceItems(tab.items, mapTab, tab.mapLayout);
         }
       });
 
@@ -263,48 +277,41 @@ export class IncomeService implements OnDestroy {
     });
   }
 
-  getPlayerPublicMaps(accountName: string, league: string) {
+  getPlayerPublicMaps(accountName: string, league: string, mapTab: any) {
 
-    let publicMapPricing = this.settingsService.get('publicMapPricing');
-    // default to true
-    if (publicMapPricing === undefined) {
-      publicMapPricing = true;
-    }
-    if (publicMapPricing === true) {
-
-      const selectedStashTabs: any[] = this.settingsService.get('selectedStashTabs');
-      const mapTab = selectedStashTabs.find(x => x.isMapTab);
-
+    if (mapTab !== undefined && mapTab) {
       this.logService.log('Starting to fetch public maps');
-      return this.externalService.getPublicMapTradeGuids(accountName, league)
+      return this.externalService.SearchPublicMaps(accountName, league) // .toArray()
         .flatMap((ids: any) => {
           const subLines = this.splitIntoSubArray(ids.result, 10);
-          return this.externalService.getPublicMapsFromTradeIds(subLines, ids.id).map((pages: any) => {
+          return this.externalService.FetchPublicMaps(subLines, ids.id).map((pages: any) => {
+
             let items = [];
 
             pages.forEach((page: any) => {
-              page.result = page.result.filter(x => mapTab !== undefined && x.listing.stash.name === mapTab.name);
+              page.result = page.result.filter(x => x.listing.stash.name === mapTab.name);
               const pageItems = page.result.map(x => x.item);
               items = items.concat(pageItems);
             });
 
             if (items.length > 0) {
               const tab = {
-                items: items
+                items: items,
+                mapLayout: {}
               } as Stash;
 
               this.playerStashTabs.push(tab);
             }
-            this.logService.log('Finished fetching public maps');
-
-          });
+          })
+            .delay(1000);
+          // });
         });
     } else {
       return of(null);
     }
   }
 
-  getPlayerStashTabs(sessionId: string, accountName: string, league: string) {
+  getPlayerStashTabs(accountName: string, league: string) {
 
     this.logService.log('[INFO] Retriving stashtabs from official site api');
 
@@ -318,11 +325,14 @@ export class IncomeService implements OnDestroy {
       selectedStashTabs = selectedStashTabs.slice(0, 20);
     }
 
+    if (selectedStashTabs.length === 0) {
+      return Observable.of(null);
+    }
+
     return Observable.from(selectedStashTabs)
-      .concatMap((tab: any) => {
-        return this.externalService.getStashTab(sessionId, accountName, league, tab.position)
-          .delay(750);
-      })
+      .mergeMap((tab: any) => {
+        return this.externalService.getStashTab(accountName, league, tab.position);
+      }, 1)
       .do(stashTab => {
         this.playerStashTabs.push(stashTab);
       });

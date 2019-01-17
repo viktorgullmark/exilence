@@ -117,10 +117,6 @@ a {
     margin-bottom: 20px !important;
 }
 
-.keybind-text {
-    font-size: 12px;
-}
-
 .progress-spinner {
     position: relative !important;
     display: flex !important;
@@ -240,9 +236,14 @@ a {
         justify-content: flex-start;
         align-items: flex-start;
 
-        > *:not(router-outlet) {
+        > *:not(router-outlet):not(mat-progress-bar) {
             width: 100%;
             height: $content-height;
+        }
+        > mat-progress-bar {
+            position: absolute;
+            bottom: 30px;
+            width: calc(100% - 50px);
         }
     }
 }

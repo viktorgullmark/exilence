@@ -4,7 +4,6 @@ import { MatDialog, MatStep, MatStepper } from '@angular/material';
 import { Router } from '@angular/router';
 import { forkJoin, Subscription } from 'rxjs';
 
-import { InfoDialogComponent } from '../authorize/components/info-dialog/info-dialog.component';
 import { ClearHistoryDialogComponent } from '../shared/components/clear-history-dialog/clear-history-dialog.component';
 import { HistoryHelper } from '../shared/helpers/history.helper';
 import { AccountInfo } from '../shared/interfaces/account-info.interface';

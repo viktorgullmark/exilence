@@ -1,21 +1,19 @@
-import { Component, Inject, OnInit, OnDestroy } from '@angular/core';
+import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { MatDialog } from '@angular/material';
 import { Router } from '@angular/router';
+import { Subscription } from 'rxjs';
 
 import { Player } from '../shared/interfaces/player.interface';
+import { ServerMessage } from '../shared/interfaces/server-message.interface';
 import { AccountService } from '../shared/providers/account.service';
 import { ElectronService } from '../shared/providers/electron.service';
 import { IncomeService } from '../shared/providers/income.service';
-import { KeybindService } from '../shared/providers/keybind.service';
 import { MapService } from '../shared/providers/map.service';
 import { MessageValueService } from '../shared/providers/message-value.service';
 import { PartyService } from '../shared/providers/party.service';
-import { RobotService } from '../shared/providers/robot.service';
-import { Subscription } from 'rxjs';
 import { SettingsService } from '../shared/providers/settings.service';
-import { MatDialog } from '@angular/material';
 import { ServerMessageDialogComponent } from './components/server-message-dialog/server-message-dialog.component';
-import { ServerMessage } from '../shared/interfaces/server-message.interface';
 
 @Component({
   selector: 'app-authorize',
@@ -30,8 +28,6 @@ export class AuthorizeComponent implements OnInit, OnDestroy {
   constructor(@Inject(FormBuilder) fb: FormBuilder,
     public partyService: PartyService,
     private mapService: MapService,
-    private robotService: RobotService,
-    private keybindService: KeybindService,
     private accountService: AccountService,
     private messageValueService: MessageValueService,
     private incomeService: IncomeService,
@@ -101,6 +97,7 @@ export class AuthorizeComponent implements OnInit, OnDestroy {
   }
 
   enterParty() {
+    this.partyService.joinInProgress = true;
     this.partyService.leaveParty(this.partyService.party.name, this.player);
     setTimeout(() => {
       this.partyService.joinParty(this.form.controls.partyCode.value.toUpperCase(), this.player);
@@ -108,6 +105,7 @@ export class AuthorizeComponent implements OnInit, OnDestroy {
       this.partyService.addPartyToRecent(this.form.controls.partyCode.value.toUpperCase());
       this.router.navigateByUrl('/404', { skipLocationChange: true }).then(() =>
         this.router.navigate(['/authorized/party']));
+      this.partyService.joinInProgress = false;
     }, 750);
   }
 }

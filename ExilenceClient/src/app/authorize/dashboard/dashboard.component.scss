@@ -29,12 +29,20 @@
                 width: 15px;
                 height: 15px;
             }
-        }
+            &.current-party-badge {
+                background: none;
+                background-color: #c2185b;
+            }
+        } 
 
         :hover {
             background: $recent-party-badge-hover-bg-color !important;
         }
     }
+}
+
+.mat-body-1, ul > li {
+ font-size: 13px !important;
 }
 
 .become-patron-button {
