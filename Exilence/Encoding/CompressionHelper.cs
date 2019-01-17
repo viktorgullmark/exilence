@@ -13,7 +13,7 @@ using K4os.Compression.LZ4.Streams;
 using K4os.Hash.xxHash;
 using Exilence.Encoding;
 
-namespace Exilence.Helper
+namespace Exilence.Encoding
 {
     public static class CompressionHelper
     {
