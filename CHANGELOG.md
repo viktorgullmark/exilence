@@ -1,6 +1,10 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [0.9.12] - 2019-XX-XX
+- Fixed a bug where SSF players could not use the maptab
+- Added a button for clearing net worth history in the summary-tab
+
 ## [0.9.11] - 2019-01-17
 - Fixed a bug where sessionId could not be validated
 - Fixed a bug where endless reconnection loops could occurr
