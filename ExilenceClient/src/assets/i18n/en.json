@@ -25,6 +25,7 @@
         "SHOW": "Show graph",
         "HIDE": "Hide graph",
         "RESET": "Clear history",
+        "RESET_SELF": "Clear my history",
         "REPORT": "Net worth Report",
         "POPOUT": "Use overlay"
     },
