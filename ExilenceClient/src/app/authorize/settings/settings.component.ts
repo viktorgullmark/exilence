@@ -44,45 +44,49 @@ export class SettingsComponent implements OnInit, OnDestroy {
       searchText: ['']
     });
 
-    this.sessionId = this.sessionService.getSession();
-    this.sessionIdValid = this.settingsService.get('account.sessionIdValid');
-    this.itemValueTreshold =
-      this.settingsService.get('itemValueTreshold') !== undefined ? this.settingsService.get('itemValueTreshold') : 1;
-    this.gainHours =
-      this.settingsService.get('gainHours') !== undefined ? this.settingsService.get('gainHours') : 3;
-    this.netWorthHistoryDays =
-      this.settingsService.get('netWorthHistoryDays') !== undefined ? this.settingsService.get('netWorthHistoryDays') : 14;
-    if (!this.sessionIdValid || this.sessionId === '') {
-      this.selectedIndex = 1;
-    }
   }
 
   ngOnInit() {
+    const settings = this.settingsService.getAll();
+
+    this.sessionId = this.sessionService.getSession();
+
+    this.sessionIdValid = settings.account.sessionIdValid;
+    this.itemValueTreshold =
+      settings.itemValueTreshold !== undefined ? settings.itemValueTreshold : 1;
+    this.gainHours =
+      settings.gainHours !== undefined ? settings.gainHours : 3;
+    this.netWorthHistoryDays =
+      settings.netWorthHistoryDays !== undefined ? settings.netWorthHistoryDays : 14;
+    if (!this.sessionIdValid || this.sessionId === '') {
+      this.selectedIndex = 1;
+    }
+
     this.analyticsService.sendScreenview('/authorized/settings');
 
-    const onTopSetting = this.settingsService.get('alwaysOnTop');
+    const onTopSetting = settings.alwaysOnTop;
 
     if (onTopSetting !== undefined) {
       this.alwaysOnTop = onTopSetting;
     }
 
-    const isResizableSetting = this.settingsService.get('isResizable');
+    const isResizableSetting = settings.isResizable;
 
     if (isResizableSetting !== undefined) {
       this.isResizable = isResizableSetting;
     }
 
-    const hideTooltipsSetting = this.settingsService.get('hideTooltips');
+    const hideTooltipsSetting = settings.hideTooltips;
     if (hideTooltipsSetting !== undefined) {
       this.hideTooltips = hideTooltipsSetting;
     }
 
-    const lowConfidencePricingSetting = this.settingsService.get('lowConfidencePricing');
+    const lowConfidencePricingSetting = settings.lowConfidencePricing;
     if (lowConfidencePricingSetting !== undefined) {
       this.lowConfidencePricing = lowConfidencePricingSetting;
     }
 
-    const characterePricingSetting = this.settingsService.get('characterPricing');
+    const characterePricingSetting = settings.characterPricing;
     if (characterePricingSetting !== undefined) {
       this.characterPricing = characterePricingSetting;
     }

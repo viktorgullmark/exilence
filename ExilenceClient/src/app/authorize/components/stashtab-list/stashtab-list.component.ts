@@ -43,9 +43,10 @@ export class StashtabListComponent implements OnInit, OnDestroy {
   }
 
   init() {
-    const accountName = this.settingsService.get('account.accountName');
+    const settings = this.settingsService.getAll();
+    const accountName = settings.account.accountName;
     const league = this.partyService.currentPlayer.character.league;
-    let selectedStashTabs: any[] = this.settingsService.get('selectedStashTabs');
+    let selectedStashTabs: any[] = settings.selectedStashTabs;
 
     if (selectedStashTabs === undefined) {
       selectedStashTabs = [];
@@ -59,14 +60,17 @@ export class StashtabListComponent implements OnInit, OnDestroy {
           });
 
           const fetchedMapStash = this.dataSource.find(x => x.isMapTab);
+          const toggleableRows = [];
           this.dataSource.forEach(r => {
             selectedStashTabs.forEach(t => {
               const shouldDeselectMaptab = fetchedMapStash !== undefined && t.position === fetchedMapStash.position && !t.isMapTab;
               if (r.position === t.position && !shouldDeselectMaptab) {
-                this.toggle(this.selection, r);
+                toggleableRows.push(r);
+                // this.toggle(this.selection, r);
               }
             });
           });
+          this.toggleAll(this.selection, toggleableRows);
 
           this.filter();
         }
@@ -113,11 +117,13 @@ export class StashtabListComponent implements OnInit, OnDestroy {
     if (row.isMapTab && !mapTabSelected) {
       this.openMaptabDialog();
     }
-    this.toggle(selection, row);
+    this.toggleAll(selection, [row]);
   }
 
-  toggle(selection, row) {
-    this.selection.toggle(row);
+  toggleAll(selection, rows) {
+    for (const row of rows) {
+      this.selection.toggle(row);
+    }
     this.settingsService.set('selectedStashTabs', selection.selected);
   }
 

@@ -2,9 +2,13 @@ import { Injectable } from '@angular/core';
 
 import { ElectronService } from './electron.service';
 import { LogService } from './log.service';
+import { settings } from 'cluster';
 
-@Injectable()
+@Injectable({
+  providedIn: 'root',
+})
 export class SettingsService {
+  settings = null;
   isChangingStash = false;
   constructor(private electronService: ElectronService, private logService: LogService) {
   }
@@ -19,6 +23,14 @@ export class SettingsService {
   get(key: string) {
     try {
       return this.electronService.settings.get(key);
+    } catch (e) {
+      this.logService.log(e);
+    }
+  }
+  getAll() {
+    try {
+      this.settings = this.electronService.settings.getAll();
+      return settings;
     } catch (e) {
       this.logService.log(e);
     }
