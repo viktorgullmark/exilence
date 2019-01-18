@@ -249,8 +249,7 @@ export class PartyService implements OnDestroy {
     if (pastHoursSnapshots.length > 1) {
       const lastSnapshot = pastHoursSnapshots[0];
       const firstSnapshot = pastHoursSnapshots[pastHoursSnapshots.length - 1];
-      const gainHour = (((1000 * 60 * 60)) / (lastSnapshot.timestamp - firstSnapshot.timestamp)
-        * (lastSnapshot.value - firstSnapshot.value)) / gainHours;
+      const gainHour = (lastSnapshot.value - firstSnapshot.value) / gainHours;
       this.partyGain = this.partyGain + gainHour;
     }
   }
@@ -265,8 +264,7 @@ export class PartyService implements OnDestroy {
     if (pastHoursSnapshots.length > 1) {
       const lastSnapshot = pastHoursSnapshots[0];
       const firstSnapshot = pastHoursSnapshots[pastHoursSnapshots.length - 1];
-      const gainHour = (((1000 * 60 * 60)) / (lastSnapshot.timestamp - firstSnapshot.timestamp)
-        * (lastSnapshot.value - firstSnapshot.value)) / gainHours;
+      const gainHour = (lastSnapshot.value - firstSnapshot.value) / gainHours;
       if (current) {
         this.messageValueService.currentPlayerGainSubject.next(gainHour);
       } else {
