@@ -218,6 +218,7 @@ export class IncomeService implements OnDestroy {
 
     const accountName = this.localPlayer.account;
     const league = this.localPlayer.character.league;
+    const tradeLeague = this.settingsService.get('account.tradeLeagueName');
 
     this.playerStashTabs = [];
     this.totalNetWorthItems = [];
@@ -249,7 +250,7 @@ export class IncomeService implements OnDestroy {
     }
 
     return Observable.forkJoin(
-      this.getPlayerPublicMaps(accountName, league, mapTab),
+      this.getPlayerPublicMaps(accountName, tradeLeague, mapTab),
       this.getPlayerStashTabs(accountName, league),
       this.pricingService.retrieveExternalPrices()
     ).do(() => {

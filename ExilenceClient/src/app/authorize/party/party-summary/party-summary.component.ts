@@ -8,6 +8,10 @@ import { PartyService } from '../../../shared/providers/party.service';
 import { SettingsService } from '../../../shared/providers/settings.service';
 import { InfoDialogComponent } from '../../components/info-dialog/info-dialog.component';
 import { NetworthTableComponent } from '../../components/networth-table/networth-table.component';
+import { AccountService } from '../../../shared/providers/account.service';
+import { AlertService } from '../../../shared/providers/alert.service';
+import { IncomeService } from '../../../shared/providers/income.service';
+import { Player } from '../../../shared/interfaces/player.interface';
 
 @Component({
   selector: 'app-party-summary',
@@ -25,15 +29,20 @@ export class PartySummaryComponent implements OnInit, OnDestroy {
   selectedIndex = 0;
   public graphDimensions = [950, 300];
   private partyGainSub: Subscription;
+  private player: Player;
   public partyGain = 0;
   private partySub: Subscription;
+  private playerSub: Subscription;
   public totalDifference = 0;
   constructor(
     @Inject(FormBuilder) fb: FormBuilder,
     public messageValueService: MessageValueService,
-    private settingsService: SettingsService,
     private dialog: MatDialog,
-    private partyService: PartyService
+    private partyService: PartyService,
+    private incomeService: IncomeService,
+    private accountService: AccountService,
+    private alertService: AlertService,
+    private settingsService: SettingsService
   ) {
     this.form = fb.group({
       searchText: [''],
@@ -43,6 +52,10 @@ export class PartySummaryComponent implements OnInit, OnDestroy {
 
     this.partyGainSub = this.messageValueService.partyGainSubject.subscribe(res => {
       this.partyGain = res;
+    });
+
+    this.playerSub = this.accountService.player.subscribe(res => {
+      this.player = res;
     });
 
     this.partySub = this.partyService.partyUpdated.subscribe(res => {
@@ -69,10 +82,28 @@ export class PartySummaryComponent implements OnInit, OnDestroy {
     if (this.partySub !== undefined) {
       this.partySub.unsubscribe();
     }
+    if (this.playerSub !== undefined) {
+      this.playerSub.unsubscribe();
+    }
   }
 
   updateDifference(event) {
     this.totalDifference = event;
+  }
+
+  resetNetWorth() {
+    const player = this.player;
+    if (player.account === this.partyService.currentPlayer.account) {
+      const emptyHistory = this.settingsService.deleteNetWorth();
+      player.netWorthSnapshots = emptyHistory.history;
+      this.incomeService.loadSnapshotsFromSettings();
+      this.accountService.player.next(player);
+      this.partyService.selectedPlayer.next(player);
+      this.partyService.updatePlayer(player);
+      setTimeout(() => {
+        this.alertService.showAlert({ message: 'Net worth history was cleared', action: 'OK' });
+      }, 2000);
+    }
   }
 
   toggleGainHours(event) {
