@@ -85,13 +85,10 @@ export class IncomeService implements OnDestroy {
     const oneDayAgo = (Date.now() - (24 * 60 * 60 * 1000));
     const twoWeeksAgo = (Date.now() - (1 * 60 * 60 * 24 * 14 * 1000));
 
+    this.netWorthHistory = this.settingsService.get('networth');
+    const selectedStashtabs = this.settingsService.get('selectedStashTabs');
 
-    const settings = this.settingsService.getAll();
-
-    this.netWorthHistory = settings.networth;
-    const selectedStashtabs = settings.selectedStashTabs;
-
-    this.sessionIdValid = settings.account.sessionIdValid;
+    this.sessionIdValid = this.settingsService.get('account.sessionIdValid');
     if (
       this.netWorthHistory.lastSnapshot < (Date.now() - this.threeMinutes) &&
       this.localPlayer !== undefined &&
@@ -224,9 +221,8 @@ export class IncomeService implements OnDestroy {
     this.totalNetWorthItems = [];
     this.totalNetWorth = 0;
 
-    const settings = this.settingsService.getAll();
 
-    const itemValueTresholdSetting = settings.itemValueTreshold;
+    const itemValueTresholdSetting = this.settingsService.get('itemValueTreshold');
     if (itemValueTresholdSetting !== undefined) {
       this.itemValueTreshold = itemValueTresholdSetting;
     } else {
@@ -234,7 +230,7 @@ export class IncomeService implements OnDestroy {
       this.settingsService.set('itemValueTreshold', 1);
     }
 
-    const characterPricing = settings.characterPricing;
+    const characterPricing = this.settingsService.get('characterPricing');
     if (characterPricing !== undefined) {
       this.characterPricing = characterPricing;
     } else {
@@ -242,7 +238,7 @@ export class IncomeService implements OnDestroy {
       this.settingsService.set('characterPricing', false);
     }
 
-    const selectedStashTabs: any[] = settings.selectedStashTabs;
+    const selectedStashTabs: any[] = this.settingsService.get('selectedStashTabs');
 
     let mapTab;
     if (selectedStashTabs !== undefined) {

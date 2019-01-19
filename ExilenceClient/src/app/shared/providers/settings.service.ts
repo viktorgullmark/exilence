@@ -2,8 +2,7 @@ import { Injectable } from '@angular/core';
 
 import { ElectronService } from './electron.service';
 import { LogService } from './log.service';
-const get = window.require('lodash/get');
-const isequal = window.require('lodash.isequal');
+const _ = window.require('lodash');
 
 
 @Injectable({
@@ -18,30 +17,22 @@ export class SettingsService {
   set(key: string, object: any) {
     try {
       this.electronService.settings.set(key, object);
+      _.set(this.settings, key, object);
     } catch (e) {
       this.logService.log(e);
     }
   }
   get(key: string) {
     try {
-      if (!this.settings) {
-        this.getAll();
-      }
-      const a = this.electronService.settings.get(key);
-      const b = get(this.settings, key);
-      if (!isequal(a, b)) {
-        console.log(a);
-        console.log(b);
-        console.log('error');
-      }
-      return get(this.settings, key);
+      this.cacheSettings();
+      return _.get(this.settings, key);
     } catch (e) {
       this.logService.log(e);
     }
   }
   getAll() {
     try {
-      this.settings = this.electronService.settings.getAll();
+      this.cacheSettings();
       return this.settings;
     } catch (e) {
       this.logService.log(e);
@@ -50,6 +41,7 @@ export class SettingsService {
   deleteAll() {
     try {
       this.electronService.settings.deleteAll();
+      this.settings = null;
     } catch (e) {
       this.logService.log(e);
     }
@@ -65,6 +57,7 @@ export class SettingsService {
     };
     try {
       this.electronService.settings.set('networth', netWorthHistory);
+      _.set(this.settings, 'networth', netWorthHistory);
     } catch (e) {
       this.logService.log(e);
     }
@@ -74,9 +67,15 @@ export class SettingsService {
     const areas = [];
     try {
       this.electronService.settings.set('areas', areas);
+      _.set(this.settings, 'areas', areas);
     } catch (e) {
       this.logService.log(e);
     }
     return areas;
+  }
+  private cacheSettings() {
+    if (!this.settings) {
+      this.settings = this.electronService.settings.getAll();
+    }
   }
 }

@@ -44,49 +44,45 @@ export class SettingsComponent implements OnInit, OnDestroy {
       searchText: ['']
     });
 
-  }
-
-  ngOnInit() {
-    const settings = this.settingsService.getAll();
-
     this.sessionId = this.sessionService.getSession();
-
-    this.sessionIdValid = settings.account.sessionIdValid;
+    this.sessionIdValid = this.settingsService.get('account.sessionIdValid');
     this.itemValueTreshold =
-      settings.itemValueTreshold !== undefined ? settings.itemValueTreshold : 1;
+      this.settingsService.get('itemValueTreshold') !== undefined ? this.settingsService.get('itemValueTreshold') : 1;
     this.gainHours =
-      settings.gainHours !== undefined ? settings.gainHours : 3;
+      this.settingsService.get('gainHours') !== undefined ? this.settingsService.get('gainHours') : 3;
     this.netWorthHistoryDays =
-      settings.netWorthHistoryDays !== undefined ? settings.netWorthHistoryDays : 14;
+      this.settingsService.get('netWorthHistoryDays') !== undefined ? this.settingsService.get('netWorthHistoryDays') : 14;
     if (!this.sessionIdValid || this.sessionId === '') {
       this.selectedIndex = 1;
     }
+  }
 
+  ngOnInit() {
     this.analyticsService.sendScreenview('/authorized/settings');
 
-    const onTopSetting = settings.alwaysOnTop;
+    const onTopSetting = this.settingsService.get('alwaysOnTop');
 
     if (onTopSetting !== undefined) {
       this.alwaysOnTop = onTopSetting;
     }
 
-    const isResizableSetting = settings.isResizable;
+    const isResizableSetting = this.settingsService.get('isResizable');
 
     if (isResizableSetting !== undefined) {
       this.isResizable = isResizableSetting;
     }
 
-    const hideTooltipsSetting = settings.hideTooltips;
+    const hideTooltipsSetting = this.settingsService.get('hideTooltips');
     if (hideTooltipsSetting !== undefined) {
       this.hideTooltips = hideTooltipsSetting;
     }
 
-    const lowConfidencePricingSetting = settings.lowConfidencePricing;
+    const lowConfidencePricingSetting = this.settingsService.get('lowConfidencePricing');
     if (lowConfidencePricingSetting !== undefined) {
       this.lowConfidencePricing = lowConfidencePricingSetting;
     }
 
-    const characterePricingSetting = settings.characterPricing;
+    const characterePricingSetting = this.settingsService.get('characterPricing');
     if (characterePricingSetting !== undefined) {
       this.characterPricing = characterePricingSetting;
     }
