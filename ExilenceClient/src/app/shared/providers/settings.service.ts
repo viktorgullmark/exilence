@@ -2,7 +2,9 @@ import { Injectable } from '@angular/core';
 
 import { ElectronService } from './electron.service';
 import { LogService } from './log.service';
-import { settings } from 'cluster';
+const get = window.require('lodash/get');
+const isequal = window.require('lodash.isequal');
+
 
 @Injectable({
   providedIn: 'root',
@@ -22,7 +24,17 @@ export class SettingsService {
   }
   get(key: string) {
     try {
-      return this.electronService.settings.get(key);
+      if (!this.settings) {
+        this.getAll();
+      }
+      const a = this.electronService.settings.get(key);
+      const b = get(this.settings, key);
+      if (!isequal(a, b)) {
+        console.log(a);
+        console.log(b);
+        console.log('error');
+      }
+      return get(this.settings, key);
     } catch (e) {
       this.logService.log(e);
     }
@@ -30,7 +42,7 @@ export class SettingsService {
   getAll() {
     try {
       this.settings = this.electronService.settings.getAll();
-      return settings;
+      return this.settings;
     } catch (e) {
       this.logService.log(e);
     }

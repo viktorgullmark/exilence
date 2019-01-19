@@ -46,6 +46,7 @@
     "electron-settings": "^3.2.0",
     "electron-updater": "^4.0.0",
     "export-to-csv": "^0.1.2",
+    "lodash": "4.17.11",
     "moment": "^2.22.2",
     "ngx-contextmenu": "^5.1.1",
     "poe-log-monitor": "github:viktorgullmark/poe-log-monitor",

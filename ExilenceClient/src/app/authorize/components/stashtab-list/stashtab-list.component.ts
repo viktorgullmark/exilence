@@ -43,7 +43,6 @@ export class StashtabListComponent implements OnInit, OnDestroy {
   }
 
   init() {
-    const settings = this.settingsService.getAll();
     const accountName = settings.account.accountName;
     const league = this.partyService.currentPlayer.character.league;
     let selectedStashTabs: any[] = settings.selectedStashTabs;
