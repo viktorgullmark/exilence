@@ -65,7 +65,6 @@ export class StashtabListComponent implements OnInit, OnDestroy {
               const shouldDeselectMaptab = fetchedMapStash !== undefined && t.position === fetchedMapStash.position && !t.isMapTab;
               if (r.position === t.position && !shouldDeselectMaptab) {
                 toggleableRows.push(r);
-                // this.toggle(this.selection, r);
               }
             });
           });
