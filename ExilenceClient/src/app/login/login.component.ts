@@ -22,6 +22,9 @@ import { SessionService } from '../shared/providers/session.service';
 import { SettingsService } from '../shared/providers/settings.service';
 
 
+const Sentry = window.require('@sentry/electron');
+
+
 @Component({
     selector: 'app-login',
     templateUrl: './login.component.html',
@@ -81,6 +84,10 @@ export class LoginComponent implements OnInit, OnDestroy {
         });
 
         this.fetchSettings();
+
+        Sentry.configureScope((scope) => {
+            scope.setUser({ 'username': this.accountName });
+        });
 
         this.accFormGroup = fb.group({
             accountName: [this.accountName !== undefined ? this.accountName : '', Validators.required]
