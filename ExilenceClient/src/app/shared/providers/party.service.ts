@@ -250,8 +250,7 @@ export class PartyService implements OnDestroy {
     if (pastHoursSnapshots.length > 1) {
       const lastSnapshot = pastHoursSnapshots[0];
       const firstSnapshot = pastHoursSnapshots[pastHoursSnapshots.length - 1];
-      const gainHour = (((1000 * 60 * 60)) / (lastSnapshot.timestamp - firstSnapshot.timestamp)
-        * (lastSnapshot.value - firstSnapshot.value)) / gainHours;
+      const gainHour = (lastSnapshot.value - firstSnapshot.value) / gainHours;
       this.partyGain = this.partyGain + gainHour;
     }
   }
@@ -266,8 +265,7 @@ export class PartyService implements OnDestroy {
     if (pastHoursSnapshots.length > 1) {
       const lastSnapshot = pastHoursSnapshots[0];
       const firstSnapshot = pastHoursSnapshots[pastHoursSnapshots.length - 1];
-      const gainHour = (((1000 * 60 * 60)) / (lastSnapshot.timestamp - firstSnapshot.timestamp)
-        * (lastSnapshot.value - firstSnapshot.value)) / gainHours;
+      const gainHour = (lastSnapshot.value - firstSnapshot.value) / gainHours;
       if (current) {
         this.messageValueService.currentPlayerGainSubject.next(gainHour);
       } else {
@@ -284,18 +282,21 @@ export class PartyService implements OnDestroy {
   }
 
   initHubConnection() {
-    this.logService.log('Starting signalr connection');
-    this._hubConnection.start().then(() => {
-      console.log('Successfully established signalr connection!');
-      if (this.party !== undefined && this.currentPlayer !== undefined && this.party.name !== '') {
-        this.joinParty(this.party.name, this.currentPlayer);
-      }
-      this.reconnectAttempts = 0;
-    }).catch((err) => {
-      Sentry.captureException(err);
-      this.logService.log('Could not connect to signalr');
-      this.reconnect();
-    });
+    // only initiate connection, when there is no connection running
+    if (this._hubConnection.state === 0) {
+      this.logService.log('Starting signalr connection');
+      this._hubConnection.start().then(() => {
+        console.log('Successfully established signalr connection!');
+        if (this.party !== undefined && this.currentPlayer !== undefined && this.party.name !== '') {
+          this.joinParty(this.party.name, this.currentPlayer);
+        }
+        this.reconnectAttempts = 0;
+      }).catch((err) => {
+        Sentry.captureException(err);
+        this.logService.log('Could not connect to signalr');
+        this.reconnect();
+      });
+    }
   }
 
   reconnect() {

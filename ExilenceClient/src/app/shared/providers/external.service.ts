@@ -11,7 +11,6 @@ import { Router } from '@angular/router';
 import RateLimiter from 'rxjs-ratelimiter';
 import { BehaviorSubject } from 'rxjs/internal/BehaviorSubject';
 import { Observable } from 'rxjs/Observable';
-
 import { AccountInfo } from '../interfaces/account-info.interface';
 import { EquipmentResponse } from '../interfaces/equipment-response.interface';
 import { Item } from '../interfaces/item.interface';
@@ -34,7 +33,9 @@ export class ExternalService {
 
   private TradeSearchRequestLimit = new RateLimiter(1, 1200);
   private TradeFetchRequestLimit = new RateLimiter(1, 600);
-  private StashTabRequestRateLimit = new RateLimiter(1, 100);
+
+  // combined ratelimiter for stash- and character-requests (singleton)
+  private RequestRateLimit = new RateLimiter(7, 10000);
 
   constructor(
     private http: HttpClient,
@@ -51,13 +52,14 @@ export class ExternalService {
   getCharacter(data: AccountInfo): Observable<any> {
     const parameters = `?accountName=${data.accountName}&character=${data.characterName}`;
 
-    return this.http.get('https://www.pathofexile.com/character-window/get-items' + parameters, { withCredentials: true }).catch(e => {
-      if (e.status !== 403 && e.status !== 404) {
-        this.logService.log('Could not character items, disconnecting!', null, true);
-        this.router.navigate(['/disconnected', true]);
-      }
-      return Observable.of(null);
-    });
+    return this.RequestRateLimit.limit
+      (this.http.get('https://www.pathofexile.com/character-window/get-items' + parameters, { withCredentials: true }).catch(e => {
+        if (e.status !== 403 && e.status !== 404) {
+          this.logService.log('Could not character items, disconnecting!', null, true);
+          this.router.navigate(['/disconnected', true]);
+        }
+        return Observable.of(null);
+      }));
   }
 
   getCharacterList(account: string, sessionId?: string) {
@@ -100,7 +102,7 @@ export class ExternalService {
   getStashTab(account: string, league: string, index: number): Observable<Stash> {
     this.analyticsService.sendEvent('income', `GET Stashtab`);
     const parameters = `?league=${league}&accountName=${account}&tabIndex=${index}&tabs=1`;
-    return this.StashTabRequestRateLimit.limit(
+    return this.RequestRateLimit.limit(
       this.http.get<Stash>('https://www.pathofexile.com/character-window/get-stash-items' + parameters))
       .retryWhen((error) => {
         return error.delay(1000).take(3);
@@ -115,7 +117,9 @@ export class ExternalService {
   }
 
   validateSessionId(sessionId: string, account: string, league: string, index: number) {
+    this.removeCookie();
     this.setCookie(sessionId);
+
     const parameters = `?league=${league}&accountName=${account}&tabIndex=${index}&tabs=1`;
     return this.http.get<Stash>('https://www.pathofexile.com/character-window/get-stash-items' + parameters)
       .catch(e => {
@@ -132,7 +136,8 @@ export class ExternalService {
 
   getAccountForCharacter(character: string) {
     const parameters = `?character=${encodeURIComponent(character)}`;
-    return this.http.get('https://www.pathofexile.com/character-window/get-account-name-by-character' + parameters);
+    return this.RequestRateLimit.limit
+      (this.http.get('https://www.pathofexile.com/character-window/get-account-name-by-character' + parameters));
   }
 
   FetchPublicMaps(subLines: any[], query: string) {
@@ -202,7 +207,6 @@ export class ExternalService {
   }
 
   setCookie(sessionId: string) {
-
     const cookie = {
       url: 'http://www.pathofexile.com',
       name: 'POESESSID',
@@ -212,17 +216,21 @@ export class ExternalService {
       secure: false,
       httpOnly: false,
       expirationDate: undefined
-    };
+    } as Electron.Details;
 
     this.electronService.remote.session.defaultSession.cookies.set(cookie, (error) => {
       if (error) {
-        this.logService.log('Could not set cookie', null, true);
+        this.logService.log('Could not set cookie', error, true);
       }
     });
   }
 
-  removeCookie(electronService, callback) {
-    electronService.remote.session.defaultSession.cookies.remove('http://www.pathofexile.com', 'POESESSID', callback);
+  removeCookie() {
+    this.electronService.remote.session.defaultSession.cookies.remove('http://www.pathofexile.com', 'POESESSID', (error) => {
+      if (error) {
+        this.logService.log('Could not set cookie', error, true);
+      }
+    });
   }
 
   setCharacter(data: EquipmentResponse, player: Player): Player {

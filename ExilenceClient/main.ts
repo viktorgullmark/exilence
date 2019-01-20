@@ -30,24 +30,6 @@ const windows: BrowserWindow[] = [];
 const args = process.argv.slice(1);
 const serve = args.some(val => val === '--serve');
 
-ipcMain.on('keybinds-update', function (event, binds) {
-  globalShortcut.unregisterAll();
-  globalShortcut.register('Command+Shift+I', () => {
-    windows[ExileWindowEnum.Main].openDevTools();
-  });
-  binds.forEach(bind => {
-    if (bind.enabled) {
-      globalShortcut.register(bind.keys, () => {
-        windows[ExileWindowEnum.Main].webContents.send('keybind', bind);
-      });
-    }
-  });
-});
-
-ipcMain.on('keybinds-unregister', function (event) {
-  globalShortcut.unregisterAll();
-});
-
 ipcMain.on('popout-window-update', (event, window: ExileWindowEvent) => {
   if (windows[window.event] && !windows[window.event].isDestroyed()) {
     windows[window.event].webContents.send('popout-window-update', window);

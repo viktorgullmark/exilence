@@ -197,7 +197,8 @@ export class IncomeService implements OnDestroy {
           gemLevel: itemPriceInfoObj.gemlevel,
           quality: itemPriceInfoObj.quality,
           variation: itemPriceInfoObj.variation,
-          frameType: itemPriceInfoObj.frameType
+          frameType: itemPriceInfoObj.frameType,
+          totalStacksize: itemPriceInfoObj.totalStacksize
         };
 
         if (netWorthItem.name.indexOf(' Map') === -1 || mapLayout || !mapTabSelected) {
@@ -215,6 +216,7 @@ export class IncomeService implements OnDestroy {
 
     const accountName = this.localPlayer.account;
     const league = this.localPlayer.character.league;
+    const tradeLeague = this.settingsService.get('account.tradeLeagueName');
 
     this.playerStashTabs = [];
     this.totalNetWorthItems = [];
@@ -244,7 +246,7 @@ export class IncomeService implements OnDestroy {
     }
 
     return Observable.forkJoin(
-      this.getPlayerPublicMaps(accountName, league, mapTab),
+      this.getPlayerPublicMaps(accountName, tradeLeague, mapTab),
       this.getPlayerStashTabs(accountName, league),
       this.pricingService.retrieveExternalPrices()
     ).do(() => {

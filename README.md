@@ -10,7 +10,13 @@ Download latest release at https://github.com/viktorgullmark/exilence/releases/l
 
 Report bugs at https://github.com/viktorgullmark/exilence/issues
 
-Communicate with us at our Discord https://discord.gg/ymr3VnA
+Communicate with us at our Discord https://discord.gg/4A5Bb7
+
+## Supporting us
+
+We want to deliver the best functionality and experience for you that we possibly can. We always strive to achieve this, both by development directly and with the help of powerful servers. Servers cost money, and your support helps us maintain these servers in the future as well as speed up the development process. 
+
+If you feel like chiming in with something, here's our Patreon: https://www.patreon.com/exilence
 
 ## Video-preview
 
@@ -41,17 +47,15 @@ Currently runs with:
 - SignalR (.NET Core) 1.1.0 w/ Redis caching
 - Angular v6.0.3
 - Angular-CLI v6.0.3
-- Electron v2.0.1
-- Electron Builder v20.13.4
-- Robot-JS v.2.0.0
+- Electron v4.0.1
+- Electron Builder v20.36.2
 
 ## Help with development
 
-If you want to help with development we gladly accept pull-requests. To set up the project, install the latest angular-cli and node version prior to 10. Exilence currently cannot run on node 10+ because of dependencies. See here for more information https://github.com/Robot/robot-js/issues/66. The following commands will help in setting up the client:
+If you want to help with development we gladly accept pull-requests. To set up the project, install the latest angular-cli and node version.
 
 ```
 npm install -g @angular/cli
-npm install -g --production windows-build-tools (needs to be run with administrator privileges using powershell)
 npm install
 npm run start (to serve the project)
 npm run electron:windows (optional, to build the installer for production)

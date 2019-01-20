@@ -2,7 +2,6 @@
 using Exilence.Interfaces;
 using Exilence.Models;
 using Exilence.Models.Ladder;
-using Microsoft.ApplicationInsights;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
@@ -17,7 +16,6 @@ namespace Exilence.Services
 {
     public class LadderService : ILadderService
     {
-        private TelemetryClient _telemetry;
         private IRedisRepository _redisRepository;
         private readonly IHostingEnvironment _env;
         private readonly ILogger<LadderService> _log;
@@ -30,7 +28,6 @@ namespace Exilence.Services
 
         public LadderService(
             IHostingEnvironment env,
-            TelemetryClient telemetry,
             ILogger<LadderService> log,
             IExternalService externalService,
             IRedisRepository redisRepository
@@ -38,7 +35,6 @@ namespace Exilence.Services
         {
             _log = log;
             _env = env;
-            _telemetry = telemetry;
             _externalService = externalService;
             _redisRepository = redisRepository;
         }

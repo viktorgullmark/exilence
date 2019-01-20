@@ -1,17 +1,17 @@
-import { Component, Inject, OnInit, ViewChild, OnDestroy } from '@angular/core';
+import { Component, Inject, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
+import { MatDialog, MatTabGroup } from '@angular/material';
+import { Subscription } from 'rxjs';
 
-import { AnalyticsService } from '../../../shared/providers/analytics.service';
 import { MessageValueService } from '../../../shared/providers/message-value.service';
 import { PartyService } from '../../../shared/providers/party.service';
-import { NetworthTableComponent } from '../../components/networth-table/networth-table.component';
-import { RobotService } from '../../../shared/providers/robot.service';
-import { KeybindService } from '../../../shared/providers/keybind.service';
 import { SettingsService } from '../../../shared/providers/settings.service';
-import { MatDialog, MatTabGroup } from '@angular/material';
 import { InfoDialogComponent } from '../../components/info-dialog/info-dialog.component';
+import { NetworthTableComponent } from '../../components/networth-table/networth-table.component';
 import { AccountService } from '../../../shared/providers/account.service';
-import { Subscription } from 'rxjs';
+import { AlertService } from '../../../shared/providers/alert.service';
+import { IncomeService } from '../../../shared/providers/income.service';
+import { Player } from '../../../shared/interfaces/player.interface';
 
 @Component({
   selector: 'app-party-summary',
@@ -28,29 +28,34 @@ export class PartySummaryComponent implements OnInit, OnDestroy {
   gainHours: number;
   selectedIndex = 0;
   public graphDimensions = [950, 300];
-  public reportKeybind: any;
   private partyGainSub: Subscription;
+  private player: Player;
   public partyGain = 0;
   private partySub: Subscription;
+  private playerSub: Subscription;
   public totalDifference = 0;
   constructor(
     @Inject(FormBuilder) fb: FormBuilder,
     public messageValueService: MessageValueService,
-    private robotService: RobotService,
-    private keybindService: KeybindService,
-    private settingsService: SettingsService,
     private dialog: MatDialog,
-    private partyService: PartyService
+    private partyService: PartyService,
+    private incomeService: IncomeService,
+    private accountService: AccountService,
+    private alertService: AlertService,
+    private settingsService: SettingsService
   ) {
     this.form = fb.group({
       searchText: [''],
       searchTextOverTime: ['']
     });
-    this.reportKeybind = this.keybindService.activeBinds.find(x => x.event === 'party-summary-networth');
     this.gainHours = this.settingsService.get('gainHours');
 
     this.partyGainSub = this.messageValueService.partyGainSubject.subscribe(res => {
       this.partyGain = res;
+    });
+
+    this.playerSub = this.accountService.player.subscribe(res => {
+      this.player = res;
     });
 
     this.partySub = this.partyService.partyUpdated.subscribe(res => {
@@ -77,10 +82,28 @@ export class PartySummaryComponent implements OnInit, OnDestroy {
     if (this.partySub !== undefined) {
       this.partySub.unsubscribe();
     }
+    if (this.playerSub !== undefined) {
+      this.playerSub.unsubscribe();
+    }
   }
 
   updateDifference(event) {
     this.totalDifference = event;
+  }
+
+  resetNetWorth() {
+    const player = this.player;
+    if (player.account === this.partyService.currentPlayer.account) {
+      const emptyHistory = this.settingsService.deleteNetWorth();
+      player.netWorthSnapshots = emptyHistory.history;
+      this.incomeService.loadSnapshotsFromSettings();
+      this.accountService.player.next(player);
+      this.partyService.selectedPlayer.next(player);
+      this.partyService.updatePlayer(player);
+      setTimeout(() => {
+        this.alertService.showAlert({ message: 'Net worth history was cleared', action: 'OK' });
+      }, 2000);
+    }
   }
 
   toggleGainHours(event) {
@@ -134,15 +157,6 @@ export class PartySummaryComponent implements OnInit, OnDestroy {
   searchOverTime() {
     if (this.overTimeTable !== undefined) {
       this.overTimeTable.doSearch(this.form.controls.searchTextOverTime.value);
-    }
-  }
-
-  report(toGame: boolean) {
-    this.messageValueService.updatePartyMsg();
-    if (toGame) {
-      this.robotService.sendTextToPathWindow(this.messageValueService.partyNetworthMsg, true);
-    } else {
-      this.robotService.setTextToClipboard(this.messageValueService.partyNetworthMsg);
     }
   }
 

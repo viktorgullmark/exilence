@@ -3,7 +3,6 @@ import { Subscription } from 'rxjs/internal/Subscription';
 
 import { Player } from '../../../../shared/interfaces/player.interface';
 import { PartyService } from '../../../../shared/providers/party.service';
-import { RobotService } from '../../../../shared/providers/robot.service';
 
 @Component({
   selector: 'app-player-badge',
@@ -18,7 +17,7 @@ export class PlayerBadgeComponent implements OnInit, OnDestroy {
   private selectedPlayerSub: Subscription;
   private selectedGenPlayerSub: Subscription;
 
-  constructor(private partyService: PartyService, private robotService: RobotService) { }
+  constructor(private partyService: PartyService) { }
 
   ngOnInit() {
     if (!this.localPlayer) {
@@ -39,10 +38,6 @@ export class PlayerBadgeComponent implements OnInit, OnDestroy {
     if (this.selectedGenPlayerSub !== undefined) {
       this.selectedGenPlayerSub.unsubscribe();
     }
-  }
-
-  invitePlayer(playerName: string) {
-    const result = this.robotService.sendTextToPathWindow(`/invite ${playerName}`, true);
   }
 
   selectPlayer() {

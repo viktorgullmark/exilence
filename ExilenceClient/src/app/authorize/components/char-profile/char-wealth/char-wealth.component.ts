@@ -12,10 +12,8 @@ import { AccountService } from '../../../../shared/providers/account.service';
 import { AlertService } from '../../../../shared/providers/alert.service';
 import { ElectronService } from '../../../../shared/providers/electron.service';
 import { IncomeService } from '../../../../shared/providers/income.service';
-import { KeybindService } from '../../../../shared/providers/keybind.service';
 import { MessageValueService } from '../../../../shared/providers/message-value.service';
 import { PartyService } from '../../../../shared/providers/party.service';
-import { RobotService } from '../../../../shared/providers/robot.service';
 import { SessionService } from '../../../../shared/providers/session.service';
 import { SettingsService } from '../../../../shared/providers/settings.service';
 import { InfoDialogComponent } from '../../info-dialog/info-dialog.component';
@@ -41,7 +39,6 @@ export class CharWealthComponent implements OnInit, OnDestroy {
   public sessionId: string;
   public sessionIdValid: boolean;
 
-  public reportKeybind: any;
   private selectedPlayerSub: Subscription;
 
   private currentPlayerGainSub: Subscription;
@@ -54,13 +51,11 @@ export class CharWealthComponent implements OnInit, OnDestroy {
     private electronService: ElectronService,
     private partyService: PartyService,
     private settingService: SettingsService,
-    private robotService: RobotService,
     private incomeService: IncomeService,
     private accountService: AccountService,
     public messageValueService: MessageValueService,
     private settingsService: SettingsService,
     private sessionService: SessionService,
-    private keybindService: KeybindService,
     private alertService: AlertService,
     private dialog: MatDialog
   ) {
@@ -91,7 +86,6 @@ export class CharWealthComponent implements OnInit, OnDestroy {
     this.sessionId = this.sessionService.getSession();
     this.sessionIdValid = this.settingsService.get('account.sessionIdValid');
     this.gainHours = this.settingService.get('gainHours');
-    this.reportKeybind = this.keybindService.activeBinds.find(x => x.event === 'party-personal-networth');
   }
 
   ngOnInit() {
@@ -185,15 +179,6 @@ export class CharWealthComponent implements OnInit, OnDestroy {
 
   showGraph() {
     this.isGraphHidden = false;
-  }
-
-  report(toGame: boolean) {
-    this.messageValueService.updateCurrentPlayerMsg();
-    if (toGame) {
-      this.robotService.sendTextToPathWindow(this.messageValueService.playerNetworthMsg, true);
-    } else {
-      this.robotService.setTextToClipboard(this.messageValueService.playerNetworthMsg);
-    }
   }
 
   loadPreviousSnapshot(event) {

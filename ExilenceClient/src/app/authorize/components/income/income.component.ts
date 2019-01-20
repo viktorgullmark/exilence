@@ -65,11 +65,16 @@ export class IncomeComponent implements OnInit, OnDestroy {
     } else {
       // party logic
       this.isSummary = true;
-      this.partyService.party.players.forEach(p => {
-        if (p.netWorthSnapshots !== null) {
-          this.updateGraph(p);
-        }
-      });
+      // update the graph every minute, to update labels
+      setInterval(() => {
+        this.dateData = [];
+        this.data = [];
+        this.partyService.party.players.forEach(p => {
+          if (p.netWorthSnapshots !== null) {
+            this.updateGraph(p);
+          }
+        });
+      }, 60 * 1000);
       this.partySubscription = this.partyService.partyUpdated.subscribe(party => {
         if (party !== undefined) {
           this.dateData = [];
@@ -106,21 +111,20 @@ export class IncomeComponent implements OnInit, OnDestroy {
   updateGraph(player: Player) {
     const playerObj = Object.assign({}, player);
 
-    if (this.isSummary) {
-      let netWorthHistoryDays = this.settingService.get('netWorthHistoryDays');
-      if (netWorthHistoryDays === undefined) {
-        netWorthHistoryDays = 14;
-        this.settingService.set('netWorthHistoryDays', netWorthHistoryDays);
-      }
-      const daysAgo = (Date.now() - (netWorthHistoryDays * 24 * 60 * 60 * 1000));
-      playerObj.netWorthSnapshots = playerObj.netWorthSnapshots.filter(x => x.timestamp > daysAgo);
-      if (playerObj.netWorthSnapshots.length === 0) {
-        playerObj.netWorthSnapshots = [{
-          timestamp: 0,
-          value: 0,
-          items: []
-        }];
-      }
+
+    let netWorthHistoryDays = this.settingService.get('netWorthHistoryDays');
+    if (netWorthHistoryDays === undefined) {
+      netWorthHistoryDays = 14;
+      this.settingService.set('netWorthHistoryDays', netWorthHistoryDays);
+    }
+    const daysAgo = (Date.now() - (netWorthHistoryDays * 24 * 60 * 60 * 1000));
+    playerObj.netWorthSnapshots = playerObj.netWorthSnapshots.filter(x => x.timestamp > daysAgo);
+    if (playerObj.netWorthSnapshots.length === 0) {
+      playerObj.netWorthSnapshots = [{
+        timestamp: 0,
+        value: 0,
+        items: []
+      }];
     }
 
     const entry: ChartSeries = {

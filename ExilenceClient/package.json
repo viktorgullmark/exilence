@@ -1,6 +1,6 @@
 {
   "name": "exilence",
-  "version": "0.9.7",
+  "version": "0.9.12",
   "author": {
     "name": "Viktor Gullmark",
     "email": "viktor.gullmark@hotmail.com"
@@ -22,8 +22,7 @@
     "url": "https://github.com/viktorgullmark/exilence.git"
   },
   "scripts": {
-    "rebuild": "electron-rebuild -f -w robot-js",
-    "postinstall": "node patch.js && npx electron-builder install-app-deps && npm run rebuild",
+    "postinstall": "node patch.js && npx electron-builder install-app-deps",
     "ng": "ng",
     "start": "npm-run-all -p ng:serve electron:serve",
     "build": "npm run electron:tsc && ng build",
@@ -34,8 +33,8 @@
     "electron:serve": "wait-on http-get://localhost:4200/ && npm run electron:tsc && electron . --serve",
     "electron:local": "npm run build:prod && electron .",
     "electron:linux": "npm run build:prod && npx electron-builder build --linux",
-    "electron:windows": "npm run rebuild && npm run build:prod && npx electron-builder build --windows",
-    "release": "npm run rebuild && npm run build:prod && npx electron-builder build --windows",
+    "electron:windows": "npm run build:prod && npx electron-builder build --windows",
+    "release": "npm run build:prod && npx electron-builder build --windows",
     "electron:mac": "npm run build:prod && npx electron-builder build --mac",
     "test": "ng test",
     "e2e": "ng e2e"
@@ -46,14 +45,11 @@
     "d3": "^5.5.0",
     "electron-log": "1.3.0",
     "electron-settings": "^3.2.0",
-    "electron-updater": "2.21.4",
+    "electron-updater": "^4.0.0",
     "export-to-csv": "^0.1.2",
-    "ffi": "^2.2.0",
     "moment": "^2.22.2",
     "ngx-contextmenu": "^5.1.1",
-    "node-key-sender": "github:viktorgullmark/node-key-sender",
     "poe-log-monitor": "github:viktorgullmark/poe-log-monitor",
-    "robot-js": "^2.0.0",
     "rxjs-ratelimiter": "^1.0.1",
     "universal-analytics": "^0.4.20"
   },
@@ -82,10 +78,10 @@
     "@types/node": "8.9.4",
     "codelyzer": "4.2.1",
     "core-js": "2.5.6",
-    "electron": "2.0.2",
-    "electron-builder": "20.8.2",
-    "electron-rebuild": "^1.8.1",
-    "electron-reload": "1.2.2",
+    "electron": "4.0.1",
+    "electron-builder": "20.36.2",
+    "electron-reload": "1.3.0",
+    "electron-rebuild": "1.8.2",
     "hammerjs": "^2.0.8",
     "jasmine-core": "3.1.0",
     "jasmine-spec-reporter": "4.2.1",

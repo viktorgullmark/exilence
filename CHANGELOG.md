@@ -1,7 +1,30 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
-## [0.9.8] - 2019-XX-XX
+## [0.9.13] - 2019-XX-XX
+- Reworked how gain per hour is calculated
+
+## [0.9.12] - 2019-01-17
+- Fixed Discord-links
+- Fixed a bug where SSF players could not use the maptab
+- Added a button for clearing net worth history in the summary-tab
+
+## [0.9.11] - 2019-01-17
+- Fixed a bug where sessionId could not be validated
+- Fixed a bug where endless reconnection loops could occurr
+- Added a combined ratelimiter for characters and stashtabs (should reduce the amount of disconnects)
+
+## [0.9.10] - 2019-01-16
+- Fixed a bug where group-summary graph was hiding some players
+
+## [0.9.9] - 2019-01-16
+- Updated Electron framework to improve performance (now runs on a newer Chromium version)
+- Now shows max-size for for divination card stacks, to easier see how many stacks you've got
+- Fixed a bug where the time since last snapshot wasn't shown correctly on labels in the graph
+- Removed functionality for sending messages to increase stability
+- Removed old dependencies
+
+## [0.9.8] - 2019-01-15
 - Added a setting for chosing how many days to track net worth history for
 - Reworked how connections are initiated on the server
 - Fixed a bug where flasks weren't properly displayed when in inventory
