@@ -18,23 +18,9 @@
     </div>
     <h3 class="mat-h3">Changes included in version {{appVersion}}</h3>
     <ul>
-        <li>Added support to price the maptab (requires it to be public)</li>
-        <li>Added column for gem-level in the net worth table</li>
-        <li>Added tooltip to value in networth table to display more detailed data such as average, mode and mean</li>
-        <li>Added colors to names for items in the net worth table, based on rarity</li>
-        <li>Added file-output for gain and networth values, making it available for import in OBS</li>
-        <li>Fixed a bug where maps in regular tabs werent included in the pricing</li>
-        <li>Fixed a bug where the gain-table didn't display new items, only the difference between current ones</li>
-        <li>Fixed a bug where the gain-table didn't display removed items properly</li>
-        <li>Fixed a bug where items of zero value would sometimes be included in pricing</li>
-        <li>Now starts pricing every three minutes, down from five, to counter increased snapshot-times with the maptab</li>
-        <li>Now displays a loading-bar when entering party</li>
-        <li>Reworked dashboard (removed old sections and added changelog for current version)</li>
-        <li>Reworked how masking works, now always masks the first group if the setting is enabled</li>
-        <li>Updated the FAQ-page</li>
-        <li>Updated SignalR package</li>
-        <li>Removed negotiate-step for websockets, now connects directly instead</li>
-        <li>Minor style tweaks to net worth table</li>
+        <li>Reworked how gain per hour is calculated</li>
+        <li>Added a dialog for resolving errors related to fetching the character-list</li>
+        <li>Minor text-changes</li>
     </ul>
     <p class="mat-body-1">
         To see the full changelog, please go to <a class="inline-link" (click)="openLink('https://github.com/viktorgullmark/exilence/blob/master/CHANGELOG.md')">this

@@ -20,6 +20,8 @@ import { LogMonitorService } from '../shared/providers/log-monitor.service';
 import { MapService } from '../shared/providers/map.service';
 import { SessionService } from '../shared/providers/session.service';
 import { SettingsService } from '../shared/providers/settings.service';
+import { ErrorMessage } from '../shared/interfaces/error-message.interface';
+import { ServerMessageDialogComponent } from '../authorize/components/server-message-dialog/server-message-dialog.component';
 
 @Component({
     selector: 'app-login',
@@ -285,6 +287,21 @@ export class LoginComponent implements OnInit, OnDestroy {
         }
     }
 
+    openErrorMsgDialog(data: ErrorMessage): void {
+        setTimeout(() => {
+            const dialogRef = this.dialog.open(ServerMessageDialogComponent, {
+                width: '850px',
+                data: {
+                    icon: 'error',
+                    title: data.title,
+                    content: data.body
+                }
+            });
+            dialogRef.afterClosed().subscribe(result => {
+            });
+        }, 0);
+    }
+
     getCharacterList(accountName?: string, skipStep?: boolean) {
         this.isFetching = true;
         const sessId = this.sessFormGroup.controls.sessionId.value;
@@ -292,21 +309,34 @@ export class LoginComponent implements OnInit, OnDestroy {
         this.externalService.getCharacterList(accountName !== undefined ? accountName : this.accFormGroup.controls.accountName.value,
             (sessId !== undefined && sessId !== '') ? sessId : undefined)
             .subscribe((res: Character[]) => {
-                const charactersByLeague = res.filter(x => x.league === this.leagueFormGroup.controls.leagueName.value);
-                this.accountService.characterList.next(charactersByLeague);
                 this.fetched = true;
 
-                if (this.characterList.find(x => x.name === this.characterName) === undefined) {
-                    this.charFormGroup.controls.characterName.setValue('');
-                }
-                if (skipStep) {
-                    setTimeout(() => {
-                        this.stepper.selectedIndex = 3;
-                    }, 250);
-                }
-                setTimeout(() => {
+                if (res === null) {
+                    this.openErrorMsgDialog({
+                        title: 'Could not fetch characters',
+                        // tslint:disable-next-line:max-line-length
+                        body: 'Character-list could not be fetched. This is most likely caused from your character-list being hidden.<br/><br/>' +
+                        'To resolve this, uncheck "Hide Characters tab" in the privacy-settings over at pathofexile.com<br/><br/>' +
+                        'If it still does not work, fetch a new session ID and update it in the login-settings.'
+                    } as ErrorMessage);
                     this.isFetching = false;
-                }, 500);
+                } else {
+
+                    const charactersByLeague = res.filter(x => x.league === this.leagueFormGroup.controls.leagueName.value);
+                    this.accountService.characterList.next(charactersByLeague);
+
+                    if (this.characterList.find(x => x.name === this.characterName) === undefined) {
+                        this.charFormGroup.controls.characterName.setValue('');
+                    }
+                    if (skipStep) {
+                        setTimeout(() => {
+                            this.stepper.selectedIndex = 3;
+                        }, 250);
+                    }
+                    setTimeout(() => {
+                        this.isFetching = false;
+                    }, 500);
+                }
             },
                 error => {
                     this.accountService.characterList.next([]);
