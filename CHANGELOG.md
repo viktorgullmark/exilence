@@ -1,7 +1,7 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
-## [0.9.13] - 2019-XX-XX
+## [0.9.13] - 2019-01-21
 - Reworked how gain per hour is calculated
 - Settings are now cached, to improve the performance of Exilence
 - Added a dialog for resolving errors related to fetching the character-list
