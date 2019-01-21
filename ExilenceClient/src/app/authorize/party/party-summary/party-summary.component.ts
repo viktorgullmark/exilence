@@ -12,6 +12,7 @@ import { AccountService } from '../../../shared/providers/account.service';
 import { AlertService } from '../../../shared/providers/alert.service';
 import { IncomeService } from '../../../shared/providers/income.service';
 import { Player } from '../../../shared/interfaces/player.interface';
+import { Party } from '../../../shared/interfaces/party.interface';
 
 @Component({
   selector: 'app-party-summary',
@@ -29,7 +30,9 @@ export class PartySummaryComponent implements OnInit, OnDestroy {
   selectedIndex = 0;
   public graphDimensions = [950, 300];
   private partyGainSub: Subscription;
+  public selectedFilterValue = '0';
   private player: Player;
+  public party: Party;
   public partyGain = 0;
   private partySub: Subscription;
   private playerSub: Subscription;
@@ -60,6 +63,7 @@ export class PartySummaryComponent implements OnInit, OnDestroy {
 
     this.partySub = this.partyService.partyUpdated.subscribe(res => {
       if (res !== undefined) {
+        this.party = res;
         let networth = 0;
         this.messageValueService.partyGainSubject.next(0);
         this.partyService.updatePartyGain(this.partyService.party.players);
@@ -85,6 +89,28 @@ export class PartySummaryComponent implements OnInit, OnDestroy {
     if (this.playerSub !== undefined) {
       this.playerSub.unsubscribe();
     }
+  }
+
+  selectPlayer(filterValue) {
+    this.selectedFilterValue = filterValue;
+    const foundPlayer = this.party.players.find(x => x.character.name === filterValue);
+
+    // update tables with new value
+    this.table.dataSource = [];
+    if (foundPlayer !== undefined) {
+      this.table.loadPlayerData(foundPlayer);
+      this.overTimeTable.loadPlayerData(foundPlayer);
+    } else {
+      this.party.players.forEach(p => {
+        if (p.netWorthSnapshots !== null) {
+          this.table.loadPlayerData(p);
+          this.overTimeTable.loadPlayerData(p);
+        }
+      });
+    }
+
+    this.table.filter();
+    this.overTimeTable.filter();
   }
 
   updateDifference(event) {

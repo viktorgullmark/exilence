@@ -16,6 +16,7 @@ export class NetworthTableComponent implements OnInit, OnDestroy {
   @Input() player: Player;
   @Input() multiple = false;
   @Input() showOverTime = false;
+  @Input() selectedFilterValue = '0';
   @Output() differenceChanged: EventEmitter<any> = new EventEmitter;
   displayedColumns: string[] = ['position', 'name', 'links', 'quality', 'gemLevel', 'corrupted', 'stacksize', 'valuePerUnit', 'value'];
   dataSource = [];
@@ -50,11 +51,16 @@ export class NetworthTableComponent implements OnInit, OnDestroy {
       this.partySub = this.partyService.partyUpdated.subscribe(party => {
         if (party !== undefined) {
           this.dataSource = [];
-          party.players.forEach(p => {
-            if (p.netWorthSnapshots !== null) {
-              this.loadPlayerData(p);
-            }
-          });
+          const foundPlayer = party.players.find(x => x.character.name === this.selectedFilterValue);
+          if (this.selectedFilterValue !== '0' && foundPlayer !== undefined) {
+            this.loadPlayerData(foundPlayer);
+          } else {
+            party.players.forEach(p => {
+              if (p.netWorthSnapshots !== null) {
+                this.loadPlayerData(p);
+              }
+            });
+          }
           this.filter();
         }
       });
