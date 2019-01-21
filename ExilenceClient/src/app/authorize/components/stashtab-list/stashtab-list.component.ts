@@ -59,14 +59,16 @@ export class StashtabListComponent implements OnInit, OnDestroy {
           });
 
           const fetchedMapStash = this.dataSource.find(x => x.isMapTab);
+          const toggleableRows = [];
           this.dataSource.forEach(r => {
             selectedStashTabs.forEach(t => {
               const shouldDeselectMaptab = fetchedMapStash !== undefined && t.position === fetchedMapStash.position && !t.isMapTab;
               if (r.position === t.position && !shouldDeselectMaptab) {
-                this.toggle(this.selection, r);
+                toggleableRows.push(r);
               }
             });
           });
+          this.toggleAll(this.selection, toggleableRows);
 
           this.filter();
         }
@@ -113,11 +115,13 @@ export class StashtabListComponent implements OnInit, OnDestroy {
     if (row.isMapTab && !mapTabSelected) {
       this.openMaptabDialog();
     }
-    this.toggle(selection, row);
+    this.toggleAll(selection, [row]);
   }
 
-  toggle(selection, row) {
-    this.selection.toggle(row);
+  toggleAll(selection, rows) {
+    for (const row of rows) {
+      this.selection.toggle(row);
+    }
     this.settingsService.set('selectedStashTabs', selection.selected);
   }
 

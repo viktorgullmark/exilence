@@ -83,7 +83,6 @@ export class IncomeService implements OnDestroy {
 
   Snapshot() {
     const oneDayAgo = (Date.now() - (24 * 60 * 60 * 1000));
-
     const twoWeeksAgo = (Date.now() - (1 * 60 * 60 * 24 * 14 * 1000));
 
     this.netWorthHistory = this.settingsService.get('networth');
@@ -221,6 +220,7 @@ export class IncomeService implements OnDestroy {
     this.playerStashTabs = [];
     this.totalNetWorthItems = [];
     this.totalNetWorth = 0;
+
 
     const itemValueTresholdSetting = this.settingsService.get('itemValueTreshold');
     if (itemValueTresholdSetting !== undefined) {

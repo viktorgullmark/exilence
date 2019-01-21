@@ -2,9 +2,14 @@ import { Injectable } from '@angular/core';
 
 import { ElectronService } from './electron.service';
 import { LogService } from './log.service';
+const _ = window.require('lodash');
 
-@Injectable()
+
+@Injectable({
+  providedIn: 'root',
+})
 export class SettingsService {
+  settings = null;
   isChangingStash = false;
   constructor(private electronService: ElectronService, private logService: LogService) {
   }
@@ -12,13 +17,23 @@ export class SettingsService {
   set(key: string, object: any) {
     try {
       this.electronService.settings.set(key, object);
+      _.set(this.settings, key, object);
     } catch (e) {
       this.logService.log(e);
     }
   }
   get(key: string) {
     try {
-      return this.electronService.settings.get(key);
+      this.cacheSettings();
+      return _.get(this.settings, key);
+    } catch (e) {
+      this.logService.log(e);
+    }
+  }
+  getAll() {
+    try {
+      this.cacheSettings();
+      return this.settings;
     } catch (e) {
       this.logService.log(e);
     }
@@ -26,6 +41,7 @@ export class SettingsService {
   deleteAll() {
     try {
       this.electronService.settings.deleteAll();
+      this.settings = null;
     } catch (e) {
       this.logService.log(e);
     }
@@ -41,6 +57,7 @@ export class SettingsService {
     };
     try {
       this.electronService.settings.set('networth', netWorthHistory);
+      _.set(this.settings, 'networth', netWorthHistory);
     } catch (e) {
       this.logService.log(e);
     }
@@ -50,9 +67,15 @@ export class SettingsService {
     const areas = [];
     try {
       this.electronService.settings.set('areas', areas);
+      _.set(this.settings, 'areas', areas);
     } catch (e) {
       this.logService.log(e);
     }
     return areas;
+  }
+  private cacheSettings() {
+    if (!this.settings) {
+      this.settings = this.electronService.settings.getAll();
+    }
   }
 }
