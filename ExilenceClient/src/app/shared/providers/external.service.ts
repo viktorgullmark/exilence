@@ -32,7 +32,7 @@ export class ExternalService {
   public tradeLeagueChanged = false;
 
   private TradeSearchRequestLimit = new RateLimiter(1, 1200);
-  private TradeFetchRequestLimit = new RateLimiter(1, 600);
+  private TradeFetchRequestLimit = new RateLimiter(1, 1500);
 
   // combined ratelimiter for stash- and character-requests (singleton)
   private RequestRateLimit = new RateLimiter(7, 10000);

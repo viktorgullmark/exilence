@@ -11,6 +11,8 @@ import { ClearHistoryDialogModule } from '../shared/components/clear-history-dia
 import { ClearHistoryDialogComponent } from '../shared/components/clear-history-dialog/clear-history-dialog.component';
 import { InfoDialogComponent } from '../authorize/components/info-dialog/info-dialog.component';
 import { InfoDialogModule } from '../authorize/components/info-dialog/info-dialog.module';
+import { ErrorMessageDialogComponent } from '../authorize/components/error-message-dialog/error-message-dialog.component';
+import { ErrorMessageDialogModule } from '../authorize/components/error-message-dialog/error-message-dialog.module';
 
 @NgModule({
   imports: [
@@ -29,10 +31,11 @@ import { InfoDialogModule } from '../authorize/components/info-dialog/info-dialo
     MatProgressBarModule,
     InfoDialogModule,
     ClearHistoryDialogModule,
+    ErrorMessageDialogModule,
     MatDividerModule,
     MatGridListModule
   ],
   declarations: [LoginComponent],
-  entryComponents: [ClearHistoryDialogComponent, InfoDialogComponent]
+  entryComponents: [ClearHistoryDialogComponent, ErrorMessageDialogComponent, InfoDialogComponent]
 })
 export class LoginModule { }

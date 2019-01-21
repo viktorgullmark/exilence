@@ -1,0 +1,7 @@
+<h1 mat-dialog-title><mat-icon class="dialog-icon-right" *ngIf="data.icon">{{data.icon}}</mat-icon>{{data.title}}</h1>
+<div mat-dialog-content>
+  <p [innerHtml]="data.content"></p>
+</div>
+<div mat-dialog-actions class="button-area">
+  <button mat-raised-button color="primary" [mat-dialog-close]="data.title" cdkFocusInitial>Ok</button>
+</div>
