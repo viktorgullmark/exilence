@@ -4,6 +4,7 @@ All notable changes to this project will be documented in this file.
 ## [0.9.13] - 2019-XX-XX
 - Reworked how gain per hour is calculated
 - Added a dialog for resolving errors related to fetching the character-list
+- Updated text in maptab info-dialog
 - Minor text-changes
 
 ## [0.9.12] - 2019-01-17
