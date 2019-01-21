@@ -54,6 +54,7 @@ export class WatchService {
           item.quality = item.quality || 0;
           item.frame = item.frame || 0;
           item.variation = item.variation || undefined;
+          item.corrupted = item.corrupted || undefined;
           if (item.variation) {
             item.variation = item.variation.charAt(0).toUpperCase() + item.variation.slice(1);
             if (item.variation.indexOf('socket') > -1) {

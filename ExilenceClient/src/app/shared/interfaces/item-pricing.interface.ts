@@ -14,6 +14,7 @@ export interface ItemPricing {
     frameType: number;
     quantity: number;
     totalStacksize: number;
+    corrupted: boolean;
 }
 
 export interface SimpleItemPricing {

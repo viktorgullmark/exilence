@@ -67,6 +67,8 @@ export class PricingService {
     itemPricingObj.frameType = item.frameType;
     itemPricingObj.totalStacksize = item.stackSize;
 
+    itemPricingObj.corrupted = item.corrupted || false;
+
     // assign if elder or shaper
     let elderOrShaper = null;
     if (item.elder) { elderOrShaper = 'elder'; }
@@ -123,7 +125,7 @@ export class PricingService {
         }
         break;
       case 3: // Unique
-        price = this.pricecheckUnique(itemPricingObj.name, links, item.name, variation);
+        price = this.pricecheckUnique(itemPricingObj.name, links, item.name, variation, itemPricingObj.corrupted);
         break;
       case 4: // Gem
         const levelStr = item.properties.find(t => t.name === 'Level').values[0][0];
@@ -135,7 +137,7 @@ export class PricingService {
         itemPricingObj.gemlevel = level;
         if (itemPricingObj.quality < 20 && itemPricingObj.quality > 0) { itemPricingObj.quality = 0; }
 
-        price = this.pricecheckGem(itemPricingObj.name, itemPricingObj.gemlevel, itemPricingObj.quality);
+        price = this.pricecheckGem(itemPricingObj.name, itemPricingObj.gemlevel, itemPricingObj.quality, itemPricingObj.corrupted);
         break;
       case 5: // Currency
         price = this.pricecheckByName(itemPricingObj.name);
@@ -209,7 +211,7 @@ export class PricingService {
     }
     return stacksize;
   }
-  pricecheckUnique(name: string, links: number, uniquename: string, variation: string = ''): SimpleItemPricing {
+  pricecheckUnique(name: string, links: number, uniquename: string, variation: string = '', corrupted: boolean): SimpleItemPricing {
     if (uniquename === '' || uniquename === undefined || uniquename === null) { // ignore unidentified uniques
       return {
         chaosequiv: 0,
@@ -225,12 +227,14 @@ export class PricingService {
       x.name === name &&
       x.links === links &&
       x.frameType === 3 &&
+      x.corrupted === corrupted &&
       (x.variation === variation || x.variation === undefined || x.variation === null)
     );
     const watchPriceInfoItem = this.watchService.watchPrices.find(x =>
       x.fullname === name &&
       x.links === links &&
       x.frame === 3 &&
+      x.corrupted === corrupted &&
       (x.variation === variation || x.variation === undefined || x.variation === null)
     );
     return this.combinePricesToSimpleObject(ninjaPriceInfoItem, watchPriceInfoItem);
@@ -247,9 +251,15 @@ export class PricingService {
       quantity: 0
     };
   }
-  pricecheckGem(name: string, level: number, quality: number): SimpleItemPricing {
-    const ninjaPriceInfoItem = this.ninjaService.ninjaPrices.find(x => x.name === name && x.gemLevel === level && x.gemQuality === quality);
-    const watchPriceInfoItem = this.watchService.watchPrices.find(x => x.fullname === name && x.lvl === level && x.quality === quality);
+  pricecheckGem(name: string, level: number, quality: number, corrupted: boolean): SimpleItemPricing {
+    const ninjaPriceInfoItem = this.ninjaService.ninjaPrices.find(x => x.name === name
+      && x.gemLevel === level
+      && x.corrupted === corrupted
+      && x.gemQuality === quality);
+    const watchPriceInfoItem = this.watchService.watchPrices.find(x => x.fullname === name
+      && x.lvl === level
+      && x.corrupted === corrupted
+      && x.quality === quality);
     return this.combinePricesToSimpleObject(ninjaPriceInfoItem, watchPriceInfoItem);
   }
   pricecheckBase(baseType: string, ilvl: number = 0, variation: string = null): SimpleItemPricing {

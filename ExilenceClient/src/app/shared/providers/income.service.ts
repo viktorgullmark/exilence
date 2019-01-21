@@ -197,6 +197,7 @@ export class IncomeService implements OnDestroy {
           quality: itemPriceInfoObj.quality,
           variation: itemPriceInfoObj.variation,
           frameType: itemPriceInfoObj.frameType,
+          corrupted: itemPriceInfoObj.corrupted,
           totalStacksize: itemPriceInfoObj.totalStacksize
         };
 

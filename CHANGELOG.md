@@ -1,6 +1,9 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [0.9.14] - 2019-XX-XX
+- Added support for pricing corrupted items (uniques and gems)
+
 ## [0.9.13] - 2019-01-21
 - Reworked how gain per hour is calculated
 - Settings are now cached, to improve the performance of Exilence

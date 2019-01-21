@@ -17,7 +17,7 @@ export class NetworthTableComponent implements OnInit, OnDestroy {
   @Input() multiple = false;
   @Input() showOverTime = false;
   @Output() differenceChanged: EventEmitter<any> = new EventEmitter;
-  displayedColumns: string[] = ['position', 'name', 'links', 'quality', 'gemLevel', 'stacksize', 'valuePerUnit', 'value'];
+  displayedColumns: string[] = ['position', 'name', 'links', 'quality', 'gemLevel', 'corrupted', 'stacksize', 'valuePerUnit', 'value'];
   dataSource = [];
   searchText = '';
   filteredArr = [];
@@ -136,6 +136,7 @@ export class NetworthTableComponent implements OnInit, OnDestroy {
           && y.links === x.links
           && y.gemLevel === x.gemLevel
           && y.variation === x.variation
+          && y.corrupted === x.corrupted
           && y.frameType === x.frameType)
           === undefined);
         const changedItems = lastSnapshot.items.filter(x =>
@@ -144,6 +145,7 @@ export class NetworthTableComponent implements OnInit, OnDestroy {
             && y.quality === x.quality
             && y.links === x.links
             && y.gemLevel === x.gemLevel
+            && y.corrupted === x.corrupted
             && y.variation === x.variation
             && y.frameType === x.frameType
           ) !== undefined
@@ -154,6 +156,7 @@ export class NetworthTableComponent implements OnInit, OnDestroy {
             && y.quality === x.quality
             && y.links === x.links
             && y.gemLevel === x.gemLevel
+            && y.corrupted === x.corrupted
             && y.variation === x.variation
             && y.frameType === x.frameType
           ) === undefined
@@ -167,6 +170,7 @@ export class NetworthTableComponent implements OnInit, OnDestroy {
             && x.quality === item.quality
             && x.links === item.links
             && x.gemLevel === item.gemLevel
+            && x.corrupted === item.corrupted
             && x.variation === item.variation
             && x.frameType === item.frameType
           );
@@ -192,6 +196,7 @@ export class NetworthTableComponent implements OnInit, OnDestroy {
             && x.quality === item.quality
             && x.links === item.links
             && x.gemLevel === item.gemLevel
+            && x.corrupted === item.corrupted
             && x.variation === item.variation
             && x.frameType === item.frameType
           );
@@ -233,6 +238,7 @@ export class NetworthTableComponent implements OnInit, OnDestroy {
         && x.quality === snapshot.quality
         && x.links === snapshot.links
         && x.gemLevel === snapshot.gemLevel
+        && x.corrupted === snapshot.corrupted
         && x.variation === snapshot.variation
         && x.frameType === snapshot.frameType
       );
@@ -268,7 +274,8 @@ export class NetworthTableComponent implements OnInit, OnDestroy {
           quality: snapshot.quality,
           holdingPlayers: [playerName],
           frameType: snapshot.frameType,
-          totalStacksize: snapshot.totalStacksize
+          totalStacksize: snapshot.totalStacksize,
+          corrupted: snapshot.corrupted
         };
         if (snapshot.value !== 0 && snapshot.stacksize !== 0) {
           this.dataSource.push(newObj);
@@ -284,6 +291,7 @@ export class NetworthTableComponent implements OnInit, OnDestroy {
         && x.quality === snapshot.quality
         && x.links === snapshot.links
         && x.gemLevel === snapshot.gemLevel
+        && x.corrupted === snapshot.corrupted
         && x.variation === snapshot.variation
         && x.frameType === snapshot.frameType
       );
@@ -310,6 +318,7 @@ export class NetworthTableComponent implements OnInit, OnDestroy {
           value_median: snapshot.value_median,
           value_average: snapshot.value_average,
           variation: snapshot.variation,
+          corrupted: snapshot.corrupted,
           valuePerUnit: snapshot.valuePerUnit,
           gemLevel: snapshot.gemLevel,
           icon: this.getIconLink(snapshot),
