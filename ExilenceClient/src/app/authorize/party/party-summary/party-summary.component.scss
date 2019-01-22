@@ -3,9 +3,13 @@
 .party-summary {
     height: $content-height;
 
-    .player-dropdown {
+    mat-form-field {
+        max-width: 100% !important;
+    }
+
+    .export-area {
         float: right;
-        bottom: -10px;
+        margin-top: 15px;
         padding-left: 20px;
     }
 
@@ -43,7 +47,8 @@
 
         .networth-wrapper {
             float: left;
-            width: 20%;
+            width: 15%;
+            margin-right: 15px;
 
             .title {
                 font-size: 14px;

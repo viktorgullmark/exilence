@@ -85,7 +85,7 @@ export class IncomeComponent implements OnInit, OnDestroy {
         }
       }, 60 * 1000);
       this.partySubscription = this.partyService.partyUpdated.subscribe(party => {
-        if (party !== undefined &&
+        if (party !== undefined ||
           // if a player left the party, skip this step and rely on other subcription to update
           ((this.party !== undefined && this.party.players.length > party.players.length)
             || this.party === undefined)) {

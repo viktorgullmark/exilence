@@ -18,6 +18,7 @@ export class NetworthTableComponent implements OnInit, OnDestroy {
   @Input() showOverTime = false;
   @Input() selectedFilterValue = '0';
   @Output() differenceChanged: EventEmitter<any> = new EventEmitter;
+  @Output() filtered: EventEmitter<any> = new EventEmitter;
   // tslint:disable-next-line:max-line-length
   displayedColumns: string[] = ['position', 'name', 'links', 'quality', 'gemLevel', 'corrupted', 'stacksize', 'valuePerUnit', 'value'];
   dataSource = [];
@@ -42,7 +43,7 @@ export class NetworthTableComponent implements OnInit, OnDestroy {
       this.filter();
 
       this.partySub = this.partyService.partyUpdated.subscribe(party => {
-        if (party !== undefined &&
+        if (party !== undefined ||
           // if a player left the party, skip this step and rely on other subcription to update
           ((this.party !== undefined && this.party.players.length > party.players.length)
             || this.party === undefined)) {
@@ -136,6 +137,8 @@ export class NetworthTableComponent implements OnInit, OnDestroy {
 
     this.source = new MatTableDataSource(this.filteredArr);
     this.source.sort = this.sort;
+
+    this.filtered.emit(this.filteredArr);
   }
 
   loadPlayerData(player: Player) {

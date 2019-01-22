@@ -1,18 +1,21 @@
 import { Component, Inject, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
-import { MatDialog, MatTabGroup, MatSelect } from '@angular/material';
+import { MatDialog, MatSelect, MatTabGroup } from '@angular/material';
+import { ExportToCsv } from 'export-to-csv';
+import * as moment from 'moment';
 import { Subscription } from 'rxjs';
 
+import { Party } from '../../../shared/interfaces/party.interface';
+import { Player } from '../../../shared/interfaces/player.interface';
+import { AccountService } from '../../../shared/providers/account.service';
+import { AlertService } from '../../../shared/providers/alert.service';
+import { IncomeService } from '../../../shared/providers/income.service';
 import { MessageValueService } from '../../../shared/providers/message-value.service';
 import { PartyService } from '../../../shared/providers/party.service';
 import { SettingsService } from '../../../shared/providers/settings.service';
 import { InfoDialogComponent } from '../../components/info-dialog/info-dialog.component';
 import { NetworthTableComponent } from '../../components/networth-table/networth-table.component';
-import { AccountService } from '../../../shared/providers/account.service';
-import { AlertService } from '../../../shared/providers/alert.service';
-import { IncomeService } from '../../../shared/providers/income.service';
-import { Player } from '../../../shared/interfaces/player.interface';
-import { Party } from '../../../shared/interfaces/party.interface';
+import { NetWorthSnapshot } from '../../../shared/interfaces/income.interface';
 
 @Component({
   selector: 'app-party-summary',
@@ -39,6 +42,10 @@ export class PartySummaryComponent implements OnInit, OnDestroy {
   private playerSub: Subscription;
   private selectedFilterValueSub: Subscription;
   public totalDifference = 0;
+
+  private tableData: any[];
+  private overtimeData: any[];
+
   constructor(
     @Inject(FormBuilder) fb: FormBuilder,
     public messageValueService: MessageValueService,
@@ -83,7 +90,7 @@ export class PartySummaryComponent implements OnInit, OnDestroy {
 
         // if player left, update dropdown
         const foundPlayer = this.party.players.find(x => x.character.name === this.selectedFilterValue);
-        if (foundPlayer === undefined) {
+        if (foundPlayer === undefined && this.selectedFilterValue !== '0') {
           this.partyService.selectedFilterValue.next('0');
           if (this.playerDd !== undefined) {
             this.playerDd.value = '0';
@@ -110,8 +117,52 @@ export class PartySummaryComponent implements OnInit, OnDestroy {
     }
   }
 
+  updateTableData(event) {
+    this.tableData = event;
+  }
+  updateOverTimeData(event) {
+    this.overtimeData = event;
+  }
+
   selectPlayer(filterValue) {
     this.partyService.selectedFilterValue.next(filterValue.value);
+  }
+
+  export() {
+    const options = {
+      fieldSeparator: ';',
+      quoteStrings: '"',
+      decimalseparator: '.',
+      showLabels: true,
+      showTitle: true,
+      title: 'Net worth export ' + moment(Date.now()).format('YYYY-MM-DD HH:MM'),
+      useBom: true,
+      useKeysAsHeaders: true,
+      filename: 'Networth_' + moment(Date.now()).format('YYYY-MM-DD')
+      // headers: ['Column 1', 'Column 2', etc...] <-- Won't work with useKeysAsHeaders present!
+    };
+
+    const csvExporter = new ExportToCsv(options);
+
+    let dataToExport = [];
+    if (this.selectedIndex === 0) {
+      dataToExport = this.tableData;
+    } else if (this.selectedIndex === 1) {
+      dataToExport = this.overtimeData;
+    }
+
+    csvExporter.generateCsv(this.mapToExport(dataToExport));
+  }
+
+  mapToExport(items: any[]) {
+    return items.map(x => {
+      return {
+        NAME: x.name,
+        QUANTITY: x.stacksize,
+        VALUE: x.valuePerUnit,
+        TOTAL: x.value
+      };
+    });
   }
 
   updateFilterValue(filterValue) {

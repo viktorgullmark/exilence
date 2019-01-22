@@ -32,6 +32,15 @@
                 </mat-select>
             </mat-form-field>
         </div>
+        <div class="networth-wrapper">
+            <mat-form-field>
+                <mat-label>Select player</mat-label>
+                <mat-select #playerDd value="0" (selectionChange)="selectPlayer($event)">
+                    <mat-option value="0">All players</mat-option>
+                    <mat-option *ngFor="let player of party.players" value="{{player.character.name}}">{{player.character.name}}</mat-option>
+                </mat-select>
+            </mat-form-field>
+        </div>
     </div>
     <div class="flex-area graph-btns">
         <div class="btn-grp">
@@ -61,13 +70,9 @@
                 </ng-template>
             </mat-tab>
         </mat-tab-group>
-        <mat-form-field class="player-dropdown">
-            <!-- <mat-label>Select player</mat-label> -->
-            <mat-select #playerDd value="0" (selectionChange)="selectPlayer($event)">
-                <mat-option value="0">All players</mat-option>
-                <mat-option *ngFor="let player of party.players" value="{{player.character.name}}">{{player.character.name}}</mat-option>
-            </mat-select>
-        </mat-form-field>
+        <div class="export-area">
+            <button mat-raised-button color="primary" (click)="export()" type="button" class="right-aligned extra-margin">Export</button>
+        </div>
         <div class="search-form-wrapper" [hidden]="selectedIndex != 0">
             <form class="form search-form" [formGroup]="form">
                 <mat-form-field>
@@ -77,7 +82,7 @@
             </form>
         </div>
         <div class="networth-table-wrapper" [hidden]="selectedIndex != 0">
-            <app-networth-table #table [multiple]="true" [selectedFilterValue]="selectedFilterValue"></app-networth-table>
+            <app-networth-table #table (filtered)="updateTableData($event)" [multiple]="true" [selectedFilterValue]="selectedFilterValue"></app-networth-table>
         </div>
 
         <div class="search-form-wrapper" [hidden]="selectedIndex != 1">
@@ -89,8 +94,8 @@
             </form>
         </div>
         <div class="networth-table-wrapper" [hidden]="selectedIndex != 1">
-            <app-networth-table #overTimeTable (differenceChanged)="updateDifference($event)"
-                [multiple]="true" [showOverTime]="true" [selectedFilterValue]="selectedFilterValue"></app-networth-table>
+            <app-networth-table #overTimeTable (filtered)="updateOverTimeData($event)" (differenceChanged)="updateDifference($event)" [multiple]="true"
+                [showOverTime]="true" [selectedFilterValue]="selectedFilterValue"></app-networth-table>
         </div>
 
     </div>
