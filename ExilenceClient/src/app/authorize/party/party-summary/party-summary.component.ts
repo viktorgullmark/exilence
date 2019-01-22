@@ -16,6 +16,7 @@ import { SettingsService } from '../../../shared/providers/settings.service';
 import { InfoDialogComponent } from '../../components/info-dialog/info-dialog.component';
 import { NetworthTableComponent } from '../../components/networth-table/networth-table.component';
 import { NetWorthSnapshot } from '../../../shared/interfaces/income.interface';
+import { ElectronService } from '../../../shared/providers/electron.service';
 
 @Component({
   selector: 'app-party-summary',
@@ -43,8 +44,8 @@ export class PartySummaryComponent implements OnInit, OnDestroy {
   private selectedFilterValueSub: Subscription;
   public totalDifference = 0;
 
-  private tableData: any[];
-  private overtimeData: any[];
+  private tableData = [];
+  private overtimeData = [];
 
   constructor(
     @Inject(FormBuilder) fb: FormBuilder,
@@ -54,7 +55,8 @@ export class PartySummaryComponent implements OnInit, OnDestroy {
     private incomeService: IncomeService,
     private accountService: AccountService,
     private alertService: AlertService,
-    private settingsService: SettingsService
+    private settingsService: SettingsService,
+    private electronService: ElectronService
   ) {
     this.form = fb.group({
       searchText: [''],
@@ -69,36 +71,47 @@ export class PartySummaryComponent implements OnInit, OnDestroy {
     this.playerSub = this.accountService.player.subscribe(res => {
       this.player = res;
     });
-
-    this.selectedFilterValueSub = this.partyService.selectedFilterValue.subscribe(res => {
-      this.selectedFilterValue = res;
-      this.updateFilterValue(this.selectedFilterValue);
-    });
   }
   ngOnInit() {
     this.partySub = this.partyService.partyUpdated.subscribe(res => {
       if (res !== undefined) {
         this.party = res;
-        let networth = 0;
-        this.messageValueService.partyGainSubject.next(0);
-        this.partyService.updatePartyGain(this.partyService.party.players);
-        res.players.forEach(p => {
-          if (p.netWorthSnapshots[0] !== undefined) {
-            networth = networth + p.netWorthSnapshots[0].value;
-          }
-        });
+        const foundPlayer = this.party.players.find(x => x.character.name === this.partyService.selectedFilterValue);
 
         // if player left, update dropdown
-        const foundPlayer = this.party.players.find(x => x.character.name === this.selectedFilterValue);
-        if (foundPlayer === undefined && this.selectedFilterValue !== '0') {
-          this.partyService.selectedFilterValue.next('0');
+        if (foundPlayer === undefined && this.partyService.selectedFilterValue !== 'All players') {
+          this.partyService.selectedFilterValue = 'All players';
+          this.partyService.selectedFilterValueSub.next('All players');
           if (this.playerDd !== undefined) {
-            this.playerDd.value = '0';
+            this.playerDd.value = 'All players';
           }
         }
+        let networth = 0;
+        if (this.partyService.selectedFilterValue === 'All players' || this.partyService.selectedFilterValue === undefined) {
+          this.messageValueService.partyGainSubject.next(0);
+          this.partyService.updatePartyGain(this.partyService.party.players);
+          res.players.forEach(p => {
+            if (p.netWorthSnapshots[0] !== undefined) {
+              networth = networth + p.netWorthSnapshots[0].value;
+            }
+          });
+        } else if (foundPlayer !== undefined) {
+          this.partyService.updatePartyGain([foundPlayer]);
+          networth = foundPlayer.netWorthSnapshots[0].value;
+        }
+
 
         this.messageValueService.partyGainSubject.next(this.partyService.partyGain);
         this.messageValueService.partyValueSubject.next(networth);
+      }
+    });
+    this.selectedFilterValueSub = this.partyService.selectedFilterValueSub.subscribe(res => {
+      if (res !== undefined) {
+        this.partyService.selectedFilterValue = res;
+        this.updateFilterValue(this.partyService.selectedFilterValue);
+        if (this.playerDd !== undefined) {
+          this.playerDd.value = this.partyService.selectedFilterValue;
+        }
       }
     });
   }
@@ -125,7 +138,42 @@ export class PartySummaryComponent implements OnInit, OnDestroy {
   }
 
   selectPlayer(filterValue) {
-    this.partyService.selectedFilterValue.next(filterValue.value);
+    this.partyService.selectedFilterValueSub.next(filterValue.value);
+
+    if (this.party !== undefined) {
+      const foundPlayer = this.party.players.find(x => x.character.name === this.partyService.selectedFilterValue);
+      let networth = 0;
+      if (this.partyService.selectedFilterValue === 'All players' || this.partyService.selectedFilterValue === undefined) {
+        this.messageValueService.partyGainSubject.next(0);
+        this.partyService.updatePartyGain(this.partyService.party.players);
+        this.party.players.forEach(p => {
+          if (p.netWorthSnapshots[0] !== undefined) {
+            networth = networth + p.netWorthSnapshots[0].value;
+          }
+        });
+      } else if (foundPlayer !== undefined) {
+        this.partyService.updatePartyGain([foundPlayer]);
+        networth = foundPlayer.netWorthSnapshots[0].value;
+      }
+      this.messageValueService.partyGainSubject.next(this.partyService.partyGain);
+      this.messageValueService.partyValueSubject.next(networth);
+    }
+  }
+
+  popout() {
+    const data = {
+      event: 'networth',
+    };
+    this.electronService.ipcRenderer.send('popout-window', data);
+    setTimeout(res => {
+      this.electronService.ipcRenderer.send('popout-window-update', {
+        event: 'networth',
+        data: {
+          networth: this.messageValueService.partyValue,
+          gain: this.messageValueService.partyGain
+        }
+      });
+    }, 1000);
   }
 
   export() {
@@ -151,7 +199,9 @@ export class PartySummaryComponent implements OnInit, OnDestroy {
       dataToExport = this.overtimeData;
     }
 
-    csvExporter.generateCsv(this.mapToExport(dataToExport));
+    if (dataToExport.length > 0) {
+      csvExporter.generateCsv(this.mapToExport(dataToExport));
+    }
   }
 
   mapToExport(items: any[]) {
@@ -232,9 +282,24 @@ export class PartySummaryComponent implements OnInit, OnDestroy {
     }
     this.gainHours = +event.value;
 
-    this.messageValueService.partyGainSubject.next(0);
-    this.partyService.updatePartyGain(this.partyService.party.players);
-    this.messageValueService.partyGainSubject.next(this.partyService.partyGain);
+    if (this.party !== undefined) {
+      const foundPlayer = this.party.players.find(x => x.character.name === this.partyService.selectedFilterValue);
+      let networth = 0;
+      if (this.partyService.selectedFilterValue === 'All players' || this.partyService.selectedFilterValue === undefined) {
+        this.messageValueService.partyGainSubject.next(0);
+        this.partyService.updatePartyGain(this.partyService.party.players);
+        this.party.players.forEach(p => {
+          if (p.netWorthSnapshots[0] !== undefined) {
+            networth = networth + p.netWorthSnapshots[0].value;
+          }
+        });
+      } else if (foundPlayer !== undefined) {
+        this.partyService.updatePartyGain([foundPlayer]);
+        networth = foundPlayer.netWorthSnapshots[0].value;
+      }
+      this.messageValueService.partyGainSubject.next(this.partyService.partyGain);
+      this.messageValueService.partyValueSubject.next(networth);
+    }
   }
 
   openSummaryDialog(): void {

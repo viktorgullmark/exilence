@@ -1,5 +1,6 @@
 import { Injectable, OnDestroy } from '@angular/core';
 import { BehaviorSubject, Subscription } from 'rxjs';
+import { ElectronService } from './electron.service';
 
 @Injectable()
 export class MessageValueService implements OnDestroy {
@@ -24,7 +25,7 @@ export class MessageValueService implements OnDestroy {
   private partyValueSub: Subscription;
   private partyGainSub: Subscription;
 
-  constructor(
+  constructor(private electronService: ElectronService
   ) {
     this.currentPlayerGainSub = this.currentPlayerGainSubject.subscribe(res => {
       this.currentPlayerGain = res;
@@ -40,10 +41,24 @@ export class MessageValueService implements OnDestroy {
 
     this.partyValueSub = this.partyValueSubject.subscribe(res => {
       this.partyValue = res;
+      this.electronService.ipcRenderer.send('popout-window-update', {
+        event: 'networth',
+        data: {
+          networth: this.partyValue,
+          gain: this.partyGain
+        }
+      });
     });
 
     this.partyGainSub = this.partyGainSubject.subscribe(res => {
       this.partyGain = res;
+      this.electronService.ipcRenderer.send('popout-window-update', {
+        event: 'networth',
+        data: {
+          networth: this.partyValue,
+          gain: this.partyGain
+        }
+      });
     });
   }
 

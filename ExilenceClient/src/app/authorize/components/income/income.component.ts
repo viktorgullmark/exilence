@@ -36,7 +36,6 @@ export class IncomeComponent implements OnInit, OnDestroy {
   private selectedPlayerSub: Subscription;
   private partySubscription: Subscription;
   private selectedFilterValueSub: Subscription;
-  private selectedFilterValue: string;
   private party: Party;
   // line interpolation
   curveType = 'Linear';
@@ -73,8 +72,8 @@ export class IncomeComponent implements OnInit, OnDestroy {
         console.log('updating from interval');
         this.dateData = [];
         this.data = [];
-        const foundPlayer = this.party.players.find(x => x.character.name === this.selectedFilterValue);
-        if (this.selectedFilterValue !== '0' && foundPlayer !== undefined) {
+        const foundPlayer = this.party.players.find(x => x.character.name === this.partyService.selectedFilterValue);
+        if (this.partyService.selectedFilterValue !== '0' && foundPlayer !== undefined) {
           this.updateGraph(foundPlayer);
         } else {
           this.party.players.forEach(p => {
@@ -93,8 +92,8 @@ export class IncomeComponent implements OnInit, OnDestroy {
           this.dateData = [];
           this.data = [];
           this.party = party;
-          const foundPlayer = this.party.players.find(x => x.character.name === this.selectedFilterValue);
-          if (this.selectedFilterValue !== '0' && foundPlayer !== undefined) {
+          const foundPlayer = this.party.players.find(x => x.character.name === this.partyService.selectedFilterValue);
+          if (this.partyService.selectedFilterValue !== '0' && foundPlayer !== undefined) {
             this.updateGraph(foundPlayer);
           } else {
             this.party.players.forEach(p => {
@@ -105,15 +104,15 @@ export class IncomeComponent implements OnInit, OnDestroy {
           }
         }
       });
-      this.selectedFilterValueSub = this.partyService.selectedFilterValue.subscribe(res => {
+      this.selectedFilterValueSub = this.partyService.selectedFilterValueSub.subscribe(res => {
         if (res !== undefined) {
           console.log('updating from selectedFilterValue');
-          this.selectedFilterValue = res;
+          this.partyService.selectedFilterValue = res;
           this.dateData = [];
           this.data = [];
 
-          const foundPlayer = this.party.players.find(x => x.character.name === this.selectedFilterValue);
-          if (this.selectedFilterValue !== '0' && foundPlayer !== undefined) {
+          const foundPlayer = this.party.players.find(x => x.character.name === this.partyService.selectedFilterValue);
+          if (this.partyService.selectedFilterValue !== '0' && foundPlayer !== undefined) {
             this.updateGraph(foundPlayer);
           } else {
             this.party.players.forEach(p => {

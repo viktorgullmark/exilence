@@ -16,7 +16,7 @@
             <span class="title">Gain per hour</span>
             <br />
             <div class="networth-inner-wrapper with-icon">
-                <span class="networth">{{partyGain.toFixed(2)}}&nbsp;&nbsp;</span><img class="chaos-icon" />
+                <span class="networth">{{messageValueService.partyGain.toFixed(2)}}&nbsp;&nbsp;</span><img class="chaos-icon" />
             </div>
         </div>
         <div class="networth-wrapper">
@@ -35,16 +35,18 @@
         <div class="networth-wrapper">
             <mat-form-field>
                 <mat-label>Select player</mat-label>
-                <mat-select #playerDd value="0" (selectionChange)="selectPlayer($event)">
-                    <mat-option value="0">All players</mat-option>
-                    <mat-option *ngFor="let player of party.players" value="{{player.character.name}}">{{player.character.name}}</mat-option>
+                <mat-select #playerDd value="{{partyService.selectedFilterValue}}" (selectionChange)="selectPlayer($event)">
+                    <mat-option value="All players">All players</mat-option>
+                    <mat-option *ngFor="let player of partyService.party.players" value="{{player.character.name}}">{{player.character.name}}</mat-option>
                 </mat-select>
             </mat-form-field>
         </div>
     </div>
     <div class="flex-area graph-btns">
         <div class="btn-grp">
-            <button mat-raised-button color="primary" (click)="resetNetWorth()" type="button" class="right-aligned extra-margin">{{'GRAPH.RESET_SELF'
+            <button mat-raised-button color="accent" (click)="resetNetWorth()" type="button" class="right-aligned extra-margin">{{'GRAPH.RESET_SELF'
+                | translate}}</button>
+            <button mat-raised-button color="primary" (click)="popout()" type="button" class="right-aligned extra-margin">{{'GRAPH.POPOUT'
                 | translate}}</button>
             <button mat-raised-button color="primary" *ngIf="!isGraphHidden" (click)="hideGraph()" type="button" class="right-aligned">{{'GRAPH.HIDE'
                 | translate}}</button>
@@ -71,7 +73,10 @@
             </mat-tab>
         </mat-tab-group>
         <div class="export-area">
-            <button mat-raised-button color="primary" (click)="export()" type="button" class="right-aligned extra-margin">Export</button>
+            <button *ngIf="selectedIndex == 0" [disabled]="tableData == undefined || tableData.length == 0"
+                mat-raised-button color="primary" (click)="export()" type="button" class="right-aligned extra-margin">Export</button>
+            <button *ngIf="selectedIndex == 1" [disabled]="overtimeData == undefined || overtimeData.length == 0"
+                mat-raised-button color="primary" (click)="export()" type="button" class="right-aligned extra-margin">Export</button>
         </div>
         <div class="search-form-wrapper" [hidden]="selectedIndex != 0">
             <form class="form search-form" [formGroup]="form">
@@ -82,7 +87,7 @@
             </form>
         </div>
         <div class="networth-table-wrapper" [hidden]="selectedIndex != 0">
-            <app-networth-table #table (filtered)="updateTableData($event)" [multiple]="true" [selectedFilterValue]="selectedFilterValue"></app-networth-table>
+            <app-networth-table #table (filtered)="updateTableData($event)" [multiple]="true"></app-networth-table>
         </div>
 
         <div class="search-form-wrapper" [hidden]="selectedIndex != 1">
@@ -94,8 +99,8 @@
             </form>
         </div>
         <div class="networth-table-wrapper" [hidden]="selectedIndex != 1">
-            <app-networth-table #overTimeTable (filtered)="updateOverTimeData($event)" (differenceChanged)="updateDifference($event)" [multiple]="true"
-                [showOverTime]="true" [selectedFilterValue]="selectedFilterValue"></app-networth-table>
+            <app-networth-table #overTimeTable (filtered)="updateOverTimeData($event)" (differenceChanged)="updateDifference($event)"
+                [multiple]="true" [showOverTime]="true"></app-networth-table>
         </div>
 
     </div>

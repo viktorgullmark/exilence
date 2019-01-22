@@ -16,7 +16,6 @@ import { Party } from '../../../shared/interfaces/party.interface';
 export class NetworthTableComponent implements OnInit, OnDestroy {
   @Input() multiple = false;
   @Input() showOverTime = false;
-  @Input() selectedFilterValue = '0';
   @Output() differenceChanged: EventEmitter<any> = new EventEmitter;
   @Output() filtered: EventEmitter<any> = new EventEmitter;
   // tslint:disable-next-line:max-line-length
@@ -49,8 +48,8 @@ export class NetworthTableComponent implements OnInit, OnDestroy {
             || this.party === undefined)) {
           this.party = party;
           this.dataSource = [];
-          const foundPlayer = party.players.find(x => x.character.name === this.selectedFilterValue);
-          if (this.selectedFilterValue !== '0' && foundPlayer !== undefined) {
+          const foundPlayer = party.players.find(x => x.character.name === this.partyService.selectedFilterValue);
+          if (this.partyService.selectedFilterValue !== 'All players' && foundPlayer !== undefined) {
             this.loadPlayerData(foundPlayer);
           } else {
             party.players.forEach(p => {
@@ -63,12 +62,12 @@ export class NetworthTableComponent implements OnInit, OnDestroy {
         }
       });
 
-      this.selectedFilterValueSub = this.partyService.selectedFilterValue.subscribe(res => {
+      this.selectedFilterValueSub = this.partyService.selectedFilterValueSub.subscribe(res => {
         if (res !== undefined) {
-          this.selectedFilterValue = res;
+          this.partyService.selectedFilterValue = res;
           this.dataSource = [];
-          const foundPlayer = this.party.players.find(x => x.character.name === this.selectedFilterValue);
-          if (this.selectedFilterValue !== '0' && foundPlayer !== undefined) {
+          const foundPlayer = this.party.players.find(x => x.character.name === this.partyService.selectedFilterValue);
+          if (this.partyService.selectedFilterValue !== 'All players' && foundPlayer !== undefined) {
             this.loadPlayerData(foundPlayer);
           } else {
             this.party.players.forEach(p => {
@@ -247,7 +246,7 @@ export class NetworthTableComponent implements OnInit, OnDestroy {
   loadPreviousSnapshot(snapshot: any) {
     this.dataSource = [];
 
-    const foundPlayer = this.party.players.find(x => x.character.name === this.selectedFilterValue);
+    const foundPlayer = this.party.players.find(x => x.character.name === this.partyService.selectedFilterValue);
 
     // if a specific player is selected
     if (foundPlayer !== undefined) {
