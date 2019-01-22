@@ -10,6 +10,7 @@ import { AccountService } from '../../../shared/providers/account.service';
 import { IncomeService } from '../../../shared/providers/income.service';
 import { SettingsService } from '../../../shared/providers/settings.service';
 import { PartyService } from '../../../shared/providers/party.service';
+import { Party } from '../../../shared/interfaces/party.interface';
 
 
 @Component({
@@ -34,7 +35,9 @@ export class IncomeComponent implements OnInit, OnDestroy {
   public isSummary = false;
   private selectedPlayerSub: Subscription;
   private partySubscription: Subscription;
-
+  private selectedFilterValueSub: Subscription;
+  private selectedFilterValue: string;
+  private party: Party;
   // line interpolation
   curveType = 'Linear';
   curve = d3.curveLinear;
@@ -67,23 +70,55 @@ export class IncomeComponent implements OnInit, OnDestroy {
       this.isSummary = true;
       // update the graph every minute, to update labels
       setInterval(() => {
+        console.log('updating from interval');
         this.dateData = [];
         this.data = [];
-        this.partyService.party.players.forEach(p => {
-          if (p.netWorthSnapshots !== null) {
-            this.updateGraph(p);
-          }
-        });
-      }, 60 * 1000);
-      this.partySubscription = this.partyService.partyUpdated.subscribe(party => {
-        if (party !== undefined) {
-          this.dateData = [];
-          this.data = [];
-          party.players.forEach(p => {
+        const foundPlayer = this.party.players.find(x => x.character.name === this.selectedFilterValue);
+        if (this.selectedFilterValue !== '0' && foundPlayer !== undefined) {
+          this.updateGraph(foundPlayer);
+        } else {
+          this.party.players.forEach(p => {
             if (p.netWorthSnapshots !== null) {
               this.updateGraph(p);
             }
           });
+        }
+      }, 60 * 1000);
+      this.partySubscription = this.partyService.partyUpdated.subscribe(party => {
+        if (party !== undefined) {
+          console.log('updating from partySub');
+          this.dateData = [];
+          this.data = [];
+          this.party = party;
+          const foundPlayer = this.party.players.find(x => x.character.name === this.selectedFilterValue);
+          if (this.selectedFilterValue !== '0' && foundPlayer !== undefined) {
+            this.updateGraph(foundPlayer);
+          } else {
+            this.party.players.forEach(p => {
+              if (p.netWorthSnapshots !== null) {
+                this.updateGraph(p);
+              }
+            });
+          }
+        }
+      });
+      this.selectedFilterValueSub = this.partyService.selectedFilterValue.subscribe(res => {
+        if (res !== undefined) {
+          console.log('updating from selectedFilterValue');
+          this.selectedFilterValue = res;
+          this.dateData = [];
+          this.data = [];
+
+          const foundPlayer = this.party.players.find(x => x.character.name === this.selectedFilterValue);
+          if (this.selectedFilterValue !== '0' && foundPlayer !== undefined) {
+            this.updateGraph(foundPlayer);
+          } else {
+            this.party.players.forEach(p => {
+              if (p.netWorthSnapshots !== null) {
+                this.updateGraph(p);
+              }
+            });
+          }
         }
       });
     }
@@ -95,6 +130,9 @@ export class IncomeComponent implements OnInit, OnDestroy {
     }
     if (this.partySubscription !== undefined) {
       this.partySubscription.unsubscribe();
+    }
+    if (this.selectedFilterValueSub !== undefined) {
+      this.selectedFilterValueSub.unsubscribe();
     }
   }
 

@@ -30,12 +30,13 @@ export class PartySummaryComponent implements OnInit, OnDestroy {
   selectedIndex = 0;
   public graphDimensions = [950, 300];
   private partyGainSub: Subscription;
-  public selectedFilterValue = '0';
+  public selectedFilterValue;
   private player: Player;
   public party: Party;
   public partyGain = 0;
   private partySub: Subscription;
   private playerSub: Subscription;
+  private selectedFilterValueSub: Subscription;
   public totalDifference = 0;
   constructor(
     @Inject(FormBuilder) fb: FormBuilder,
@@ -59,6 +60,11 @@ export class PartySummaryComponent implements OnInit, OnDestroy {
 
     this.playerSub = this.accountService.player.subscribe(res => {
       this.player = res;
+    });
+
+    this.selectedFilterValueSub = this.partyService.selectedFilterValue.subscribe(res => {
+      this.selectedFilterValue = res;
+      this.updateFilterValue(this.selectedFilterValue);
     });
 
     this.partySub = this.partyService.partyUpdated.subscribe(res => {
@@ -89,28 +95,54 @@ export class PartySummaryComponent implements OnInit, OnDestroy {
     if (this.playerSub !== undefined) {
       this.playerSub.unsubscribe();
     }
+    if (this.selectedFilterValueSub !== undefined) {
+      this.selectedFilterValueSub.unsubscribe();
+    }
   }
 
   selectPlayer(filterValue) {
-    this.selectedFilterValue = filterValue;
-    const foundPlayer = this.party.players.find(x => x.character.name === filterValue);
+    this.partyService.selectedFilterValue.next(filterValue.value);
+  }
 
-    // update tables with new value
-    this.table.dataSource = [];
-    if (foundPlayer !== undefined) {
-      this.table.loadPlayerData(foundPlayer);
-      this.overTimeTable.loadPlayerData(foundPlayer);
-    } else {
-      this.party.players.forEach(p => {
-        if (p.netWorthSnapshots !== null) {
-          this.table.loadPlayerData(p);
-          this.overTimeTable.loadPlayerData(p);
+  updateFilterValue(filterValue) {
+    if (this.party !== undefined) {
+      const foundPlayer = this.party.players.find(x => x.character.name === filterValue);
+
+      // update tables with new value
+
+      if (this.table !== undefined) {
+        this.table.dataSource = [];
+      }
+      if (this.overTimeTable !== undefined) {
+        this.overTimeTable.dataSource = [];
+      }
+
+      if (foundPlayer !== undefined) {
+        if (this.table !== undefined) {
+          this.table.loadPlayerData(foundPlayer);
         }
-      });
-    }
+        if (this.overTimeTable !== undefined) {
+          this.overTimeTable.loadPlayerData(foundPlayer);
+        }
+      } else {
+        this.party.players.forEach(p => {
+          if (p.netWorthSnapshots !== null) {
+            if (this.table !== undefined) {
+              this.table.loadPlayerData(p);
+            } if (this.overTimeTable !== undefined) {
+              this.overTimeTable.loadPlayerData(p);
+            }
+          }
+        });
+      }
 
-    this.table.filter();
-    this.overTimeTable.filter();
+      if (this.table !== undefined) {
+        this.table.filter();
+      }
+      if (this.overTimeTable !== undefined) {
+        this.overTimeTable.filter();
+      }
+    }
   }
 
   updateDifference(event) {

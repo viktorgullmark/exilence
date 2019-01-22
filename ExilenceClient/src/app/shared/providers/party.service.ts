@@ -47,6 +47,7 @@ export class PartyService implements OnDestroy {
   public recentPrivatePlayers: string[] = [];
   public playerLeagues: BehaviorSubject<LeagueWithPlayers[]> = new BehaviorSubject<LeagueWithPlayers[]>([]);
   public genericPlayers: BehaviorSubject<Player[]> = new BehaviorSubject<Player[]>([]);
+  public selectedFilterValue: BehaviorSubject<string> = new BehaviorSubject<string>(undefined);
 
   public serverMessageReceived: BehaviorSubject<ServerMessage> = new BehaviorSubject<ServerMessage>(undefined);
 

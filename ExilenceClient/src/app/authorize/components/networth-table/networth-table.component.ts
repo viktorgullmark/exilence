@@ -6,6 +6,7 @@ import { NetWorthItem, NetWorthSnapshot } from '../../../shared/interfaces/incom
 import { Player } from '../../../shared/interfaces/player.interface';
 import { PartyService } from '../../../shared/providers/party.service';
 import { SettingsService } from '../../../shared/providers/settings.service';
+import { Party } from '../../../shared/interfaces/party.interface';
 
 @Component({
   selector: 'app-networth-table',
@@ -13,43 +14,35 @@ import { SettingsService } from '../../../shared/providers/settings.service';
   styleUrls: ['./networth-table.component.scss']
 })
 export class NetworthTableComponent implements OnInit, OnDestroy {
-  @Input() player: Player;
   @Input() multiple = false;
   @Input() showOverTime = false;
   @Input() selectedFilterValue = '0';
   @Output() differenceChanged: EventEmitter<any> = new EventEmitter;
+  // tslint:disable-next-line:max-line-length
   displayedColumns: string[] = ['position', 'name', 'links', 'quality', 'gemLevel', 'corrupted', 'stacksize', 'valuePerUnit', 'value'];
   dataSource = [];
   searchText = '';
   filteredArr = [];
+  party: Party;
   public totalDifference = 0;
   source: any;
   @ViewChild(MatSort) sort: MatSort;
-  private selectedPlayerSub: Subscription;
+
   private partySub: Subscription;
 
   constructor(private partyService: PartyService, private settingsService: SettingsService) { }
 
   ngOnInit() {
-    if (this.multiple && !this.showOverTime) {
+    if (!this.showOverTime) {
       this.displayedColumns.push('holdingPlayers');
     }
-    if (this.player !== undefined) {
-      this.loadPlayerData(this.player);
-      this.selectedPlayerSub = this.partyService.selectedPlayer.subscribe(res => {
-        this.player = res;
-        this.dataSource = [];
-        if (res.netWorthSnapshots !== null) {
-          this.loadPlayerData(res);
-        }
-        this.filter();
-      });
-    } else if (this.multiple) {
+    if (this.multiple) {
       // party logic
       this.filter();
 
       this.partySub = this.partyService.partyUpdated.subscribe(party => {
         if (party !== undefined) {
+          this.party = party;
           this.dataSource = [];
           const foundPlayer = party.players.find(x => x.character.name === this.selectedFilterValue);
           if (this.selectedFilterValue !== '0' && foundPlayer !== undefined) {
@@ -68,9 +61,6 @@ export class NetworthTableComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    if (this.selectedPlayerSub !== undefined) {
-      this.selectedPlayerSub.unsubscribe();
-    }
     if (this.partySub !== undefined) {
       this.partySub.unsubscribe();
     }
@@ -228,7 +218,13 @@ export class NetworthTableComponent implements OnInit, OnDestroy {
 
   loadPreviousSnapshot(snapshot: any) {
     this.dataSource = [];
-    this.updateTable(snapshot.items, this.player.character.name);
+
+    const foundPlayer = this.party.players.find(x => x.character.name === this.selectedFilterValue);
+
+    // if a specific player is selected
+    if (foundPlayer !== undefined) {
+      this.updateTable(snapshot.items, foundPlayer.character.name);
+    }
 
     this.filter();
   }
