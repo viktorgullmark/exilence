@@ -1,6 +1,6 @@
 import { Component, Inject, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
-import { MatDialog, MatTabGroup } from '@angular/material';
+import { MatDialog, MatTabGroup, MatSelect } from '@angular/material';
 import { Subscription } from 'rxjs';
 
 import { MessageValueService } from '../../../shared/providers/message-value.service';
@@ -26,6 +26,7 @@ export class PartySummaryComponent implements OnInit, OnDestroy {
   @ViewChild('table') table: NetworthTableComponent;
   @ViewChild('overTimeTable') overTimeTable: NetworthTableComponent;
   @ViewChild('networthTabs') networthTabs: MatTabGroup;
+  @ViewChild('playerDd') playerDd: MatSelect;
   gainHours: number;
   selectedIndex = 0;
   public graphDimensions = [950, 300];
@@ -66,7 +67,8 @@ export class PartySummaryComponent implements OnInit, OnDestroy {
       this.selectedFilterValue = res;
       this.updateFilterValue(this.selectedFilterValue);
     });
-
+  }
+  ngOnInit() {
     this.partySub = this.partyService.partyUpdated.subscribe(res => {
       if (res !== undefined) {
         this.party = res;
@@ -78,12 +80,20 @@ export class PartySummaryComponent implements OnInit, OnDestroy {
             networth = networth + p.netWorthSnapshots[0].value;
           }
         });
+
+        // if player left, update dropdown
+        const foundPlayer = this.party.players.find(x => x.character.name === this.selectedFilterValue);
+        if (foundPlayer === undefined) {
+          this.partyService.selectedFilterValue.next('0');
+          if (this.playerDd !== undefined) {
+            this.playerDd.value = '0';
+          }
+        }
+
         this.messageValueService.partyGainSubject.next(this.partyService.partyGain);
         this.messageValueService.partyValueSubject.next(networth);
       }
     });
-  }
-  ngOnInit() {
   }
   ngOnDestroy() {
     if (this.partyGainSub !== undefined) {

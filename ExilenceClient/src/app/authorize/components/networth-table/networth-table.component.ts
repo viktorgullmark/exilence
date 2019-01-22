@@ -25,6 +25,7 @@ export class NetworthTableComponent implements OnInit, OnDestroy {
   filteredArr = [];
   party: Party;
   public totalDifference = 0;
+  private selectedFilterValueSub: Subscription;
   source: any;
   @ViewChild(MatSort) sort: MatSort;
 
@@ -41,7 +42,10 @@ export class NetworthTableComponent implements OnInit, OnDestroy {
       this.filter();
 
       this.partySub = this.partyService.partyUpdated.subscribe(party => {
-        if (party !== undefined) {
+        if (party !== undefined &&
+          // if a player left the party, skip this step and rely on other subcription to update
+          ((this.party !== undefined && this.party.players.length > party.players.length)
+            || this.party === undefined)) {
           this.party = party;
           this.dataSource = [];
           const foundPlayer = party.players.find(x => x.character.name === this.selectedFilterValue);
@@ -57,12 +61,33 @@ export class NetworthTableComponent implements OnInit, OnDestroy {
           this.filter();
         }
       });
+
+      this.selectedFilterValueSub = this.partyService.selectedFilterValue.subscribe(res => {
+        if (res !== undefined) {
+          this.selectedFilterValue = res;
+          this.dataSource = [];
+          const foundPlayer = this.party.players.find(x => x.character.name === this.selectedFilterValue);
+          if (this.selectedFilterValue !== '0' && foundPlayer !== undefined) {
+            this.loadPlayerData(foundPlayer);
+          } else {
+            this.party.players.forEach(p => {
+              if (p.netWorthSnapshots !== null) {
+                this.loadPlayerData(p);
+              }
+            });
+          }
+          this.filter();
+        }
+      });
     }
   }
 
   ngOnDestroy() {
     if (this.partySub !== undefined) {
       this.partySub.unsubscribe();
+    }
+    if (this.selectedFilterValueSub !== undefined) {
+      this.selectedFilterValueSub.unsubscribe();
     }
   }
 
