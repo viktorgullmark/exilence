@@ -310,7 +310,7 @@ export class PartySummaryComponent implements OnInit, OnDestroy {
           icon: 'attach_money',
           title: 'Currency',
           // tslint:disable-next-line:max-line-length
-          content: 'This tab updates when a partymember changes area in game, at most once every 3 minutes.<br/><br/>' +
+          content: 'This tab updates when a partymember changes area in game, at most once every 2 minutes.<br/><br/>' +
             'We store all your parties net worth data two weeks back in time. This will be extended in the future.'
         }
       });

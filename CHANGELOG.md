@@ -5,6 +5,9 @@ All notable changes to this project will be documented in this file.
 - Added support for pricing corrupted items (uniques and gems)
 - Added the option to select which player to see data for in the currency-tab
 - Added export-functionality to currency summary (for both gain and net worth)
+- Now starts pricing every two minutes, down from three
+- Reworked the in-game overlay to work with the new currency-tab
+- Improved the update-functionality for the in-game overlay
 - Removed the smaller variant of the currency-tab
 
 ## [0.9.13] - 2019-01-21

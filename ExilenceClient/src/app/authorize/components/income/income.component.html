@@ -1,6 +1,6 @@
 <ng-container *ngIf="isSummary || (player != undefined && player.netWorthSnapshots && player.netWorthSnapshots.length > 0 && player.netWorthSnapshots[0].timestamp > 0)">
   <h3 class="mat-h3 graph-title">{{title}}
-    <span class="mat-caption caption-text">(updates when you change area, at most every 3 minutes)</span>
+    <span class="mat-caption caption-text">(updates when you change area, at most every 2 minutes)</span>
     <mat-icon class="info-icon" matTooltip="Only data from the past 24 hours is shared with your group">info</mat-icon>
   </h3>
   <div class="chart-container">
@@ -25,7 +25,7 @@
   <div class="mid-text-wrapper">
     <mat-icon class="header-icon">warning</mat-icon>
     <h3 class="mat-h3">
-      No net worth recorded yet, will update every 3 minutes
+      No net worth recorded yet, will update every 2 minutes
     </h3>
   </div>
 </ng-container>
