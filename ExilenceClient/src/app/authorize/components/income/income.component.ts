@@ -37,6 +37,7 @@ export class IncomeComponent implements OnInit, OnDestroy {
   private partySubscription: Subscription;
   private selectedFilterValueSub: Subscription;
   private party: Party;
+  private interval;
   // line interpolation
   curveType = 'Linear';
   curve = d3.curveLinear;
@@ -68,7 +69,7 @@ export class IncomeComponent implements OnInit, OnDestroy {
       // party logic
       this.isSummary = true;
       // update the graph every minute, to update labels
-      setInterval(() => {
+      this.interval = setInterval(() => {
         console.log('updating from interval');
         this.dateData = [];
         this.data = [];
@@ -135,6 +136,9 @@ export class IncomeComponent implements OnInit, OnDestroy {
     }
     if (this.selectedFilterValueSub !== undefined) {
       this.selectedFilterValueSub.unsubscribe();
+    }
+    if (this.interval) {
+      clearInterval(this.interval);
     }
   }
 

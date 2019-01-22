@@ -51,7 +51,7 @@ export class PartySummaryComponent implements OnInit, OnDestroy {
     @Inject(FormBuilder) fb: FormBuilder,
     public messageValueService: MessageValueService,
     private dialog: MatDialog,
-    private partyService: PartyService,
+    public partyService: PartyService,
     private incomeService: IncomeService,
     private accountService: AccountService,
     private alertService: AlertService,
