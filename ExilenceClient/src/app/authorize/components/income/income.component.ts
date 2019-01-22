@@ -70,7 +70,6 @@ export class IncomeComponent implements OnInit, OnDestroy {
       this.isSummary = true;
       // update the graph every minute, to update labels
       this.interval = setInterval(() => {
-        console.log('updating from interval');
         this.dateData = [];
         this.data = [];
         const foundPlayer = this.party.players.find(x => x.character.name === this.partyService.selectedFilterValue);
@@ -89,7 +88,6 @@ export class IncomeComponent implements OnInit, OnDestroy {
           // if a player left the party, skip this step and rely on other subcription to update
           ((this.party !== undefined && this.party.players.length > party.players.length)
             || this.party === undefined)) {
-          console.log('updating from partySub');
           this.dateData = [];
           this.data = [];
           this.party = party;
@@ -107,7 +105,6 @@ export class IncomeComponent implements OnInit, OnDestroy {
       });
       this.selectedFilterValueSub = this.partyService.selectedFilterValueSub.subscribe(res => {
         if (res !== undefined) {
-          console.log('updating from selectedFilterValue');
           this.partyService.selectedFilterValue = res;
           this.dateData = [];
           this.data = [];
