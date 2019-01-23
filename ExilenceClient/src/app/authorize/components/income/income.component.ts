@@ -1,15 +1,14 @@
-import { Component, EventEmitter, Input, OnInit, Output, OnDestroy } from '@angular/core';
+import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { colorSets as ngxChartsColorsets } from '@swimlane/ngx-charts/release/utils/color-sets';
 import * as d3 from 'd3';
 import * as moment from 'moment';
 import { Subscription } from 'rxjs/internal/Subscription';
 
 import { ChartSeries, ChartSeriesEntry } from '../../../shared/interfaces/chart.interface';
+import { Party } from '../../../shared/interfaces/party.interface';
 import { Player } from '../../../shared/interfaces/player.interface';
-import { AccountService } from '../../../shared/providers/account.service';
-import { IncomeService } from '../../../shared/providers/income.service';
-import { SettingsService } from '../../../shared/providers/settings.service';
 import { PartyService } from '../../../shared/providers/party.service';
+import { SettingsService } from '../../../shared/providers/settings.service';
 
 
 @Component({
@@ -29,11 +28,13 @@ export class IncomeComponent implements OnInit, OnDestroy {
 
   public isHidden = false;
   public visible = true;
-  private data = [];
 
   public isSummary = false;
   private selectedPlayerSub: Subscription;
   private partySubscription: Subscription;
+  private selectedFilterValueSub: Subscription;
+  private party: Party;
+  private interval;
 
   // line interpolation
   curveType = 'Linear';
@@ -57,7 +58,6 @@ export class IncomeComponent implements OnInit, OnDestroy {
       this.updateGraph(this.player);
       this.selectedPlayerSub = this.partyService.selectedPlayer.subscribe(res => {
         this.dateData = [];
-        this.data = [];
         if (res.netWorthSnapshots !== null) {
           this.updateGraph(res);
         }
@@ -66,24 +66,57 @@ export class IncomeComponent implements OnInit, OnDestroy {
       // party logic
       this.isSummary = true;
       // update the graph every minute, to update labels
-      setInterval(() => {
+      this.interval = setInterval(() => {
         this.dateData = [];
-        this.data = [];
-        this.partyService.party.players.forEach(p => {
-          if (p.netWorthSnapshots !== null) {
-            this.updateGraph(p);
-          }
-        });
-      }, 60 * 1000);
-      this.partySubscription = this.partyService.partyUpdated.subscribe(party => {
-        if (party !== undefined) {
-          this.dateData = [];
-          this.data = [];
-          party.players.forEach(p => {
+        const foundPlayer = this.party.players.find(x => x.character.name === this.partyService.selectedFilterValue);
+        if (this.partyService.selectedFilterValue !== '0' && foundPlayer !== undefined) {
+          this.updateGraph(foundPlayer);
+        } else {
+          this.party.players.forEach(p => {
             if (p.netWorthSnapshots !== null) {
               this.updateGraph(p);
             }
           });
+        }
+      }, 60 * 1000);
+      this.partySubscription = this.partyService.partyUpdated.subscribe(party => {
+        if (party !== undefined ||
+          // if a player left the party, skip this step and rely on other subcription to update
+          ((this.party !== undefined && this.party.players.length > party.players.length)
+            || this.party === undefined)) {
+          this.dateData = [];
+          this.party = party;
+
+          // update values for entire party, or a specific player, depending on selection
+          const foundPlayer = this.party.players.find(x => x.character.name === this.partyService.selectedFilterValue);
+          if (this.partyService.selectedFilterValue !== '0' && foundPlayer !== undefined) {
+            this.updateGraph(foundPlayer);
+          } else {
+            this.party.players.forEach(p => {
+              if (p.netWorthSnapshots !== null) {
+                this.updateGraph(p);
+              }
+            });
+          }
+        }
+      });
+      // subscribe to dropdown for playerselection
+      this.selectedFilterValueSub = this.partyService.selectedFilterValueSub.subscribe(res => {
+        if (res !== undefined) {
+          this.partyService.selectedFilterValue = res;
+          this.dateData = [];
+
+          // update values for entire party, or a specific player, depending on selection
+          const foundPlayer = this.party.players.find(x => x.character.name === this.partyService.selectedFilterValue);
+          if (this.partyService.selectedFilterValue !== '0' && foundPlayer !== undefined) {
+            this.updateGraph(foundPlayer);
+          } else {
+            this.party.players.forEach(p => {
+              if (p.netWorthSnapshots !== null) {
+                this.updateGraph(p);
+              }
+            });
+          }
         }
       });
     }
@@ -95,6 +128,12 @@ export class IncomeComponent implements OnInit, OnDestroy {
     }
     if (this.partySubscription !== undefined) {
       this.partySubscription.unsubscribe();
+    }
+    if (this.selectedFilterValueSub !== undefined) {
+      this.selectedFilterValueSub.unsubscribe();
+    }
+    if (this.interval) {
+      clearInterval(this.interval);
     }
   }
 

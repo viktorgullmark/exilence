@@ -1,17 +1,21 @@
 import { Component, Inject, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
-import { MatDialog, MatTabGroup } from '@angular/material';
+import { MatDialog, MatSelect, MatTabGroup } from '@angular/material';
+import { ExportToCsv } from 'export-to-csv';
+import * as moment from 'moment';
 import { Subscription } from 'rxjs';
 
+import { Party } from '../../../shared/interfaces/party.interface';
+import { Player } from '../../../shared/interfaces/player.interface';
+import { AccountService } from '../../../shared/providers/account.service';
+import { AlertService } from '../../../shared/providers/alert.service';
+import { ElectronService } from '../../../shared/providers/electron.service';
+import { IncomeService } from '../../../shared/providers/income.service';
 import { MessageValueService } from '../../../shared/providers/message-value.service';
 import { PartyService } from '../../../shared/providers/party.service';
 import { SettingsService } from '../../../shared/providers/settings.service';
 import { InfoDialogComponent } from '../../components/info-dialog/info-dialog.component';
 import { NetworthTableComponent } from '../../components/networth-table/networth-table.component';
-import { AccountService } from '../../../shared/providers/account.service';
-import { AlertService } from '../../../shared/providers/alert.service';
-import { IncomeService } from '../../../shared/providers/income.service';
-import { Player } from '../../../shared/interfaces/player.interface';
 
 @Component({
   selector: 'app-party-summary',
@@ -19,30 +23,38 @@ import { Player } from '../../../shared/interfaces/player.interface';
   styleUrls: ['./party-summary.component.scss']
 })
 export class PartySummaryComponent implements OnInit, OnDestroy {
-  form: FormGroup;
-
-  isGraphHidden = false;
   @ViewChild('table') table: NetworthTableComponent;
   @ViewChild('overTimeTable') overTimeTable: NetworthTableComponent;
   @ViewChild('networthTabs') networthTabs: MatTabGroup;
-  gainHours: number;
-  selectedIndex = 0;
+  @ViewChild('playerDd') playerDd: MatSelect;
+
+  public gainHours: number;
+  public selectedIndex = 0;
   public graphDimensions = [950, 300];
-  private partyGainSub: Subscription;
-  private player: Player;
+  public totalDifference = 0;
+  public party: Party;
   public partyGain = 0;
+  public form: FormGroup;
+  public isGraphHidden = false;
+
   private partySub: Subscription;
   private playerSub: Subscription;
-  public totalDifference = 0;
+  private selectedFilterValueSub: Subscription;
+  private partyGainSub: Subscription;
+  private player: Player;
+  private tableData = [];
+  private overtimeData = [];
+
   constructor(
     @Inject(FormBuilder) fb: FormBuilder,
     public messageValueService: MessageValueService,
     private dialog: MatDialog,
-    private partyService: PartyService,
+    public partyService: PartyService,
     private incomeService: IncomeService,
     private accountService: AccountService,
     private alertService: AlertService,
-    private settingsService: SettingsService
+    private settingsService: SettingsService,
+    private electronService: ElectronService
   ) {
     this.form = fb.group({
       searchText: [''],
@@ -57,23 +69,54 @@ export class PartySummaryComponent implements OnInit, OnDestroy {
     this.playerSub = this.accountService.player.subscribe(res => {
       this.player = res;
     });
-
+  }
+  ngOnInit() {
     this.partySub = this.partyService.partyUpdated.subscribe(res => {
       if (res !== undefined) {
-        let networth = 0;
-        this.messageValueService.partyGainSubject.next(0);
-        this.partyService.updatePartyGain(this.partyService.party.players);
-        res.players.forEach(p => {
-          if (p.netWorthSnapshots[0] !== undefined) {
-            networth = networth + p.netWorthSnapshots[0].value;
+        this.party = res;
+
+        // check if the current dropdown selection is a player in our party
+        const foundPlayer = this.party.players.find(x => x.character.name === this.partyService.selectedFilterValue);
+
+        // if player left or value is incorrect, update dropdown
+        if (foundPlayer === undefined && this.partyService.selectedFilterValue !== 'All players') {
+          // force-set the value here, since the subscription wont finish in time, should be reworked
+          this.partyService.selectedFilterValue = 'All players';
+          this.partyService.selectedFilterValueSub.next('All players');
+          if (this.playerDd !== undefined) {
+            this.playerDd.value = 'All players';
           }
-        });
+        }
+        let networth = 0;
+        if (this.partyService.selectedFilterValue === 'All players' || this.partyService.selectedFilterValue === undefined) {
+          this.messageValueService.partyGainSubject.next(0);
+          this.partyService.updatePartyGain(this.partyService.party.players);
+          res.players.forEach(p => {
+            if (p.netWorthSnapshots[0] !== undefined) {
+              networth = networth + p.netWorthSnapshots[0].value;
+            }
+          });
+          // if a specific player is selected, update values for that
+        } else if (foundPlayer !== undefined) {
+          this.partyService.updatePartyGain([foundPlayer]);
+          networth = foundPlayer.netWorthSnapshots[0].value;
+        }
+
+        // finally send values to msgvalueservice, to update the overlay
         this.messageValueService.partyGainSubject.next(this.partyService.partyGain);
         this.messageValueService.partyValueSubject.next(networth);
       }
     });
-  }
-  ngOnInit() {
+    this.selectedFilterValueSub = this.partyService.selectedFilterValueSub.subscribe(res => {
+      if (res !== undefined) {
+        this.partyService.selectedFilterValue = res;
+        // update the tables whenever the value changes
+        this.updateFilterValue(this.partyService.selectedFilterValue);
+        if (this.playerDd !== undefined) {
+          this.playerDd.value = this.partyService.selectedFilterValue;
+        }
+      }
+    });
   }
   ngOnDestroy() {
     if (this.partyGainSub !== undefined) {
@@ -84,6 +127,138 @@ export class PartySummaryComponent implements OnInit, OnDestroy {
     }
     if (this.playerSub !== undefined) {
       this.playerSub.unsubscribe();
+    }
+    if (this.selectedFilterValueSub !== undefined) {
+      this.selectedFilterValueSub.unsubscribe();
+    }
+  }
+
+  updateTableData(event: any[]) {
+    this.tableData = event;
+  }
+  updateOverTimeData(event: any[]) {
+    this.overtimeData = event;
+  }
+
+  selectPlayer(filterValue: any) {
+    this.partyService.selectedFilterValueSub.next(filterValue.value);
+
+    if (this.party !== undefined) {
+      const foundPlayer = this.party.players.find(x => x.character.name === this.partyService.selectedFilterValue);
+      let networth = 0;
+      // update values for entire party, or a specific player, depending on selection
+      if (this.partyService.selectedFilterValue === 'All players' || this.partyService.selectedFilterValue === undefined) {
+        this.messageValueService.partyGainSubject.next(0);
+        this.partyService.updatePartyGain(this.partyService.party.players);
+        this.party.players.forEach(p => {
+          if (p.netWorthSnapshots[0] !== undefined) {
+            networth = networth + p.netWorthSnapshots[0].value;
+          }
+        });
+      } else if (foundPlayer !== undefined) {
+        this.partyService.updatePartyGain([foundPlayer]);
+        networth = foundPlayer.netWorthSnapshots[0].value;
+      }
+      this.messageValueService.partyGainSubject.next(this.partyService.partyGain);
+      this.messageValueService.partyValueSubject.next(networth);
+    }
+  }
+
+  popout() {
+    const data = {
+      event: 'networth',
+    };
+    this.electronService.ipcRenderer.send('popout-window', data);
+    setTimeout(res => {
+      this.electronService.ipcRenderer.send('popout-window-update', {
+        event: 'networth',
+        data: {
+          networth: this.messageValueService.partyValue,
+          gain: this.messageValueService.partyGain
+        }
+      });
+    }, 1000);
+  }
+
+  export() {
+    const options = {
+      fieldSeparator: ';',
+      quoteStrings: '"',
+      decimalseparator: '.',
+      showLabels: true,
+      showTitle: true,
+      title: 'Net worth export ' + moment(Date.now()).format('YYYY-MM-DD HH:MM'),
+      useBom: true,
+      useKeysAsHeaders: true,
+      filename: 'Networth_' + moment(Date.now()).format('YYYY-MM-DD')
+      // headers: ['Column 1', 'Column 2', etc...] <-- Won't work with useKeysAsHeaders present!
+    };
+
+    const csvExporter = new ExportToCsv(options);
+
+    let dataToExport = [];
+    if (this.selectedIndex === 0) {
+      dataToExport = this.tableData;
+    } else if (this.selectedIndex === 1) {
+      dataToExport = this.overtimeData;
+    }
+
+    if (dataToExport.length > 0) {
+      csvExporter.generateCsv(this.mapToExport(dataToExport));
+    }
+  }
+
+  // todo: move this to a helper-lib
+  mapToExport(items: any[]) {
+    return items.map(x => {
+      return {
+        NAME: x.name,
+        QUANTITY: x.stacksize,
+        VALUE: x.valuePerUnit,
+        TOTAL: x.value
+      };
+    });
+  }
+
+  updateFilterValue(filterValue) {
+    if (this.party !== undefined) {
+      const foundPlayer = this.party.players.find(x => x.character.name === filterValue);
+
+      // update tables with new value
+
+      if (this.table !== undefined) {
+        this.table.dataSource = [];
+      }
+      if (this.overTimeTable !== undefined) {
+        this.overTimeTable.dataSource = [];
+      }
+
+      if (foundPlayer !== undefined) {
+        if (this.table !== undefined) {
+          this.table.loadPlayerData(foundPlayer);
+        }
+        if (this.overTimeTable !== undefined) {
+          this.overTimeTable.loadPlayerData(foundPlayer);
+        }
+      } else {
+        this.party.players.forEach(p => {
+          if (p.netWorthSnapshots !== null) {
+            if (this.table !== undefined) {
+              this.table.loadPlayerData(p);
+            } if (this.overTimeTable !== undefined) {
+              this.overTimeTable.loadPlayerData(p);
+            }
+          }
+        });
+      }
+
+      // finally render the data onto the tables
+      if (this.table !== undefined) {
+        this.table.filter();
+      }
+      if (this.overTimeTable !== undefined) {
+        this.overTimeTable.filter();
+      }
     }
   }
 
@@ -106,16 +281,31 @@ export class PartySummaryComponent implements OnInit, OnDestroy {
     }
   }
 
-  toggleGainHours(event) {
+  toggleGainHours(event: any) {
     this.settingsService.set('gainHours', +event.value);
     if (this.overTimeTable !== undefined) {
       this.overTimeTable.updateGainHours(+event.value);
     }
     this.gainHours = +event.value;
 
-    this.messageValueService.partyGainSubject.next(0);
-    this.partyService.updatePartyGain(this.partyService.party.players);
-    this.messageValueService.partyGainSubject.next(this.partyService.partyGain);
+    if (this.party !== undefined) {
+      const foundPlayer = this.party.players.find(x => x.character.name === this.partyService.selectedFilterValue);
+      let networth = 0;
+      if (this.partyService.selectedFilterValue === 'All players' || this.partyService.selectedFilterValue === undefined) {
+        this.messageValueService.partyGainSubject.next(0);
+        this.partyService.updatePartyGain(this.partyService.party.players);
+        this.party.players.forEach(p => {
+          if (p.netWorthSnapshots[0] !== undefined) {
+            networth = networth + p.netWorthSnapshots[0].value;
+          }
+        });
+      } else if (foundPlayer !== undefined) {
+        this.partyService.updatePartyGain([foundPlayer]);
+        networth = foundPlayer.netWorthSnapshots[0].value;
+      }
+      this.messageValueService.partyGainSubject.next(this.partyService.partyGain);
+      this.messageValueService.partyValueSubject.next(networth);
+    }
   }
 
   openSummaryDialog(): void {
@@ -124,9 +314,9 @@ export class PartySummaryComponent implements OnInit, OnDestroy {
         width: '650px',
         data: {
           icon: 'attach_money',
-          title: 'Currency summary',
+          title: 'Currency',
           // tslint:disable-next-line:max-line-length
-          content: 'This tab updates when a partymember changes area in game, at most once every 3 minutes.<br/><br/>' +
+          content: 'This tab updates when a partymember changes area in game, at most once every 2 minutes.<br/><br/>' +
             'We store all your parties net worth data two weeks back in time. This will be extended in the future.'
         }
       });

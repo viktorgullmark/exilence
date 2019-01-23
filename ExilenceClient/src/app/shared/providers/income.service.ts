@@ -38,7 +38,7 @@ export class IncomeService implements OnDestroy {
 
   private totalNetWorthItems: NetWorthItem[] = [];
   public totalNetWorth = 0;
-  private threeMinutes = 3 * 60 * 1000;
+  private twoMinutes = 2 * 60 * 1000;
   private sessionIdValid = false;
 
   private characterPricing = false;
@@ -90,7 +90,7 @@ export class IncomeService implements OnDestroy {
 
     this.sessionIdValid = this.settingsService.get('account.sessionIdValid');
     if (
-      this.netWorthHistory.lastSnapshot < (Date.now() - this.threeMinutes) &&
+      this.netWorthHistory.lastSnapshot < (Date.now() - this.twoMinutes) &&
       this.localPlayer !== undefined &&
       (this.sessionId !== undefined && this.sessionId !== '' && this.sessionIdValid) &&
       !this.isSnapshotting && !this.accountService.loggingIn && !this.settingsService.isChangingStash &&
