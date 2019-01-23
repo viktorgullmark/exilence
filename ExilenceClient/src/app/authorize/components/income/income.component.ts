@@ -58,7 +58,6 @@ export class IncomeComponent implements OnInit, OnDestroy {
       this.updateGraph(this.player);
       this.selectedPlayerSub = this.partyService.selectedPlayer.subscribe(res => {
         this.dateData = [];
-        this.data = [];
         if (res.netWorthSnapshots !== null) {
           this.updateGraph(res);
         }
@@ -69,7 +68,6 @@ export class IncomeComponent implements OnInit, OnDestroy {
       // update the graph every minute, to update labels
       this.interval = setInterval(() => {
         this.dateData = [];
-        this.data = [];
         const foundPlayer = this.party.players.find(x => x.character.name === this.partyService.selectedFilterValue);
         if (this.partyService.selectedFilterValue !== '0' && foundPlayer !== undefined) {
           this.updateGraph(foundPlayer);
@@ -87,7 +85,6 @@ export class IncomeComponent implements OnInit, OnDestroy {
           ((this.party !== undefined && this.party.players.length > party.players.length)
             || this.party === undefined)) {
           this.dateData = [];
-          this.data = [];
           this.party = party;
 
           // update values for entire party, or a specific player, depending on selection
@@ -108,7 +105,6 @@ export class IncomeComponent implements OnInit, OnDestroy {
         if (res !== undefined) {
           this.partyService.selectedFilterValue = res;
           this.dateData = [];
-          this.data = [];
 
           // update values for entire party, or a specific player, depending on selection
           const foundPlayer = this.party.players.find(x => x.character.name === this.partyService.selectedFilterValue);
