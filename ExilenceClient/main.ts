@@ -202,6 +202,7 @@ try {
   app.on('ready', () => {
 
     createWindow();
+    createWindow();
 
     autoUpdater.checkForUpdates();
 

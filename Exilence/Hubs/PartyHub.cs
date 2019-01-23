@@ -49,6 +49,9 @@ namespace Exilence.Hubs
             var party = await _cache.GetAsync<PartyModel>($"party:{partyName}");
             if (party == null)
             {
+                // set player to leader, since its a new party
+                player.IsLeader = true;
+
                 party = new PartyModel() { Name = partyName, Players = new List<PlayerModel> { player } };
                 await _cache.SetAsync<PartyModel>($"party:{partyName}", party);
                 await Clients.Caller.SendAsync("EnteredParty", CompressionHelper.Compress(party), CompressionHelper.Compress(player));
@@ -93,7 +96,17 @@ namespace Exilence.Hubs
 
                 var foundPlayer = foundParty.Players.FirstOrDefault(x => x.ConnectionID == player.ConnectionID);
 
-                foundParty.Players.Remove(foundPlayer);                
+                foundParty.Players.Remove(foundPlayer);     
+
+                if(player.IsLeader)
+                {
+                    // if there is any player left in party, assign leader to first one
+                    if(foundParty.Players.Any()) { 
+                        foundParty.Players[0].IsLeader = true;
+                        await Clients.Group(partyName).SendAsync("LeaderChanged", new { oldLeader = player, newLeader = foundParty.Players[0] });
+                    }  
+                }
+
                 var success = RemoveFromIndex();
 
                 if (foundParty.Players.Count != 0)
@@ -109,6 +122,29 @@ namespace Exilence.Hubs
 
             await Clients.OthersInGroup(partyName).SendAsync("PlayerLeft", CompressionHelper.Compress(player));
             await Groups.RemoveFromGroupAsync(Context.ConnectionId, partyName);
+        }
+
+        public async Task AssignLeader(string partyName, string playerToAssign)
+        {
+            var party = await _cache.GetAsync<PartyModel>($"party:{partyName}");
+
+            var playerObjToAssign = party.Players.FirstOrDefault(x => x.Character.Name == playerToAssign);
+            var currentLeader = party.Players.FirstOrDefault(x => x.IsLeader);
+            if (playerObjToAssign != null && currentLeader != null)
+            { 
+                if(currentLeader != null) { 
+                    currentLeader.IsLeader = false;
+                    var indexOfPlayer = party.Players.IndexOf(party.Players.FirstOrDefault(x => x.ConnectionID == currentLeader.ConnectionID));
+                    party.Players[indexOfPlayer] = currentLeader;
+                }
+
+                playerObjToAssign.IsLeader = true;
+                var indexOfPlayerToAssign = party.Players.IndexOf(party.Players.FirstOrDefault(x => x.ConnectionID == playerObjToAssign.ConnectionID));
+                party.Players[indexOfPlayerToAssign] = playerObjToAssign;
+
+                await _cache.SetAsync<PartyModel>($"party:{partyName}", party);
+                await Clients.Group(partyName).SendAsync("LeaderChanged", CompressionHelper.Compress(new { oldLeader = currentLeader, newLeader = playerObjToAssign }));
+            }
         }
 
         public async Task UpdatePlayer(string partyName, string playerObj)

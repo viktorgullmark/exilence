@@ -3,7 +3,7 @@
 
   </div>
   <div class="player-badge-content">
-    <span class="mat-subheading-1"><span class="player-rank">{{getRanking() != '' ? '#' + getRanking() + ' ' : ''}}</span>{{player.character?.name}}</span>
+    <span class="mat-subheading-1"><span class="player-rank"><ng-container *ngIf="player.isLeader">!! </ng-container>{{getRanking() != '' ? '#' + getRanking() + ' ' : ''}}</span>{{player.character?.name}}</span>
     <br/>
     <span class="mat-subheading-1">Level {{player.character?.level}} {{player.character?.class}}</span>
     <br/>

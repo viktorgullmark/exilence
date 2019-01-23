@@ -197,6 +197,33 @@ export class PartyService implements OnDestroy {
       });
     });
 
+    this._hubConnection.on('LeaderChanged', (data: string) => {
+      this.electronService.decompress(data, (leaderData) => {
+        console.log(leaderData);
+        const oldLeader = this.party.players.find(x => x.character.name === leaderData.oldLeader.character.name);
+        const newLeader = this.party.players.find(x => x.character.name === leaderData.newLeader.character.name);
+
+        // if previous leader is still in the party, update the value
+        if (oldLeader !== undefined) {
+          const indexOfOldLeader = this.party.players.indexOf(oldLeader);
+          oldLeader.isLeader = false;
+          this.party.players[indexOfOldLeader] = oldLeader;
+        }
+
+        const indexOfNewLeader = this.party.players.indexOf(newLeader);
+        newLeader.isLeader = true;
+        this.party.players[indexOfNewLeader] = newLeader;
+
+        // update permissions if you become the leader
+        if (this.currentPlayer.account === newLeader.account) {
+          this.accountService.player.next(newLeader);
+        }
+
+        this.partyUpdated.next(this.party);
+        this.updatePlayerLists(this.party);
+      });
+    });
+
     this._hubConnection.on('ServerMessageReceived', (data: ServerMessage) => {
 
       this.serverMessageReceived.next(data);
@@ -350,6 +377,14 @@ export class PartyService implements OnDestroy {
             }));
         }
       });
+  }
+
+  public assignLeader(characterName: string) {
+    if (this._hubConnection) {
+      this._hubConnection.invoke('AssignLeader', this.party.name, characterName)
+        .catch((e) => {
+        });
+    }
   }
 
   public getAccountForCharacter(character: string): Promise<any> {

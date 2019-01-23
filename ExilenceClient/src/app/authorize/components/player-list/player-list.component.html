@@ -11,12 +11,12 @@
     <app-player-badge *ngFor="let player of genericPlayers" localPlayer="true" [player]="player">
     </app-player-badge>
 </ng-container>
-<!-- 
-<context-menu>
-    <ng-template contextMenuItem (execute)="showMessage('/invite ' + $event.item.character.name)">
-        Invite to party
+
+<context-menu *ngIf="currentPlayer.isLeader">
+    <ng-template contextMenuItem (execute)="assignLeader($event.item.character.name)">
+        Assign as leader
     </ng-template>
-    <ng-template contextMenuItem let-item (execute)="showMessage('/whois ' + $event.item.character.name)">
-        Send whois
+    <ng-template contextMenuItem let-item (execute)="kickFromGroup($event.item.character.name)">
+        Kick from group
     </ng-template>
-</context-menu> -->
+</context-menu>
