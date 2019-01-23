@@ -9,14 +9,13 @@ import { Party } from '../../../shared/interfaces/party.interface';
 import { Player } from '../../../shared/interfaces/player.interface';
 import { AccountService } from '../../../shared/providers/account.service';
 import { AlertService } from '../../../shared/providers/alert.service';
+import { ElectronService } from '../../../shared/providers/electron.service';
 import { IncomeService } from '../../../shared/providers/income.service';
 import { MessageValueService } from '../../../shared/providers/message-value.service';
 import { PartyService } from '../../../shared/providers/party.service';
 import { SettingsService } from '../../../shared/providers/settings.service';
 import { InfoDialogComponent } from '../../components/info-dialog/info-dialog.component';
 import { NetworthTableComponent } from '../../components/networth-table/networth-table.component';
-import { NetWorthSnapshot } from '../../../shared/interfaces/income.interface';
-import { ElectronService } from '../../../shared/providers/electron.service';
 
 @Component({
   selector: 'app-party-summary',
@@ -24,26 +23,25 @@ import { ElectronService } from '../../../shared/providers/electron.service';
   styleUrls: ['./party-summary.component.scss']
 })
 export class PartySummaryComponent implements OnInit, OnDestroy {
-  form: FormGroup;
-
-  isGraphHidden = false;
   @ViewChild('table') table: NetworthTableComponent;
   @ViewChild('overTimeTable') overTimeTable: NetworthTableComponent;
   @ViewChild('networthTabs') networthTabs: MatTabGroup;
   @ViewChild('playerDd') playerDd: MatSelect;
-  gainHours: number;
-  selectedIndex = 0;
+
+  public gainHours: number;
+  public selectedIndex = 0;
   public graphDimensions = [950, 300];
-  private partyGainSub: Subscription;
-  public selectedFilterValue;
-  private player: Player;
+  public totalDifference = 0;
   public party: Party;
   public partyGain = 0;
+  public form: FormGroup;
+  public isGraphHidden = false;
+
   private partySub: Subscription;
   private playerSub: Subscription;
   private selectedFilterValueSub: Subscription;
-  public totalDifference = 0;
-
+  private partyGainSub: Subscription;
+  private player: Player;
   private tableData = [];
   private overtimeData = [];
 
@@ -76,10 +74,13 @@ export class PartySummaryComponent implements OnInit, OnDestroy {
     this.partySub = this.partyService.partyUpdated.subscribe(res => {
       if (res !== undefined) {
         this.party = res;
+
+        // check if the current dropdown selection is a player in our party
         const foundPlayer = this.party.players.find(x => x.character.name === this.partyService.selectedFilterValue);
 
-        // if player left, update dropdown
+        // if player left or value is incorrect, update dropdown
         if (foundPlayer === undefined && this.partyService.selectedFilterValue !== 'All players') {
+          // force-set the value here, since the subscription wont finish in time, should be reworked
           this.partyService.selectedFilterValue = 'All players';
           this.partyService.selectedFilterValueSub.next('All players');
           if (this.playerDd !== undefined) {
@@ -95,12 +96,13 @@ export class PartySummaryComponent implements OnInit, OnDestroy {
               networth = networth + p.netWorthSnapshots[0].value;
             }
           });
+          // if a specific player is selected, update values for that
         } else if (foundPlayer !== undefined) {
           this.partyService.updatePartyGain([foundPlayer]);
           networth = foundPlayer.netWorthSnapshots[0].value;
         }
 
-
+        // finally send values to msgvalueservice, to update the overlay
         this.messageValueService.partyGainSubject.next(this.partyService.partyGain);
         this.messageValueService.partyValueSubject.next(networth);
       }
@@ -108,6 +110,7 @@ export class PartySummaryComponent implements OnInit, OnDestroy {
     this.selectedFilterValueSub = this.partyService.selectedFilterValueSub.subscribe(res => {
       if (res !== undefined) {
         this.partyService.selectedFilterValue = res;
+        // update the tables whenever the value changes
         this.updateFilterValue(this.partyService.selectedFilterValue);
         if (this.playerDd !== undefined) {
           this.playerDd.value = this.partyService.selectedFilterValue;
@@ -130,19 +133,20 @@ export class PartySummaryComponent implements OnInit, OnDestroy {
     }
   }
 
-  updateTableData(event) {
+  updateTableData(event: any[]) {
     this.tableData = event;
   }
-  updateOverTimeData(event) {
+  updateOverTimeData(event: any[]) {
     this.overtimeData = event;
   }
 
-  selectPlayer(filterValue) {
+  selectPlayer(filterValue: any) {
     this.partyService.selectedFilterValueSub.next(filterValue.value);
 
     if (this.party !== undefined) {
       const foundPlayer = this.party.players.find(x => x.character.name === this.partyService.selectedFilterValue);
       let networth = 0;
+      // update values for entire party, or a specific player, depending on selection
       if (this.partyService.selectedFilterValue === 'All players' || this.partyService.selectedFilterValue === undefined) {
         this.messageValueService.partyGainSubject.next(0);
         this.partyService.updatePartyGain(this.partyService.party.players);
@@ -204,6 +208,7 @@ export class PartySummaryComponent implements OnInit, OnDestroy {
     }
   }
 
+  // todo: move this to a helper-lib
   mapToExport(items: any[]) {
     return items.map(x => {
       return {
@@ -247,6 +252,7 @@ export class PartySummaryComponent implements OnInit, OnDestroy {
         });
       }
 
+      // finally render the data onto the tables
       if (this.table !== undefined) {
         this.table.filter();
       }
@@ -275,7 +281,7 @@ export class PartySummaryComponent implements OnInit, OnDestroy {
     }
   }
 
-  toggleGainHours(event) {
+  toggleGainHours(event: any) {
     this.settingsService.set('gainHours', +event.value);
     if (this.overTimeTable !== undefined) {
       this.overTimeTable.updateGainHours(+event.value);

@@ -1,16 +1,14 @@
-import { Component, EventEmitter, Input, OnInit, Output, OnDestroy } from '@angular/core';
+import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { colorSets as ngxChartsColorsets } from '@swimlane/ngx-charts/release/utils/color-sets';
 import * as d3 from 'd3';
 import * as moment from 'moment';
 import { Subscription } from 'rxjs/internal/Subscription';
 
 import { ChartSeries, ChartSeriesEntry } from '../../../shared/interfaces/chart.interface';
-import { Player } from '../../../shared/interfaces/player.interface';
-import { AccountService } from '../../../shared/providers/account.service';
-import { IncomeService } from '../../../shared/providers/income.service';
-import { SettingsService } from '../../../shared/providers/settings.service';
-import { PartyService } from '../../../shared/providers/party.service';
 import { Party } from '../../../shared/interfaces/party.interface';
+import { Player } from '../../../shared/interfaces/player.interface';
+import { PartyService } from '../../../shared/providers/party.service';
+import { SettingsService } from '../../../shared/providers/settings.service';
 
 
 @Component({
@@ -30,7 +28,6 @@ export class IncomeComponent implements OnInit, OnDestroy {
 
   public isHidden = false;
   public visible = true;
-  private data = [];
 
   public isSummary = false;
   private selectedPlayerSub: Subscription;
@@ -38,6 +35,7 @@ export class IncomeComponent implements OnInit, OnDestroy {
   private selectedFilterValueSub: Subscription;
   private party: Party;
   private interval;
+
   // line interpolation
   curveType = 'Linear';
   curve = d3.curveLinear;
@@ -91,6 +89,8 @@ export class IncomeComponent implements OnInit, OnDestroy {
           this.dateData = [];
           this.data = [];
           this.party = party;
+
+          // update values for entire party, or a specific player, depending on selection
           const foundPlayer = this.party.players.find(x => x.character.name === this.partyService.selectedFilterValue);
           if (this.partyService.selectedFilterValue !== '0' && foundPlayer !== undefined) {
             this.updateGraph(foundPlayer);
@@ -103,12 +103,14 @@ export class IncomeComponent implements OnInit, OnDestroy {
           }
         }
       });
+      // subscribe to dropdown for playerselection
       this.selectedFilterValueSub = this.partyService.selectedFilterValueSub.subscribe(res => {
         if (res !== undefined) {
           this.partyService.selectedFilterValue = res;
           this.dateData = [];
           this.data = [];
 
+          // update values for entire party, or a specific player, depending on selection
           const foundPlayer = this.party.players.find(x => x.character.name === this.partyService.selectedFilterValue);
           if (this.partyService.selectedFilterValue !== '0' && foundPlayer !== undefined) {
             this.updateGraph(foundPlayer);

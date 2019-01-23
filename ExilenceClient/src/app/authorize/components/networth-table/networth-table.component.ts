@@ -7,6 +7,7 @@ import { Player } from '../../../shared/interfaces/player.interface';
 import { PartyService } from '../../../shared/providers/party.service';
 import { SettingsService } from '../../../shared/providers/settings.service';
 import { Party } from '../../../shared/interfaces/party.interface';
+import { TableHelper } from '../../../shared/helpers/table.helper';
 
 @Component({
   selector: 'app-networth-table',
@@ -49,6 +50,7 @@ export class NetworthTableComponent implements OnInit, OnDestroy {
           this.party = party;
           this.dataSource = [];
           const foundPlayer = party.players.find(x => x.character.name === this.partyService.selectedFilterValue);
+          // update values for entire party, or a specific player, depending on selection
           if (this.partyService.selectedFilterValue !== 'All players' && foundPlayer !== undefined) {
             this.loadPlayerData(foundPlayer);
           } else {
@@ -67,6 +69,7 @@ export class NetworthTableComponent implements OnInit, OnDestroy {
           this.partyService.selectedFilterValue = res;
           this.dataSource = [];
           const foundPlayer = this.party.players.find(x => x.character.name === this.partyService.selectedFilterValue);
+          // update values for entire party, or a specific player, depending on selection
           if (this.partyService.selectedFilterValue !== 'All players' && foundPlayer !== undefined) {
             this.loadPlayerData(foundPlayer);
           } else {
@@ -92,6 +95,7 @@ export class NetworthTableComponent implements OnInit, OnDestroy {
   }
 
   getIconLink(snapshot: any) {
+    // render higher resolution icons for all maps
     if (snapshot.name.indexOf(' Map') > -1) {
       snapshot.icon = snapshot.icon.replace('w=1&h=1', 'w=2&h=2');
     }
@@ -137,6 +141,7 @@ export class NetworthTableComponent implements OnInit, OnDestroy {
     this.source = new MatTableDataSource(this.filteredArr);
     this.source.sort = this.sort;
 
+    // emit event to parentcomponent, for export etc
     this.filtered.emit(this.filteredArr);
   }
 
@@ -153,50 +158,20 @@ export class NetworthTableComponent implements OnInit, OnDestroy {
         const lastSnapshot = pastHoursSnapshots[0];
         const difference = [];
 
-        const removedItems = firstSnapshot.items.filter(x => lastSnapshot.items.find(y =>
-          y.name === x.name
-          && y.quality === x.quality
-          && y.links === x.links
-          && y.gemLevel === x.gemLevel
-          && y.variation === x.variation
-          && y.corrupted === x.corrupted
-          && y.frameType === x.frameType)
-          === undefined);
+        const removedItems = firstSnapshot.items.filter(x =>
+          TableHelper.findNetworthObj(lastSnapshot.items, x) === undefined
+        );
         const changedItems = lastSnapshot.items.filter(x =>
-          firstSnapshot.items.find(y =>
-            y.name === x.name
-            && y.quality === x.quality
-            && y.links === x.links
-            && y.gemLevel === x.gemLevel
-            && y.corrupted === x.corrupted
-            && y.variation === x.variation
-            && y.frameType === x.frameType
-          ) !== undefined
+          TableHelper.findNetworthObj(firstSnapshot.items, x) !== undefined
         );
         const addedItems = lastSnapshot.items.filter(x =>
-          firstSnapshot.items.find(y =>
-            y.name === x.name
-            && y.quality === x.quality
-            && y.links === x.links
-            && y.gemLevel === x.gemLevel
-            && y.corrupted === x.corrupted
-            && y.variation === x.variation
-            && y.frameType === x.frameType
-          ) === undefined
+          TableHelper.findNetworthObj(firstSnapshot.items, x) === undefined
         );
 
         const changedOrAdded = changedItems.concat(addedItems);
         changedOrAdded.forEach(item => {
           // if item exists in first snapshot
-          const existingItem = firstSnapshot.items.find(x =>
-            x.name === item.name
-            && x.quality === item.quality
-            && x.links === item.links
-            && x.gemLevel === item.gemLevel
-            && x.corrupted === item.corrupted
-            && x.variation === item.variation
-            && x.frameType === item.frameType
-          );
+          const existingItem = TableHelper.findNetworthObj(firstSnapshot.items, item);
 
           if (existingItem !== undefined) {
             const recentItem = Object.assign({}, item);
@@ -214,15 +189,7 @@ export class NetworthTableComponent implements OnInit, OnDestroy {
         });
 
         removedItems.forEach(item => {
-          const existingItem = lastSnapshot.items.find(x =>
-            x.name === item.name
-            && x.quality === item.quality
-            && x.links === item.links
-            && x.gemLevel === item.gemLevel
-            && x.corrupted === item.corrupted
-            && x.variation === item.variation
-            && x.frameType === item.frameType
-          );
+          const existingItem = TableHelper.findNetworthObj(lastSnapshot.items, item);
           const recentItem = Object.assign({}, item);
           if (recentItem.value !== 0 && recentItem.stacksize !== 0) {
             if (existingItem !== undefined) {
@@ -243,16 +210,13 @@ export class NetworthTableComponent implements OnInit, OnDestroy {
     }
   }
 
-  loadPreviousSnapshot(snapshot: any) {
+  loadPreviousSnapshot(snapshot: NetWorthSnapshot) {
     this.dataSource = [];
-
     const foundPlayer = this.party.players.find(x => x.character.name === this.partyService.selectedFilterValue);
-
-    // if a specific player is selected
+    // only do this if a specific player is selected
     if (foundPlayer !== undefined) {
       this.updateTable(snapshot.items, foundPlayer.character.name);
     }
-
     this.filter();
   }
 
@@ -260,17 +224,9 @@ export class NetworthTableComponent implements OnInit, OnDestroy {
     return icon.indexOf('/Divination/') > -1;
   }
 
-  updateOverTime(items: any[], playerName: string) {
+  updateOverTime(items: NetWorthItem[], playerName: string) {
     items.forEach(snapshot => {
-      const existingItem = this.dataSource.find(x =>
-        x.name === snapshot.name
-        && x.quality === snapshot.quality
-        && x.links === snapshot.links
-        && x.gemLevel === snapshot.gemLevel
-        && x.corrupted === snapshot.corrupted
-        && x.variation === snapshot.variation
-        && x.frameType === snapshot.frameType
-      );
+      const existingItem = TableHelper.findNetworthObj(this.dataSource, snapshot);
       if (existingItem !== undefined) {
         const indexOfItem = this.dataSource.indexOf(existingItem);
         // update existing item with new data
@@ -284,28 +240,8 @@ export class NetworthTableComponent implements OnInit, OnDestroy {
           this.dataSource[indexOfItem] = existingItem;
         }
       } else {
-        const newObj = {
-          position: items.indexOf(snapshot) + 1,
-          name: snapshot.name,
-          stacksize: snapshot.stacksize,
-          value: snapshot.value,
-          value_min: snapshot.value_min,
-          quantity: snapshot.quantity,
-          value_max: snapshot.value_max,
-          value_mode: snapshot.value_mode,
-          value_median: snapshot.value_median,
-          value_average: snapshot.value_average,
-          variation: snapshot.variation,
-          valuePerUnit: snapshot.valuePerUnit,
-          gemLevel: snapshot.gemLevel,
-          icon: this.getIconLink(snapshot),
-          links: snapshot.links,
-          quality: snapshot.quality,
-          holdingPlayers: [playerName],
-          frameType: snapshot.frameType,
-          totalStacksize: snapshot.totalStacksize,
-          corrupted: snapshot.corrupted
-        };
+        const index = items.indexOf(snapshot) + 1;
+        const newObj = TableHelper.formatNetworthObj(snapshot, index, this.getIconLink(snapshot), playerName);
         if (snapshot.value !== 0 && snapshot.stacksize !== 0) {
           this.dataSource.push(newObj);
         }
@@ -313,17 +249,9 @@ export class NetworthTableComponent implements OnInit, OnDestroy {
     });
   }
 
-  updateTable(items: any[], playerName: string) {
+  updateTable(items: NetWorthItem[], playerName: string) {
     items.forEach(snapshot => {
-      const existingItem = this.dataSource.find(x =>
-        x.name === snapshot.name
-        && x.quality === snapshot.quality
-        && x.links === snapshot.links
-        && x.gemLevel === snapshot.gemLevel
-        && x.corrupted === snapshot.corrupted
-        && x.variation === snapshot.variation
-        && x.frameType === snapshot.frameType
-      );
+      const existingItem = TableHelper.findNetworthObj(this.dataSource, snapshot);
       if (existingItem !== undefined) {
         const indexOfItem = this.dataSource.indexOf(existingItem);
         // update existing item with new data
@@ -335,28 +263,8 @@ export class NetworthTableComponent implements OnInit, OnDestroy {
         existingItem.links = snapshot.links;
         this.dataSource[indexOfItem] = existingItem;
       } else {
-        const newObj = {
-          position: items.indexOf(snapshot) + 1,
-          name: snapshot.name,
-          stacksize: snapshot.stacksize,
-          value: snapshot.value,
-          value_min: snapshot.value_min,
-          quantity: snapshot.quantity,
-          value_max: snapshot.value_max,
-          value_mode: snapshot.value_mode,
-          value_median: snapshot.value_median,
-          value_average: snapshot.value_average,
-          variation: snapshot.variation,
-          corrupted: snapshot.corrupted,
-          valuePerUnit: snapshot.valuePerUnit,
-          gemLevel: snapshot.gemLevel,
-          icon: this.getIconLink(snapshot),
-          links: snapshot.links,
-          quality: snapshot.quality,
-          holdingPlayers: [playerName],
-          frameType: snapshot.frameType,
-          totalStacksize: snapshot.totalStacksize
-        };
+        const index = items.indexOf(snapshot) + 1;
+        const newObj = TableHelper.formatNetworthObj(snapshot, index, this.getIconLink(snapshot), playerName);
         if (snapshot.value !== 0 && snapshot.stacksize !== 0) {
           this.dataSource.push(newObj);
         }
