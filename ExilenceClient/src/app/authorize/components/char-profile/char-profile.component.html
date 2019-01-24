@@ -6,12 +6,6 @@
                 Equipment
             </ng-template>
         </mat-tab>
-        <mat-tab #wealthTab id="wealthTab" [disabled]="localProfile">
-            <ng-template mat-tab-label>
-                <mat-icon class="tab-icon">attach_money</mat-icon>
-                Currency
-            </ng-template>
-        </mat-tab>
         <mat-tab #mapTab id="mapTab" [disabled]="localProfile">
             <ng-template mat-tab-label>
                 <mat-icon class="tab-icon">map</mat-icon>
@@ -34,17 +28,12 @@
     <app-char-inventory [topMargin]="10" [items]="player?.character?.items"></app-char-inventory>
 </div>
 
-<!-- tab CURRENCY -->
-<div class="tab-content" [hidden]="selectedIndex != 1 || localProfile">
-    <app-char-wealth #charWealth *ngIf="!localProfile && selectedIndex == 1" [player]="player"></app-char-wealth>
-</div>
-
 <!-- tab MAPS -->
-<div class="tab-content" [hidden]="selectedIndex != 2 || localProfile">
+<div class="tab-content" [hidden]="selectedIndex != 1 || localProfile">
     <app-char-maps #charMaps *ngIf="!localProfile" [player]="player"></app-char-maps>  
 </div>
 
 <!-- tab LADDER -->
-<div class="tab-content" [hidden]="selectedIndex != 3 || localProfile">
+<div class="tab-content" [hidden]="selectedIndex != 2 || localProfile">
     <app-char-ladder #charLadder *ngIf="!localProfile" [player]="player"></app-char-ladder>
 </div>

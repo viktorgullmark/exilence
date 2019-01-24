@@ -25,6 +25,7 @@ namespace Exilence.Models
         public string Variation { get; set; }
         public int FrameType { get; set; }
         public int TotalStacksize { get; set; }
+        public bool Corrupted { get; set; }
     }
 
     [Serializable]

@@ -27,6 +27,10 @@ td {
     text-overflow: ellipsis;
 }
 
+.corrupted {
+    color: $corrupted-item-color;
+}
+
 .wide-cell {
     max-width: 300px;
 }

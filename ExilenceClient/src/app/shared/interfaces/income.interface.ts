@@ -27,4 +27,5 @@ export interface NetWorthItem {
   variation: string;
   frameType: number;
   totalStacksize: number;
+  corrupted: boolean;
 }

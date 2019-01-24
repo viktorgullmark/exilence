@@ -3,6 +3,16 @@
 .party-summary {
     height: $content-height;
 
+    mat-form-field {
+        max-width: 100% !important;
+    }
+
+    .export-area {
+        float: right;
+        margin-top: 15px;
+        padding-left: 20px;
+    }
+
     .income-graph-wrapper {
         padding-top: 25px;
         padding-bottom: 25px;
@@ -37,7 +47,8 @@
 
         .networth-wrapper {
             float: left;
-            width: 20%;
+            width: 12%;
+            margin-right: 15px;
 
             .title {
                 font-size: 14px;
@@ -82,12 +93,12 @@
         }
         
         .networth-table-wrapper {
-            height: calc(100% - 150px);
+            height: calc(100% - 155px);
             overflow-y: scroll;
         }
 
         .search-form-wrapper {
-            margin-top: 5px;
+            margin-top: 10px;
         }
     }
 

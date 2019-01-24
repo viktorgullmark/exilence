@@ -80,6 +80,7 @@ export interface NinjaLine {
     mapTier?: number;
     itemClass?: number;
     stackSize?: number;
+    corrupted?: boolean;
 }
 
 export interface NinjaPriceInfo {
@@ -95,6 +96,7 @@ export interface NinjaPriceInfo {
     mapTier: number;
     frameType: number;
     totalStacksize: number;
+    corrupted: boolean;
 }
 
 export interface NinjaCurrencyDetail {

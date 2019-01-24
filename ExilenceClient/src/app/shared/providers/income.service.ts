@@ -38,7 +38,7 @@ export class IncomeService implements OnDestroy {
 
   private totalNetWorthItems: NetWorthItem[] = [];
   public totalNetWorth = 0;
-  private threeMinutes = 3 * 60 * 1000;
+  private twoMinutes = 2 * 60 * 1000;
   private sessionIdValid = false;
 
   private characterPricing = false;
@@ -83,7 +83,6 @@ export class IncomeService implements OnDestroy {
 
   Snapshot() {
     const oneDayAgo = (Date.now() - (24 * 60 * 60 * 1000));
-
     const twoWeeksAgo = (Date.now() - (1 * 60 * 60 * 24 * 14 * 1000));
 
     this.netWorthHistory = this.settingsService.get('networth');
@@ -91,7 +90,7 @@ export class IncomeService implements OnDestroy {
 
     this.sessionIdValid = this.settingsService.get('account.sessionIdValid');
     if (
-      this.netWorthHistory.lastSnapshot < (Date.now() - this.threeMinutes) &&
+      this.netWorthHistory.lastSnapshot < (Date.now() - this.twoMinutes) &&
       this.localPlayer !== undefined &&
       (this.sessionId !== undefined && this.sessionId !== '' && this.sessionIdValid) &&
       !this.isSnapshotting && !this.accountService.loggingIn && !this.settingsService.isChangingStash &&
@@ -198,6 +197,7 @@ export class IncomeService implements OnDestroy {
           quality: itemPriceInfoObj.quality,
           variation: itemPriceInfoObj.variation,
           frameType: itemPriceInfoObj.frameType,
+          corrupted: itemPriceInfoObj.corrupted,
           totalStacksize: itemPriceInfoObj.totalStacksize
         };
 
@@ -221,6 +221,7 @@ export class IncomeService implements OnDestroy {
     this.playerStashTabs = [];
     this.totalNetWorthItems = [];
     this.totalNetWorth = 0;
+
 
     const itemValueTresholdSetting = this.settingsService.get('itemValueTreshold');
     if (itemValueTresholdSetting !== undefined) {

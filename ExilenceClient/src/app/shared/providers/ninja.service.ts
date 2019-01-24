@@ -112,6 +112,7 @@ export class NinjaService {
                   gemLevel: line.gemLevel,
                   variation: line.variant,
                   baseType: line.baseType,
+                  corrupted: line.corrupted,
                   icon: line.icon,
                   mapTier: line.mapTier,
                   frameType: line.itemClass,

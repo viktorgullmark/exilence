@@ -11,7 +11,6 @@ import { CharEquipmentComponent } from './char-equipment/char-equipment.componen
 import { Subscription } from 'rxjs/internal/Subscription';
 import { AccountService } from '../../../shared/providers/account.service';
 import { CharMapsComponent } from './char-maps/char-maps.component';
-import { CharWealthComponent } from './char-wealth/char-wealth.component';
 
 @Component({
   selector: 'app-char-profile',
@@ -24,7 +23,6 @@ export class CharProfileComponent implements OnInit, OnDestroy {
   @Input() localProfile = false;
   @ViewChild('subTabGroup') subTabGroup: MatTabGroup;
   @ViewChild('equipmentTab') equipmentTab: MatTab;
-  @ViewChild('charWealth') charWealth: CharWealthComponent;
   @ViewChild('charMaps') charMaps: CharMapsComponent;
   @ViewChild('charEquipment') charEquipment: CharEquipmentComponent;
 
@@ -97,21 +95,14 @@ export class CharProfileComponent implements OnInit, OnDestroy {
         this.analyticsService.sendScreenview('/authorized/party/player/profile');
         break;
       }
-      // wealth
-      case 1: {
-        this.charWealth.openCurrencyDialog();
-        this.analyticsService.sendScreenview('/authorized/party/player/wealth');
-        this.partyService.updatePlayerGain(this.player, this.currentPlayer.account === this.player.account);
-        break;
-      }
       // maps
-      case 2: {
+      case 1: {
         this.charMaps.openMapDialog();
         this.analyticsService.sendScreenview('/authorized/party/player/maps');
         break;
       }
       // ladder
-      case 3: {
+      case 2: {
         this.analyticsService.sendScreenview('/authorized/party/player/ladder');
         break;
       }

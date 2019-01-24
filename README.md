@@ -10,7 +10,7 @@ Download latest release at https://github.com/viktorgullmark/exilence/releases/l
 
 Report bugs at https://github.com/viktorgullmark/exilence/issues
 
-Communicate with us at our Discord https://discord.gg/4A5Bb7
+Communicate with us at our Discord https://discord.gg/yxuBrPY
 
 ## Supporting us
 
@@ -63,7 +63,7 @@ npm run electron:windows (optional, to build the installer for production)
 
 To run the API you'll need a local redis-server. 
 
-If you're interested in helping with development, contact us directly on discord: https://discordapp.com/invite/ymr3VnA and we'll help setting it up.
+If you're interested in helping with development, contact us directly on discord: https://discord.gg/yxuBrPY and we'll help setting it up.
 
 ## Acknowledgements
 
