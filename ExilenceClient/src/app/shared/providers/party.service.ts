@@ -199,7 +199,6 @@ export class PartyService implements OnDestroy {
 
     this._hubConnection.on('LeaderChanged', (data: string) => {
       this.electronService.decompress(data, (leaderData) => {
-        console.log(leaderData);
         const oldLeader = this.party.players.find(x => x.character.name === leaderData.oldLeader.character.name);
         const newLeader = this.party.players.find(x => x.character.name === leaderData.newLeader.character.name);
 
@@ -222,6 +221,7 @@ export class PartyService implements OnDestroy {
         }
 
         this.updatePlayerLists(this.party);
+        this.logService.log('leader changed to:', newLeader);
       });
     });
 
