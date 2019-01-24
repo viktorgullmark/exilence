@@ -60,6 +60,12 @@ namespace Exilence.Hubs
             {
                 var oldPlayer = party.Players.FirstOrDefault(x => x.Character.Name == player.Character.Name || x.ConnectionID == player.ConnectionID);
 
+                // if the party were joining doesnt have a leader, make the player leader
+                if (!party.Players.Any(x => x.IsLeader))
+                {
+                    player.IsLeader = true;
+                }
+
                 if (oldPlayer == null)
                 {
                     party.Players.Insert(0, player);
@@ -103,7 +109,7 @@ namespace Exilence.Hubs
                     // if there is any player left in party, assign leader to first one
                     if(foundParty.Players.Any()) { 
                         foundParty.Players[0].IsLeader = true;
-                        await Clients.Group(partyName).SendAsync("LeaderChanged", new { oldLeader = player, newLeader = foundParty.Players[0] });
+                        await Clients.Group(partyName).SendAsync("LeaderChanged", CompressionHelper.Compress(new { oldLeader = player, newLeader = foundParty.Players[0] }));
                     }  
                 }
 
