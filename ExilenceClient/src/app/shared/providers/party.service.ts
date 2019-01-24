@@ -217,6 +217,8 @@ export class PartyService implements OnDestroy {
         // update permissions if you become the leader
         if (this.currentPlayer.account === newLeader.account) {
           this.accountService.player.next(newLeader);
+        } else if (this.currentPlayer.account === oldLeader.account) {
+          this.accountService.player.next(oldLeader);
         }
 
         this.updatePlayerLists(this.party);
