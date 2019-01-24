@@ -13,7 +13,8 @@ if (AppConfig.production) {
 }
 
 Sentry.init({
-  dsn: AppConfig.sentryDsn
+  dsn: AppConfig.sentryDsn,
+  sampleRate: 0.1
 });
 
 platformBrowserDynamic()

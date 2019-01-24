@@ -18,7 +18,8 @@ export enum ExileWindowEnum {
 }
 
 Sentry.init({
-  dsn: 'https://0db02ec6abdd490d8e749491dcaf2a96@sentry.io/1370601'
+  dsn: 'https://0db02ec6abdd490d8e749491dcaf2a96@sentry.io/1370601',
+  sampleRate: 0.1
 });
 
 const ipcMain = require('electron').ipcMain;
