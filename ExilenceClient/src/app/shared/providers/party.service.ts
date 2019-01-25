@@ -236,6 +236,10 @@ export class PartyService implements OnDestroy {
       this.disconnect('Recived force disconnect command from server.');
     });
 
+    this._hubConnection.on('ForceDisconnect', () => {
+      this.disconnect('Recived force disconnect command from server.');
+    });
+
     this.logMonitorService.areaJoin.subscribe((msg: LogMessage) => {
       this.logService.log('Player joined area: ', msg.player.name);
       this.handleAreaEvent(msg);
@@ -383,6 +387,14 @@ export class PartyService implements OnDestroy {
   public assignLeader(characterName: string) {
     if (this._hubConnection) {
       this._hubConnection.invoke('AssignLeader', this.party.name, characterName)
+        .catch((e) => {
+        });
+    }
+  }
+
+  public kickFromParty(characterName: string) {
+    if (this._hubConnection) {
+      this._hubConnection.invoke('KickFromParty', this.party.name, characterName)
         .catch((e) => {
         });
     }

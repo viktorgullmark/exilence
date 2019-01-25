@@ -4,8 +4,8 @@ import { Subscription } from 'rxjs/internal/Subscription';
 
 import { LeagueWithPlayers } from '../../../shared/interfaces/league.interface';
 import { Player } from '../../../shared/interfaces/player.interface';
-import { PartyService } from '../../../shared/providers/party.service';
 import { AccountService } from '../../../shared/providers/account.service';
+import { PartyService } from '../../../shared/providers/party.service';
 
 @Component({
   selector: 'app-player-list',
@@ -64,7 +64,7 @@ export class PlayerListComponent implements OnInit, OnDestroy {
   }
 
   kickFromGroup(characterName: string) {
-
+    this.partyService.kickFromParty(characterName);
   }
 
   showMessage(message: any) {
