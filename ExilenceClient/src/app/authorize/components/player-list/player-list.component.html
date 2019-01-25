@@ -12,8 +12,7 @@
     </app-player-badge>
 </ng-container>
 
-<div [hidden]="!currentPlayer?.isLeader">
-<context-menu>
+<context-menu [disabled]="!currentPlayer?.isLeader">
     <ng-template contextMenuItem let-item (execute)="assignLeader($event.item.character.name)">
         Assign as leader
     </ng-template>
@@ -21,4 +20,3 @@
         Kick from group
     </ng-template>
 </context-menu>
-</div>
