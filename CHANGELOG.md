@@ -6,6 +6,7 @@ All notable changes to this project will be documented in this file.
 - Added the option to select which player to see data for in the currency-tab
 - Added export-functionality to currency summary (for both gain and net worth)
 - Now starts pricing every two minutes, down from three
+- Now displays an info-text on the currency-graph if no data has been retrieved
 - Reworked the in-game overlay to work with the new currency-tab
 - Improved the update-functionality for the in-game overlay
 - Removed the smaller variant of the currency-tab
