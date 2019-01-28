@@ -22,8 +22,10 @@ export class ServerMessageDialogComponent implements OnInit {
   onNoClick(): void {
     this.dialogRef.close();
   }
-  disableTooltips() {
+  close() {
+    console.log('should close');
     this.dialogRef.close();
+    console.log('closed');
   }
   ngOnInit() {
   }
