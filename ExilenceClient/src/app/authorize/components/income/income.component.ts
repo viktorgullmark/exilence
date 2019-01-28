@@ -30,8 +30,9 @@ export class IncomeComponent implements OnInit, OnDestroy {
 
   public isHidden = false;
   public visible = true;
-
   public isSummary = false;
+  public foundPlayer: Player;
+
   private selectedPlayerSub: Subscription;
   private partySubscription: Subscription;
   private selectedFilterValueSub: Subscription;
@@ -56,6 +57,14 @@ export class IncomeComponent implements OnInit, OnDestroy {
   ) {
   }
 
+  anyPlayerSnapshots() {
+    return this.party.players.find(x =>
+      x.netWorthSnapshots !== undefined
+      && x.netWorthSnapshots.length > 0
+      && x.netWorthSnapshots[0].timestamp > 0
+    ) !== undefined;
+  }
+
   ngOnInit() {
     if (this.player !== undefined) {
       this.updateGraph(this.player);
@@ -71,9 +80,9 @@ export class IncomeComponent implements OnInit, OnDestroy {
       // update the graph every minute, to update labels
       this.interval = setInterval(() => {
         this.dateData = [];
-        const foundPlayer = this.party.players.find(x => x.character.name === this.partyService.selectedFilterValue);
-        if (this.partyService.selectedFilterValue !== '0' && foundPlayer !== undefined) {
-          this.updateGraph(foundPlayer);
+        this.foundPlayer = this.party.players.find(x => x.character.name === this.partyService.selectedFilterValue);
+        if (this.partyService.selectedFilterValue !== '0' && this.foundPlayer !== undefined) {
+          this.updateGraph(this.foundPlayer);
         } else {
           this.party.players.forEach(p => {
             if (p.netWorthSnapshots !== null) {
@@ -91,9 +100,9 @@ export class IncomeComponent implements OnInit, OnDestroy {
           this.party = party;
 
           // update values for entire party, or a specific player, depending on selection
-          const foundPlayer = this.party.players.find(x => x.character.name === this.partyService.selectedFilterValue);
-          if (this.partyService.selectedFilterValue !== '0' && foundPlayer !== undefined) {
-            this.updateGraph(foundPlayer);
+          this.foundPlayer = this.party.players.find(x => x.character.name === this.partyService.selectedFilterValue);
+          if (this.partyService.selectedFilterValue !== '0' && this.foundPlayer !== undefined) {
+            this.updateGraph(this.foundPlayer);
           } else {
             this.party.players.forEach(p => {
               if (p.netWorthSnapshots !== null) {
@@ -110,9 +119,9 @@ export class IncomeComponent implements OnInit, OnDestroy {
           this.dateData = [];
 
           // update values for entire party, or a specific player, depending on selection
-          const foundPlayer = this.party.players.find(x => x.character.name === this.partyService.selectedFilterValue);
-          if (this.partyService.selectedFilterValue !== '0' && foundPlayer !== undefined) {
-            this.updateGraph(foundPlayer);
+          this.foundPlayer = this.party.players.find(x => x.character.name === this.partyService.selectedFilterValue);
+          if (this.partyService.selectedFilterValue !== '0' && this.foundPlayer !== undefined) {
+            this.updateGraph(this.foundPlayer);
           } else {
             this.party.players.forEach(p => {
               if (p.netWorthSnapshots !== null) {
