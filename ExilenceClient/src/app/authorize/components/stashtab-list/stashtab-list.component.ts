@@ -93,7 +93,7 @@ export class StashtabListComponent implements OnInit, OnDestroy {
   }
 
   checkSelectionLength(row) {
-    if (this.selection.selected.length > 20 && !this.selection.isSelected(row)) {
+    if (this.selection.selected.length > 40 && !this.selection.isSelected(row)) {
       this.showAlert();
     }
   }
@@ -107,7 +107,7 @@ export class StashtabListComponent implements OnInit, OnDestroy {
   }
 
   showAlert() {
-    this.alertService.showAlert({ message: 'You can select at most 20 stash tabs', action: 'OK' });
+    this.alertService.showAlert({ message: 'You can select at most 40 stash tabs', action: 'OK' });
   }
 
   shouldToggle(selection, row) {
@@ -134,10 +134,10 @@ export class StashtabListComponent implements OnInit, OnDestroy {
 
   /** Selects all rows if they are not all selected; otherwise clear selection. */
   masterToggle() {
-    this.isAllSelected() || this.selection.selected.length >= 20 ?
+    this.isAllSelected() || this.selection.selected.length >= 40 ?
       this.selection.clear() :
       this.source.data.forEach(row => {
-        if (this.selection.selected.length < 21) {
+        if (this.selection.selected.length < 41) {
           this.selection.select(row);
         } else { this.showAlert(); }
       });
