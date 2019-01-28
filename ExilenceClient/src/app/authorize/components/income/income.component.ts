@@ -9,6 +9,8 @@ import { Party } from '../../../shared/interfaces/party.interface';
 import { Player } from '../../../shared/interfaces/player.interface';
 import { PartyService } from '../../../shared/providers/party.service';
 import { SettingsService } from '../../../shared/providers/settings.service';
+import { ElectronService } from '../../../shared/providers/electron.service';
+import { Router } from '@angular/router';
 
 
 @Component({
@@ -50,6 +52,7 @@ export class IncomeComponent implements OnInit, OnDestroy {
   constructor(
     private partyService: PartyService,
     private settingService: SettingsService,
+    private router: Router
   ) {
   }
 
@@ -135,6 +138,10 @@ export class IncomeComponent implements OnInit, OnDestroy {
     if (this.interval) {
       clearInterval(this.interval);
     }
+  }
+
+  goToSettings() {
+    this.router.navigate(['/authorized/settings']);
   }
 
   hideGraph() {
