@@ -23,9 +23,7 @@ export class ServerMessageDialogComponent implements OnInit {
     this.dialogRef.close();
   }
   close() {
-    console.log('should close');
     this.dialogRef.close();
-    console.log('closed');
   }
   ngOnInit() {
   }
