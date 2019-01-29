@@ -339,7 +339,7 @@ export class PartyService implements OnDestroy {
         }
         this.reconnectAttempts = 0;
       }).catch((err) => {
-        this.logService.log('Could not connect to signalr', null, true);
+        this.logService.log('Could not connect to signalr');
         this.reconnect();
       });
     }
@@ -349,7 +349,7 @@ export class PartyService implements OnDestroy {
     if (this.reconnectAttempts > 5 && !this.forceClosed) {
       this.disconnect('Could not connect after 5 attempts.');
     } else {
-      this.logService.log('Trying to reconnect to signalr in 5 seconds.', null, true);
+      this.logService.log('Trying to reconnect to signalr in 5 seconds.');
       setTimeout(() => {
         this.initHubConnection();
       }, (5000));
