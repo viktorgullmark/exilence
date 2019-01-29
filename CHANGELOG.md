@@ -15,8 +15,9 @@ All notable changes to this project will be documented in this file.
 - Reworked the in-game overlay to work with the new currency-tab
 
 ### Fixed
-- Data on the player-badges (current zone etc) is now updated instantly
+- Improved the way we validate session id (no longer requires a Standard-character)
 - Improved the update-functionality for the in-game overlay
+- Data on the player-badges (current zone etc) is now updated instantly
 
 ### Removed
 - Removed the smaller variant of the currency-tab

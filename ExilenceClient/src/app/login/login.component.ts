@@ -239,7 +239,7 @@ export class LoginComponent implements OnInit, OnDestroy {
         this.externalService.setCookie(sessionId);
     }
 
-    getLeagues(accountName?: string, skipStep?: boolean) {
+    getLeagues(accountName?: string, skipStep?: boolean, shouldValidate = false) {
         this.isFetchingLeagues = true;
 
         const sessId = this.sessFormGroup.controls.sessionId.value;
@@ -280,6 +280,21 @@ export class LoginComponent implements OnInit, OnDestroy {
                 setTimeout(() => {
                     this.isFetchingLeagues = false;
                 }, 500);
+
+                if (shouldValidate) {
+                    const form = this.getFormObj();
+                    const requests = [];
+                    distinctLeagues.forEach(league => {
+                        requests.push(this.externalService.validateSessionId(
+                            form.sessionId,
+                            form.accountName,
+                            league.id,
+                            0
+                        ));
+                    });
+
+                    this.sendValidateRequests(requests);
+                }
             }
         });
     }
@@ -442,16 +457,16 @@ export class LoginComponent implements OnInit, OnDestroy {
         });
     }
 
-    validateSessionId() {
+    validateSessionId(league: string) {
         const form = this.getFormObj();
-        this.externalService.validateSessionId(
-            form.sessionId,
-            form.accountName,
-            'Standard',
-            0
-        ).subscribe(res => {
+        this.getLeagues(form.accountName, false, true);
+    }
+
+    sendValidateRequests(requests: any) {
+        forkJoin(requests).subscribe(results => {
+            const successfulRequest = results.find(x => x !== false && x !== null);
             this.needsValidation = false;
-            this.sessionIdValid = res !== false;
+            this.sessionIdValid = successfulRequest !== false && successfulRequest !== undefined;
         });
     }
 
