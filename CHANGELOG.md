@@ -1,6 +1,9 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [0.9.15] - 2019-01-29
+- Fixed a bug where some buttons were incorrectly hidden in the currency-tab
+
 ## [0.9.14] - 2019-01-29
 ### Added
 - Added support for pricing corrupted items (uniques and gems)
