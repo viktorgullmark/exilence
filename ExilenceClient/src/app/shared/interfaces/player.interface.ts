@@ -14,6 +14,7 @@ export interface Player {
     generic: boolean;
     sessionIdProvided: boolean;
     genericHost: string;
+    isLeader: boolean;
     netWorthSnapshots: NetWorthSnapshot[];
     areaInfo: ExtendedAreaInfo;
     pastAreas: ExtendedAreaInfo[];

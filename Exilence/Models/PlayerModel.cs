@@ -17,6 +17,7 @@ namespace Exilence.Models
         public bool Generic { get; set; }
         public bool SessionIdProvided { get; set; }
         public string GenericHost { get; set; }
+        public bool IsLeader { get; set; }
         public List<NetWorthSnapshot> NetWorthSnapshots { get; set; }
 
         public ExtenedAreaInfoModel AreaInfo { get; set; }

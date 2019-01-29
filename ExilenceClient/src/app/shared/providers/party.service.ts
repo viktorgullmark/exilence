@@ -24,6 +24,7 @@ import { HistoryHelper } from '../helpers/history.helper';
 import { LeagueWithPlayers } from '../interfaces/league.interface';
 import { Subscription } from 'rxjs';
 import { ServerMessage } from '../interfaces/server-message.interface';
+import { ErrorMessage } from '../interfaces/error-message.interface';
 
 @Injectable()
 export class PartyService implements OnDestroy {
@@ -197,11 +198,56 @@ export class PartyService implements OnDestroy {
       });
     });
 
+    this._hubConnection.on('KickedFromParty', () => {
+        this.initParty();
+        this.partyUpdated.next(this.party);
+        this.selectedPlayer.next(this.currentPlayer);
+        this.router.navigate(['/authorized/dashboard']);
+        const data = {
+          title: 'You were removed from the group',
+          body: 'The leader of the group kicked you. To keep playing, enter another group.'
+        } as ServerMessage;
+        this.serverMessageReceived.next(data);
+        this.logService.log('kicked from party');
+    });
+
+    this._hubConnection.on('LeaderChanged', (data: string) => {
+      this.electronService.decompress(data, (leaderData) => {
+        const oldLeader = this.party.players.find(x => x.character.name === leaderData.oldLeader.character.name);
+        const newLeader = this.party.players.find(x => x.character.name === leaderData.newLeader.character.name);
+
+        // if previous leader is still in the party, update the value
+        if (oldLeader !== undefined) {
+          const indexOfOldLeader = this.party.players.indexOf(oldLeader);
+          oldLeader.isLeader = false;
+          this.party.players[indexOfOldLeader] = oldLeader;
+        }
+
+        const indexOfNewLeader = this.party.players.indexOf(newLeader);
+        newLeader.isLeader = true;
+        this.party.players[indexOfNewLeader] = newLeader;
+
+        // update permissions if you become the leader
+        if (this.currentPlayer.account === newLeader.account) {
+          this.accountService.player.next(newLeader);
+        } else if (this.currentPlayer.account === oldLeader.account) {
+          this.accountService.player.next(oldLeader);
+        }
+
+        this.updatePlayerLists(this.party);
+        this.logService.log('leader changed to:', newLeader);
+      });
+    });
+
     this._hubConnection.on('ServerMessageReceived', (data: ServerMessage) => {
 
       this.serverMessageReceived.next(data);
 
       this.logService.log('server message received:', data.body);
+    });
+
+    this._hubConnection.on('ForceDisconnect', () => {
+      this.disconnect('Recived force disconnect command from server.');
     });
 
     this._hubConnection.on('ForceDisconnect', () => {
@@ -350,6 +396,22 @@ export class PartyService implements OnDestroy {
             }));
         }
       });
+  }
+
+  public assignLeader(characterName: string) {
+    if (this._hubConnection) {
+      this._hubConnection.invoke('AssignLeader', this.party.name, characterName)
+        .catch((e) => {
+        });
+    }
+  }
+
+  public kickFromParty(characterName: string) {
+    if (this._hubConnection) {
+      this._hubConnection.invoke('KickFromParty', this.party.name, characterName)
+        .catch((e) => {
+        });
+    }
   }
 
   public getAccountForCharacter(character: string): Promise<any> {
