@@ -18,7 +18,29 @@
     </div>
     <h3 class="mat-h3">Changes included in version {{appVersion}}</h3>
     <ul>
-        <li>todo: add list here</li>
+        <h5>Added</h5>
+        <ul>
+            <li>Added support for pricing corrupted items (uniques and gems)</li>
+            <li>Added the option to select which player to see data for in the currency-tab</li>
+            <li>Added export-functionality to currency summary (for both gain and net worth)</li>
+            <li>Added likelihood-check for Client.txt, displays a warning if it contains old data</li>
+            <li>Added an info-text on the currency-graph if no data has been retrieved</li>
+        </ul>
+        <h5>Changed</h5>
+        <ul>
+            <li>Now supports up to 40 selected stash-tabs, up from 20</li>
+            <li>Now starts pricing every two minutes, down from three</li>
+            <li>Reworked the in-game overlay to work with the new currency-tab</li>
+        </ul>
+        <h5>Fixed</h5>
+        <ul>
+            <li>Data on the player-badges (current zone etc) is now updated instantly</li>
+            <li>Improved the update-functionality for the in-game overlay</li>
+        </ul>
+        <h5>Removed</h5>
+        <ul>
+            <li>Removed the smaller variant of the currency-tab</li>
+        </ul>
     </ul>
     <p class="mat-body-1">
         To see the full changelog, please go to <a class="inline-link" (click)="openLink('https://github.com/viktorgullmark/exilence/blob/master/CHANGELOG.md')">this
