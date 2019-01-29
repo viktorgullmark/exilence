@@ -1,4 +1,4 @@
-import { Component, Inject, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, Inject, OnDestroy, OnInit, ViewChild, NgZone } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialog, MatStep, MatStepper } from '@angular/material';
 import { Router } from '@angular/router';
@@ -65,6 +65,7 @@ export class LoginComponent implements OnInit, OnDestroy {
 
     leaguesSub: Subscription;
     characterListSub: Subscription;
+    lineReader: any;
 
     @ViewChild('stepper') stepper: MatStepper;
     @ViewChild('lastStep') lastStep: MatStep;
@@ -79,8 +80,11 @@ export class LoginComponent implements OnInit, OnDestroy {
         private analyticsService: AnalyticsService,
         public logMonitorService: LogMonitorService,
         private mapService: MapService,
-        private dialog: MatDialog
+        private dialog: MatDialog,
+        private ngZone: NgZone
     ) {
+        this.lineReader = window.require('read-last-lines');
+
         this.leaguesSub = this.externalService.leagues.subscribe((res: League[]) => {
             this.leagues = res;
         });
@@ -243,7 +247,7 @@ export class LoginComponent implements OnInit, OnDestroy {
         this.externalService.setCookie(sessionId);
     }
 
-    getLeagues(accountName?: string, skipStep?: boolean) {
+    getLeagues(accountName?: string, skipStep?: boolean, shouldValidate = false) {
         this.isFetchingLeagues = true;
 
         const sessId = this.sessFormGroup.controls.sessionId.value;
@@ -284,6 +288,21 @@ export class LoginComponent implements OnInit, OnDestroy {
                 setTimeout(() => {
                     this.isFetchingLeagues = false;
                 }, 500);
+
+                if (shouldValidate) {
+                    const form = this.getFormObj();
+                    const requests = [];
+                    distinctLeagues.forEach(league => {
+                        requests.push(this.externalService.validateSessionId(
+                            form.sessionId,
+                            form.accountName,
+                            league.id,
+                            0
+                        ));
+                    });
+
+                    this.sendValidateRequests(requests);
+                }
             }
         });
     }
@@ -324,8 +343,8 @@ export class LoginComponent implements OnInit, OnDestroy {
                         title: 'Could not fetch characters',
                         // tslint:disable-next-line:max-line-length
                         body: 'Character-list could not be fetched. This is most likely caused from your character-list being hidden.<br/><br/>' +
-                        'To resolve this, uncheck "Hide Characters tab" in the privacy-settings over at pathofexile.com<br/><br/>' +
-                        'If it still does not work, fetch a new session ID and update it in the login-settings.'
+                            'To resolve this, uncheck "Hide Characters tab" in the privacy-settings over at pathofexile.com<br/><br/>' +
+                            'If it still does not work, fetch a new session ID and update it in the login-settings.'
                     } as ErrorMessage);
                     this.isFetching = false;
                 } else {
@@ -375,8 +394,28 @@ export class LoginComponent implements OnInit, OnDestroy {
             this.pathFormGroup.controls.filePath.setValue(filePath[0]);
             setTimeout(() => {
                 this.checkPath();
+                this.ngZone.run(() => {
+                    this.likelyhoodCheck(filePath[0]);
+                });
             }, 500);
         }
+    }
+
+    likelyhoodCheck(filePath) {
+        this.lineReader.read(filePath, 2)
+            .then((lines) => {
+                const twoDaysAgo = (Date.now() - (60 * 60 * 1000 * 48));
+                const lastTimestamp = Date.parse(lines.slice(0, 19));
+                // if last timestamp is more than 2 days ago, show warning-dialog
+                if (twoDaysAgo > lastTimestamp) {
+                    const errorMsg = {
+                        title: 'Wrong Client.txt selected?',
+                        body: 'We detected that your Client.txt contains older data.<br/><br/>' +
+                            'Make sure to select the file from the same directory as you run the game from.'
+                    } as ErrorMessage;
+                    this.openErrorMsgDialog(errorMsg);
+                }
+            });
     }
 
     checkLeagueChange(event) {
@@ -426,16 +465,16 @@ export class LoginComponent implements OnInit, OnDestroy {
         });
     }
 
-    validateSessionId() {
+    validateSessionId(league: string) {
         const form = this.getFormObj();
-        this.externalService.validateSessionId(
-            form.sessionId,
-            form.accountName,
-            'Standard',
-            0
-        ).subscribe(res => {
+        this.getLeagues(form.accountName, false, true);
+    }
+
+    sendValidateRequests(requests: any) {
+        forkJoin(requests).subscribe(results => {
+            const successfulRequest = results.find(x => x !== false && x !== null);
             this.needsValidation = false;
-            this.sessionIdValid = res !== false;
+            this.sessionIdValid = successfulRequest !== false && successfulRequest !== undefined;
         });
     }
 

@@ -121,7 +121,7 @@ export class ExternalService {
     this.setCookie(sessionId);
 
     const parameters = `?league=${league}&accountName=${account}&tabIndex=${index}&tabs=1`;
-    return this.http.get<Stash>('https://www.pathofexile.com/character-window/get-stash-items' + parameters)
+    return this.RequestRateLimit.limit(this.http.get<Stash>('https://www.pathofexile.com/character-window/get-stash-items' + parameters)
       .catch(e => {
         if (e.status === 500 || e.status === 502 || e.status === 503) {
           this.logService.log('Could not validate, disconnecting!', null, true);
@@ -131,7 +131,7 @@ export class ExternalService {
           return Observable.of(false);
         }
         return Observable.of(null);
-      });
+      }));
   }
 
   getAccountForCharacter(character: string) {
@@ -148,7 +148,7 @@ export class ExternalService {
           this.http.get(url).retryWhen((err) => {
             return err.flatMap((error: any) => {
               if (error.status === 429) {
-                return Observable.of(error.status).delay(1000 * 10); // 10 second retry
+                return Observable.of(error.status).delay(1000 * 60); // 60 second retry
               }
               return Observable.of(null);
             }).take(2);

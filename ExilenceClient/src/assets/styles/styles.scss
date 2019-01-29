@@ -414,14 +414,16 @@ mat-tooltip-component > .mat-tooltip {
         border: 0px;
     }
 
-    li {        
-        padding: 10px 25px 10px 25px;
+    li {      
+        cursor: pointer; 
         border-bottom: #222222 2px solid;
         &:hover {
             background-color: #2f2f2f;
         }
 
         a{
+            display: block;
+            padding: 10px 25px 10px 25px;
             color: white;
             text-decoration: none;
         }

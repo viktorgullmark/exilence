@@ -78,7 +78,7 @@
     },
     "ERROR": {
         "PATH_NOT_VALID": "The filepath is not valid",
-        "SESSIONID_NOT_VALID": "Either the sessionId/accountname is not valid, or you don't have an item in your first stashtab in Standard (current way we validate sessions)",
+        "SESSIONID_NOT_VALID": "The session id or account name is not valid",
         "SESSIONID_NOT_VALIDATED": "The sessionId has not been validated yet",
         "SESSIONID_NOT_PROVIDED": "No sessionId provided",
         "PRIVATE_PROFILE": "Character-list is hidden/private, a sessionId is required to continue"

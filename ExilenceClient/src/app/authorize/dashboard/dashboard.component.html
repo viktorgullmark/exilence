@@ -18,30 +18,40 @@
     </div>
     <h3 class="mat-h3">Changes included in version {{appVersion}}</h3>
     <ul>
-        <li>Added support for pricing corrupted items</li>
+        <h4>Added</h4>
+        <ul>
+            <li>Added support for pricing corrupted items (uniques and gems)</li>
+            <li>Added new functionality for "leaders"</li>
+            <ul>
+                <li>The leader can right-click on players to kick them from the group</li>
+                <li>The leader can right-click on players to pass the leader-role</li>
+            </ul>
+            <li>Added the option to select which player to see data for in the currency-tab</li>
+            <li>Added export-functionality to currency summary (for both gain and net worth)</li>
+            <li>Added likelihood-check for Client.txt, displays a warning if it contains old data</li>
+            <li>Added an info-text on the currency-graph if no data has been retrieved</li>
+        </ul>
+        <h4>Changed</h4>
+        <ul>
+            <li>Now supports up to 40 selected stash-tabs, up from 20</li>
+            <li>Now starts pricing every two minutes, down from three</li>
+            <li>Reworked the in-game overlay to work with the new currency-tab</li>
+        </ul>
+        <h4>Fixed</h4>
+        <ul>
+            <li>Improved the way we validate session id (no longer requires a Standard-character)</li>
+            <li>Improved the update-functionality for the in-game overlay</li>
+            <li>Data on the player-badges (current zone etc) is now updated instantly</li>
+        </ul>
+        <h4>Removed</h4>
+        <ul>
+            <li>Removed the smaller variant of the currency-tab</li>
+        </ul>
     </ul>
+    <mat-divider class="divider"></mat-divider>
     <p class="mat-body-1">
         To see the full changelog, please go to <a class="inline-link" (click)="openLink('https://github.com/viktorgullmark/exilence/blob/master/CHANGELOG.md')">this
             link
         </a>
-    </p>
-    <h3 class="mat-h3">Beta information</h3>
-    <p class="mat-body-1">
-        This version is a beta release, which means it's still in an early stage. Bug reports and feature-requests are
-        greatly appreciated
-        as it will help us develop the app further, and are preferrebly posted in our
-        <a class="inline-link" (click)="openLink('https://discord.gg/yxuBrPY')">Discord</a> or directly at
-        <a class="inline-link" (click)="openLink('https://github.com/viktorgullmark/exilence/issues')">https://github.com/viktorgullmark/exilence/issues</a>.
-        Updates will be applied automatically when you restart
-        the program. Please be patient as it will download the new version and apply it before you can start using the
-        application.
-    </p>
-    <p class="mat-body-1">
-        Feel free to contact us on Discord or GitHub for any questions/input.
-    </p>
-    <p class="mat-body-1">
-        <a class="inline-link" (click)="openLink('https://github.com/viktorgullmark')">github.com/viktorgullmark</a>
-        <br />
-        <a class="inline-link" (click)="openLink('https://github.com/petterannerwall')">github.com/petterannerwall</a>
     </p>
 </div>
