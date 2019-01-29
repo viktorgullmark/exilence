@@ -464,7 +464,7 @@ export class LoginComponent implements OnInit, OnDestroy {
         });
     }
 
-    validateSessionId(league: string) {
+    validateSessionId() {
         const form = this.getFormObj();
         this.getLeagues(form.accountName, false, true);
     }
