@@ -4,7 +4,7 @@ import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
 import { AppModule } from './app/app.module';
 import { AppConfig } from './environments/environment';
 import 'hammerjs';
-const Sentry = window.require('@sentry/electron');
+import * as Sentry from '@sentry/browser';
 
 
 

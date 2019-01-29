@@ -19,7 +19,7 @@ export class SettingsService {
       this.electronService.settings.set(key, object);
       _.set(this.settings, key, object);
     } catch (e) {
-      this.logService.log(e);
+      this.logService.log(e, null, true);
     }
   }
   get(key: string) {
@@ -27,7 +27,7 @@ export class SettingsService {
       this.cacheSettings();
       return _.get(this.settings, key);
     } catch (e) {
-      this.logService.log(e);
+      this.logService.log(e, null, true);
     }
   }
   getAll() {
@@ -35,7 +35,7 @@ export class SettingsService {
       this.cacheSettings();
       return this.settings;
     } catch (e) {
-      this.logService.log(e);
+      this.logService.log(e, null, true);
     }
   }
   deleteAll() {
@@ -43,7 +43,7 @@ export class SettingsService {
       this.electronService.settings.deleteAll();
       this.settings = null;
     } catch (e) {
-      this.logService.log(e);
+      this.logService.log(e, null, true);
     }
   }
   deleteNetWorth() {
@@ -59,7 +59,7 @@ export class SettingsService {
       this.electronService.settings.set('networth', netWorthHistory);
       _.set(this.settings, 'networth', netWorthHistory);
     } catch (e) {
-      this.logService.log(e);
+      this.logService.log(e, null, true);
     }
     return netWorthHistory;
   }
@@ -69,7 +69,7 @@ export class SettingsService {
       this.electronService.settings.set('areas', areas);
       _.set(this.settings, 'areas', areas);
     } catch (e) {
-      this.logService.log(e);
+      this.logService.log(e, null, true);
     }
     return areas;
   }

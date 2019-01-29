@@ -2,7 +2,6 @@ import { Injectable, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
 import * as signalR from '@aspnet/signalr';
 import { HubConnection } from '@aspnet/signalr';
-import * as Sentry from '@sentry/electron';
 import { BehaviorSubject } from 'rxjs/internal/BehaviorSubject';
 
 import { AppConfig } from '../../../environments/environment';
@@ -340,8 +339,7 @@ export class PartyService implements OnDestroy {
         }
         this.reconnectAttempts = 0;
       }).catch((err) => {
-        Sentry.captureException(err);
-        this.logService.log('Could not connect to signalr');
+        this.logService.log('Could not connect to signalr', null, true);
         this.reconnect();
       });
     }
@@ -395,6 +393,7 @@ export class PartyService implements OnDestroy {
         if (this._hubConnection) {
           this.electronService.compress(objToSend, (data) => this._hubConnection.invoke('UpdatePlayer', this.party.name, data)
             .catch((e) => {
+              this.logService.log(e, null, true);
             }));
         }
       });
@@ -404,6 +403,7 @@ export class PartyService implements OnDestroy {
     if (this._hubConnection) {
       this._hubConnection.invoke('AssignLeader', this.party.name, characterName)
         .catch((e) => {
+          this.logService.log(e, null, true);
         });
     }
   }
@@ -412,6 +412,7 @@ export class PartyService implements OnDestroy {
     if (this._hubConnection) {
       this._hubConnection.invoke('KickFromParty', this.party.name, characterName)
         .catch((e) => {
+          this.logService.log(e, null, true);
         });
     }
   }

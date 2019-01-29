@@ -1,7 +1,6 @@
 import { app, BrowserWindow, dialog, globalShortcut } from 'electron';
 import * as path from 'path';
 import * as url from 'url';
-import * as Sentry from '@sentry/electron';
 
 
 export interface ExileWindowEvent {
@@ -16,11 +15,6 @@ export enum ExileWindowEnum {
   Areas = 'areas',
   Trade = 'trade'
 }
-
-Sentry.init({
-  dsn: 'https://0db02ec6abdd490d8e749491dcaf2a96@sentry.io/1370601',
-  sampleRate: 0.1
-});
 
 const ipcMain = require('electron').ipcMain;
 const log = require('electron-log');

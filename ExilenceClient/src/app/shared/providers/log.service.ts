@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import * as Sentry from '@sentry/browser';
 
 @Injectable()
 export class LogService {
@@ -21,6 +22,7 @@ export class LogService {
       console.log(`[INFO] ${message}`, data);
     } else {
       this.logger.error(message);
+      Sentry.captureException(message);
       console.log(`[ERROR] ${message}`, data);
     }
   }

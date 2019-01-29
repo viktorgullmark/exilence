@@ -23,8 +23,7 @@ import { SettingsService } from '../shared/providers/settings.service';
 import { ErrorMessage } from '../shared/interfaces/error-message.interface';
 import { ServerMessageDialogComponent } from '../authorize/components/server-message-dialog/server-message-dialog.component';
 
-
-const Sentry = window.require('@sentry/electron');
+import * as Sentry from '@sentry/browser';
 
 
 @Component({
