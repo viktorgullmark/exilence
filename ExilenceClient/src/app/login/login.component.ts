@@ -23,6 +23,9 @@ import { SettingsService } from '../shared/providers/settings.service';
 import { ErrorMessage } from '../shared/interfaces/error-message.interface';
 import { ServerMessageDialogComponent } from '../authorize/components/server-message-dialog/server-message-dialog.component';
 
+import * as Sentry from '@sentry/browser';
+
+
 @Component({
     selector: 'app-login',
     templateUrl: './login.component.html',
@@ -86,6 +89,10 @@ export class LoginComponent implements OnInit, OnDestroy {
         });
 
         this.fetchSettings();
+
+        Sentry.configureScope((scope) => {
+            scope.setUser({ 'username': this.accountName });
+        });
 
         this.accFormGroup = fb.group({
             accountName: [this.accountName !== undefined ? this.accountName : '', Validators.required]

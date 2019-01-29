@@ -349,7 +349,7 @@ export class PartyService implements OnDestroy {
     if (this.reconnectAttempts > 5 && !this.forceClosed) {
       this.disconnect('Could not connect after 5 attempts.');
     } else {
-      this.logService.log('Trying to reconnect to signalr in 5 seconds.', null, true);
+      this.logService.log('Trying to reconnect to signalr in 5 seconds.');
       setTimeout(() => {
         this.initHubConnection();
       }, (5000));
@@ -393,6 +393,7 @@ export class PartyService implements OnDestroy {
         if (this._hubConnection) {
           this.electronService.compress(objToSend, (data) => this._hubConnection.invoke('UpdatePlayer', this.party.name, data)
             .catch((e) => {
+              this.logService.log(e, null, true);
             }));
         }
       });
@@ -402,6 +403,7 @@ export class PartyService implements OnDestroy {
     if (this._hubConnection) {
       this._hubConnection.invoke('AssignLeader', this.party.name, characterName)
         .catch((e) => {
+          this.logService.log(e, null, true);
         });
     }
   }
@@ -410,6 +412,7 @@ export class PartyService implements OnDestroy {
     if (this._hubConnection) {
       this._hubConnection.invoke('KickFromParty', this.party.name, characterName)
         .catch((e) => {
+          this.logService.log(e, null, true);
         });
     }
   }
