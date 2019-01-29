@@ -1,5 +1,5 @@
-﻿using Exilence.Models;
-using Exilence.Models.Ladder;
+﻿using Shared.Models;
+using Shared.Models.Ladder;
 using System;
 using System.Collections.Generic;
 using System.Linq;

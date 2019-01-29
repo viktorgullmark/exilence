@@ -1,17 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Exilence.Interfaces;
-using Exilence.Models;
+﻿using System.Threading.Tasks;
+using Shared.Interfaces;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Caching.Distributed;
-using Exilence.Helper;
-using Microsoft.Extensions.Logging;
-using Exilence.Models.Ladder;
-using Exilence.Models.Connection;
 
-namespace Exilence
+namespace Shared
 {
     [Route("api/[controller]")]
     public class HealthController : Controller

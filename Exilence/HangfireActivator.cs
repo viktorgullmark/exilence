@@ -1,10 +1,6 @@
-﻿using Hangfire;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System;
 
-namespace Exilence
+namespace Shared
 {
     public class HangfireActivator : Hangfire.JobActivator
     {

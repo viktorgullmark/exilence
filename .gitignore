@@ -3,6 +3,10 @@ packages/
 Exilence/obj/
 Exilence/bin/
 Exilence/appsettings.json
+LadderService/obj/
+LadderService/bin/
+Shared/obj/
+Shared/bin/
 
 Exilence/Properties/PublishProfiles/Local.pubxml.user
 Exilence/appsettings.Development.json

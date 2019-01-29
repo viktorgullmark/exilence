@@ -1,7 +1,7 @@
-﻿using Exilence.Hubs;
-using Exilence.Interfaces;
-using Exilence.Repositories;
-using Exilence.Services;
+﻿using Shared.Hubs;
+using Shared.Interfaces;
+using Shared.Repositories;
+using Shared.Services;
 using Hangfire;
 using Hangfire.MemoryStorage;
 using Microsoft.AspNetCore.Builder;
@@ -12,8 +12,9 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using System;
+using Exilence.Interfaces;
 
-namespace Exilence
+namespace Shared
 {
     public class Startup
     {

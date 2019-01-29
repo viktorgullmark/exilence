@@ -1,18 +1,18 @@
-﻿using Exilence.Helper;
-using Exilence.Interfaces;
-using Exilence.Models;
-using Exilence.Models.Ladder;
+﻿using Shared.Helper;
+using Shared.Interfaces;
+using Shared.Models;
+using Shared.Models.Ladder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Web;
+using Exilence.Interfaces;
 
-namespace Exilence.Services
+namespace Shared.Services
 {
     public class LadderService : ILadderService
     {
@@ -39,14 +39,6 @@ namespace Exilence.Services
             _redisRepository = redisRepository;
         }
 
-        #region Leagues
-        private async Task<List<LeagueApiModel>> FetchLeaguesAsync()
-        {
-            var json = await _externalService.ExecuteGetAsync(LeagesUrl);
-            return JsonConvert.DeserializeObject<List<LeagueApiModel>>(json);
-        }
-
-        #endregion
 
         #region Ladder
 

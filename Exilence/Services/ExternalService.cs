@@ -1,10 +1,11 @@
-﻿using Exilence.Interfaces;
+﻿using Shared.Interfaces;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Net.Http;
 using System.Threading.Tasks;
+using Exilence.Interfaces;
 
-namespace Exilence.Services
+namespace Shared.Services
 {
     public class ExternalService : IExternalService
     {

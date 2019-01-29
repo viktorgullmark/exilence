@@ -1,0 +1,15 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>netcoreapp2.2</TargetFramework>
+    <LangVersion>latest</LangVersion>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="FSharp.Core" Version="4.6.0" />
+    <PackageReference Include="PathOfSupporting" Version="0.0.21" />
+    <PackageReference Include="RateLimiter" Version="1.1.1" />
+  </ItemGroup>
+
+</Project>

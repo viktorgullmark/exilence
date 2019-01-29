@@ -3,7 +3,14 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.27703.2000
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Exilence", "Exilence\Exilence.csproj", "{5F0894AC-6D1A-47C1-9AF0-38406C08FDEF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Exilence", "Exilence\Exilence.csproj", "{5F0894AC-6D1A-47C1-9AF0-38406C08FDEF}"
+	ProjectSection(ProjectDependencies) = postProject
+		{B77EA6FD-6ADD-46CB-867C-81E396BFA530} = {B77EA6FD-6ADD-46CB-867C-81E396BFA530}
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LadderService", "LadderService\LadderService.csproj", "{2732FE0F-F71B-4467-827F-0838337185B1}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Shared", "Shared\Shared.csproj", "{B77EA6FD-6ADD-46CB-867C-81E396BFA530}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +22,14 @@ Global
 		{5F0894AC-6D1A-47C1-9AF0-38406C08FDEF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5F0894AC-6D1A-47C1-9AF0-38406C08FDEF}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5F0894AC-6D1A-47C1-9AF0-38406C08FDEF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2732FE0F-F71B-4467-827F-0838337185B1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2732FE0F-F71B-4467-827F-0838337185B1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2732FE0F-F71B-4467-827F-0838337185B1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2732FE0F-F71B-4467-827F-0838337185B1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B77EA6FD-6ADD-46CB-867C-81E396BFA530}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B77EA6FD-6ADD-46CB-867C-81E396BFA530}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B77EA6FD-6ADD-46CB-867C-81E396BFA530}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B77EA6FD-6ADD-46CB-867C-81E396BFA530}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
