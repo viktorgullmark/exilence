@@ -9,7 +9,7 @@ All notable changes to this project will be documented in this file.
 - Added likelihood-check for Client.txt, displays a warning if it contains old data
 - Added an info-text on the currency-graph if no data has been retrieved
 
-### Changes
+### Changed
 - Now supports up to 40 selected stash-tabs, up from 20
 - Now starts pricing every two minutes, down from three
 - Improved the update-functionality for the in-game overlay
