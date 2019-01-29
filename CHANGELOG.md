@@ -12,9 +12,11 @@ All notable changes to this project will be documented in this file.
 ### Changed
 - Now supports up to 40 selected stash-tabs, up from 20
 - Now starts pricing every two minutes, down from three
-- Improved the update-functionality for the in-game overlay
-- Data on the player-badges (current zone etc) is now updated instantly
 - Reworked the in-game overlay to work with the new currency-tab
+
+### Fixed
+- Data on the player-badges (current zone etc) is now updated instantly
+- Improved the update-functionality for the in-game overlay
 
 ### Removed
 - Removed the smaller variant of the currency-tab
