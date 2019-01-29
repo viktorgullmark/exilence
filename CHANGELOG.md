@@ -4,6 +4,9 @@ All notable changes to this project will be documented in this file.
 ## [0.9.14] - 2019-XX-XX
 ### Added
 - Added support for pricing corrupted items (uniques and gems)
+- Added new functionality for "leaders"
+    - The leader can right-click on players to kick them from the group
+    - The leader can right-click on players to pass the leader-role
 - Added the option to select which player to see data for in the currency-tab
 - Added export-functionality to currency summary (for both gain and net worth)
 - Added likelihood-check for Client.txt, displays a warning if it contains old data
