@@ -1,4 +1,4 @@
-import { Component, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit, ViewChild, ChangeDetectorRef } from '@angular/core';
 import { ContextMenuComponent } from 'ngx-contextmenu';
 import { Subscription } from 'rxjs/internal/Subscription';
 
@@ -21,7 +21,7 @@ export class PlayerListComponent implements OnInit, OnDestroy {
   private genericPlayersSub: Subscription;
   private currentPlayerSub: Subscription;
 
-  constructor(public partyService: PartyService, private accountService: AccountService) { }
+  constructor(public partyService: PartyService, private accountService: AccountService, private ref: ChangeDetectorRef) { }
 
   playerLeagues: LeagueWithPlayers[];
   currentPlayer: Player;
@@ -34,11 +34,14 @@ export class PlayerListComponent implements OnInit, OnDestroy {
     if (!this.localList) {
       this.playerLeaguesSub = this.partyService.playerLeagues.subscribe(res => {
         this.playerLeagues = res;
+        this.ref.detectChanges();
       });
     } else {
       this.genericPlayersSub = this.partyService.genericPlayers.subscribe(res => {
         if (res !== undefined) {
           this.genericPlayers = res;
+          this.ref.detectChanges();
+
           if (this.partyService.selectedGenericPlayerObj === undefined && this.genericPlayers.length > 0) {
             this.partyService.selectedGenericPlayer.next(this.genericPlayers[0]);
           }

@@ -157,7 +157,7 @@ namespace Exilence.Hubs
             var compressedPlayerToKick = CompressionHelper.Compress(playerObjToKick);
 
             await LeaveParty(partyName, compressedPlayerToKick);
-            await Clients.Client(playerObjToKick.ConnectionID).SendAsync("ForceDisconnect");
+            await Clients.Client(playerObjToKick.ConnectionID).SendAsync("KickedFromParty");
         }
 
         public async Task UpdatePlayer(string partyName, string playerObj)

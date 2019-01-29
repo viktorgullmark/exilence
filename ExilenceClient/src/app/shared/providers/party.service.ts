@@ -24,6 +24,7 @@ import { HistoryHelper } from '../helpers/history.helper';
 import { LeagueWithPlayers } from '../interfaces/league.interface';
 import { Subscription } from 'rxjs';
 import { ServerMessage } from '../interfaces/server-message.interface';
+import { ErrorMessage } from '../interfaces/error-message.interface';
 
 @Injectable()
 export class PartyService implements OnDestroy {
@@ -195,6 +196,19 @@ export class PartyService implements OnDestroy {
         }
         this.logService.log('player left:', player);
       });
+    });
+
+    this._hubConnection.on('KickedFromParty', () => {
+        this.initParty();
+        this.partyUpdated.next(this.party);
+        this.selectedPlayer.next(this.currentPlayer);
+        this.router.navigate(['/authorized/dashboard']);
+        const data = {
+          title: 'You were removed from the group',
+          body: 'The leader of the group kicked you. To keep playing, enter another group.'
+        } as ServerMessage;
+        this.serverMessageReceived.next(data);
+        this.logService.log('kicked from party');
     });
 
     this._hubConnection.on('LeaderChanged', (data: string) => {
