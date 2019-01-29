@@ -11,6 +11,7 @@ All notable changes to this project will be documented in this file.
 - Added export-functionality to currency summary (for both gain and net worth)
 - Added likelihood-check for Client.txt, displays a warning if it contains old data
 - Added an info-text on the currency-graph if no data has been retrieved
+- Added Sentry (error reporting service)
 
 ### Changed
 - Now supports up to 40 selected stash-tabs, up from 20
