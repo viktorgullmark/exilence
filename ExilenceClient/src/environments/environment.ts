@@ -1,5 +1,5 @@
 export const AppConfig = {
   production: false,
-  environment: 'LOCAL',
+  environment: 'DEV',
   url: 'http://localhost:61606/'
 };

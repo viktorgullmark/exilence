@@ -1,7 +1,11 @@
-<ng-container *ngIf="isSummary || (player != undefined && player.netWorthSnapshots && player.netWorthSnapshots.length > 0 && player.netWorthSnapshots[0].timestamp > 0)">
+<ng-container *ngIf="isSummary && (
+ (foundPlayer == undefined && anyPlayerSnapshots())||
+ (foundPlayer != undefined 
+ && foundPlayer.netWorthSnapshots 
+ && foundPlayer.netWorthSnapshots.length > 0 
+ && foundPlayer.netWorthSnapshots[0].timestamp > 0))">
   <h3 class="mat-h3 graph-title">{{title}}
     <span class="mat-caption caption-text">(updates when you change area, at most every 2 minutes)</span>
-    <mat-icon class="info-icon" matTooltip="Only data from the past 24 hours is shared with your group">info</mat-icon>
   </h3>
   <div class="chart-container">
     <ngx-charts-line-chart *ngIf="visible" [view]="view" class="chart-container" [ngClass]="{'summary-chart': player == undefined}"
@@ -21,11 +25,16 @@
   </div>
 </ng-container>
 
-<ng-container *ngIf="player != undefined && player.netWorthSnapshots && (player.netWorthSnapshots.length === 0 || (player.netWorthSnapshots.length > 0 && player.netWorthSnapshots[0].timestamp === 0))">
+<ng-container *ngIf="foundPlayer == undefined && !anyPlayerSnapshots() 
+  || (foundPlayer != undefined 
+    && foundPlayer.netWorthSnapshots 
+    && (foundPlayer.netWorthSnapshots.length === 0 
+    || (foundPlayer.netWorthSnapshots.length > 0 
+    && foundPlayer.netWorthSnapshots[0].timestamp === 0)))">
   <div class="mid-text-wrapper">
     <mat-icon class="header-icon">warning</mat-icon>
     <h3 class="mat-h3">
-      No net worth recorded yet, will update every 2 minutes
+      Net worth data is recorded every 2 minutes. Make sure to <a class="inline-link" (click)="goToSettings()">select the stashtabs</a> that you want to track.
     </h3>
   </div>
 </ng-container>

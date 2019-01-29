@@ -5,7 +5,10 @@ All notable changes to this project will be documented in this file.
 - Added support for pricing corrupted items (uniques and gems)
 - Added the option to select which player to see data for in the currency-tab
 - Added export-functionality to currency summary (for both gain and net worth)
+- Added likelihood-check for Client.txt, displays a warning if it contains old data
+- Now supports up to 40 selected stash-tabs, up from 20
 - Now starts pricing every two minutes, down from three
+- Now displays an info-text on the currency-graph if no data has been retrieved
 - Reworked the in-game overlay to work with the new currency-tab
 - Improved the update-functionality for the in-game overlay
 - Removed the smaller variant of the currency-tab

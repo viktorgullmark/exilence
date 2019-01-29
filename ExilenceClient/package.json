@@ -26,7 +26,6 @@
     "ng": "ng",
     "start": "npm-run-all -p ng:serve electron:serve",
     "build": "npm run electron:tsc && ng build",
-    "build:dev": "npm run build -- -c dev",
     "build:prod": "npm run build -- -c production",
     "ng:serve": "ng serve",
     "electron:tsc": "tsc main.ts",
@@ -50,6 +49,7 @@
     "moment": "^2.22.2",
     "ngx-contextmenu": "^5.1.1",
     "poe-log-monitor": "github:viktorgullmark/poe-log-monitor",
+    "read-last-lines": "^1.6.0",
     "rxjs-ratelimiter": "^1.0.1",
     "universal-analytics": "^0.4.20"
   },

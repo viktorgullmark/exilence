@@ -3,5 +3,5 @@
   <p [innerHtml]="data.content"></p>
 </div>
 <div mat-dialog-actions class="button-area">
-  <button mat-raised-button color="primary" [mat-dialog-close]="data.title" cdkFocusInitial>Ok</button>
+  <button mat-raised-button color="primary" cdkFocusInitial (click)="close()">Ok</button>
 </div>

@@ -148,7 +148,7 @@ export class ExternalService {
           this.http.get(url).retryWhen((err) => {
             return err.flatMap((error: any) => {
               if (error.status === 429) {
-                return Observable.of(error.status).delay(1000 * 10); // 10 second retry
+                return Observable.of(error.status).delay(1000 * 60); // 60 second retry
               }
               return Observable.of(null);
             }).take(2);
