@@ -127,7 +127,10 @@ export class PartyService implements OnDestroy {
           this.party = party;
           this.updatePlayerLists(this.party);
           this.accountService.player.next(playerObj);
-          this.selectedPlayer.next(playerObj);
+          const playerToSelect = this.party.players.find(x => !x.isSpectator);
+          if (playerToSelect !== undefined) {
+            this.selectedPlayer.next(playerToSelect);
+          }
           this.isEntering = false;
           this.logService.log('Entered party:', party);
           console.log(party);
@@ -189,9 +192,7 @@ export class PartyService implements OnDestroy {
 
     this._hubConnection.on('PlayerLeft', (data: string) => {
       this.electronService.decompress(data, (player: Player) => {
-        this.party.players = this.party.players.filter(x => x.account !== player.account);
-        this.partyUpdated.next(this.party);
-        this.updatePlayerLists(this.party);
+        this.party.players = this.party.players.filter(x => x.connectionID !== player.connectionID);
 
         // if last player leaves, kick self to login screen
         if (this.party.players.find(x => !x.isSpectator) === undefined) {

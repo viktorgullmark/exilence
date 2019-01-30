@@ -31,7 +31,6 @@ namespace Exilence.Hubs
         public async Task JoinParty(string partyName, string playerObj)
         {
             var player = CompressionHelper.Decompress<PlayerModel>(playerObj);
-            PlayerModel playerToSend = null;
             if(!player.IsSpectator) { 
                 var ladder = await _ladderService.GetLadderForPlayer(player.Character.League, player.Character.Name);
                 if (ladder == null)
@@ -70,7 +69,6 @@ namespace Exilence.Hubs
                 {
                     await Clients.Caller.SendAsync("GroupNotFoundOrEmpty");
                 } else {
-                    playerToSend = party.Players[0];
                     var oldPlayer = party.Players.FirstOrDefault(x => (x.Character != null && player.Character != null && x.Character.Name == player.Character.Name) || x.ConnectionID == player.ConnectionID);
 
                     // if the party were joining doesnt have a leader, make the player leader
@@ -90,7 +88,7 @@ namespace Exilence.Hubs
                     }
 
                     await _cache.SetAsync<PartyModel>($"party:{partyName}", party);
-                    await Clients.Caller.SendAsync("EnteredParty", CompressionHelper.Compress(party), CompressionHelper.Compress(playerToSend));
+                    await Clients.Caller.SendAsync("EnteredParty", CompressionHelper.Compress(party), CompressionHelper.Compress(player));
                 }
             }
 
