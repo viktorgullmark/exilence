@@ -2,7 +2,6 @@
   <div *ngIf="!electronService.isElectron()" class="form group-selection-screen">
     <h1 class="mat-h1">Group selection</h1>
     <span class="mat-body-1">Type the name of the group you wish to spectate.<br /><br /></span>
-    <mat-divider class="divider group-selection-divider"></mat-divider>
     <mat-form-field>
       <input matInput [(ngModel)]="groupName" placeholder="{{'PARTY.CODE' | translate}}" required>
     </mat-form-field>
