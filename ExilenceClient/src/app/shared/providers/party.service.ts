@@ -1,4 +1,4 @@
-import { Injectable, OnDestroy } from '@angular/core';
+import { Injectable, OnDestroy, EventEmitter } from '@angular/core';
 import { Router } from '@angular/router';
 import * as signalR from '@aspnet/signalr';
 import { HubConnection } from '@aspnet/signalr';
@@ -48,6 +48,7 @@ export class PartyService implements OnDestroy {
   public genericPlayers: BehaviorSubject<Player[]> = new BehaviorSubject<Player[]>([]);
   public selectedFilterValueSub: BehaviorSubject<string> = new BehaviorSubject<string>(undefined);
   public selectedFilterValue = 'All players';
+  public connectionInitiated: EventEmitter<boolean> = new EventEmitter();
 
   public serverMessageReceived: BehaviorSubject<ServerMessage> = new BehaviorSubject<ServerMessage>(undefined);
 
@@ -356,6 +357,7 @@ export class PartyService implements OnDestroy {
     if (this._hubConnection.state === 0) {
       this.logService.log('Starting signalr connection');
       this._hubConnection.start().then(() => {
+        this.connectionInitiated.emit(true);
         console.log('Successfully established signalr connection!');
         if (this.party !== undefined && this.currentPlayer !== undefined && this.party.name !== '') {
           this.joinParty(this.party.name, this.currentPlayer);

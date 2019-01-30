@@ -67,6 +67,7 @@ export class LoginComponent implements OnInit, OnDestroy {
     characterListSub: Subscription;
     lineReader: any;
     groupNoExists = false;
+    providedPartyName = undefined;
 
     @ViewChild('stepper') stepper: MatStepper;
     @ViewChild('lastStep') lastStep: MatStep;
@@ -85,9 +86,13 @@ export class LoginComponent implements OnInit, OnDestroy {
         private dialog: MatDialog,
         private ngZone: NgZone
     ) {
+
+        this.providedPartyName = window['partyName'];
+
         if (this.electronService.isElectron()) {
             this.lineReader = window.require('read-last-lines');
         }
+
         this.leaguesSub = this.externalService.leagues.subscribe((res: League[]) => {
             this.leagues = res;
         });
@@ -122,6 +127,17 @@ export class LoginComponent implements OnInit, OnDestroy {
         this.mapService.previousInstanceServer = undefined;
         this.mapService.previousDate = undefined;
         this.mapService.currentArea = undefined;
+
+        if (!this.electronService.isElectron()) {
+            if (this.providedPartyName !== '' && this.providedPartyName !== undefined) {
+                console.log('Joining provided party: ', this.providedPartyName);
+                this.partyService.connectionInitiated.subscribe(res => {
+                    if (res) {
+                        this.loadGroup(this.providedPartyName);
+                    }
+                });
+            }
+        }
     }
 
     checkPath() {
@@ -477,6 +493,9 @@ export class LoginComponent implements OnInit, OnDestroy {
     }
 
     loadGroup(groupName: string) {
+
+        groupName = groupName.toUpperCase();
+
         const player = {
             isSpectator: true,
             netWorthSnapshots: [{
@@ -485,6 +504,7 @@ export class LoginComponent implements OnInit, OnDestroy {
                 items: []
             }]
         } as Player;
+
         this.partyService.checkIfPartyExists(groupName).then(exists => {
             if (exists) {
                 this.partyService.joinParty(groupName, player);
