@@ -15,17 +15,20 @@ import { FaqComponent } from './authorize/faq/faq.component';
 const routes: Routes = [
     // login-section
     { path: 'login', component: LoginComponent },
+    { path: 'party', component: LoginComponent },
     { path: '', redirectTo: 'login', pathMatch: 'full' },
 
     // authorized
-    { path: 'authorized', component: AuthorizeComponent, children: [
-        { path: 'dashboard', component: DashboardComponent },
-        { path: 'party', component: PartyComponent },
-        { path: 'inspect-players', component: InspectPlayersComponent },
-        { path: 'settings', component: SettingsComponent },
-        { path: 'faq', component: FaqComponent },
-        { path: '', redirectTo: '/authorized/dashboard', pathMatch: 'full' }
-    ]},
+    {
+        path: 'authorized', component: AuthorizeComponent, children: [
+            { path: 'dashboard', component: DashboardComponent },
+            { path: 'party', component: PartyComponent },
+            { path: 'inspect-players', component: InspectPlayersComponent },
+            { path: 'settings', component: SettingsComponent },
+            { path: 'faq', component: FaqComponent },
+            { path: '', redirectTo: '/authorized/dashboard', pathMatch: 'full' }
+        ]
+    },
 
     { path: 'disconnected/:external', component: DisconnectedComponent },
 

@@ -1,5 +1,5 @@
 <div class="container">
-  <div *ngIf="!electronService.isElectron() && providedPartyName == undefined && groupNoExists == false" class="form group-selection-screen">
+  <div *ngIf="!electronService.isElectron() && providedPartyName == undefined" class="form group-selection-screen">
     <h1 class="mat-h1">Group selection</h1>
     <span class="mat-body-1">Type the name of the group you wish to spectate.<br /><br /></span>
     <mat-form-field>

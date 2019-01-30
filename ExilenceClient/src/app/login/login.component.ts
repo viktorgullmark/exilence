@@ -502,11 +502,13 @@ export class LoginComponent implements OnInit, OnDestroy {
         } as Player;
 
         this.partyService.checkIfPartyExists(groupName).then(exists => {
+
             if (exists) {
                 this.partyService.joinParty(groupName, player);
                 this.router.navigate(['/authorized/party']);
             } else {
                 this.groupNoExists = true;
+                this.providedPartyName = undefined;
             }
         });
     }
