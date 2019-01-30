@@ -121,6 +121,14 @@ export class LoginComponent implements OnInit, OnDestroy {
         this.mapService.previousInstanceServer = undefined;
         this.mapService.previousDate = undefined;
         this.mapService.currentArea = undefined;
+
+        if (!this.electronService.isElectron()) {
+            const partyName = window['partyName'];
+            if (partyName !== '' && partyName !== undefined && partyName != null) {
+                console.log('Joining party: ', partyName);
+                setTimeout(() => this.loadGroup(partyName), 1000);
+            }
+        }
     }
 
     checkPath() {

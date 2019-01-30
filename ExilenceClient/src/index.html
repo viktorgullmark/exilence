@@ -1,29 +1,34 @@
 <!doctype html>
 <html>
 
-<head>
-  <meta charset="utf-8">
-  <title>Exilence</title>
-  <base href="">
+  <head>
+    <meta charset="utf-8">
+    <title>Exilence</title>
+    <base href="">
 
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500" rel="stylesheet">
-  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-  <link rel="icon" type="image/x-icon" href="assets/img/app-icon.png">
-</head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="icon" type="image/x-icon" href="assets/img/app-icon.png">
 
-<body class="exilence">
-  <app-root>
-    <div class="loading-container">
-      <div class="loading-content">
-        <span class="mat-display-2">Loading...</span>
+    <script>
+      var partyName = window.location.href.split('/login/')[1]; 
+    </script>
+
+  </head>
+
+  <body class="exilence">
+    <app-root>
+      <div class="loading-container">
+        <div class="loading-content">
+          <span class="mat-display-2">Loading...</span>
+        </div>
       </div>
-    </div>
-  </app-root>
-  <script type="text/javascript" src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+    </app-root>
+    <script type="text/javascript" src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
 
-  <!-- Compiled and minified JavaScript -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-beta/js/materialize.min.js"></script>
-</body>
+    <!-- Compiled and minified JavaScript -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-beta/js/materialize.min.js"></script>
+  </body>
 
 </html>
