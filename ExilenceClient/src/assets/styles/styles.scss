@@ -293,29 +293,79 @@ a {
     transform: translateZ(0);
     -webkit-font-smoothing: subpixel-antialiased;
 
-    @media screen and (max-height: 975px) {
-        transform-origin: top left;
-        transform: scale(0.975);
-    }
+    // @media screen and (max-height: 950px) {
+    //     transform-origin: top left;
+    //     transform: scale(0.975);
+    // }
 
-    @media screen and (max-height: 940px) {
+    // @media screen and (max-height: 940px) {
+    //     transform-origin: top left;
+    //     transform: scale(0.97);
+    // }
+   
+    @media screen and (max-height: 930px) {
         transform-origin: top left;
-        transform: scale(0.9);
+        transform: scale(0.96);
+    }
+    
+    @media screen and (max-height: 920px) {
+        transform-origin: top left;
+        transform: scale(0.95);
     }
 
     @media screen and (max-height: 910px) {
         transform-origin: top left;
-        transform: scale(0.85);
+        transform: scale(0.94);
     }
 
+    @media screen and (max-height: 900px) {
+        transform-origin: top left;
+        transform: scale(0.93);
+    }
+
+    @media screen and (max-height: 890px) {
+        transform-origin: top left;
+        transform: scale(0.92);
+    }
+
+    @media screen and (max-height: 900px) {
+        transform-origin: top left;
+        transform: scale(0.93);
+    }
+
+    @media screen and (max-height: 890px) {
+        transform-origin: top left;
+        transform: scale(0.90);
+    }
+
+    @media screen and (max-height: 880px) {
+        transform-origin: top left;
+        transform: scale(0.89);
+    }
+
+    @media screen and (max-height: 870px) {
+        transform-origin: top left;
+        transform: scale(0.88);
+    }
+    
     @media screen and (max-height: 860px) {
         transform-origin: top left;
-        transform: scale(0.8);
+        transform: scale(0.85);
+    }
+    
+    @media screen and (max-height: 830px) {
+        transform-origin: top left;
+        transform: scale(0.80);
     }
 
     @media screen and (max-height: 810px) {
         transform-origin: top left;
-        transform: scale(0.75);
+        transform: scale(0.775);
+    }
+
+    @media screen and (max-height: 780px) {
+        transform-origin: top left;
+        transform: scale(0.740);
     }
 }
 
