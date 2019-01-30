@@ -39,16 +39,11 @@ export class AppComponent implements OnDestroy {
 
     translate.setDefaultLang('en');
 
-    // console.log('AppConfig', AppConfig);
-
     if (electronService.isElectron()) {
       moment.locale(this.electronService.remote.app.getLocale());
-      // console.log('Mode electron');
-      // console.log('Electron ipcRenderer', electronService.ipcRenderer);
-      // console.log('NodeJS childProcess', electronService.childProcess);
       this.loadWindowSettings();
     } else {
-      // console.log('Mode web');
+      // todo: load browser locale
     }
 
     this.alertSub = this.alertService.alert.subscribe(res => {
