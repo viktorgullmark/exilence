@@ -22,7 +22,7 @@ const routes: Routes = [
     {
         path: 'authorized', component: AuthorizeComponent, children: [
             { path: 'dashboard', component: DashboardComponent },
-            { path: 'party', component: PartyComponent },
+            { path: 'group', component: PartyComponent },
             { path: 'inspect-players', component: InspectPlayersComponent },
             { path: 'settings', component: SettingsComponent },
             { path: 'faq', component: FaqComponent },

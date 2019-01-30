@@ -196,8 +196,8 @@ export class PartyService implements OnDestroy {
         if (this.party.players.find(x => !x.isSpectator) === undefined) {
           this.leaveParty(this.party.name, this.currentPlayer);
           const errorMsg = {
-            title: 'The group was abandoned',
-            body: 'We removed you from the group since the last player left.'
+            title: 'Information',
+            body: 'Spectator mode ended, all players left the group.'
           } as ServerMessage;
           this.serverMessageReceived.next(errorMsg);
           this.router.navigate(['/']);
@@ -216,8 +216,8 @@ export class PartyService implements OnDestroy {
       this.selectedPlayer.next(this.currentPlayer);
       this.router.navigate(['/authorized/dashboard']);
       const data = {
-        title: 'You were removed from the group',
-        body: 'The leader of the group kicked you. To keep playing, enter another group.'
+        title: 'Information',
+        body: 'You were kicked from the group by the leader.'
       } as ServerMessage;
       this.serverMessageReceived.next(data);
       this.logService.log('kicked from party');
@@ -270,8 +270,8 @@ export class PartyService implements OnDestroy {
 
     this._hubConnection.on('GroupNotFoundOrEmpty', () => {
       const errorMsg = {
-        title: 'Group Not Found',
-        body: 'The group you tried to join does not exist or or is empty.'
+        title: 'Information',
+        body: 'The group you tried to join does not exist'
       } as ServerMessage;
       this.serverMessageReceived.next(errorMsg);
       this.isEntering = false;
