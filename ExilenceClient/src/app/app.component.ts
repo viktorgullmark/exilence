@@ -43,7 +43,7 @@ export class AppComponent implements OnDestroy {
       moment.locale(this.electronService.remote.app.getLocale());
       this.loadWindowSettings();
     } else {
-      // todo: load browser locale
+      moment.locale(this.getBrowserLang());
     }
 
     this.alertSub = this.alertService.alert.subscribe(res => {
@@ -54,6 +54,13 @@ export class AppComponent implements OnDestroy {
     });
   }
 
+  getBrowserLang() {
+    if (navigator.languages !== undefined) {
+      return navigator.languages[0];
+    } else {
+      return navigator.language;
+    }
+  }
   displayAlert(message: string, action: string) {
     this.snackBar.open(message, action, {
       duration: 2000,
