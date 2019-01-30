@@ -67,7 +67,7 @@ export class LoginComponent implements OnInit, OnDestroy {
     characterListSub: Subscription;
     lineReader: any;
     groupNoExists = false;
-    providedPartyName = null;
+    providedPartyName = undefined;
 
     @ViewChild('stepper') stepper: MatStepper;
     @ViewChild('lastStep') lastStep: MatStep;
@@ -129,11 +129,10 @@ export class LoginComponent implements OnInit, OnDestroy {
         this.mapService.currentArea = undefined;
 
         if (!this.electronService.isElectron()) {
-            if (this.providedPartyName !== '' && this.providedPartyName !== undefined && this.providedPartyName != null) {
-                console.log('Joining party: ', this.providedPartyName);
+            if (this.providedPartyName !== '' && this.providedPartyName !== undefined) {
+                console.log('Joining provided party: ', this.providedPartyName);
                 this.partyService.connectionInitiated.subscribe(res => {
                     if (res) {
-
                         this.loadGroup(this.providedPartyName);
                     }
                 });
