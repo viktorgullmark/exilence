@@ -31,13 +31,15 @@ namespace Exilence.Hubs
         public async Task JoinParty(string partyName, string playerObj)
         {
             var player = CompressionHelper.Decompress<PlayerModel>(playerObj);
-
-            var ladder = await _ladderService.GetLadderForPlayer(player.Character.League, player.Character.Name);
-            if (ladder == null)
-            {
-                ladder = await _ladderService.GetLadderForLeague(player.Character.League);
+            PlayerModel playerToSend = null;
+            if(!player.IsSpectator) { 
+                var ladder = await _ladderService.GetLadderForPlayer(player.Character.League, player.Character.Name);
+                if (ladder == null)
+                {
+                    ladder = await _ladderService.GetLadderForLeague(player.Character.League);
+                }
+                player.LadderInfo = ladder;
             }
-            player.LadderInfo = ladder;
 
             // set initial id of player
             player.ConnectionID = Context.ConnectionId;
@@ -49,40 +51,55 @@ namespace Exilence.Hubs
             var party = await _cache.GetAsync<PartyModel>($"party:{partyName}");
             if (party == null)
             {
-                // set player to leader, since its a new party
-                player.IsLeader = true;
+                if(player.IsSpectator)
+                {
+                    await Clients.Caller.SendAsync("GroupNotFoundOrEmpty");
+                } else { 
 
-                party = new PartyModel() { Name = partyName, Players = new List<PlayerModel> { player } };
-                await _cache.SetAsync<PartyModel>($"party:{partyName}", party);
-                await Clients.Caller.SendAsync("EnteredParty", CompressionHelper.Compress(party), CompressionHelper.Compress(player));
+                    // set player to leader, since its a new party
+                    player.IsLeader = true;
+
+                    party = new PartyModel() { Name = partyName, Players = new List<PlayerModel> { player } };
+                    await _cache.SetAsync<PartyModel>($"party:{partyName}", party);
+                    await Clients.Caller.SendAsync("EnteredParty", CompressionHelper.Compress(party), CompressionHelper.Compress(player));
+                }
             }
             else
             {
-                var oldPlayer = party.Players.FirstOrDefault(x => x.Character.Name == player.Character.Name || x.ConnectionID == player.ConnectionID);
-
-                // if the party were joining doesnt have a leader, make the player leader
-                if (!party.Players.Any(x => x.IsLeader))
+                if(!party.Players.Any())
                 {
-                    player.IsLeader = true;
-                }
+                    await Clients.Caller.SendAsync("GroupNotFoundOrEmpty");
+                } else {
+                    playerToSend = party.Players[0];
+                    var oldPlayer = party.Players.FirstOrDefault(x => (x.Character != null && player.Character != null && x.Character.Name == player.Character.Name) || x.ConnectionID == player.ConnectionID);
 
-                if (oldPlayer == null)
-                {
-                    party.Players.Insert(0, player);
-                }
-                else
-                {
-                    var index = party.Players.IndexOf(oldPlayer);
-                    party.Players[index] = player;
-                }
+                    // if the party were joining doesnt have a leader, make the player leader
+                    if (!party.Players.Any(x => x.IsLeader))
+                    {
+                        player.IsLeader = true;
+                    }
 
-                await _cache.SetAsync<PartyModel>($"party:{partyName}", party);
-                await Clients.Caller.SendAsync("EnteredParty", CompressionHelper.Compress(party), CompressionHelper.Compress(player));
+                    if (oldPlayer == null)
+                    {
+                        party.Players.Insert(0, player);
+                    }
+                    else
+                    {
+                        var index = party.Players.IndexOf(oldPlayer);
+                        party.Players[index] = player;
+                    }
+
+                    await _cache.SetAsync<PartyModel>($"party:{partyName}", party);
+                    await Clients.Caller.SendAsync("EnteredParty", CompressionHelper.Compress(party), CompressionHelper.Compress(playerToSend));
+                }
             }
 
             await Groups.AddToGroupAsync(Context.ConnectionId, partyName);
             await Clients.OthersInGroup(partyName).SendAsync("PlayerJoined", CompressionHelper.Compress(player));
-            await Clients.Group(partyName).SendAsync("PlayerUpdated", CompressionHelper.Compress(player));
+
+            if (!player.IsSpectator) { 
+                await Clients.Group(partyName).SendAsync("PlayerUpdated", CompressionHelper.Compress(player));
+            }
         }
 
         public async Task LeaveParty(string partyName, string playerObj)
@@ -92,14 +109,6 @@ namespace Exilence.Hubs
             var party = await _cache.GetAsync<PartyModel>($"party:{partyName}");
             if (party != null)
             {
-                //Handle generic players if "host" left
-                var genericPlayers = party.Players.Where(t => t.GenericHost == player.Character.Name).ToList();
-                foreach (var genericPlayer in genericPlayers)
-                {
-                    party.Players.Remove(genericPlayer);
-                    await Clients.Group(partyName).SendAsync("PlayerLeft", genericPlayer);
-                }
-
                 var foundPlayer = party.Players.FirstOrDefault(x => x.ConnectionID == player.ConnectionID);
                 party.Players.Remove(foundPlayer);
 

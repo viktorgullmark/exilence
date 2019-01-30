@@ -1,5 +1,5 @@
 <mat-sidenav-container class="main-container">
-  <mat-sidenav class="sidenav-container" mode="side" opened [hidden]="!electronService.isElectron()">
+  <mat-sidenav class="sidenav-container" mode="side" opened *ngIf="electronService.isElectron()">
     <form class="form sidenav-form" [formGroup]="form" (ngSubmit)="enterParty()">
       <mat-form-field>
         <input matInput formControlName="partyCode" placeholder="{{'PARTY.CODE' | translate}}" class="party-name-input" [type]="partyService.maskedName ? 'password' : 'text'">

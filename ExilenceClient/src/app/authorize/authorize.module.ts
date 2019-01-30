@@ -43,7 +43,6 @@ import { SettingsModule } from './settings/settings.module';
   declarations: [AuthorizeComponent],
   providers: [
     MessageValueService,
-    PartyService,
     PricingService,
     IncomeService,
     AnalyticsService

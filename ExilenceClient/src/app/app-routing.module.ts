@@ -18,7 +18,7 @@ const routes: Routes = [
     { path: '', redirectTo: 'login', pathMatch: 'full' },
 
     // authorized
-    { path: 'authorized', component: AuthorizeComponent,  canActivate: [CanActivateAuthorized], children: [
+    { path: 'authorized', component: AuthorizeComponent, children: [
         { path: 'dashboard', component: DashboardComponent },
         { path: 'party', component: PartyComponent },
         { path: 'inspect-players', component: InspectPlayersComponent },

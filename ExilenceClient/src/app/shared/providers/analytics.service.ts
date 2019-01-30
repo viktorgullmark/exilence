@@ -21,7 +21,7 @@ export class AnalyticsService {
   }
 
   startTracking(account: string) {
-    if (!this.isTracking) {
+    if (!this.isTracking && this.isElectron()) {
       this.isTracking = true;
       this.visitor = ua('UA-121704803-1', account.toLowerCase(), { strictCidFormat: false });
       this.visitor.set('uid', account);
@@ -31,44 +31,54 @@ export class AnalyticsService {
     }
   }
 
+  isElectron() {
+    return window && window.process && window.process.type;
+  }
+
   sendPageview(page: string) {
-    this.visitor.pageview(page).send((err) => {
-      if (err) {
-        this.logService.log('Sending pageview: ', err, false);
-      }
-    });
+    if (this.isElectron()) {
+      this.visitor.pageview(page).send((err) => {
+        if (err) {
+          this.logService.log('Sending pageview: ', err, false);
+        }
+      });
+    }
   }
 
   sendEvent(category: string, action: string) {
+    if (this.isElectron()) {
+      const params = {
+        ec: category,
+        ea: action,
+      };
 
-    const params = {
-      ec: category,
-      ea: action,
-    };
-
-    this.visitor.event(params).send((err) => {
-      if (err) {
-        this.logService.log('Sending event: ', err, false);
-      }
-    });
-
+      this.visitor.event(params).send((err) => {
+        if (err) {
+          this.logService.log('Sending event: ', err, false);
+        }
+      });
+    }
   }
 
   sendLastPartyPlayerScreen() {
-    for (let i = 0; i < this.pastScreens.length; i++) {
-      const screen = this.pastScreens[i];
-      if (screen.indexOf('/authorized/party/player/') !== -1) {
-        this.sendScreenview(screen);
-        break;
+    if (this.isElectron()) {
+      for (let i = 0; i < this.pastScreens.length; i++) {
+        const screen = this.pastScreens[i];
+        if (screen.indexOf('/authorized/party/player/') !== -1) {
+          this.sendScreenview(screen);
+          break;
+        }
       }
     }
   }
 
   sendScreenview(screenName: string) {
-    this.pastScreens.unshift(screenName);
+    if (this.isElectron()) {
+      this.pastScreens.unshift(screenName);
 
-    this.visitor.screenview(screenName, this.appName, this.version).send((err) => {
-      this.logService.log('Sending screenview: ', screenName, false);
-    });
+      this.visitor.screenview(screenName, this.appName, this.version).send((err) => {
+        this.logService.log('Sending screenview: ', screenName, false);
+      });
+    }
   }
 }

@@ -121,7 +121,7 @@ export class PartyService implements OnDestroy {
         this.electronService.decompress(playerData, (player: Player) => {
           // if player is self, set history based on local data
           const playerObj = Object.assign({}, player);
-          if (playerObj.account === this.currentPlayer.account) {
+          if (this.currentPlayer !== undefined && playerObj.account === this.currentPlayer.account) {
             playerObj.netWorthSnapshots = Object.assign([], this.currentPlayer.netWorthSnapshots);
           }
           this.party = party;
@@ -130,7 +130,7 @@ export class PartyService implements OnDestroy {
           this.selectedPlayer.next(playerObj);
           this.isEntering = false;
           this.logService.log('Entered party:', party);
-
+          console.log(party);
           // set initial values for party net worth
           let networth = 0;
           this.messageValueService.partyGainSubject.next(0);
@@ -199,16 +199,16 @@ export class PartyService implements OnDestroy {
     });
 
     this._hubConnection.on('KickedFromParty', () => {
-        this.initParty();
-        this.partyUpdated.next(this.party);
-        this.selectedPlayer.next(this.currentPlayer);
-        this.router.navigate(['/authorized/dashboard']);
-        const data = {
-          title: 'You were removed from the group',
-          body: 'The leader of the group kicked you. To keep playing, enter another group.'
-        } as ServerMessage;
-        this.serverMessageReceived.next(data);
-        this.logService.log('kicked from party');
+      this.initParty();
+      this.partyUpdated.next(this.party);
+      this.selectedPlayer.next(this.currentPlayer);
+      this.router.navigate(['/authorized/dashboard']);
+      const data = {
+        title: 'You were removed from the group',
+        body: 'The leader of the group kicked you. To keep playing, enter another group.'
+      } as ServerMessage;
+      this.serverMessageReceived.next(data);
+      this.logService.log('kicked from party');
     });
 
     this._hubConnection.on('LeaderChanged', (data: string) => {
@@ -370,12 +370,14 @@ export class PartyService implements OnDestroy {
     // construct initial object based on players in party
     const leagues: LeagueWithPlayers[] = [];
     party.players.forEach(player => {
-      const league = leagues.find(l => l.id === player.character.league);
-      if (league === undefined) {
-        leagues.push({ id: player.character.league, players: [player] } as LeagueWithPlayers);
-      } else {
-        const indexOfLeague = leagues.indexOf(league);
-        leagues[indexOfLeague].players.push(player);
+      if (player.character !== null) {
+        const league = leagues.find(l => l.id === player.character.league);
+        if (league === undefined) {
+          leagues.push({ id: player.character.league, players: [player] } as LeagueWithPlayers);
+        } else {
+          const indexOfLeague = leagues.indexOf(league);
+          leagues[indexOfLeague].players.push(player);
+        }
       }
     });
 
