@@ -6,6 +6,7 @@ import { LeagueWithPlayers } from '../../../shared/interfaces/league.interface';
 import { Player } from '../../../shared/interfaces/player.interface';
 import { AccountService } from '../../../shared/providers/account.service';
 import { PartyService } from '../../../shared/providers/party.service';
+import { ElectronService } from '../../../shared/providers/electron.service';
 
 @Component({
   selector: 'app-player-list',
@@ -21,7 +22,12 @@ export class PlayerListComponent implements OnInit, OnDestroy {
   private genericPlayersSub: Subscription;
   private currentPlayerSub: Subscription;
 
-  constructor(public partyService: PartyService, private accountService: AccountService, private ref: ChangeDetectorRef) { }
+  constructor(
+    private electronService: ElectronService,
+    public partyService: PartyService,
+    private accountService: AccountService,
+    private ref: ChangeDetectorRef
+  ) { }
 
   playerLeagues: LeagueWithPlayers[];
   currentPlayer: Player;

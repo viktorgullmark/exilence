@@ -315,13 +315,14 @@ export class PartySummaryComponent implements OnInit, OnDestroy {
   }
 
   openSummaryDialog(): void {
-    if (!this.settingsService.get('diaShown_partySummary') && !this.settingsService.get('hideTooltips')) {
+    if (!this.settingsService.get('diaShown_partySummary') &&
+      !this.settingsService.get('hideTooltips') &&
+      this.electronService.isElectron()) {
       const dialogRef = this.dialog.open(InfoDialogComponent, {
         width: '650px',
         data: {
           icon: 'attach_money',
           title: 'Currency',
-          // tslint:disable-next-line:max-line-length
           content: 'This tab updates when a partymember changes area in game, at most once every 2 minutes.<br/><br/>' +
             'We store all your parties net worth data two weeks back in time. This will be extended in the future.'
         }

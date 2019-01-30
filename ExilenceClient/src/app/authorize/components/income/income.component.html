@@ -33,8 +33,12 @@
     && foundPlayer.netWorthSnapshots[0].timestamp === 0)))">
   <div class="mid-text-wrapper">
     <mat-icon class="header-icon">warning</mat-icon>
-    <h3 class="mat-h3">
-      Net worth data is recorded every 2 minutes. Make sure to <a class="inline-link" (click)="goToSettings()">select the stashtabs</a> that you want to track.
+    <h3 *ngIf="electronService.isElectron()" class="mat-h3">
+      Net worth data is recorded every 2 minutes. Make sure to <a class="inline-link" (click)="goToSettings()">select
+        the stashtabs</a> that you want to track.
+    </h3>
+    <h3 *ngIf="!electronService.isElectron()" class="mat-h3">
+      No net worth data to display
     </h3>
   </div>
 </ng-container>
