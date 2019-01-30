@@ -192,6 +192,13 @@ export class PartyService implements OnDestroy {
         this.party.players = this.party.players.filter(x => x.account !== player.account);
         this.partyUpdated.next(this.party);
         this.updatePlayerLists(this.party);
+
+        // if last player leaves, kick self to login screen
+        if (this.party.players.find(x => !x.isSpectator) === undefined) {
+          this.leaveParty(this.party.name, this.currentPlayer);
+          this.router.navigate(['/']);
+        }
+
         if (this.selectedPlayerObj.account === player.account) {
           this.selectedPlayer.next(this.currentPlayer);
         }
@@ -214,8 +221,10 @@ export class PartyService implements OnDestroy {
 
     this._hubConnection.on('LeaderChanged', (data: string) => {
       this.electronService.decompress(data, (leaderData) => {
-        const oldLeader = this.party.players.find(x => x.character !== null && x.character.name === leaderData.oldLeader.character.name);
-        const newLeader = this.party.players.find(x => x.character !== null && x.character.name === leaderData.newLeader.character.name);
+        const oldLeader = this.party.players.find(x => x.character !== null && leaderData.oldLeader.character !== null
+          && x.character.name === leaderData.oldLeader.character.name);
+        const newLeader = this.party.players.find(x => x.character !== null && leaderData.newLeader.character !== null
+          && x.character.name === leaderData.newLeader.character.name);
 
         // if previous leader is still in the party, update the value
         if (oldLeader !== undefined) {

@@ -112,7 +112,7 @@ namespace Exilence.Hubs
                 var foundPlayer = party.Players.FirstOrDefault(x => x.ConnectionID == player.ConnectionID);
                 party.Players.Remove(foundPlayer);
 
-                if (player.IsLeader && party.Players.Any()) // if there is any player left in party, assign leader to first one
+                if (player.IsLeader && party.Players.Any(x => !x.IsSpectator)) // if there is any player left in party, assign leader to first one
                 {
                     party.Players[0].IsLeader = true;
                     await Clients.Group(partyName).SendAsync("LeaderChanged", CompressionHelper.Compress(new { oldLeader = player, newLeader = party.Players[0] }));
@@ -128,7 +128,6 @@ namespace Exilence.Hubs
                 {
                     await _cache.RemoveAsync($"party:{partyName}");
                 }
-
             }
 
             await Groups.RemoveFromGroupAsync(player.ConnectionID, partyName);
@@ -141,7 +140,7 @@ namespace Exilence.Hubs
             var playerObjToAssign = party.Players.FirstOrDefault(x => x.Character.Name == playerToAssign);
             var currentLeader = party.Players.FirstOrDefault(x => x.IsLeader);
 
-            if (playerObjToAssign != null && currentLeader != null)
+            if (playerObjToAssign != null && !playerObjToAssign.IsSpectator && currentLeader != null)
             {
                 if (currentLeader != null)
                 {
