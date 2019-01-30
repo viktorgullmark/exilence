@@ -66,6 +66,7 @@ export class LoginComponent implements OnInit, OnDestroy {
     leaguesSub: Subscription;
     characterListSub: Subscription;
     lineReader: any;
+    groupNoExists = false;
 
     @ViewChild('stepper') stepper: MatStepper;
     @ViewChild('lastStep') lastStep: MatStep;
@@ -485,7 +486,7 @@ export class LoginComponent implements OnInit, OnDestroy {
                 this.partyService.joinParty(groupName, player);
                 this.router.navigate(['/authorized/party']);
             } else {
-                console.log('no exists');
+                this.groupNoExists = true;
             }
         });
     }
