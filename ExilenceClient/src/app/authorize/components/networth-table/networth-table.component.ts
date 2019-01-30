@@ -78,7 +78,7 @@ export class NetworthTableComponent implements OnInit, OnDestroy {
             this.loadPlayerData(foundPlayer);
           } else {
             this.party.players.forEach(p => {
-              if (p.netWorthSnapshots !== null) {
+              if (p.netWorthSnapshots !== null && p.character !== null) {
                 this.loadPlayerData(p);
               }
             });

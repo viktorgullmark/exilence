@@ -9,20 +9,22 @@
 }
 
 .radio-group {
-  display: inline-flex;
-  flex-direction: column;
+    display: inline-flex;
+    flex-direction: column;
 }
 
 .radio-button {
-  margin: 5px;
+    margin: 5px;
 }
 
 .enter-grp-btn {
-  float: right;
-  width: 30%;
-  margin-right: 0;
+    margin-right: 0;
 }
 
 .divider {
-  margin-top: 15px !important;
+    margin-top: 15px !important;
+
+    &.group-selection-divider {
+      margin-top: 0px !important;
+    }
 }

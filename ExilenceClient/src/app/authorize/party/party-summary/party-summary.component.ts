@@ -152,7 +152,7 @@ export class PartySummaryComponent implements OnInit, OnDestroy {
     this.partyService.selectedFilterValueSub.next(filterValue.value);
 
     if (this.party !== undefined) {
-      const foundPlayer = this.party.players.find(x => x.character.name === this.partyService.selectedFilterValue);
+      const foundPlayer = this.party.players.find(x => x.character !== null && x.character.name === this.partyService.selectedFilterValue);
       let networth = 0;
       // update values for entire party, or a specific player, depending on selection
       if (this.partyService.selectedFilterValue === 'All players' || this.partyService.selectedFilterValue === undefined) {
@@ -252,7 +252,7 @@ export class PartySummaryComponent implements OnInit, OnDestroy {
         }
       } else {
         this.party.players.forEach(p => {
-          if (p.netWorthSnapshots !== null) {
+          if (p.netWorthSnapshots !== null && p.character !== null) {
             if (this.table !== undefined) {
               this.table.loadPlayerData(p);
             } if (this.overTimeTable !== undefined) {
