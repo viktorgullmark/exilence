@@ -2,6 +2,15 @@
 
 .chart-container {
     fill: white;
+    height: 400px;
+
+    @media screen and (max-height: 1100px) {
+        height: 300px;
+    }
+
+    @media screen and (max-height: 950px) {
+        height: 225px;
+    }
 }
 
 .caption-text {
