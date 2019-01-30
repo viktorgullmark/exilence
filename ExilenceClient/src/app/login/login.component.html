@@ -4,7 +4,7 @@
     <span class="mat-body-1">Type the name of the group you wish to spectate.<br /><br /></span>
     <mat-divider class="divider group-selection-divider"></mat-divider>
     <mat-form-field>
-      <input matInput [(ngModel)]="groupName" placeholder="{{'GROUP.NAME' | translate}}" required>
+      <input matInput [(ngModel)]="groupName" placeholder="{{'PARTY.CODE' | translate}}" required>
     </mat-form-field>
     <button class="enter-grp-btn" mat-raised-button color="primary" (click)="loadGroup(groupName)">Enter group</button>
     <mat-grid-list cols="4" rowHeight="40px">
