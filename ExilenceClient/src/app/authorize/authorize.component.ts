@@ -31,7 +31,7 @@ export class AuthorizeComponent implements OnInit, OnDestroy {
     private accountService: AccountService,
     private messageValueService: MessageValueService,
     private incomeService: IncomeService,
-    private electronService: ElectronService,
+    public electronService: ElectronService,
     private settingsService: SettingsService,
     private dialog: MatDialog,
     private router: Router) {

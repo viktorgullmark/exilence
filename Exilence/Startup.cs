@@ -44,7 +44,7 @@ namespace Exilence
                     builder =>
                     {
                         builder.AllowAnyHeader();
-                        builder.AllowAnyOrigin();
+                        builder.WithOrigins("http://localhost:4200", "http://exilence.app");
                         builder.AllowAnyMethod();
                         builder.AllowCredentials();
                     });
@@ -78,9 +78,9 @@ namespace Exilence
                 app.UseDeveloperExceptionPage();
             }
 
+            app.UseCors("AllowAll");
             app.UseMvc();
             app.UseFileServer();
-            app.UseCors("AllowAll");
 
             GlobalConfiguration.Configuration.UseActivator(new HangfireActivator(serviceProvider));
 

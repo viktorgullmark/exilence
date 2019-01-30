@@ -61,7 +61,7 @@ export class LoginComponent implements OnInit, OnDestroy {
     needsValidation: boolean;
     leagueChanged = false;
     shouldSetup = true;
-
+    groupName = '';
     leaguesSub: Subscription;
     characterListSub: Subscription;
     lineReader: any;
@@ -72,7 +72,7 @@ export class LoginComponent implements OnInit, OnDestroy {
     constructor(@Inject(FormBuilder) fb: FormBuilder,
         private router: Router,
         private externalService: ExternalService,
-        private electronService: ElectronService,
+        public electronService: ElectronService,
         private accountService: AccountService,
         public sessionService: SessionService,
         private settingsService: SettingsService,

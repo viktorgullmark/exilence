@@ -175,6 +175,10 @@ a {
         width: 50%;
     }
 
+    &.group-selection-screen {
+        width: 40%;
+    }
+
     .form-error {
         color: $error-color;
     }
@@ -244,6 +248,9 @@ a {
             position: absolute;
             bottom: 30px;
             width: calc(100% - 50px);
+        }
+        &.in-browser {
+            margin-left: 0 !important;
         }
     }
 }
