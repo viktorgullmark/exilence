@@ -193,6 +193,11 @@ export class PartyService implements OnDestroy {
         // if last player leaves, kick self to login screen
         if (this.party.players.find(x => !x.isSpectator) === undefined) {
           this.leaveParty(this.party.name, this.currentPlayer);
+          const errorMsg = {
+            title: 'The group was abandoned',
+            body: 'We removed you from the group since the last player left.'
+          } as ServerMessage;
+          this.serverMessageReceived.next(errorMsg);
           this.router.navigate(['/']);
         }
 
