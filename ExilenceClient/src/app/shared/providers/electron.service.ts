@@ -22,7 +22,7 @@ export class ElectronService {
   settings: any;
   robot: any;
   zlib: any;
-
+  lodash: any;
   arch: any;
 
   constructor(
@@ -40,8 +40,12 @@ export class ElectronService {
       this.shell = window.require('electron').shell;
       this.settings = window.require('electron-settings');
       this.zlib = window.require('zlib');
-
       this.arch = window.require('os').arch();
+      this.lodash = window.require('lodash');
+    } else {
+      this.zlib = require('zlib');
+      this.lodash = require('lodash');
+      this.fs = require('fs');
     }
   }
 

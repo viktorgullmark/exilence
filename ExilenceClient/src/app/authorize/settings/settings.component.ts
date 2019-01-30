@@ -172,19 +172,23 @@ export class SettingsComponent implements OnInit, OnDestroy {
   }
 
   upload() {
-    this.electronService.sendLog();
-    setTimeout(() => {
-      this.uploaded = true;
-      if (this.logService.lastError === false) {
-        this.alertService.showAlert({ message: 'Information sent to Exilence server.', action: 'OK' });
-      } else {
-        this.alertService.showAlert({ message: 'Could not send information to Exilence server.', action: 'OK' });
-      }
-    }, 1000);
+    if (this.electronService.isElectron()) {
+      this.electronService.sendLog();
+      setTimeout(() => {
+        this.uploaded = true;
+        if (this.logService.lastError === false) {
+          this.alertService.showAlert({ message: 'Information sent to Exilence server.', action: 'OK' });
+        } else {
+          this.alertService.showAlert({ message: 'Could not send information to Exilence server.', action: 'OK' });
+        }
+      }, 1000);
+    }
   }
 
   clearSettings() {
-    this.settingsService.deleteAll();
-    this.electronService.ipcRenderer.send('relaunch');
+    if (this.electronService.isElectron()) {
+      this.settingsService.deleteAll();
+      this.electronService.ipcRenderer.send('relaunch');
+    }
   }
 }

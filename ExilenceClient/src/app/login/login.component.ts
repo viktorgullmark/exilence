@@ -82,8 +82,9 @@ export class LoginComponent implements OnInit, OnDestroy {
         private dialog: MatDialog,
         private ngZone: NgZone
     ) {
-        this.lineReader = window.require('read-last-lines');
-
+        if (this.electronService.isElectron()) {
+            this.lineReader = window.require('read-last-lines');
+        }
         this.leaguesSub = this.externalService.leagues.subscribe((res: League[]) => {
             this.leagues = res;
         });
@@ -121,8 +122,10 @@ export class LoginComponent implements OnInit, OnDestroy {
     }
 
     checkPath() {
-        this.pathValid = this.electronService.fs.existsSync(this.pathFormGroup.controls.filePath.value)
-            && this.pathFormGroup.controls.filePath.value.toLowerCase().endsWith('client.txt');
+        if (this.electronService.isElectron()) {
+            this.pathValid = this.electronService.fs.existsSync(this.pathFormGroup.controls.filePath.value)
+                && this.pathFormGroup.controls.filePath.value.toLowerCase().endsWith('client.txt');
+        }
     }
 
     ngOnDestroy() {
@@ -401,20 +404,22 @@ export class LoginComponent implements OnInit, OnDestroy {
     }
 
     likelyhoodCheck(filePath) {
-        this.lineReader.read(filePath, 2)
-            .then((lines) => {
-                const twoDaysAgo = (Date.now() - (60 * 60 * 1000 * 48));
-                const lastTimestamp = Date.parse(lines.slice(0, 19));
-                // if last timestamp is more than 2 days ago, show warning-dialog
-                if (twoDaysAgo > lastTimestamp) {
-                    const errorMsg = {
-                        title: 'Wrong Client.txt selected?',
-                        body: 'We detected that your Client.txt contains older data.<br/><br/>' +
-                            'Make sure to select the file from the same directory as you run the game from.'
-                    } as ErrorMessage;
-                    this.openErrorMsgDialog(errorMsg);
-                }
-            });
+        if (this.lineReader !== undefined) {
+            this.lineReader.read(filePath, 2)
+                .then((lines) => {
+                    const twoDaysAgo = (Date.now() - (60 * 60 * 1000 * 48));
+                    const lastTimestamp = Date.parse(lines.slice(0, 19));
+                    // if last timestamp is more than 2 days ago, show warning-dialog
+                    if (twoDaysAgo > lastTimestamp) {
+                        const errorMsg = {
+                            title: 'Wrong Client.txt selected?',
+                            body: 'We detected that your Client.txt contains older data.<br/><br/>' +
+                                'Make sure to select the file from the same directory as you run the game from.'
+                        } as ErrorMessage;
+                        this.openErrorMsgDialog(errorMsg);
+                    }
+                });
+        }
     }
 
     checkLeagueChange(event) {

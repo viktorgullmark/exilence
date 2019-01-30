@@ -38,10 +38,11 @@ export class AppComponent implements OnDestroy {
     this.logout();
 
     translate.setDefaultLang('en');
-    moment.locale(this.electronService.remote.app.getLocale());
+
     // console.log('AppConfig', AppConfig);
 
     if (electronService.isElectron()) {
+      moment.locale(this.electronService.remote.app.getLocale());
       // console.log('Mode electron');
       // console.log('Electron ipcRenderer', electronService.ipcRenderer);
       // console.log('NodeJS childProcess', electronService.childProcess);

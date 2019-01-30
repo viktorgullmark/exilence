@@ -64,7 +64,9 @@ export class AuthorizeComponent implements OnInit, OnDestroy {
           content: data.body
         }
       });
-      this.electronService.ipcRenderer.send('servermsg');
+      if (this.electronService.isElectron()) {
+        this.electronService.ipcRenderer.send('servermsg');
+      }
       dialogRef.afterClosed().subscribe(result => {
       });
     }, 0);

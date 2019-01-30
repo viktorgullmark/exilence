@@ -168,16 +168,18 @@ export class PartySummaryComponent implements OnInit, OnDestroy {
     const data = {
       event: 'networth',
     };
-    this.electronService.ipcRenderer.send('popout-window', data);
-    setTimeout(res => {
-      this.electronService.ipcRenderer.send('popout-window-update', {
-        event: 'networth',
-        data: {
-          networth: this.messageValueService.partyValue,
-          gain: this.messageValueService.partyGain
-        }
-      });
-    }, 1000);
+    if (this.electronService.isElectron()) {
+      this.electronService.ipcRenderer.send('popout-window', data);
+      setTimeout(res => {
+        this.electronService.ipcRenderer.send('popout-window-update', {
+          event: 'networth',
+          data: {
+            networth: this.messageValueService.partyValue,
+            gain: this.messageValueService.partyGain
+          }
+        });
+      }, 1000);
+    }
   }
 
   export() {
