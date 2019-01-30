@@ -442,8 +442,8 @@ export class PartyService implements OnDestroy {
     }
   }
 
-  public getAccountForCharacter(character: string): Promise<any> {
-    return this._hubConnection.invoke('GetAccountForCharacter', character).then((response) => {
+  public checkIfPartyExists(partyName: string) {
+    return this._hubConnection.invoke('PartyExists', partyName).then((response) => {
       return response;
     });
   }

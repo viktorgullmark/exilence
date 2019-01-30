@@ -8,11 +8,6 @@ import { AppConfig } from '../../../environments/environment';
 import { AnalyticsService } from './analytics.service';
 import { LogService } from './log.service';
 
-
-export function isElectron() {
-  return window && window.process && window.process.type;
-}
-
 // If you import a module but never use any of the imported values other than as TypeScript types,
 // the resulting javascript file will look as if you never imported the module at all.
 @Injectable()

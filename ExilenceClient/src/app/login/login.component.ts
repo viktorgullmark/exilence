@@ -480,8 +480,14 @@ export class LoginComponent implements OnInit, OnDestroy {
                 items: []
             }]
         } as Player;
-        this.partyService.joinParty(groupName, player);
-        this.router.navigate(['/authorized/party']);
+        this.partyService.checkIfPartyExists(groupName).then(exists => {
+            if (exists) {
+                this.partyService.joinParty(groupName, player);
+                this.router.navigate(['/authorized/party']);
+            } else {
+                console.log('no exists');
+            }
+        });
     }
 
     validateSessionId() {

@@ -28,6 +28,13 @@ namespace Exilence.Hubs
             _ladderService = ladderService;
         }
 
+        public async Task<bool> PartyExists(string partyName)
+        {
+            var party = await _cache.GetAsync<PartyModel>($"party:{partyName}");
+
+            return party != null;
+        }
+
         public async Task JoinParty(string partyName, string playerObj)
         {
             var player = CompressionHelper.Decompress<PlayerModel>(playerObj);
