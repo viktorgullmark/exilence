@@ -76,7 +76,8 @@ export class PartySummaryComponent implements OnInit, OnDestroy {
         this.party = res;
 
         // check if the current dropdown selection is a player in our party
-        const foundPlayer = this.party.players.find(x => x.character.name === this.partyService.selectedFilterValue);
+        const foundPlayer = this.party.players.find(x =>
+          x.character !== null && x.character.name === this.partyService.selectedFilterValue);
 
         // if player left or value is incorrect, update dropdown
         if (foundPlayer === undefined && this.partyService.selectedFilterValue !== 'All players') {
@@ -117,6 +118,9 @@ export class PartySummaryComponent implements OnInit, OnDestroy {
         }
       }
     });
+  }
+  getPlayers() {
+    return this.partyService.party.players.filter(x => x.character !== null);
   }
   ngOnDestroy() {
     if (this.partyGainSub !== undefined) {

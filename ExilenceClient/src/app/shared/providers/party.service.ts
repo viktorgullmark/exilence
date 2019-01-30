@@ -178,7 +178,7 @@ export class PartyService implements OnDestroy {
 
     this._hubConnection.on('PlayerJoined', (data: string) => {
       this.electronService.decompress(data, (player: Player) => {
-        this.party.players = this.party.players.filter(x => x.character.name !== player.character.name);
+        this.party.players = this.party.players.filter(x => x.connectionID !== player.connectionID);
         this.party.players.push(player);
         this.partyUpdated.next(this.party);
         this.updatePlayerLists(this.party);

@@ -37,7 +37,7 @@
                 <mat-label>Select player</mat-label>
                 <mat-select #playerDd value="{{partyService.selectedFilterValue}}" (selectionChange)="selectPlayer($event)">
                     <mat-option value="All players">All players</mat-option>
-                    <mat-option *ngFor="let player of partyService.party.players" value="{{player.character.name}}">{{player.character.name}}</mat-option>
+                    <mat-option *ngFor="let player of getPlayers()" value="{{player.character.name}}">{{player.character.name}}</mat-option>
                 </mat-select>
             </mat-form-field>
         </div>
