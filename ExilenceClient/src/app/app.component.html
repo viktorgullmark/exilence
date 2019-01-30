@@ -2,7 +2,7 @@
     <span class="toolbar-text title">{{ 'INFO.TITLE' | translate }}
         <span class="version">{{appVersion}} BETA</span>
     </span>
-    <div class="right-area">
+    <div class="right-area" *ngIf="electronService.isElectron()">
         <a (click)="logout()" class="left-link toolbar-text" *ngIf="sessionService.getSession() != null">
             {{ 'ACCOUNT.LOGOUT' | translate}} </a>
         <mat-icon (click)="minimize()" class="icon-link window-icon">minimize</mat-icon>

@@ -43,20 +43,19 @@
         </div>
     </div>
     <div class="flex-area">
-        <div *ngIf="electronService.isElectron()" class="btn-grp">
-            <button mat-raised-button color="accent" (click)="resetNetWorth()" type="button" class="right-aligned extra-margin">{{'GRAPH.RESET_SELF'
-                | translate}}</button>
-            <button mat-raised-button color="primary" (click)="popout()" type="button" class="right-aligned extra-margin">{{'GRAPH.POPOUT'
-                | translate}}</button>
+        <div class="btn-grp">
+            <ng-container *ngIf="electronService.isElectron()">
+                <button mat-raised-button color="accent" (click)="resetNetWorth()" type="button" class="right-aligned extra-margin">{{'GRAPH.RESET_SELF'
+                    | translate}}</button>
+                <button mat-raised-button color="primary" (click)="popout()" type="button" class="right-aligned extra-margin">{{'GRAPH.POPOUT'
+                    | translate}}</button>
+            </ng-container>
             <button mat-raised-button color="primary" *ngIf="!isGraphHidden" (click)="hideGraph()" type="button" class="graph-btns right-aligned">{{'GRAPH.HIDE'
                 | translate}}</button>
             <button mat-raised-button color="primary" *ngIf="isGraphHidden" (click)="showGraph()" type="button" class="graph-btns right-aligned">{{'GRAPH.SHOW'
                 | translate}}</button>
         </div>
-        <div *ngIf="!electronService.isElectron()">
-            <button type="button" mat-raised-button color="accent" style="visibility: hidden">Take up space if we are
-                not electron</button>
-        </div>
+
     </div>
     <div class="income-graph-wrapper" [hidden]="isGraphHidden">
         <app-income title="Net worth summary" (hidden)="toggleGraph($event)" [view]="graphDimensions"></app-income>

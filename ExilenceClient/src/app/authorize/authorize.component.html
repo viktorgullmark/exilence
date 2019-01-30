@@ -37,7 +37,7 @@
       <img alt="Click to support us" class="patron-button" (click)="openLink('https://www.patreon.com/exilence')">
     </div>
   </mat-sidenav>
-  <mat-sidenav-content class="content-container" [ngClass]="{'in-browser': !electronService.isElectron() }">
+  <mat-sidenav-content class="content-container" [ngClass]="{'in-electron': electronService.isElectron() }">
     <router-outlet></router-outlet>
     <mat-progress-bar *ngIf="partyService.joinInProgress || partyService.isEntering" class="progress-bar top-margin" color="primary" mode="indeterminate">
     </mat-progress-bar>

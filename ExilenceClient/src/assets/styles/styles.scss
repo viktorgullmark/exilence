@@ -231,7 +231,7 @@ a {
 
     .content-container {
         overflow: hidden;
-        margin-left: 265px !important;
+        margin-left: 0 !important;
         padding: $content-container-padding;
         background: $background-overlay, url("./../img/secondary-bg.jpg");
         background-repeat: no-repeat;
@@ -249,8 +249,8 @@ a {
             bottom: 30px;
             width: calc(100% - 50px);
         }
-        &.in-browser {
-            margin-left: 0 !important;
+        &.in-electron {
+            margin-left: 265px !important;
         }
     }
 }
