@@ -19,12 +19,10 @@ import { LogService } from './log.service';
 import { ElectronService } from './electron.service';
 import { NetWorthSnapshot } from '../interfaces/income.interface';
 import { MessageValueService } from './message-value.service';
-import { ExtendedAreaInfo } from '../interfaces/area.interface';
 import { HistoryHelper } from '../helpers/history.helper';
 import { LeagueWithPlayers } from '../interfaces/league.interface';
 import { Subscription } from 'rxjs';
 import { ServerMessage } from '../interfaces/server-message.interface';
-import { ErrorMessage } from '../interfaces/error-message.interface';
 
 @Injectable()
 export class PartyService implements OnDestroy {
@@ -76,8 +74,7 @@ export class PartyService implements OnDestroy {
     private logService: LogService,
     private electronService: ElectronService,
     private messageValueService: MessageValueService,
-    private settingsService: SettingsService
-  ) {
+    private settingsService: SettingsService) {
     this.reconnectAttempts = 0;
     this.forceClosed = false;
 
@@ -264,6 +261,16 @@ export class PartyService implements OnDestroy {
       this.disconnect('Recived force disconnect command from server.');
     });
 
+    this._hubConnection.on('GroupNotFoundOrEmpty', () => {
+      const errorMsg = {
+        title: 'Group Not Found',
+        body: 'The group you tried to join does not exist or or is empty.'
+      } as ServerMessage;
+      this.serverMessageReceived.next(errorMsg);
+      this.isEntering = false;
+      this.router.navigate(['/']);
+    });
+
     this.logMonitorService.areaJoin.subscribe((msg: LogMessage) => {
       this.logService.log('Player joined area: ', msg.player.name);
       this.handleAreaEvent(msg);
@@ -348,7 +355,7 @@ export class PartyService implements OnDestroy {
           this.joinParty(this.party.name, this.currentPlayer);
         }
         this.reconnectAttempts = 0;
-      }).catch((err) => {
+      }).catch(() => {
         this.logService.log('Could not connect to signalr');
         this.reconnect();
       });
