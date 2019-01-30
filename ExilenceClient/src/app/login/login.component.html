@@ -1,13 +1,37 @@
 <div class="container">
   <div *ngIf="!electronService.isElectron()" class="form group-selection-screen">
-    <h1 class="mat-h1">Group selection</h1>
-    <span class="mat-body-1">Type the name of the group you wish to spectate.<br /><br /></span>
-    <mat-form-field>
-      <input matInput [(ngModel)]="groupName" placeholder="{{'PARTY.CODE' | translate}}" required>
-    </mat-form-field>
-    <span class="form-error group-no-exists" *ngIf="groupNoExists">{{'ERROR.GROUP_DOESNT_EXIST'
-      | translate}}</span>
-    <button class="enter-grp-btn" mat-raised-button color="primary" (click)="loadGroup(groupName)">Enter group</button>
+    <mat-card class="group-selection-card">
+
+      <h1 class="mat-h1">Spectate group</h1>
+
+
+      <mat-card-content>
+
+        <span class="mat-body-1">Type the name of the group you wish to spectate.<br /><br /></span>
+
+        <mat-form-field>
+          <input matInput [(ngModel)]="groupName" placeholder="{{'PARTY.CODE' | translate}}" required>
+        </mat-form-field>
+
+        <div class="group-no-exists" *ngIf="groupNoExists">
+          <span class="form-error">{{'ERROR.GROUP_DOESNT_EXIST'
+            | translate}}</span>
+        </div>
+
+        <button class="enter-grp-btn" mat-raised-button color="primary" (click)="loadGroup(groupName)">Enter
+          group</button>
+      </mat-card-content>
+    </mat-card>
+    <mat-divider class="divider group-selection-divider"></mat-divider>
+
+    <mat-grid-list cols="4" rowHeight="60px">
+      <mat-grid-tile [colspan]="2" [rowspan]="1">
+        <img alt="Click to join our Discord" height="45" class="link-logo discord-logo" (click)="openLink('https://discord.gg/yxuBrPY')">
+      </mat-grid-tile>
+      <mat-grid-tile [colspan]="2" [rowspan]="1">
+        <img alt="Click to support us" class="link-logo patron-button" (click)="openLink('https://www.patreon.com/exilence')">
+      </mat-grid-tile>
+    </mat-grid-list>
     <mat-grid-list cols="4" rowHeight="40px">
       <mat-grid-tile [colspan]="4" [rowspan]="1">
         <mat-progress-bar *ngIf="partyService.isEntering" class="progress-bar" color="primary" mode="indeterminate">
