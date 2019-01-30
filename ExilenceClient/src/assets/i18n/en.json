@@ -81,7 +81,8 @@
         "SESSIONID_NOT_VALID": "The session id or account name is not valid",
         "SESSIONID_NOT_VALIDATED": "The sessionId has not been validated yet",
         "SESSIONID_NOT_PROVIDED": "No sessionId provided",
-        "PRIVATE_PROFILE": "Character-list is hidden/private, a sessionId is required to continue"
+        "PRIVATE_PROFILE": "Character-list is hidden/private, a sessionId is required to continue",
+        "GROUP_DOESNT_EXIST": "ERROR: The group could not be found."
     },
     "STASH": {
         "SEARCH": "Filter tabs",

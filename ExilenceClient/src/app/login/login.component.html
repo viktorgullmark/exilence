@@ -5,6 +5,8 @@
     <mat-form-field>
       <input matInput [(ngModel)]="groupName" placeholder="{{'PARTY.CODE' | translate}}" required>
     </mat-form-field>
+    <span class="form-error group-no-exists" *ngIf="groupNoExists">{{'ERROR.GROUP_DOESNT_EXIST'
+      | translate}}</span>
     <button class="enter-grp-btn" mat-raised-button color="primary" (click)="loadGroup(groupName)">Enter group</button>
     <mat-grid-list cols="4" rowHeight="40px">
       <mat-grid-tile [colspan]="4" [rowspan]="1">
