@@ -168,7 +168,8 @@ export class PartyService implements OnDestroy {
     });
 
     this._hubConnection.on('GenericPlayerUpdated', (player: Player) => {
-      const index = this.genericPartyPlayers.indexOf(this.genericPartyPlayers.find(x => x.character.name === player.character.name));
+      const index = this.genericPartyPlayers.indexOf(this.genericPartyPlayers.find(x => x.character !== null &&
+        x.character.name === player.character.name));
       this.genericPartyPlayers[index] = player;
       this.updateGenericPlayerList(this.genericPartyPlayers);
       if (this.selectedGenericPlayerObj.character.name === player.character.name) {
@@ -213,8 +214,8 @@ export class PartyService implements OnDestroy {
 
     this._hubConnection.on('LeaderChanged', (data: string) => {
       this.electronService.decompress(data, (leaderData) => {
-        const oldLeader = this.party.players.find(x => x.character.name === leaderData.oldLeader.character.name);
-        const newLeader = this.party.players.find(x => x.character.name === leaderData.newLeader.character.name);
+        const oldLeader = this.party.players.find(x => x.character !== null && x.character.name === leaderData.oldLeader.character.name);
+        const newLeader = this.party.players.find(x => x.character !== null && x.character.name === leaderData.newLeader.character.name);
 
         // if previous leader is still in the party, update the value
         if (oldLeader !== undefined) {

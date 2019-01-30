@@ -232,7 +232,7 @@ export class PartySummaryComponent implements OnInit, OnDestroy {
 
   updateFilterValue(filterValue) {
     if (this.party !== undefined) {
-      const foundPlayer = this.party.players.find(x => x.character.name === filterValue);
+      const foundPlayer = this.party.players.find(x => x.character !== null && x.character.name === filterValue);
 
       // update tables with new value
 
@@ -299,7 +299,7 @@ export class PartySummaryComponent implements OnInit, OnDestroy {
     this.gainHours = +event.value;
 
     if (this.party !== undefined) {
-      const foundPlayer = this.party.players.find(x => x.character.name === this.partyService.selectedFilterValue);
+      const foundPlayer = this.party.players.find(x => x.character !== null && x.character.name === this.partyService.selectedFilterValue);
       let networth = 0;
       if (this.partyService.selectedFilterValue === 'All players' || this.partyService.selectedFilterValue === undefined) {
         this.messageValueService.partyGainSubject.next(0);
