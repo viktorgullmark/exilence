@@ -282,6 +282,15 @@ a {
 
 /* #endregion */
 
+.discord-logo {
+    cursor: pointer;
+    content:url("./../../assets/img/discord-logo-white.svg");
+}
+.patron-button {    
+    cursor: pointer;
+    content:url("./../../assets/img/become_a_patron.png");
+}
+
 /* #region Responsitivity */
 .down-scale-inventory {
     image-rendering: -moz-crisp-edges; /* Firefox */
