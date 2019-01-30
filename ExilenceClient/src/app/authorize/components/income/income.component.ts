@@ -175,12 +175,17 @@ export class IncomeComponent implements OnInit, OnDestroy {
   updateGraph(player: Player) {
     const playerObj = Object.assign({}, player);
 
-
-    let netWorthHistoryDays = this.settingService.get('netWorthHistoryDays');
-    if (netWorthHistoryDays === undefined) {
-      netWorthHistoryDays = 14;
-      this.settingService.set('netWorthHistoryDays', netWorthHistoryDays);
+    let netWorthHistoryDays = 14;
+    if (this.electronService.isElectron()) {
+      netWorthHistoryDays = this.settingService.get('netWorthHistoryDays');
+      if (netWorthHistoryDays === undefined) {
+        this.settingService.set('netWorthHistoryDays', netWorthHistoryDays);
+      }
+    } else {
+      netWorthHistoryDays = 1;
     }
+
+
     const daysAgo = (Date.now() - (netWorthHistoryDays * 24 * 60 * 60 * 1000));
     playerObj.netWorthSnapshots = playerObj.netWorthSnapshots.filter(x => x.timestamp > daysAgo);
     if (playerObj.netWorthSnapshots.length === 0) {

@@ -19,7 +19,7 @@
                 <span class="networth">{{messageValueService.partyGain.toFixed(2)}}&nbsp;&nbsp;</span><img class="chaos-icon" />
             </div>
         </div>
-        <div class="networth-wrapper">
+        <div *ngIf="electronService.isElectron()" class="networth-wrapper">
             <mat-form-field>
                 <mat-label>Calculate gain over past</mat-label>
                 <mat-select #fontSize value="{{gainHours}}" (selectionChange)="toggleGainHours($event)">

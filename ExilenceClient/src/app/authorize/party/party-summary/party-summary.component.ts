@@ -60,7 +60,11 @@ export class PartySummaryComponent implements OnInit, OnDestroy {
       searchText: [''],
       searchTextOverTime: ['']
     });
-    this.gainHours = this.settingsService.get('gainHours');
+
+    this.gainHours = 1;
+    if (this.electronService.isElectron()) {
+      this.gainHours = this.settingsService.get('gainHours');
+    }
 
     this.partyGainSub = this.messageValueService.partyGainSubject.subscribe(res => {
       this.partyGain = res;
