@@ -11,6 +11,7 @@ import { InspectPlayersComponent } from './authorize/inspect-players/inspect-pla
 import { SettingsComponent } from './authorize/settings/settings.component';
 import { DisconnectedComponent } from './disconnected/disconnected.component';
 import { FaqComponent } from './authorize/faq/faq.component';
+import { isElectron } from './shared/providers/electron.service';
 
 const routes: Routes = [
     // login-section
@@ -35,7 +36,7 @@ const routes: Routes = [
 ];
 
 @NgModule({
-    imports: [RouterModule.forRoot(routes, { useHash: true })],
+    imports: [RouterModule.forRoot(routes, { useHash: isElectron() })],
     exports: [RouterModule]
 })
 export class AppRoutingModule { }
