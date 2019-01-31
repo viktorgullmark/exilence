@@ -10,6 +10,10 @@
         <mat-icon (click)="unmaximize()" *ngIf="maximized" class="icon-link window-icon">filter_none</mat-icon>
         <mat-icon (click)="close()" class="icon-link window-icon">close</mat-icon>
     </div>
+    <div class="right-area" *ngIf="!electronService.isElectron()">
+        <a (click)="changeGroup()" class="left-link toolbar-text no-margin">
+            {{ 'PARTY.CHANGE' | translate}} </a>
+    </div>
 </mat-toolbar>
 <app-notfication-bar [appVersion]="appVersion"></app-notfication-bar>
 <router-outlet></router-outlet>

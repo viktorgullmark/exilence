@@ -76,6 +76,10 @@ export class AppComponent implements OnDestroy {
     this.router.navigate(['login']);
   }
 
+  changeGroup() {
+    this.router.navigate(['login']);
+  }
+
   close() {
     this.sessionService.cancelSession();
     this.electronService.remote.getCurrentWindow().close();
