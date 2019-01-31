@@ -35,7 +35,7 @@ export class AppComponent implements OnDestroy {
     public snackBar: MatSnackBar
   ) {
 
-    if (AppConfig.environment === 'DEV') {
+    if (AppConfig.environment === 'DEV' && this.electronService.isElectron()) {
       this.logout();
     }
 
