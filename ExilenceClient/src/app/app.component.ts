@@ -13,6 +13,7 @@ import { AlertService } from './shared/providers/alert.service';
 import { AlertMessage } from './shared/interfaces/alert-message.interface';
 import { MatSnackBar } from '@angular/material';
 import { Subscription } from 'rxjs';
+import { AppConfig } from '../environments/environment.js';
 
 @Component({
   selector: 'app-root',
@@ -33,6 +34,11 @@ export class AppComponent implements OnDestroy {
     private alertService: AlertService,
     public snackBar: MatSnackBar
   ) {
+
+    if (AppConfig.environment === 'DEV') {
+      this.logout();
+    }
+
     this.appVersion = pkg['version'];
 
     translate.setDefaultLang('en');
