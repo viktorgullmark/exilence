@@ -35,8 +35,6 @@ export class AppComponent implements OnDestroy {
   ) {
     this.appVersion = pkg['version'];
 
-    this.logout();
-
     translate.setDefaultLang('en');
 
     if (electronService.isElectron()) {
