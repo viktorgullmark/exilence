@@ -1,7 +1,7 @@
 import { Component, Inject, OnDestroy, OnInit, ViewChild, NgZone } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialog, MatStep, MatStepper } from '@angular/material';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { forkJoin, Subscription } from 'rxjs';
 
 import { ClearHistoryDialogComponent } from '../shared/components/clear-history-dialog/clear-history-dialog.component';
@@ -84,11 +84,9 @@ export class LoginComponent implements OnInit, OnDestroy {
         public logMonitorService: LogMonitorService,
         private mapService: MapService,
         private dialog: MatDialog,
+        private route: ActivatedRoute,
         private ngZone: NgZone
     ) {
-
-        this.providedPartyName = window['partyName'];
-
         if (this.electronService.isElectron()) {
             this.lineReader = window.require('read-last-lines');
         }
@@ -127,17 +125,6 @@ export class LoginComponent implements OnInit, OnDestroy {
         this.mapService.previousInstanceServer = undefined;
         this.mapService.previousDate = undefined;
         this.mapService.currentArea = undefined;
-
-        if (!this.electronService.isElectron()) {
-            if (this.providedPartyName !== '' && this.providedPartyName !== undefined) {
-                console.log('Joining provided party: ', this.providedPartyName);
-                this.partyService.connectionInitiated.subscribe(res => {
-                    if (res) {
-                        this.loadGroup(this.providedPartyName);
-                    }
-                });
-            }
-        }
     }
 
     checkPath() {
@@ -229,6 +216,20 @@ export class LoginComponent implements OnInit, OnDestroy {
             this.tradeLeagueName === 'SSF Delve') {
             this.settingsService.deleteAll();
             this.stepper.selectedIndex = 0;
+        }
+
+        if (!this.electronService.isElectron()) {
+            this.route.queryParams.subscribe(params => {
+                this.providedPartyName = params['group'];
+            });
+            if (this.providedPartyName !== '' && this.providedPartyName !== undefined) {
+                console.log('Joining provided party: ', this.providedPartyName);
+                this.partyService.connectionInitiated.subscribe(res => {
+                    if (res) {
+                        this.loadGroup(this.providedPartyName);
+                    }
+                });
+            }
         }
 
         this.accountService.loggingIn = true;
