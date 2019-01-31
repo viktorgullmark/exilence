@@ -476,7 +476,7 @@ export class PartyService implements OnDestroy {
   }
 
   public initParty() {
-    this.party = { name: '', players: [] };
+    this.party = { name: '', spectatorCode: '', players: [] };
   }
 
   public addPartyToRecent(partyName: string) {

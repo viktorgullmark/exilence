@@ -5,6 +5,7 @@ using Exilence.Models.Statistics;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.Caching.Distributed;
+using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,14 +19,24 @@ namespace Exilence.Hubs
         private IDistributedCache _cache;
         private IRedisRepository _redisRepository;
         private ILadderService _ladderService;
+        private IConfiguration _configuration;
 
+        private int _spectatorKey;
         private string ConnectionId => Context.ConnectionId;
 
-        public PartyHub(IDistributedCache cache, IRedisRepository redisRepository, ILadderService ladderService)
+        public PartyHub(
+            IDistributedCache cache,
+            IRedisRepository redisRepository,
+            ILadderService ladderService,
+            IConfiguration configuration
+            )
         {
             _cache = cache;
             _redisRepository = redisRepository;
             _ladderService = ladderService;
+            _configuration = configuration;
+
+            _spectatorKey = _configuration.GetValue<int>("Spectator:Key");
         }
 
         public async Task<bool> PartyExists(string partyName)
@@ -37,8 +48,11 @@ namespace Exilence.Hubs
 
         public async Task JoinParty(string partyName, string playerObj)
         {
+            //partyName = partyName.ToValidPartyName();
+
             var player = CompressionHelper.Decompress<PlayerModel>(playerObj);
-            if(!player.IsSpectator) { 
+            if (!player.IsSpectator)
+            {
                 var ladder = await _ladderService.GetLadderForPlayer(player.Character.League, player.Character.Name);
                 if (ladder == null)
                 {
@@ -57,25 +71,31 @@ namespace Exilence.Hubs
             var party = await _cache.GetAsync<PartyModel>($"party:{partyName}");
             if (party == null)
             {
-                if(player.IsSpectator)
+                if (player.IsSpectator)
                 {
                     await Clients.Caller.SendAsync("GroupNotFoundOrEmpty");
-                } else { 
-
+                }
+                else
+                {
                     // set player to leader, since its a new party
                     player.IsLeader = true;
 
-                    party = new PartyModel() { Name = partyName, Players = new List<PlayerModel> { player } };
+                    var spectatorCode = SpectatorHelper.ToSpectatorCode(partyName, _spectatorKey);
+                    var originalName = SpectatorHelper.ToPartyName(spectatorCode, _spectatorKey);
+
+                    party = new PartyModel() { Name = partyName, Players = new List<PlayerModel> { player }, SpectatorCode = spectatorCode };
                     await _cache.SetAsync<PartyModel>($"party:{partyName}", party);
                     await Clients.Caller.SendAsync("EnteredParty", CompressionHelper.Compress(party), CompressionHelper.Compress(player));
                 }
             }
             else
             {
-                if(!party.Players.Any())
+                if (!party.Players.Any())
                 {
                     await Clients.Caller.SendAsync("GroupNotFoundOrEmpty");
-                } else {
+                }
+                else
+                {
                     var oldPlayer = party.Players.FirstOrDefault(x => (x.Character != null && player.Character != null && x.Character.Name == player.Character.Name) || x.ConnectionID == player.ConnectionID);
 
                     // if the party were joining doesnt have a leader, make the player leader
@@ -102,7 +122,8 @@ namespace Exilence.Hubs
             await Groups.AddToGroupAsync(Context.ConnectionId, partyName);
             await Clients.OthersInGroup(partyName).SendAsync("PlayerJoined", CompressionHelper.Compress(player));
 
-            if (!player.IsSpectator) { 
+            if (!player.IsSpectator)
+            {
                 await Clients.Group(partyName).SendAsync("PlayerUpdated", CompressionHelper.Compress(player));
             }
         }
