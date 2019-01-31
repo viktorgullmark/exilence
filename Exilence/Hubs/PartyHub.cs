@@ -46,9 +46,17 @@ namespace Exilence.Hubs
             return party != null;
         }
 
-        public async Task JoinParty(string partyName, string playerObj)
+        public async Task JoinParty(string partyName, string spectatorCode, string playerObj)
         {
-            //partyName = partyName.ToValidPartyName();
+            // if spectatorCode is empty, fetch it
+            if(String.IsNullOrEmpty(spectatorCode))
+            {
+                spectatorCode = SpectatorHelper.ToSpectatorCode(partyName, _spectatorKey);
+            }
+            // if partyname is empty, fetch it
+            else if (String.IsNullOrEmpty(partyName)) {
+                partyName = SpectatorHelper.ToPartyName(spectatorCode, _spectatorKey);
+            }
 
             var player = CompressionHelper.Decompress<PlayerModel>(playerObj);
             if (!player.IsSpectator)
@@ -80,11 +88,12 @@ namespace Exilence.Hubs
                     // set player to leader, since its a new party
                     player.IsLeader = true;
 
-                    var spectatorCode = SpectatorHelper.ToSpectatorCode(partyName, _spectatorKey);
-                    var originalName = SpectatorHelper.ToPartyName(spectatorCode, _spectatorKey);
-
+        
                     party = new PartyModel() { Name = partyName, Players = new List<PlayerModel> { player }, SpectatorCode = spectatorCode };
                     await _cache.SetAsync<PartyModel>($"party:{partyName}", party);
+
+                    // dont expose name to clients
+                    party.Name = "";
                     await Clients.Caller.SendAsync("EnteredParty", CompressionHelper.Compress(party), CompressionHelper.Compress(player));
                 }
             }
@@ -115,6 +124,9 @@ namespace Exilence.Hubs
                     }
 
                     await _cache.SetAsync<PartyModel>($"party:{partyName}", party);
+
+                    // dont expose name to clients
+                    party.Name = "";
                     await Clients.Caller.SendAsync("EnteredParty", CompressionHelper.Compress(party), CompressionHelper.Compress(player));
                 }
             }
@@ -128,9 +140,20 @@ namespace Exilence.Hubs
             }
         }
 
-        public async Task LeaveParty(string partyName, string playerObj)
+        public async Task LeaveParty(string partyName, string spectatorCode, string playerObj)
         {
             var player = CompressionHelper.Decompress<PlayerModel>(playerObj);
+
+            // if spectatorCode is empty, fetch it
+            if (String.IsNullOrEmpty(spectatorCode))
+            {
+                spectatorCode = SpectatorHelper.ToSpectatorCode(partyName, _spectatorKey);
+            }
+            // if partyname is empty, fetch it
+            else if (String.IsNullOrEmpty(partyName))
+            {
+                partyName = SpectatorHelper.ToPartyName(spectatorCode, _spectatorKey);
+            }
 
             var party = await _cache.GetAsync<PartyModel>($"party:{partyName}");
             if (party != null)
@@ -190,7 +213,7 @@ namespace Exilence.Hubs
             var playerObjToKick = party.Players.FirstOrDefault(x => x.Character.Name == playerToKick);
             var compressedPlayerToKick = CompressionHelper.Compress(playerObjToKick);
 
-            await LeaveParty(partyName, compressedPlayerToKick);
+            await LeaveParty(partyName, null, compressedPlayerToKick);
             await Clients.Client(playerObjToKick.ConnectionID).SendAsync("KickedFromParty");
         }
 
