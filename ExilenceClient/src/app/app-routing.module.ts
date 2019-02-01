@@ -29,7 +29,7 @@ const routes: Routes = [
 
     // login-section
     { path: 'login', component: LoginComponent },
-    { path: 'group', component: LoginComponent },
+    { path: 'spectate/:code', component: LoginComponent },
     { path: '', redirectTo: 'login', pathMatch: 'full' },
 
 

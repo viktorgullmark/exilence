@@ -219,8 +219,8 @@ export class LoginComponent implements OnInit, OnDestroy {
         }
 
         if (!this.electronService.isElectron()) {
-            this.route.queryParams.subscribe(params => {
-                this.providedSpectatorCode = params['group'];
+            this.route.params.subscribe(params => {
+                this.providedSpectatorCode = params.code;
             });
             if (this.providedSpectatorCode !== '' && this.providedSpectatorCode !== undefined) {
                 this.partyService.connectionInitiated.subscribe(res => {

@@ -289,7 +289,7 @@ namespace Exilence.Hubs
                     var foundPlayer = foundParty.Players.FirstOrDefault(x => x.ConnectionID == Context.ConnectionId);
                     if (foundPlayer != null)
                     {   //This compression and then uncompression is ugly
-                        await LeaveParty(partyName, CompressionHelper.Compress(foundPlayer));
+                        await LeaveParty(partyName, "", CompressionHelper.Compress(foundPlayer));
                         var success = RemoveFromIndex();
                     }
                 }

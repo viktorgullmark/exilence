@@ -86,7 +86,7 @@
         "SESSIONID_NOT_VALIDATED": "The sessionId has not been validated yet",
         "SESSIONID_NOT_PROVIDED": "No sessionId provided",
         "PRIVATE_PROFILE": "Character-list is hidden/private, a sessionId is required to continue",
-        "GROUP_DOESNT_EXIST": "ERROR: The group could not be found."
+        "GROUP_DOESNT_EXIST": "ERROR: The code is invalid."
     },
     "STASH": {
         "SEARCH": "Filter tabs",
