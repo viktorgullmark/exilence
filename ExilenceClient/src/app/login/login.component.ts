@@ -62,12 +62,12 @@ export class LoginComponent implements OnInit, OnDestroy {
     needsValidation: boolean;
     leagueChanged = false;
     shouldSetup = true;
-    groupName = '';
+    spectatorCode = '';
     leaguesSub: Subscription;
     characterListSub: Subscription;
     lineReader: any;
     groupNoExists = false;
-    providedPartyName = undefined;
+    providedSpectatorCode = undefined;
 
     @ViewChild('stepper') stepper: MatStepper;
     @ViewChild('lastStep') lastStep: MatStep;
@@ -220,13 +220,13 @@ export class LoginComponent implements OnInit, OnDestroy {
 
         if (!this.electronService.isElectron()) {
             this.route.queryParams.subscribe(params => {
-                this.providedPartyName = params['group'];
+                this.providedSpectatorCode = params['group'];
             });
-            if (this.providedPartyName !== '' && this.providedPartyName !== undefined) {
-                console.log('Joining provided party: ', this.providedPartyName);
+            if (this.providedSpectatorCode !== '' && this.providedSpectatorCode !== undefined) {
+                console.log('Joining provided party: ', this.providedSpectatorCode);
                 this.partyService.connectionInitiated.subscribe(res => {
                     if (res) {
-                        this.loadGroup(this.providedPartyName);
+                        this.loadGroup(this.providedSpectatorCode);
                     }
                 });
             }
@@ -493,9 +493,9 @@ export class LoginComponent implements OnInit, OnDestroy {
         });
     }
 
-    loadGroup(groupName: string) {
+    loadGroup(spectatorCode: string) {
 
-        groupName = groupName.toUpperCase();
+        spectatorCode = spectatorCode.toUpperCase();
 
         const player = {
             isSpectator: true,
@@ -506,14 +506,14 @@ export class LoginComponent implements OnInit, OnDestroy {
             }]
         } as Player;
 
-        this.partyService.checkIfPartyExists(groupName).then(exists => {
+        this.partyService.checkIfPartyExists(spectatorCode).then(exists => {
 
             if (exists) {
-                this.partyService.joinParty(groupName, player);
+                this.partyService.joinParty('', spectatorCode, player);
                 this.router.navigate(['/authorized/party']);
             } else {
                 this.groupNoExists = true;
-                this.providedPartyName = undefined;
+                this.providedSpectatorCode = undefined;
             }
         });
     }

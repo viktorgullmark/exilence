@@ -194,7 +194,7 @@ export class PartyService implements OnDestroy {
 
         // if last player leaves, kick self to login screen
         if (this.party.players.find(x => !x.isSpectator) === undefined) {
-          this.leaveParty(this.party.name, this.currentPlayer);
+          this.leaveParty(this.party.name, this.party.spectatorCode, this.currentPlayer);
           const errorMsg = {
             title: 'Information',
             body: 'Spectator mode ended, all players left the group.'
@@ -359,8 +359,8 @@ export class PartyService implements OnDestroy {
       this._hubConnection.start().then(() => {
         this.connectionInitiated.emit(true);
         console.log('Successfully established signalr connection!');
-        if (this.party !== undefined && this.currentPlayer !== undefined && this.party.name !== '') {
-          this.joinParty(this.party.name, this.currentPlayer);
+        if (this.party !== undefined && this.currentPlayer !== undefined && (this.party.name !== '' || this.party.spectatorCode !== '')) {
+          this.joinParty(this.party.name, this.party.spectatorCode, this.currentPlayer);
         }
         this.reconnectAttempts = 0;
       }).catch(() => {
@@ -444,13 +444,13 @@ export class PartyService implements OnDestroy {
     }
   }
 
-  public checkIfPartyExists(partyName: string) {
-    return this._hubConnection.invoke('PartyExists', partyName).then((response) => {
+  public checkIfPartyExists(spectatorCode: string) {
+    return this._hubConnection.invoke('PartyExists', spectatorCode).then((response) => {
       return response;
     });
   }
 
-  public joinParty(partyName: string, player: Player) {
+  public joinParty(partyName: string, spectatorCode: string, player: Player) {
     const playerToSend = Object.assign({}, player);
     this.isEntering = true;
     this.initParty();
@@ -462,15 +462,15 @@ export class PartyService implements OnDestroy {
       const areasToSend = HistoryHelper.filterAreas(playerToSend.pastAreas, oneDayAgo);
       playerToSend.netWorthSnapshots = historyToSend;
       playerToSend.pastAreas = areasToSend;
-      this.electronService.compress(playerToSend, (data) => this._hubConnection.invoke('JoinParty', partyName, data));
+      this.electronService.compress(playerToSend, (data) => this._hubConnection.invoke('JoinParty', partyName, spectatorCode, data));
     }
   }
 
-  public leaveParty(partyName: string, player: Player) {
+  public leaveParty(partyName: string, spectatorCode: string, player: Player) {
     this.initParty();
     if (partyName !== '') {
       if (this._hubConnection) {
-        this.electronService.compress(player, (data) => this._hubConnection.invoke('LeaveParty', partyName, data));
+        this.electronService.compress(player, (data) => this._hubConnection.invoke('LeaveParty', partyName, spectatorCode, data));
       }
     }
   }

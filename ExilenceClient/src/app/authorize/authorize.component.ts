@@ -100,9 +100,9 @@ export class AuthorizeComponent implements OnInit, OnDestroy {
 
   enterParty() {
     this.partyService.joinInProgress = true;
-    this.partyService.leaveParty(this.partyService.party.name, this.player);
+    this.partyService.leaveParty(this.partyService.party.name, this.partyService.party.spectatorCode, this.player);
     setTimeout(() => {
-      this.partyService.joinParty(this.form.controls.partyCode.value.toUpperCase(), this.player);
+      this.partyService.joinParty(this.form.controls.partyCode.value.toUpperCase(), '', this.player);
       this.incomeService.Snapshot();
       this.partyService.addPartyToRecent(this.form.controls.partyCode.value.toUpperCase());
       this.router.navigateByUrl('/404', { skipLocationChange: true }).then(() =>

@@ -39,8 +39,9 @@ namespace Exilence.Hubs
             _spectatorKey = _configuration.GetValue<int>("Spectator:Key");
         }
 
-        public async Task<bool> PartyExists(string partyName)
+        public async Task<bool> PartyExists(string spectatorCode)
         {
+            var partyName = SpectatorHelper.ToPartyName(spectatorCode, _spectatorKey);
             var party = await _cache.GetAsync<PartyModel>($"party:{partyName}");
 
             return party != null;

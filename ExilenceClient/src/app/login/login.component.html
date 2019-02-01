@@ -1,5 +1,5 @@
 <div class="container">
-  <div *ngIf="!electronService.isElectron() && providedPartyName == undefined" class="form group-selection-screen">
+  <div *ngIf="!electronService.isElectron() && providedSpectatorCode == undefined" class="form group-selection-screen">
     <mat-card class="group-selection-card">
 
       <h1 class="mat-h1">Spectator mode</h1>
@@ -10,14 +10,14 @@
         <span class="mat-body-1">Fill in the spectator code of the group you wish to spectate below.<br /><br /></span>
 
         <mat-form-field>
-          <input matInput [(ngModel)]="groupName" placeholder="{{'SPECTATOR.CODE' | translate}}" required>
+          <input matInput [(ngModel)]="spectatorCode" placeholder="{{'SPECTATOR.CODE' | translate}}" required>
         </mat-form-field>
 
         <div class="group-no-exists" *ngIf="groupNoExists">
           <span class="form-error">{{'ERROR.GROUP_DOESNT_EXIST' | translate}}</span>
         </div>
 
-        <button class="enter-grp-btn" mat-raised-button color="primary" (click)="loadGroup(groupName)">Spectate
+        <button class="enter-grp-btn" mat-raised-button color="primary" (click)="loadGroup(spectatorCode)">Spectate
           group</button>
       </mat-card-content>
     </mat-card>
