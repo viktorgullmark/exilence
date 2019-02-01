@@ -62,6 +62,9 @@
         "NAME": "Character name",
         "NAME_INFO": "Select your current character"
     },
+    "SPECTATOR": {
+        "CODE": "Spectator code"
+    },
     "PARTY": {
         "CODE": "Group name",
         "NAME_HINT": "Enter name of your choice here",
