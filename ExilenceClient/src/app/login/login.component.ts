@@ -223,7 +223,6 @@ export class LoginComponent implements OnInit, OnDestroy {
                 this.providedSpectatorCode = params['group'];
             });
             if (this.providedSpectatorCode !== '' && this.providedSpectatorCode !== undefined) {
-                console.log('Joining provided party: ', this.providedSpectatorCode);
                 this.partyService.connectionInitiated.subscribe(res => {
                     if (res) {
                         this.loadGroup(this.providedSpectatorCode);

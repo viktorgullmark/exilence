@@ -122,6 +122,10 @@ export class PartyService implements OnDestroy {
           if (this.currentPlayer !== undefined && playerObj.account === this.currentPlayer.account) {
             playerObj.netWorthSnapshots = Object.assign([], this.currentPlayer.netWorthSnapshots);
           }
+          // if we are a player, there should be a partyname that we can use, since we wont expose it from the server
+          if (this.party.name !== undefined) {
+            party.name = this.party.name;
+          }
           this.party = party;
           this.updatePlayerLists(this.party);
           this.accountService.player.next(playerObj);
@@ -131,7 +135,6 @@ export class PartyService implements OnDestroy {
           }
           this.isEntering = false;
           this.logService.log('Entered party:', party);
-          console.log(party);
           // set initial values for party net worth
           let networth = 0;
           this.messageValueService.partyGainSubject.next(0);
