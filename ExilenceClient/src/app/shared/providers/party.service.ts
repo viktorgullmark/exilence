@@ -57,6 +57,7 @@ export class PartyService implements OnDestroy {
 
   public joinInProgress = false;
   public maskedName = false;
+  public maskedSpectatorCode = false;
   public currentPlayerGain;
   public playerGain;
   public partyGain = 0;
@@ -85,6 +86,7 @@ export class PartyService implements OnDestroy {
     this.recentParties.next(this.settingService.get('recentParties') || []);
 
     this.maskedName = this.settingsService.get('maskedGroupname') === true ? true : false;
+    this.maskedSpectatorCode = this.settingsService.get('maskedSpectatorCode') === true ? true : false;
 
     this.playerSub = this.accountService.player.subscribe(res => {
       this.currentPlayer = res;

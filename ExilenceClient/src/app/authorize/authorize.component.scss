@@ -13,6 +13,14 @@
     }
 }
 
+.align-left {
+    float: left;
+}
+
+.spectate-link {
+    font-size: 14px;
+}
+
 .sidenav-container {
     
     .bottom-area-wrapper {
@@ -46,4 +54,10 @@
 
 .mat-drawer {
     background: $drawer-bg-color;
+}
+
+.form {
+    button {
+        margin-right: 0;
+    }
 }

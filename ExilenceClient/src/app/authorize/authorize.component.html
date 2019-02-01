@@ -2,19 +2,32 @@
   <mat-sidenav class="sidenav-container" mode="side" opened *ngIf="electronService.isElectron()">
     <form class="form sidenav-form" [formGroup]="form" (ngSubmit)="enterParty()">
       <mat-form-field>
-        <input matInput formControlName="partyCode" placeholder="{{'PARTY.CODE' | translate}}" class="party-name-input" [type]="partyService.maskedName ? 'password' : 'text'">
+        <input matInput formControlName="partyCode" placeholder="{{'PARTY.CODE' | translate}}" class="party-name-input"
+          [type]="partyService.maskedName ? 'password' : 'text'">
         <mat-hint>{{'PARTY.NAME_HINT' | translate}}</mat-hint>
       </mat-form-field>
-      <br/>
-      <mat-checkbox [disableRipple]="true" [(ngModel)]="partyService.maskedName" [ngModelOptions]="{standalone: true}" (ngModelChange)="saveMaskedSetting()">Mask groupname</mat-checkbox>
+
+
+      <mat-checkbox class="top-margin" [disableRipple]="true" [(ngModel)]="partyService.maskedName" [ngModelOptions]="{standalone: true}"
+        (ngModelChange)="saveMaskedSetting()">Mask groupname</mat-checkbox>
+      <mat-checkbox [hidden]="partyService.party.name == ''" [disableRipple]="true" [(ngModel)]="partyService.maskedSpectatorCode"
+        [ngModelOptions]="{standalone: true}" (ngModelChange)="saveMaskedSpectatorCodeSetting()">Mask spectator code</mat-checkbox>
       <button class="top-margin" *ngIf="!form.valid || partyService.party.name == form.controls.partyCode.value"
         mat-raised-button color="primary" type="submit" disabled>{{'PARTY.ENTER' | translate}}</button>
       <button class="top-margin" *ngIf="form.valid && partyService.party.name != form.controls.partyCode.value"
         mat-raised-button color="primary" type="submit">{{'PARTY.ENTER' | translate}}</button>
+
+      <div [hidden]="partyService.party.name == '' || partyService.maskedSpectatorCode" class="top-margin">
+        <span class="span-label">Spectator link</span><br/>
+        <a class="inline-link spectate-link" (click)="openLink('https://exilence.app/spectate/' + partyService.party.spectatorCode)">exilence.app/spectate/{{partyService.party.spectatorCode}}</a>
+
+        <button class="top-margin full-width" mat-raised-button color="primary" type="button">Copy spectate link</button>
+      </div>
+
     </form>
     <mat-nav-list class="sidenav">
-      <mat-list-item routerLinkActive="active" class="current-group" [routerLinkActiveOptions]="{exact:true}" routerLink="/authorized/party"
-        *ngIf="partyService.party.name != ''">
+      <mat-list-item routerLinkActive="active" class="current-group" [routerLinkActiveOptions]="{exact:true}"
+        routerLink="/authorized/party" *ngIf="partyService.party.name != ''">
         <mat-icon>group</mat-icon><a matLine>{{'PAGES.PARTY.TITLE' | translate}}</a>
       </mat-list-item>
       <mat-list-item routerLinkActive="active" [routerLinkActiveOptions]="{exact:true}" routerLink="/authorized/dashboard">
@@ -39,7 +52,8 @@
   </mat-sidenav>
   <mat-sidenav-content class="content-container" [ngClass]="{'in-electron': electronService.isElectron() }">
     <router-outlet></router-outlet>
-    <mat-progress-bar *ngIf="partyService.joinInProgress || partyService.isEntering" class="progress-bar top-margin" color="primary" mode="indeterminate">
+    <mat-progress-bar *ngIf="partyService.joinInProgress || partyService.isEntering" class="progress-bar top-margin"
+      color="primary" mode="indeterminate">
     </mat-progress-bar>
   </mat-sidenav-content>
 </mat-sidenav-container>

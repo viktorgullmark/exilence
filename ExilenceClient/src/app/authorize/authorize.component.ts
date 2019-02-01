@@ -85,6 +85,10 @@ export class AuthorizeComponent implements OnInit, OnDestroy {
     this.settingsService.set('maskedGroupname', this.partyService.maskedName);
   }
 
+  saveMaskedSpectatorCodeSetting() {
+    this.settingsService.set('maskedSpectatorCode', this.partyService.maskedSpectatorCode);
+  }
+
   openLink(link: string) {
     this.electronService.shell.openExternal(link);
   }
