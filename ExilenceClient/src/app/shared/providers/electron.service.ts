@@ -24,6 +24,7 @@ export class ElectronService {
   zlib: any;
   lodash: any;
   arch: any;
+  clipboard: any;
 
   constructor(
     private analyticsService: AnalyticsService, // Not used but instanciated here
@@ -42,6 +43,7 @@ export class ElectronService {
       this.zlib = window.require('zlib');
       this.arch = window.require('os').arch();
       this.lodash = window.require('lodash');
+      this.clipboard = window.require('electron').clipboard;
     } else {
       this.zlib = require('zlib');
       this.lodash = require('lodash');

@@ -25,6 +25,8 @@ export class AuthorizeComponent implements OnInit, OnDestroy {
   player: Player;
   private playerSub: Subscription;
   private serverMsgSub: Subscription;
+  public copyText = 'Copy spectate link';
+  public isCopying = false;
   constructor(@Inject(FormBuilder) fb: FormBuilder,
     public partyService: PartyService,
     private mapService: MapService,
@@ -91,6 +93,22 @@ export class AuthorizeComponent implements OnInit, OnDestroy {
 
   openLink(link: string) {
     this.electronService.shell.openExternal(link);
+  }
+
+  getSpectateLink() {
+    return 'https://exilence.app/spectate/' + this.partyService.party.spectatorCode;
+  }
+
+  copyLink() {
+    if (this.electronService.isElectron()) {
+      this.electronService.clipboard.writeText(this.getSpectateLink());
+      this.isCopying = true;
+      this.copyText = 'Copied!';
+      setTimeout(x => {
+        this.isCopying = false;
+        this.copyText = 'Copy spectate link';
+      }, 1500);
+    }
   }
 
   generatePartyName(): string {

@@ -3,7 +3,7 @@
     <form class="form sidenav-form" [formGroup]="form" (ngSubmit)="enterParty()">
       <mat-form-field>
         <input matInput formControlName="partyCode" placeholder="{{'PARTY.CODE' | translate}}" class="party-name-input"
-          [type]="partyService.maskedName ? 'password' : 'text'">
+          [type]="partyService.maskedName ? 'password' : 'text'" maxlength="10">
         <mat-hint>{{'PARTY.NAME_HINT' | translate}}</mat-hint>
       </mat-form-field>
 
@@ -19,9 +19,9 @@
 
       <div [hidden]="partyService.party.name == '' || partyService.maskedSpectatorCode" class="top-margin">
         <span class="span-label">Spectator link</span><br/>
-        <a class="inline-link spectate-link" (click)="openLink('https://exilence.app/spectate/' + partyService.party.spectatorCode)">exilence.app/spectate/{{partyService.party.spectatorCode}}</a>
+        <a class="inline-link spectate-link" (click)="openLink(getSpectateLink())">exilence.app/spectate/{{partyService.party.spectatorCode}}</a>
 
-        <button class="top-margin full-width" mat-raised-button color="primary" type="button">Copy spectate link</button>
+        <button class="top-margin full-width" mat-raised-button (click)="copyLink()" color="primary" type="button" [disabled]="isCopying">{{copyText}}</button>
       </div>
 
     </form>
