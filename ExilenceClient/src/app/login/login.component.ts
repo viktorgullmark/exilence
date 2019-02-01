@@ -222,13 +222,11 @@ export class LoginComponent implements OnInit, OnDestroy {
             this.route.params.subscribe(params => {
                 this.providedSpectatorCode = params.code;
             });
-            if (this.providedSpectatorCode !== '' && this.providedSpectatorCode !== undefined) {
-                this.partyService.connectionInitiated.subscribe(res => {
-                    if (res) {
-                        this.loadGroup(this.providedSpectatorCode);
-                    }
-                });
-            }
+            this.partyService.connectionInitiated.subscribe(res => {
+                if (res && this.providedSpectatorCode !== '' && this.providedSpectatorCode !== undefined) {
+                    this.loadGroup(this.providedSpectatorCode);
+                }
+            });
         }
 
         this.accountService.loggingIn = true;

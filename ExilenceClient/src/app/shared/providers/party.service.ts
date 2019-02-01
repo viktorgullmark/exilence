@@ -66,6 +66,9 @@ export class PartyService implements OnDestroy {
   private accountInfoSub: Subscription;
   private currentPlayerGainSub: Subscription;
   private playerGainSub: Subscription;
+
+  public isConnecting = false;
+
   constructor(
     private router: Router,
     private accountService: AccountService,
@@ -358,9 +361,12 @@ export class PartyService implements OnDestroy {
   initHubConnection() {
     // only initiate connection, when there is no connection running
     if (this._hubConnection.state === 0) {
+      this.isConnecting = true;
       this.logService.log('Starting signalr connection');
       this._hubConnection.start().then(() => {
         this.connectionInitiated.emit(true);
+
+        this.isConnecting = false;
         console.log('Successfully established signalr connection!');
         if (this.party !== undefined && this.currentPlayer !== undefined && (this.party.name !== '' || this.party.spectatorCode !== '')) {
           this.joinParty(this.party.name, this.party.spectatorCode, this.currentPlayer);

@@ -3,7 +3,8 @@ import { NgModule } from '@angular/core';
 import {
   MatButtonModule, MatInputModule, MatOptionModule, MatSelectModule, MatIconModule,
   MatStepperModule, MatProgressBarModule, MatCheckboxModule, MatRadioModule, MatDividerModule, MatGridListModule,
-  MatCardModule
+  MatCardModule,
+  MatProgressSpinnerModule
 } from '@angular/material';
 import { MatFormFieldModule } from '@angular/material/form-field';
 
@@ -37,7 +38,8 @@ import { ErrorMessageDialogModule } from '../authorize/components/error-message-
     ErrorMessageDialogModule,
     MatDividerModule,
     MatGridListModule,
-    MatCardModule
+    MatCardModule,
+    MatProgressSpinnerModule
   ],
   declarations: [LoginComponent],
   entryComponents: [ClearHistoryDialogComponent, ErrorMessageDialogComponent, InfoDialogComponent]
