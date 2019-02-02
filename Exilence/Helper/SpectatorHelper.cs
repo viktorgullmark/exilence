@@ -5,31 +5,51 @@ namespace Exilence.Helper
 {
     public static class SpectatorHelper
     {
-
-        public static char cipher(char ch, int key)
+        private static int Mod(int a, int b)
         {
-            if (!char.IsLetter(ch))
-            {
-                return ch;
-            }
-
-            char d = char.IsUpper(ch) ? 'A' : 'a';
-            return (char)((((ch + key) - d) % 26) + d);
+            return (a % b + b) % b;
         }
 
-        public static string ToSpectatorCode(string partyName, int key)
+        private static string Encrypt(string input, string key, bool encipher)
         {
             string output = string.Empty;
 
-            foreach (char ch in partyName)
-                output += cipher(ch, key);
+            for (int i = 0; i < key.Length; ++i)
+                if (!char.IsLetter(key[i]))
+                    return null; // Error
+
+            int nonAlphaCharCount = 0;
+
+            for (int i = 0; i < input.Length; ++i)
+            {
+                if (char.IsLetter(input[i]))
+                {
+                    bool cIsUpper = char.IsUpper(input[i]);
+                    char offset = cIsUpper ? 'A' : 'a';
+                    int keyIndex = (i - nonAlphaCharCount) % key.Length;
+                    int k = (cIsUpper ? char.ToUpper(key[keyIndex]) : char.ToLower(key[keyIndex])) - offset;
+                    k = encipher ? k : -k;
+                    char ch = (char)((Mod(((input[i] + k) - offset), 26)) + offset);
+                    output += ch;
+                }
+                else
+                {
+                    output += input[i];
+                    ++nonAlphaCharCount;
+                }
+            }
 
             return output;
         }
 
-        public static string ToPartyName(string spectatorCode, int key)
+        public static string ToSpectatorCode(string partyName, string key)
         {
-            return ToSpectatorCode(spectatorCode, 26 - key);
+            return Encrypt(partyName, key, true);
+        }
+
+        public static string ToPartyName(string spectatorCode, string key)
+        {
+            return Encrypt(spectatorCode, key, false);
         }
     }
 }

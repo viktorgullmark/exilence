@@ -21,7 +21,7 @@ namespace Exilence.Hubs
         private ILadderService _ladderService;
         private IConfiguration _configuration;
 
-        private int _spectatorKey;
+        private string _key;
         private string ConnectionId => Context.ConnectionId;
 
         public PartyHub(
@@ -36,12 +36,12 @@ namespace Exilence.Hubs
             _ladderService = ladderService;
             _configuration = configuration;
 
-            _spectatorKey = _configuration.GetValue<int>("Spectator:Key");
+            _key = _configuration.GetValue<string>("Spectator:Key");
         }
 
         public async Task<bool> PartyExists(string spectatorCode)
         {
-            var partyName = SpectatorHelper.ToPartyName(spectatorCode, _spectatorKey);
+            var partyName = SpectatorHelper.ToPartyName(spectatorCode, _key);
             var party = await _cache.GetAsync<PartyModel>($"party:{partyName}");
 
             return party != null;
@@ -52,11 +52,11 @@ namespace Exilence.Hubs
             // if spectatorCode is empty, fetch it
             if(String.IsNullOrEmpty(spectatorCode))
             {
-                spectatorCode = SpectatorHelper.ToSpectatorCode(partyName, _spectatorKey);
+                spectatorCode = SpectatorHelper.ToSpectatorCode(partyName, _key);
             }
             // if partyname is empty, fetch it
             else if (String.IsNullOrEmpty(partyName)) {
-                partyName = SpectatorHelper.ToPartyName(spectatorCode, _spectatorKey);
+                partyName = SpectatorHelper.ToPartyName(spectatorCode, _key);
             }
 
             var player = CompressionHelper.Decompress<PlayerModel>(playerObj);
@@ -148,12 +148,12 @@ namespace Exilence.Hubs
             // if spectatorCode is empty, fetch it
             if (String.IsNullOrEmpty(spectatorCode))
             {
-                spectatorCode = SpectatorHelper.ToSpectatorCode(partyName, _spectatorKey);
+                spectatorCode = SpectatorHelper.ToSpectatorCode(partyName, _key);
             }
             // if partyname is empty, fetch it
             else if (String.IsNullOrEmpty(partyName))
             {
-                partyName = SpectatorHelper.ToPartyName(spectatorCode, _spectatorKey);
+                partyName = SpectatorHelper.ToPartyName(spectatorCode, _key);
             }
 
             var party = await _cache.GetAsync<PartyModel>($"party:{partyName}");
