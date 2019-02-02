@@ -94,6 +94,14 @@ text {
     margin-top: 15px !important;
 }
 
+.small-checkbox{
+    font-size: 14px !important;
+    .mat-checkbox-inner-container {
+        height: 15px !important;
+        width: 15px !important;
+    }
+}
+
 a {
     cursor: pointer;
 

@@ -1,29 +1,26 @@
 <mat-sidenav-container class="main-container">
   <mat-sidenav class="sidenav-container" mode="side" opened *ngIf="electronService.isElectron()">
     <form class="form sidenav-form" [formGroup]="form" (ngSubmit)="enterParty()">
-      <mat-form-field>
+      <div [hidden]="partyService.party.name == '' || partyService.maskedSpectatorCode">
+        <span class="span-label">Spectator link</span><br />
+        <a class="inline-link spectate-link" (click)="openLink(getSpectateLink())">exilence.app/spectate/{{partyService.party.spectatorCode}}</a>
+        <!-- <button class="top-margin full-width" mat-raised-button (click)="copyLink()" color="primary" type="button"
+                [disabled]="isCopying">{{copyText}}</button> -->
+      </div>
+      <mat-form-field [ngClass]="{'top-margin': partyService.party.name != '' && !partyService.maskedSpectatorCode}">
         <input matInput formControlName="partyCode" placeholder="{{'PARTY.CODE' | translate}}" class="party-name-input"
           [type]="partyService.maskedName ? 'password' : 'text'" maxlength="10">
         <mat-hint>{{'PARTY.NAME_HINT' | translate}}</mat-hint>
       </mat-form-field>
-
-
-      <mat-checkbox class="top-margin" [disableRipple]="true" [(ngModel)]="partyService.maskedName" [ngModelOptions]="{standalone: true}"
-        (ngModelChange)="saveMaskedSetting()">Mask groupname</mat-checkbox>
-      <mat-checkbox [hidden]="partyService.party.name == ''" [disableRipple]="true" [(ngModel)]="partyService.maskedSpectatorCode"
-        [ngModelOptions]="{standalone: true}" (ngModelChange)="saveMaskedSpectatorCodeSetting()">Mask spectator code</mat-checkbox>
+      <mat-checkbox class="top-margin small-checkbox" [disableRipple]="true" [(ngModel)]="partyService.maskedName"
+        [ngModelOptions]="{standalone: true}" (ngModelChange)="saveMaskedSetting()">Mask groupname</mat-checkbox>
+      <mat-checkbox class="small-checkbox" [hidden]="partyService.party.name == ''" [disableRipple]="true" [(ngModel)]="partyService.maskedSpectatorCode"
+        [ngModelOptions]="{standalone: true}" (ngModelChange)="saveMaskedSpectatorCodeSetting()">Hide
+        spectator link</mat-checkbox>
       <button class="top-margin" *ngIf="!form.valid || partyService.party.name == form.controls.partyCode.value"
         mat-raised-button color="primary" type="submit" disabled>{{'PARTY.ENTER' | translate}}</button>
       <button class="top-margin" *ngIf="form.valid && partyService.party.name != form.controls.partyCode.value"
         mat-raised-button color="primary" type="submit">{{'PARTY.ENTER' | translate}}</button>
-
-      <div [hidden]="partyService.party.name == '' || partyService.maskedSpectatorCode" class="top-margin">
-        <span class="span-label">Spectator link</span><br/>
-        <a class="inline-link spectate-link" (click)="openLink(getSpectateLink())">exilence.app/spectate/{{partyService.party.spectatorCode}}</a>
-
-        <button class="top-margin full-width" mat-raised-button (click)="copyLink()" color="primary" type="button" [disabled]="isCopying">{{copyText}}</button>
-      </div>
-
     </form>
     <mat-nav-list class="sidenav">
       <mat-list-item routerLinkActive="active" class="current-group" [routerLinkActiveOptions]="{exact:true}"
