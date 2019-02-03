@@ -13,7 +13,7 @@ using Shared.Models.Statistics;
 using Exilence.Interfaces;
 using Exilence.Helper;
 
-namespace Shared.Hubs
+namespace Exilence.Hubs
 {
     [EnableCors("AllowAll")]
     public class PartyHub : Hub

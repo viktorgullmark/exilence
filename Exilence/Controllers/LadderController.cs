@@ -5,7 +5,7 @@ using Microsoft.Extensions.Logging;
 using Exilence.Interfaces;
 using Shared.Interfaces;
 
-namespace Shared.Controllers
+namespace Exilence.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]

@@ -11,6 +11,5 @@ namespace Exilence.Interfaces
     {
         Task<List<LadderPlayerModel>> GetLadderForPlayer(string league, string player);
         Task<List<LadderPlayerModel>> GetLadderForLeague(string league, bool full = false);
-        Task UpdateLadders();
     }
 }

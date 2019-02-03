@@ -1,10 +1,10 @@
 ﻿using System.Threading.Tasks;
-using Shared.Hubs;
+using Exilence.Hubs;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.Configuration;
 
-namespace Shared.Controllers
+namespace Exilence.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]

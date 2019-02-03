@@ -4,7 +4,7 @@ using Shared.Helper;
 using Shared.Models.Log;
 using Microsoft.AspNetCore.Mvc;
 
-namespace Shared.Controllers
+namespace Exilence.Controllers
 {
     [Route("[controller]")]
     [ApiController]

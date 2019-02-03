@@ -1,20 +1,17 @@
 ﻿using Shared.Interfaces;
-using Microsoft.Extensions.Logging;
 using System;
 using System.Net.Http;
 using System.Threading.Tasks;
-using Exilence.Interfaces;
+using LadderService.Interfaces;
 
-namespace Shared.Services
+namespace LadderService.Services
 {
     public class ExternalService : IExternalService
     {
-        private readonly ILogger<ExternalService> _log;
         private readonly HttpClient _httpClient;
 
-        public ExternalService(ILogger<ExternalService> log, HttpClient httpClient)
+        public ExternalService(HttpClient httpClient)
         {
-            _log = log;
             _httpClient = httpClient;
         }
 
@@ -32,22 +29,11 @@ namespace Shared.Services
                 }
 
                 return null;
-            }
-            catch (Exception e)
+            } catch(Exception e)
             {
-                if (e is TaskCanceledException)
-                {
-                    _log.LogCritical($"Request timed out after 12 seconds.");
-                }
-                else
-                {
-                    _log.LogCritical($"Exception: {e.Message}");
-                }
-
+                Console.WriteLine(e.Message);
                 return null;
             }
         }
-
-
     }
 }

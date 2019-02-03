@@ -2,7 +2,7 @@
 using Shared.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
-namespace Shared
+namespace Exilence
 {
     [Route("api/[controller]")]
     public class HealthController : Controller

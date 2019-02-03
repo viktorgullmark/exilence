@@ -2,7 +2,7 @@
 using Shared.Interfaces;
 using System.Threading.Tasks;
 
-namespace Shared.Services
+namespace Exilence.Services
 {
     public class ConnectionService : IConnectionService
     {
