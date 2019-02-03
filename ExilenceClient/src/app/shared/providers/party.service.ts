@@ -115,7 +115,7 @@ export class PartyService implements OnDestroy {
     this.initHubConnection();
 
     this._hubConnection.onclose(() => {
-      this.logService.log('Signalr connection closed', null, true);
+      this.logService.log('Signalr connection closed');
       this.reconnect();
     });
 
@@ -269,11 +269,17 @@ export class PartyService implements OnDestroy {
     });
 
     this._hubConnection.on('ForceDisconnect', () => {
-      this.disconnect('Recived force disconnect command from server.');
+      this.disconnect('Recived force disconnect command from server.', false);
     });
 
-    this._hubConnection.on('ForceDisconnect', () => {
-      this.disconnect('Recived force disconnect command from server.');
+    this._hubConnection.on('GroupNotFoundOrEmpty', () => {
+      const errorMsg = {
+        title: 'Information',
+        body: 'The group you tried to join does not exist'
+      } as ServerMessage;
+      this.serverMessageReceived.next(errorMsg);
+      this.isEntering = false;
+      this.router.navigate(['/']);
     });
 
     this._hubConnection.on('GroupNotFoundOrEmpty', () => {
@@ -383,7 +389,7 @@ export class PartyService implements OnDestroy {
 
   reconnect() {
     if (this.reconnectAttempts > 5 && !this.forceClosed) {
-      this.disconnect('Could not connect after 5 attempts.');
+      this.disconnect('Could not connect after 5 attempts.', true);
     } else {
       this.logService.log('Trying to reconnect to signalr in 5 seconds.');
       setTimeout(() => {
@@ -393,9 +399,9 @@ export class PartyService implements OnDestroy {
     this.reconnectAttempts++;
   }
 
-  disconnect(reason: string) {
+  disconnect(reason: string, error: boolean) {
     this.forceClosed = true;
-    this.logService.log(reason, null, true);
+    this.logService.log(reason, null, error);
     this.accountService.clearCharacterList();
     localStorage.removeItem('sessionId');
     this.router.navigate(['/disconnected', false]);
@@ -567,7 +573,7 @@ export class PartyService implements OnDestroy {
       } else {
         this.logService.log('Account lookup failed for: ', event.player.name);
       }
-    });
+    }, (error: any) => { });
   }
 
   addRecentPlayer(player: RecentPlayer, accountName: string) {
