@@ -3,8 +3,9 @@ packages/
 Exilence/obj/
 Exilence/bin/
 Exilence/appsettings.json
-LadderService/obj/
-LadderService/bin/
+LadderParser/obj/
+LadderParser/bin/
+LadderParser/appsettings.json
 Shared/obj/
 Shared/bin/
 
