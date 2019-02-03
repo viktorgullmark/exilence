@@ -18,13 +18,18 @@ namespace LadderParser
 {
     class Program
     {
+        public static IConfigurationRoot Configuration;
+
         public static async Task Main(string[] args)
         {
+            // Set up configuration sources.
+            var builder = new ConfigurationBuilder()
+                .SetBasePath(Path.Combine(AppContext.BaseDirectory))
+                .AddJsonFile("appsettings.json", optional: true);
+
+            Configuration = builder.Build();
+
             var host = new HostBuilder()
-                .ConfigureAppConfiguration((hostContext, config) =>
-                {
-                    config.AddJsonFile("appsettings.json", optional: true);
-                })
                  .ConfigureServices((hostContext, services) =>
                  {
                      services.AddHttpClient<IExternalService, ExternalService>();
@@ -34,7 +39,7 @@ namespace LadderParser
                      services
                          .AddDistributedRedisCache(options =>
                         {
-                            options.Configuration = hostContext.Configuration.GetConnectionString("Redis");
+                            options.Configuration = Configuration.GetConnectionString("Redis");
                             options.InstanceName = "Exilence:";
                         });
                  })
