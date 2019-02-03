@@ -282,6 +282,16 @@ export class PartyService implements OnDestroy {
       this.router.navigate(['/']);
     });
 
+    this._hubConnection.on('GroupNotFoundOrEmpty', () => {
+      const errorMsg = {
+        title: 'Information',
+        body: 'The group you tried to join does not exist'
+      } as ServerMessage;
+      this.serverMessageReceived.next(errorMsg);
+      this.isEntering = false;
+      this.router.navigate(['/']);
+    });
+
     this.logMonitorService.areaJoin.subscribe((msg: LogMessage) => {
       this.logService.log('Player joined area: ', msg.player.name);
       this.handleAreaEvent(msg);

@@ -14,6 +14,7 @@ import { AlertMessage } from './shared/interfaces/alert-message.interface';
 import { MatSnackBar } from '@angular/material';
 import { Subscription } from 'rxjs';
 import { AppConfig } from '../environments/environment.js';
+import { StateService } from './shared/providers/state.service.js';
 
 @Component({
   selector: 'app-root',
@@ -26,7 +27,9 @@ export class AppComponent implements OnDestroy {
   public appVersion;
   maximized = false;
   private alertSub: Subscription;
-  constructor(public electronService: ElectronService,
+  constructor(
+    public electronService: ElectronService,
+    private stateService: StateService,
     private translate: TranslateService,
     public sessionService: SessionService,
     private settingsService: SettingsService,
