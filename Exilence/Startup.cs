@@ -44,7 +44,7 @@ namespace Exilence
                     builder =>
                     {
                         builder.AllowAnyHeader();
-                        builder.AllowAnyOrigin();
+                        builder.WithOrigins("http://localhost:4200", "http://exilence.app");
                         builder.AllowAnyMethod();
                         builder.AllowCredentials();
                     });
@@ -78,9 +78,9 @@ namespace Exilence
                 app.UseDeveloperExceptionPage();
             }
 
+            app.UseCors("AllowAll");
             app.UseMvc();
             app.UseFileServer();
-            app.UseCors("AllowAll");
 
             GlobalConfiguration.Configuration.UseActivator(new HangfireActivator(serviceProvider));
 
@@ -98,7 +98,7 @@ namespace Exilence
 
             app.UseSignalR(routes =>
             {
-                routes.MapHub<PartyHub>("/hubs/party", options =>
+                routes.MapHub<PartyHub>("/api/hubs/party", options =>
                 {
                     options.ApplicationMaxBufferSize = 50 * 1024 * 1024;
                     options.TransportMaxBufferSize = 50 * 1024 * 1024;

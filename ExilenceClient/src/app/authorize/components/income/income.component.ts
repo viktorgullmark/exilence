@@ -51,6 +51,7 @@ export class IncomeComponent implements OnInit, OnDestroy {
   selectedColorScheme: string;
 
   constructor(
+    private electronService: ElectronService,
     private partyService: PartyService,
     private settingService: SettingsService,
     private router: Router
@@ -80,13 +81,15 @@ export class IncomeComponent implements OnInit, OnDestroy {
       // update the graph every minute, to update labels
       this.interval = setInterval(() => {
         this.dateData = [];
-        this.foundPlayer = this.party.players.find(x => x.character.name === this.partyService.selectedFilterValue);
+        this.foundPlayer = this.party.players.find(x => x.character !== null && x.character.name === this.partyService.selectedFilterValue);
         if (this.partyService.selectedFilterValue !== '0' && this.foundPlayer !== undefined) {
           this.updateGraph(this.foundPlayer);
         } else {
           this.party.players.forEach(p => {
-            if (p.netWorthSnapshots !== null) {
-              this.updateGraph(p);
+            if (p.character !== null) {
+              if (p.netWorthSnapshots !== null) {
+                this.updateGraph(p);
+              }
             }
           });
         }
@@ -100,13 +103,16 @@ export class IncomeComponent implements OnInit, OnDestroy {
           this.party = party;
 
           // update values for entire party, or a specific player, depending on selection
-          this.foundPlayer = this.party.players.find(x => x.character.name === this.partyService.selectedFilterValue);
+          this.foundPlayer = this.party.players.find(x => x.character !== null
+            && x.character.name === this.partyService.selectedFilterValue);
           if (this.partyService.selectedFilterValue !== '0' && this.foundPlayer !== undefined) {
             this.updateGraph(this.foundPlayer);
           } else {
             this.party.players.forEach(p => {
-              if (p.netWorthSnapshots !== null) {
-                this.updateGraph(p);
+              if (p.character !== null) {
+                if (p.netWorthSnapshots !== null) {
+                  this.updateGraph(p);
+                }
               }
             });
           }
@@ -119,13 +125,16 @@ export class IncomeComponent implements OnInit, OnDestroy {
           this.dateData = [];
 
           // update values for entire party, or a specific player, depending on selection
-          this.foundPlayer = this.party.players.find(x => x.character.name === this.partyService.selectedFilterValue);
+          this.foundPlayer = this.party.players.find(x => x.character !== null &&
+            x.character.name === this.partyService.selectedFilterValue);
           if (this.partyService.selectedFilterValue !== '0' && this.foundPlayer !== undefined) {
             this.updateGraph(this.foundPlayer);
           } else {
             this.party.players.forEach(p => {
-              if (p.netWorthSnapshots !== null) {
-                this.updateGraph(p);
+              if (p.character !== null) {
+                if (p.netWorthSnapshots !== null) {
+                  this.updateGraph(p);
+                }
               }
             });
           }
@@ -166,12 +175,17 @@ export class IncomeComponent implements OnInit, OnDestroy {
   updateGraph(player: Player) {
     const playerObj = Object.assign({}, player);
 
-
-    let netWorthHistoryDays = this.settingService.get('netWorthHistoryDays');
-    if (netWorthHistoryDays === undefined) {
-      netWorthHistoryDays = 14;
-      this.settingService.set('netWorthHistoryDays', netWorthHistoryDays);
+    let netWorthHistoryDays = 14;
+    if (this.electronService.isElectron()) {
+      netWorthHistoryDays = this.settingService.get('netWorthHistoryDays');
+      if (netWorthHistoryDays === undefined) {
+        this.settingService.set('netWorthHistoryDays', netWorthHistoryDays);
+      }
+    } else {
+      netWorthHistoryDays = 1;
     }
+
+
     const daysAgo = (Date.now() - (netWorthHistoryDays * 24 * 60 * 60 * 1000));
     playerObj.netWorthSnapshots = playerObj.netWorthSnapshots.filter(x => x.timestamp > daysAgo);
     if (playerObj.netWorthSnapshots.length === 0) {

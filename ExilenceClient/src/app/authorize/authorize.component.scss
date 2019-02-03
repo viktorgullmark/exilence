@@ -13,18 +13,23 @@
     }
 }
 
+.align-left {
+    float: left;
+}
+
+.spectate-link {
+    font-size: 14px;
+}
+
 .sidenav-container {
     
     .bottom-area-wrapper {
         position: absolute;
         bottom: 15px;
         width: 265px !important;
-        display: flex;
-
+        display: flex;       
         .discord-logo {
             flex: 1;
-            cursor: pointer;
-            content:url("./../../assets/img/discord-logo-white.svg");
         }
     } 
     .patreon-btn-wrapper {
@@ -33,14 +38,11 @@
         width: 265px !important;
         display: flex;
         justify-content: center;
-        .patron-button {    
+        .patron-button {
             height: 45px;
-            cursor: pointer;
-            content:url("./../../assets/img/become_a_patron.png");
         }
     } 
 }
-
 
 .sidenav-form {
     padding: $container-padding;
@@ -52,4 +54,10 @@
 
 .mat-drawer {
     background: $drawer-bg-color;
+}
+
+.form {
+    button {
+        margin-right: 0;
+    }
 }

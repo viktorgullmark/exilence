@@ -5,7 +5,7 @@ import { LogService } from './log.service';
 
 @Injectable()
 export class LogMonitorService {
-  private PathOfExileLog = window.require('poe-log-monitor');
+  private PathOfExileLog: any;
 
   logTail: any;
   entireLog: any;
@@ -28,62 +28,73 @@ export class LogMonitorService {
   parsingComplete: EventEmitter<any> = new EventEmitter();
 
   constructor(private accountService: AccountService, private logService: LogService) {
-    this.accountService.accountInfo.subscribe(res => {
-      if (res !== undefined && this.logTail === undefined) {
-        this.filePath = res.filePath;
-        this.logTail = new this.PathOfExileLog({
-          logfile: this.filePath,
-          interval: 500
-        });
-        this.logTail.on('area', (data) => {
-          this.areaEvent.emit(data);
-        });
-        this.logTail.on('areaJoin', (data) => {
-          this.areaJoin.emit(data);
-        });
-        this.logTail.on('areaLeave', (data) => {
-          this.areaLeft.emit(data);
-        });
-        this.logTail.on('message', (data) => {
-          this.messageEvent.emit(data);
-        });
-        this.logTail.on('instanceServer', (data) => {
-          this.instanceServerEvent.emit(data);
-        });
-        this.logTail.on('error', (data) => {
-          this.logService.log('poe-log-reader', data, true);
-        });
-      }
-    });
+    if (this.isElectron()) {
+      this.PathOfExileLog = window.require('poe-log-monitor');
+      this.accountService.accountInfo.subscribe(res => {
+        if (res !== undefined && this.logTail === undefined) {
+          this.filePath = res.filePath;
+          this.logTail = new this.PathOfExileLog({
+            logfile: this.filePath,
+            interval: 500
+          });
+          this.logTail.on('area', (data) => {
+            this.areaEvent.emit(data);
+          });
+          this.logTail.on('areaJoin', (data) => {
+            this.areaJoin.emit(data);
+          });
+          this.logTail.on('areaLeave', (data) => {
+            this.areaLeft.emit(data);
+          });
+          this.logTail.on('message', (data) => {
+            this.messageEvent.emit(data);
+          });
+          this.logTail.on('instanceServer', (data) => {
+            this.instanceServerEvent.emit(data);
+          });
+          this.logTail.on('error', (data) => {
+            this.logService.log('poe-log-reader', data, true);
+          });
+        }
+      });
+    }
+  }
+
+  isElectron() {
+    return window && window.process && window.process.type;
   }
 
   removeLogParser() {
-    this.entireLog.removeAllListeners();
+    if (this.isElectron()) {
+      this.entireLog.removeAllListeners();
+    }
   }
 
   instantiateLogParser(path) {
-    this.filePath = path;
-    // instantiate monitor that parses the entire log
-    this.entireLog = new this.PathOfExileLog({
-      logfile: this.filePath,
-      includedEvents: ['area', 'instanceServer'],
-      chunkSize: 10240 // todo: read ram-size/cpu-speed and calc based on these?
-    });
+    if (this.isElectron()) {
+      this.filePath = path;
+      // instantiate monitor that parses the entire log
+      this.entireLog = new this.PathOfExileLog({
+        logfile: this.filePath,
+        includedEvents: ['area', 'instanceServer'],
+        chunkSize: 10240 // todo: read ram-size/cpu-speed and calc based on these?
+      });
 
-    this.entireLog.on('parsingStarted', (data) => {
-      this.parsingStarted.emit(data);
-    });
-    this.entireLog.on('parsingComplete', (data) => {
-      this.parsingComplete.emit(data);
-    });
-    this.entireLog.on('area', (data) => {
-      this.historicalAreaEvent.emit(data);
-    });
-    this.entireLog.on('instanceServer', (data) => {
-      this.historicalInstanceServerEvent.emit(data);
-    });
-    this.entireLog.on('error', (data) => {
-      this.logService.log('poe-log-reader', data, true);
-    });
+      this.entireLog.on('parsingStarted', (data) => {
+        this.parsingStarted.emit(data);
+      });
+      this.entireLog.on('parsingComplete', (data) => {
+        this.parsingComplete.emit(data);
+      });
+      this.entireLog.on('area', (data) => {
+        this.historicalAreaEvent.emit(data);
+      });
+      this.entireLog.on('instanceServer', (data) => {
+        this.historicalInstanceServerEvent.emit(data);
+      });
+      this.entireLog.on('error', (data) => {
+        this.logService.log('poe-log-reader', data, true);
+      });
+    }
   }
 }

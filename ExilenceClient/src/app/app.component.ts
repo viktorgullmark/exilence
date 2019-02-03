@@ -13,6 +13,7 @@ import { AlertService } from './shared/providers/alert.service';
 import { AlertMessage } from './shared/interfaces/alert-message.interface';
 import { MatSnackBar } from '@angular/material';
 import { Subscription } from 'rxjs';
+import { AppConfig } from '../environments/environment.js';
 
 @Component({
   selector: 'app-root',
@@ -33,21 +34,20 @@ export class AppComponent implements OnDestroy {
     private alertService: AlertService,
     public snackBar: MatSnackBar
   ) {
+
+    if (AppConfig.environment === 'DEV' && this.electronService.isElectron()) {
+      this.logout();
+    }
+
     this.appVersion = pkg['version'];
 
-    this.logout();
-
     translate.setDefaultLang('en');
-    moment.locale(this.electronService.remote.app.getLocale());
-    // console.log('AppConfig', AppConfig);
 
     if (electronService.isElectron()) {
-      // console.log('Mode electron');
-      // console.log('Electron ipcRenderer', electronService.ipcRenderer);
-      // console.log('NodeJS childProcess', electronService.childProcess);
+      moment.locale(this.electronService.remote.app.getLocale());
       this.loadWindowSettings();
     } else {
-      // console.log('Mode web');
+      moment.locale(this.getBrowserLang());
     }
 
     this.alertSub = this.alertService.alert.subscribe(res => {
@@ -58,6 +58,13 @@ export class AppComponent implements OnDestroy {
     });
   }
 
+  getBrowserLang() {
+    if (navigator.languages !== undefined) {
+      return navigator.languages[0];
+    } else {
+      return navigator.language;
+    }
+  }
   displayAlert(message: string, action: string) {
     this.snackBar.open(message, action, {
       duration: 2000,
@@ -66,6 +73,10 @@ export class AppComponent implements OnDestroy {
 
   logout() {
     this.sessionService.cancelSession();
+    this.router.navigate(['login']);
+  }
+
+  changeGroup() {
     this.router.navigate(['login']);
   }
 

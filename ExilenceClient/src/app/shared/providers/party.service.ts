@@ -1,4 +1,4 @@
-import { Injectable, OnDestroy } from '@angular/core';
+import { Injectable, OnDestroy, EventEmitter } from '@angular/core';
 import { Router } from '@angular/router';
 import * as signalR from '@aspnet/signalr';
 import { HubConnection } from '@aspnet/signalr';
@@ -19,12 +19,10 @@ import { LogService } from './log.service';
 import { ElectronService } from './electron.service';
 import { NetWorthSnapshot } from '../interfaces/income.interface';
 import { MessageValueService } from './message-value.service';
-import { ExtendedAreaInfo } from '../interfaces/area.interface';
 import { HistoryHelper } from '../helpers/history.helper';
 import { LeagueWithPlayers } from '../interfaces/league.interface';
 import { Subscription } from 'rxjs';
 import { ServerMessage } from '../interfaces/server-message.interface';
-import { ErrorMessage } from '../interfaces/error-message.interface';
 
 @Injectable()
 export class PartyService implements OnDestroy {
@@ -50,6 +48,7 @@ export class PartyService implements OnDestroy {
   public genericPlayers: BehaviorSubject<Player[]> = new BehaviorSubject<Player[]>([]);
   public selectedFilterValueSub: BehaviorSubject<string> = new BehaviorSubject<string>(undefined);
   public selectedFilterValue = 'All players';
+  public connectionInitiated: EventEmitter<boolean> = new EventEmitter();
 
   public serverMessageReceived: BehaviorSubject<ServerMessage> = new BehaviorSubject<ServerMessage>(undefined);
 
@@ -58,6 +57,7 @@ export class PartyService implements OnDestroy {
 
   public joinInProgress = false;
   public maskedName = false;
+  public maskedSpectatorCode = false;
   public currentPlayerGain;
   public playerGain;
   public partyGain = 0;
@@ -67,6 +67,9 @@ export class PartyService implements OnDestroy {
   private accountInfoSub: Subscription;
   private currentPlayerGainSub: Subscription;
   private playerGainSub: Subscription;
+
+  public isConnecting = false;
+
   constructor(
     private router: Router,
     private accountService: AccountService,
@@ -76,14 +79,14 @@ export class PartyService implements OnDestroy {
     private logService: LogService,
     private electronService: ElectronService,
     private messageValueService: MessageValueService,
-    private settingsService: SettingsService
-  ) {
+    private settingsService: SettingsService) {
     this.reconnectAttempts = 0;
     this.forceClosed = false;
 
     this.recentParties.next(this.settingService.get('recentParties') || []);
 
     this.maskedName = this.settingsService.get('maskedGroupname') === true ? true : false;
+    this.maskedSpectatorCode = this.settingsService.get('maskedSpectatorCode') === true ? true : false;
 
     this.playerSub = this.accountService.player.subscribe(res => {
       this.currentPlayer = res;
@@ -121,16 +124,22 @@ export class PartyService implements OnDestroy {
         this.electronService.decompress(playerData, (player: Player) => {
           // if player is self, set history based on local data
           const playerObj = Object.assign({}, player);
-          if (playerObj.account === this.currentPlayer.account) {
+          if (this.currentPlayer !== undefined && playerObj.account === this.currentPlayer.account) {
             playerObj.netWorthSnapshots = Object.assign([], this.currentPlayer.netWorthSnapshots);
+          }
+          // if we are a player, there should be a partyname that we can use, since we wont expose it from the server
+          if (this.party.name !== undefined) {
+            party.name = this.party.name;
           }
           this.party = party;
           this.updatePlayerLists(this.party);
           this.accountService.player.next(playerObj);
-          this.selectedPlayer.next(playerObj);
+          const playerToSelect = this.party.players.find(x => !x.isSpectator);
+          if (playerToSelect !== undefined) {
+            this.selectedPlayer.next(playerToSelect);
+          }
           this.isEntering = false;
           this.logService.log('Entered party:', party);
-
           // set initial values for party net worth
           let networth = 0;
           this.messageValueService.partyGainSubject.next(0);
@@ -168,7 +177,8 @@ export class PartyService implements OnDestroy {
     });
 
     this._hubConnection.on('GenericPlayerUpdated', (player: Player) => {
-      const index = this.genericPartyPlayers.indexOf(this.genericPartyPlayers.find(x => x.character.name === player.character.name));
+      const index = this.genericPartyPlayers.indexOf(this.genericPartyPlayers.find(x => x.character !== null &&
+        x.character.name === player.character.name));
       this.genericPartyPlayers[index] = player;
       this.updateGenericPlayerList(this.genericPartyPlayers);
       if (this.selectedGenericPlayerObj.character.name === player.character.name) {
@@ -178,7 +188,7 @@ export class PartyService implements OnDestroy {
 
     this._hubConnection.on('PlayerJoined', (data: string) => {
       this.electronService.decompress(data, (player: Player) => {
-        this.party.players = this.party.players.filter(x => x.character.name !== player.character.name);
+        this.party.players = this.party.players.filter(x => x.connectionID !== player.connectionID);
         this.party.players.push(player);
         this.partyUpdated.next(this.party);
         this.updatePlayerLists(this.party);
@@ -188,9 +198,19 @@ export class PartyService implements OnDestroy {
 
     this._hubConnection.on('PlayerLeft', (data: string) => {
       this.electronService.decompress(data, (player: Player) => {
-        this.party.players = this.party.players.filter(x => x.account !== player.account);
-        this.partyUpdated.next(this.party);
-        this.updatePlayerLists(this.party);
+        this.party.players = this.party.players.filter(x => x.connectionID !== player.connectionID);
+
+        // if last player leaves, kick self to login screen
+        if (this.party.players.find(x => !x.isSpectator) === undefined) {
+          this.leaveParty(this.party.name, this.party.spectatorCode, this.currentPlayer);
+          const errorMsg = {
+            title: 'Information',
+            body: 'Spectator mode ended, all players left the group.'
+          } as ServerMessage;
+          this.serverMessageReceived.next(errorMsg);
+          this.router.navigate(['/']);
+        }
+
         if (this.selectedPlayerObj.account === player.account) {
           this.selectedPlayer.next(this.currentPlayer);
         }
@@ -199,22 +219,24 @@ export class PartyService implements OnDestroy {
     });
 
     this._hubConnection.on('KickedFromParty', () => {
-        this.initParty();
-        this.partyUpdated.next(this.party);
-        this.selectedPlayer.next(this.currentPlayer);
-        this.router.navigate(['/authorized/dashboard']);
-        const data = {
-          title: 'You were removed from the group',
-          body: 'The leader of the group kicked you. To keep playing, enter another group.'
-        } as ServerMessage;
-        this.serverMessageReceived.next(data);
-        this.logService.log('kicked from party');
+      this.initParty();
+      this.partyUpdated.next(this.party);
+      this.selectedPlayer.next(this.currentPlayer);
+      this.router.navigate(['/authorized/dashboard']);
+      const data = {
+        title: 'Information',
+        body: 'You were kicked from the group by the leader.'
+      } as ServerMessage;
+      this.serverMessageReceived.next(data);
+      this.logService.log('kicked from party');
     });
 
     this._hubConnection.on('LeaderChanged', (data: string) => {
       this.electronService.decompress(data, (leaderData) => {
-        const oldLeader = this.party.players.find(x => x.character.name === leaderData.oldLeader.character.name);
-        const newLeader = this.party.players.find(x => x.character.name === leaderData.newLeader.character.name);
+        const oldLeader = this.party.players.find(x => x.character !== null && leaderData.oldLeader.character !== null
+          && x.character.name === leaderData.oldLeader.character.name);
+        const newLeader = this.party.players.find(x => x.character !== null && leaderData.newLeader.character !== null
+          && x.character.name === leaderData.newLeader.character.name);
 
         // if previous leader is still in the party, update the value
         if (oldLeader !== undefined) {
@@ -248,6 +270,16 @@ export class PartyService implements OnDestroy {
 
     this._hubConnection.on('ForceDisconnect', () => {
       this.disconnect('Recived force disconnect command from server.', false);
+    });
+
+    this._hubConnection.on('GroupNotFoundOrEmpty', () => {
+      const errorMsg = {
+        title: 'Information',
+        body: 'The group you tried to join does not exist'
+      } as ServerMessage;
+      this.serverMessageReceived.next(errorMsg);
+      this.isEntering = false;
+      this.router.navigate(['/']);
     });
 
     this.logMonitorService.areaJoin.subscribe((msg: LogMessage) => {
@@ -327,14 +359,18 @@ export class PartyService implements OnDestroy {
   initHubConnection() {
     // only initiate connection, when there is no connection running
     if (this._hubConnection.state === 0) {
+      this.isConnecting = true;
       this.logService.log('Starting signalr connection');
       this._hubConnection.start().then(() => {
+        this.connectionInitiated.emit(true);
+
+        this.isConnecting = false;
         console.log('Successfully established signalr connection!');
-        if (this.party !== undefined && this.currentPlayer !== undefined && this.party.name !== '') {
-          this.joinParty(this.party.name, this.currentPlayer);
+        if (this.party !== undefined && this.currentPlayer !== undefined && (this.party.name !== '' || this.party.spectatorCode !== '')) {
+          this.joinParty(this.party.name, this.party.spectatorCode, this.currentPlayer);
         }
         this.reconnectAttempts = 0;
-      }).catch((err) => {
+      }).catch(() => {
         this.logService.log('Could not connect to signalr');
         this.reconnect();
       });
@@ -366,12 +402,14 @@ export class PartyService implements OnDestroy {
     // construct initial object based on players in party
     const leagues: LeagueWithPlayers[] = [];
     party.players.forEach(player => {
-      const league = leagues.find(l => l.id === player.character.league);
-      if (league === undefined) {
-        leagues.push({ id: player.character.league, players: [player] } as LeagueWithPlayers);
-      } else {
-        const indexOfLeague = leagues.indexOf(league);
-        leagues[indexOfLeague].players.push(player);
+      if (player.character !== null) {
+        const league = leagues.find(l => l.id === player.character.league);
+        if (league === undefined) {
+          leagues.push({ id: player.character.league, players: [player] } as LeagueWithPlayers);
+        } else {
+          const indexOfLeague = leagues.indexOf(league);
+          leagues[indexOfLeague].players.push(player);
+        }
       }
     });
 
@@ -413,13 +451,13 @@ export class PartyService implements OnDestroy {
     }
   }
 
-  public getAccountForCharacter(character: string): Promise<any> {
-    return this._hubConnection.invoke('GetAccountForCharacter', character).then((response) => {
+  public checkIfPartyExists(spectatorCode: string) {
+    return this._hubConnection.invoke('PartyExists', spectatorCode).then((response) => {
       return response;
     });
   }
 
-  public joinParty(partyName: string, player: Player) {
+  public joinParty(partyName: string, spectatorCode: string, player: Player) {
     const playerToSend = Object.assign({}, player);
     this.isEntering = true;
     this.initParty();
@@ -431,21 +469,21 @@ export class PartyService implements OnDestroy {
       const areasToSend = HistoryHelper.filterAreas(playerToSend.pastAreas, oneDayAgo);
       playerToSend.netWorthSnapshots = historyToSend;
       playerToSend.pastAreas = areasToSend;
-      this.electronService.compress(playerToSend, (data) => this._hubConnection.invoke('JoinParty', partyName, data));
+      this.electronService.compress(playerToSend, (data) => this._hubConnection.invoke('JoinParty', partyName, spectatorCode, data));
     }
   }
 
-  public leaveParty(partyName: string, player: Player) {
+  public leaveParty(partyName: string, spectatorCode: string, player: Player) {
     this.initParty();
     if (partyName !== '') {
       if (this._hubConnection) {
-        this.electronService.compress(player, (data) => this._hubConnection.invoke('LeaveParty', partyName, data));
+        this.electronService.compress(player, (data) => this._hubConnection.invoke('LeaveParty', partyName, spectatorCode, data));
       }
     }
   }
 
   public initParty() {
-    this.party = { name: '', players: [] };
+    this.party = { name: '', spectatorCode: '', players: [] };
   }
 
   public addPartyToRecent(partyName: string) {

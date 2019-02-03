@@ -46,7 +46,7 @@ export class CharEquipmentComponent implements OnInit, OnDestroy, AfterViewInit 
   }
 
   openEquipmentDialog(): void {
-    if (!this.settingsService.get('diaShown_equipment') && !this.settingsService.get('hideTooltips')) {
+    if (!this.settingsService.get('diaShown_equipment') && !this.settingsService.get('hideTooltips') && this.electronService.isElectron()) {
       const dialogRef = this.dialog.open(InfoDialogComponent, {
         width: '650px',
         data: {

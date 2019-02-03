@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace Exilence.Helper
@@ -45,6 +46,11 @@ namespace Exilence.Helper
         public static double ToUnixTimeStamp(this DateTime dateTime)
         {
             return (TimeZoneInfo.ConvertTimeToUtc(dateTime) - new DateTime(1970, 1, 1)).TotalSeconds;
+        }
+
+        public static string ToValidPartyName(this string name)
+        {
+            return new string(name.Where(c => char.IsLetterOrDigit(c)).ToArray());
         }
 
     }

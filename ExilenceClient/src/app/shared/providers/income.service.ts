@@ -291,7 +291,8 @@ export class IncomeService implements OnDestroy {
             let items = [];
 
             pages.forEach((page: any) => {
-              page.result = page.result.filter(x => x.listing.stash.name === mapTab.name);
+              page.result = page.result.filter(x => x.listing !== undefined && x.listing.stash !== undefined
+                && x.listing.stash.name === mapTab.name);
               const pageItems = page.result.map(x => x.item);
               items = items.concat(pageItems);
             });

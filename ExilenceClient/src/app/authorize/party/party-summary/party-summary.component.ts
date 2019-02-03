@@ -60,7 +60,11 @@ export class PartySummaryComponent implements OnInit, OnDestroy {
       searchText: [''],
       searchTextOverTime: ['']
     });
-    this.gainHours = this.settingsService.get('gainHours');
+
+    this.gainHours = 1;
+    if (this.electronService.isElectron()) {
+      this.gainHours = this.settingsService.get('gainHours');
+    }
 
     this.partyGainSub = this.messageValueService.partyGainSubject.subscribe(res => {
       this.partyGain = res;
@@ -76,7 +80,8 @@ export class PartySummaryComponent implements OnInit, OnDestroy {
         this.party = res;
 
         // check if the current dropdown selection is a player in our party
-        const foundPlayer = this.party.players.find(x => x.character.name === this.partyService.selectedFilterValue);
+        const foundPlayer = this.party.players.find(x =>
+          x.character !== null && x.character.name === this.partyService.selectedFilterValue);
 
         // if player left or value is incorrect, update dropdown
         if (foundPlayer === undefined && this.partyService.selectedFilterValue !== 'All players') {
@@ -118,6 +123,9 @@ export class PartySummaryComponent implements OnInit, OnDestroy {
       }
     });
   }
+  getPlayers() {
+    return this.partyService.party.players.filter(x => x.character !== null);
+  }
   ngOnDestroy() {
     if (this.partyGainSub !== undefined) {
       this.partyGainSub.unsubscribe();
@@ -144,7 +152,7 @@ export class PartySummaryComponent implements OnInit, OnDestroy {
     this.partyService.selectedFilterValueSub.next(filterValue.value);
 
     if (this.party !== undefined) {
-      const foundPlayer = this.party.players.find(x => x.character.name === this.partyService.selectedFilterValue);
+      const foundPlayer = this.party.players.find(x => x.character !== null && x.character.name === this.partyService.selectedFilterValue);
       let networth = 0;
       // update values for entire party, or a specific player, depending on selection
       if (this.partyService.selectedFilterValue === 'All players' || this.partyService.selectedFilterValue === undefined) {
@@ -168,16 +176,18 @@ export class PartySummaryComponent implements OnInit, OnDestroy {
     const data = {
       event: 'networth',
     };
-    this.electronService.ipcRenderer.send('popout-window', data);
-    setTimeout(res => {
-      this.electronService.ipcRenderer.send('popout-window-update', {
-        event: 'networth',
-        data: {
-          networth: this.messageValueService.partyValue,
-          gain: this.messageValueService.partyGain
-        }
-      });
-    }, 1000);
+    if (this.electronService.isElectron()) {
+      this.electronService.ipcRenderer.send('popout-window', data);
+      setTimeout(res => {
+        this.electronService.ipcRenderer.send('popout-window-update', {
+          event: 'networth',
+          data: {
+            networth: this.messageValueService.partyValue,
+            gain: this.messageValueService.partyGain
+          }
+        });
+      }, 1000);
+    }
   }
 
   export() {
@@ -222,7 +232,7 @@ export class PartySummaryComponent implements OnInit, OnDestroy {
 
   updateFilterValue(filterValue) {
     if (this.party !== undefined) {
-      const foundPlayer = this.party.players.find(x => x.character.name === filterValue);
+      const foundPlayer = this.party.players.find(x => x.character !== null && x.character.name === filterValue);
 
       // update tables with new value
 
@@ -242,7 +252,7 @@ export class PartySummaryComponent implements OnInit, OnDestroy {
         }
       } else {
         this.party.players.forEach(p => {
-          if (p.netWorthSnapshots !== null) {
+          if (p.netWorthSnapshots !== null && p.character !== null) {
             if (this.table !== undefined) {
               this.table.loadPlayerData(p);
             } if (this.overTimeTable !== undefined) {
@@ -289,7 +299,7 @@ export class PartySummaryComponent implements OnInit, OnDestroy {
     this.gainHours = +event.value;
 
     if (this.party !== undefined) {
-      const foundPlayer = this.party.players.find(x => x.character.name === this.partyService.selectedFilterValue);
+      const foundPlayer = this.party.players.find(x => x.character !== null && x.character.name === this.partyService.selectedFilterValue);
       let networth = 0;
       if (this.partyService.selectedFilterValue === 'All players' || this.partyService.selectedFilterValue === undefined) {
         this.messageValueService.partyGainSubject.next(0);
@@ -309,13 +319,14 @@ export class PartySummaryComponent implements OnInit, OnDestroy {
   }
 
   openSummaryDialog(): void {
-    if (!this.settingsService.get('diaShown_partySummary') && !this.settingsService.get('hideTooltips')) {
+    if (!this.settingsService.get('diaShown_partySummary') &&
+      !this.settingsService.get('hideTooltips') &&
+      this.electronService.isElectron()) {
       const dialogRef = this.dialog.open(InfoDialogComponent, {
         width: '650px',
         data: {
           icon: 'attach_money',
           title: 'Currency',
-          // tslint:disable-next-line:max-line-length
           content: 'This tab updates when a partymember changes area in game, at most once every 2 minutes.<br/><br/>' +
             'We store all your parties net worth data two weeks back in time. This will be extended in the future.'
         }

@@ -46,7 +46,7 @@ export class PartyComponent implements OnInit, OnDestroy {
       if (res !== undefined) {
         this.player = res;
         this.messageValueService.playerValue = this.player.netWorthSnapshots[0].value;
-        const isCurrentPlayer = res.account === this.partyService.currentPlayer.account;
+        const isCurrentPlayer = this.partyService.currentPlayer !== undefined && res.account === this.partyService.currentPlayer.account;
         this.partyService.updatePlayerGain(res, isCurrentPlayer);
       }
     });
@@ -90,13 +90,15 @@ export class PartyComponent implements OnInit, OnDestroy {
   }
 
   updatePopout() {
-    this.electronService.ipcRenderer.send('popout-window-update', {
-      event: 'networth',
-      data: {
-        networth: this.messageValueService.currentPlayerValue,
-        gain: this.messageValueService.currentPlayerGain
-      }
-    });
+    if (this.electronService.isElectron()) {
+      this.electronService.ipcRenderer.send('popout-window-update', {
+        event: 'networth',
+        data: {
+          networth: this.messageValueService.currentPlayerValue,
+          gain: this.messageValueService.currentPlayerGain
+        }
+      });
+    }
   }
 
   ngOnInit() {
@@ -125,7 +127,7 @@ export class PartyComponent implements OnInit, OnDestroy {
     if (this.currentPlayerGainSub !== undefined) {
       this.currentPlayerGainSub.unsubscribe();
     }
-    if(this.tabSubscription !== undefined) {
+    if (this.tabSubscription !== undefined) {
       this.tabSubscription.unsubscribe();
     }
   }

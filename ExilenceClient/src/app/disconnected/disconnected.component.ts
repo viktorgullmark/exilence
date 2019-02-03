@@ -24,7 +24,9 @@ export class DisconnectedComponent implements OnInit {
       this.external = JSON.parse(params['external']);
     });
 
-    this.electronService.ipcRenderer.send('disconnect');
+    if (this.electronService.isElectron()) {
+      this.electronService.ipcRenderer.send('disconnect');
+    }
 
     if (this.analyticsService.isTracking) {
       this.analyticsService.sendScreenview('/disconnected');
@@ -32,10 +34,16 @@ export class DisconnectedComponent implements OnInit {
   }
 
   openLink(link: string) {
-    this.electronService.shell.openExternal(link);
+    if (this.electronService.isElectron()) {
+      this.electronService.shell.openExternal(link);
+    } else {
+      // todo: go to link normally
+    }
   }
 
   relaunch() {
-    this.electronService.ipcRenderer.send('relaunch');
+    if (this.electronService.isElectron()) {
+      this.electronService.ipcRenderer.send('relaunch');
+    }
   }
 }

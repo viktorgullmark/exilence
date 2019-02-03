@@ -1,7 +1,7 @@
 import { Component, Inject, OnDestroy, OnInit, ViewChild, NgZone } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialog, MatStep, MatStepper } from '@angular/material';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { forkJoin, Subscription } from 'rxjs';
 
 import { ClearHistoryDialogComponent } from '../shared/components/clear-history-dialog/clear-history-dialog.component';
@@ -24,6 +24,7 @@ import { ErrorMessage } from '../shared/interfaces/error-message.interface';
 import { ServerMessageDialogComponent } from '../authorize/components/server-message-dialog/server-message-dialog.component';
 
 import * as Sentry from '@sentry/browser';
+import { PartyService } from '../shared/providers/party.service';
 
 
 @Component({
@@ -61,10 +62,12 @@ export class LoginComponent implements OnInit, OnDestroy {
     needsValidation: boolean;
     leagueChanged = false;
     shouldSetup = true;
-
+    spectatorCode = '';
     leaguesSub: Subscription;
     characterListSub: Subscription;
     lineReader: any;
+    groupNoExists = false;
+    providedSpectatorCode = undefined;
 
     @ViewChild('stepper') stepper: MatStepper;
     @ViewChild('lastStep') lastStep: MatStep;
@@ -72,17 +75,21 @@ export class LoginComponent implements OnInit, OnDestroy {
     constructor(@Inject(FormBuilder) fb: FormBuilder,
         private router: Router,
         private externalService: ExternalService,
-        private electronService: ElectronService,
+        public electronService: ElectronService,
         private accountService: AccountService,
         public sessionService: SessionService,
+        public partyService: PartyService,
         private settingsService: SettingsService,
         private analyticsService: AnalyticsService,
         public logMonitorService: LogMonitorService,
         private mapService: MapService,
         private dialog: MatDialog,
+        private route: ActivatedRoute,
         private ngZone: NgZone
     ) {
-        this.lineReader = window.require('read-last-lines');
+        if (this.electronService.isElectron()) {
+            this.lineReader = window.require('read-last-lines');
+        }
 
         this.leaguesSub = this.externalService.leagues.subscribe((res: League[]) => {
             this.leagues = res;
@@ -121,8 +128,10 @@ export class LoginComponent implements OnInit, OnDestroy {
     }
 
     checkPath() {
-        this.pathValid = this.electronService.fs.existsSync(this.pathFormGroup.controls.filePath.value)
-            && this.pathFormGroup.controls.filePath.value.toLowerCase().endsWith('client.txt');
+        if (this.electronService.isElectron()) {
+            this.pathValid = this.electronService.fs.existsSync(this.pathFormGroup.controls.filePath.value)
+                && this.pathFormGroup.controls.filePath.value.toLowerCase().endsWith('client.txt');
+        }
     }
 
     ngOnDestroy() {
@@ -135,7 +144,11 @@ export class LoginComponent implements OnInit, OnDestroy {
     }
 
     openLink(link: string) {
-        this.electronService.shell.openExternal(link);
+        if (this.electronService.isElectron()) {
+            this.electronService.shell.openExternal(link);
+        } else {
+            window.open(link, '_blank');
+        }
     }
 
     resetStepper() {
@@ -203,6 +216,17 @@ export class LoginComponent implements OnInit, OnDestroy {
             this.tradeLeagueName === 'SSF Delve') {
             this.settingsService.deleteAll();
             this.stepper.selectedIndex = 0;
+        }
+
+        if (!this.electronService.isElectron()) {
+            this.route.params.subscribe(params => {
+                this.providedSpectatorCode = params.code;
+            });
+            this.partyService.connectionInitiated.subscribe(res => {
+                if (res && this.providedSpectatorCode !== '' && this.providedSpectatorCode !== undefined) {
+                    this.loadGroup(this.providedSpectatorCode);
+                }
+            });
         }
 
         this.accountService.loggingIn = true;
@@ -401,20 +425,22 @@ export class LoginComponent implements OnInit, OnDestroy {
     }
 
     likelyhoodCheck(filePath) {
-        this.lineReader.read(filePath, 2)
-            .then((lines) => {
-                const twoDaysAgo = (Date.now() - (60 * 60 * 1000 * 48));
-                const lastTimestamp = Date.parse(lines.slice(0, 19));
-                // if last timestamp is more than 2 days ago, show warning-dialog
-                if (twoDaysAgo > lastTimestamp) {
-                    const errorMsg = {
-                        title: 'Wrong Client.txt selected?',
-                        body: 'We detected that your Client.txt contains older data.<br/><br/>' +
-                            'Make sure to select the file from the same directory as you run the game from.'
-                    } as ErrorMessage;
-                    this.openErrorMsgDialog(errorMsg);
-                }
-            });
+        if (this.lineReader !== undefined) {
+            this.lineReader.read(filePath, 2)
+                .then((lines) => {
+                    const twoDaysAgo = (Date.now() - (60 * 60 * 1000 * 48));
+                    const lastTimestamp = Date.parse(lines.slice(0, 19));
+                    // if last timestamp is more than 2 days ago, show warning-dialog
+                    if (twoDaysAgo > lastTimestamp) {
+                        const errorMsg = {
+                            title: 'Wrong Client.txt selected?',
+                            body: 'We detected that your Client.txt contains older data.<br/><br/>' +
+                                'Make sure to select the file from the same directory as you run the game from.'
+                        } as ErrorMessage;
+                        this.openErrorMsgDialog(errorMsg);
+                    }
+                });
+        }
     }
 
     checkLeagueChange(event) {
@@ -461,6 +487,31 @@ export class LoginComponent implements OnInit, OnDestroy {
             const player = this.externalService.setCharacter(res[0], this.player);
             this.player = player;
             this.completeLogin();
+        });
+    }
+
+    loadGroup(spectatorCode: string) {
+
+        spectatorCode = spectatorCode.toUpperCase();
+
+        const player = {
+            isSpectator: true,
+            netWorthSnapshots: [{
+                timestamp: 0,
+                value: 0,
+                items: []
+            }]
+        } as Player;
+
+        this.partyService.checkIfPartyExists(spectatorCode).then(exists => {
+
+            if (exists) {
+                this.partyService.joinParty('', spectatorCode, player);
+                this.router.navigate(['/authorized/party']);
+            } else {
+                this.groupNoExists = true;
+                this.providedSpectatorCode = undefined;
+            }
         });
     }
 

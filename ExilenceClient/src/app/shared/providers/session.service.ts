@@ -38,7 +38,7 @@ export class SessionService implements OnDestroy {
   }
   cancelSession() {
     this.accountService.clearCharacterList();
-    this.partyService.leaveParty(this.partyService.party.name, this.player);
+    this.partyService.leaveParty(this.partyService.party.name, this.partyService.party.spectatorCode, this.player);
     localStorage.removeItem('sessionId');
   }
 }

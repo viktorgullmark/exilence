@@ -62,11 +62,15 @@
         "NAME": "Character name",
         "NAME_INFO": "Select your current character"
     },
+    "SPECTATOR": {
+        "CODE": "Spectator code"
+    },
     "PARTY": {
         "CODE": "Group name",
         "NAME_HINT": "Enter name of your choice here",
         "ENTER": "Enter",
-        "PARTY": "Group"
+        "PARTY": "Group",
+        "CHANGE": "Change group"
     },
     "MAPS": {
         "SEARCH": "Filter areas",
@@ -81,7 +85,8 @@
         "SESSIONID_NOT_VALID": "The session id or account name is not valid",
         "SESSIONID_NOT_VALIDATED": "The sessionId has not been validated yet",
         "SESSIONID_NOT_PROVIDED": "No sessionId provided",
-        "PRIVATE_PROFILE": "Character-list is hidden/private, a sessionId is required to continue"
+        "PRIVATE_PROFILE": "Character-list is hidden/private, a sessionId is required to continue",
+        "GROUP_DOESNT_EXIST": "ERROR: The code is invalid."
     },
     "STASH": {
         "SEARCH": "Filter tabs",
