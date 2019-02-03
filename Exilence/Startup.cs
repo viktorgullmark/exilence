@@ -98,7 +98,7 @@ namespace Exilence
 
             app.UseSignalR(routes =>
             {
-                routes.MapHub<PartyHub>("/hubs/party", options =>
+                routes.MapHub<PartyHub>("/api/hubs/party", options =>
                 {
                     options.ApplicationMaxBufferSize = 50 * 1024 * 1024;
                     options.TransportMaxBufferSize = 50 * 1024 * 1024;

@@ -11,7 +11,7 @@ using Newtonsoft.Json.Linq;
 
 namespace Exilence.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("[controller]")]
     [ApiController]
     public class LogController : ControllerBase
     {
