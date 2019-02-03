@@ -8,9 +8,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Exilence", "Exilence\Exilen
 		{B77EA6FD-6ADD-46CB-867C-81E396BFA530} = {B77EA6FD-6ADD-46CB-867C-81E396BFA530}
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LadderService", "LadderService\LadderService.csproj", "{2732FE0F-F71B-4467-827F-0838337185B1}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LadderParser", "LadderParser\LadderParser.csproj", "{2732FE0F-F71B-4467-827F-0838337185B1}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Shared", "Shared\Shared.csproj", "{B77EA6FD-6ADD-46CB-867C-81E396BFA530}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Shared", "Shared\Shared.csproj", "{B77EA6FD-6ADD-46CB-867C-81E396BFA530}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

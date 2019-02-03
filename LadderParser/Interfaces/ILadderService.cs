@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace LadderService.Interfaces
+namespace LadderParser.Interfaces
 {
     public interface ILadderService
     {

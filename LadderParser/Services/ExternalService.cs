@@ -2,9 +2,9 @@
 using System;
 using System.Net.Http;
 using System.Threading.Tasks;
-using LadderService.Interfaces;
+using LadderParser.Interfaces;
 
-namespace LadderService.Services
+namespace LadderParser.Services
 {
     public class ExternalService : IExternalService
     {

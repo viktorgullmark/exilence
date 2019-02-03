@@ -8,9 +8,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Web;
-using LadderService.Interfaces;
+using LadderParser.Interfaces;
 
-namespace LadderService.Services
+namespace LadderParser.Services
 {
     public class LadderService : ILadderService
     {
