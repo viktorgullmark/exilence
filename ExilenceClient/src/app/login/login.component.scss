@@ -4,19 +4,52 @@
     color: $player-area-font-color;
 }
 
+.group-selection-card {
+    background: $stepper-bg-color !important;
+}
+
 .progress-bar {
     margin-top: 15px;
 }
 
 .radio-group {
-  display: inline-flex;
-  flex-direction: column;
+    display: inline-flex;
+    flex-direction: column;
 }
 
 .radio-button {
-  margin: 5px;
+    margin: 5px;
+}
+
+.enter-grp-btn {
+    margin-right: 0;
+    width: 35%;
+}
+
+.spinner-container {
+    align-items: center;
+}
+
+.half-width {
+    width: 50% !important;
 }
 
 .divider {
-  margin-top: 15px !important;
+    margin-top: 15px !important;
+
+    &.group-selection-divider {
+      margin-top: 25px !important;
+    }
+}
+
+.link-logo {
+    height: 50px;
+}
+
+.group-no-exists {
+    margin-bottom: 15px;
+}
+
+.release-link{
+    color: $primary;
 }

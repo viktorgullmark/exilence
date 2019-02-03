@@ -4,6 +4,7 @@ using Shared.Models;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.Caching.Distributed;
+using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -19,26 +20,56 @@ namespace Shared.Hubs
         private IDistributedCache _cache;
         private IRedisRepository _redisRepository;
         private ILadderService _ladderService;
+        private IConfiguration _configuration;
 
+        private string _key;
         private string ConnectionId => Context.ConnectionId;
 
-        public PartyHub(IDistributedCache cache, IRedisRepository redisRepository, ILadderService ladderService)
+        public PartyHub(
+            IDistributedCache cache,
+            IRedisRepository redisRepository,
+            ILadderService ladderService,
+            IConfiguration configuration
+            )
         {
             _cache = cache;
             _redisRepository = redisRepository;
             _ladderService = ladderService;
+            _configuration = configuration;
+
+            _key = _configuration.GetValue<string>("Spectator:Key");
         }
 
-        public async Task JoinParty(string partyName, string playerObj)
+        public async Task<bool> PartyExists(string spectatorCode)
         {
-            var player = CompressionHelper.Decompress<PlayerModel>(playerObj);
+            var partyName = SpectatorHelper.ToPartyName(spectatorCode, _key);
+            var party = await _cache.GetAsync<PartyModel>($"party:{partyName}");
 
-            var ladder = await _ladderService.GetLadderForPlayer(player.Character.League, player.Character.Name);
-            if (ladder == null)
+            return party != null;
+        }
+
+        public async Task JoinParty(string partyName, string spectatorCode, string playerObj)
+        {
+            // if spectatorCode is empty, fetch it
+            if(String.IsNullOrEmpty(spectatorCode))
             {
-                ladder = await _ladderService.GetLadderForLeague(player.Character.League);
+                spectatorCode = SpectatorHelper.ToSpectatorCode(partyName, _key);
             }
-            player.LadderInfo = ladder;
+            // if partyname is empty, fetch it
+            else if (String.IsNullOrEmpty(partyName)) {
+                partyName = SpectatorHelper.ToPartyName(spectatorCode, _key);
+            }
+
+            var player = CompressionHelper.Decompress<PlayerModel>(playerObj);
+            if (!player.IsSpectator)
+            {
+                var ladder = await _ladderService.GetLadderForPlayer(player.Character.League, player.Character.Name);
+                if (ladder == null)
+                {
+                    ladder = await _ladderService.GetLadderForLeague(player.Character.League);
+                }
+                player.LadderInfo = ladder;
+            }
 
             // set initial id of player
             player.ConnectionID = Context.ConnectionId;
@@ -50,61 +81,89 @@ namespace Shared.Hubs
             var party = await _cache.GetAsync<PartyModel>($"party:{partyName}");
             if (party == null)
             {
-                // set player to leader, since its a new party
-                player.IsLeader = true;
-
-                party = new PartyModel() { Name = partyName, Players = new List<PlayerModel> { player } };
-                await _cache.SetAsync<PartyModel>($"party:{partyName}", party);
-                await Clients.Caller.SendAsync("EnteredParty", CompressionHelper.Compress(party), CompressionHelper.Compress(player));
-            }
-            else
-            {
-                var oldPlayer = party.Players.FirstOrDefault(x => x.Character.Name == player.Character.Name || x.ConnectionID == player.ConnectionID);
-
-                // if the party were joining doesnt have a leader, make the player leader
-                if (!party.Players.Any(x => x.IsLeader))
+                if (player.IsSpectator)
                 {
-                    player.IsLeader = true;
-                }
-
-                if (oldPlayer == null)
-                {
-                    party.Players.Insert(0, player);
+                    await Clients.Caller.SendAsync("GroupNotFoundOrEmpty");
                 }
                 else
                 {
-                    var index = party.Players.IndexOf(oldPlayer);
-                    party.Players[index] = player;
-                }
+                    // set player to leader, since its a new party
+                    player.IsLeader = true;
 
-                await _cache.SetAsync<PartyModel>($"party:{partyName}", party);
-                await Clients.Caller.SendAsync("EnteredParty", CompressionHelper.Compress(party), CompressionHelper.Compress(player));
+        
+                    party = new PartyModel() { Name = partyName, Players = new List<PlayerModel> { player }, SpectatorCode = spectatorCode };
+                    await _cache.SetAsync<PartyModel>($"party:{partyName}", party);
+
+                    // dont expose name to clients
+                    party.Name = "";
+                    await Clients.Caller.SendAsync("EnteredParty", CompressionHelper.Compress(party), CompressionHelper.Compress(player));
+                }
+            }
+            else
+            {
+                if (!party.Players.Any())
+                {
+                    await Clients.Caller.SendAsync("GroupNotFoundOrEmpty");
+                }
+                else
+                {
+                    var oldPlayer = party.Players.FirstOrDefault(x => (x.Character != null && player.Character != null && x.Character.Name == player.Character.Name) || x.ConnectionID == player.ConnectionID);
+
+                    // if the party were joining doesnt have a leader, make the player leader
+                    if (!party.Players.Any(x => x.IsLeader))
+                    {
+                        player.IsLeader = true;
+                    }
+
+                    if (oldPlayer == null)
+                    {
+                        party.Players.Insert(0, player);
+                    }
+                    else
+                    {
+                        var index = party.Players.IndexOf(oldPlayer);
+                        party.Players[index] = player;
+                    }
+
+                    await _cache.SetAsync<PartyModel>($"party:{partyName}", party);
+
+                    // dont expose name to clients
+                    party.Name = "";
+                    await Clients.Caller.SendAsync("EnteredParty", CompressionHelper.Compress(party), CompressionHelper.Compress(player));
+                }
             }
 
             await Groups.AddToGroupAsync(Context.ConnectionId, partyName);
             await Clients.OthersInGroup(partyName).SendAsync("PlayerJoined", CompressionHelper.Compress(player));
-            await Clients.Group(partyName).SendAsync("PlayerUpdated", CompressionHelper.Compress(player));
+
+            if (!player.IsSpectator)
+            {
+                await Clients.Group(partyName).SendAsync("PlayerUpdated", CompressionHelper.Compress(player));
+            }
         }
 
-        public async Task LeaveParty(string partyName, string playerObj)
+        public async Task LeaveParty(string partyName, string spectatorCode, string playerObj)
         {
             var player = CompressionHelper.Decompress<PlayerModel>(playerObj);
+
+            // if spectatorCode is empty, fetch it
+            if (String.IsNullOrEmpty(spectatorCode))
+            {
+                spectatorCode = SpectatorHelper.ToSpectatorCode(partyName, _key);
+            }
+            // if partyname is empty, fetch it
+            else if (String.IsNullOrEmpty(partyName))
+            {
+                partyName = SpectatorHelper.ToPartyName(spectatorCode, _key);
+            }
 
             var party = await _cache.GetAsync<PartyModel>($"party:{partyName}");
             if (party != null)
             {
-                //Handle generic players if "host" left
-                var genericPlayers = party.Players.Where(t => t.GenericHost == player.Character.Name).ToList();
-                foreach (var genericPlayer in genericPlayers)
-                {
-                    party.Players.Remove(genericPlayer);
-                    await Clients.Group(partyName).SendAsync("PlayerLeft", genericPlayer);
-                }
-
                 var foundPlayer = party.Players.FirstOrDefault(x => x.ConnectionID == player.ConnectionID);
                 party.Players.Remove(foundPlayer);
 
-                if (player.IsLeader && party.Players.Any()) // if there is any player left in party, assign leader to first one
+                if (player.IsLeader && party.Players.Any(x => !x.IsSpectator)) // if there is any player left in party, assign leader to first one
                 {
                     party.Players[0].IsLeader = true;
                     await Clients.Group(partyName).SendAsync("LeaderChanged", CompressionHelper.Compress(new { oldLeader = player, newLeader = party.Players[0] }));
@@ -120,7 +179,6 @@ namespace Shared.Hubs
                 {
                     await _cache.RemoveAsync($"party:{partyName}");
                 }
-
             }
 
             await Groups.RemoveFromGroupAsync(player.ConnectionID, partyName);
@@ -133,7 +191,7 @@ namespace Shared.Hubs
             var playerObjToAssign = party.Players.FirstOrDefault(x => x.Character.Name == playerToAssign);
             var currentLeader = party.Players.FirstOrDefault(x => x.IsLeader);
 
-            if (playerObjToAssign != null && currentLeader != null)
+            if (playerObjToAssign != null && !playerObjToAssign.IsSpectator && currentLeader != null)
             {
                 if (currentLeader != null)
                 {
@@ -157,7 +215,7 @@ namespace Shared.Hubs
             var playerObjToKick = party.Players.FirstOrDefault(x => x.Character.Name == playerToKick);
             var compressedPlayerToKick = CompressionHelper.Compress(playerObjToKick);
 
-            await LeaveParty(partyName, compressedPlayerToKick);
+            await LeaveParty(partyName, null, compressedPlayerToKick);
             await Clients.Client(playerObjToKick.ConnectionID).SendAsync("KickedFromParty");
         }
 
@@ -232,7 +290,7 @@ namespace Shared.Hubs
                     var foundPlayer = foundParty.Players.FirstOrDefault(x => x.ConnectionID == Context.ConnectionId);
                     if (foundPlayer != null)
                     {   //This compression and then uncompression is ugly
-                        await LeaveParty(partyName, CompressionHelper.Compress(foundPlayer));
+                        await LeaveParty(partyName, "", CompressionHelper.Compress(foundPlayer));
                         var success = RemoveFromIndex();
                     }
                 }

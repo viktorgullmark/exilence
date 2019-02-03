@@ -17,7 +17,7 @@
         padding-top: 25px;
         padding-bottom: 25px;
         
-        @media screen and (max-height: 950px) {
+        @media screen and (max-height: 850px) {
             display: none;
         }
     }
@@ -36,7 +36,7 @@
     }
 
     .graph-btns {
-        @media screen and (max-height: 950px) {
+        @media screen and (max-height: 850px) {
             display: none;
         }
     }
@@ -89,6 +89,10 @@
         }
 
         @media screen and (max-height: 950px) {
+            height: 50%;
+        }
+
+        @media screen and (max-height: 850px) {
             height: 77%;
         }
         

@@ -41,24 +41,28 @@ export class MessageValueService implements OnDestroy {
 
     this.partyValueSub = this.partyValueSubject.subscribe(res => {
       this.partyValue = res;
-      this.electronService.ipcRenderer.send('popout-window-update', {
-        event: 'networth',
-        data: {
-          networth: this.partyValue,
-          gain: this.partyGain
-        }
-      });
+      if (this.electronService.isElectron()) {
+        this.electronService.ipcRenderer.send('popout-window-update', {
+          event: 'networth',
+          data: {
+            networth: this.partyValue,
+            gain: this.partyGain
+          }
+        });
+      }
     });
 
     this.partyGainSub = this.partyGainSubject.subscribe(res => {
       this.partyGain = res;
-      this.electronService.ipcRenderer.send('popout-window-update', {
-        event: 'networth',
-        data: {
-          networth: this.partyValue,
-          gain: this.partyGain
-        }
-      });
+      if (this.electronService.isElectron()) {
+        this.electronService.ipcRenderer.send('popout-window-update', {
+          event: 'networth',
+          data: {
+            networth: this.partyValue,
+            gain: this.partyGain
+          }
+        });
+      }
     });
   }
 

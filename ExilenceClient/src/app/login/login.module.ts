@@ -1,7 +1,11 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
-import { MatButtonModule, MatInputModule, MatOptionModule, MatSelectModule, MatIconModule,
-  MatStepperModule, MatProgressBarModule, MatCheckboxModule, MatRadioModule, MatDividerModule, MatGridListModule } from '@angular/material';
+import {
+  MatButtonModule, MatInputModule, MatOptionModule, MatSelectModule, MatIconModule,
+  MatStepperModule, MatProgressBarModule, MatCheckboxModule, MatRadioModule, MatDividerModule, MatGridListModule,
+  MatCardModule,
+  MatProgressSpinnerModule
+} from '@angular/material';
 import { MatFormFieldModule } from '@angular/material/form-field';
 
 import { LoginComponent } from './login.component';
@@ -33,7 +37,9 @@ import { ErrorMessageDialogModule } from '../authorize/components/error-message-
     ClearHistoryDialogModule,
     ErrorMessageDialogModule,
     MatDividerModule,
-    MatGridListModule
+    MatGridListModule,
+    MatCardModule,
+    MatProgressSpinnerModule
   ],
   declarations: [LoginComponent],
   entryComponents: [ClearHistoryDialogComponent, ErrorMessageDialogComponent, InfoDialogComponent]

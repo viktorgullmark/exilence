@@ -19,7 +19,7 @@
                 <span class="networth">{{messageValueService.partyGain.toFixed(2)}}&nbsp;&nbsp;</span><img class="chaos-icon" />
             </div>
         </div>
-        <div class="networth-wrapper">
+        <div *ngIf="electronService.isElectron()" class="networth-wrapper">
             <mat-form-field>
                 <mat-label>Calculate gain over past</mat-label>
                 <mat-select #fontSize value="{{gainHours}}" (selectionChange)="toggleGainHours($event)">
@@ -37,22 +37,25 @@
                 <mat-label>Select player</mat-label>
                 <mat-select #playerDd value="{{partyService.selectedFilterValue}}" (selectionChange)="selectPlayer($event)">
                     <mat-option value="All players">All players</mat-option>
-                    <mat-option *ngFor="let player of partyService.party.players" value="{{player.character.name}}">{{player.character.name}}</mat-option>
+                    <mat-option *ngFor="let player of getPlayers()" value="{{player.character.name}}">{{player.character.name}}</mat-option>
                 </mat-select>
             </mat-form-field>
         </div>
     </div>
-    <div class="flex-area graph-btns">
+    <div class="flex-area">
         <div class="btn-grp">
-            <button mat-raised-button color="accent" (click)="resetNetWorth()" type="button" class="right-aligned extra-margin">{{'GRAPH.RESET_SELF'
+            <ng-container *ngIf="electronService.isElectron()">
+                <button mat-raised-button color="accent" (click)="resetNetWorth()" type="button" class="right-aligned extra-margin">{{'GRAPH.RESET_SELF'
+                    | translate}}</button>
+                <button mat-raised-button color="primary" (click)="popout()" type="button" class="right-aligned extra-margin">{{'GRAPH.POPOUT'
+                    | translate}}</button>
+            </ng-container>
+            <button mat-raised-button color="primary" *ngIf="!isGraphHidden" (click)="hideGraph()" type="button" class="graph-btns right-aligned">{{'GRAPH.HIDE'
                 | translate}}</button>
-            <button mat-raised-button color="primary" (click)="popout()" type="button" class="right-aligned extra-margin">{{'GRAPH.POPOUT'
-                | translate}}</button>
-            <button mat-raised-button color="primary" *ngIf="!isGraphHidden" (click)="hideGraph()" type="button" class="right-aligned">{{'GRAPH.HIDE'
-                | translate}}</button>
-            <button mat-raised-button color="primary" *ngIf="isGraphHidden" (click)="showGraph()" type="button" class="right-aligned">{{'GRAPH.SHOW'
+            <button mat-raised-button color="primary" *ngIf="isGraphHidden" (click)="showGraph()" type="button" class="graph-btns right-aligned">{{'GRAPH.SHOW'
                 | translate}}</button>
         </div>
+
     </div>
     <div class="income-graph-wrapper" [hidden]="isGraphHidden">
         <app-income title="Net worth summary" (hidden)="toggleGraph($event)" [view]="graphDimensions"></app-income>

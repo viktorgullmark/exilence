@@ -43,7 +43,9 @@ export class NotficationBarComponent implements OnInit, OnDestroy {
       if (this.appVersion !== release.name) {
         if (this.notifications.indexOf('NEW_VERSION') === -1) {
           this.notifications.push('NEW_VERSION');
-          this.electronService.ipcRenderer.send('servermsg');
+          if (this.electronService.isElectron()) {
+            this.electronService.ipcRenderer.send('servermsg');
+          }
         }
       }
 
@@ -52,7 +54,9 @@ export class NotficationBarComponent implements OnInit, OnDestroy {
   }
 
   relaunch() {
-    this.electronService.ipcRenderer.send('relaunch');
+    if (this.electronService.isElectron()) {
+      this.electronService.ipcRenderer.send('relaunch');
+    }
   }
 
   ngOnDestroy() {

@@ -15,6 +15,7 @@ import { InfoDialogComponent } from '../../info-dialog/info-dialog.component';
 import { MatDialog } from '@angular/material';
 import { ExportToCsv } from 'export-to-csv';
 import { Subscription } from 'rxjs/internal/Subscription';
+import { ElectronService } from '../../../../shared/providers/electron.service';
 
 @Component({
   selector: 'app-char-maps',
@@ -39,6 +40,7 @@ export class CharMapsComponent implements OnInit, OnDestroy {
     private mapService: MapService,
     private accountService: AccountService,
     private alertService: AlertService,
+    private electronService: ElectronService,
     private dialog: MatDialog
   ) {
     this.form = fb.group({
@@ -107,13 +109,12 @@ export class CharMapsComponent implements OnInit, OnDestroy {
 
   openMapDialog(): void {
     setTimeout(() => {
-      if (!this.settingsService.get('diaShown_maps') && !this.settingsService.get('hideTooltips')) {
+      if (!this.settingsService.get('diaShown_maps') && !this.settingsService.get('hideTooltips') && this.electronService.isElectron()) {
         const dialogRef = this.dialog.open(InfoDialogComponent, {
           width: '650px',
           data: {
             icon: 'map',
             title: 'Map tab',
-            // tslint:disable-next-line:max-line-length
             content: 'This tab updates every time the selected player changes area in game.<br/><br/>' +
               'You will only see data from the past 24 hours for the rest of your group.'
           }

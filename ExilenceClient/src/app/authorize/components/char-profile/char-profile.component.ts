@@ -109,7 +109,11 @@ export class CharProfileComponent implements OnInit, OnDestroy {
     }
   }
   openLink(link: string) {
-    this.electronService.shell.openExternal(link);
+    if (this.electronService.isElectron()) {
+      this.electronService.shell.openExternal(link);
+    } else {
+      window.open(link, '_blank');
+    }
   }
   goToProfile() {
     this.openLink('https://www.pathofexile.com/account/view-profile/'

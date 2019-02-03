@@ -100,9 +100,9 @@ export class DashboardComponent implements OnInit, OnDestroy, AfterViewInit {
   joinParty(partyName: string) {
     if (partyName !== this.partyService.party.name) {
       this.partyService.joinInProgress = true;
-      this.partyService.leaveParty(this.partyService.party.name, this.player);
+      this.partyService.leaveParty(this.partyService.party.name, this.partyService.party.spectatorCode, this.player);
       setTimeout(() => {
-        this.partyService.joinParty(partyName, this.player);
+        this.partyService.joinParty(partyName, '', this.player);
         this.incomeService.Snapshot();
         this.partyService.addPartyToRecent(partyName);
         this.router.navigateByUrl('/404', { skipLocationChange: true }).then(() =>

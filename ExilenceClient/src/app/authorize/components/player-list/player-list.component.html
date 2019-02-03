@@ -12,8 +12,9 @@
     </app-player-badge>
 </ng-container>
 
-<context-menu [disabled]="!currentPlayer?.isLeader">
-    <ng-template contextMenuItem let-item (execute)="assignLeader($event.item.character.name)">
+<context-menu [disabled]="!currentPlayer?.isLeader || !electronService.isElectron()">
+    <ng-template contextMenuItem let-item (execute)="
+    assignLeader($event.item.character.name)">
         Assign as leader
     </ng-template>
     <ng-template contextMenuItem let-item (execute)="kickFromGroup($event.item.character.name)">

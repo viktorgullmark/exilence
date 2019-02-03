@@ -2,8 +2,6 @@ import { Injectable } from '@angular/core';
 
 import { ElectronService } from './electron.service';
 import { LogService } from './log.service';
-const _ = window.require('lodash');
-
 
 @Injectable({
   providedIn: 'root',
@@ -17,7 +15,7 @@ export class SettingsService {
   set(key: string, object: any) {
     try {
       this.electronService.settings.set(key, object);
-      _.set(this.settings, key, object);
+      this.electronService.lodash.set(this.settings, key, object);
     } catch (e) {
       this.logService.log(e, null, true);
     }
@@ -25,7 +23,7 @@ export class SettingsService {
   get(key: string) {
     try {
       this.cacheSettings();
-      return _.get(this.settings, key);
+      return this.electronService.lodash.get(this.settings, key);
     } catch (e) {
       this.logService.log(e, null, true);
     }
@@ -57,7 +55,7 @@ export class SettingsService {
     };
     try {
       this.electronService.settings.set('networth', netWorthHistory);
-      _.set(this.settings, 'networth', netWorthHistory);
+      this.electronService.lodash.set(this.settings, 'networth', netWorthHistory);
     } catch (e) {
       this.logService.log(e, null, true);
     }
@@ -67,7 +65,7 @@ export class SettingsService {
     const areas = [];
     try {
       this.electronService.settings.set('areas', areas);
-      _.set(this.settings, 'areas', areas);
+      this.electronService.lodash.set(this.settings, 'areas', areas);
     } catch (e) {
       this.logService.log(e, null, true);
     }

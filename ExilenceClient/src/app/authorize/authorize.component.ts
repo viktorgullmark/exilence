@@ -25,13 +25,15 @@ export class AuthorizeComponent implements OnInit, OnDestroy {
   player: Player;
   private playerSub: Subscription;
   private serverMsgSub: Subscription;
+  public copyText = 'Copy spectate link';
+  public isCopying = false;
   constructor(@Inject(FormBuilder) fb: FormBuilder,
     public partyService: PartyService,
     private mapService: MapService,
     private accountService: AccountService,
     private messageValueService: MessageValueService,
     private incomeService: IncomeService,
-    private electronService: ElectronService,
+    public electronService: ElectronService,
     private settingsService: SettingsService,
     private dialog: MatDialog,
     private router: Router) {
@@ -64,7 +66,9 @@ export class AuthorizeComponent implements OnInit, OnDestroy {
           content: data.body
         }
       });
-      this.electronService.ipcRenderer.send('servermsg');
+      if (this.electronService.isElectron()) {
+        this.electronService.ipcRenderer.send('servermsg');
+      }
       dialogRef.afterClosed().subscribe(result => {
       });
     }, 0);
@@ -83,8 +87,28 @@ export class AuthorizeComponent implements OnInit, OnDestroy {
     this.settingsService.set('maskedGroupname', this.partyService.maskedName);
   }
 
+  saveMaskedSpectatorCodeSetting() {
+    this.settingsService.set('maskedSpectatorCode', this.partyService.maskedSpectatorCode);
+  }
+
   openLink(link: string) {
     this.electronService.shell.openExternal(link);
+  }
+
+  getSpectateLink() {
+    return 'https://exilence.app/spectate/' + this.partyService.party.spectatorCode;
+  }
+
+  copyLink() {
+    if (this.electronService.isElectron()) {
+      this.electronService.clipboard.writeText(this.getSpectateLink());
+      this.isCopying = true;
+      this.copyText = 'Copied!';
+      setTimeout(x => {
+        this.isCopying = false;
+        this.copyText = 'Copy spectate link';
+      }, 1500);
+    }
   }
 
   generatePartyName(): string {
@@ -98,9 +122,9 @@ export class AuthorizeComponent implements OnInit, OnDestroy {
 
   enterParty() {
     this.partyService.joinInProgress = true;
-    this.partyService.leaveParty(this.partyService.party.name, this.player);
+    this.partyService.leaveParty(this.partyService.party.name, this.partyService.party.spectatorCode, this.player);
     setTimeout(() => {
-      this.partyService.joinParty(this.form.controls.partyCode.value.toUpperCase(), this.player);
+      this.partyService.joinParty(this.form.controls.partyCode.value.toUpperCase(), '', this.player);
       this.incomeService.Snapshot();
       this.partyService.addPartyToRecent(this.form.controls.partyCode.value.toUpperCase());
       this.router.navigateByUrl('/404', { skipLocationChange: true }).then(() =>

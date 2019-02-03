@@ -49,14 +49,17 @@ export class NetworthTableComponent implements OnInit, OnDestroy {
             || this.party === undefined)) {
           this.party = party;
           this.dataSource = [];
-          const foundPlayer = party.players.find(x => x.character.name === this.partyService.selectedFilterValue);
+          const foundPlayer = party.players.find(x => x.character !== null &&
+            x.character.name === this.partyService.selectedFilterValue);
           // update values for entire party, or a specific player, depending on selection
           if (this.partyService.selectedFilterValue !== 'All players' && foundPlayer !== undefined) {
             this.loadPlayerData(foundPlayer);
           } else {
             party.players.forEach(p => {
-              if (p.netWorthSnapshots !== null) {
-                this.loadPlayerData(p);
+              if (p.character !== null) {
+                if (p.netWorthSnapshots !== null) {
+                  this.loadPlayerData(p);
+                }
               }
             });
           }
@@ -68,13 +71,14 @@ export class NetworthTableComponent implements OnInit, OnDestroy {
         if (res !== undefined) {
           this.partyService.selectedFilterValue = res;
           this.dataSource = [];
-          const foundPlayer = this.party.players.find(x => x.character.name === this.partyService.selectedFilterValue);
+          const foundPlayer = this.party.players.find(x => x.character !== null &&
+            x.character.name === this.partyService.selectedFilterValue);
           // update values for entire party, or a specific player, depending on selection
           if (this.partyService.selectedFilterValue !== 'All players' && foundPlayer !== undefined) {
             this.loadPlayerData(foundPlayer);
           } else {
             this.party.players.forEach(p => {
-              if (p.netWorthSnapshots !== null) {
+              if (p.netWorthSnapshots !== null && p.character !== null) {
                 this.loadPlayerData(p);
               }
             });
@@ -212,7 +216,8 @@ export class NetworthTableComponent implements OnInit, OnDestroy {
 
   loadPreviousSnapshot(snapshot: NetWorthSnapshot) {
     this.dataSource = [];
-    const foundPlayer = this.party.players.find(x => x.character.name === this.partyService.selectedFilterValue);
+    const foundPlayer = this.party.players.find(x => x.character !== null &&
+      x.character.name === this.partyService.selectedFilterValue);
     // only do this if a specific player is selected
     if (foundPlayer !== undefined) {
       this.updateTable(snapshot.items, foundPlayer.character.name);

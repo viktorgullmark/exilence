@@ -12,20 +12,28 @@ import { SettingsComponent } from './authorize/settings/settings.component';
 import { DisconnectedComponent } from './disconnected/disconnected.component';
 import { FaqComponent } from './authorize/faq/faq.component';
 
+const isElectron = window && window.process && window.process.type;
+
 const routes: Routes = [
+    // authorized
+    {
+        path: 'authorized', component: AuthorizeComponent, children: [
+            { path: 'dashboard', component: DashboardComponent },
+            { path: 'party', component: PartyComponent },
+            { path: 'inspect-players', component: InspectPlayersComponent },
+            { path: 'settings', component: SettingsComponent },
+            { path: 'faq', component: FaqComponent },
+            { path: '', redirectTo: '/authorized/dashboard', pathMatch: 'full' }
+        ]
+    },
+
     // login-section
     { path: 'login', component: LoginComponent },
+    { path: 'spectate', component: LoginComponent },
+    { path: 'spectate/:code', component: LoginComponent },
     { path: '', redirectTo: 'login', pathMatch: 'full' },
 
-    // authorized
-    { path: 'authorized', component: AuthorizeComponent,  canActivate: [CanActivateAuthorized], children: [
-        { path: 'dashboard', component: DashboardComponent },
-        { path: 'party', component: PartyComponent },
-        { path: 'inspect-players', component: InspectPlayersComponent },
-        { path: 'settings', component: SettingsComponent },
-        { path: 'faq', component: FaqComponent },
-        { path: '', redirectTo: '/authorized/dashboard', pathMatch: 'full' }
-    ]},
+
 
     { path: 'disconnected/:external', component: DisconnectedComponent },
 
@@ -35,7 +43,7 @@ const routes: Routes = [
 ];
 
 @NgModule({
-    imports: [RouterModule.forRoot(routes, { useHash: true })],
+    imports: [RouterModule.forRoot(routes, { useHash: isElectron })],
     exports: [RouterModule]
 })
 export class AppRoutingModule { }

@@ -1,6 +1,9 @@
 import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { MatButtonModule, MatCheckboxModule, MatFormFieldModule, MatIconModule, MatInputModule } from '@angular/material';
+import {
+  MatButtonModule, MatCheckboxModule, MatFormFieldModule, MatIconModule, MatInputModule,
+  MatGridListModule
+} from '@angular/material';
 import { MatListModule } from '@angular/material/list';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { RouterModule } from '@angular/router';
@@ -38,12 +41,12 @@ import { SettingsModule } from './settings/settings.module';
     SettingsModule,
     FaqModule,
     MatCheckboxModule,
+    MatGridListModule,
     ServerMessageDialogModule
   ],
   declarations: [AuthorizeComponent],
   providers: [
     MessageValueService,
-    PartyService,
     PricingService,
     IncomeService,
     AnalyticsService
