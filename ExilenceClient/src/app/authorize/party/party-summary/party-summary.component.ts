@@ -54,7 +54,7 @@ export class PartySummaryComponent implements OnInit, OnDestroy {
     private accountService: AccountService,
     private alertService: AlertService,
     private settingsService: SettingsService,
-    private electronService: ElectronService
+    public electronService: ElectronService
   ) {
     this.form = fb.group({
       searchText: [''],

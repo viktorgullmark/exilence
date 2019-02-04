@@ -23,7 +23,7 @@ export class PlayerListComponent implements OnInit, OnDestroy {
   private currentPlayerSub: Subscription;
 
   constructor(
-    private electronService: ElectronService,
+    public electronService: ElectronService,
     public partyService: PartyService,
     private accountService: AccountService,
     private ref: ChangeDetectorRef
