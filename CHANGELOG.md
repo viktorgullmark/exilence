@@ -5,6 +5,9 @@ All notable changes to this project will be documented in this file.
 ### Added
 - Added a spectator-mode, available on the web (http://exilence.app)
 
+### Changed
+- Reworked how the ladder is parsed, resulting in more frequent updates
+
 ## [0.9.15] - 2019-01-29
 - Fixed a bug where some buttons were incorrectly hidden in the currency-tab
 
