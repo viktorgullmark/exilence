@@ -26,13 +26,40 @@ export class LadderTableComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.partySub = this.partyService.partyUpdated.subscribe(party => {
       if (party !== undefined) {
+
+        // temporary check
+        let selectedPlayerValue;
+        if (this.partyService.selectedFilterValue === 'All players') {
+          selectedPlayerValue = this.getPlayers()[0].character.name;
+        } else {
+          selectedPlayerValue = this.partyService.selectedFilterValue;
+        }
+
         this.party = party;
+        const foundPlayer = this.party.players.find(x => x.character !== null &&
+          x.character.name === selectedPlayerValue);
+        this.dataSource = [];
+        if (foundPlayer !== undefined) {
+          if (foundPlayer.ladderInfo !== null && foundPlayer.ladderInfo !== undefined) {
+            this.updateTable(foundPlayer.ladderInfo);
+          }
+          this.init();
+        }
       }
     });
     this.selectedFilterValueSub = this.partyService.selectedFilterValueSub.subscribe(res => {
       if (res !== undefined) {
+
+        // temporary check
+        let selectedPlayerValue;
+        if (this.partyService.selectedFilterValue === 'All players') {
+          selectedPlayerValue = this.getPlayers()[0].character.name;
+        } else {
+          selectedPlayerValue = this.partyService.selectedFilterValue;
+        }
+
         const foundPlayer = this.party.players.find(x => x.character !== null &&
-          x.character.name === this.partyService.selectedFilterValue);
+          x.character.name === selectedPlayerValue);
         this.dataSource = [];
         if (foundPlayer !== undefined) {
           if (foundPlayer.ladderInfo !== null && foundPlayer.ladderInfo !== undefined) {
@@ -51,6 +78,10 @@ export class LadderTableComponent implements OnInit, OnDestroy {
     if (this.partySub !== undefined) {
       this.partySub.unsubscribe();
     }
+  }
+
+  getPlayers() {
+    return this.partyService.party.players.filter(x => x.character !== null);
   }
 
   init() {

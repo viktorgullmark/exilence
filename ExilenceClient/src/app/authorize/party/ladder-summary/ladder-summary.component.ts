@@ -5,6 +5,7 @@ import { Subscription } from 'rxjs';
 
 import { Party } from '../../../shared/interfaces/party.interface';
 import { PartyService } from '../../../shared/providers/party.service';
+import { LadderTableComponent } from '../../components/ladder-table/ladder-table.component';
 
 @Component({
   selector: 'app-ladder-summary',
@@ -20,6 +21,7 @@ export class LadderSummaryComponent implements OnInit, OnDestroy {
   public selectedLocalValue: string;
 
   @ViewChild('playerDd') playerDd: MatSelect;
+  @ViewChild('table') table: LadderTableComponent;
 
   constructor(
     @Inject(FormBuilder) fb: FormBuilder,
@@ -49,7 +51,7 @@ export class LadderSummaryComponent implements OnInit, OnDestroy {
         // update the tables whenever the value changes
 
         if (this.playerDd !== undefined) {
-            this.playerDd.value = this.selectedLocalValue;
+          this.playerDd.value = this.selectedLocalValue;
         }
         this.updateFilterValue(this.playerDd.value);
       }
@@ -94,9 +96,9 @@ export class LadderSummaryComponent implements OnInit, OnDestroy {
 
       // update values for entire party, or a specific player, depending on selection
       if (this.partyService.selectedFilterValue === 'All players' || this.partyService.selectedFilterValue === undefined) {
-        // TODO: update data 
+        // TODO: update data
       } else if (foundPlayer !== undefined) {
-        // TODO: update data 
+        // TODO: update data
       }
     }
   }
@@ -105,7 +107,15 @@ export class LadderSummaryComponent implements OnInit, OnDestroy {
     if (this.party !== undefined) {
       const foundPlayer = this.party.players.find(x => x.character !== null && x.character.name === filterValue);
 
-      // TODO: update table with new value
+      if (this.table !== undefined) {
+        this.table.dataSource = [];
+      }
+
+      if (foundPlayer !== undefined) {
+        if (this.table !== undefined) {
+          this.table.updateTable(foundPlayer.ladderInfo);
+        }
+      }
     }
   }
 }
