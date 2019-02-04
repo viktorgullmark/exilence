@@ -23,6 +23,7 @@ import { HistoryHelper } from '../helpers/history.helper';
 import { LeagueWithPlayers } from '../interfaces/league.interface';
 import { Subscription } from 'rxjs';
 import { ServerMessage } from '../interfaces/server-message.interface';
+import { StateService } from './state.service';
 
 @Injectable()
 export class PartyService implements OnDestroy {
@@ -50,7 +51,6 @@ export class PartyService implements OnDestroy {
   public selectedFilterValue = 'All players';
   public connectionInitiated: EventEmitter<boolean> = new EventEmitter();
 
-  public spectatorCount: BehaviorSubject<number> = new BehaviorSubject<number>(0);
   public serverMessageReceived: BehaviorSubject<ServerMessage> = new BehaviorSubject<ServerMessage>(undefined);
 
   private reconnectAttempts: number;
@@ -80,7 +80,9 @@ export class PartyService implements OnDestroy {
     private logService: LogService,
     private electronService: ElectronService,
     private messageValueService: MessageValueService,
-    private settingsService: SettingsService) {
+    private settingsService: SettingsService,
+    private stateService: StateService
+  ) {
     this.reconnectAttempts = 0;
     this.forceClosed = false;
 
@@ -151,8 +153,8 @@ export class PartyService implements OnDestroy {
           this.messageValueService.partyValueSubject.next(networth);
           this.messageValueService.partyGainSubject.next(this.partyGain);
 
-          // update spectator count
-          this.spectatorCount.next(this.updateSpectatorCount(this.party.players));
+          const spectators = this.updateSpectatorCount(this.party.players);
+          this.stateService.dispatch({ key: 'spectatorCount', value: spectators });
 
           this.partyUpdated.next(this.party);
         });
@@ -197,8 +199,8 @@ export class PartyService implements OnDestroy {
         this.partyUpdated.next(this.party);
         this.updatePlayerLists(this.party);
 
-        // update spectator count
-        this.spectatorCount.next(this.updateSpectatorCount(this.party.players));
+        const spectators = this.updateSpectatorCount(this.party.players);
+        this.stateService.dispatch({ key: 'spectatorCount', value: spectators });
 
         this.logService.log('player joined:', player);
       });
@@ -226,7 +228,8 @@ export class PartyService implements OnDestroy {
         }
 
         // update spectator count
-        this.spectatorCount.next(this.updateSpectatorCount(this.party.players));
+        const spectators = this.updateSpectatorCount(this.party.players);
+        this.stateService.dispatch({ key: 'spectatorCount', value: spectators });
 
         this.logService.log('player left:', player);
       });
@@ -333,7 +336,7 @@ export class PartyService implements OnDestroy {
     }
   }
 
-  updateSpectatorCount(players: Player[]) {
+  updateSpectatorCount(players: Player[]): number {
     let count = 0;
     const spectators = players.filter(x => x.isSpectator);
     if (spectators !== undefined) {

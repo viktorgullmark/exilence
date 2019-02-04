@@ -19,19 +19,20 @@ export interface StateEntry {
 export class StateService {
 
   private stateSubject = new Subject();
-  private initialState: StateObject = {
-    isSnapshotting: false,
-  };
+  private initialState: StateObject = {};
 
   constructor(
     private settingsService: SettingsService
   ) {
 
-    this.state$.subscribe(s => console.log('State updated: ', this.initialState));
+    // this.initialState.XXX = this.settingsService.get('XXX');
 
 
     // Stuff what we always wanna have saved to settings when it changes.
     this.state$.subscribe(state => {
+      console.log('State updated: ', state);
+      // this.settingsService.set('XXX', null);
+
 
     });
 
@@ -42,7 +43,7 @@ export class StateService {
     scan((currentState: StateObject, newObject: StateObject) => {
 
       const key = Object.keys(newObject)[0];
-      const value = newObject[Object.keys(newObject)[0]]
+      const value = newObject[Object.keys(newObject)[0]];
 
       if (value === null) {
         delete currentState[key];
