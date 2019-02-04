@@ -32,7 +32,6 @@ namespace Exilence.Services
         }
 
 
-        #region Ladder
 
         public async Task<List<LadderPlayerModel>> GetLadderForLeague(string leagueName, bool full = false)
         {
@@ -90,8 +89,6 @@ namespace Exilence.Services
 
             return null;
         }
-
-        #endregion
 
     }
 }

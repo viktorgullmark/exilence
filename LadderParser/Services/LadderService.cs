@@ -1,14 +1,14 @@
-﻿using Shared.Helper;
+﻿using LadderParser.Interfaces;
+using Newtonsoft.Json;
+using Shared.Helper;
 using Shared.Interfaces;
 using Shared.Models;
 using Shared.Models.Ladder;
-using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Web;
-using LadderParser.Interfaces;
 
 namespace LadderParser.Services
 {
@@ -28,8 +28,7 @@ namespace LadderParser.Services
             _redisRepository = redisRepository;
         }
 
-        #region Ladder
-        
+
         public async Task UpdateLadders()
         {
             var leagues = await _redisRepository.GetAllLeaguesLadders();
@@ -42,10 +41,7 @@ namespace LadderParser.Services
                 {
                     if (pendingLeague != null)
                     {
-                        if (pendingLeague.Finished < DateTime.Now.AddMinutes(-5))
-                        {
-                            await UpdateLadder(pendingLeague.Name);
-                        }
+                        await UpdateLadder(pendingLeague.Name);
                     }
                 }
             }
@@ -156,8 +152,6 @@ namespace LadderParser.Services
             return null;
         }
 
-
-        #endregion
 
     }
 }
