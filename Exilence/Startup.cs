@@ -1,9 +1,7 @@
 ﻿using Exilence.Hubs;
-using Exilence.Interfaces;
-using Exilence.Repositories;
+using Shared.Interfaces;
+using Shared.Repositories;
 using Exilence.Services;
-using Hangfire;
-using Hangfire.MemoryStorage;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpOverrides;
@@ -12,6 +10,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using System;
+using Exilence.Interfaces;
 
 namespace Exilence
 {
@@ -27,8 +26,6 @@ namespace Exilence
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddHangfire(c => c.UseMemoryStorage());
-
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
 
             //Add distributed cache service backed by Redis cache
@@ -61,7 +58,6 @@ namespace Exilence
                 });
 
             services.AddScoped<ILadderService, LadderService>();
-            services.AddHttpClient<IExternalService, ExternalService>();
             services.AddScoped<IRedisRepository, RedisRepository>();
         }
 
@@ -81,20 +77,6 @@ namespace Exilence
             app.UseCors("AllowAll");
             app.UseMvc();
             app.UseFileServer();
-
-            GlobalConfiguration.Configuration.UseActivator(new HangfireActivator(serviceProvider));
-
-            var hangfireOpts = new BackgroundJobServerOptions
-            {
-                SchedulePollingInterval = TimeSpan.FromMilliseconds(1000)
-            };
-
-            app.UseHangfireServer(hangfireOpts);
-            app.UseHangfireDashboard();
-
-            if (Configuration.GetValue<bool>("Ladder:PollingEnabled")) { 
-                BackgroundJob.Schedule<ILadderService>(ls => ls.UpdateLadders(), TimeSpan.FromMilliseconds(5000));
-            }
 
             app.UseSignalR(routes =>
             {

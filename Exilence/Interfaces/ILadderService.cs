@@ -1,5 +1,5 @@
-﻿using Exilence.Models;
-using Exilence.Models.Ladder;
+﻿using Shared.Models;
+using Shared.Models.Ladder;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,6 +11,5 @@ namespace Exilence.Interfaces
     {
         Task<List<LadderPlayerModel>> GetLadderForPlayer(string league, string player);
         Task<List<LadderPlayerModel>> GetLadderForLeague(string league, bool full = false);
-        Task UpdateLadders();
     }
 }

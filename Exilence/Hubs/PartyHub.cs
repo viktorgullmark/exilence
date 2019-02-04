@@ -1,7 +1,6 @@
-﻿using Exilence.Helper;
-using Exilence.Interfaces;
-using Exilence.Models;
-using Exilence.Models.Statistics;
+﻿using Shared.Helper;
+using Shared.Interfaces;
+using Shared.Models;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.Caching.Distributed;
@@ -10,6 +9,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Shared.Models.Statistics;
+using Exilence.Interfaces;
+using Exilence.Helper;
 
 namespace Exilence.Hubs
 {

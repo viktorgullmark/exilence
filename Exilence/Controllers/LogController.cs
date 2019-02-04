@@ -1,13 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Threading.Tasks;
-using Exilence.Helper;
-using Exilence.Models.Log;
-using Microsoft.AspNetCore.Http;
+using Shared.Helper;
+using Shared.Models.Log;
 using Microsoft.AspNetCore.Mvc;
-using Newtonsoft.Json.Linq;
 
 namespace Exilence.Controllers
 {
