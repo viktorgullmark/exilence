@@ -12,6 +12,7 @@ import {
 
 import { SharedModule } from '../../../shared/shared.module';
 import { LadderSummaryComponent } from './ladder-summary.component';
+import { LadderTableModule } from '../../components/ladder-table/ladder-table.module';
 
 @NgModule({
   imports: [
@@ -25,6 +26,7 @@ import { LadderSummaryComponent } from './ladder-summary.component';
     MatTabsModule,
     MatFormFieldModule,
     MatSelectModule,
+    LadderTableModule
   ],
   declarations: [LadderSummaryComponent],
   exports: [LadderSummaryComponent]

@@ -4,6 +4,7 @@ import { Subscription } from 'rxjs/internal/Subscription';
 
 import { LadderPlayer, Player } from '../../../shared/interfaces/player.interface';
 import { PartyService } from '../../../shared/providers/party.service';
+import { Party } from '../../../shared/interfaces/party.interface';
 
 @Component({
   selector: 'app-ladder-table',
@@ -11,34 +12,44 @@ import { PartyService } from '../../../shared/providers/party.service';
   styleUrls: ['./ladder-table.component.scss']
 })
 export class LadderTableComponent implements OnInit, OnDestroy {
-  @Input() player: Player;
   displayedColumns: string[] = ['online', 'rank', 'level', 'character', 'account', 'experiencePerHour'];
   dataSource = [];
   filteredArr = [];
   source: any;
-  private selectedPlayerSub: Subscription;
-
+  party: Party;
+  private selectedFilterValueSub: Subscription;
+  private partySub: Subscription;
   @ViewChild(MatSort) sort: MatSort;
   constructor(private partyService: PartyService) {
   }
 
   ngOnInit() {
-    this.updateTable(this.player.ladderInfo);
-    this.selectedPlayerSub = this.partyService.selectedPlayer.subscribe(res => {
-      if (res !== undefined && res !== null) {
-        this.player = res;
+    this.partySub = this.partyService.partyUpdated.subscribe(party => {
+      if (party !== undefined) {
+        this.party = party;
+      }
+    });
+    this.selectedFilterValueSub = this.partyService.selectedFilterValueSub.subscribe(res => {
+      if (res !== undefined) {
+        const foundPlayer = this.party.players.find(x => x.character !== null &&
+          x.character.name === this.partyService.selectedFilterValue);
         this.dataSource = [];
-        if (res.ladderInfo !== null && res.ladderInfo !== undefined) {
-          this.updateTable(res.ladderInfo);
+        if (foundPlayer !== undefined) {
+          if (foundPlayer.ladderInfo !== null && foundPlayer.ladderInfo !== undefined) {
+            this.updateTable(foundPlayer.ladderInfo);
+          }
+          this.init();
         }
-        this.init();
       }
     });
   }
 
   ngOnDestroy() {
-    if (this.selectedPlayerSub !== undefined) {
-      this.selectedPlayerSub.unsubscribe();
+    if (this.selectedFilterValueSub !== undefined) {
+      this.selectedFilterValueSub.unsubscribe();
+    }
+    if (this.partySub !== undefined) {
+      this.partySub.unsubscribe();
     }
   }
 

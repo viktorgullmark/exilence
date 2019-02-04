@@ -12,12 +12,6 @@
                 Areas
             </ng-template>
         </mat-tab>
-        <mat-tab #ladderTab id="ladderTab" [disabled]="localProfile">
-            <ng-template mat-tab-label>
-                <mat-icon class="tab-icon">list</mat-icon>
-                Ladder
-            </ng-template>
-        </mat-tab>
     </mat-tab-group>
 </div>
 
@@ -31,9 +25,4 @@
 <!-- tab MAPS -->
 <div class="tab-content" [hidden]="selectedIndex != 1 || localProfile">
     <app-char-maps #charMaps *ngIf="!localProfile" [player]="player"></app-char-maps>  
-</div>
-
-<!-- tab LADDER -->
-<div class="tab-content" [hidden]="selectedIndex != 2 || localProfile">
-    <app-char-ladder #charLadder *ngIf="!localProfile" [player]="player"></app-char-ladder>
 </div>
