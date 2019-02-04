@@ -32,7 +32,10 @@ export class PartyComponent implements OnInit, OnDestroy {
   private currentPlayerValueSub: Subscription;
   private currentPlayerGainSub: Subscription;
   private tabSubscription: any;
+  private spectatorCountSub: any;
   private gainHours = 1;
+
+  public spectatorCount = 0;
 
   constructor(
     public partyService: PartyService,
@@ -48,6 +51,11 @@ export class PartyComponent implements OnInit, OnDestroy {
         this.messageValueService.playerValue = this.player.netWorthSnapshots[0].value;
         const isCurrentPlayer = this.partyService.currentPlayer !== undefined && res.account === this.partyService.currentPlayer.account;
         this.partyService.updatePlayerGain(res, isCurrentPlayer);
+      }
+    });
+    this.spectatorCountSub = this.partyService.spectatorCount.subscribe(res => {
+      if (res !== undefined) {
+        this.spectatorCount = res;
       }
     });
     this.playerSub = this.accountService.player.subscribe(res => {
@@ -120,6 +128,9 @@ export class PartyComponent implements OnInit, OnDestroy {
     }
     if (this.partySub !== undefined) {
       this.partySub.unsubscribe();
+    }
+    if (this.spectatorCountSub !== undefined) {
+      this.spectatorCountSub.unsubscribe();
     }
     if (this.currentPlayerValueSub !== undefined) {
       this.currentPlayerValueSub.unsubscribe();

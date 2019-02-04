@@ -13,6 +13,9 @@
             </ng-template>
         </mat-tab>
     </mat-tab-group>
+    <div class="spectator-wrapper">
+        <span>{{spectatorCount}} spectators</span>
+    </div>
 </div>
 
 <div [hidden]="partyService.isEntering || selectedIndex != 0" class="group-wrapper">
