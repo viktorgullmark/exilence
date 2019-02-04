@@ -50,6 +50,7 @@ export class PartyService implements OnDestroy {
   public selectedFilterValue = 'All players';
   public connectionInitiated: EventEmitter<boolean> = new EventEmitter();
 
+  public spectatorCount: BehaviorSubject<number> = new BehaviorSubject<number>(0);
   public serverMessageReceived: BehaviorSubject<ServerMessage> = new BehaviorSubject<ServerMessage>(undefined);
 
   private reconnectAttempts: number;
@@ -150,6 +151,9 @@ export class PartyService implements OnDestroy {
           this.messageValueService.partyValueSubject.next(networth);
           this.messageValueService.partyGainSubject.next(this.partyGain);
 
+          // update spectator count
+          this.spectatorCount.next(this.updateSpectatorCount(this.party.players));
+
           this.partyUpdated.next(this.party);
         });
       });
@@ -192,6 +196,10 @@ export class PartyService implements OnDestroy {
         this.party.players.push(player);
         this.partyUpdated.next(this.party);
         this.updatePlayerLists(this.party);
+
+        // update spectator count
+        this.spectatorCount.next(this.updateSpectatorCount(this.party.players));
+
         this.logService.log('player joined:', player);
       });
     });
@@ -214,6 +222,10 @@ export class PartyService implements OnDestroy {
         if (this.selectedPlayerObj.account === player.account) {
           this.selectedPlayer.next(this.currentPlayer);
         }
+
+        // update spectator count
+        this.spectatorCount.next(this.updateSpectatorCount(this.party.players));
+
         this.logService.log('player left:', player);
       });
     });
@@ -317,6 +329,15 @@ export class PartyService implements OnDestroy {
     } if (this.playerGainSub !== undefined) {
       this.playerGainSub.unsubscribe();
     }
+  }
+
+  updateSpectatorCount(players: Player[]) {
+    let count = 0;
+    const spectators = players.filter(x => x.isSpectator);
+    if (spectators !== undefined) {
+      count = spectators.length;
+    }
+    return count;
   }
 
   updatePartyGain(players: Player[]) {
