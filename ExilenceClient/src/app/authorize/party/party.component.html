@@ -3,13 +3,19 @@
         <mat-tab #currentGrpTab id="currentGrpTab" class="active">
             <ng-template mat-tab-label>
                 <mat-icon class="tab-icon">group</mat-icon>
-                &nbsp;Overview
+                &nbsp;Characters
             </ng-template>
         </mat-tab>
         <mat-tab #summaryTab id="summaryTab">
             <ng-template mat-tab-label>
                 <mat-icon class="tab-icon">attach_money</mat-icon>
-                &nbsp;Currency
+                &nbsp;Net worth
+            </ng-template>
+        </mat-tab>
+        <mat-tab #ladderTab id="ladderTab">
+            <ng-template mat-tab-label>
+                <mat-icon class="tab-icon">list</mat-icon>
+                &nbsp;Ladder
             </ng-template>
         </mat-tab>
     </mat-tab-group>
@@ -31,4 +37,8 @@
 
 <div [hidden]="partyService.isEntering || selectedIndex != 1">
     <app-party-summary #tabSummary *ngIf="!partyService.isEntering && selectedIndex == 1"></app-party-summary>
+</div>
+
+<div [hidden]="partyService.isEntering || selectedIndex != 2">
+    <app-ladder-summary #tabLadder *ngIf="!partyService.isEntering && selectedIndex == 2"></app-ladder-summary>
 </div>

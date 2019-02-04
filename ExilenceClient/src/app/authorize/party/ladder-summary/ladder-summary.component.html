@@ -1,0 +1,18 @@
+<div class="ladder-summary down-scale">
+    <div class="top-summary-wrapper">
+        <div class="top-text-wrapper"><span>Displays your position on the ladder, or the top-ranks if you are not on the ladder.</span></div>
+        <mat-form-field class="player-selection-field">
+            <mat-label>Select player</mat-label>
+            <mat-select #playerDd value="{{selectedLocalValue}}" (selectionChange)="selectPlayer($event)">
+                <mat-option *ngFor="let player of getPlayers()" value="{{player.character.name}}">{{player.character.name}}</mat-option>
+            </mat-select>
+        </mat-form-field>
+    </div>
+    <div class="flex-area">
+        <div class="btn-grp">
+        </div>
+    </div>
+    <div class="table-outer-wrapper full-height-table">
+        <app-ladder-table #table></app-ladder-table>
+    </div>
+</div>

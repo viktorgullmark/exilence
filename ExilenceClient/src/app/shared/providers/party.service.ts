@@ -221,6 +221,8 @@ export class PartyService implements OnDestroy {
           this.router.navigate(['/']);
         }
 
+        this.partyUpdated.next(this.party);
+
         if (this.selectedPlayerObj.account === player.account) {
           this.selectedPlayer.next(this.currentPlayer);
         }

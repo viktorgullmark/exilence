@@ -1,9 +1,10 @@
 import { Component, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { MatSort, MatTableDataSource } from '@angular/material';
+import { MatSort, MatTableDataSource, MatPaginator } from '@angular/material';
 import { Subscription } from 'rxjs/internal/Subscription';
 
 import { LadderPlayer, Player } from '../../../shared/interfaces/player.interface';
 import { PartyService } from '../../../shared/providers/party.service';
+import { Party } from '../../../shared/interfaces/party.interface';
 
 @Component({
   selector: 'app-ladder-table',
@@ -11,35 +12,79 @@ import { PartyService } from '../../../shared/providers/party.service';
   styleUrls: ['./ladder-table.component.scss']
 })
 export class LadderTableComponent implements OnInit, OnDestroy {
-  @Input() player: Player;
   displayedColumns: string[] = ['online', 'rank', 'level', 'character', 'account', 'experiencePerHour'];
   dataSource = [];
   filteredArr = [];
   source: any;
-  private selectedPlayerSub: Subscription;
-
+  party: Party;
+  private selectedFilterValueSub: Subscription;
+  private partySub: Subscription;
+  public selectedPlayerValue: any;
   @ViewChild(MatSort) sort: MatSort;
+  @ViewChild(MatPaginator) paginator: MatPaginator;
   constructor(private partyService: PartyService) {
   }
 
   ngOnInit() {
-    this.updateTable(this.player.ladderInfo);
-    this.selectedPlayerSub = this.partyService.selectedPlayer.subscribe(res => {
-      if (res !== undefined && res !== null) {
-        this.player = res;
-        this.dataSource = [];
-        if (res.ladderInfo !== null && res.ladderInfo !== undefined) {
-          this.updateTable(res.ladderInfo);
+    this.partySub = this.partyService.partyUpdated.subscribe(party => {
+      if (party !== undefined) {
+        this.party = party;
+
+        let foundPlayer = this.party.players.find(x => x.character !== null &&
+          x.character.name === this.selectedPlayerValue);
+
+        // temporary check
+        if (this.partyService.selectedFilterValue === 'All players') {
+          this.selectedPlayerValue = this.getPlayers()[0].character.name;
+        } else if (foundPlayer !== undefined) {
+          this.selectedPlayerValue = this.partyService.selectedFilterValue;
+        } else {
+          this.selectedPlayerValue = this.getPlayers()[0].character.name;
         }
-        this.init();
+
+        foundPlayer = this.party.players.find(x => x.character !== null &&
+          x.character.name === this.selectedPlayerValue);
+
+        this.dataSource = [];
+        if (foundPlayer !== undefined) {
+          if (foundPlayer.ladderInfo !== null && foundPlayer.ladderInfo !== undefined) {
+            this.updateTable(foundPlayer.ladderInfo);
+          }
+          this.init();
+        }
+      }
+    });
+    this.selectedFilterValueSub = this.partyService.selectedFilterValueSub.subscribe(res => {
+      if (res !== undefined) {
+        if (this.partyService.selectedFilterValue === 'All players') {
+          this.selectedPlayerValue = this.getPlayers()[0].character.name;
+        } else {
+          this.selectedPlayerValue = this.partyService.selectedFilterValue;
+        }
+        const foundPlayer = this.party.players.find(x => x.character !== null &&
+          x.character.name === this.selectedPlayerValue);
+        this.dataSource = [];
+        if (foundPlayer !== undefined) {
+          if (foundPlayer.ladderInfo !== null && foundPlayer.ladderInfo !== undefined) {
+            this.updateTable(foundPlayer.ladderInfo);
+          }
+          this.init();
+        }
       }
     });
   }
 
   ngOnDestroy() {
-    if (this.selectedPlayerSub !== undefined) {
-      this.selectedPlayerSub.unsubscribe();
+    if (this.selectedFilterValueSub !== undefined) {
+      this.selectedFilterValueSub.unsubscribe();
     }
+    if (this.partySub !== undefined) {
+      this.partySub.unsubscribe();
+    }
+  }
+
+  getPlayers() {
+    return this.party.players.filter(x => x.character !== null);
   }
 
   init() {
@@ -47,6 +92,7 @@ export class LadderTableComponent implements OnInit, OnDestroy {
       this.filteredArr = [...this.dataSource];
       this.source = new MatTableDataSource(this.filteredArr);
       this.source.sort = this.sort;
+      this.source.paginator = this.paginator;
     }, 0);
   }
 

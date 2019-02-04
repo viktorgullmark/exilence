@@ -101,11 +101,6 @@ export class CharProfileComponent implements OnInit, OnDestroy {
         this.analyticsService.sendScreenview('/authorized/party/player/maps');
         break;
       }
-      // ladder
-      case 2: {
-        this.analyticsService.sendScreenview('/authorized/party/player/ladder');
-        break;
-      }
     }
   }
   openLink(link: string) {
