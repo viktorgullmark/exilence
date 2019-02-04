@@ -1,0 +1,20 @@
+<div class="ladder-summary down-scale">
+    <div class="top-summary-wrapper">
+        <div class="field-wrapper">
+            <mat-form-field>
+                <mat-label>Select player</mat-label>
+                <mat-select #playerDd value="{{partyService.selectedFilterValue}}" (selectionChange)="selectPlayer($event)">
+                    <mat-option *ngFor="let player of getPlayers()" value="{{player.character.name}}">{{player.character.name}}</mat-option>
+                </mat-select>
+            </mat-form-field>
+        </div>
+    </div>
+    <div class="flex-area">
+        <div class="btn-grp">
+            button-area
+        </div>
+    </div>
+    <div class="table-outer-wrapper full-height-table">
+        table-area
+    </div>
+</div>

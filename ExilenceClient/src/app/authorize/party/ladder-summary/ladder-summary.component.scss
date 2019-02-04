@@ -1,0 +1,74 @@
+@import "./../../../../assets/styles/_variables.scss";
+
+.ladder-summary {
+    height: $content-height;
+
+    mat-form-field {
+        max-width: 100% !important;
+    }
+
+    .flex-area {
+        display: flex;
+        align-items: flex-end;
+        justify-content: end;
+
+        .btn-grp {
+            margin-left: auto;
+            .extra-margin {
+                margin-right: 25px;
+            }
+        }
+    }
+
+    .top-summary-wrapper {
+        width: 100%;
+        margin-bottom: 25px;
+
+        .field-wrapper {
+            float: left;
+            width: 12%;
+            margin-right: 15px;
+
+            .title {
+                font-size: 14px;
+            }
+
+            .top-inner-wrapper {
+                margin-top: 10px;
+
+                .field-placeholder {
+                    color: $networth-placeholder-color;
+                }
+            }
+        } 
+    }
+
+    .table-outer-wrapper {
+        height: 44%;
+        bottom: 0px;
+        width: calc(100% - 50px);
+        margin-top: 25px;
+        position: absolute;
+
+        @media screen and (min-height: 1200px) {
+            height: 44%;
+        }
+
+        @media screen and (max-height: 950px) {
+            height: 50%;
+        }
+
+        @media screen and (max-height: 850px) {
+            height: 77%;
+        }
+        
+        .ladder-table-wrapper {
+            height: calc(100% - 155px);
+            overflow-y: scroll;
+        }
+    }
+
+    .full-height-table {
+        height: 77%;
+    }
+}

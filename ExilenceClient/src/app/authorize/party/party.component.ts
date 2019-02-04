@@ -13,6 +13,7 @@ import { AccountService } from '../../shared/providers/account.service';
 import { PartySummaryComponent } from './party-summary/party-summary.component';
 import { Subscription } from 'rxjs';
 import { SettingsService } from '../../shared/providers/settings.service';
+import { LadderSummaryComponent } from './ladder-summary/ladder-summary.component';
 
 
 @Component({
@@ -25,6 +26,7 @@ export class PartyComponent implements OnInit, OnDestroy {
   player: Player;
   @ViewChild('tabGroup') tabGroup: MatTabGroup;
   @ViewChild('tabSummary') tabSummary: PartySummaryComponent;
+  @ViewChild('tabLadder') tabLadder: LadderSummaryComponent;
 
   private selectedPlayerSub: Subscription;
   private playerSub: Subscription;

@@ -7,6 +7,7 @@ import { CharProfileModule } from '../components/char-profile/char-profile.modul
 import { PlayerListModule } from '../components/player-list/player-list.module';
 import { PartySummaryModule } from './party-summary/party-summary.module';
 import { PartyComponent } from './party.component';
+import { LadderSummaryModule } from './ladder-summary/ladder-summary.module';
 
 
 @NgModule({
@@ -17,7 +18,8 @@ import { PartyComponent } from './party.component';
     CharProfileModule,
     MatTabsModule,
     MatIconModule,
-    PartySummaryModule
+    PartySummaryModule,
+    LadderSummaryModule
   ],
   declarations: [PartyComponent],
   providers: []
