@@ -16,6 +16,9 @@ export class LadderSummaryComponent implements OnInit, OnDestroy {
   private party: Party;
   private selectedFilterValueSub: Subscription;
   private partySub: Subscription;
+
+  public selectedLocalValue: string;
+
   @ViewChild('playerDd') playerDd: MatSelect;
 
   constructor(
@@ -24,14 +27,31 @@ export class LadderSummaryComponent implements OnInit, OnDestroy {
   ) {
   }
   ngOnInit() {
+
+    // TODO: remove once ladder has been reworked
+    if (this.partyService.selectedFilterValue !== 'All players') {
+      this.selectedLocalValue = this.partyService.selectedFilterValue;
+    } else {
+      this.selectedLocalValue = this.getPlayers()[0].character.name;
+    }
+
     this.selectedFilterValueSub = this.partyService.selectedFilterValueSub.subscribe(res => {
       if (res !== undefined) {
         this.partyService.selectedFilterValue = res;
-        // update the tables whenever the value changes
-        this.updateFilterValue(this.partyService.selectedFilterValue);
-        if (this.playerDd !== undefined) {
-          this.playerDd.value = this.partyService.selectedFilterValue;
+
+        // TODO: remove once ladder has been reworked
+        if (res !== 'All players') {
+          this.selectedLocalValue = res;
+        } else {
+          this.selectedLocalValue = this.getPlayers()[0].character.name;
         }
+
+        // update the tables whenever the value changes
+
+        if (this.playerDd !== undefined) {
+            this.playerDd.value = this.selectedLocalValue;
+        }
+        this.updateFilterValue(this.playerDd.value);
       }
     });
     this.partySub = this.partyService.partyUpdated.subscribe(res => {
@@ -45,10 +65,10 @@ export class LadderSummaryComponent implements OnInit, OnDestroy {
         // if player left or value is incorrect, update dropdown
         if (foundPlayer === undefined && this.partyService.selectedFilterValue !== 'All players') {
           // force-set the value here, since the subscription wont finish in time, should be reworked
-          this.partyService.selectedFilterValue = this.getPlayers[0].character.name;
-          this.partyService.selectedFilterValueSub.next(this.getPlayers[0].character.name);
+          this.partyService.selectedFilterValue = this.getPlayers()[0].character.name;
+          this.partyService.selectedFilterValueSub.next(this.getPlayers()[0].character.name);
           if (this.playerDd !== undefined) {
-            this.playerDd.value = this.getPlayers[0].character.name;
+            this.playerDd.value = this.getPlayers()[0].character.name;
           }
         }
       }
