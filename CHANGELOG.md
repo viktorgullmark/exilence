@@ -4,6 +4,7 @@ All notable changes to this project will be documented in this file.
 ## [0.9.16] - XXXX-XX-XX
 ### Added
 - Added a spectator-mode, available on the web (http://exilence.app)
+    - To let users spectate your group, share the link in the top-right corner
 
 ### Changed
 - Reworked how the ladder is parsed, resulting in more frequent updates
