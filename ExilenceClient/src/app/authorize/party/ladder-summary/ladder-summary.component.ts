@@ -62,15 +62,15 @@ export class LadderSummaryComponent implements OnInit, OnDestroy {
 
         // check if the current dropdown selection is a player in our party
         const foundPlayer = this.party.players.find(x =>
-          x.character !== null && x.character.name === this.partyService.selectedFilterValue);
+          x.character !== null && x.character.name === this.selectedLocalValue);
 
         // if player left or value is incorrect, update dropdown
-        if (foundPlayer === undefined && this.partyService.selectedFilterValue !== 'All players') {
+        if (foundPlayer === undefined) {
           // force-set the value here, since the subscription wont finish in time, should be reworked
-          this.partyService.selectedFilterValue = this.getPlayers()[0].character.name;
-          this.partyService.selectedFilterValueSub.next(this.getPlayers()[0].character.name);
+          this.selectedLocalValue = this.getPlayers()[0].character.name;
+
           if (this.playerDd !== undefined) {
-            this.playerDd.value = this.getPlayers()[0].character.name;
+            this.playerDd.value = this.selectedLocalValue;
           }
         }
       }

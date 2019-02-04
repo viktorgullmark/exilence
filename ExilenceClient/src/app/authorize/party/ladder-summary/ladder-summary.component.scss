@@ -14,6 +14,7 @@
 
         .btn-grp {
             margin-left: auto;
+
             .extra-margin {
                 margin-right: 25px;
             }
@@ -40,15 +41,12 @@
                     color: $networth-placeholder-color;
                 }
             }
-        } 
+        }
     }
 
     .table-outer-wrapper {
         height: 44%;
-        bottom: 0px;
-        width: calc(100% - 50px);
         margin-top: 25px;
-        position: absolute;
 
         @media screen and (min-height: 1200px) {
             height: 44%;
@@ -61,7 +59,7 @@
         @media screen and (max-height: 850px) {
             height: 77%;
         }
-        
+
         .ladder-table-wrapper {
             height: calc(100% - 155px);
             overflow-y: scroll;
@@ -71,4 +69,9 @@
     .full-height-table {
         height: 77%;
     }
+}
+
+.top-text-wrapper {
+    height: 50px;
+    float: left;
 }

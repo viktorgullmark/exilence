@@ -1,5 +1,6 @@
 <div class="ladder-summary down-scale">
     <div class="top-summary-wrapper">
+        <div class="top-text-wrapper"><span>Displays your position on the ladder, or the top-ranks if you are not on the ladder.</span></div>
         <mat-form-field class="player-selection-field">
             <mat-label>Select player</mat-label>
             <mat-select #playerDd value="{{selectedLocalValue}}" (selectionChange)="selectPlayer($event)">
@@ -9,7 +10,6 @@
     </div>
     <div class="flex-area">
         <div class="btn-grp">
-            button-area
         </div>
     </div>
     <div class="table-outer-wrapper full-height-table">

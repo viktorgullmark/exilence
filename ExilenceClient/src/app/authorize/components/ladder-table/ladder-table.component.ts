@@ -1,5 +1,5 @@
 import { Component, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { MatSort, MatTableDataSource } from '@angular/material';
+import { MatSort, MatTableDataSource, MatPaginator } from '@angular/material';
 import { Subscription } from 'rxjs/internal/Subscription';
 
 import { LadderPlayer, Player } from '../../../shared/interfaces/player.interface';
@@ -19,25 +19,32 @@ export class LadderTableComponent implements OnInit, OnDestroy {
   party: Party;
   private selectedFilterValueSub: Subscription;
   private partySub: Subscription;
+  public selectedPlayerValue: any;
   @ViewChild(MatSort) sort: MatSort;
+  @ViewChild(MatPaginator) paginator: MatPaginator;
   constructor(private partyService: PartyService) {
   }
 
   ngOnInit() {
     this.partySub = this.partyService.partyUpdated.subscribe(party => {
       if (party !== undefined) {
+        this.party = party;
+
+        let foundPlayer = this.party.players.find(x => x.character !== null &&
+          x.character.name === this.selectedPlayerValue);
 
         // temporary check
-        let selectedPlayerValue;
         if (this.partyService.selectedFilterValue === 'All players') {
-          selectedPlayerValue = this.getPlayers()[0].character.name;
+          this.selectedPlayerValue = this.getPlayers()[0].character.name;
+        } else if (foundPlayer !== undefined) {
+          this.selectedPlayerValue = this.partyService.selectedFilterValue;
         } else {
-          selectedPlayerValue = this.partyService.selectedFilterValue;
+          this.selectedPlayerValue = this.getPlayers()[0].character.name;
         }
 
-        this.party = party;
-        const foundPlayer = this.party.players.find(x => x.character !== null &&
-          x.character.name === selectedPlayerValue);
+        foundPlayer = this.party.players.find(x => x.character !== null &&
+          x.character.name === this.selectedPlayerValue);
+
         this.dataSource = [];
         if (foundPlayer !== undefined) {
           if (foundPlayer.ladderInfo !== null && foundPlayer.ladderInfo !== undefined) {
@@ -49,17 +56,13 @@ export class LadderTableComponent implements OnInit, OnDestroy {
     });
     this.selectedFilterValueSub = this.partyService.selectedFilterValueSub.subscribe(res => {
       if (res !== undefined) {
-
-        // temporary check
-        let selectedPlayerValue;
         if (this.partyService.selectedFilterValue === 'All players') {
-          selectedPlayerValue = this.getPlayers()[0].character.name;
+          this.selectedPlayerValue = this.getPlayers()[0].character.name;
         } else {
-          selectedPlayerValue = this.partyService.selectedFilterValue;
+          this.selectedPlayerValue = this.partyService.selectedFilterValue;
         }
-
         const foundPlayer = this.party.players.find(x => x.character !== null &&
-          x.character.name === selectedPlayerValue);
+          x.character.name === this.selectedPlayerValue);
         this.dataSource = [];
         if (foundPlayer !== undefined) {
           if (foundPlayer.ladderInfo !== null && foundPlayer.ladderInfo !== undefined) {
@@ -81,7 +84,7 @@ export class LadderTableComponent implements OnInit, OnDestroy {
   }
 
   getPlayers() {
-    return this.partyService.party.players.filter(x => x.character !== null);
+    return this.party.players.filter(x => x.character !== null);
   }
 
   init() {
@@ -89,6 +92,7 @@ export class LadderTableComponent implements OnInit, OnDestroy {
       this.filteredArr = [...this.dataSource];
       this.source = new MatTableDataSource(this.filteredArr);
       this.source.sort = this.sort;
+      this.source.paginator = this.paginator;
     }, 0);
   }
 
