@@ -1,18 +1,16 @@
-import { Component, OnInit, ViewChild, OnDestroy } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { MatTabGroup } from '@angular/material';
+import { Subscription } from 'rxjs';
 
+import { Player } from '../../shared/interfaces/player.interface';
+import { AccountService } from '../../shared/providers/account.service';
 import { AnalyticsService } from '../../shared/providers/analytics.service';
 import { ElectronService } from '../../shared/providers/electron.service';
 import { MessageValueService } from '../../shared/providers/message-value.service';
-
 import { PartyService } from '../../shared/providers/party.service';
-
-import { Player } from '../../shared/interfaces/player.interface';
-import { NetWorthSnapshot } from '../../shared/interfaces/income.interface';
-import { AccountService } from '../../shared/providers/account.service';
-import { PartySummaryComponent } from './party-summary/party-summary.component';
-import { Subscription } from 'rxjs';
 import { SettingsService } from '../../shared/providers/settings.service';
+import { StateService } from '../../shared/providers/state.service';
+import { PartySummaryComponent } from './party-summary/party-summary.component';
 
 
 @Component({
@@ -43,7 +41,8 @@ export class PartyComponent implements OnInit, OnDestroy {
     private analyticsService: AnalyticsService,
     private messageValueService: MessageValueService,
     private electronService: ElectronService,
-    private settingsService: SettingsService
+    private settingsService: SettingsService,
+    private stateService: StateService
   ) {
     this.selectedPlayerSub = this.partyService.selectedPlayer.subscribe(res => {
       if (res !== undefined) {
@@ -53,11 +52,10 @@ export class PartyComponent implements OnInit, OnDestroy {
         this.partyService.updatePlayerGain(res, isCurrentPlayer);
       }
     });
-    this.spectatorCountSub = this.partyService.spectatorCount.subscribe(res => {
-      if (res !== undefined) {
-        this.spectatorCount = res;
-      }
+    this.stateService.state$.subscribe(state => {
+      this.spectatorCount = 'spectatorCount'.split('.').reduce((o, i) => o[i], state);
     });
+
     this.playerSub = this.accountService.player.subscribe(res => {
       if (res !== undefined) {
 
