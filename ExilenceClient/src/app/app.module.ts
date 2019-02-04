@@ -72,7 +72,7 @@ export function HttpLoaderFactory(http: HttpClient) {
       }
     }),
   ],
-  providers: [,
+  providers: [
     ExternalService,
     AnalyticsService,
     ElectronService,
