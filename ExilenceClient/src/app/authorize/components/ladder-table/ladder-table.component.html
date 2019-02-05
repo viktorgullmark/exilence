@@ -1,44 +1,46 @@
-<table *ngIf="dataSource.length > 0" mat-table [dataSource]="source" class="mat-elevation-z8" matSort matSortActive="rank"
-  matSortDisableClear matSortDirection="asc">
+<ng-container *ngIf="dataSource.length > 0">
+  <table mat-table [dataSource]="source" class="mat-elevation-z8" matSort matSortActive="rank" matSortDisableClear
+    matSortDirection="asc">
 
-  <ng-container matColumnDef="online">
-    <th mat-header-cell *matHeaderCellDef></th>
-    <td mat-cell *matCellDef="let element" [ngClass]="{'active': element.character === selectedPlayerValue }">
-      <mat-icon (click)="minimize()" class="status-icon" [ngClass]="{'online': element.online }">fiber_manual_record</mat-icon>
-    </td>
-  </ng-container>
+    <ng-container matColumnDef="online">
+      <th mat-header-cell *matHeaderCellDef></th>
+      <td mat-cell *matCellDef="let element" [ngClass]="{'active': element.character === selectedPlayerValue }">
+        <mat-icon (click)="minimize()" class="status-icon" [ngClass]="{'online': element.online }">fiber_manual_record</mat-icon>
+      </td>
+    </ng-container>
 
-  <ng-container matColumnDef="rank">
-    <th mat-header-cell *matHeaderCellDef mat-sort-header="rank"> Rank </th>
-    <td mat-cell *matCellDef="let element" [ngClass]="{'active': element.character === selectedPlayerValue }" class="ranking">
-      {{element.rank}} </td>
-  </ng-container>
+    <ng-container matColumnDef="rank">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header="rank"> Rank </th>
+      <td mat-cell *matCellDef="let element" [ngClass]="{'active': element.character === selectedPlayerValue }" class="ranking">
+        {{element.rank}} </td>
+    </ng-container>
 
-  <ng-container matColumnDef="level">
-    <th mat-header-cell *matHeaderCellDef mat-sort-header="level"> Level </th>
-    <td mat-cell *matCellDef="let element" [ngClass]="{'active': element.character === selectedPlayerValue }">
-      {{element.level}} </td>
-  </ng-container>
+    <ng-container matColumnDef="level">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header="level"> Level </th>
+      <td mat-cell *matCellDef="let element" [ngClass]="{'active': element.character === selectedPlayerValue }">
+        {{element.level}} </td>
+    </ng-container>
 
-  <ng-container matColumnDef="character">
-    <th mat-header-cell *matHeaderCellDef mat-sort-header="character"> Character </th>
-    <td mat-cell *matCellDef="let element" [ngClass]="{'active': element.character === selectedPlayerValue }">
-      {{element.character}} </td>
-  </ng-container>
+    <ng-container matColumnDef="character">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header="character"> Character </th>
+      <td mat-cell *matCellDef="let element" [ngClass]="{'active': element.character === selectedPlayerValue }">
+        {{element.character}} </td>
+    </ng-container>
 
-  <ng-container matColumnDef="account">
-    <th mat-header-cell *matHeaderCellDef mat-sort-header="account"> Account </th>
-    <td mat-cell *matCellDef="let element" [ngClass]="{'active': element.character === selectedPlayerValue }">
-      {{element.account}} </td>
-  </ng-container>
+    <ng-container matColumnDef="account">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header="account"> Account </th>
+      <td mat-cell *matCellDef="let element" [ngClass]="{'active': element.character === selectedPlayerValue }">
+        {{element.account}} </td>
+    </ng-container>
 
-  <ng-container matColumnDef="experiencePerHour">
-    <th mat-header-cell *matHeaderCellDef mat-sort-header="experiencePerHour"> Exp / hour </th>
-    <td mat-cell *matCellDef="let element" [ngClass]="{'active': element.character === selectedPlayerValue }" class="experience">
-      {{element.experiencePerHour}} </td>
-  </ng-container>
+    <ng-container matColumnDef="experiencePerHour">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header="experiencePerHour"> Exp / hour </th>
+      <td mat-cell *matCellDef="let element" [ngClass]="{'active': element.character === selectedPlayerValue }" class="experience">
+        {{element.experiencePerHour}} </td>
+    </ng-container>
 
-  <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-  <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-</table>
-<mat-paginator [pageSizeOptions]="[14]" showFirstLastButtons></mat-paginator>
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+  </table>
+  <mat-paginator [pageSizeOptions]="[14]" showFirstLastButtons></mat-paginator>
+</ng-container>

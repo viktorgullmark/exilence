@@ -50,7 +50,7 @@ namespace Exilence.Services
                     }
                     else
                     {
-                        return league.Ladder.OrderBy(t => t.Rank.Overall).Take(100).ToList();
+                        return league.Ladder.OrderBy(t => t.Rank.Overall).Take(14).ToList();
                     }
                 }
             }
@@ -76,8 +76,8 @@ namespace Exilence.Services
                 if (characterOnLadder != null)
                 {
                     var index = league.Ladder.IndexOf(characterOnLadder);
-                    var before = league.Ladder.Where(t => t.Rank.Overall < characterOnLadder.Rank.Overall && t.Rank.Overall >= (characterOnLadder.Rank.Overall - 49));
-                    var after = league.Ladder.Where(t => t.Rank.Overall > characterOnLadder.Rank.Overall && t.Rank.Overall <= (characterOnLadder.Rank.Overall + 50));
+                    var before = league.Ladder.Where(t => t.Rank.Overall < characterOnLadder.Rank.Overall && t.Rank.Overall >= (characterOnLadder.Rank.Overall - 6));
+                    var after = league.Ladder.Where(t => t.Rank.Overall > characterOnLadder.Rank.Overall && t.Rank.Overall <= (characterOnLadder.Rank.Overall + 7));
 
                     var ladderList = new List<LadderPlayerModel>();
                     ladderList.AddRange(before);
