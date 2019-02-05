@@ -12,7 +12,8 @@ import { Party } from '../../../shared/interfaces/party.interface';
   styleUrls: ['./ladder-table.component.scss']
 })
 export class LadderTableComponent implements OnInit, OnDestroy {
-  displayedColumns: string[] = ['online', 'rank', 'level', 'character', 'account', 'experiencePerHour'];
+  // tslint:disable-next-line:max-line-length
+  displayedColumns: string[] = ['online', 'rank', 'level', 'challenges', 'account', 'character', 'class', 'classRank', 'depthGroup', 'depthGroupRank', 'depthSolo', 'depthSoloRank'];
   dataSource = [];
   filteredArr = [];
   source: any;
@@ -104,12 +105,17 @@ export class LadderTableComponent implements OnInit, OnDestroy {
           level: player.level,
           online: player.online,
           account: player.account,
+          challenges: player.challenges,
           dead: player.dead,
           experience: player.experience,
           rank: player.rank.overall,
           twitch: player.twitch,
+          depthSolo: player.depth.solo,
+          depthGroup: player.depth.group,
+          depthSoloRank: player.depth.soloRank,
+          depthGroupRank: player.depth.groupRank,
           class: player.class,
-          class_rank: player.rank.class,
+          classRank: player.rank.class,
           experiencePerHour: this.numberWithSpaces(player.experiencePerHour)
         };
 

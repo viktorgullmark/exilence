@@ -70,6 +70,7 @@ namespace LadderParser.Services
                             Level = t.Character.Level,
                             Online = t.Online,
                             Dead = t.Dead,
+                            Challenges = t.Account.Challenges.Total,
                             Account = t.Account.Name,
                             Experience = t.Character.Experience,
                             ExperiencePerHour = 0,
@@ -112,8 +113,8 @@ namespace LadderParser.Services
         {
             foreach (var newEntry in newLadder)
             {
-                newEntry.Depth.Group = newLadder.Count(t => t.Depth.Group > newEntry.Depth.Group) + 1;
-                newEntry.Depth.Solo = newLadder.Count(t => t.Depth.Solo > newEntry.Depth.Solo) + 1;
+                newEntry.Depth.GroupRank = newLadder.Count(t => t.Depth.Group > newEntry.Depth.Group) + 1;
+                newEntry.Depth.SoloRank = newLadder.Count(t => t.Depth.Solo > newEntry.Depth.Solo) + 1;
                 newEntry.Rank.Class = newLadder.Where(t => t.Class == newEntry.Class).Where(x => x.Rank.Overall < newEntry.Rank.Overall).Count() + 1;
 
                 if (oldLadder != null)

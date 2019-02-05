@@ -34,7 +34,9 @@ export interface Rank {
 
 export interface Depth {
     solo: number;
+    soloRank: number;
     group: number;
+    groupRank: number;
 }
 
 export interface LadderPlayer {
@@ -43,6 +45,7 @@ export interface LadderPlayer {
     online: boolean;
     dead: boolean;
     account: string;
+    challenges: number;
     experience: number;
     experiencePerHour: number;
     rank: Rank;

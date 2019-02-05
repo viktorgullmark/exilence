@@ -19,6 +19,42 @@ td {
         color: $experience-font-color !important;
     }
 
+    &.depth-solo {
+        color: $depth-solo-font-color !important;
+    }
+
+    &.depth-group {
+        color: $depth-group-font-color !important;
+    }
+
+    &.challenges {
+        color: $challenges-font-color !important;
+    }
+
+    &.Scion, &.Ascendant {
+        color: $depth-group-font-color !important;
+    }
+    &.Witch, &.Elementalist, &.Occultist, &.Necromancer {
+        color: $class-witch-font-color !important;
+    }
+    &.Shadow, &.Saboteur, &.Trickster, &.Assasin {
+        color: $class-shadow-font-color !important;
+    }
+    &.Ranger, &.Deadeye, &.Raider, &.Pathfinder {
+        color: $class-ranger-font-color !important;
+    }
+    &.Duelist, &.Slayer, &.Gladiator, &.Champion {
+        color: $class-duelist-font-color !important;
+    }
+    &.Marauder, &.Cheiftain, &.Juggernaut, &.Berserker {
+        color: $class-marauder-font-color !important;
+    }
+    &.Templar, &.Inquisitor, &.Hierophant, &.Guardian {
+        color: $class-templar-font-color !important;
+    }
+
+
+
     .status-icon {
         color: rgb(131, 0, 0);
         height: 21px;

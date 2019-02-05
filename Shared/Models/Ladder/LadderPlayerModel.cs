@@ -7,13 +7,11 @@ namespace Shared.Models
     [Serializable]
     public class LadderPlayerModel
     {
-        [Key]
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public int Id { get; set; }
         public string Name { get; set; }
         public int Level { get; set; }
         public bool Online { get; set; }
         public bool Dead { get; set; }
+        public int Challenges { get; set; }
         public string Account { get; set; }
         public long Experience { get; set; }
         public long ExperiencePerHour { get; set; }
@@ -27,22 +25,17 @@ namespace Shared.Models
     [Serializable]
     public class LadderPlayerDepthModel
     {
-        [Key]
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public int Id { get; set; }
         public int Solo { get; set; }
+        public int SoloRank{ get; set; }
         public int Group { get; set; }
+        public int GroupRank { get; set; }
     }
     
     [Serializable]
     public class LadderPlayerRankModel
     {
-        [Key]
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public int Id { get; set; }
         public int Overall { get; set; }
         public int Class { get; set; }
-        public int Depth { get; set; }
     }
 
 
