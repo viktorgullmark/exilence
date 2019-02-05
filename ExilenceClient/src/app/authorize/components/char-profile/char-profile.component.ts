@@ -10,7 +10,6 @@ import { SessionService } from '../../../shared/providers/session.service';
 import { CharEquipmentComponent } from './char-equipment/char-equipment.component';
 import { Subscription } from 'rxjs/internal/Subscription';
 import { AccountService } from '../../../shared/providers/account.service';
-import { CharMapsComponent } from './char-maps/char-maps.component';
 
 @Component({
   selector: 'app-char-profile',
@@ -23,7 +22,6 @@ export class CharProfileComponent implements OnInit, OnDestroy {
   @Input() localProfile = false;
   @ViewChild('subTabGroup') subTabGroup: MatTabGroup;
   @ViewChild('equipmentTab') equipmentTab: MatTab;
-  @ViewChild('charMaps') charMaps: CharMapsComponent;
   @ViewChild('charEquipment') charEquipment: CharEquipmentComponent;
 
   selectedIndex = 0;
@@ -93,12 +91,6 @@ export class CharProfileComponent implements OnInit, OnDestroy {
       case 0: {
         this.charEquipment.openEquipmentDialog();
         this.analyticsService.sendScreenview('/authorized/party/player/profile');
-        break;
-      }
-      // maps
-      case 1: {
-        this.charMaps.openMapDialog();
-        this.analyticsService.sendScreenview('/authorized/party/player/maps');
         break;
       }
     }

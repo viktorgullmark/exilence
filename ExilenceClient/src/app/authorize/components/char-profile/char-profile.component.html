@@ -6,12 +6,6 @@
                 Equipment
             </ng-template>
         </mat-tab>
-        <mat-tab #mapTab id="mapTab" [disabled]="localProfile">
-            <ng-template mat-tab-label>
-                <mat-icon class="tab-icon">map</mat-icon>
-                Areas
-            </ng-template>
-        </mat-tab>
     </mat-tab-group>
 </div>
 
@@ -20,9 +14,4 @@
     <app-char-equipment #charEquipment [items]="player?.character?.items"></app-char-equipment>
     <button mat-raised-button color="primary" (click)="goToProfile()" class="profile-link" type="button">Go to profile</button>
     <app-char-inventory [topMargin]="-2" [items]="player?.character?.items"></app-char-inventory>
-</div>
-
-<!-- tab MAPS -->
-<div class="tab-content" [hidden]="selectedIndex != 1 || localProfile">
-    <app-char-maps #charMaps *ngIf="!localProfile" [player]="player"></app-char-maps>  
 </div>
