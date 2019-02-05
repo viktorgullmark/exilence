@@ -7,6 +7,14 @@ All notable changes to this project will be documented in this file.
     - To let users spectate your group, share the link in the top-right corner
 - Added a ladder-overview tab, which replaces the smaller variant
 - Added a area-overview tab, which replaces the smaller variant
+- Added the following columns to the ladder-table
+    - Challenges
+    - Class
+    - Class rank
+    - Depth
+    - Depth rank
+    - Depth solo
+    - Depth solo rank
 
 ### Changed
 - Reworked how the ladder is parsed, resulting in more frequent updates
