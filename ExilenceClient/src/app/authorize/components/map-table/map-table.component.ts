@@ -7,6 +7,7 @@ import { Player } from '../../../shared/interfaces/player.interface';
 import { PartyService } from '../../../shared/providers/party.service';
 import { MapService } from '../../../shared/providers/map.service';
 import { Subscription } from 'rxjs/internal/Subscription';
+import { Party } from '../../../shared/interfaces/party.interface';
 
 @Component({
   selector: 'app-map-table',
@@ -14,15 +15,17 @@ import { Subscription } from 'rxjs/internal/Subscription';
   styleUrls: ['./map-table.component.scss']
 })
 export class MapTableComponent implements OnInit, OnDestroy {
-  @Input() player: Player;
+
   @Output() filtered: EventEmitter<any> = new EventEmitter;
   displayedColumns: string[] = ['timestamp', 'name', 'tier', 'time'];
   dataSource = [];
   searchText = '';
   filteredArr = [];
   source: any;
-  private selectedPlayerSub: Subscription;
-
+  party: Party;
+  private selectedFilterValueSub: Subscription;
+  private partySub: Subscription;
+  public selectedPlayerValue: any;
   @ViewChild(MatSort) sort: MatSort;
   @ViewChild(MatPaginator) paginator: MatPaginator;
 
@@ -30,28 +33,72 @@ export class MapTableComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    if (this.player.account === this.partyService.currentPlayer.account) {
-      this.updateTable(this.mapService.localPlayerAreas);
-    } else {
-      this.updateTable(this.player.pastAreas);
-    }
-    this.selectedPlayerSub = this.partyService.selectedPlayer.subscribe(res => {
-      if (res !== undefined) {
-        this.player = res;
-        this.dataSource = [];
-        if (res.pastAreas !== null && this.player.account !== this.partyService.currentPlayer.account) {
-          this.updateTable(res.pastAreas);
-        } else if (this.player.account === this.partyService.currentPlayer.account) {
-          this.updateTable(this.mapService.localPlayerAreas);
+    this.partySub = this.partyService.partyUpdated.subscribe(party => {
+      if (party !== undefined) {
+        this.party = party;
+
+        let foundPlayer = this.party.players.find(x => x.character !== null &&
+          x.character.name === this.selectedPlayerValue);
+
+        // temporary check
+        if (this.partyService.selectedFilterValue === 'All players') {
+          this.selectedPlayerValue = this.getPlayers()[0].character.name;
+        } else if (foundPlayer !== undefined) {
+          this.selectedPlayerValue = this.partyService.selectedFilterValue;
+        } else {
+          this.selectedPlayerValue = this.getPlayers()[0].character.name;
         }
-        this.filter();
+
+        foundPlayer = this.party.players.find(x => x.character !== null &&
+          x.character.name === this.selectedPlayerValue);
+
+        this.dataSource = [];
+        if (foundPlayer !== undefined) {
+          if (foundPlayer.ladderInfo !== null && foundPlayer.ladderInfo !== undefined) {
+            if (foundPlayer.account === this.partyService.currentPlayer.account) {
+              this.updateTable(this.mapService.localPlayerAreas);
+            } else {
+              this.updateTable(foundPlayer.pastAreas);
+            }
+          }
+          this.filter();
+        }
+      }
+    });
+    this.selectedFilterValueSub = this.partyService.selectedFilterValueSub.subscribe(res => {
+      if (res !== undefined) {
+        if (this.partyService.selectedFilterValue === 'All players') {
+          this.selectedPlayerValue = this.getPlayers()[0].character.name;
+        } else {
+          this.selectedPlayerValue = this.partyService.selectedFilterValue;
+        }
+        const foundPlayer = this.party.players.find(x => x.character !== null &&
+          x.character.name === this.selectedPlayerValue);
+        this.dataSource = [];
+        if (foundPlayer !== undefined) {
+          if (foundPlayer.ladderInfo !== null && foundPlayer.ladderInfo !== undefined) {
+            if (foundPlayer.account === this.partyService.currentPlayer.account) {
+              this.updateTable(this.mapService.localPlayerAreas);
+            } else {
+              this.updateTable(foundPlayer.pastAreas);
+            }
+          }
+          this.filter();
+        }
       }
     });
   }
 
+  getPlayers() {
+    return this.party.players.filter(x => x.character !== null);
+  }
+
   ngOnDestroy() {
-    if (this.selectedPlayerSub !== undefined) {
-      this.selectedPlayerSub.unsubscribe();
+    if (this.selectedFilterValueSub !== undefined) {
+      this.selectedFilterValueSub.unsubscribe();
+    }
+    if (this.partySub !== undefined) {
+      this.partySub.unsubscribe();
     }
   }
 

@@ -12,6 +12,7 @@ import { SettingsService } from '../../shared/providers/settings.service';
 import { StateService } from '../../shared/providers/state.service';
 import { PartySummaryComponent } from './party-summary/party-summary.component';
 import { LadderSummaryComponent } from './ladder-summary/ladder-summary.component';
+import { AreaSummaryComponent } from './area-summary/area-summary.component';
 
 @Component({
   selector: 'app-party',
@@ -24,6 +25,7 @@ export class PartyComponent implements OnInit, OnDestroy {
   @ViewChild('tabGroup') tabGroup: MatTabGroup;
   @ViewChild('tabSummary') tabSummary: PartySummaryComponent;
   @ViewChild('tabLadder') tabLadder: LadderSummaryComponent;
+  @ViewChild('tabArea') tabArea: AreaSummaryComponent;
 
   private selectedPlayerSub: Subscription;
   private playerSub: Subscription;

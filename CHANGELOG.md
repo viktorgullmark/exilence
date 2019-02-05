@@ -6,12 +6,22 @@ All notable changes to this project will be documented in this file.
 - Added a spectator-mode, available on the web (http://exilence.app)
     - To let users spectate your group, share the link in the top-right corner
 - Added a ladder-overview tab, which replaces the smaller variant
+- Added a area-overview tab, which replaces the smaller variant
+- Added the following columns to the ladder-table
+    - Challenges
+    - Class
+    - Class rank
+    - Depth
+    - Depth rank
+    - Depth solo
+    - Depth solo rank
 
 ### Changed
 - Reworked how the ladder is parsed, resulting in more frequent updates
 
 ### Removed
 - Removed the smaller variant of the ladder-tab
+- Removed the smaller variant of the area-tab
 
 ## [0.9.15] - 2019-01-29
 - Fixed a bug where some buttons were incorrectly hidden in the currency-tab

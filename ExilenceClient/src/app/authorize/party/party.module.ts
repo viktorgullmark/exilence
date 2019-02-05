@@ -8,6 +8,7 @@ import { PlayerListModule } from '../components/player-list/player-list.module';
 import { PartySummaryModule } from './party-summary/party-summary.module';
 import { PartyComponent } from './party.component';
 import { LadderSummaryModule } from './ladder-summary/ladder-summary.module';
+import { AreaSummaryModule } from './area-summary/area-summary.module';
 
 
 @NgModule({
@@ -19,7 +20,8 @@ import { LadderSummaryModule } from './ladder-summary/ladder-summary.module';
     MatTabsModule,
     MatIconModule,
     PartySummaryModule,
-    LadderSummaryModule
+    LadderSummaryModule,
+    AreaSummaryModule
   ],
   declarations: [PartyComponent],
   providers: []
