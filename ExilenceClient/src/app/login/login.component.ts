@@ -507,7 +507,7 @@ export class LoginComponent implements OnInit, OnDestroy {
 
             if (exists) {
                 this.partyService.joinParty('', spectatorCode, player);
-                this.router.navigate(['/authorized/party']);
+                this.router.navigate(['/authorized/party'], { skipLocationChange: true });
             } else {
                 this.groupNoExists = true;
                 this.providedSpectatorCode = undefined;
