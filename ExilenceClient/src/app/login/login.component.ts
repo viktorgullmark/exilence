@@ -22,7 +22,7 @@ import { SessionService } from '../shared/providers/session.service';
 import { SettingsService } from '../shared/providers/settings.service';
 import { ErrorMessage } from '../shared/interfaces/error-message.interface';
 import { ServerMessageDialogComponent } from '../authorize/components/server-message-dialog/server-message-dialog.component';
-
+import { Location } from '@angular/common';
 import * as Sentry from '@sentry/browser';
 import { PartyService } from '../shared/providers/party.service';
 
@@ -85,7 +85,8 @@ export class LoginComponent implements OnInit, OnDestroy {
         private mapService: MapService,
         private dialog: MatDialog,
         private route: ActivatedRoute,
-        private ngZone: NgZone
+        private ngZone: NgZone,
+        private location: Location
     ) {
         if (this.electronService.isElectron()) {
             this.lineReader = window.require('read-last-lines');
@@ -504,7 +505,7 @@ export class LoginComponent implements OnInit, OnDestroy {
         } as Player;
 
         this.partyService.checkIfPartyExists(spectatorCode).then(exists => {
-
+            this.location.go('/spectate/' + spectatorCode);
             if (exists) {
                 this.partyService.joinParty('', spectatorCode, player);
                 this.router.navigate(['/authorized/party'], { skipLocationChange: true });
