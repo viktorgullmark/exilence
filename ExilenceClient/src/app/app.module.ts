@@ -33,9 +33,9 @@ import { LogMonitorService } from './shared/providers/log-monitor.service';
 import { LogService } from './shared/providers/log.service';
 import { MapService } from './shared/providers/map.service';
 import { NinjaService } from './shared/providers/ninja.service';
+import { PartyService } from './shared/providers/party.service';
 import { SessionService } from './shared/providers/session.service';
 import { SettingsService } from './shared/providers/settings.service';
-import { PartyService } from './shared/providers/party.service';
 import { StateService } from './shared/providers/state.service';
 
 // AoT requires an exported function for factories

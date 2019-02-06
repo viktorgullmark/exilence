@@ -25,7 +25,7 @@
     "postinstall": "node patch.js && npx electron-builder install-app-deps",
     "ng": "ng",
     "start": "npm-run-all -p ng:serve electron:serve",
-    "build": "npm run electron:tsc && ng build",
+    "build": "npm run electron:tsc && ng build --base-href .",
     "build:prod": "npm run build -- -c production",
     "ng:serve": "ng serve",
     "electron:tsc": "tsc main.ts",
