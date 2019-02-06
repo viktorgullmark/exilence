@@ -62,7 +62,6 @@ export function HttpLoaderFactory(http: HttpClient) {
     HttpClientModule,
     AppRoutingModule,
     DisconnectedModule,
-    GroupNamePipe,
     BrowserAnimationsModule,
     ContextMenuModule.forRoot(),
     TranslateModule.forRoot({
