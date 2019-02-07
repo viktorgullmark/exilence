@@ -34,14 +34,12 @@ namespace Shared.Repositories
                     leagues.Add(league);
                 }
             }
-
             return leagues;
         }
 
         public async Task<LadderStoreModel> GetLeagueLadder(string leagueName)
         {
             var compressedLeague = await _cache.GetAsync<string>($"ladder:{leagueName}");
-
             if (compressedLeague != null)
             {
                 var league = CompressionHelper.Decompress<LadderStoreModel>(compressedLeague);
@@ -56,7 +54,7 @@ namespace Shared.Repositories
             {
                 var oldCompressedLeague = await _cache.GetAsync<string>($"ladder:{league}");
                 var leagueLadder = CompressionHelper.Decompress<LadderStoreModel>(oldCompressedLeague);
-                leagueLadder.Finished = DateTime.Now;
+                leagueLadder.Finished = DateTime.UtcNow;
                 leagueLadder.Running = false;
                 leagueLadder.Ladder = ladder;
                 var newCompressedLeague = CompressionHelper.Compress<LadderStoreModel>(leagueLadder);
@@ -83,7 +81,7 @@ namespace Shared.Repositories
             if (league != null)
             {
                 league.Running = true;
-                league.Started = DateTime.Now;
+                league.Started = DateTime.UtcNow;
                 var newCompressedLeague = CompressionHelper.Compress<LadderStoreModel>(league);
                 await _cache.SetAsync<string>($"ladder:{leagueName}", newCompressedLeague);
             }

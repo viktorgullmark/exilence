@@ -13,6 +13,7 @@ namespace LadderParser.Services
         public ExternalService(HttpClient httpClient)
         {
             _httpClient = httpClient;
+            //_httpClient.DefaultRequestHeaders.Add("Cookie", "POESESSID=XXXXXXXX");
         }
 
         public async Task<string> ExecuteGetAsync(string url)

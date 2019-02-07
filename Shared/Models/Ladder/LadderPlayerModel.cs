@@ -1,6 +1,5 @@
-﻿using System;
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
+﻿using Shared.Models.Ladder;
+using System;
 
 namespace Shared.Models
 {
@@ -20,17 +19,46 @@ namespace Shared.Models
         public string Twitch { get; set; }
         public string Class { get; set; }
         public DateTime Updated { get; set; }
+
+        public LadderPlayerModel()
+        {
+
+        }
+
+        public LadderPlayerModel(LadderApiEntry entry)
+        {
+            Name = entry.Character.Name;
+            Level = entry.Character.Level;
+            Online = entry.Online;
+            Dead = entry.Dead;
+            Challenges = entry.Account.Challenges.Total;
+            Account = entry.Account.Name;
+            Experience = entry.Character.Experience;
+            ExperiencePerHour = 0;
+            Rank = new LadderPlayerRankModel()
+            {
+                Overall = entry.Rank
+            };
+            Depth = new LadderPlayerDepthModel()
+            {
+                Solo = entry.Character.Depth != null ? entry.Character.Depth.Solo : 0,
+                Group = entry.Character.Depth != null ? entry.Character.Depth.@default : 0
+            };
+            Twitch = entry.Account.Twitch?.Name;
+            Class = entry.Character.Class;
+            Updated = DateTime.Now;
+        }
     }
 
     [Serializable]
     public class LadderPlayerDepthModel
     {
         public int Solo { get; set; }
-        public int SoloRank{ get; set; }
+        public int SoloRank { get; set; }
         public int Group { get; set; }
         public int GroupRank { get; set; }
     }
-    
+
     [Serializable]
     public class LadderPlayerRankModel
     {

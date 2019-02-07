@@ -92,6 +92,13 @@ export class LadderTableComponent implements OnInit, OnDestroy {
     setTimeout(res => {
       this.filteredArr = [...this.dataSource];
       this.source = new MatTableDataSource(this.filteredArr);
+      this.source.sortingDataAccessor = (item, property) => {
+        switch (property) {
+          case 'level': return item.experience;
+          case 'class': return item.rank.class;
+          default: return item[property];
+        }
+      };
       this.source.sort = this.sort;
       this.source.paginator = this.paginator;
     }, 0);

@@ -34,70 +34,54 @@ namespace LadderParser.Services
             var leagues = await _redisRepository.GetAllLeaguesLadders();
             if (leagues != null)
             {
-                var anyRunning = leagues.Any(t => t.Running);
-                var pendingLeague = leagues.OrderByDescending(t => t.Finished).LastOrDefault();
+                var pendingLeague = leagues.Where(t => !t.Running && t.Finished < DateTime.UtcNow.AddMinutes(-1)).OrderByDescending(t => t.Finished).LastOrDefault();
 
-                if (!anyRunning)
+                if (pendingLeague != null)
                 {
-                    if (pendingLeague != null)
-                    {
-                        await UpdateLadder(pendingLeague.Name);
-                    }
+                    await UpdateLadder(pendingLeague.Name);
                 }
             }
         }
 
         private async Task UpdateLadder(string leagueName)
         {
+            Log($"Starting to fetch {leagueName} ladder");
             await _redisRepository.SetLeagueLadderRunning(leagueName);
 
             var league = await _redisRepository.GetLeagueLadder(leagueName);
             var oldLadder = league.Ladder;
             var newLadder = new List<LadderPlayerModel>();
+            var sortModes = new List<string>() { null, "depth", "depthsolo" };
+            var pages = Enumerable.Range(0, 75);
 
-            var pages = Enumerable.Range(0, 25);
-            using (var rateGate = new RateGate(2, TimeSpan.FromSeconds(1)))
+            using (var rateGate = new RateGate(5, TimeSpan.FromMilliseconds(5500)))
             {
-                foreach (int page in pages)
+                foreach (var sortMode in sortModes)
                 {
-                    await rateGate.WaitToProceed();
-                    LadderApiResponse result = await FetchLadderApiPage(leagueName, page);
-                    if (result != null)
+                    var sortNiceName = sortMode ?? "exp";
+                    Log($"Using mode: {sortNiceName}");
+
+                    foreach (int page in pages)
                     {
-                        var LadderPlayerList = result.Entries.Select(t => new LadderPlayerModel()
+                        await rateGate.WaitToProceed();
+                        LadderApiResponse result = await FetchLadderApiPage(leagueName, page, sortMode);
+                        if (result != null)
                         {
-                            Name = t.Character.Name,
-                            Level = t.Character.Level,
-                            Online = t.Online,
-                            Dead = t.Dead,
-                            Challenges = t.Account.Challenges.Total,
-                            Account = t.Account.Name,
-                            Experience = t.Character.Experience,
-                            ExperiencePerHour = 0,
-                            Rank = new LadderPlayerRankModel()
+                            var LadderPlayerList = result.Entries.
+                                Where(t => !newLadder.Any(x => x.Name == t.Character.Name))
+                                .Select(t => new LadderPlayerModel(t)).ToList();
+
+                            newLadder.AddRange(LadderPlayerList);
+                            if (newLadder.Count == result.Total || result.Entries.Count == 0)
                             {
-                                Overall = t.Rank
-                            },
-                            Depth = new LadderPlayerDepthModel()
-                            {
-                                Solo = t.Character.Depth != null ? t.Character.Depth.Solo : 0,
-                                Group = t.Character.Depth != null ? t.Character.Depth.@default : 0
-                            },
-                            Twitch = t.Account.Twitch?.Name,
-                            Class = t.Character.Class,
-                            Updated = DateTime.Now
-                        }).ToList();
-                        // Convert result to LadderPlayer model here
-                        newLadder.AddRange(LadderPlayerList);
-                        if (newLadder.Count == result.Total || result.Entries.Count == 0)
+                                break;
+                            }
+                        }
+                        else
                         {
+                            await _redisRepository.RemoveLeagueLadder(leagueName);
                             break;
                         }
-                    }
-                    else
-                    {
-                        await _redisRepository.RemoveLeagueLadder(leagueName);
-                        break;
                     }
                 }
             }
@@ -107,11 +91,14 @@ namespace LadderParser.Services
                 newLadder = CalculateStatistics(oldLadder, newLadder);
                 await _redisRepository.UpdateLeagueLadder(leagueName, newLadder);
             }
+            Log($"Finished fetching {leagueName} ladder.");
+            Log($"--------------------------------------");
         }
 
         private List<LadderPlayerModel> CalculateStatistics(List<LadderPlayerModel> oldLadder, List<LadderPlayerModel> newLadder)
         {
-            foreach (var newEntry in newLadder)
+            Log($"Started calculating statistics.");
+            Parallel.ForEach(newLadder, newEntry =>
             {
                 newEntry.Depth.GroupRank = newLadder.Count(t => t.Depth.Group > newEntry.Depth.Group) + 1;
                 newEntry.Depth.SoloRank = newLadder.Count(t => t.Depth.Solo > newEntry.Depth.Solo) + 1;
@@ -129,15 +116,22 @@ namespace LadderParser.Services
                         newEntry.ExperiencePerHour = (long)gainOverTime;
                     }
                 }
-            }
+            });
+            Log($"Finished calculating statistics.");
             return newLadder;
         }
 
-        public async Task<LadderApiResponse> FetchLadderApiPage(string league, int page)
+        public async Task<LadderApiResponse> FetchLadderApiPage(string league, int page, string sort = null)
         {
+            var sortNiceName = sort ?? "exp";
+            Log($"Fetching {league} ladder, sort: {sortNiceName}, page: {page}");
             var offset = page * 200;
             league = HttpUtility.UrlEncode(league);
             var urlParams = $"offset={offset}&limit=200&id={league}&type=league";
+            if (sort != null)
+            {
+                urlParams += $"&sort={sort}";
+            }
             var url = $"{LadderUrl}?{urlParams}";
             var apiResponse = await HandleLadderRequest(url);
             return apiResponse;
@@ -151,6 +145,11 @@ namespace LadderParser.Services
                 return JsonConvert.DeserializeObject<LadderApiResponse>(json);
             }
             return null;
+        }
+
+        private void Log(string message)
+        {
+            Console.WriteLine($"{DateTime.Now.ToShortTimeString()}: {message}");
         }
 
 

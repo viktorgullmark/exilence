@@ -46,11 +46,11 @@ namespace Exilence.Services
                 {
                     if (full)
                     {
-                        return league.Ladder.OrderBy(t => t.Rank.Overall).ToList();
+                        return league.Ladder.OrderByDescending(t => t.Experience).ToList();
                     }
                     else
                     {
-                        return league.Ladder.OrderBy(t => t.Rank.Overall).Take(14).ToList();
+                        return league.Ladder.OrderByDescending(t => t.Experience).Take(14).ToList();
                     }
                 }
             }
@@ -81,9 +81,9 @@ namespace Exilence.Services
 
                     var ladderList = new List<LadderPlayerModel>();
                     ladderList.AddRange(before);
-                    ladderList.AddRange(after);
                     ladderList.Add(characterOnLadder);
-                    return ladderList.OrderBy(t => t.Rank.Overall).ToList();
+                    ladderList.AddRange(after);
+                    return ladderList.OrderBy(t => t.Experience).ToList();
                 }
             }
 
