@@ -70,7 +70,7 @@ export class PartyService implements OnDestroy {
   private playerGainSub: Subscription;
 
   public isConnecting = false;
-  private playerLadders: Array<PlayerLadder>;
+  private playerLadders: Array<PlayerLadder> = [];
 
   constructor(
     private router: Router,
@@ -160,6 +160,10 @@ export class PartyService implements OnDestroy {
           const spectators = this.updateSpectatorCount(this.party.players);
           this.stateService.dispatch({ key: 'spectatorCount', value: spectators });
 
+          if (this.playerLadders.find(x => x.name === player.character.league) === undefined) {
+            this.getLadderForLeague(player.character.league);
+          }
+
           this.partyUpdated.next(this.party);
         });
       });
@@ -205,6 +209,10 @@ export class PartyService implements OnDestroy {
 
         const spectators = this.updateSpectatorCount(this.party.players);
         this.stateService.dispatch({ key: 'spectatorCount', value: spectators });
+
+        if (this.playerLadders.find(x => x.name === player.character.league) === undefined) {
+          this.getLadderForLeague(player.character.league);
+        }
 
         this.logService.log('player joined:', player);
       });

@@ -49,7 +49,7 @@ namespace Exilence.Hubs
             return party != null;
         }
 
-        public async Task<string> GetLaddderForLeague(string league)
+        public async Task<string> GetLadderForLeague(string league)
         {
             var ladder = await _ladderService.GetLadderForLeague(league);
             return CompressionHelper.Compress(ladder);

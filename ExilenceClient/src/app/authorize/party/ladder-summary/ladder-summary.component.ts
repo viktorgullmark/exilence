@@ -20,7 +20,7 @@ export class LadderSummaryComponent implements OnInit, OnDestroy {
   private selectedFilterValueSub: Subscription;
   private partySub: Subscription;
 
-  private playerLadders: Array<PlayerLadder>;
+  private playerLadders: Array<PlayerLadder> = [];
 
   public selectedLocalValue: string;
 

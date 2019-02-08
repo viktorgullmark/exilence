@@ -21,7 +21,7 @@ export class LadderTableComponent implements OnInit, OnDestroy {
   party: Party;
   private selectedFilterValueSub: Subscription;
   private partySub: Subscription;
-  private playerLadders: Array<PlayerLadder>;
+  private playerLadders: Array<PlayerLadder> = [];
   public selectedPlayerValue: any;
   @ViewChild(MatSort) sort: MatSort;
   @ViewChild(MatPaginator) paginator: MatPaginator;

@@ -19,7 +19,7 @@ export interface StateEntry {
 export class StateService {
 
   private stateSubject = new Subject();
-  private initialState: StateObject = {};
+  private initialState: StateObject = { playerLadders: [] };
 
   constructor(
     private settingsService: SettingsService
