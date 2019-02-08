@@ -49,6 +49,12 @@ namespace Exilence.Hubs
             return party != null;
         }
 
+        public async Task<List<LadderPlayerModel>> GetLaddderForLeague(string league)
+        {
+            var ladder = await _ladderService.GetLadderForLeague(league);
+            return ladder;
+        }
+
         public async Task JoinParty(string partyName, string spectatorCode, string playerObj)
         {
             // if spectatorCode is empty, fetch it
@@ -62,15 +68,6 @@ namespace Exilence.Hubs
             }
 
             var player = CompressionHelper.Decompress<PlayerModel>(playerObj);
-            if (!player.IsSpectator)
-            {
-                var ladder = await _ladderService.GetLadderForPlayer(player.Character.League, player.Character.Name);
-                if (ladder == null)
-                {
-                    ladder = await _ladderService.GetLadderForLeague(player.Character.League);
-                }
-                player.LadderInfo = ladder;
-            }
 
             // set initial id of player
             player.ConnectionID = Context.ConnectionId;
@@ -227,13 +224,6 @@ namespace Exilence.Hubs
 
             if (party != null)
             {
-                var ladder = await _ladderService.GetLadderForPlayer(player.Character.League, player.Character.Name);
-                if (ladder == null)
-                {
-                    ladder = await _ladderService.GetLadderForLeague(player.Character.League);
-                }
-                player.LadderInfo = ladder;
-
                 var index = party.Players.IndexOf(party.Players.FirstOrDefault(x => x.ConnectionID == player.ConnectionID));
                 if (index != -1)
                 {
