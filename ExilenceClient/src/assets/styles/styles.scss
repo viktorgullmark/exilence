@@ -259,9 +259,7 @@ a {
         justify-content: flex-start;
         align-items: flex-start;
 
-        overflow-y: auto;
-
-        > *:not(router-outlet):not(mat-progress-bar) {
+        > *:not(router-outlet):not(mat-progress-bar):not(.party-view) {
             width: 100%;
             // height: $content-height;
         }
