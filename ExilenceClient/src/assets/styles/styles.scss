@@ -259,9 +259,11 @@ a {
         justify-content: flex-start;
         align-items: flex-start;
 
+        overflow-y: auto;
+
         > *:not(router-outlet):not(mat-progress-bar) {
             width: 100%;
-            height: $content-height;
+            // height: $content-height;
         }
         > mat-progress-bar {
             position: absolute;
