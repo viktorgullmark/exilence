@@ -529,7 +529,6 @@ export class PartyService implements OnDestroy {
   }
 
   public refreshLaddersForParty() {
-    debugger;
     // filter out leagues that are not in the party (in case players left)
     const leaguesToUpdate = this.party.players.map(x => x.character.league);
     this.playerLadders.filter(x => leaguesToUpdate.find(y => y === x.name) !== undefined);
