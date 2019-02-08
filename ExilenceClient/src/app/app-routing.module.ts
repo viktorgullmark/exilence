@@ -2,15 +2,13 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 
 import { AuthorizeComponent } from './authorize/authorize.component';
-import { PartyComponent } from './authorize/party/party.component';
 import { DashboardComponent } from './authorize/dashboard/dashboard.component';
-import { LoginComponent } from './login/login.component';
-import { NotFoundComponent } from './not-found/not-found.component';
-import { CanActivateAuthorized } from './shared/guards/authorized.guard';
 import { InspectPlayersComponent } from './authorize/inspect-players/inspect-players.component';
+import { PartyComponent } from './authorize/party/party.component';
 import { SettingsComponent } from './authorize/settings/settings.component';
 import { DisconnectedComponent } from './disconnected/disconnected.component';
-import { FaqComponent } from './authorize/faq/faq.component';
+import { LoginComponent } from './login/login.component';
+import { NotFoundComponent } from './not-found/not-found.component';
 
 const isElectron = window && window.process && window.process.type;
 
@@ -22,7 +20,6 @@ const routes: Routes = [
             { path: 'party', component: PartyComponent },
             { path: 'inspect-players', component: InspectPlayersComponent },
             { path: 'settings', component: SettingsComponent },
-            { path: 'faq', component: FaqComponent },
             { path: '', redirectTo: '/authorized/dashboard', pathMatch: 'full' }
         ]
     },

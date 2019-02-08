@@ -39,7 +39,6 @@ import { SettingsModule } from './settings/settings.module';
     InspectPlayersModule,
     MatSidenavModule,
     SettingsModule,
-    FaqModule,
     MatCheckboxModule,
     MatGridListModule,
     ServerMessageDialogModule
