@@ -32,6 +32,15 @@ export class LadderTableComponent implements OnInit, OnDestroy {
 
     this.stateService.state$.subscribe(state => {
       this.playerLadders = 'playerLadders'.split('.').reduce((o, i) => o[i], state);
+
+      // if the selection is the right one, update table directly when state is updated
+      const foundPlayer = this.party.players.find(x => x.character !== null &&
+        x.character.name === this.selectedPlayerValue);
+        const ladder = this.playerLadders.find(x => x.name === foundPlayer.character.league);
+        if (ladder !== undefined) {
+          this.updateTable(ladder.players);
+        }
+        this.init();
     });
 
     this.partySub = this.partyService.partyUpdated.subscribe(party => {

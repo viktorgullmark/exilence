@@ -330,6 +330,9 @@ export class PartyService implements OnDestroy {
       this.handleAreaEvent(msg);
     });
 
+    setInterval(() => {
+      this.refreshLaddersForParty();
+    }, 60 * 1000);
   }
 
   ngOnDestroy() {
@@ -509,17 +512,32 @@ export class PartyService implements OnDestroy {
     return this._hubConnection.invoke('GetLadderForLeague', league).then((response) => {
       this.electronService.decompress(response, (ladder: LadderPlayer[]) => {
 
-        // update ladder in state (fugly)
-        const foundLadder = this.playerLadders.find(x => x.name === league);
-        if (foundLadder !== undefined) {
-          const ladderIndex = this.playerLadders.indexOf(foundLadder);
-          this.playerLadders[ladderIndex] = { name: league, players: ladder } as PlayerLadder;
-        } else {
-          this.playerLadders.push({ name: league, players: ladder } as PlayerLadder);
-        }
+        if (ladder !== null) {
+          // update ladder in state (fugly)
+          const foundLadder = this.playerLadders.find(x => x.name === league);
+          if (foundLadder !== undefined && foundLadder !== null) {
+            const ladderIndex = this.playerLadders.indexOf(foundLadder);
+            this.playerLadders[ladderIndex] = { name: league, players: ladder } as PlayerLadder;
+          } else {
+            this.playerLadders.push({ name: league, players: ladder } as PlayerLadder);
+          }
 
-        this.stateService.dispatch({ key: 'playerLadders', value: this.playerLadders });
+          this.stateService.dispatch({ key: 'playerLadders', value: this.playerLadders });
+        }
       });
+    });
+  }
+
+  public refreshLaddersForParty() {
+    debugger;
+    // filter out leagues that are not in the party (in case players left)
+    const leaguesToUpdate = this.party.players.map(x => x.character.league);
+    this.playerLadders.filter(x => leaguesToUpdate.find(y => y === x.name) !== undefined);
+    this.playerLadders.forEach(x => {
+      // separate requests so we dont lag the client
+      setTimeout(() => {
+        this.getLadderForLeague(x.name);
+      }, 5000);
     });
   }
 
