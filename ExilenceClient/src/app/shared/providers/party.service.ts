@@ -536,7 +536,7 @@ export class PartyService implements OnDestroy {
       // separate requests so we dont lag the client
       setTimeout(() => {
         this.getLadderForLeague(x.name);
-      }, 5000);
+      }, 10000);
     });
   }
 
