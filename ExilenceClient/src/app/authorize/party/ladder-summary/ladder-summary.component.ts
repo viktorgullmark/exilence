@@ -96,9 +96,9 @@ export class LadderSummaryComponent implements OnInit, OnDestroy {
 
       // update values for entire party, or a specific player, depending on selection
       if (this.partyService.selectedFilterValue === 'All players' || this.partyService.selectedFilterValue === undefined) {
-        // TODO: update data
+        this.table.updateTable(this.partyService.currentPlayer.ladderInfo);
       } else if (foundPlayer !== undefined) {
-        // TODO: update data
+        this.table.updateTable(foundPlayer.ladderInfo);
       }
     }
   }

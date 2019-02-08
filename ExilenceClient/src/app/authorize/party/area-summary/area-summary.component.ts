@@ -9,6 +9,9 @@ import { MapTableComponent } from '../../components/map-table/map-table.componen
 import * as moment from 'moment';
 import { ExportToCsv } from 'export-to-csv';
 import { MapService } from '../../../shared/providers/map.service';
+import { SettingsService } from '../../../shared/providers/settings.service';
+import { AlertService } from '../../../shared/providers/alert.service';
+import { AccountService } from '../../../shared/providers/account.service';
 
 @Component({
   selector: 'app-area-summary',
@@ -34,7 +37,10 @@ export class AreaSummaryComponent implements OnInit, OnDestroy {
   constructor(
     @Inject(FormBuilder) fb: FormBuilder,
     public partyService: PartyService,
-    public mapService: MapService
+    public mapService: MapService,
+    private settingsService: SettingsService,
+    private alertService: AlertService,
+    private accountService: AccountService
   ) {
     this.form = fb.group({
       searchText: ['']
@@ -47,6 +53,12 @@ export class AreaSummaryComponent implements OnInit, OnDestroy {
       this.selectedLocalValue = this.partyService.selectedFilterValue;
     } else {
       this.selectedLocalValue = this.getPlayers()[0].character.name;
+    }
+
+    if (this.selectedLocalValue === this.partyService.currentPlayer.character.name) {
+      this.selfSelected = true;
+    } else {
+      this.selfSelected = false;
     }
 
     this.selectedFilterValueSub = this.partyService.selectedFilterValueSub.subscribe(res => {
@@ -98,6 +110,19 @@ export class AreaSummaryComponent implements OnInit, OnDestroy {
   getPlayers() {
     return this.partyService.party.players.filter(x => x.character !== null);
   }
+
+  resetAreaHistory() {
+    if (this.selfSelected) {
+      const emptyHistory = this.settingsService.deleteAreas();
+      this.mapService.updateLocalPlayerAreas(emptyHistory);
+      this.partyService.currentPlayer.pastAreas = emptyHistory;
+      this.mapService.loadAreasFromSettings();
+      this.accountService.player.next(this.partyService.currentPlayer);
+      this.partyService.updatePlayer(this.partyService.currentPlayer);
+      this.alertService.showAlert({ message: 'Area history was cleared', action: 'OK' });
+    }
+  }
+
   ngOnDestroy() {
     if (this.selectedFilterValueSub !== undefined) {
       this.selectedFilterValueSub.unsubscribe();
@@ -208,9 +233,13 @@ export class AreaSummaryComponent implements OnInit, OnDestroy {
 
       // update values for entire party, or a specific player, depending on selection
       if (this.partyService.selectedFilterValue === 'All players' || this.partyService.selectedFilterValue === undefined) {
-        // TODO: update data
+        this.table.updateTable(this.mapService.localPlayerAreas);
       } else if (foundPlayer !== undefined) {
-        // TODO: update data
+        if (foundPlayer.character.name === this.partyService.currentPlayer.character.name) {
+          this.table.updateTable(this.mapService.localPlayerAreas);
+        } else {
+          this.table.updateTable(foundPlayer.pastAreas);
+        }
       }
     }
   }
