@@ -9,7 +9,6 @@ namespace Exilence.Interfaces
 {
     public interface ILadderService
     {
-        Task<List<LadderPlayerModel>> GetLadderForPlayer(string league, string player);
-        Task<List<LadderPlayerModel>> GetLadderForLeague(string league, bool full = false);
+        Task<List<LadderPlayerModel>> GetLadderForLeague(string league);
     }
 }

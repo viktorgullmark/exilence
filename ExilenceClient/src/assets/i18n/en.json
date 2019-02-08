@@ -77,6 +77,10 @@
         "RESET": "Clear areas",
         "EXPORT": "Export"
     },
+    "LADDER": {
+        "SEARCH": "Filter ladder",
+        "EXPORT": "Export"
+    },
     "CURRENCY": {
         "SEARCH": "Filter currency"
     },

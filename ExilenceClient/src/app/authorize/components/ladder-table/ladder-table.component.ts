@@ -1,4 +1,4 @@
-import { Component, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit, ViewChild, EventEmitter, Output } from '@angular/core';
 import { MatSort, MatTableDataSource, MatPaginator } from '@angular/material';
 import { Subscription } from 'rxjs/internal/Subscription';
 
@@ -17,6 +17,7 @@ export class LadderTableComponent implements OnInit, OnDestroy {
   displayedColumns: string[] = ['online', 'rank', 'level', 'challenges', 'account', 'character', 'class', 'classRank', 'depthGroup', 'depthGroupRank', 'depthSolo', 'depthSoloRank'];
   dataSource = [];
   filteredArr = [];
+  searchText = '';
   source: any;
   party: Party;
   private selectedFilterValueSub: Subscription;
@@ -25,6 +26,7 @@ export class LadderTableComponent implements OnInit, OnDestroy {
   public selectedPlayerValue: any;
   @ViewChild(MatSort) sort: MatSort;
   @ViewChild(MatPaginator) paginator: MatPaginator;
+  @Output() filtered: EventEmitter<any> = new EventEmitter;
   constructor(private partyService: PartyService, private stateService: StateService) {
   }
 
@@ -41,7 +43,7 @@ export class LadderTableComponent implements OnInit, OnDestroy {
         if (ladder !== undefined) {
           this.updateTable(ladder.players);
         }
-        this.init();
+        this.filter();
       }
     });
 
@@ -70,7 +72,7 @@ export class LadderTableComponent implements OnInit, OnDestroy {
           if (ladder !== undefined) {
             this.updateTable(ladder.players);
           }
-          this.init();
+          this.filter();
         }
       }
     });
@@ -89,7 +91,7 @@ export class LadderTableComponent implements OnInit, OnDestroy {
           if (ladder !== undefined) {
             this.updateTable(ladder.players);
           }
-          this.init();
+          this.filter();
         }
       }
     });
@@ -104,13 +106,21 @@ export class LadderTableComponent implements OnInit, OnDestroy {
     }
   }
 
-  getPlayers() {
-    return this.party.players.filter(x => x.character !== null);
+  doSearch(text: string) {
+    this.searchText = text;
+
+    this.filter();
   }
 
-  init() {
+  filter() {
     setTimeout(res => {
       this.filteredArr = [...this.dataSource];
+      this.filteredArr = this.filteredArr.filter(item =>
+        Object.keys(item).some(k => item[k] != null && item[k] !== '' &&
+          item[k].toString().toLowerCase()
+            .includes(this.searchText.toLowerCase()))
+      );
+
       this.source = new MatTableDataSource(this.filteredArr);
       this.source.sortingDataAccessor = (item, property) => {
         switch (property) {
@@ -119,9 +129,15 @@ export class LadderTableComponent implements OnInit, OnDestroy {
           default: return item[property];
         }
       };
-      this.source.sort = this.sort;
       this.source.paginator = this.paginator;
+      this.source.sort = this.sort;
+      this.filtered.emit({ filteredArr: this.filteredArr, dataSource: this.dataSource });
     }, 0);
+
+  }
+
+  getPlayers() {
+    return this.party.players.filter(x => x.character !== null);
   }
 
   updateTable(playersOnLadder: LadderPlayer[]) {
