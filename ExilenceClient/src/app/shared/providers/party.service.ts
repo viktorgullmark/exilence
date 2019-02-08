@@ -512,18 +512,16 @@ export class PartyService implements OnDestroy {
     return this._hubConnection.invoke('GetLadderForLeague', league).then((response) => {
       this.electronService.decompress(response, (ladder: LadderPlayer[]) => {
 
-        if (ladder !== null) {
-          // update ladder in state (fugly)
-          const foundLadder = this.playerLadders.find(x => x.name === league);
-          if (foundLadder !== undefined && foundLadder !== null) {
-            const ladderIndex = this.playerLadders.indexOf(foundLadder);
-            this.playerLadders[ladderIndex] = { name: league, players: ladder } as PlayerLadder;
-          } else {
-            this.playerLadders.push({ name: league, players: ladder } as PlayerLadder);
-          }
-
-          this.stateService.dispatch({ key: 'playerLadders', value: this.playerLadders });
+        // update ladder in state (fugly)
+        const foundLadder = this.playerLadders.find(x => x.name === league);
+        if (foundLadder !== undefined && foundLadder !== null) {
+          const ladderIndex = this.playerLadders.indexOf(foundLadder);
+          this.playerLadders[ladderIndex] = { name: league, players: ladder } as PlayerLadder;
+        } else {
+          this.playerLadders.push({ name: league, players: ladder } as PlayerLadder);
         }
+
+        this.stateService.dispatch({ key: 'playerLadders', value: this.playerLadders });
       });
     });
   }
