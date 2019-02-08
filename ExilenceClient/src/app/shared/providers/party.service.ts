@@ -8,7 +8,7 @@ import { AppConfig } from '../../../environments/environment';
 import { AccountInfo } from '../interfaces/account-info.interface';
 import { EquipmentResponse } from '../interfaces/equipment-response.interface';
 import { Party } from '../interfaces/party.interface';
-import { Player, RecentPlayer } from '../interfaces/player.interface';
+import { Player, RecentPlayer, LadderPlayer, PlayerLadder } from '../interfaces/player.interface';
 import { AccountService } from './account.service';
 import { ExternalService } from './external.service';
 import { LogMonitorService } from './log-monitor.service';
@@ -70,6 +70,7 @@ export class PartyService implements OnDestroy {
   private playerGainSub: Subscription;
 
   public isConnecting = false;
+  private playerLadders: Array<PlayerLadder>;
 
   constructor(
     private router: Router,
@@ -108,6 +109,9 @@ export class PartyService implements OnDestroy {
     });
     this.accountInfoSub = this.accountService.accountInfo.subscribe(res => {
       this.accountInfo = res;
+    });
+    this.stateService.state$.subscribe(state => {
+      this.playerLadders = 'playerLadders'.split('.').reduce((o, i) => o[i], state);
     });
     this.initParty();
     this._hubConnection = new signalR.HubConnectionBuilder()
@@ -490,6 +494,24 @@ export class PartyService implements OnDestroy {
   public checkIfPartyExists(spectatorCode: string) {
     return this._hubConnection.invoke('PartyExists', spectatorCode).then((response) => {
       return response;
+    });
+  }
+
+  public getLadderForLeague(league: string) {
+    return this._hubConnection.invoke('GetLadderForLeague', league).then((response) => {
+      this.electronService.decompress(response, (ladder: LadderPlayer[]) => {
+
+        // update ladder in state (fugly)
+        const foundLadder = this.playerLadders.find(x => x.name === league);
+        if (foundLadder !== undefined) {
+          const ladderIndex = this.playerLadders.indexOf(foundLadder);
+          this.playerLadders[ladderIndex] = { name: league, players: ladder } as PlayerLadder;
+        } else {
+          this.playerLadders.push({ name: league, players: ladder } as PlayerLadder);
+        }
+
+        this.stateService.dispatch({ key: 'playerLadders', value: this.playerLadders });
+      });
     });
   }
 

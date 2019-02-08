@@ -54,7 +54,7 @@ export class MapTableComponent implements OnInit, OnDestroy {
 
         this.dataSource = [];
         if (foundPlayer !== undefined) {
-          if (foundPlayer.ladderInfo !== null && foundPlayer.ladderInfo !== undefined) {
+          if (foundPlayer.pastAreas !== null && foundPlayer.pastAreas !== undefined) {
             if (foundPlayer.account === this.partyService.currentPlayer.account) {
               this.updateTable(this.mapService.localPlayerAreas);
             } else {
@@ -76,7 +76,7 @@ export class MapTableComponent implements OnInit, OnDestroy {
           x.character.name === this.selectedPlayerValue);
         this.dataSource = [];
         if (foundPlayer !== undefined) {
-          if (foundPlayer.ladderInfo !== null && foundPlayer.ladderInfo !== undefined) {
+          if (foundPlayer.pastAreas !== null && foundPlayer.pastAreas !== undefined) {
             if (foundPlayer.account === this.partyService.currentPlayer.account) {
               this.updateTable(this.mapService.localPlayerAreas);
             } else {

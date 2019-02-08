@@ -50,16 +50,7 @@ export class PlayerBadgeComponent implements OnInit, OnDestroy {
   }
 
   getRanking() {
-    if (
-      this.player.ladderInfo !== null &&
-      !this.localPlayer &&
-      this.player.ladderInfo.find(t => t.name === this.player.character.name) // Since we fetch top 10 if player is not on ladder.
-    ) {
-      return this.player.ladderInfo.find(x => x.name === this.player.character.name).rank.overall;
-
-    } else {
-      return '';
-    }
+    return this.player.overallRank !== undefined ? this.player.overallRank : '';
   }
 
 }

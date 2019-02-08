@@ -2,9 +2,10 @@ import { Component, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { MatSort, MatTableDataSource, MatPaginator } from '@angular/material';
 import { Subscription } from 'rxjs/internal/Subscription';
 
-import { LadderPlayer, Player } from '../../../shared/interfaces/player.interface';
+import { LadderPlayer, Player, PlayerLadder } from '../../../shared/interfaces/player.interface';
 import { PartyService } from '../../../shared/providers/party.service';
 import { Party } from '../../../shared/interfaces/party.interface';
+import { StateService } from '../../../shared/providers/state.service';
 
 @Component({
   selector: 'app-ladder-table',
@@ -20,13 +21,19 @@ export class LadderTableComponent implements OnInit, OnDestroy {
   party: Party;
   private selectedFilterValueSub: Subscription;
   private partySub: Subscription;
+  private playerLadders: Array<PlayerLadder>;
   public selectedPlayerValue: any;
   @ViewChild(MatSort) sort: MatSort;
   @ViewChild(MatPaginator) paginator: MatPaginator;
-  constructor(private partyService: PartyService) {
+  constructor(private partyService: PartyService, private stateService: StateService) {
   }
 
   ngOnInit() {
+
+    this.stateService.state$.subscribe(state => {
+      this.playerLadders = 'playerLadders'.split('.').reduce((o, i) => o[i], state);
+    });
+
     this.partySub = this.partyService.partyUpdated.subscribe(party => {
       if (party !== undefined) {
         this.party = party;
@@ -48,8 +55,9 @@ export class LadderTableComponent implements OnInit, OnDestroy {
 
         this.dataSource = [];
         if (foundPlayer !== undefined) {
-          if (foundPlayer.ladderInfo !== null && foundPlayer.ladderInfo !== undefined) {
-            this.updateTable(foundPlayer.ladderInfo);
+          const ladder = this.playerLadders.find(x => x.name === foundPlayer.character.league);
+          if (ladder !== undefined) {
+            this.updateTable(ladder.players);
           }
           this.init();
         }
@@ -66,8 +74,9 @@ export class LadderTableComponent implements OnInit, OnDestroy {
           x.character.name === this.selectedPlayerValue);
         this.dataSource = [];
         if (foundPlayer !== undefined) {
-          if (foundPlayer.ladderInfo !== null && foundPlayer.ladderInfo !== undefined) {
-            this.updateTable(foundPlayer.ladderInfo);
+          const ladder = this.playerLadders.find(x => x.name === foundPlayer.character.league);
+          if (ladder !== undefined) {
+            this.updateTable(ladder.players);
           }
           this.init();
         }

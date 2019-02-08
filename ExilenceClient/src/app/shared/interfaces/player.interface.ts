@@ -14,12 +14,12 @@ export interface Player {
     generic: boolean;
     sessionIdProvided: boolean;
     genericHost: string;
+    overallRank: number;
     isLeader: boolean;
     isSpectator: boolean;
     netWorthSnapshots: NetWorthSnapshot[];
     areaInfo: ExtendedAreaInfo;
     pastAreas: ExtendedAreaInfo[];
-    ladderInfo: LadderPlayer[];
 }
 
 export interface RecentPlayer {
@@ -53,6 +53,11 @@ export interface LadderPlayer {
     twitch: string;
     class: string;
     updated: Date;
+}
+
+export interface PlayerLadder {
+    name: string;
+    players: LadderPlayer[];
 }
 
 
