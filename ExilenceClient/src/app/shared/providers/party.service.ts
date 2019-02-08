@@ -68,7 +68,7 @@ export class PartyService implements OnDestroy {
   private accountInfoSub: Subscription;
   private currentPlayerGainSub: Subscription;
   private playerGainSub: Subscription;
-
+  private stateSub: Subscription;
   public isConnecting = false;
   private playerLadders: Array<PlayerLadder> = [];
 
@@ -110,7 +110,7 @@ export class PartyService implements OnDestroy {
     this.accountInfoSub = this.accountService.accountInfo.subscribe(res => {
       this.accountInfo = res;
     });
-    this.stateService.state$.subscribe(state => {
+    this.stateSub = this.stateService.state$.subscribe(state => {
       this.playerLadders = 'playerLadders'.split('.').reduce((o, i) => o[i], state);
     });
     this.initParty();
@@ -348,6 +348,8 @@ export class PartyService implements OnDestroy {
       this.currentPlayerGainSub.unsubscribe();
     } if (this.playerGainSub !== undefined) {
       this.playerGainSub.unsubscribe();
+    } if (this.stateSub !== undefined) {
+      this.stateSub.unsubscribe();
     }
   }
 

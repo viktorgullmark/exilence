@@ -35,7 +35,7 @@ export class PartyComponent implements OnInit, OnDestroy {
   private tabSubscription: any;
   private spectatorCountSub: any;
   private gainHours = 1;
-
+  private stateSub: Subscription;
   public spectatorCount = 0;
 
   constructor(
@@ -55,7 +55,7 @@ export class PartyComponent implements OnInit, OnDestroy {
         this.partyService.updatePlayerGain(res, isCurrentPlayer);
       }
     });
-    this.stateService.state$.subscribe(state => {
+    this.stateSub = this.stateService.state$.subscribe(state => {
       this.spectatorCount = 'spectatorCount'.split('.').reduce((o, i) => o[i], state);
     });
 
@@ -142,6 +142,9 @@ export class PartyComponent implements OnInit, OnDestroy {
     }
     if (this.tabSubscription !== undefined) {
       this.tabSubscription.unsubscribe();
+    }
+    if (this.stateSub !== undefined) {
+      this.stateSub.unsubscribe();
     }
   }
 

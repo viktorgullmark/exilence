@@ -20,7 +20,7 @@ export class LadderSummaryComponent implements OnInit, OnDestroy {
   private party: Party;
   private selectedFilterValueSub: Subscription;
   private partySub: Subscription;
-
+  private stateSub: Subscription;
   private playerLadders: Array<PlayerLadder> = [];
 
   public selectedLocalValue: string;
@@ -38,7 +38,7 @@ export class LadderSummaryComponent implements OnInit, OnDestroy {
     });
   }
   ngOnInit() {
-    this.stateService.state$.subscribe(state => {
+    this.stateSub = this.stateService.state$.subscribe(state => {
       this.playerLadders = 'playerLadders'.split('.').reduce((o, i) => o[i], state);
     });
     // TODO: remove once ladder has been reworked
@@ -96,6 +96,9 @@ export class LadderSummaryComponent implements OnInit, OnDestroy {
     }
     if (this.partySub !== undefined) {
       this.partySub.unsubscribe();
+    }
+    if (this.stateSub !== undefined) {
+      this.stateSub.unsubscribe();
     }
   }
 

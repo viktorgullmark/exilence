@@ -26,6 +26,7 @@ export class AuthorizeComponent implements OnInit, OnDestroy {
   player: Player;
   private playerSub: Subscription;
   private serverMsgSub: Subscription;
+  private stateSub: Subscription;
   public copyText = 'Copy spectate link';
   public isCopying = false;
   public selectedGroupIndex: number;
@@ -47,7 +48,7 @@ export class AuthorizeComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    this.stateService.state$.subscribe(state => {
+    this.stateSub = this.stateService.state$.subscribe(state => {
       this.selectedGroupIndex = 'selectedGroupIndex'.split('.').reduce((o, i) => o[i], state);
     });
     this.playerSub = this.accountService.player.subscribe(res => {
@@ -86,6 +87,9 @@ export class AuthorizeComponent implements OnInit, OnDestroy {
     }
     if (this.serverMsgSub !== undefined) {
       this.serverMsgSub.unsubscribe();
+    }
+    if (this.stateService !== undefined) {
+      this.stateSub.unsubscribe();
     }
   }
 

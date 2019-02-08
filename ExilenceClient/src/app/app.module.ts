@@ -37,7 +37,6 @@ import { PartyService } from './shared/providers/party.service';
 import { SessionService } from './shared/providers/session.service';
 import { SettingsService } from './shared/providers/settings.service';
 import { StateService } from './shared/providers/state.service';
-import { GroupNamePipe } from './shared/pipes/groupname.pipe';
 
 // AoT requires an exported function for factories
 export function HttpLoaderFactory(http: HttpClient) {

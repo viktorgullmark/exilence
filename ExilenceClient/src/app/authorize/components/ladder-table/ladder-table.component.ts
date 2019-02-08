@@ -22,7 +22,9 @@ export class LadderTableComponent implements OnInit, OnDestroy {
   party: Party;
   private selectedFilterValueSub: Subscription;
   private partySub: Subscription;
+  private stateSub: Subscription;
   private playerLadders: Array<PlayerLadder> = [];
+
   public selectedPlayerValue: any;
   @ViewChild(MatSort) sort: MatSort;
   @ViewChild(MatPaginator) paginator: MatPaginator;
@@ -32,7 +34,7 @@ export class LadderTableComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
 
-    this.stateService.state$.subscribe(state => {
+    this.stateSub = this.stateService.state$.subscribe(state => {
       this.playerLadders = 'playerLadders'.split('.').reduce((o, i) => o[i], state);
       this.dataSource = [];
       // if the selection is the right one, update table directly when state is updated
@@ -103,6 +105,9 @@ export class LadderTableComponent implements OnInit, OnDestroy {
     }
     if (this.partySub !== undefined) {
       this.partySub.unsubscribe();
+    }
+    if (this.stateSub !== undefined) {
+      this.stateSub.unsubscribe();
     }
   }
 
