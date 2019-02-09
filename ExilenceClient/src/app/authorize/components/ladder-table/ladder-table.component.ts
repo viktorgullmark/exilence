@@ -117,8 +117,35 @@ export class LadderTableComponent implements OnInit, OnDestroy {
     this.filter();
   }
 
+  findSelectedPlayerOnLadder(source) {
+    if (this.paginator !== undefined) {
+
+      const data = source.sortData(source.filteredData, source.sort);
+      const count = data.length;
+      const pageSize = this.paginator.pageSize;
+
+      // find player on ladder based on dropdown-value
+      const foundOnLadder = data.find(x => x.character === this.selectedPlayerValue);
+
+      if (foundOnLadder !== undefined) {
+        const indexOfPlayer = data.indexOf(foundOnLadder);
+
+        // make sure player exists in the current filtered array
+        if (count >= indexOfPlayer) {
+          // round page downwards
+          const pageToGoTo = Math.floor(indexOfPlayer / pageSize);
+          // make sure we're not already on the requested page before navigating
+
+          this.paginator.pageIndex = pageToGoTo;
+        }
+
+      }
+    }
+  }
+
   filter() {
     setTimeout(res => {
+
       this.filteredArr = [...this.dataSource];
       this.filteredArr = this.filteredArr.filter(item =>
         Object.keys(item).some(k => item[k] != null && item[k] !== '' &&
@@ -134,8 +161,12 @@ export class LadderTableComponent implements OnInit, OnDestroy {
           default: return item[property];
         }
       };
-      this.source.paginator = this.paginator;
       this.source.sort = this.sort;
+
+      // todo : move method to appropriate place, this is just for testing
+      this.findSelectedPlayerOnLadder(this.source);
+
+      this.source.paginator = this.paginator;
       this.filtered.emit({ filteredArr: this.filteredArr, dataSource: this.dataSource });
     }, 0);
 
