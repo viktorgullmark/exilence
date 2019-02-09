@@ -32,7 +32,7 @@ namespace LadderParser.Services
         public async Task UpdateLadders()
         {
             var leagues = await _redisRepository.GetAllLeaguesLadders();
-            if (leagues != null)
+            if (leagues != null & !leagues.Any(t => t.Running))
             {
                 var pendingLeague = leagues.Where(t => !t.Running && t.Finished < DateTime.UtcNow.AddMinutes(-1)).OrderByDescending(t => t.Finished).LastOrDefault();
 
@@ -54,7 +54,7 @@ namespace LadderParser.Services
             var sortModes = new List<string>() { null, "depth", "depthsolo" };
             var pages = Enumerable.Range(0, 75);
 
-            using (var rateGate = new RateGate(5, TimeSpan.FromMilliseconds(5500)))
+            using (var rateGate = new RateGate(4, TimeSpan.FromMilliseconds(5000)))
             {
                 foreach (var sortMode in sortModes)
                 {
