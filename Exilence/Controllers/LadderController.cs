@@ -25,14 +25,7 @@ namespace Exilence.Controllers
         [Route("")]
         public async Task<IActionResult> All(string league, bool full = false)
         {
-            var list = await _ladderService.GetLadderForLeague(league, full);
-            return Ok(new { Ladder = list });
-        }
-
-        [Route("character")]
-        public async Task<IActionResult> Index(string league, string character)
-        {
-            var list = await _ladderService.GetLadderForPlayer(league, character);
+            var list = await _ladderService.GetLadderForLeague(league);
             return Ok(new { Ladder = list });
         }
 

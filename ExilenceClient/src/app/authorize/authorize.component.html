@@ -36,9 +36,6 @@
       <mat-list-item routerLinkActive="active" [routerLinkActiveOptions]="{exact:true}" routerLink="/authorized/settings">
         <mat-icon>settings</mat-icon><a matLine>{{'PAGES.SETTINGS.TITLE' | translate}}</a>
       </mat-list-item>
-      <mat-list-item routerLinkActive="active" [routerLinkActiveOptions]="{exact:true}" routerLink="/authorized/faq">
-        <mat-icon>help</mat-icon><a matLine>{{'PAGES.FAQ.TITLE' | translate}}</a>
-      </mat-list-item>
     </mat-nav-list>
     <div class="bottom-area-wrapper">
       <img alt="Click to join our Discord" height="45" class="discord-logo" (click)="openLink('https://discord.gg/yxuBrPY')">
@@ -47,7 +44,7 @@
       <img alt="Click to support us" class="patron-button" (click)="openLink('https://www.patreon.com/exilence')">
     </div>
   </mat-sidenav>
-  <mat-sidenav-content class="content-container" [ngClass]="{'in-electron': electronService.isElectron() }">
+  <mat-sidenav-content class="content-container" [ngClass]="{'in-electron': electronService.isElectron(), 'scroll': selectedGroupIndex > 0 }">
     <router-outlet></router-outlet>
     <mat-progress-bar *ngIf="partyService.joinInProgress || partyService.isEntering" class="progress-bar top-margin"
       color="primary" mode="indeterminate">

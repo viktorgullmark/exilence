@@ -1,5 +1,5 @@
 import { Component, Inject, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { FormBuilder } from '@angular/forms';
+import { FormBuilder, FormGroup } from '@angular/forms';
 import { MatSelect } from '@angular/material';
 import { Subscription } from 'rxjs';
 
@@ -15,11 +15,12 @@ import { PlayerLadder } from '../../../shared/interfaces/player.interface';
   styleUrls: ['./ladder-summary.component.scss']
 })
 export class LadderSummaryComponent implements OnInit, OnDestroy {
-
+  form: FormGroup;
+  filteredArr = [];
   private party: Party;
   private selectedFilterValueSub: Subscription;
   private partySub: Subscription;
-
+  private stateSub: Subscription;
   private playerLadders: Array<PlayerLadder> = [];
 
   public selectedLocalValue: string;
@@ -32,9 +33,12 @@ export class LadderSummaryComponent implements OnInit, OnDestroy {
     public partyService: PartyService,
     private stateService: StateService
   ) {
+    this.form = fb.group({
+      searchText: ['']
+    });
   }
   ngOnInit() {
-    this.stateService.state$.subscribe(state => {
+    this.stateSub = this.stateService.state$.subscribe(state => {
       this.playerLadders = 'playerLadders'.split('.').reduce((o, i) => o[i], state);
     });
     // TODO: remove once ladder has been reworked
@@ -93,6 +97,13 @@ export class LadderSummaryComponent implements OnInit, OnDestroy {
     if (this.partySub !== undefined) {
       this.partySub.unsubscribe();
     }
+    if (this.stateSub !== undefined) {
+      this.stateSub.unsubscribe();
+    }
+  }
+
+  search() {
+    this.table.doSearch(this.form.controls.searchText.value);
   }
 
   selectPlayer(filterValue: any) {
@@ -114,6 +125,9 @@ export class LadderSummaryComponent implements OnInit, OnDestroy {
         }
       }
     }
+  }
+
+  ladderFiltered(event) {
   }
 
   updateFilterValue(filterValue) {

@@ -33,7 +33,7 @@ namespace Exilence.Services
 
 
 
-        public async Task<List<LadderPlayerModel>> GetLadderForLeague(string leagueName, bool full = false)
+        public async Task<List<LadderPlayerModel>> GetLadderForLeague(string leagueName)
         {
             var league = await _redisRepository.GetLeagueLadder(leagueName);
             if (league == null)
@@ -44,46 +44,7 @@ namespace Exilence.Services
             {
                 if (league.Ladder != null)
                 {
-                    if (full)
-                    {
-                        return league.Ladder.OrderByDescending(t => t.Experience).ToList();
-                    }
-                    else
-                    {
-                        return league.Ladder.OrderByDescending(t => t.Experience).Take(14).ToList();
-                    }
-                }
-            }
-
-            return null;
-        }
-
-        public async Task<List<LadderPlayerModel>> GetLadderForPlayer(string leagueName, string character)
-        {
-            var league = await _redisRepository.GetLeagueLadder(leagueName);
-            if (league == null)
-            {
-                await _redisRepository.SetLeagueLadderPending(leagueName);
-            }
-            else
-            {
-                LadderPlayerModel characterOnLadder = null;
-                if (league.Ladder != null)
-                {
-                    characterOnLadder = league.Ladder.FirstOrDefault(t => t.Name == character);
-                }
-
-                if (characterOnLadder != null)
-                {
-                    var index = league.Ladder.IndexOf(characterOnLadder);
-                    var before = league.Ladder.Where(t => t.Rank.Overall < characterOnLadder.Rank.Overall && t.Rank.Overall >= (characterOnLadder.Rank.Overall - 6));
-                    var after = league.Ladder.Where(t => t.Rank.Overall > characterOnLadder.Rank.Overall && t.Rank.Overall <= (characterOnLadder.Rank.Overall + 7));
-
-                    var ladderList = new List<LadderPlayerModel>();
-                    ladderList.AddRange(before);
-                    ladderList.Add(characterOnLadder);
-                    ladderList.AddRange(after);
-                    return ladderList.OrderBy(t => t.Experience).ToList();
+                    return league.Ladder.OrderByDescending(t => t.Experience).ToList();
                 }
             }
 

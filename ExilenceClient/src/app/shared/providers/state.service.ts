@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 
-import { BehaviorSubject, Subject } from 'rxjs';
+import { BehaviorSubject, Subject, Subscription } from 'rxjs';
 import { scan, shareReplay, startWith } from 'rxjs/operators';
 import { SettingsService } from './settings.service';
 
@@ -20,6 +20,7 @@ export class StateService {
 
   private stateSubject = new Subject();
   private initialState: StateObject = { playerLadders: [] };
+  private stateSub: Subscription;
 
   constructor(
     private settingsService: SettingsService
@@ -29,7 +30,7 @@ export class StateService {
 
 
     // Stuff what we always wanna have saved to settings when it changes.
-    this.state$.subscribe(state => {
+    this.stateSub = this.state$.subscribe(state => {
       console.log('State updated: ', state);
       // this.settingsService.set('XXX', null);
 

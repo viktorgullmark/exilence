@@ -68,7 +68,7 @@ export class PartyService implements OnDestroy {
   private accountInfoSub: Subscription;
   private currentPlayerGainSub: Subscription;
   private playerGainSub: Subscription;
-
+  private stateSub: Subscription;
   public isConnecting = false;
   private playerLadders: Array<PlayerLadder> = [];
 
@@ -110,7 +110,7 @@ export class PartyService implements OnDestroy {
     this.accountInfoSub = this.accountService.accountInfo.subscribe(res => {
       this.accountInfo = res;
     });
-    this.stateService.state$.subscribe(state => {
+    this.stateSub = this.stateService.state$.subscribe(state => {
       this.playerLadders = 'playerLadders'.split('.').reduce((o, i) => o[i], state);
     });
     this.initParty();
@@ -330,6 +330,9 @@ export class PartyService implements OnDestroy {
       this.handleAreaEvent(msg);
     });
 
+    setInterval(() => {
+      this.refreshLaddersForParty();
+    }, 60 * 1000);
   }
 
   ngOnDestroy() {
@@ -345,6 +348,8 @@ export class PartyService implements OnDestroy {
       this.currentPlayerGainSub.unsubscribe();
     } if (this.playerGainSub !== undefined) {
       this.playerGainSub.unsubscribe();
+    } if (this.stateSub !== undefined) {
+      this.stateSub.unsubscribe();
     }
   }
 
@@ -511,7 +516,7 @@ export class PartyService implements OnDestroy {
 
         // update ladder in state (fugly)
         const foundLadder = this.playerLadders.find(x => x.name === league);
-        if (foundLadder !== undefined) {
+        if (foundLadder !== undefined && foundLadder !== null) {
           const ladderIndex = this.playerLadders.indexOf(foundLadder);
           this.playerLadders[ladderIndex] = { name: league, players: ladder } as PlayerLadder;
         } else {
@@ -520,6 +525,18 @@ export class PartyService implements OnDestroy {
 
         this.stateService.dispatch({ key: 'playerLadders', value: this.playerLadders });
       });
+    });
+  }
+
+  public refreshLaddersForParty() {
+    // filter out leagues that are not in the party (in case players left)
+    const leaguesToUpdate = this.party.players.map(x => x.character.league);
+    this.playerLadders.filter(x => leaguesToUpdate.find(y => y === x.name) !== undefined);
+    this.playerLadders.forEach(x => {
+      // separate requests so we dont lag the client
+      setTimeout(() => {
+        this.getLadderForLeague(x.name);
+      }, 10000);
     });
   }
 

@@ -1,4 +1,4 @@
-import { Component, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit, ViewChild, EventEmitter, Output } from '@angular/core';
 import { MatSort, MatTableDataSource, MatPaginator } from '@angular/material';
 import { Subscription } from 'rxjs/internal/Subscription';
 
@@ -17,21 +17,36 @@ export class LadderTableComponent implements OnInit, OnDestroy {
   displayedColumns: string[] = ['online', 'rank', 'level', 'challenges', 'account', 'character', 'class', 'classRank', 'depthGroup', 'depthGroupRank', 'depthSolo', 'depthSoloRank'];
   dataSource = [];
   filteredArr = [];
+  searchText = '';
   source: any;
   party: Party;
   private selectedFilterValueSub: Subscription;
   private partySub: Subscription;
+  private stateSub: Subscription;
   private playerLadders: Array<PlayerLadder> = [];
+
   public selectedPlayerValue: any;
   @ViewChild(MatSort) sort: MatSort;
   @ViewChild(MatPaginator) paginator: MatPaginator;
+  @Output() filtered: EventEmitter<any> = new EventEmitter;
   constructor(private partyService: PartyService, private stateService: StateService) {
   }
 
   ngOnInit() {
 
-    this.stateService.state$.subscribe(state => {
+    this.stateSub = this.stateService.state$.subscribe(state => {
       this.playerLadders = 'playerLadders'.split('.').reduce((o, i) => o[i], state);
+      this.dataSource = [];
+      // if the selection is the right one, update table directly when state is updated
+      if (this.party !== undefined) {
+        const foundPlayer = this.party.players.find(x => x.character !== null &&
+          x.character.name === this.selectedPlayerValue);
+        const ladder = this.playerLadders.find(x => x.name === foundPlayer.character.league);
+        if (ladder !== undefined) {
+          this.updateTable(ladder.players);
+        }
+        this.filter();
+      }
     });
 
     this.partySub = this.partyService.partyUpdated.subscribe(party => {
@@ -59,7 +74,7 @@ export class LadderTableComponent implements OnInit, OnDestroy {
           if (ladder !== undefined) {
             this.updateTable(ladder.players);
           }
-          this.init();
+          this.filter();
         }
       }
     });
@@ -78,7 +93,7 @@ export class LadderTableComponent implements OnInit, OnDestroy {
           if (ladder !== undefined) {
             this.updateTable(ladder.players);
           }
-          this.init();
+          this.filter();
         }
       }
     });
@@ -91,15 +106,26 @@ export class LadderTableComponent implements OnInit, OnDestroy {
     if (this.partySub !== undefined) {
       this.partySub.unsubscribe();
     }
+    if (this.stateSub !== undefined) {
+      this.stateSub.unsubscribe();
+    }
   }
 
-  getPlayers() {
-    return this.party.players.filter(x => x.character !== null);
+  doSearch(text: string) {
+    this.searchText = text;
+
+    this.filter();
   }
 
-  init() {
+  filter() {
     setTimeout(res => {
       this.filteredArr = [...this.dataSource];
+      this.filteredArr = this.filteredArr.filter(item =>
+        Object.keys(item).some(k => item[k] != null && item[k] !== '' &&
+          item[k].toString().toLowerCase()
+            .includes(this.searchText.toLowerCase()))
+      );
+
       this.source = new MatTableDataSource(this.filteredArr);
       this.source.sortingDataAccessor = (item, property) => {
         switch (property) {
@@ -108,9 +134,15 @@ export class LadderTableComponent implements OnInit, OnDestroy {
           default: return item[property];
         }
       };
-      this.source.sort = this.sort;
       this.source.paginator = this.paginator;
+      this.source.sort = this.sort;
+      this.filtered.emit({ filteredArr: this.filteredArr, dataSource: this.dataSource });
     }, 0);
+
+  }
+
+  getPlayers() {
+    return this.party.players.filter(x => x.character !== null);
   }
 
   updateTable(playersOnLadder: LadderPlayer[]) {

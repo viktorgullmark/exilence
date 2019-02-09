@@ -1,6 +1,7 @@
 <div class="ladder-summary down-scale">
     <div class="top-summary-wrapper">
-        <div class="top-text-wrapper"><span>Displays your position on the ladder, or the top-ranks if you are not on the ladder.</span></div>
+        <div class="top-text-wrapper"><span>Displays your position on the ladder, or the top-ranks if you are not on
+                the ladder.</span></div>
         <mat-form-field class="player-selection-field">
             <mat-label>Select player</mat-label>
             <mat-select #playerDd value="{{selectedLocalValue}}" (selectionChange)="selectPlayer($event)">
@@ -13,6 +14,16 @@
         </div>
     </div>
     <div class="table-outer-wrapper full-height-table">
-        <app-ladder-table #table></app-ladder-table>
+        <div class="search-form-wrapper">
+            <form class="form search-form" [formGroup]="form">
+                <mat-form-field>
+                    <input matInput formControlName="searchText" placeholder="{{'LADDER.SEARCH' | translate}}" class="search-text-input"
+                        (ngModelChange)="search()">
+                </mat-form-field>
+            </form>
+        </div>
+        <div class="ladder-table-wrapper">
+            <app-ladder-table #table (filtered)="ladderFiltered($event)"></app-ladder-table>
+        </div>
     </div>
 </div>

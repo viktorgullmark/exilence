@@ -14,6 +14,7 @@ import { MessageValueService } from '../shared/providers/message-value.service';
 import { PartyService } from '../shared/providers/party.service';
 import { SettingsService } from '../shared/providers/settings.service';
 import { ServerMessageDialogComponent } from './components/server-message-dialog/server-message-dialog.component';
+import { StateService } from '../shared/providers/state.service';
 
 @Component({
   selector: 'app-authorize',
@@ -25,8 +26,10 @@ export class AuthorizeComponent implements OnInit, OnDestroy {
   player: Player;
   private playerSub: Subscription;
   private serverMsgSub: Subscription;
+  private stateSub: Subscription;
   public copyText = 'Copy spectate link';
   public isCopying = false;
+  public selectedGroupIndex: number;
   constructor(@Inject(FormBuilder) fb: FormBuilder,
     public partyService: PartyService,
     private mapService: MapService,
@@ -35,6 +38,7 @@ export class AuthorizeComponent implements OnInit, OnDestroy {
     private incomeService: IncomeService,
     public electronService: ElectronService,
     private settingsService: SettingsService,
+    private stateService: StateService,
     private dialog: MatDialog,
     private router: Router) {
     this.form = fb.group({
@@ -44,6 +48,9 @@ export class AuthorizeComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
+    this.stateSub = this.stateService.state$.subscribe(state => {
+      this.selectedGroupIndex = 'selectedGroupIndex'.split('.').reduce((o, i) => o[i], state);
+    });
     this.playerSub = this.accountService.player.subscribe(res => {
       this.player = res;
     });
@@ -80,6 +87,9 @@ export class AuthorizeComponent implements OnInit, OnDestroy {
     }
     if (this.serverMsgSub !== undefined) {
       this.serverMsgSub.unsubscribe();
+    }
+    if (this.stateService !== undefined) {
+      this.stateSub.unsubscribe();
     }
   }
 
