@@ -98,7 +98,7 @@ namespace LadderParser.Services
         private List<LadderPlayerModel> CalculateStatistics(List<LadderPlayerModel> oldLadder, List<LadderPlayerModel> newLadder)
         {
             Log($"Started calculating statistics.");
-            Parallel.ForEach(newLadder, newEntry =>
+            foreach (var newEntry in newLadder)
             {
                 newEntry.Depth.GroupRank = newLadder.Count(t => t.Depth.Group > newEntry.Depth.Group) + 1;
                 newEntry.Depth.SoloRank = newLadder.Count(t => t.Depth.Solo > newEntry.Depth.Solo) + 1;
@@ -116,7 +116,7 @@ namespace LadderParser.Services
                         newEntry.ExperiencePerHour = (long)gainOverTime;
                     }
                 }
-            });
+            }
             Log($"Finished calculating statistics.");
             return newLadder;
         }
