@@ -36,21 +36,21 @@ export class NotficationBarComponent implements OnInit, OnDestroy {
 
 
   checkForNewRelease() {
-    this.releaseSub = this.externalService.getLatestRelease().subscribe((release: GithubRelease) => {
-      this.logService.log('Current Version: ' + this.appVersion);
-      this.logService.log('Latest Version: ' + release.name);
+    if (this.electronService.isElectron()) {
+      this.releaseSub = this.externalService.getLatestRelease().subscribe((release: GithubRelease) => {
+        this.logService.log('Current Version: ' + this.appVersion);
+        this.logService.log('Latest Version: ' + release.name);
 
-      if (this.appVersion !== release.name) {
-        if (this.notifications.indexOf('NEW_VERSION') === -1) {
-          this.notifications.push('NEW_VERSION');
-          if (this.electronService.isElectron()) {
+        if (this.appVersion !== release.name) {
+          if (this.notifications.indexOf('NEW_VERSION') === -1) {
+            this.notifications.push('NEW_VERSION');
             this.electronService.ipcRenderer.send('servermsg');
           }
         }
-      }
 
-      this.latestVersion = release.name;
-    });
+        this.latestVersion = release.name;
+      });
+    }
   }
 
   relaunch() {
