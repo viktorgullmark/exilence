@@ -1,6 +1,9 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [0.9.17] - 2019-02-11
+- Several bug-fixes to new area- and ladder-tables
+
 ## [0.9.16] - 2019-02-10
 ### Added
 - Added a spectator-mode, available on the web (https://exilence.app)
