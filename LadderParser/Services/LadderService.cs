@@ -18,6 +18,7 @@ namespace LadderParser.Services
         private readonly IExternalService _externalService;
 
         private const string LadderUrl = "http://www.pathofexile.com/api/ladders";
+        private bool isRunning;
 
         public LadderService(
             IExternalService externalService,
@@ -26,19 +27,21 @@ namespace LadderParser.Services
         {
             _externalService = externalService;
             _redisRepository = redisRepository;
+            isRunning = false;
         }
-
 
         public async Task UpdateLadders()
         {
             var leagues = await _redisRepository.GetAllLeaguesLadders();
-            if (leagues != null & !leagues.Any(t => t.Running))
+            if (!isRunning)
             {
                 var pendingLeague = leagues.Where(t => !t.Running && t.Finished < DateTime.UtcNow.AddMinutes(-1)).OrderByDescending(t => t.Finished).LastOrDefault();
 
                 if (pendingLeague != null)
                 {
+                    isRunning = true;
                     await UpdateLadder(pendingLeague.Name);
+                    isRunning = false;
                 }
             }
         }
