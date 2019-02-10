@@ -32,6 +32,7 @@ html, body {
     &.in-table {
         padding: 0 10px 0 10px;
     }
+
     > * {
         vertical-align: middle;
     }
@@ -94,8 +95,9 @@ text {
     margin-top: 15px !important;
 }
 
-.small-checkbox{
+.small-checkbox {
     font-size: 14px !important;
+
     .mat-checkbox-inner-container {
         height: 15px !important;
         width: 15px !important;
@@ -261,13 +263,17 @@ a {
 
         > *:not(router-outlet):not(mat-progress-bar):not(.party-view) {
             width: 100%;
+
             // height: $content-height;
+       
         }
+
         > mat-progress-bar {
             position: absolute;
             bottom: 30px;
             width: calc(100% - 50px);
         }
+
         &.in-electron {
             margin-left: 265px !important;
         }
@@ -303,11 +309,12 @@ a {
 
 .discord-logo {
     cursor: pointer;
-    content:url("./../../assets/img/discord-logo-white.svg");
+    content: url("./../../assets/img/discord-logo-white.svg");
 }
-.patron-button {    
+
+.patron-button {
     cursor: pointer;
-    content:url("./../../assets/img/become_a_patron.png");
+    content: url("./../../assets/img/become_a_patron.png");
 }
 
 /* #region Responsitivity */
@@ -330,12 +337,12 @@ a {
     //     transform-origin: top left;
     //     transform: scale(0.97);
     // }
-   
+
     @media screen and (max-height: 930px) {
         transform-origin: top left;
         transform: scale(0.96);
     }
-    
+
     @media screen and (max-height: 920px) {
         transform-origin: top left;
         transform: scale(0.95);
@@ -363,7 +370,7 @@ a {
 
     @media screen and (max-height: 890px) {
         transform-origin: top left;
-        transform: scale(0.90);
+        transform: scale(0.9);
     }
 
     @media screen and (max-height: 880px) {
@@ -375,15 +382,15 @@ a {
         transform-origin: top left;
         transform: scale(0.88);
     }
-    
+
     @media screen and (max-height: 860px) {
         transform-origin: top left;
         transform: scale(0.85);
     }
-    
+
     @media screen and (max-height: 830px) {
         transform-origin: top left;
-        transform: scale(0.80);
+        transform: scale(0.8);
     }
 
     @media screen and (max-height: 810px) {
@@ -393,7 +400,7 @@ a {
 
     @media screen and (max-height: 780px) {
         transform-origin: top left;
-        transform: scale(0.740);
+        transform: scale(0.74);
     }
 }
 
@@ -483,7 +490,8 @@ mat-vertical-stepper {
 mat-tooltip-component > .mat-tooltip {
     white-space: pre;
     font-size: 14px;
-    color: #d8b100;
+
+    // color: #d8b100;
     background-color: #272727 !important;
     margin-left: -40px !important;
     border: #222222 4px solid;
@@ -499,22 +507,21 @@ mat-tooltip-component > .mat-tooltip {
         border: 0px;
     }
 
-    li {      
-        cursor: pointer; 
+    li {
+        cursor: pointer;
         border-bottom: #222222 2px solid;
+
         &:hover {
             background-color: #2f2f2f;
         }
 
-        a{
+        a {
             display: block;
             padding: 10px 25px 10px 25px;
             color: white;
             text-decoration: none;
         }
-    }    
+    }
 }
-
-
 
 /* #endregion */
