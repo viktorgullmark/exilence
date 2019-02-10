@@ -92,7 +92,11 @@ export class SettingsComponent implements OnInit, OnDestroy {
   }
 
   openLink(link: string) {
-    this.electronService.shell.openExternal(link);
+    if (this.electronService.isElectron()) {
+      this.electronService.shell.openExternal(link);
+    } else {
+      window.open(link, '_blank');
+    }
   }
 
   search() {

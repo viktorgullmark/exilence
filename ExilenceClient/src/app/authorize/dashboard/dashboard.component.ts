@@ -94,7 +94,11 @@ export class DashboardComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   openLink(link: string) {
-    this.electronService.shell.openExternal(link);
+    if (this.electronService.isElectron()) {
+      this.electronService.shell.openExternal(link);
+    } else {
+      window.open(link, '_blank');
+    }
   }
 
   joinParty(partyName: string) {
