@@ -48,7 +48,7 @@
     <ng-container matColumnDef="classRank">
       <th mat-header-cell *matHeaderCellDef mat-sort-header="classRank"> Class Rank </th>
       <td mat-cell *matCellDef="let element" [ngClass]="{'active': element.character === selectedPlayerValue }">
-        {{element.classRank}} </td>
+        #{{element.classRank}} </td>
     </ng-container>
 
     <ng-container matColumnDef="depthSolo">
@@ -60,7 +60,7 @@
     <ng-container matColumnDef="depthSoloRank">
       <th mat-header-cell *matHeaderCellDef mat-sort-header="depthSoloRank"> Depth Rank (Solo) </th>
       <td mat-cell *matCellDef="let element" [ngClass]="{'active': element.character === selectedPlayerValue }" class="depth-solo">
-        {{element.depthSoloRank}} </td>
+        #{{element.depthSoloRank}} </td>
     </ng-container>
 
     <ng-container matColumnDef="depthGroup">
@@ -72,7 +72,7 @@
     <ng-container matColumnDef="depthGroupRank">
       <th mat-header-cell *matHeaderCellDef mat-sort-header="depthGroupRank"> Depth Rank </th>
       <td mat-cell *matCellDef="let element" [ngClass]="{'active': element.character === selectedPlayerValue }" class="depth-group">
-        {{element.depthGroupRank}} </td>
+        #{{element.depthGroupRank}} </td>
     </ng-container>
 
     <ng-container matColumnDef="experiencePerHour">
