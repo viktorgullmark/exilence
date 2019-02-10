@@ -164,7 +164,7 @@ export class PartyService implements OnDestroy {
           const spectators = this.updateSpectatorCount(this.party.players);
           this.stateService.dispatch({ key: 'spectatorCount', value: spectators });
 
-          if (this.playerLadders.find(x => x.name === player.character.league) === undefined) {
+          if (this.playerLadders.find(x => player.character !== null && x.name === player.character.league) === undefined) {
             this.getLadderForLeague(player.character.league);
           }
 
@@ -214,7 +214,7 @@ export class PartyService implements OnDestroy {
         const spectators = this.updateSpectatorCount(this.party.players);
         this.stateService.dispatch({ key: 'spectatorCount', value: spectators });
 
-        if (this.playerLadders.find(x => x.name === player.character.league) === undefined) {
+        if (this.playerLadders.find(x => player.character !== null && x.name === player.character.league) === undefined) {
           this.getLadderForLeague(player.character.league);
         }
 
@@ -460,7 +460,7 @@ export class PartyService implements OnDestroy {
     const leagues: LeagueWithPlayers[] = [];
     party.players.forEach(player => {
       if (player.character !== null) {
-        const league = leagues.find(l => l.id === player.character.league);
+        const league = leagues.find(l => player.character !== null && l.id === player.character.league);
         if (league === undefined) {
           leagues.push({ id: player.character.league, players: [player] } as LeagueWithPlayers);
         } else {
@@ -534,7 +534,8 @@ export class PartyService implements OnDestroy {
 
   public refreshLaddersForParty() {
     // filter out leagues that are not in the party (in case players left)
-    const leaguesToUpdate = this.party.players.map(x => x.character.league);
+    const activePlayers = this.party.players.filter(x => x.character !== null);
+    const leaguesToUpdate = activePlayers.map(x => x.character.league);
     this.playerLadders.filter(x => leaguesToUpdate.find(y => y === x.name) !== undefined);
     this.playerLadders.forEach(x => {
       // separate requests so we dont lag the client

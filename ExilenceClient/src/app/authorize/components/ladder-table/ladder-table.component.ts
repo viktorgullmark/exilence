@@ -41,11 +41,13 @@ export class LadderTableComponent implements OnInit, OnDestroy {
       if (this.party !== undefined) {
         const foundPlayer = this.party.players.find(x => x.character !== null &&
           x.character.name === this.selectedPlayerValue);
-        const ladder = this.playerLadders.find(x => x.name === foundPlayer.character.league);
-        if (ladder !== undefined) {
-          this.updateTable(ladder.players);
+        if (foundPlayer !== undefined) {
+          const ladder = this.playerLadders.find(x => x.name === foundPlayer.character.league);
+          if (ladder !== undefined) {
+            this.updateTable(ladder.players);
+          }
+          this.filter();
         }
-        this.filter();
       }
     });
 
