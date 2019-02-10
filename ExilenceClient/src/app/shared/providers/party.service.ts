@@ -164,7 +164,7 @@ export class PartyService implements OnDestroy {
           const spectators = this.updateSpectatorCount(this.party.players);
           this.stateService.dispatch({ key: 'spectatorCount', value: spectators });
 
-          if (this.playerLadders.find(x => player.character !== null && x.name === player.character.league) === undefined) {
+          if (this.playerLadders.find(x => x.name === player.character.league) === undefined && player.character !== null) {
             this.getLadderForLeague(player.character.league);
           }
 
@@ -214,7 +214,7 @@ export class PartyService implements OnDestroy {
         const spectators = this.updateSpectatorCount(this.party.players);
         this.stateService.dispatch({ key: 'spectatorCount', value: spectators });
 
-        if (this.playerLadders.find(x => player.character !== null && x.name === player.character.league) === undefined &&
+        if (this.playerLadders.find(x => x.name === player.character.league) === undefined &&
           player.character !== null) {
           this.getLadderForLeague(player.character.league);
         }
