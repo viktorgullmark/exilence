@@ -87,7 +87,10 @@ export class PartyService implements OnDestroy {
     this.reconnectAttempts = 0;
     this.forceClosed = false;
 
-    this.recentParties.next(this.settingService.get('recentParties') || []);
+    const recentParties = this.settingService.get('recentParties') || [];
+    const regex = new RegExp('^[A-Z0-9]+$');
+    const matchRecenParties = recentParties.filter(party => party.match(regex));
+    this.recentParties.next(matchRecenParties);
 
     this.maskedName = this.settingsService.get('maskedGroupname') === true ? true : false;
     this.maskedSpectatorCode = this.settingsService.get('maskedSpectatorCode') === true ? true : false;

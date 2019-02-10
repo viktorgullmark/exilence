@@ -43,7 +43,12 @@ export class AuthorizeComponent implements OnInit, OnDestroy {
     private router: Router) {
     this.form = fb.group({
       partyCode: [this.partyService.party.name !== '' ? this.partyService.party.name : this.generatePartyName(),
-      [Validators.maxLength(25), Validators.required]]
+      [
+        Validators.maxLength(25),
+        Validators.required,
+        Validators.pattern('^[A-Z0-9]+$')
+      ]
+      ],
     });
   }
 
