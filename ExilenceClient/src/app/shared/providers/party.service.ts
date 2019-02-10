@@ -214,7 +214,8 @@ export class PartyService implements OnDestroy {
         const spectators = this.updateSpectatorCount(this.party.players);
         this.stateService.dispatch({ key: 'spectatorCount', value: spectators });
 
-        if (this.playerLadders.find(x => player.character !== null && x.name === player.character.league) === undefined) {
+        if (this.playerLadders.find(x => player.character !== null && x.name === player.character.league) === undefined &&
+          player.character !== null) {
           this.getLadderForLeague(player.character.league);
         }
 
@@ -278,9 +279,11 @@ export class PartyService implements OnDestroy {
           this.party.players[indexOfOldLeader] = oldLeader;
         }
 
-        const indexOfNewLeader = this.party.players.indexOf(newLeader);
-        newLeader.isLeader = true;
-        this.party.players[indexOfNewLeader] = newLeader;
+        if (newLeader !== undefined) {
+          const indexOfNewLeader = this.party.players.indexOf(newLeader);
+          newLeader.isLeader = true;
+          this.party.players[indexOfNewLeader] = newLeader;
+        }
 
         // update permissions if you become the leader
         if (this.currentPlayer.account === newLeader.account) {
