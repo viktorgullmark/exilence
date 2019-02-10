@@ -233,11 +233,14 @@ export class AreaSummaryComponent implements OnInit, OnDestroy {
 
       // update values for entire party, or a specific player, depending on selection
       if (this.partyService.selectedFilterValue === 'All players' || this.partyService.selectedFilterValue === undefined) {
+        this.table.dataSource = [];
         this.table.updateTable(this.mapService.localPlayerAreas);
       } else if (foundPlayer !== undefined) {
         if (foundPlayer.character.name === this.partyService.currentPlayer.character.name) {
+          this.table.dataSource = [];
           this.table.updateTable(this.mapService.localPlayerAreas);
         } else {
+          this.table.dataSource = [];
           this.table.updateTable(foundPlayer.pastAreas);
         }
       }
@@ -254,6 +257,7 @@ export class AreaSummaryComponent implements OnInit, OnDestroy {
 
       if (foundPlayer !== undefined) {
         if (this.table !== undefined) {
+          this.table.dataSource = [];
           this.table.updateTable(foundPlayer.pastAreas);
         }
       }

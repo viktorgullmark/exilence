@@ -116,11 +116,13 @@ export class LadderSummaryComponent implements OnInit, OnDestroy {
       if (this.partyService.selectedFilterValue === 'All players' || this.partyService.selectedFilterValue === undefined) {
         const ladder = this.playerLadders.find(x => x.name === this.partyService.currentPlayer.character.league);
         if (ladder !== undefined) {
+          this.table.dataSource = [];
           this.table.updateTable(ladder.players);
         }
       } else if (foundPlayer !== undefined) {
         const ladder = this.playerLadders.find(x => x.name === foundPlayer.character.league);
         if (ladder !== undefined) {
+          this.table.dataSource = [];
           this.table.updateTable(ladder.players);
         }
       }
@@ -142,6 +144,7 @@ export class LadderSummaryComponent implements OnInit, OnDestroy {
         if (this.table !== undefined) {
           const ladder = this.playerLadders.find(x => x.name === foundPlayer.character.league);
           if (ladder !== undefined) {
+            this.table.dataSource = [];
             this.table.updateTable(ladder.players);
           }
         }
