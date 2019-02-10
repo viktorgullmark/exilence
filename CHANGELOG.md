@@ -4,7 +4,7 @@ All notable changes to this project will be documented in this file.
 ## [0.9.16] - 2019-02-10
 ### Added
 - Added a spectator-mode, available on the web (https://exilence.app)
-    - To let users spectate your group, share the link in the top-right corner
+    - To let users spectate your group, share the link in the top-left corner
 - Added a ladder-overview tab, which replaces the smaller variant
 - Added a area-overview tab, which replaces the smaller variant
 - Added the following columns to the ladder-table

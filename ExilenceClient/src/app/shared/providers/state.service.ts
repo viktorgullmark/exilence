@@ -31,7 +31,6 @@ export class StateService {
 
     // Stuff what we always wanna have saved to settings when it changes.
     this.stateSub = this.state$.subscribe(state => {
-      console.log('State updated: ', state);
       // this.settingsService.set('XXX', null);
 
 
