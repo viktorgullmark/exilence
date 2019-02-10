@@ -13,7 +13,7 @@ export class DisconnectedComponent implements OnInit {
   private sub: any;
   public external: boolean;
   constructor(
-    private electronService: ElectronService,
+    public electronService: ElectronService,
     private route: ActivatedRoute,
     private analyticsService: AnalyticsService
   ) { }
