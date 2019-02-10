@@ -37,7 +37,7 @@
           </p>
         </div>
       </div>
-      <p>
+      <p *ngIf="electronService.isElectron()">
         <button mat-raised-button color="primary" (click)="relaunch()" class="relaunch-btn">Relaunch Exilence</button>
       </p>
     </div>

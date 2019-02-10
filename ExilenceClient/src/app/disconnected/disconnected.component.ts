@@ -37,7 +37,7 @@ export class DisconnectedComponent implements OnInit {
     if (this.electronService.isElectron()) {
       this.electronService.shell.openExternal(link);
     } else {
-      // todo: go to link normally
+      window.open(link, '_blank');
     }
   }
 
