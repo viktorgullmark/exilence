@@ -446,6 +446,11 @@ a {
     color: #fff !important;
 }
 
+.legen-label {
+    text-overflow: ellipsis !important;
+    max-width: 175px !important;
+}
+
 .mat-expansion-panel {
     background: #272727 !important;
 }
