@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
-import { MatTooltipModule } from '@angular/material';
+import { MatTooltipModule, MatPaginatorModule } from '@angular/material';
 import { MatSortModule } from '@angular/material/sort';
 import { MatTableModule } from '@angular/material/table';
 
@@ -11,6 +11,7 @@ import { NetworthTableComponent } from './networth-table.component';
     CommonModule,
     MatTableModule,
     MatSortModule,
+    MatPaginatorModule,
     MatTooltipModule
   ],
   declarations: [NetworthTableComponent],
