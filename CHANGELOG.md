@@ -2,6 +2,9 @@
 All notable changes to this project will be documented in this file.
 
 ## [0.9.18] - 2019-XX-XX
+### Added
+- Implemented MongoDB, for persistance and improved concurrency
+
 ### Changed
 - Style-tweaks to net worth page
 - Style-tweaks to new ladder-overview page
@@ -12,9 +15,6 @@ All notable changes to this project will be documented in this file.
 - Fixed a bug where the player-list was not properly updated when players left
 - Fixed a bug where the group-name was case-sensitive, even if it displayed uppercase only
 - Fixed a bug where selecting a player sometimes took too long
-
-### Changed
-- Implemented MongoDB, for persistance and improved concurrency
 
 ## [0.9.17] - 2019-02-11
 - Several bug-fixes to new area- and ladder-tables
