@@ -1,17 +1,17 @@
-﻿using Shared.Helper;
-using Shared.Interfaces;
-using Shared.Models;
+﻿using Exilence.Helper;
+using Exilence.Interfaces;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Extensions.Configuration;
+using Shared.Helper;
+using Shared.Interfaces;
+using Shared.Models;
+using Shared.Models.Statistics;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Shared.Models.Statistics;
-using Exilence.Interfaces;
-using Exilence.Helper;
 
 namespace Exilence.Hubs
 {
@@ -58,12 +58,13 @@ namespace Exilence.Hubs
         public async Task JoinParty(string partyName, string spectatorCode, string playerObj)
         {
             // if spectatorCode is empty, fetch it
-            if(String.IsNullOrEmpty(spectatorCode))
+            if (string.IsNullOrEmpty(spectatorCode))
             {
                 spectatorCode = SpectatorHelper.ToSpectatorCode(partyName, _key);
             }
             // if partyname is empty, fetch it
-            else if (String.IsNullOrEmpty(partyName)) {
+            else if (string.IsNullOrEmpty(partyName))
+            {
                 partyName = SpectatorHelper.ToPartyName(spectatorCode, _key);
             }
 
@@ -88,7 +89,7 @@ namespace Exilence.Hubs
                     // set player to leader, since its a new party
                     player.IsLeader = true;
 
-        
+
                     party = new PartyModel() { Name = partyName, Players = new List<PlayerModel> { player }, SpectatorCode = spectatorCode };
                     await _cache.SetAsync<PartyModel>($"party:{partyName}", party);
 
@@ -145,12 +146,12 @@ namespace Exilence.Hubs
             var player = CompressionHelper.Decompress<PlayerModel>(playerObj);
 
             // if spectatorCode is empty, fetch it
-            if (String.IsNullOrEmpty(spectatorCode))
+            if (string.IsNullOrEmpty(spectatorCode))
             {
                 spectatorCode = SpectatorHelper.ToSpectatorCode(partyName, _key);
             }
             // if partyname is empty, fetch it
-            else if (String.IsNullOrEmpty(partyName))
+            else if (string.IsNullOrEmpty(partyName))
             {
                 partyName = SpectatorHelper.ToPartyName(spectatorCode, _key);
             }
@@ -166,8 +167,6 @@ namespace Exilence.Hubs
                     party.Players[0].IsLeader = true;
                     await Clients.Group(partyName).SendAsync("LeaderChanged", CompressionHelper.Compress(new { oldLeader = player, newLeader = party.Players[0] }));
                 }
-
-                var success = RemoveFromIndex();
 
                 if (party.Players.Count != 0)
                 {
@@ -232,11 +231,14 @@ namespace Exilence.Hubs
                     await Clients.Group(partyName).SendAsync("PlayerUpdated", CompressionHelper.Compress(player));
 
                 }
+                await CheckDisconnectedPlayers(partyName);
+                await SendPlayersInParty(partyName);
             }
             else
             {
                 await Clients.Group(partyName).SendAsync("ForceDisconnect");
             }
+
         }
 
         public async Task GenericUpdatePlayer(PlayerModel player, string partyName)
@@ -271,6 +273,7 @@ namespace Exilence.Hubs
 
         public override async Task OnDisconnectedAsync(Exception exception)
         {
+
             var partyName = await GetPartynameFromIndex();
 
             if (partyName != null)
@@ -282,13 +285,40 @@ namespace Exilence.Hubs
                     if (foundPlayer != null)
                     {   //This compression and then uncompression is ugly
                         await LeaveParty(partyName, "", CompressionHelper.Compress(foundPlayer));
-                        var success = RemoveFromIndex();
                     }
                 }
             }
 
+            var success = RemoveFromIndex();
             await _redisRepository.UpdateStatistics(StatisticsActionEnum.DecrementConnection);
             await base.OnDisconnectedAsync(exception);
+        }
+
+        private async Task CheckDisconnectedPlayers(string partyName)
+        {
+            var party = await _cache.GetAsync<PartyModel>($"party:{partyName}");
+            var playersToRemove = new List<PlayerModel>();
+            foreach (var player in party.Players)
+            {
+                var connectionExists = await _redisRepository.GetPartyNameFromConnection(player.ConnectionID);
+                if (connectionExists == null)
+                {
+                    playersToRemove.Add(player);
+                }
+            }
+            if (playersToRemove.Count > 0)
+            {
+                party = await _cache.GetAsync<PartyModel>($"party:{partyName}");
+                party.Players = party.Players.Where(t => !playersToRemove.Any(x => x.ConnectionID == t.ConnectionID)).ToList();
+                await _cache.SetAsync($"party:{partyName}", party);
+            }
+        }
+
+        public async Task SendPlayersInParty(string partyName)
+        {
+            var party = await _cache.GetAsync<PartyModel>($"party:{partyName}");
+            var playerList = party.Players.Select(t => t.ConnectionID).ToList();
+            await Clients.Group(partyName).SendAsync("PlayersInParty", CompressionHelper.Compress(playerList));
         }
 
         private async Task<string> GetPartynameFromIndex()

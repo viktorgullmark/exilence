@@ -146,31 +146,17 @@ namespace Shared.Repositories
 
         public async Task<string> GetPartyNameFromConnection(string connectionId)
         {
-            var connections = await GetAllConnections();
-            if (connections != null)
+            var connectionModel = await _cache.GetAsync<ConnectionModel>($"connections:{connectionId}");
+            if (connectionModel != null)
             {
-                var connection = connections.FirstOrDefault(t => t.ConnectionId == connectionId);
-                if (connection != null)
-                {
-                    return connection.PartyName;
-                }
+                return connectionModel.PartyName;
             }
             return null;
         }
 
         public async Task<bool> RemoveConnection(string connectionId)
         {
-            var connections = await GetAllConnections();
-            if (connections != null)
-            {
-                var connection = connections.FirstOrDefault(t => t.ConnectionId == connectionId);
-                if (connection != null)
-                {
-                    connections.Remove(connection);
-                    await _cache.SetAsync<List<ConnectionModel>>($"connections", connections);
-                    return true;
-                }
-            }
+            await _cache.RemoveAsync($"connections:{connectionId}");
             return false;
         }
 
@@ -182,21 +168,7 @@ namespace Shared.Repositories
                 ConnectionId = connectionId,
                 ConnectedDate = DateTime.Now
             };
-            var connections = await GetAllConnections();
-
-            if (connections == null)
-            {
-                connections = new List<ConnectionModel>();
-            }
-
-            var existingConnection = connections.FirstOrDefault(t => t.ConnectionId == connectionId);
-            if (existingConnection != null)
-            {
-                connections.Remove(existingConnection);
-            }
-
-            connections.Add(connectionModel);
-            await _cache.SetAsync<List<ConnectionModel>>($"connections", connections);
+            await _cache.SetAsync<ConnectionModel>($"connections:{connectionId}", connectionModel, new DistributedCacheEntryOptions());
         }
 
         #endregion

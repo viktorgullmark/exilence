@@ -223,40 +223,17 @@ export class PartyService implements OnDestroy {
 
     this._hubConnection.on('PlayerLeft', (data: string) => {
       this.electronService.decompress(data, (player: Player) => {
-        this.party.players = this.party.players.filter(x => x.connectionID !== player.connectionID);
+        this.PlayerLeft(player);
+      });
+    });
 
-        // if last player leaves, kick self to login screen
-        if (this.party.players.find(x => !x.isSpectator) === undefined) {
-          this.leaveParty(this.party.name, this.party.spectatorCode, this.currentPlayer);
-          const errorMsg = {
-            title: 'Information',
-            body: 'Spectator mode ended, all players left the group.'
-          } as ServerMessage;
-          this.serverMessageReceived.next(errorMsg);
-          this.router.navigate(['/']);
-        }
-
-        this.partyUpdated.next(this.party);
-        this.updatePlayerLists(this.party);
-
-        if (this.selectedPlayerObj.account === player.account) {
-
-          // select self if is player, otherwhise select the first player in the group
-          if (this.currentPlayer.character !== null) {
-            this.selectedPlayer.next(this.currentPlayer);
-          } else {
-            const firstPlayer = this.party.players.find(x => x.character !== null && !x.isSpectator);
-            if (firstPlayer !== undefined) {
-              this.selectedPlayer.next(this.party.players.find(x => x.character !== null && !x.isSpectator));
-            }
-          }
-        }
-
-        // update spectator count
-        const spectators = this.updateSpectatorCount(this.party.players);
-        this.stateService.dispatch({ key: 'spectatorCount', value: spectators });
-
-        this.logService.log('player left:', player);
+    this._hubConnection.on('PlayersInParty', (data: string) => {
+      this.electronService.decompress(data, (connectionIds: string[]) => {
+        console.log('Players Accually in party: ', connectionIds);
+        const playersNotInParty = this.party.players.filter(x => connectionIds.indexOf(x.connectionID) === -1);
+        playersNotInParty.forEach(player => {
+          this.PlayerLeft(player);
+        });
       });
     });
 
@@ -364,6 +341,43 @@ export class PartyService implements OnDestroy {
     } if (this.stateSub !== undefined) {
       this.stateSub.unsubscribe();
     }
+  }
+
+  PlayerLeft(player: Player) {
+    this.party.players = this.party.players.filter(x => x.connectionID !== player.connectionID);
+
+    // if last player leaves, kick self to login screen
+    if (this.party.players.find(x => !x.isSpectator) === undefined) {
+      this.leaveParty(this.party.name, this.party.spectatorCode, this.currentPlayer);
+      const errorMsg = {
+        title: 'Information',
+        body: 'Spectator mode ended, all players left the group.'
+      } as ServerMessage;
+      this.serverMessageReceived.next(errorMsg);
+      this.router.navigate(['/']);
+    }
+
+    this.partyUpdated.next(this.party);
+    this.updatePlayerLists(this.party);
+
+    if (this.selectedPlayerObj.account === player.account) {
+
+      // select self if is player, otherwhise select the first player in the group
+      if (this.currentPlayer.character !== null) {
+        this.selectedPlayer.next(this.currentPlayer);
+      } else {
+        const firstPlayer = this.party.players.find(x => x.character !== null && !x.isSpectator);
+        if (firstPlayer !== undefined) {
+          this.selectedPlayer.next(this.party.players.find(x => x.character !== null && !x.isSpectator));
+        }
+      }
+    }
+
+    // update spectator count
+    const spectators = this.updateSpectatorCount(this.party.players);
+    this.stateService.dispatch({ key: 'spectatorCount', value: spectators });
+
+    this.logService.log('player left:', player);
   }
 
   updateSpectatorCount(players: Player[]): number {
