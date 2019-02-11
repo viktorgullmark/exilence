@@ -297,7 +297,9 @@ export class PartyService implements OnDestroy {
           this.accountService.player.next(oldLeader);
         }
 
+        this.partyUpdated.next(this.party);
         this.updatePlayerLists(this.party);
+
         this.logService.log('leader changed to:', newLeader);
       });
     });
