@@ -538,6 +538,19 @@ export class PartyService implements OnDestroy {
         }
 
         this.stateService.dispatch({ key: 'playerLadders', value: this.playerLadders });
+
+        // update player ranks based on fetched ladder
+        this.party.players.map(player => {
+          if (player.character !== null && player.character.league === league) {
+            const playerOnLadder = ladder.find(x => x.name === player.character.name);
+            if (playerOnLadder !== undefined) {
+              player.overallRank = playerOnLadder.rank.overall;
+              return player;
+            }
+          }
+        });
+        this.updatePlayerLists(this.party);
+        this.partyUpdated.next(this.party);
       });
     });
   }
