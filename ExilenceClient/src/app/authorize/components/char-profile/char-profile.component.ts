@@ -45,9 +45,6 @@ export class CharProfileComponent implements OnInit, OnDestroy {
   ngOnInit() {
     if (!this.localProfile) {
       this.selectedPlayerSub = this.partyService.selectedPlayer.subscribe(res => {
-        setTimeout(() => {
-          window.dispatchEvent(new Event('resize'));
-        }, 1000);
         this.player = res;
       });
       this.playerSub = this.accountService.player.subscribe(res => {
@@ -55,13 +52,9 @@ export class CharProfileComponent implements OnInit, OnDestroy {
       });
     } else {
       this.selectedGenPlayerSub = this.partyService.selectedGenericPlayer.subscribe(res => {
-        setTimeout(() => {
-          window.dispatchEvent(new Event('resize'));
-        }, 1000);
         this.player = res;
       });
     }
-
 
     // select first tab
     this.equipmentTab.isActive = true;

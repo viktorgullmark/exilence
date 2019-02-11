@@ -31,7 +31,6 @@ export class PartyComponent implements OnInit, OnDestroy {
   private playerSub: Subscription;
   private partySub: Subscription;
   private currentPlayerValueSub: Subscription;
-  private currentPlayerGainSub: Subscription;
   private tabSubscription: any;
   private spectatorCountSub: any;
   private gainHours = 1;
@@ -40,7 +39,6 @@ export class PartyComponent implements OnInit, OnDestroy {
 
   constructor(
     public partyService: PartyService,
-    private accountService: AccountService,
     private analyticsService: AnalyticsService,
     private messageValueService: MessageValueService,
     private electronService: ElectronService,
@@ -50,30 +48,12 @@ export class PartyComponent implements OnInit, OnDestroy {
     this.selectedPlayerSub = this.partyService.selectedPlayer.subscribe(res => {
       if (res !== undefined) {
         this.player = res;
-        this.messageValueService.playerValue = this.player.netWorthSnapshots[0].value;
-        const isCurrentPlayer = this.partyService.currentPlayer !== undefined && res.account === this.partyService.currentPlayer.account;
-        this.partyService.updatePlayerGain(res, isCurrentPlayer);
       }
     });
     this.stateSub = this.stateService.state$.subscribe(state => {
       this.spectatorCount = 'spectatorCount'.split('.').reduce((o, i) => o[i], state);
     });
 
-    this.playerSub = this.accountService.player.subscribe(res => {
-      if (res !== undefined) {
-
-        this.currentPlayerValueSub = this.messageValueService.currentPlayerValueSubject.subscribe(value => {
-          this.updatePopout();
-        });
-        this.currentPlayerGainSub = this.messageValueService.currentPlayerGainSubject.subscribe(gain => {
-          this.updatePopout();
-        });
-        // update msg-values based on current player
-        this.messageValueService.currentPlayerValueSubject.next(res.netWorthSnapshots[0].value);
-        const isCurrentPlayer = res.account === this.partyService.currentPlayer.account;
-        this.partyService.updatePlayerGain(res, isCurrentPlayer);
-      }
-    });
     this.partySub = this.partyService.partyUpdated.subscribe(res => {
       if (res !== undefined) {
         let networth = 0;
@@ -96,18 +76,6 @@ export class PartyComponent implements OnInit, OnDestroy {
       this.settingsService.set('gainHours', 1);
     }
 
-  }
-
-  updatePopout() {
-    if (this.electronService.isElectron()) {
-      this.electronService.ipcRenderer.send('popout-window-update', {
-        event: 'networth',
-        data: {
-          networth: this.messageValueService.currentPlayerValue,
-          gain: this.messageValueService.currentPlayerGain
-        }
-      });
-    }
   }
 
   ngOnInit() {
@@ -136,9 +104,6 @@ export class PartyComponent implements OnInit, OnDestroy {
     }
     if (this.currentPlayerValueSub !== undefined) {
       this.currentPlayerValueSub.unsubscribe();
-    }
-    if (this.currentPlayerGainSub !== undefined) {
-      this.currentPlayerGainSub.unsubscribe();
     }
     if (this.tabSubscription !== undefined) {
       this.tabSubscription.unsubscribe();
