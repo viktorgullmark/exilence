@@ -46,7 +46,7 @@ export class AuthorizeComponent implements OnInit, OnDestroy {
       [
         Validators.maxLength(25),
         Validators.required,
-        Validators.pattern('^[A-Z0-9]+$')
+        Validators.pattern('^[A-Za-z0-9]+$')
       ]
       ],
     });
