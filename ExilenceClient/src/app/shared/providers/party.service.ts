@@ -442,7 +442,7 @@ export class PartyService implements OnDestroy {
     // construct initial object based on players in party
     const leagues: LeagueWithPlayers[] = [];
     party.players.forEach(player => {
-      if (player.character !== null) {
+      if (player.character !== null && player.character !== undefined) {
         const league = leagues.find(l => player.character !== null && l.id === player.character.league);
         if (league === undefined) {
           leagues.push({ id: player.character.league, players: [player] } as LeagueWithPlayers);
