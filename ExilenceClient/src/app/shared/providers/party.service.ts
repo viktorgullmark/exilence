@@ -244,9 +244,19 @@ export class PartyService implements OnDestroy {
         }
 
         this.partyUpdated.next(this.party);
+        this.updatePlayerLists(this.party);
 
         if (this.selectedPlayerObj.account === player.account) {
-          this.selectedPlayer.next(this.currentPlayer);
+
+          // select self if is player, otherwhise select the first player in the group
+          if (this.currentPlayer.character !== null) {
+            this.selectedPlayer.next(this.currentPlayer);
+          } else {
+            const firstPlayer = this.party.players.find(x => x.character !== null && !x.isSpectator);
+            if (firstPlayer !== undefined) {
+              this.selectedPlayer.next(this.party.players.find(x => x.character !== null && !x.isSpectator));
+            }
+          }
         }
 
         // update spectator count
