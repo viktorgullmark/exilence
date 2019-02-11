@@ -65,38 +65,11 @@
     }
 
     .table-outer-wrapper {
-        height: 44%;
         margin-top: 25px;
-
-        @media screen and (min-height: 1200px) {
-            height: 44%;
-        }
-
-        @media screen and (max-height: 950px) {
-            height: 50%;
-        }
-
-        @media screen and (max-height: 850px) {
-            height: 77%;
-        }
-
+        margin-bottom: 25px;
         .area-table-wrapper {
             height: calc(100% - 60px);
-
-            @media screen and (max-height: 975px) {
-                overflow-y: scroll;
-                max-height: 500px;
-            }
-
-            @media screen and (max-height: 870px) {
-                overflow-y: scroll;
-                max-height: 400px;
-            }
         }
-    }
-
-    .full-height-table {
-        height: 77%;
     }
 }
 

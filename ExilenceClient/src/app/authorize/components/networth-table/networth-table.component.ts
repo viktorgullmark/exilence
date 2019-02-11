@@ -1,5 +1,5 @@
 import { Component, Input, OnDestroy, OnInit, ViewChild, EventEmitter, Output } from '@angular/core';
-import { MatSort, MatTableDataSource } from '@angular/material';
+import { MatSort, MatTableDataSource, MatPaginator } from '@angular/material';
 import { Subscription } from 'rxjs/internal/Subscription';
 
 import { NetWorthItem, NetWorthSnapshot } from '../../../shared/interfaces/income.interface';
@@ -29,6 +29,7 @@ export class NetworthTableComponent implements OnInit, OnDestroy {
   private selectedFilterValueSub: Subscription;
   source: any;
   @ViewChild(MatSort) sort: MatSort;
+  @ViewChild(MatPaginator) paginator: MatPaginator;
 
   private partySub: Subscription;
 
@@ -144,6 +145,7 @@ export class NetworthTableComponent implements OnInit, OnDestroy {
 
     this.source = new MatTableDataSource(this.filteredArr);
     this.source.sort = this.sort;
+    this.source.paginator = this.paginator;
 
     // emit event to parentcomponent, for export etc
     this.filtered.emit(this.filteredArr);
