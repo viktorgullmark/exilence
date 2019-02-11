@@ -3,7 +3,8 @@ All notable changes to this project will be documented in this file.
 
 ## [0.9.18] - 2019-XX-XX
 ### Changed
-- Style-tweaks to new ladder-overview
+- Style-tweaks to net worth page
+- Style-tweaks to new ladder-overview page
 
 ### Fixed
 - Fixed a bug where the player ranking was not displayed in the player-list
