@@ -10,6 +10,11 @@ All notable changes to this project will be documented in this file.
 - Fixed a bug where the player ranking was not displayed in the player-list
 - Fixed a bug where groups could have multiple leaders
 - Fixed a bug where the player-list was not properly updated when players left
+- Fixed a bug where the group-name was case-sensitive, even if it displayed uppercase only
+- Fixed a bug where selecting a player sometimes took too long
+
+### Changed
+- Implemented MongoDB, for persistance and improved concurrency
 
 ## [0.9.17] - 2019-02-11
 - Several bug-fixes to new area- and ladder-tables
