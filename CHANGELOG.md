@@ -1,6 +1,9 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [0.9.18] - 2019-XX-XX
+- Style-tweaks to new ladder-overview
+
 ## [0.9.17] - 2019-02-11
 - Several bug-fixes to new area- and ladder-tables
 

@@ -12,7 +12,7 @@
     <ng-container matColumnDef="rank">
       <th mat-header-cell *matHeaderCellDef mat-sort-header="rank"> Rank </th>
       <td mat-cell *matCellDef="let element" [ngClass]="{'active': element.character === selectedPlayerValue }" class="ranking">
-        {{element.rank}} </td>
+        #{{element.rank}} </td>
     </ng-container>
 
     <ng-container matColumnDef="challenges">
