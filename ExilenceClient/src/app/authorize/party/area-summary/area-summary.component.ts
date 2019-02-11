@@ -55,7 +55,8 @@ export class AreaSummaryComponent implements OnInit, OnDestroy {
       this.selectedLocalValue = this.getPlayers()[0].character.name;
     }
 
-    if (this.selectedLocalValue === this.partyService.currentPlayer.character.name) {
+    if (this.partyService.currentPlayer.character !== null &&
+      this.selectedLocalValue === this.partyService.currentPlayer.character.name) {
       this.selfSelected = true;
     } else {
       this.selfSelected = false;
@@ -64,7 +65,8 @@ export class AreaSummaryComponent implements OnInit, OnDestroy {
     this.selectedFilterValueSub = this.partyService.selectedFilterValueSub.subscribe(res => {
       if (res !== undefined) {
 
-        if (res === this.partyService.currentPlayer.character.name) {
+        if (this.partyService.currentPlayer.character &&
+          res === this.partyService.currentPlayer.character.name) {
           this.selfSelected = true;
         } else {
           this.selfSelected = false;
@@ -174,7 +176,7 @@ export class AreaSummaryComponent implements OnInit, OnDestroy {
 
   updateSummary(event) {
     this.tableData = event.filteredArr;
-    const foundPlayer = this.party.players.find(x => x.character !== null &&
+    const foundPlayer = this.partyService.party.players.find(x => x.character !== null &&
       x.character.name === this.selectedLocalValue);
 
     const filteredArr = event.filteredArr;
@@ -229,14 +231,16 @@ export class AreaSummaryComponent implements OnInit, OnDestroy {
     this.partyService.selectedFilterValueSub.next(filterValue.value);
 
     if (this.party !== undefined) {
-      const foundPlayer = this.party.players.find(x => x.character !== null && x.character.name === this.partyService.selectedFilterValue);
+      const foundPlayer =
+        this.partyService.party.players.find(x => x.character !== null && x.character.name === this.partyService.selectedFilterValue);
 
       // update values for entire party, or a specific player, depending on selection
       if (this.partyService.selectedFilterValue === 'All players' || this.partyService.selectedFilterValue === undefined) {
         this.table.dataSource = [];
         this.table.updateTable(this.mapService.localPlayerAreas);
       } else if (foundPlayer !== undefined) {
-        if (foundPlayer.character.name === this.partyService.currentPlayer.character.name) {
+        if (this.partyService.currentPlayer.character !== null &&
+          foundPlayer.character.name === this.partyService.currentPlayer.character.name) {
           this.table.dataSource = [];
           this.table.updateTable(this.mapService.localPlayerAreas);
         } else {
@@ -248,8 +252,8 @@ export class AreaSummaryComponent implements OnInit, OnDestroy {
   }
 
   updateFilterValue(filterValue) {
-    if (this.party !== undefined) {
-      const foundPlayer = this.party.players.find(x => x.character !== null && x.character.name === filterValue);
+    if (this.partyService.party !== undefined) {
+      const foundPlayer = this.partyService.party.players.find(x => x.character !== null && x.character.name === filterValue);
 
       if (this.table !== undefined) {
         this.table.dataSource = [];
