@@ -227,16 +227,6 @@ export class PartyService implements OnDestroy {
       });
     });
 
-    this._hubConnection.on('PlayersInParty', (data: string) => {
-      this.electronService.decompress(data, (connectionIds: string[]) => {
-        console.log('Players Accually in party: ', connectionIds);
-        const playersNotInParty = this.party.players.filter(x => connectionIds.indexOf(x.connectionID) === -1);
-        playersNotInParty.forEach(player => {
-          this.PlayerLeft(player);
-        });
-      });
-    });
-
     this._hubConnection.on('KickedFromParty', () => {
       this.initParty();
       this.partyUpdated.next(this.party);

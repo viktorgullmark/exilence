@@ -1,10 +1,7 @@
 ﻿using Shared.Models;
-using Shared.Models.Connection;
+using Shared.Models.SignalR;
 using Shared.Models.Ladder;
-using Shared.Models.Statistics;
-using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace Shared.Interfaces
@@ -27,9 +24,5 @@ namespace Shared.Interfaces
         Task<bool> RemoveConnection(string connectionId);
 
         Task<PartyModel> GetParty(string partyName);
-
-        Task<Statistics> GetStatistics();
-        Task UpdateStatistics(StatisticsActionEnum action);
-        Task ResetStatistics();
     }
 }

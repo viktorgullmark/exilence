@@ -1,7 +1,7 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
 
-namespace Shared.Models.Connection
+namespace Shared.Models.SignalR
 {
     [Serializable]
     public class ConnectionModel

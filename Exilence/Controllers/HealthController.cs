@@ -16,10 +16,9 @@ namespace Exilence
 
         // Used for HAProxy healthchecking
         [Route("")]
-        public async Task<IActionResult> Index()
+        public IActionResult Index()
         {
-            var connections = await _redisRepository.GetStatistics();
-            return Ok(connections);
+            return Ok();
         }
     }
 }

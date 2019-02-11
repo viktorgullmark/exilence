@@ -2,9 +2,8 @@
 using Shared.Helper;
 using Shared.Interfaces;
 using Shared.Models;
-using Shared.Models.Connection;
+using Shared.Models.SignalR;
 using Shared.Models.Ladder;
-using Shared.Models.Statistics;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -181,48 +180,6 @@ namespace Shared.Repositories
         }
         #endregion
 
-
-        #region Statistics
-
-        public async Task<Statistics> GetStatistics()
-        {
-            var statistics = await _cache.GetAsync<Statistics>($"statistics");
-            return statistics;
-        }
-
-        public async Task UpdateStatistics(StatisticsActionEnum action)
-        {
-
-            var statistics = await _cache.GetAsync<Statistics>($"statistics");
-
-            if (statistics == null)
-            {
-                statistics = new Statistics();
-            }
-
-            switch (action)
-            {
-                case StatisticsActionEnum.IncrementConnection:
-                    statistics.Connections++;
-                    break;
-                case StatisticsActionEnum.DecrementConnection:
-                    statistics.Connections--;
-                    break;
-                default:
-                    break;
-            }
-
-            await _cache.SetAsync($"statistics", statistics);
-        }
-
-        public async Task ResetStatistics()
-        {
-            var statistics = new Statistics();
-            await _cache.SetAsync($"statistics", statistics);
-        }
-
-
-        #endregion
 
     }
 }

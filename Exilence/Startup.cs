@@ -59,6 +59,7 @@ namespace Exilence
 
             services.AddScoped<ILadderService, LadderService>();
             services.AddScoped<IRedisRepository, RedisRepository>();
+            services.AddScoped<IMongoRepository, MongoRepository>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

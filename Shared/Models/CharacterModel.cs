@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MongoDB.Bson.Serialization.Attributes;
+using System;
 using System.Collections.Generic;
 
 namespace Shared.Models
@@ -6,6 +7,7 @@ namespace Shared.Models
     [Serializable]
     public class CharacterModel
     {
+        [BsonId]
         public string Name { get; set; }
         public string League { get; set; }
         public int ClassId { get; set; }
