@@ -166,6 +166,9 @@ export class PartyService implements OnDestroy {
 
           if (this.playerLadders.find(x => x.name === player.character.league) === undefined && player.character !== null) {
             this.getLadderForLeague(player.character.league);
+          } else {
+            const firstPlayer = this.party.players.find(x => x.character !== null && !x.isSpectator);
+            this.getLadderForLeague(firstPlayer.character.league);
           }
 
           this.partyUpdated.next(this.party);
@@ -217,6 +220,9 @@ export class PartyService implements OnDestroy {
         if (this.playerLadders.find(x => x.name === player.character.league) === undefined &&
           player.character !== null) {
           this.getLadderForLeague(player.character.league);
+        } else {
+          const firstPlayer = this.party.players.find(x => x.character !== null && !x.isSpectator);
+          this.getLadderForLeague(firstPlayer.character.league);
         }
 
         this.logService.log('player joined:', player);
