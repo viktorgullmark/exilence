@@ -139,7 +139,7 @@ export class PartyService implements OnDestroy {
           this.party = party;
           this.updatePlayerLists(this.party);
           this.accountService.player.next(playerObj);
-          const playerToSelect = this.party.players.find(x => !x.isSpectator);
+          const playerToSelect = !player.isSpectator ? player : this.party.players.find(x => !x.isSpectator);
           if (playerToSelect !== undefined) {
             this.selectedPlayer.next(playerToSelect);
           }
@@ -244,6 +244,7 @@ export class PartyService implements OnDestroy {
 
     this._hubConnection.on('LeaderChanged', (data: string) => {
       this.electronService.decompress(data, (leaderData) => {
+
         const oldLeader = this.party.players.find(x => x.character !== null && leaderData.oldLeader.character !== null
           && x.character.name === leaderData.oldLeader.character.name);
         const newLeader = this.party.players.find(x => x.character !== null && leaderData.newLeader.character !== null
@@ -568,6 +569,8 @@ export class PartyService implements OnDestroy {
   }
 
   public leaveParty(partyName: string, spectatorCode: string, player: Player) {
+    player.isLeader = false;
+    this.accountService.player.next(player);
     this.initParty();
     if (partyName !== '') {
       if (this._hubConnection) {
