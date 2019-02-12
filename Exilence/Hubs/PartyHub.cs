@@ -119,7 +119,7 @@ namespace Exilence.Hubs
                         await _mongoRepository.UpdatePlayerInParty(partyName, player);
                     }
 
-                    // dont expose name to clients
+                    party = await _mongoRepository.GetParty(partyName);
                     party.Name = "";
                     await Clients.Caller.SendAsync("EnteredParty", CompressionHelper.Compress(party), CompressionHelper.Compress(player));
                 }
