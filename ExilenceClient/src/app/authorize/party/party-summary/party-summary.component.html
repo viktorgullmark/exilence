@@ -58,7 +58,7 @@
 
     </div>
     <div class="income-graph-wrapper" [hidden]="isGraphHidden">
-        <app-income (hidden)="toggleGraph($event)" (removeSnapshot)="removeSnapshot($event)" [view]="graphDimensions"></app-income>
+        <app-income (hidden)="toggleGraph($event)" (removeSnapshot)="removeSnapshot()" [view]="graphDimensions"></app-income>
     </div>
     <div class="table-outer-wrapper" [ngClass]="{'full-height-table': isGraphHidden }">
         <mat-tab-group #networthTabs id="networthTabs" [(selectedIndex)]="selectedIndex" (selectedTabChange)="handleTabEvent()">
