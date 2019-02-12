@@ -69,6 +69,7 @@ export class IncomeComponent implements OnInit, OnDestroy {
     private accountService: AccountService,
     private router: Router,
     private ref: ChangeDetectorRef,
+    private settingsService: SettingsService,
     private dialog: MatDialog
   ) {
   }
@@ -263,6 +264,7 @@ export class IncomeComponent implements OnInit, OnDestroy {
   }
 
   deleteSnapshot(snapshot) {
+    const netWorthHistory = this.settingsService.get('networth');
     const player = Object.assign({}, this.currentPlayer);
     const foundSnapshot = player.netWorthSnapshots.find(x => x.timestamp === snapshot.name.getTime() &&
       x.value === snapshot.value);
@@ -273,6 +275,12 @@ export class IncomeComponent implements OnInit, OnDestroy {
       if (indexOfSnapshot > -1) {
         player.netWorthSnapshots = player.netWorthSnapshots.splice(indexOfSnapshot, 1);
       }
+
+      if (netWorthHistory !== undefined) {
+        netWorthHistory.snapshots = player.netWorthSnapshots;
+      }
+
+      this.settingsService.set('networth', netWorthHistory);
       this.accountService.player.next(player);
       this.partyService.updatePlayer(player);
     } else {
