@@ -1,5 +1,6 @@
 ﻿using Shared.Models;
 using Shared.Models.Ladder;
+using Shared.Models.SignalR;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -30,6 +31,13 @@ namespace Shared.Interfaces
         Task SetLadderRunning(string leagueName);
         Task SetLadderPending(string leagueName);
         Task UpdateLadder(string leagueName, List<LadderPlayerModel> players);
+        #endregion
+
+        #region Connections
+        Task AddToConnectionIndex(string connectionId, string partyName);
+        Task RemoveConnectionFromIndex(string connectionId);
+        Task<ConnectionModel> GetPartyNameFromConnectionIndex(string connectionId);
+        Task<ConnectionModel> UpdatePartyNameInConnectionIndex(string connectionId, string partyName);
         #endregion
     }
 }

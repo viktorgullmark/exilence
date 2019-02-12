@@ -7,6 +7,7 @@ using MongoDB.Driver;
 using Shared.Interfaces;
 using Shared.Models;
 using Shared.Models.Ladder;
+using Shared.Models.SignalR;
 
 namespace Shared.Repositories
 {
@@ -17,6 +18,7 @@ namespace Shared.Repositories
         private readonly IMongoCollection<PartyModel> _parties;
         private readonly IMongoCollection<PlayerModel> _players;
         private readonly IMongoCollection<LadderModel> _ladders;
+        private readonly IMongoCollection<ConnectionModel> _connections;
 
         private IConfiguration _configuration;
 
@@ -27,6 +29,7 @@ namespace Shared.Repositories
             _database = _client.GetDatabase("exilence");
             _parties = _database.GetCollection<PartyModel>("parties");
             _ladders = _database.GetCollection<LadderModel>("ladders");
+            _connections = _database.GetCollection<ConnectionModel>("connections");
         }
         
         public async Task PartyExists(string partyName)
@@ -171,6 +174,41 @@ namespace Shared.Repositories
                 .Set(l => l.Finished, DateTime.UtcNow)
                 .Set(l => l.Ladder, players);
             var result = await _ladders.UpdateOneAsync(p => p.Name == leagueName, update);
+        }
+
+        #endregion
+
+        #region Connections
+
+        public async Task AddToConnectionIndex(string connectionId, string partyName)
+        {
+            var connectionModel = new ConnectionModel()
+            {
+                ConnectedDate = DateTime.UtcNow,
+                ConnectionId = connectionId,
+                PartyName = partyName
+            };
+            await _connections.InsertOneAsync(connectionModel);
+        }
+
+
+        public async Task<ConnectionModel> UpdatePartyNameInConnectionIndex(string connectionId, string partyName)
+        {
+            var update = Builders<ConnectionModel>.Update.Set(c => c.PartyName, partyName);
+            var result = await _connections.FindOneAndUpdateAsync(c => c.ConnectionId == connectionId, update);
+            return result;
+        }
+
+
+        public async Task RemoveConnectionFromIndex(string connectionId)
+        {
+            await _connections.DeleteOneAsync(c => c.ConnectionId == connectionId);
+        }
+
+        public async Task<ConnectionModel> GetPartyNameFromConnectionIndex(string connectionId)
+        {
+            var result = await _connections.FindAsync(c => c.ConnectionId == connectionId);
+            return await result.FirstOrDefaultAsync();
         }
 
         #endregion
