@@ -2,7 +2,6 @@
 using Exilence.Interfaces;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.SignalR;
-using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Extensions.Configuration;
 using Shared.Helper;
 using Shared.Interfaces;
@@ -138,12 +137,10 @@ namespace Exilence.Hubs
         {
             var player = CompressionHelper.Decompress<PlayerModel>(playerObj);
 
-            // if spectatorCode is empty, fetch it
             if (string.IsNullOrEmpty(spectatorCode))
             {
                 spectatorCode = SpectatorHelper.ToSpectatorCode(partyName, _key);
             }
-            // if partyname is empty, fetch it
             else if (string.IsNullOrEmpty(partyName))
             {
                 partyName = SpectatorHelper.ToPartyName(spectatorCode, _key);
@@ -154,23 +151,20 @@ namespace Exilence.Hubs
             {
                 await _mongoRepository.RemovePlayerFromParty(partyName, ConnectionId);
 
-                // if we are leaving as the last player
-                if (party.Players.Count(x => !x.IsSpectator) == 1) {  
+                if (party.Players.Count(x => !x.IsSpectator) == 1)
+                {
                     await _mongoRepository.RemoveParty(partyName);
                 }
-
-                party = await _mongoRepository.GetParty(partyName);
-                if(party != null) { 
-                    if (player.IsLeader && party.Players.Any(x => !x.IsSpectator && x.ConnectionID != ConnectionId)) // if there is any player left in party, assign leader to first one
+                else
+                {
+                    if (player.IsLeader && party.Players.Any(x => !x.IsSpectator && x.ConnectionID != ConnectionId))
                     {
                         var leader = party.Players.First(x => !x.IsSpectator);
                         await _mongoRepository.SetSpecificPlayerAsLeader(partyName, leader.Character.Name);
-                        party = await _mongoRepository.GetParty(partyName);
-                        await Clients.Group(partyName).SendAsync("LeaderChanged", CompressionHelper.Compress(new { oldLeader = player, newLeader = party.Players.First(x => !x.IsSpectator)}));
+                        await Clients.Group(partyName).SendAsync("LeaderChanged", CompressionHelper.Compress(new { oldLeader = player, newLeader = leader }));
                     }
                 }
             }
-
             await Groups.RemoveFromGroupAsync(player.ConnectionID, partyName);
             await Clients.Group(partyName).SendAsync("PlayerLeft", CompressionHelper.Compress(player));
         }
@@ -239,7 +233,7 @@ namespace Exilence.Hubs
 
             await RemoveFromIndex();
             await base.OnDisconnectedAsync(exception);
-        }       
+        }
 
         private async Task<string> GetPartynameFromIndex()
         {
