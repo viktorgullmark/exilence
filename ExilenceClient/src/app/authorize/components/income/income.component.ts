@@ -262,7 +262,7 @@ export class IncomeComponent implements OnInit, OnDestroy {
   }
 
   deleteSnapshot(snapshot) {
-    if (!this.partyService.updateInProgress) {
+    if (!this.partyService.updateInProgress && snapshot !== undefined) {
       const netWorthHistory = this.settingsService.get('networth');
       const player = Object.assign({}, this.currentPlayer);
       const foundSnapshot = player.netWorthSnapshots.find(x => x.timestamp === snapshot.name.getTime() &&
