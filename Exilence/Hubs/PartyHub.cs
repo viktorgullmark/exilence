@@ -17,7 +17,6 @@ namespace Exilence.Hubs
     [EnableCors("AllowAll")]
     public class PartyHub : Hub
     {
-        private IDistributedCache _cache;
         private ILadderService _ladderService;
         private IConfiguration _configuration;
         private IMongoRepository _mongoRepository;
@@ -27,13 +26,11 @@ namespace Exilence.Hubs
         private string ConnectionId => Context.ConnectionId;
 
         public PartyHub(
-            IDistributedCache cache,
             ILadderService ladderService,
             IConfiguration configuration,
             IMongoRepository mongoRepository
             )
         {
-            _cache = cache;
             _ladderService = ladderService;
             _configuration = configuration;
             _mongoRepository = mongoRepository;
