@@ -182,11 +182,9 @@ namespace Exilence.Hubs
             await _mongoRepository.RemoveSpecificPlayerAsLeader(partyName, currentLeader.Character.Name);
             await _mongoRepository.SetSpecificPlayerAsLeader(partyName, characterName);
 
-            var newLeader = _mongoRepository.GetPlayerByCharacterName(partyName, characterName);
+            var newLeader = await _mongoRepository.GetPlayerByCharacterName(partyName, characterName);
 
-            party = await _mongoRepository.GetParty(partyName);
-
-            await Clients.Group(partyName).SendAsync("LeaderChanged", CompressionHelper.Compress(new { oldLeader = currentLeader, newLeader = newLeader }));
+            await Clients.Group(partyName).SendAsync("LeaderChanged", CompressionHelper.Compress(new { oldLeader = currentLeader, newLeader }));
         }
 
         public async Task KickFromParty(string partyName, string characterName)
