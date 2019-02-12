@@ -4,6 +4,7 @@ All notable changes to this project will be documented in this file.
 ## [0.9.18] - 2019-XX-XX
 ### Added
 - Implemented MongoDB, for persistance and improved concurrency
+- Now remembers window-size between startups
 
 ### Changed
 - Style-tweaks to net worth page
