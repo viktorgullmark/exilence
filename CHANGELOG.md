@@ -19,6 +19,7 @@ All notable changes to this project will be documented in this file.
 - Fixed a bug where the group-name was case-sensitive, even if it displayed uppercase only
 - Fixed a bug where selecting a player sometimes took too long
 - Fixed a bug where the scrollbar would sometimes appear in the character-tab
+- Fixed a bug where you sometimes couldn't select a player in your group
 
 ## [0.9.17] - 2019-02-11
 - Several bug-fixes to new area- and ladder-tables
