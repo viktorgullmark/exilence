@@ -4,7 +4,7 @@
  && foundPlayer.netWorthSnapshots 
  && foundPlayer.netWorthSnapshots.length > 0 
  && foundPlayer.netWorthSnapshots[0].timestamp > 0))">
-  <h3 class="mat-h3 graph-title">{{title}}
+  <h3 class="mat-h3 graph-title">Net worth summary
     <span class="mat-caption caption-text">(updates when you change area, at most every 2 minutes)</span>
   </h3>
   <div class="chart-container">
@@ -12,7 +12,7 @@
       [scheme]="colorScheme" [results]="dateData" [legend]="player == undefined" legendTitle="Players"
       (legendLabelClick)="onLegendLabelClick($event)" gradient="false" xAxis="true" yAxis="true" showXAxisLabel="true"
       showYAxisLabel="true" xAxisLabel="Time" [xAxisTickFormatting]="axisFormat" animations="true" yAxisLabel="Net worth in Chaos"
-      autoScale="true" showGridLines="true" [curve]="curve" (select)="select($event)">
+      autoScale="true" showGridLines="true" [curve]="curve" (select)="select($event)" [contextMenu]="badgeMenu" [contextMenuSubject]="selectedSnapshot">
       <ng-template #tooltipTemplate let-model="model">
         Net worth: {{ model?.value.toFixed(2) }} chaos
         <br> Time: {{ axisFormat(model?.name) }}
@@ -42,3 +42,9 @@
     </h3>
   </div>
 </ng-container>
+
+<context-menu [disabled]="selectedSnapshot == {}">
+    <ng-template contextMenuItem let-item (execute)="markForRemoval()">
+        Remove a snapshot
+    </ng-template>
+</context-menu>

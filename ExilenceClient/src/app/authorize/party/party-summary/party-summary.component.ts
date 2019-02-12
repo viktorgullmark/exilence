@@ -16,6 +16,7 @@ import { PartyService } from '../../../shared/providers/party.service';
 import { SettingsService } from '../../../shared/providers/settings.service';
 import { InfoDialogComponent } from '../../components/info-dialog/info-dialog.component';
 import { NetworthTableComponent } from '../../components/networth-table/networth-table.component';
+import { RemoveSnapshotDialogComponent } from './remove-snapshot-dialog/remove-snapshot.component';
 
 @Component({
   selector: 'app-party-summary',
@@ -139,6 +140,10 @@ export class PartySummaryComponent implements OnInit, OnDestroy {
     if (this.selectedFilterValueSub !== undefined) {
       this.selectedFilterValueSub.unsubscribe();
     }
+  }
+
+  removeSnapshot() {
+    this.openRemovalDialog();
   }
 
   updateTableData(event: any[]) {
@@ -333,6 +338,16 @@ export class PartySummaryComponent implements OnInit, OnDestroy {
       });
       dialogRef.afterClosed().subscribe(result => {
         this.settingsService.set('diaShown_partySummary', true);
+      });
+    }
+  }
+
+  openRemovalDialog(): void {
+    if (this.electronService.isElectron()) {
+      const dialogRef = this.dialog.open(RemoveSnapshotDialogComponent, {
+        width: '850px'
+      });
+      dialogRef.afterClosed().subscribe(result => {
       });
     }
   }

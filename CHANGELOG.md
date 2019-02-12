@@ -4,6 +4,7 @@ All notable changes to this project will be documented in this file.
 ## [0.9.18] - 2019-XX-XX
 ### Added
 - Added a progress-bar for gem-progress
+- Added the ability to remove snapshots (right-click in the graph)
 - Now remembers window-size between startups
 - Implemented MongoDB, for persistance and improved concurrency
 

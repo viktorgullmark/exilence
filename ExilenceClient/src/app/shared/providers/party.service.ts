@@ -518,17 +518,18 @@ export class PartyService implements OnDestroy {
 
         if (ladder !== null) {
           // update player ranks based on fetched ladder
-          this.party.players.map(player => {
-            if (player.character !== null && player.character.league === league) {
-              const playerOnLadder = ladder.find(x => x.name === player.character.name);
-              if (playerOnLadder !== undefined) {
-                player.overallRank = playerOnLadder.rank.overall;
-                return player;
-              }
+          const foundInParty = this.party.players.find(x => x.character !== null &&
+            x.character.league === league &&
+            this.currentPlayer.character != null &&
+            this.currentPlayer.character.name === x.character.name);
+          if (foundInParty !== undefined) {
+            const foundInLadder = ladder.find(x => x.name === foundInParty.character.name);
+            if (foundInLadder !== undefined) {
+              foundInParty.overallRank = foundInLadder.rank.overall;
+              this.updatePlayer(foundInParty);
+              this.accountService.player.next(foundInParty);
             }
-          });
-          this.updatePlayerLists(this.party);
-          this.partyUpdated.next(this.party);
+          }
         }
       });
     });
