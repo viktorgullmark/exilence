@@ -157,9 +157,9 @@ namespace Exilence.Hubs
                 }
                 else
                 {
-                    if (player.IsLeader && party.Players.Any(x => !x.IsSpectator && x.ConnectionID != ConnectionId))
+                    var leader = party.Players.FirstOrDefault(x => !x.IsSpectator && x.ConnectionID != player.ConnectionID);
+                    if (leader != null)
                     {
-                        var leader = party.Players.First(x => !x.IsSpectator);
                         await _mongoRepository.SetSpecificPlayerAsLeader(partyName, leader.Character.Name);
                         await Clients.Group(partyName).SendAsync("LeaderChanged", CompressionHelper.Compress(new { oldLeader = player, newLeader = leader }));
                     }
@@ -218,15 +218,12 @@ namespace Exilence.Hubs
             if (partyName != null)
             {
                 var party = await _mongoRepository.GetParty(partyName);
-
                 if (party != null)
                 {
-                    await _mongoRepository.RemovePlayerFromParty(partyName, ConnectionId);
-                    party = await _mongoRepository.GetParty(partyName);
-
-                    if (party.Players.Where(p => p.IsSpectator == false).Count() == 1)
+                    var player = party.Players.FirstOrDefault(t => t.ConnectionID == ConnectionId);
+                    if (player != null)
                     {
-                        await _mongoRepository.RemoveParty(partyName);
+                        await LeaveParty(partyName, null, CompressionHelper.Compress(player));
                     }
                 }
             }
@@ -238,7 +235,7 @@ namespace Exilence.Hubs
         private async Task<string> GetPartynameFromIndex()
         {
             var connectionModel = await _mongoRepository.GetPartyNameFromConnectionIndex(ConnectionId);
-            return connectionModel?.PartyName;
+            return connectionModel.PartyName;
         }
 
         private async Task RemoveFromIndex()
