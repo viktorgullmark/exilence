@@ -63,7 +63,7 @@ export class IncomeComponent implements OnInit, OnDestroy {
   selectedColorScheme: string;
 
   constructor(
-    private electronService: ElectronService,
+    public electronService: ElectronService,
     private partyService: PartyService,
     private settingService: SettingsService,
     private accountService: AccountService,
