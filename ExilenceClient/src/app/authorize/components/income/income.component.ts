@@ -264,38 +264,40 @@ export class IncomeComponent implements OnInit, OnDestroy {
   }
 
   deleteSnapshot(snapshot) {
-    const netWorthHistory = this.settingsService.get('networth');
-    const player = Object.assign({}, this.currentPlayer);
-    const foundSnapshot = player.netWorthSnapshots.find(x => x.timestamp === snapshot.name.getTime() &&
-      x.value === snapshot.value);
+    if (!this.partyService.updateInProgress) {
+      const netWorthHistory = this.settingsService.get('networth');
+      const player = Object.assign({}, this.currentPlayer);
+      const foundSnapshot = player.netWorthSnapshots.find(x => x.timestamp === snapshot.name.getTime() &&
+        x.value === snapshot.value);
 
-    if (foundSnapshot !== undefined) {
-      const indexOfSnapshot = player.netWorthSnapshots.indexOf(foundSnapshot);
+      if (foundSnapshot !== undefined) {
+        const indexOfSnapshot = player.netWorthSnapshots.indexOf(foundSnapshot);
 
-      if (indexOfSnapshot > -1) {
-        player.netWorthSnapshots = player.netWorthSnapshots.splice(indexOfSnapshot, 1);
+        if (indexOfSnapshot > -1) {
+          player.netWorthSnapshots = player.netWorthSnapshots.splice(indexOfSnapshot, 1);
+        }
+
+        if (netWorthHistory !== undefined) {
+          netWorthHistory.snapshots = player.netWorthSnapshots;
+        }
+
+        this.settingsService.set('networth', netWorthHistory);
+        this.accountService.player.next(player);
+        this.partyService.updatePlayer(player);
+      } else {
+        setTimeout(() => {
+          const dialogRef = this.dialog.open(ServerMessageDialogComponent, {
+            width: '850px',
+            data: {
+              icon: 'error',
+              title: 'Not your snapshot',
+              content: 'You can only remove your own snapshots. Nothing was removed.'
+            }
+          });
+          dialogRef.afterClosed().subscribe(result => {
+          });
+        }, 0);
       }
-
-      if (netWorthHistory !== undefined) {
-        netWorthHistory.snapshots = player.netWorthSnapshots;
-      }
-
-      this.settingsService.set('networth', netWorthHistory);
-      this.accountService.player.next(player);
-      this.partyService.updatePlayer(player);
-    } else {
-      setTimeout(() => {
-        const dialogRef = this.dialog.open(ServerMessageDialogComponent, {
-          width: '850px',
-          data: {
-            icon: 'error',
-            title: 'Not your snapshot',
-            content: 'You can only remove your own snapshots. Nothing was removed.'
-          }
-        });
-        dialogRef.afterClosed().subscribe(result => {
-        });
-      }, 0);
     }
   }
 

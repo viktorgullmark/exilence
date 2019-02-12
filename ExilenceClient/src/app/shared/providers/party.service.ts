@@ -56,6 +56,7 @@ export class PartyService implements OnDestroy {
   private reconnectAttempts: number;
   private forceClosed: boolean;
 
+  public updateInProgress = false;
   public joinInProgress = false;
   public maskedName = false;
   public maskedSpectatorCode = false;
@@ -187,6 +188,7 @@ export class PartyService implements OnDestroy {
           this.selectedPlayer.next(playerObj);
         }
         this.logService.log('Player updated:', playerObj);
+        this.updateInProgress = false;
       });
     });
 
@@ -462,6 +464,7 @@ export class PartyService implements OnDestroy {
 
   public updatePlayer(player: Player) {
     const oneDayAgo = (Date.now() - (24 * 60 * 60 * 1000));
+    this.updateInProgress = true;
     this.externalService.getCharacter(this.accountInfo)
       .subscribe((equipment: EquipmentResponse) => {
         player = this.externalService.setCharacter(equipment, player);
