@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild, ChangeDetectorRef } from '@angular/core';
+import { Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { colorSets as ngxChartsColorsets } from '@swimlane/ngx-charts/release/utils/color-sets';
 import * as d3 from 'd3';
@@ -68,7 +68,6 @@ export class IncomeComponent implements OnInit, OnDestroy {
     private settingService: SettingsService,
     private accountService: AccountService,
     private router: Router,
-    private ref: ChangeDetectorRef,
     private settingsService: SettingsService,
     private dialog: MatDialog
   ) {
@@ -227,8 +226,6 @@ export class IncomeComponent implements OnInit, OnDestroy {
     }
     const data = [... this.dateData];
     this.dateData = data;
-
-    this.ref.detectChanges();
   }
 
   axisFormat(val) {

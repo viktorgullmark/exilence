@@ -1,4 +1,4 @@
-import { Component, Input, OnDestroy, OnInit, ViewChild, EventEmitter, Output, ChangeDetectorRef } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit, ViewChild, EventEmitter, Output } from '@angular/core';
 import { MatSort, MatTableDataSource, MatPaginator } from '@angular/material';
 import { Subscription } from 'rxjs/internal/Subscription';
 
@@ -33,7 +33,7 @@ export class NetworthTableComponent implements OnInit, OnDestroy {
 
   private partySub: Subscription;
 
-  constructor(private partyService: PartyService, private settingsService: SettingsService, private ref: ChangeDetectorRef) { }
+  constructor(private partyService: PartyService, private settingsService: SettingsService) { }
 
   ngOnInit() {
     if (!this.showOverTime) {
@@ -149,8 +149,6 @@ export class NetworthTableComponent implements OnInit, OnDestroy {
 
     // emit event to parentcomponent, for export etc
     this.filtered.emit(this.filteredArr);
-
-    this.ref.detectChanges();
   }
 
   loadPlayerData(player: Player) {
