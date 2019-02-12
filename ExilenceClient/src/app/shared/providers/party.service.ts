@@ -530,7 +530,6 @@ export class PartyService implements OnDestroy {
             const foundInLadder = ladder.find(x => x.name === foundInParty.character.name);
             if (foundInLadder !== undefined) {
               foundInParty.overallRank = foundInLadder.rank.overall;
-              this.updatePlayer(foundInParty);
               this.accountService.player.next(foundInParty);
             }
           }
