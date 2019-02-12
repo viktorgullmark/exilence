@@ -157,14 +157,11 @@ namespace Exilence.Hubs
             var party = await _mongoRepository.GetParty(partyName);
             if (party != null)
             {
+                await _mongoRepository.RemovePlayerFromParty(partyName, ConnectionId);
 
-                if (party.Players.Count == 1)
-                {
+                // if we are leaving as the last player
+                if (party.Players.Count(x => !x.IsSpectator) == 1) {  
                     await _mongoRepository.RemoveParty(partyName);
-                }
-                else
-                {
-                    await _mongoRepository.RemovePlayerFromParty(partyName, ConnectionId);
                 }
 
                 if (player.IsLeader && party.Players.Any(x => !x.IsSpectator && x.ConnectionID != ConnectionId)) // if there is any player left in party, assign leader to first one
@@ -172,7 +169,6 @@ namespace Exilence.Hubs
                     await _mongoRepository.SetFirstPlayerAsLeader(partyName);
                     await Clients.Group(partyName).SendAsync("LeaderChanged", CompressionHelper.Compress(new { oldLeader = player, newLeader = party.Players[0] }));
                 }
-
             }
 
             await Groups.RemoveFromGroupAsync(player.ConnectionID, partyName);
