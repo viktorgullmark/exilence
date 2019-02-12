@@ -1,7 +1,7 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
-## [0.9.18] - 2019-XX-XX
+## [0.9.18] - 2019-02-12
 ### Added
 - Added a progress-bar for gem-progress
 - Added the ability to remove snapshots (right-click in the graph)
