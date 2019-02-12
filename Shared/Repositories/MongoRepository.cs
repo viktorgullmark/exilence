@@ -71,8 +71,8 @@ namespace Shared.Repositories
 
         public async Task SetFirstPlayerAsLeader(string partyName)
         {
-            var update = Builders<PartyModel>.Update.Set(p => p.Players[0].IsLeader, true );
-            var result = await _parties.FindOneAndUpdateAsync(p => p.Name == partyName, update);
+            var update = Builders<PartyModel>.Update.Set(p => p.Players[-1].IsLeader, true);
+            var result = await _parties.UpdateOneAsync(p => p.Name == partyName && p.Players.Any(c => !c.IsSpectator), update);
         }
 
         public async Task SetSpecificPlayerAsLeader(string partyName, string characterName)
