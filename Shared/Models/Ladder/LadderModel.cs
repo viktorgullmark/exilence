@@ -9,7 +9,6 @@ namespace Shared.Models.Ladder
     public class LadderModel
     {
         [BsonId]
-        public int Id { get; set; }
         public string Name { get; set; }
         public bool Running { get; set; }
         public DateTime Started { get; set; }

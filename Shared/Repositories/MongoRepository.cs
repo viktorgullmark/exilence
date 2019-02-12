@@ -18,9 +18,12 @@ namespace Shared.Repositories
         private readonly IMongoCollection<PlayerModel> _players;
         private readonly IMongoCollection<LadderModel> _ladders;
 
-        public MongoRepository(IConfiguration config)
+        private IConfiguration _configuration;
+
+        public MongoRepository(IConfiguration configuration)
         {
-            _client = new MongoClient(config.GetConnectionString("Mongo"));
+            _configuration = configuration;
+            _client = new MongoClient(_configuration.GetConnectionString("Mongo"));
             _database = _client.GetDatabase("exilence");
             _parties = _database.GetCollection<PartyModel>("parties");
             _players = _database.GetCollection<PlayerModel>("players");
@@ -104,13 +107,20 @@ namespace Shared.Repositories
             return await ladder.FirstOrDefaultAsync();
         }
 
+        public async Task<List<LadderModel>> GetAllLadders()
+        {
+            return await _ladders.Find(l => true).ToListAsync();
+        }
+
         public async Task<LadderModel> GetPendingLadder()
         {
-            var condition = Builders<LadderModel>.Filter.Eq(l => l.Running && l.Finished < DateTime.UtcNow.AddMinutes(-1), false);
+
+            var filter = (Builders<LadderModel>.Filter.Eq(l => l.Running, false) 
+                & Builders<LadderModel>.Filter.Lt(l => l.Finished, DateTime.UtcNow.AddMinutes(-1)));
             var fields = Builders<LadderModel>.Projection
                 .Include(l => l.Finished)
                 .Include(l => l.Running);
-            var results = await _ladders.Find(condition).Project<LadderModel>(fields).ToListAsync();
+            var results = await _ladders.Find(filter).Project<LadderModel>(fields).ToListAsync();
             return results.OrderByDescending(l => l.Finished).LastOrDefault();
         }
 
@@ -124,7 +134,8 @@ namespace Shared.Repositories
 
         public async Task<bool> LadderExists(string leagueName)
         {
-            return await _ladders.FindAsync(p => p.Name == leagueName) != null;
+            var ladder = await _ladders.FindAsync(p => p.Name == leagueName);
+            return ladder.Current != null;
         }
 
         public async Task SetLadderRunning(string leagueName)
@@ -133,6 +144,25 @@ namespace Shared.Repositories
                 .Set(l => l.Running, true)
                 .Set(l => l.Started, DateTime.UtcNow);
             var result = await _ladders.UpdateOneAsync(p => p.Name == leagueName, update);
+        }
+
+        public async Task SetLadderPending(string leagueName)
+        {
+            var exists = await LadderExists(leagueName);
+
+            if(!exists)
+            {
+                var ladder = new LadderModel()
+                {
+                    Name = leagueName,
+                    Started = DateTime.MinValue,
+                    Finished = DateTime.MinValue,
+                    Ladder = new List<LadderPlayerModel>(),
+                    Running = false
+                };
+
+                await _ladders.InsertOneAsync(ladder);
+            }
         }
 
         public async Task UpdateLadder(string leagueName, List<LadderPlayerModel> players)

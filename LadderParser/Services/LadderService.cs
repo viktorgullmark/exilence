@@ -14,7 +14,7 @@ namespace LadderParser.Services
 {
     public class LadderService : ILadderService
     {
-        private IRedisRepository _redisRepository;
+        private IMongoRepository _repository;
         private readonly IExternalService _externalService;
 
         private const string LadderUrl = "http://www.pathofexile.com/api/ladders";
@@ -22,21 +22,19 @@ namespace LadderParser.Services
 
         public LadderService(
             IExternalService externalService,
-            IRedisRepository redisRepository
+            IMongoRepository repository
             )
         {
             _externalService = externalService;
-            _redisRepository = redisRepository;
+            _repository = repository;
             isRunning = false;
         }
 
         public async Task UpdateLadders()
         {
-            var leagues = await _redisRepository.GetAllLeaguesLadders();
             if (!isRunning)
             {
-                var pendingLeague = leagues.Where(t => !t.Running && t.Finished < DateTime.UtcNow.AddMinutes(-1)).OrderByDescending(t => t.Finished).LastOrDefault();
-
+                var pendingLeague = await _repository.GetPendingLadder();
                 if (pendingLeague != null)
                 {
                     isRunning = true;
@@ -49,9 +47,9 @@ namespace LadderParser.Services
         private async Task UpdateLadder(string leagueName)
         {
             Log($"Starting to fetch {leagueName} ladder");
-            await _redisRepository.SetLeagueLadderRunning(leagueName);
+            await _repository.SetLadderRunning(leagueName);
 
-            var league = await _redisRepository.GetLeagueLadder(leagueName);
+            var league = await _repository.GetLadder(leagueName);
             var oldLadder = league.Ladder;
             var newLadder = new List<LadderPlayerModel>();
             var sortModes = new List<string>() { null, "depth", "depthsolo" };
@@ -82,7 +80,7 @@ namespace LadderParser.Services
                         }
                         else
                         {
-                            await _redisRepository.RemoveLeagueLadder(leagueName);
+                            await _repository.RemoveLadder(leagueName);
                             break;
                         }
                     }
@@ -92,7 +90,7 @@ namespace LadderParser.Services
             if (newLadder.Count > 0)
             {
                 newLadder = CalculateStatistics(oldLadder, newLadder);
-                await _redisRepository.UpdateLeagueLadder(leagueName, newLadder);
+                await _repository.UpdateLadder(leagueName, newLadder);
             }
             Log($"Finished fetching {leagueName} ladder.");
             Log($"--------------------------------------");

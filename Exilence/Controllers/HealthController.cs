@@ -7,11 +7,8 @@ namespace Exilence
     [Route("api/[controller]")]
     public class HealthController : Controller
     {
-        IRedisRepository _redisRepository;
-
-        public HealthController(IRedisRepository redisRepository)
+        public HealthController()
         {
-            _redisRepository = redisRepository;
         }
 
         // Used for HAProxy healthchecking
