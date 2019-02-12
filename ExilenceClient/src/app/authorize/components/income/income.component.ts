@@ -187,14 +187,15 @@ export class IncomeComponent implements OnInit, OnDestroy {
 
     let netWorthHistoryDays = 14;
     if (this.electronService.isElectron()) {
-      netWorthHistoryDays = this.settingService.get('netWorthHistoryDays');
-      if (netWorthHistoryDays === undefined) {
+      const networthDaysSetting = this.settingService.get('netWorthHistoryDays');
+      if (networthDaysSetting === undefined) {
         this.settingService.set('netWorthHistoryDays', netWorthHistoryDays);
+      } else {
+        netWorthHistoryDays = networthDaysSetting;
       }
     } else {
       netWorthHistoryDays = 1;
     }
-
 
     const daysAgo = (Date.now() - (netWorthHistoryDays * 24 * 60 * 60 * 1000));
     playerObj.netWorthSnapshots = playerObj.netWorthSnapshots.filter(x => x.timestamp > daysAgo);
