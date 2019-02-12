@@ -86,14 +86,14 @@ namespace Shared.Repositories
 
         public async Task SetSpecificPlayerAsLeader(string partyName, string characterName)
         {
-            var update = Builders<PartyModel>.Update.Set(p => p.Players.Find(c => c.Character.Name == characterName).IsLeader, true);
-            var result = await _parties.FindOneAndUpdateAsync(p => p.Name == partyName, update);
+            var update = Builders<PartyModel>.Update.Set(p => p.Players[-1].IsLeader, true);
+            var result = await _parties.UpdateOneAsync(p => p.Name == partyName && p.Players.Any(c => c.Character.Name == characterName), update);
         }
 
         public async Task RemoveSpecificPlayerAsLeader(string partyName, string characterName)
         {
-            var update = Builders<PartyModel>.Update.Set(p => p.Players.Find(c => c.Character.Name == characterName).IsLeader, false);
-            var result = await _parties.FindOneAndUpdateAsync(p => p.Name == partyName, update);
+            var update = Builders<PartyModel>.Update.Set(p => p.Players[-1].IsLeader, false);
+            var result = await _parties.UpdateOneAsync(p => p.Name == partyName && p.Players.Any(c => c.Character.Name == characterName), update);
         }
 
         #region Ladder
