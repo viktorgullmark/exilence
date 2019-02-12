@@ -1,10 +1,12 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Configuration;
 using MongoDB.Driver;
 using Shared.Interfaces;
 using Shared.Models;
+using Shared.Models.Ladder;
 
 namespace Shared.Repositories
 {
@@ -14,13 +16,18 @@ namespace Shared.Repositories
         private readonly IMongoDatabase _database;
         private readonly IMongoCollection<PartyModel> _parties;
         private readonly IMongoCollection<PlayerModel> _players;
+        private readonly IMongoCollection<LadderModel> _ladders;
 
-        public MongoRepository(IConfiguration config)
+        private IConfiguration _configuration;
+
+        public MongoRepository(IConfiguration configuration)
         {
-            _client = new MongoClient(config.GetConnectionString("Mongo"));
+            _configuration = configuration;
+            _client = new MongoClient(_configuration.GetConnectionString("Mongo"));
             _database = _client.GetDatabase("exilence");
             _parties = _database.GetCollection<PartyModel>("parties");
             _players = _database.GetCollection<PlayerModel>("players");
+            _ladders = _database.GetCollection<LadderModel>("ladders");
         }
         
         public async Task PartyExists(string partyName)
@@ -86,5 +93,87 @@ namespace Shared.Repositories
             var update = Builders<PartyModel>.Update.Set(p => p.Players.Find(c => c.Character.Name == characterName).IsLeader, false);
             var result = await _parties.FindOneAndUpdateAsync(p => p.Name == partyName, update);
         }
+
+        #region Ladder
+
+        public async Task RemoveLadder(string leagueName)
+        {
+            await _ladders.DeleteOneAsync(p => p.Name == leagueName);
+        }
+
+        public async Task<LadderModel> GetLadder(string leagueName)
+        {
+            var ladder = await _ladders.FindAsync(p => p.Name == leagueName);
+            return await ladder.FirstOrDefaultAsync();
+        }
+
+        public async Task<List<LadderModel>> GetAllLadders()
+        {
+            return await _ladders.Find(l => true).ToListAsync();
+        }
+
+        public async Task<LadderModel> GetPendingLadder()
+        {
+
+            var filter = (Builders<LadderModel>.Filter.Eq(l => l.Running, false) 
+                & Builders<LadderModel>.Filter.Lt(l => l.Finished, DateTime.UtcNow.AddMinutes(-1)));
+            var fields = Builders<LadderModel>.Projection
+                .Include(l => l.Finished)
+                .Include(l => l.Running);
+            var results = await _ladders.Find(filter).Project<LadderModel>(fields).ToListAsync();
+            return results.OrderByDescending(l => l.Finished).LastOrDefault();
+        }
+
+        public async Task<bool> AnyLadderRunning()
+        {
+            var condition = Builders<LadderModel>.Filter.Eq(l => l.Running, true);
+            var fields = Builders<LadderModel>.Projection
+                .Include(l => l.Running);
+            return await _ladders.Find(condition).Project<LadderModel>(fields).ToListAsync() != null; // todo: maybe have to check if list = empty
+        }
+
+        public async Task<bool> LadderExists(string leagueName)
+        {
+            var ladder = await _ladders.FindAsync(p => p.Name == leagueName);
+            return ladder.Current != null;
+        }
+
+        public async Task SetLadderRunning(string leagueName)
+        {
+            var update = Builders<LadderModel>.Update
+                .Set(l => l.Running, true)
+                .Set(l => l.Started, DateTime.UtcNow);
+            var result = await _ladders.UpdateOneAsync(p => p.Name == leagueName, update);
+        }
+
+        public async Task SetLadderPending(string leagueName)
+        {
+            var exists = await LadderExists(leagueName);
+
+            if(!exists)
+            {
+                var ladder = new LadderModel()
+                {
+                    Name = leagueName,
+                    Started = DateTime.MinValue,
+                    Finished = DateTime.MinValue,
+                    Ladder = new List<LadderPlayerModel>(),
+                    Running = false
+                };
+
+                await _ladders.InsertOneAsync(ladder);
+            }
+        }
+
+        public async Task UpdateLadder(string leagueName, List<LadderPlayerModel> players)
+        {
+            var update = Builders<LadderModel>.Update
+                .Set(l => l.Running, false)
+                .Set(l => l.Finished, DateTime.UtcNow)
+                .Set(l => l.Ladder, players);
+            var result = await _ladders.UpdateOneAsync(p => p.Name == leagueName, update);
+        }
+
+        #endregion
     }
 }

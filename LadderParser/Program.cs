@@ -13,35 +13,30 @@ using Shared.Interfaces;
 using LadderParser.Interfaces;
 using LadderParser.Services;
 using Microsoft.Extensions.Hosting;
+using LadderParser.Models;
 
 namespace LadderParser
 {
     class Program
     {
-        public static IConfigurationRoot Configuration;
-
         public static async Task Main(string[] args)
         {
-            // Set up configuration sources.
-            var builder = new ConfigurationBuilder()
-                .SetBasePath(Path.Combine(AppContext.BaseDirectory))
-                .AddJsonFile("appsettings.json", optional: true);
-
-            Configuration = builder.Build();
-
             var host = new HostBuilder()
+                 .ConfigureAppConfiguration((configuration) =>
+                 {
+                     var config = new ConfigurationBuilder()
+                    .SetBasePath(Path.Combine(AppContext.BaseDirectory))
+                    .AddJsonFile("appsettings.json", optional: true).Build();
+
+                     configuration.AddConfiguration(config);
+                 })
                  .ConfigureServices((hostContext, services) =>
                  {
                      services.AddHttpClient<IExternalService, ExternalService>();
                      services.AddHostedService<TimedHostedService>();
                      services.AddSingleton<ILadderService, LadderService>();
-                     services.AddSingleton<IRedisRepository, RedisRepository>();
-                     services
-                         .AddDistributedRedisCache(options =>
-                        {
-                            options.Configuration = Configuration.GetConnectionString("Redis");
-                            options.InstanceName = "Exilence:";
-                        });
+                     services.AddSingleton<IMongoRepository, MongoRepository>();
+                     services.AddOptions();
                  })
                 .UseConsoleLifetime()
                 .Build();

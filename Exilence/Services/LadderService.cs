@@ -16,29 +16,29 @@ namespace Exilence.Services
 {
     public class LadderService : ILadderService
     {
-        private IRedisRepository _redisRepository;
+        private IMongoRepository _repository;
         private readonly IHostingEnvironment _env;
         private readonly ILogger<LadderService> _log;
 
         public LadderService(
             IHostingEnvironment env,
             ILogger<LadderService> log,
-            IRedisRepository redisRepository
+            IMongoRepository repository
             )
         {
             _log = log;
             _env = env;
-            _redisRepository = redisRepository;
+            _repository = repository;
         }
 
 
 
         public async Task<List<LadderPlayerModel>> GetLadderForLeague(string leagueName)
         {
-            var league = await _redisRepository.GetLeagueLadder(leagueName);
+            var league = await _repository.GetLadder(leagueName);
             if (league == null)
             {
-                await _redisRepository.SetLeagueLadderPending(leagueName);
+                await _repository.SetLadderPending(leagueName);
             }
             else
             {
