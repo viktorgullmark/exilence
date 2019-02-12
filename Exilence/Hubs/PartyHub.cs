@@ -162,8 +162,9 @@ namespace Exilence.Hubs
                 party = await _mongoRepository.GetParty(partyName);
                 if(party != null) { 
                     if (player.IsLeader && party.Players.Any(x => !x.IsSpectator && x.ConnectionID != ConnectionId)) // if there is any player left in party, assign leader to first one
-                    {             
-                        await _mongoRepository.SetFirstPlayerAsLeader(partyName);
+                    {
+                        var leader = party.Players.First(x => !x.IsSpectator);
+                        await _mongoRepository.SetSpecificPlayerAsLeader(partyName, leader.Character.Name);
                         party = await _mongoRepository.GetParty(partyName);
                         await Clients.Group(partyName).SendAsync("LeaderChanged", CompressionHelper.Compress(new { oldLeader = player, newLeader = party.Players.First(x => !x.IsSpectator)}));
                     }
