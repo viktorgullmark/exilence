@@ -9,6 +9,7 @@ namespace Shared.Models
         public string Name { get; set; }
         public List<List<string>> Values { get; set; }
         public int DisplayMode { get; set; }
+        public decimal? Progress { get; set; }
         public int Type { get; set; }
     }
 }

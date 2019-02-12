@@ -1,4 +1,4 @@
-import { Injectable, OnDestroy } from '@angular/core';
+import { Injectable, OnDestroy, ApplicationRef } from '@angular/core';
 import { BehaviorSubject, Subscription } from 'rxjs';
 import { ElectronService } from './electron.service';
 

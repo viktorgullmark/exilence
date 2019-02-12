@@ -1,7 +1,7 @@
 import { app, BrowserWindow, dialog, globalShortcut } from 'electron';
 import * as path from 'path';
 import * as url from 'url';
-
+const windowStateKeeper = require('electron-window-state');
 
 export interface ExileWindowEvent {
   event: ExileWindowEnum;
@@ -104,12 +104,19 @@ function sendStatusToWindow(text) {
 }
 
 function createWindow(windowType: ExileWindowEnum = ExileWindowEnum.Main) {
+
+  // Default size
+  const mainWindowState = windowStateKeeper({
+    defaultWidth: 1344,
+    defaultHeight: 955
+  });
+
   // Create the browser window.
   windows[ExileWindowEnum.Main] = new BrowserWindow({
     x: 100,
     y: 100,
-    height: 985,
-    width: 1344,
+    height: mainWindowState.height,
+    width: mainWindowState.width,
     minHeight: 768,
     minWidth: 1344,
     webPreferences: { webSecurity: false },
@@ -117,6 +124,8 @@ function createWindow(windowType: ExileWindowEnum = ExileWindowEnum.Main) {
     resizable: false,
     icon: path.join(__dirname, 'dist/assets/img/app-icon.png'),
   });
+
+  mainWindowState.manage(windows[ExileWindowEnum.Main]);
 
   const filePath: string = null;
 
@@ -200,6 +209,7 @@ try {
   // initialization and is ready to create browser windows.
   // Some APIs can only be used after this event occurs.
   app.on('ready', () => {
+
     createWindow();
 
     autoUpdater.checkForUpdates();

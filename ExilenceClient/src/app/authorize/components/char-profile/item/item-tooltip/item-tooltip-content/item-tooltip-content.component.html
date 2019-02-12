@@ -69,6 +69,15 @@
                 </span>
             </ng-container>
             <hr *ngIf="item.properties != undefined">
+            <!-- properties -->
+            <ng-container *ngFor="let prop of item.additionalProperties">
+                <ng-container *ngIf="prop.progress != undefined">
+                    <mat-progress-bar class="progress-bar gem-progress"
+                        color="primary" mode="determinate" [value]="prop.progress * 100">
+                    </mat-progress-bar>
+                </ng-container>
+            </ng-container>
+            <hr *ngIf="item.additionalProperties != undefined">
             <div class="requirements" *ngIf="item.requirements">
                 <span class="requirement">Requires </span>
                 <ng-container *ngFor="let req of item.requirements, let i = index">
