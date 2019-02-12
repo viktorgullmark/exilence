@@ -183,6 +183,8 @@ namespace Exilence.Hubs
 
             var newLeader = _mongoRepository.GetPlayerByCharacterName(partyName, characterName);
 
+            party = await _mongoRepository.GetParty(partyName);
+
             await Clients.Group(partyName).SendAsync("LeaderChanged", CompressionHelper.Compress(new { oldLeader = currentLeader, newLeader = newLeader }));
         }
 
@@ -224,6 +226,7 @@ namespace Exilence.Hubs
                 if (party != null)
                 {
                     await _mongoRepository.RemovePlayerFromParty(partyName, ConnectionId);
+                    party = await _mongoRepository.GetParty(partyName);
 
                     if (party.Players.Where(p => p.IsSpectator == false).Count() == 1)
                     {
