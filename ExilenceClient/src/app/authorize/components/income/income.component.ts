@@ -258,7 +258,7 @@ export class IncomeComponent implements OnInit, OnDestroy {
     // only allow removal of snapshots for 20 seconds, in case of missclick
     setTimeout(() => {
       this.removalEnabled = false;
-    }, 20000);
+    }, 60 * 1);
   }
 
   deleteSnapshot(snapshot) {
