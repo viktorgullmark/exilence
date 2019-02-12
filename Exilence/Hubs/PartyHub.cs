@@ -99,7 +99,7 @@ namespace Exilence.Hubs
             }
             else
             {
-                if (!party.Players.Any())
+                if (player.IsSpectator && !party.Players.Any(x => !x.IsSpectator))
                 {
                     await Clients.Caller.SendAsync("GroupNotFoundOrEmpty");
                 }
