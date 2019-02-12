@@ -191,7 +191,9 @@ namespace Exilence.Hubs
         {
             var playerToKick = await _mongoRepository.GetPlayerByCharacterName(partyName, characterName);
             await _mongoRepository.RemovePlayerFromParty(partyName, playerToKick.ConnectionID);
+            await Groups.RemoveFromGroupAsync(playerToKick.ConnectionID, partyName);
             await Clients.Client(playerToKick.ConnectionID).SendAsync("KickedFromParty");
+            await Clients.Group(partyName).SendAsync("PlayerLeft", CompressionHelper.Compress(playerToKick));
         }
 
         public async Task UpdatePlayer(string partyName, string playerObj)
