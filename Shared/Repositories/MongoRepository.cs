@@ -78,12 +78,12 @@ namespace Shared.Repositories
             await _parties.FindOneAndUpdateAsync(p => p.Name == partyName, update);
         }
 
-        public async Task SetFirstPlayerAsLeader(string partyName)
+        public async Task SetSpecificPlayerAsLeader(string partyName, string characterName)
         {
             var update = Builders<PartyModel>.Update.Set(p => p.Players[-1].IsLeader, true);
-            var result = await _parties.UpdateOneAsync(p => p.Name == partyName && p.Players.Any(c => c.IsSpectator == false), update);
+            var result = await _parties.UpdateOneAsync(p => p.Name == partyName && p.Players.Any(c => c.Character.Name == characterName), update);
         }
-        
+
         public async Task RemoveSpecificPlayerAsLeader(string partyName, string characterName)
         {
             var update = Builders<PartyModel>.Update.Set(p => p.Players[-1].IsLeader, false);
