@@ -234,12 +234,7 @@ namespace Exilence.Hubs
 
             await RemoveFromIndex();
             await base.OnDisconnectedAsync(exception);
-        }        
-
-        public async Task UpdatePartyNameInConnectionIndex(string partyName)
-        {
-            
-        }
+        }       
 
         private async Task<string> GetPartynameFromIndex()
         {
