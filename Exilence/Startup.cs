@@ -58,7 +58,6 @@ namespace Exilence
                 });
 
             services.AddScoped<ILadderService, LadderService>();
-            services.AddScoped<IRedisRepository, RedisRepository>();
             services.AddScoped<IMongoRepository, MongoRepository>();
         }
 
