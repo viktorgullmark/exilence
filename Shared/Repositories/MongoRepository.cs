@@ -26,7 +26,6 @@ namespace Shared.Repositories
             _client = new MongoClient(_configuration.GetConnectionString("Mongo"));
             _database = _client.GetDatabase("exilence");
             _parties = _database.GetCollection<PartyModel>("parties");
-            _players = _database.GetCollection<PlayerModel>("players");
             _ladders = _database.GetCollection<LadderModel>("ladders");
         }
         
