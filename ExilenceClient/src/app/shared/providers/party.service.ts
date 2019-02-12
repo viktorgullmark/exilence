@@ -569,8 +569,11 @@ export class PartyService implements OnDestroy {
   }
 
   public leaveParty(partyName: string, spectatorCode: string, player: Player) {
-    player.isLeader = false;
-    this.accountService.player.next(player);
+    if (player !== undefined) {
+      player.isLeader = false;
+      this.accountService.player.next(player);
+    }
+
     this.initParty();
     if (partyName !== '') {
       if (this._hubConnection) {
