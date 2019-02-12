@@ -1,6 +1,5 @@
 ﻿using LadderParser.Interfaces;
 using Newtonsoft.Json;
-using Shared.Helper;
 using Shared.Interfaces;
 using Shared.Models;
 using Shared.Models.Ladder;
@@ -49,9 +48,7 @@ namespace LadderParser.Services
             Log($"Starting to fetch {leagueName} ladder");
             await _repository.SetLadderRunning(leagueName);
 
-            var league = await _repository.GetLadder(leagueName);
-            var oldLadder = league.Ladder;
-            var newLadder = new List<LadderPlayerModel>();
+            var ladder = new List<LadderPlayerModel>();
             var sortModes = new List<string>() { null, "depth", "depthsolo" };
             var pages = Enumerable.Range(0, 75);
 
@@ -59,7 +56,7 @@ namespace LadderParser.Services
             {
                 foreach (var sortMode in sortModes)
                 {
-                    var sortNiceName = sortMode ?? "exp";
+                    var sortNiceName = sortMode ?? "overall";
                     Log($"Using mode: {sortNiceName}");
 
                     foreach (int page in pages)
@@ -69,11 +66,11 @@ namespace LadderParser.Services
                         if (result != null)
                         {
                             var LadderPlayerList = result.Entries.
-                                Where(t => !newLadder.Any(x => x.Name == t.Character.Name))
+                                Where(t => !ladder.Any(x => x.Name == t.Character.Name))
                                 .Select(t => new LadderPlayerModel(t)).ToList();
 
-                            newLadder.AddRange(LadderPlayerList);
-                            if (newLadder.Count == result.Total || result.Entries.Count == 0)
+                            ladder.AddRange(LadderPlayerList);
+                            if (ladder.Count == result.Total || result.Entries.Count == 0)
                             {
                                 break;
                             }
@@ -87,39 +84,30 @@ namespace LadderParser.Services
                 }
             }
 
-            if (newLadder.Count > 0)
+            if (ladder.Count > 0)
             {
-                newLadder = CalculateStatistics(oldLadder, newLadder);
-                await _repository.UpdateLadder(leagueName, newLadder);
+                ladder = await CalculateStatisticsAsync(ladder);
+                await _repository.UpdateLadder(leagueName, ladder);
             }
             Log($"Finished fetching {leagueName} ladder.");
             Log($"--------------------------------------");
         }
 
-        private List<LadderPlayerModel> CalculateStatistics(List<LadderPlayerModel> oldLadder, List<LadderPlayerModel> newLadder)
+        private async Task<List<LadderPlayerModel>> CalculateStatisticsAsync(List<LadderPlayerModel> ladder)
         {
-            Log($"Started calculating statistics.");
-            foreach (var newEntry in newLadder)
+            using (var rateGate = new RateGate(1, TimeSpan.FromMilliseconds(5)))
             {
-                newEntry.Depth.GroupRank = newLadder.Count(t => t.Depth.Group > newEntry.Depth.Group) + 1;
-                newEntry.Depth.SoloRank = newLadder.Count(t => t.Depth.Solo > newEntry.Depth.Solo) + 1;
-                newEntry.Rank.Class = newLadder.Where(t => t.Class == newEntry.Class).Where(x => x.Rank.Overall < newEntry.Rank.Overall).Count() + 1;
-
-                if (oldLadder != null)
+                Log($"Started calculating ranks for ladder entries");
+                foreach (var newEntry in ladder)
                 {
-                    var oldLadderEntry = oldLadder.FirstOrDefault(t => t.Name == newEntry.Name);
-                    if (oldLadderEntry != null && oldLadderEntry.Updated != DateTime.MinValue)
-                    {
-                        var expGain = newEntry.Experience - oldLadderEntry.Experience;
-                        var oneHour = (1 * 60 * 60);
-                        var timeBetweenUpdates = newEntry.Updated.ToUnixTimeStamp() - oldLadderEntry.Updated.ToUnixTimeStamp();
-                        var gainOverTime = (oneHour / timeBetweenUpdates) * expGain;
-                        newEntry.ExperiencePerHour = (long)gainOverTime;
-                    }
+                    await rateGate.WaitToProceed();
+                    newEntry.Depth.GroupRank = ladder.Count(t => t.Depth.Group > newEntry.Depth.Group) + 1;
+                    newEntry.Depth.SoloRank = ladder.Count(t => t.Depth.Solo > newEntry.Depth.Solo) + 1;
+                    newEntry.Rank.Class = ladder.Where(t => t.Class == newEntry.Class).Where(x => x.Rank.Overall < newEntry.Rank.Overall).Count() + 1;
                 }
             }
-            Log($"Finished calculating statistics.");
-            return newLadder;
+            Log($"Finished calculating ranks.");
+            return ladder;
         }
 
         public async Task<LadderApiResponse> FetchLadderApiPage(string league, int page, string sort = null)
