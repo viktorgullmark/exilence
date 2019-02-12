@@ -18,7 +18,6 @@ namespace Exilence.Hubs
     public class PartyHub : Hub
     {
         private IDistributedCache _cache;
-        private IRedisRepository _redisRepository;
         private ILadderService _ladderService;
         private IConfiguration _configuration;
         private IMongoRepository _mongoRepository;
@@ -29,14 +28,12 @@ namespace Exilence.Hubs
 
         public PartyHub(
             IDistributedCache cache,
-            IRedisRepository redisRepository,
             ILadderService ladderService,
             IConfiguration configuration,
             IMongoRepository mongoRepository
             )
         {
             _cache = cache;
-            _redisRepository = redisRepository;
             _ladderService = ladderService;
             _configuration = configuration;
             _mongoRepository = mongoRepository;
@@ -73,13 +70,14 @@ namespace Exilence.Hubs
 
             var player = CompressionHelper.Decompress<PlayerModel>(playerObj);
 
-            // set initial id of player
             player.ConnectionID = Context.ConnectionId;
 
-            //update ConnectionId:Partyname index
-            await AddToIndex(partyName);
+            var update = await _mongoRepository.UpdatePartyNameInConnectionIndex(ConnectionId, partyName);
+            if (update == null)
+            {
+                await AddToIndex(partyName);
+            }
 
-            // look for party
             var party = await _mongoRepository.GetParty(partyName);
             if (party == null)
             {
@@ -222,39 +220,46 @@ namespace Exilence.Hubs
         public override async Task OnDisconnectedAsync(Exception exception)
         {
             var partyName = await GetPartynameFromIndex();
-            var party = await _mongoRepository.GetParty(partyName);
-
-            if (party != null)
+            if (partyName != null)
             {
-                await _mongoRepository.RemovePlayerFromParty(partyName, ConnectionId);
+                var party = await _mongoRepository.GetParty(partyName);
 
-                if (party.Players.Where(p => p.IsSpectator == false).Count() == 1)
+                if (party != null)
                 {
-                    await _mongoRepository.RemoveParty(partyName);
+                    await _mongoRepository.RemovePlayerFromParty(partyName, ConnectionId);
+
+                    if (party.Players.Where(p => p.IsSpectator == false).Count() == 1)
+                    {
+                        await _mongoRepository.RemoveParty(partyName);
+                    }
                 }
             }
 
-            var success = RemoveFromIndex();
+            await RemoveFromIndex();
             await base.OnDisconnectedAsync(exception);
         }        
 
-        private async Task<string> GetPartynameFromIndex()
+        public async Task UpdatePartyNameInConnectionIndex(string partyName)
         {
-            var result = await _redisRepository.GetPartyNameFromConnection(ConnectionId);
-            return result;
+            
         }
 
-        private async Task<bool> RemoveFromIndex()
+        private async Task<string> GetPartynameFromIndex()
         {
-            var success = await _redisRepository.RemoveConnection(ConnectionId);
-            return success;
+            var connectionModel = await _mongoRepository.GetPartyNameFromConnectionIndex(ConnectionId);
+            return connectionModel?.PartyName;
+        }
+
+        private async Task RemoveFromIndex()
+        {
+            await _mongoRepository.RemoveConnectionFromIndex(ConnectionId);
         }
 
         private async Task AddToIndex(string partyName)
         {
-            if (partyName != "")
+            if (!string.IsNullOrEmpty(partyName))
             {
-                await _redisRepository.AddConnection(ConnectionId, partyName);
+                await _mongoRepository.AddToConnectionIndex(ConnectionId, partyName);
             }
         }
     }
