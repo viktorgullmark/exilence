@@ -1,6 +1,11 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [0.9.19] - XXXX-XX-XX
+### Fixed
+- Fixed a bug where the "Remove snapshot"-option was visible for spectators (though not usable)
+- Fixed a bug where unnecessery update-events were sent to the server
+
 ## [0.9.18] - 2019-02-12
 ### Added
 - Added a progress-bar for gem-progress
