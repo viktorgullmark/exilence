@@ -285,11 +285,11 @@ export class IncomeComponent implements OnInit, OnDestroy {
       } else {
         setTimeout(() => {
           const dialogRef = this.dialog.open(ServerMessageDialogComponent, {
-            width: '850px',
+            width: '425px',
             data: {
               icon: 'error',
-              title: 'Not your snapshot',
-              content: 'You can only remove your own snapshots. Nothing was removed.'
+              title: 'Information',
+              content: 'You can only remove your own snapshots.'
             }
           });
           dialogRef.afterClosed().subscribe(result => {

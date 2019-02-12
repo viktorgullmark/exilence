@@ -345,7 +345,7 @@ export class PartySummaryComponent implements OnInit, OnDestroy {
   openRemovalDialog(): void {
     if (this.electronService.isElectron()) {
       const dialogRef = this.dialog.open(RemoveSnapshotDialogComponent, {
-        width: '850px'
+        width: '425px'
       });
       dialogRef.afterClosed().subscribe(result => {
       });
