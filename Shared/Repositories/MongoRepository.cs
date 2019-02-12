@@ -1,10 +1,12 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Configuration;
 using MongoDB.Driver;
 using Shared.Interfaces;
 using Shared.Models;
+using Shared.Models.Ladder;
 
 namespace Shared.Repositories
 {
@@ -14,6 +16,7 @@ namespace Shared.Repositories
         private readonly IMongoDatabase _database;
         private readonly IMongoCollection<PartyModel> _parties;
         private readonly IMongoCollection<PlayerModel> _players;
+        private readonly IMongoCollection<LadderModel> _ladders;
 
         public MongoRepository(IConfiguration config)
         {
@@ -21,6 +24,7 @@ namespace Shared.Repositories
             _database = _client.GetDatabase("exilence");
             _parties = _database.GetCollection<PartyModel>("parties");
             _players = _database.GetCollection<PlayerModel>("players");
+            _ladders = _database.GetCollection<LadderModel>("ladders");
         }
         
         public async Task PartyExists(string partyName)
@@ -85,6 +89,14 @@ namespace Shared.Repositories
         {
             var update = Builders<PartyModel>.Update.Set(p => p.Players.Find(c => c.Character.Name == characterName).IsLeader, false);
             var result = await _parties.FindOneAndUpdateAsync(p => p.Name == partyName, update);
+        }
+
+        public async Task<LadderModel> GetPendingLeague()
+        {
+            var condition = Builders<LadderModel>.Filter.Eq(l => l.Running && l.Finished < DateTime.UtcNow.AddMinutes(-1), false);
+            var fields = Builders<LadderModel>.Projection.Include(l => l);
+            var results = await _ladders.Find(condition).Project<LadderModel>(fields).ToListAsync();
+            return results.OrderByDescending(l => l.Finished).LastOrDefault();
         }
     }
 }
