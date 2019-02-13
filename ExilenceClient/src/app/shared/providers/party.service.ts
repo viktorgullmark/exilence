@@ -24,6 +24,7 @@ import { LeagueWithPlayers } from '../interfaces/league.interface';
 import { Subscription } from 'rxjs';
 import { ServerMessage } from '../interfaces/server-message.interface';
 import { StateService } from './state.service';
+import { ItemHelper } from '../helpers/item.helper';
 
 @Injectable()
 export class PartyService implements OnDestroy {
@@ -470,6 +471,10 @@ export class PartyService implements OnDestroy {
       .subscribe((equipment: EquipmentResponse) => {
         player = this.externalService.setCharacter(equipment, player);
         const objToSend = Object.assign({}, player);
+
+        const inventoryItems = ItemHelper.getInventoryItems(player.character.items);
+        this.stateService.dispatch({ key: 'inventory', value: inventoryItems });
+
         objToSend.pastAreas = HistoryHelper.filterAreas(objToSend.pastAreas, oneDayAgo);
         objToSend.netWorthSnapshots = HistoryHelper.filterNetworth(objToSend.netWorthSnapshots, oneDayAgo);
         if (this._hubConnection) {

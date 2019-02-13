@@ -71,4 +71,8 @@ export class ItemHelper {
         }
         return 0;
     }
+
+    public static getInventoryItems(items: Item[]) {
+        return [...items.filter(i => i.inventoryId === 'MainInventory')];
+    }
 }

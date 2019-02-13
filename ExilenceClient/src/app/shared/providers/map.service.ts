@@ -1,16 +1,18 @@
-import { Injectable, EventEmitter, OnDestroy } from '@angular/core';
+import { EventEmitter, Injectable, OnDestroy } from '@angular/core';
+import { Subscription } from 'rxjs';
+import { BehaviorSubject } from 'rxjs/internal/BehaviorSubject';
 
+import { HistoryHelper } from '../helpers/history.helper';
 import { AreaEventType, AreaInfo, EventArea, ExtendedAreaInfo } from '../interfaces/area.interface';
+import { Item } from '../interfaces/item.interface';
 import { Player } from '../interfaces/player.interface';
 import { AccountService } from './account.service';
 import { IncomeService } from './income.service';
 import { LogMonitorService } from './log-monitor.service';
 import { PartyService } from './party.service';
-import { NetWorthSnapshot } from '../interfaces/income.interface';
+import { PricingService } from './pricing.service';
 import { SettingsService } from './settings.service';
-import { HistoryHelper } from '../helpers/history.helper';
-import { BehaviorSubject } from 'rxjs/internal/BehaviorSubject';
-import { Subscription } from 'rxjs';
+import { StateService } from './state.service';
 
 @Injectable()
 export class MapService implements OnDestroy {
@@ -21,12 +23,12 @@ export class MapService implements OnDestroy {
   public previousInstanceServer: string;
   public historicalInstanceServer: string;
   public previousDate: Date;
-  private durationSeconds = 0;
-  private durationInterval: any;
   private localPlayer: Player;
+  private inventory: Item[];
 
   private playerSub: Subscription;
   private areasSub: Subscription;
+  private stateSubscription: Subscription;
 
   areasParsed: EventEmitter<any> = new EventEmitter();
 
@@ -39,10 +41,20 @@ export class MapService implements OnDestroy {
     private accountService: AccountService,
     private partyService: PartyService,
     private incomeService: IncomeService,
-    private settingsService: SettingsService
+    private settingsService: SettingsService,
+    private stateService: StateService,
+    private pricingService: PricingService
   ) {
 
     this.loadAreasFromSettings();
+
+    this.stateSubscription = this.stateService.state$.subscribe(state => {
+      const inventory = 'inventory'.split('.').reduce((o, i) => o[i], state);
+      inventory.forEach(item => {
+        const price = pricingService.priceItem(item);
+        console.log('Price for item: ', item, price);
+      });
+    });
 
     this.playerSub = this.accountService.player.subscribe(player => {
       if (player !== undefined) {
@@ -91,6 +103,9 @@ export class MapService implements OnDestroy {
     }
     if (this.areasSub !== undefined) {
       this.areasSub.unsubscribe();
+    }
+    if (this.stateSubscription !== undefined) {
+      this.stateSubscription.unsubscribe();
     }
   }
 
