@@ -54,35 +54,41 @@ namespace LadderParser.Services
 
             using (var rateGate = new RateGate(4, TimeSpan.FromMilliseconds(5000)))
             {
-                foreach (var sortMode in sortModes)
+                try
                 {
-                    var sortNiceName = sortMode ?? "overall";
-                    Log($"Using mode: {sortNiceName}");
-
-                    foreach (int page in pages)
+                    foreach (var sortMode in sortModes)
                     {
-                        await rateGate.WaitToProceed();
-                        LadderApiResponse result = await FetchLadderApiPage(leagueName, page, sortMode);
-                        if (result != null)
-                        {
-                            var LadderPlayerList = result.Entries.
-                                Where(t => !ladder.Any(x => x.Name == t.Character.Name))
-                                .Select(t => new LadderPlayerModel(t)).ToList();
+                        var sortNiceName = sortMode ?? "overall";
+                        Log($"Using mode: {sortNiceName}");
 
-                            ladder.AddRange(LadderPlayerList);
-                            if (ladder.Count == result.Total || result.Entries.Count == 0)
+                        foreach (int page in pages)
+                        {
+                            await rateGate.WaitToProceed();
+                            LadderApiResponse result = await FetchLadderApiPage(leagueName, page, sortMode);
+                            if (result != null)
                             {
+                                var LadderPlayerList = result.Entries.
+                                    Where(t => !ladder.Any(x => x.Name == t.Character.Name))
+                                    .Select(t => new LadderPlayerModel(t)).ToList();
+
+                                ladder.AddRange(LadderPlayerList);
+                                if (ladder.Count == result.Total || result.Entries.Count == 0)
+                                {
+                                    break;
+                                }
+                            }
+                            else
+                            {
+                                await _repository.RemoveLadder(leagueName);
                                 break;
                             }
                         }
-                        else
-                        {
-                            await _repository.RemoveLadder(leagueName);
-                            break;
-                        }
                     }
                 }
-                await rateGate.WaitToProceed(5000);
+                catch (Exception e)
+                {
+                    Log($"Exception caught: {e.Message}");
+                }
             }
 
             if (ladder.Count > 0)
@@ -98,16 +104,21 @@ namespace LadderParser.Services
         {
             using (var rateGate = new RateGate(1, TimeSpan.FromMilliseconds(5)))
             {
-                Log($"Started calculating ranks for ladder entries");
-                foreach (var newEntry in ladder)
+                try
                 {
-                    await rateGate.WaitToProceed();
-                    newEntry.Depth.GroupRank = ladder.Count(t => t.Depth.Group > newEntry.Depth.Group) + 1;
-                    newEntry.Depth.SoloRank = ladder.Count(t => t.Depth.Solo > newEntry.Depth.Solo) + 1;
-                    newEntry.Rank.Class = ladder.Where(t => t.Class == newEntry.Class).Where(x => x.Rank.Overall < newEntry.Rank.Overall).Count() + 1;
+                    Log($"Started calculating ranks for ladder entries");
+                    foreach (var newEntry in ladder)
+                    {
+                        await rateGate.WaitToProceed();
+                        newEntry.Depth.GroupRank = ladder.Count(t => t.Depth.Group > newEntry.Depth.Group) + 1;
+                        newEntry.Depth.SoloRank = ladder.Count(t => t.Depth.Solo > newEntry.Depth.Solo) + 1;
+                        newEntry.Rank.Class = ladder.Where(t => t.Class == newEntry.Class).Where(x => x.Rank.Overall < newEntry.Rank.Overall).Count() + 1;
+                    }
                 }
-
-                await rateGate.WaitToProceed(5000);
+                catch (Exception e)
+                {
+                    Log($"Exception caught: {e.Message}");
+                }
             }
             Log($"Finished calculating ranks.");
             return ladder;

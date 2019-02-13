@@ -91,12 +91,7 @@ namespace LadderParser
             while (_exitTimes.TryPeek(out exitTime)
                     && unchecked(exitTime - Environment.TickCount) <= 0)
             {
-                try { 
-                    _semaphore.Release();
-                } catch (ObjectDisposedException e)
-                {
-                    Console.WriteLine(e.Message);
-                }
+                _semaphore.Release();
                 _exitTimes.TryDequeue(out exitTime);
             }
 
