@@ -150,12 +150,12 @@ namespace Exilence.Hubs
             if (party != null)
             {
                 await _mongoRepository.RemovePlayerFromParty(partyName, ConnectionId);
-
-                if (party.Players.Count(x => !x.IsSpectator) == 1)
+                party = await _mongoRepository.GetParty(partyName);
+                if (!party.Players.Any(x => !x.IsSpectator))
                 {
                     await _mongoRepository.RemoveParty(partyName);
                 }
-                else
+                else if (!party.Players.Any(x => x.IsLeader))
                 {
                     var leader = party.Players.FirstOrDefault(x => !x.IsSpectator && x.ConnectionID != player.ConnectionID);
                     if (leader != null)
