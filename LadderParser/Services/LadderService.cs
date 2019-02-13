@@ -59,7 +59,7 @@ namespace LadderParser.Services
 
                 foreach (int page in pages)
                 {
-                    var interval = 15000;
+                    var interval = 1250;
                     var elapsed = 0;
 
                     using (var stopwatch = new DisposableStopwatch())
