@@ -82,7 +82,7 @@ namespace LadderParser.Services
                         }
                     }
                 }
-                await rateGate.WaitToProceed();
+                await rateGate.WaitToProceed(5000);
             }
 
             if (ladder.Count > 0)
@@ -107,7 +107,7 @@ namespace LadderParser.Services
                     newEntry.Rank.Class = ladder.Where(t => t.Class == newEntry.Class).Where(x => x.Rank.Overall < newEntry.Rank.Overall).Count() + 1;
                 }
 
-                await rateGate.WaitToProceed();
+                await rateGate.WaitToProceed(5000);
             }
             Log($"Finished calculating ranks.");
             return ladder;
