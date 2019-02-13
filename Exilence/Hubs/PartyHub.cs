@@ -235,7 +235,7 @@ namespace Exilence.Hubs
         private async Task<string> GetPartynameFromIndex()
         {
             var connectionModel = await _mongoRepository.GetPartyNameFromConnectionIndex(ConnectionId);
-            return connectionModel.PartyName;
+            return connectionModel?.PartyName;
         }
 
         private async Task RemoveFromIndex()
