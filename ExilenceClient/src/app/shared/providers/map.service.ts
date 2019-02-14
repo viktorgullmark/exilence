@@ -50,10 +50,12 @@ export class MapService implements OnDestroy {
 
     this.stateSubscription = this.stateService.state$.subscribe(state => {
       const inventory = 'inventory'.split('.').reduce((o, i) => o[i], state);
-      inventory.forEach(item => {
-        const price = pricingService.priceItem(item);
-        console.log('Price for item: ', item, price);
-      });
+      if (inventory !== undefined) {
+        inventory.forEach(item => {
+          const price = pricingService.priceItem(item);
+          console.log('Price for item: ', item, price);
+        });
+      }
     });
 
     this.playerSub = this.accountService.player.subscribe(player => {
