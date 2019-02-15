@@ -32,7 +32,7 @@ export class MapService implements OnDestroy {
 
   private playerSub: Subscription;
   private areasSub: Subscription;
-  private stateSubscription: Subscription;
+  private playerInventorySub: Subscription;
 
   areasParsed: EventEmitter<any> = new EventEmitter();
 
@@ -52,7 +52,7 @@ export class MapService implements OnDestroy {
 
     this.loadAreasFromSettings();
 
-    this.stateSubscription = this.stateService.state$.subscribe(state => {
+    this.playerInventorySub = this.partyService.playerInventory.subscribe(state => {
       const inventory: Item[] = 'inventory'.split('.').reduce((o, i) => o[i], state);
       let networthItems: NetWorthItem[] = [...this.temporaryGain];
       this.temporaryGain = [];
@@ -63,12 +63,12 @@ export class MapService implements OnDestroy {
           networthItems.push(networthItem);
         });
 
-        if (this.areaHistory[0] !== undefined) {
+        if (this.areaHistory[1] !== undefined) {
           networthItems = networthItems.filter(x =>
-            TableHelper.findNetworthObj(this.areaHistory[0].items, x) === undefined
+            TableHelper.findNetworthObj(this.areaHistory[1].items, x) === undefined
           );
         }
-        this.areaHistory[1].items = networthItems;
+        this.areaHistory[0].items = networthItems;
         this.settingsService.set('areas', this.areaHistory);
         this.updateLocalPlayerAreas(this.areaHistory);
       }
@@ -121,8 +121,8 @@ export class MapService implements OnDestroy {
     if (this.areasSub !== undefined) {
       this.areasSub.unsubscribe();
     }
-    if (this.stateSubscription !== undefined) {
-      this.stateSubscription.unsubscribe();
+    if (this.playerInventorySub !== undefined) {
+      this.playerInventorySub.unsubscribe();
     }
   }
 

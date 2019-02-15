@@ -25,6 +25,7 @@ import { Subscription } from 'rxjs';
 import { ServerMessage } from '../interfaces/server-message.interface';
 import { StateService } from './state.service';
 import { ItemHelper } from '../helpers/item.helper';
+import { Item } from '../interfaces/item.interface';
 
 @Injectable()
 export class PartyService implements OnDestroy {
@@ -53,6 +54,7 @@ export class PartyService implements OnDestroy {
   public connectionInitiated: EventEmitter<boolean> = new EventEmitter();
 
   public serverMessageReceived: BehaviorSubject<ServerMessage> = new BehaviorSubject<ServerMessage>(undefined);
+  public playerInventory: BehaviorSubject<Item[]> = new BehaviorSubject<Item[]>(undefined);
 
   private reconnectAttempts: number;
   private forceClosed: boolean;
@@ -474,7 +476,7 @@ export class PartyService implements OnDestroy {
 
         if (reason === 'area-change') {
           const inventoryItems = ItemHelper.getInventoryItems(player.character.items);
-          this.stateService.dispatch({ key: 'inventory', value: inventoryItems });
+          this.playerInventory.next(inventoryItems);
         }
 
         objToSend.pastAreas = HistoryHelper.filterAreas(objToSend.pastAreas, oneDayAgo);
