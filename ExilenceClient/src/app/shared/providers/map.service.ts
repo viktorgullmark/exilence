@@ -151,7 +151,7 @@ export class MapService implements OnDestroy {
           && this.currentArea !== undefined
           && ((this.currentArea.eventArea.name.endsWith('Hideout')
             || this.currentArea.eventArea.info[0].town)
-            || this.currentArea.eventArea.name === ('The Templar Labaratory'))
+            || this.currentArea.eventArea.name === ('The Templar Laboratory'))
           && this.areaHistory[1].eventArea.name.indexOf(e.name) > -1
           && this.previousInstanceServer === this.areaHistory[1].instanceServer);
 
