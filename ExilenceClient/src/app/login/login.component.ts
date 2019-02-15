@@ -25,6 +25,9 @@ import { ServerMessageDialogComponent } from '../authorize/components/server-mes
 import { Location } from '@angular/common';
 import * as Sentry from '@sentry/browser';
 import { PartyService } from '../shared/providers/party.service';
+import { WatchService } from '../shared/providers/watch.service';
+import { NinjaService } from '../shared/providers/ninja.service';
+import { PricingService } from '../shared/providers/pricing.service';
 
 
 @Component({
@@ -82,6 +85,7 @@ export class LoginComponent implements OnInit, OnDestroy {
         private settingsService: SettingsService,
         private analyticsService: AnalyticsService,
         public logMonitorService: LogMonitorService,
+        private pricingService: PricingService,
         private mapService: MapService,
         private dialog: MatDialog,
         private route: ActivatedRoute,
@@ -562,6 +566,9 @@ export class LoginComponent implements OnInit, OnDestroy {
             this.sessionService.completedLogin = true;
 
             this.settingsService.set('account', this.form);
+
+            this.pricingService.retrieveExternalPrices().subscribe();
+
             this.settingsService.set('trackMapsOnly', this.logMonitorService.trackMapsOnly);
             this.sessionService.initSession(this.form.sessionId);
             this.isLoading = false;

@@ -13,6 +13,10 @@ import { PartyService } from './party.service';
 import { PricingService } from './pricing.service';
 import { SettingsService } from './settings.service';
 import { StateService } from './state.service';
+import { ItemPrice } from '../interfaces/poe-watch/item-price.interface';
+import { ItemHelper } from '../helpers/item.helper';
+import { NetWorthItem } from '../interfaces/income.interface';
+import { TableHelper } from '../helpers/table.helper';
 
 @Injectable()
 export class MapService implements OnDestroy {
@@ -24,7 +28,7 @@ export class MapService implements OnDestroy {
   public historicalInstanceServer: string;
   public previousDate: Date;
   private localPlayer: Player;
-  private inventory: Item[];
+  private temporaryGain: NetWorthItem[] = [];
 
   private playerSub: Subscription;
   private areasSub: Subscription;
@@ -49,19 +53,29 @@ export class MapService implements OnDestroy {
     this.loadAreasFromSettings();
 
     this.stateSubscription = this.stateService.state$.subscribe(state => {
-      const inventory = 'inventory'.split('.').reduce((o, i) => o[i], state);
+      const inventory: Item[] = 'inventory'.split('.').reduce((o, i) => o[i], state);
+      let networthItems: NetWorthItem[] = [...this.temporaryGain];
       if (inventory !== undefined) {
-        inventory.forEach(item => {
-          const price = pricingService.priceItem(item);
-          console.log('Price for item: ', item, price);
+        inventory.forEach((item: Item) => {
+          const priceInformation = pricingService.priceItem(item);
+          const networthItem = ItemHelper.toNetworthItem(item, priceInformation);
+          networthItems.push(networthItem);
         });
+
+        if (this.areaHistory[1] !== undefined) {
+          networthItems = networthItems.filter(x =>
+            TableHelper.findNetworthObj(this.areaHistory[1].items, x) === undefined
+          );
+        }
+        this.areaHistory[0].items = networthItems;
+        this.settingsService.set('areas', this.areaHistory);
+        this.updateLocalPlayerAreas(this.areaHistory);
       }
     });
 
     this.playerSub = this.accountService.player.subscribe(player => {
       if (player !== undefined) {
         this.localPlayer = player;
-        // this.localPlayer.pastAreas = this.areaHistory;
       }
     });
 
@@ -120,6 +134,16 @@ export class MapService implements OnDestroy {
     // zone entered
     const shouldUpdateAreaHistory = (e.type === 'map' || e.name.endsWith('Hideout') || !this.logMonitorService.trackMapsOnly);
 
+    const nextNeutralZone =
+      ((e.name.endsWith('Hideout') ||
+        e.info[0].town) ||
+        e.name === ('The Templar Laboratory'));
+
+    const neutralZone = this.currentArea !== undefined &&
+      ((this.currentArea.eventArea.name.endsWith('Hideout')
+        || this.currentArea.eventArea.info[0].town)
+        || this.currentArea.eventArea.name === ('The Templar Laboratory'));
+
     if ((!this.logMonitorService.parsingCompleted || live)) {
       let diffSeconds = 0;
       let duration = 0;
@@ -137,8 +161,13 @@ export class MapService implements OnDestroy {
         type: AreaEventType.Join,
         timestamp: eventTimestamp,
         duration: 0,
-        instanceServer: this.previousInstanceServer
+        instanceServer: this.previousInstanceServer,
+        items: []
       } as ExtendedAreaInfo;
+
+      if (eventArea.eventArea.type === 'map' && eventArea.eventArea.info.length > 0) {
+        eventArea.eventArea.name += ` map (T${eventArea.eventArea.info[0].tier})`;
+      }
 
       // If we enter a map
       // And got atleast three zones in out history (map --> hideout --> map)
@@ -149,9 +178,7 @@ export class MapService implements OnDestroy {
       const sameZoneAsBefore =
         (this.areaHistory.length > 1
           && this.currentArea !== undefined
-          && ((this.currentArea.eventArea.name.endsWith('Hideout')
-            || this.currentArea.eventArea.info[0].town)
-            || this.currentArea.eventArea.name === ('The Templar Laboratory'))
+          && neutralZone
           && this.areaHistory[1].eventArea.name.indexOf(e.name) > -1
           && this.previousInstanceServer === this.areaHistory[1].instanceServer);
 
@@ -167,6 +194,10 @@ export class MapService implements OnDestroy {
         // if we enter the same map, add duration to previous event
         if (sameZoneAsBefore && shouldUpdateAreaHistory) {
           duration = this.areaHistory[1].duration + diffSeconds;
+
+          console.log('this.areaHistory', this.areaHistory);
+          this.temporaryGain = this.temporaryGain.concat(this.areaHistory[1].items);
+
           // remove hideout-event from current array
           this.areaHistory.shift();
           eventArea = this.areaHistory[0];
@@ -174,9 +205,7 @@ export class MapService implements OnDestroy {
           // todo: concat gain for zones
           this.areaHistory[0] = eventArea;
         } else {
-          if (eventArea.eventArea.type === 'map' && eventArea.eventArea.info.length > 0) {
-            eventArea.eventArea.name += ` map (T${eventArea.eventArea.info[0].tier})`;
-          }
+          this.temporaryGain = [];
           if (shouldUpdateAreaHistory) {
             this.areaHistory[0].duration = diffSeconds;
             // push the new object to our area-history
@@ -184,6 +213,7 @@ export class MapService implements OnDestroy {
           }
         }
       } else {
+        // This is the first zone
         if (shouldUpdateAreaHistory) {
           this.updateAreaHistory(eventArea);
         }
@@ -209,7 +239,12 @@ export class MapService implements OnDestroy {
         this.settingsService.set('areas', this.areaHistory);
         this.updateLocalPlayerAreas(this.areaHistory);
       }
-      this.partyService.updatePlayer(this.localPlayer);
+
+      console.log('Neutral Zone: ', neutralZone);
+      console.log('Next Neutral Zone: ', nextNeutralZone);
+
+      const reason = !neutralZone && nextNeutralZone ? 'area-change' : null;
+      this.partyService.updatePlayer(this.localPlayer, reason);
     }
   }
 

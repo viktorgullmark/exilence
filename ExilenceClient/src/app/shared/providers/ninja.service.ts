@@ -60,7 +60,7 @@ export class NinjaService {
       return Observable
         .from(enumTypes)
         .concatMap(type => this.getFromNinja(league, type)
-          .delay(750))
+          .delay(250))
         .do(typeResponse => {
           if (typeResponse !== null) {
             typeResponse.lines.forEach((line: NinjaLine) => {

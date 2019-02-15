@@ -1,4 +1,6 @@
 import { Item } from '../interfaces/item.interface';
+import { NetWorthItem } from '../interfaces/income.interface';
+import { ItemPricing } from '../interfaces/item-pricing.interface';
 
 
 export class ItemHelper {
@@ -75,4 +77,51 @@ export class ItemHelper {
     public static getInventoryItems(items: Item[]) {
         return [...items.filter(i => i.inventoryId === 'MainInventory')];
     }
+
+
+
+    public static toNetworthItem(item: Item, pricing: ItemPricing): NetWorthItem {
+
+
+        let icon = item.icon.indexOf('?') >= 0
+            ? item.icon.substring(0, item.icon.indexOf('?')) + '?scale=1&scaleIndex=3&w=1&h=1'
+            : item.icon + '?scale=1&scaleIndex=3&w=1&h=1';
+
+        if (item.typeLine.indexOf(' Map') > -1) {
+            icon = item.icon;
+        }
+
+        let stacksize = 1;
+        let totalValueForItem = pricing.chaosequiv;
+        if (item.stackSize) {
+            stacksize = item.stackSize;
+            totalValueForItem = (pricing.chaosequiv * stacksize);
+        }
+
+        const netWorthItem = {
+            name: pricing.name,
+            value: totalValueForItem,
+            value_min: pricing.chaosequiv_min,
+            value_max: pricing.chaosequiv_max,
+            value_mode: pricing.chaosequiv_mode,
+            value_median: pricing.chaosequiv_median,
+            value_average: pricing.chaosequiv_average,
+            quantity: pricing.quantity,
+            valuePerUnit: pricing.chaosequiv,
+            icon,
+            stacksize,
+            links: pricing.links,
+            gemLevel: pricing.gemlevel,
+            quality: pricing.quality,
+            variation: pricing.variation,
+            frameType: pricing.frameType,
+            corrupted: pricing.corrupted,
+            totalStacksize: pricing.totalStacksize
+        } as NetWorthItem;
+
+        return netWorthItem;
+
+    }
+
 }
+

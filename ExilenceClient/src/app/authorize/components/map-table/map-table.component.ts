@@ -109,14 +109,12 @@ export class MapTableComponent implements OnInit, OnDestroy {
         timestamp: 0
       };
     }
+
     this.selected = element;
 
     if (this.selected.timestamp > 0) {
 
-      // todo: update gain based on hovered element here
-
-      // temp
-      this.gain = this.party.players[0].netWorthSnapshots[0].items;
+      this.gain = element.items;
 
       this.rowWidth = table._elementRef.nativeElement.clientWidth;
       this.tooltip.top = el.top;
@@ -173,6 +171,8 @@ export class MapTableComponent implements OnInit, OnDestroy {
           const minute = Math.floor(area.duration / 60);
           const seconds = area.duration % 60;
           const newAreaObj = {
+            items: area.items,
+            gain: area.items.map(i => i.value).reduce((a, b) => a + b, 0),
             name: area.eventArea.name,
             tier: area.eventArea.info[0].level,
             time: ((minute < 10) ? '0' + minute.toString() : minute.toString())

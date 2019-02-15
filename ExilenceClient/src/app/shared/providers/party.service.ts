@@ -464,7 +464,7 @@ export class PartyService implements OnDestroy {
     this.playerLeagues.next(leagues);
   }
 
-  public updatePlayer(player: Player) {
+  public updatePlayer(player: Player, reason: string = null) {
     const oneDayAgo = (Date.now() - (24 * 60 * 60 * 1000));
     this.updateInProgress = true;
     this.externalService.getCharacter(this.accountInfo)
@@ -472,8 +472,10 @@ export class PartyService implements OnDestroy {
         player = this.externalService.setCharacter(equipment, player);
         const objToSend = Object.assign({}, player);
 
-        const inventoryItems = ItemHelper.getInventoryItems(player.character.items);
-        this.stateService.dispatch({ key: 'inventory', value: inventoryItems });
+        if (reason === 'area-change') {
+          const inventoryItems = ItemHelper.getInventoryItems(player.character.items);
+          this.stateService.dispatch({ key: 'inventory', value: inventoryItems });
+        }
 
         objToSend.pastAreas = HistoryHelper.filterAreas(objToSend.pastAreas, oneDayAgo);
         objToSend.netWorthSnapshots = HistoryHelper.filterNetworth(objToSend.netWorthSnapshots, oneDayAgo);
