@@ -146,11 +146,12 @@ export class MapService implements OnDestroy {
       // And the map zone before that has the same map name as this one
       // And is located on the same instance server as this one
       // It's probably the same map
-      const sameMapAsBefore =
-        (e.type === 'map'
-          && this.areaHistory.length > 1
+      const sameZoneAsBefore =
+        (this.areaHistory.length > 1
           && this.currentArea !== undefined
-          && this.currentArea.eventArea.name.endsWith('Hideout')
+          && ((this.currentArea.eventArea.name.endsWith('Hideout')
+            || this.currentArea.eventArea.info[0].town)
+            || this.currentArea.eventArea.name === ('The Templar Labaratory'))
           && this.areaHistory[1].eventArea.name.indexOf(e.name) > -1
           && this.previousInstanceServer === this.areaHistory[1].instanceServer);
 
@@ -164,12 +165,13 @@ export class MapService implements OnDestroy {
         }
 
         // if we enter the same map, add duration to previous event
-        if (sameMapAsBefore && shouldUpdateAreaHistory) {
+        if (sameZoneAsBefore && shouldUpdateAreaHistory) {
           duration = this.areaHistory[1].duration + diffSeconds;
           // remove hideout-event from current array
           this.areaHistory.shift();
           eventArea = this.areaHistory[0];
           eventArea.duration = duration;
+          // todo: concat gain for zones
           this.areaHistory[0] = eventArea;
         } else {
           if (eventArea.eventArea.type === 'map' && eventArea.eventArea.info.length > 0) {
@@ -212,6 +214,7 @@ export class MapService implements OnDestroy {
   }
 
   updateAreaHistory(eventArea) {
+    // todo: add gain
     this.areaHistory.unshift(eventArea);
     if (this.areaHistory.length > 1000) {
       this.areaHistory.pop();
