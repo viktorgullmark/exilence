@@ -17,7 +17,7 @@ import { TableHelper } from '../../../shared/helpers/table.helper';
 export class NetworthTableComponent implements OnInit, OnDestroy {
   @Input() multiple = false;
   @Input() showOverTime = false;
-  @Input() items: NetWorthItem[];
+  @Input() slim = false;
   @Output() differenceChanged: EventEmitter<any> = new EventEmitter;
   @Output() filtered: EventEmitter<any> = new EventEmitter;
   // tslint:disable-next-line:max-line-length
@@ -40,9 +40,9 @@ export class NetworthTableComponent implements OnInit, OnDestroy {
     if (!this.showOverTime && this.multiple) {
       this.displayedColumns.push('holdingPlayers');
     }
-    if (this.items !== undefined) {
-      this.displayedColumns = this.displayedColumns.filter(x => x !== 'links' && x !== 'gemLevel' && x !== 'corrupted');
-      // todo: show items
+    if (this.slim) {
+      // remove columns in slim variant
+      this.displayedColumns = this.displayedColumns.filter(x => x !== 'links' && x !== 'quality' && x !== 'gemLevel' && x !== 'corrupted');
     } else if (this.multiple) {
       // party logic
       this.filter();
@@ -283,9 +283,8 @@ export class NetworthTableComponent implements OnInit, OnDestroy {
     });
 
     // if slim variant of the table, only show top-items
-    if (this.items !== undefined) {
-      this.dataSource = this.dataSource.sort((n1, n2) => n1.value - n2.value);
-      this.dataSource = this.dataSource.slice(0, 5);
+    if (this.slim) {
+      this.dataSource = this.dataSource.sort((n1, n2) => n2.value - n1.value).slice(0, 12);
     }
   }
 }

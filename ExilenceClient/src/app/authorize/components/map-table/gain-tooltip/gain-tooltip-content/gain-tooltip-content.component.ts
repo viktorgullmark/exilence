@@ -10,12 +10,10 @@ import { NetworthTableComponent } from '../../../networth-table/networth-table.c
   encapsulation: ViewEncapsulation.None
 })
 export class GainTooltipContentComponent implements OnInit {
-  @Input() gain: NetWorthItem[];
   @ViewChild('table') table: NetworthTableComponent;
   constructor() { }
 
   ngOnInit() {
-    console.log(this.gain);
   }
 
   renderItems(items: NetWorthItem[]) {

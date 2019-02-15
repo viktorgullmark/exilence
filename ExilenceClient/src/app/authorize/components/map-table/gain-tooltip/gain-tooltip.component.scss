@@ -6,15 +6,12 @@
     white-space: nowrap;
     border: 1px solid $tooltip-separator-color;
 
-    width: 600px;
-
     &.hidden {
         opacity: 0;
     }
 
     &.inner-content 
     {   
-        padding: 5px;
         float: left;
         background: $item-tooltip-bg-color;
     }

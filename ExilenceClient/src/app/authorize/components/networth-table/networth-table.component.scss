@@ -2,6 +2,14 @@
 
 table {
     width: 100%;
+
+    &.slim {
+        tbody {
+            tr {
+                height: auto !important;
+            }
+        }
+    }
 }
 
 .icon-cell {
@@ -12,11 +20,19 @@ table {
 
     .networth-icon {
         max-height: 40px;
+
+        &.slim {
+            max-height: 27px;
+        }
     }
 }
 
 td {
     min-height: 40px;
+
+    &.slim {
+        min-height: 0;
+    }
 }
 
 .mat-cell {

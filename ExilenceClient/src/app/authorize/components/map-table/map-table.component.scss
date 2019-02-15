@@ -11,3 +11,10 @@ td {
 .gain-tooltip {
     display: block;
 }
+
+.gain-cell {
+    cursor: pointer;
+    :hover {
+        color: $primary;
+    }
+}

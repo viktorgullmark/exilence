@@ -23,8 +23,8 @@ export class GainTooltipComponent implements OnInit {
   reposition(host: any) {
     this.repositioned = false;
     setTimeout(() => {
-      this.left = 50;
-      this.top = 275;
+      this.left = 15;
+      this.top = 15;
       this.repositioned = true;
     }, 1);
   }
