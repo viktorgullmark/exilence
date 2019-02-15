@@ -167,6 +167,7 @@ export class MapTableComponent implements OnInit, OnDestroy {
   updateTable(pastAreas: ExtendedAreaInfo[]) {
     if (pastAreas !== null && pastAreas !== undefined) {
       pastAreas.forEach((area: ExtendedAreaInfo) => {
+        area.items = area.items === undefined ? [] : area.items;
         if (area.duration < 1800) {
           const minute = Math.floor(area.duration / 60);
           const seconds = area.duration % 60;

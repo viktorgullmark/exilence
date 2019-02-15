@@ -55,6 +55,7 @@ export class MapService implements OnDestroy {
     this.stateSubscription = this.stateService.state$.subscribe(state => {
       const inventory: Item[] = 'inventory'.split('.').reduce((o, i) => o[i], state);
       let networthItems: NetWorthItem[] = [...this.temporaryGain];
+      this.temporaryGain = [];
       if (inventory !== undefined) {
         inventory.forEach((item: Item) => {
           const priceInformation = pricingService.priceItem(item);
@@ -62,12 +63,12 @@ export class MapService implements OnDestroy {
           networthItems.push(networthItem);
         });
 
-        if (this.areaHistory[1] !== undefined) {
+        if (this.areaHistory[0] !== undefined) {
           networthItems = networthItems.filter(x =>
-            TableHelper.findNetworthObj(this.areaHistory[1].items, x) === undefined
+            TableHelper.findNetworthObj(this.areaHistory[0].items, x) === undefined
           );
         }
-        this.areaHistory[0].items = networthItems;
+        this.areaHistory[1].items = networthItems;
         this.settingsService.set('areas', this.areaHistory);
         this.updateLocalPlayerAreas(this.areaHistory);
       }
@@ -132,7 +133,7 @@ export class MapService implements OnDestroy {
 
   registerAreaEvent(e: EventArea, live: boolean) {
     // zone entered
-    const shouldUpdateAreaHistory = (e.type === 'map' || e.name.endsWith('Hideout') || !this.logMonitorService.trackMapsOnly);
+    const shouldUpdateAreaHistory = true;
 
     const nextNeutralZone =
       ((e.name.endsWith('Hideout') ||
@@ -190,14 +191,12 @@ export class MapService implements OnDestroy {
         if (this.currentArea.timestamp < eventTimestamp) {
           diffSeconds = (eventTimestamp - this.currentArea.timestamp) / 1000;
         }
-
+        if (this.areaHistory[1] !== undefined) {
+          this.temporaryGain = this.temporaryGain.concat(this.areaHistory[1].items);
+        }
         // if we enter the same map, add duration to previous event
         if (sameZoneAsBefore && shouldUpdateAreaHistory) {
           duration = this.areaHistory[1].duration + diffSeconds;
-
-          console.log('this.areaHistory', this.areaHistory);
-          this.temporaryGain = this.temporaryGain.concat(this.areaHistory[1].items);
-
           // remove hideout-event from current array
           this.areaHistory.shift();
           eventArea = this.areaHistory[0];
@@ -205,7 +204,6 @@ export class MapService implements OnDestroy {
           // todo: concat gain for zones
           this.areaHistory[0] = eventArea;
         } else {
-          this.temporaryGain = [];
           if (shouldUpdateAreaHistory) {
             this.areaHistory[0].duration = diffSeconds;
             // push the new object to our area-history
