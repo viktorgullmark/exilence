@@ -14,7 +14,14 @@ td {
 
 .gain-cell {
     cursor: pointer;
-    :hover {
-        color: $primary;
-    }
+}
+
+.networth-value {
+    color: $currency-chaos-color;
+}
+
+.neutral-arrow {
+    color: $font-color;
+    transform: rotate(270deg);
+    font-size: 20px !important;
 }
