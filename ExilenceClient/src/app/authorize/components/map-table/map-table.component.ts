@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnInit, Output, ViewChild, OnDestroy } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output, ViewChild, OnDestroy, ElementRef } from '@angular/core';
 import { MatSort, MatTableDataSource, MatPaginator } from '@angular/material';
 import * as moment from 'moment';
 
@@ -8,6 +8,8 @@ import { PartyService } from '../../../shared/providers/party.service';
 import { MapService } from '../../../shared/providers/map.service';
 import { Subscription } from 'rxjs/internal/Subscription';
 import { Party } from '../../../shared/interfaces/party.interface';
+import { GainTooltipComponent } from './gain-tooltip/gain-tooltip.component';
+import { NetWorthItem } from '../../../shared/interfaces/income.interface';
 
 @Component({
   selector: 'app-map-table',
@@ -17,19 +19,27 @@ import { Party } from '../../../shared/interfaces/party.interface';
 export class MapTableComponent implements OnInit, OnDestroy {
 
   @Output() filtered: EventEmitter<any> = new EventEmitter;
-  displayedColumns: string[] = ['timestamp', 'name', 'tier', 'time'];
+  displayedColumns: string[] = ['timestamp', 'name', 'tier', 'time', 'gain'];
   dataSource = [];
   searchText = '';
   filteredArr = [];
   source: any;
   party: Party;
+  gain: NetWorthItem[];
+  selected = {
+    name: '',
+    tier: 0,
+    time: 0,
+    timestamp: 0
+  };
   private selectedFilterValueSub: Subscription;
   private partySub: Subscription;
   public selectedPlayerValue: any;
   @ViewChild(MatSort) sort: MatSort;
   @ViewChild(MatPaginator) paginator: MatPaginator;
+  @ViewChild(GainTooltipComponent) tooltip: GainTooltipComponent;
 
-  constructor(private partyService: PartyService, private mapService: MapService) {
+  constructor(private partyService: PartyService, private mapService: MapService, public el: ElementRef) {
   }
 
   ngOnInit() {
@@ -87,6 +97,28 @@ export class MapTableComponent implements OnInit, OnDestroy {
         }
       }
     });
+  }
+
+  updateTooltip(element, el) {
+    if (element === undefined) {
+      element = {
+        name: '',
+        tier: 0,
+        time: 0,
+        timestamp: 0
+      };
+    }
+    this.selected = element;
+
+    if (this.selected.timestamp > 0) {
+
+      // todo: update gain based on hovered element here
+
+      this.gain = [];
+      this.tooltip.top = el.top;
+      this.tooltip.left = el.left;
+      this.tooltip.reposition(el);
+    }
   }
 
   getPlayers() {

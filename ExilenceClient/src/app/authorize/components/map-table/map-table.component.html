@@ -1,4 +1,5 @@
-<table mat-table [dataSource]="source" class="mat-elevation-z8" matSort matSortActive="timestamp" matSortDisableClear matSortDirection="desc">
+<table mat-table [dataSource]="source" class="mat-elevation-z8" matSort matSortActive="timestamp" matSortDisableClear
+  matSortDirection="desc">
 
   <!--- Note that these columns can be defined in any order.
           The actual rendered columns are set as a property on the row definition" -->
@@ -26,7 +27,17 @@
     <td mat-cell *matCellDef="let element"> {{element.time == '00:00' ? 'n/a' : element.time }} </td>
   </ng-container>
 
+  <!-- Gain Column -->
+  <ng-container matColumnDef="gain">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header="gain"> Gain </th>
+    <td mat-cell *matCellDef="let element" class="gain-cell" #el (mouseenter)="updateTooltip(element, el)"
+      (mouseleave)="updateTooltip(undefined, el)">gain here
+    </td>
+  </ng-container>
+
   <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
   <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
 </table>
 <mat-paginator [pageSizeOptions]="[12]" showFirstLastButtons></mat-paginator>
+<app-gain-tooltip #tooltip [gain]="gain"
+  class="tooltip" [style.top.px]="tooltip.top" [style.left.px]="tooltip.left" [ngClass]="{'gain-tooltip': selected.timestamp > 0 && tooltip.repositioned }"></app-gain-tooltip>

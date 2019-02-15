@@ -17,6 +17,7 @@ import { TableHelper } from '../../../shared/helpers/table.helper';
 export class NetworthTableComponent implements OnInit, OnDestroy {
   @Input() multiple = false;
   @Input() showOverTime = false;
+  @Input() items: NetWorthItem[];
   @Output() differenceChanged: EventEmitter<any> = new EventEmitter;
   @Output() filtered: EventEmitter<any> = new EventEmitter;
   // tslint:disable-next-line:max-line-length
@@ -39,7 +40,9 @@ export class NetworthTableComponent implements OnInit, OnDestroy {
     if (!this.showOverTime) {
       this.displayedColumns.push('holdingPlayers');
     }
-    if (this.multiple) {
+    if (this.items !== undefined) {
+      // todo: show items
+    } else if (this.multiple) {
       // party logic
       this.filter();
 
