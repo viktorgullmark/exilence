@@ -1,4 +1,4 @@
-<ng-container *ngIf="gain != undefined">
-    <h3 class="mat-h3">Gain listings</h3>
-    <app-networth-table #table [multiple]="true" [items]="[]"></app-networth-table>
+<ng-container>
+    <h3 class="mat-h3">Showing top 5 most valued items</h3>
+    <app-networth-table #table [multiple]="false" [items]="gain"></app-networth-table>
 </ng-container>

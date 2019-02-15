@@ -1,6 +1,7 @@
-import { Component, Input, OnInit, ViewEncapsulation } from '@angular/core';
+import { Component, Input, OnInit, ViewEncapsulation, ViewChild } from '@angular/core';
 
 import { NetWorthItem } from '../../../../../shared/interfaces/income.interface';
+import { NetworthTableComponent } from '../../../networth-table/networth-table.component';
 
 @Component({
   selector: 'app-gain-tooltip-content',
@@ -10,8 +11,16 @@ import { NetWorthItem } from '../../../../../shared/interfaces/income.interface'
 })
 export class GainTooltipContentComponent implements OnInit {
   @Input() gain: NetWorthItem[];
+  @ViewChild('table') table: NetworthTableComponent;
   constructor() { }
 
   ngOnInit() {
+    console.log(this.gain);
+  }
+
+  renderItems(items: NetWorthItem[]) {
+    this.table.dataSource = [];
+    this.table.updateTable(items, undefined);
+    this.table.filter();
   }
 }

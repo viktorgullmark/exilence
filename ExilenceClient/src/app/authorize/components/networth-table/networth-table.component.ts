@@ -37,10 +37,11 @@ export class NetworthTableComponent implements OnInit, OnDestroy {
   constructor(private partyService: PartyService, private settingsService: SettingsService) { }
 
   ngOnInit() {
-    if (!this.showOverTime) {
+    if (!this.showOverTime && this.multiple) {
       this.displayedColumns.push('holdingPlayers');
     }
     if (this.items !== undefined) {
+      this.displayedColumns = this.displayedColumns.filter(x => x !== 'links' && x !== 'gemLevel' && x !== 'corrupted');
       // todo: show items
     } else if (this.multiple) {
       // party logic
@@ -280,6 +281,12 @@ export class NetworthTableComponent implements OnInit, OnDestroy {
         }
       }
     });
+
+    // if slim variant of the table, only show top-items
+    if (this.items !== undefined) {
+      this.dataSource = this.dataSource.sort((n1, n2) => n1.value - n2.value);
+      this.dataSource = this.dataSource.slice(0, 5);
+    }
   }
 }
 

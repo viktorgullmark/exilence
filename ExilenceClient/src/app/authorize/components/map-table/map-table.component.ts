@@ -23,6 +23,7 @@ export class MapTableComponent implements OnInit, OnDestroy {
   dataSource = [];
   searchText = '';
   filteredArr = [];
+  rowWidth = 0;
   source: any;
   party: Party;
   gain: NetWorthItem[];
@@ -99,7 +100,7 @@ export class MapTableComponent implements OnInit, OnDestroy {
     });
   }
 
-  updateTooltip(element, el) {
+  updateTooltip(element, el, table) {
     if (element === undefined) {
       element = {
         name: '',
@@ -114,10 +115,14 @@ export class MapTableComponent implements OnInit, OnDestroy {
 
       // todo: update gain based on hovered element here
 
-      this.gain = [];
+      // temp
+      this.gain = this.party.players[0].netWorthSnapshots[0].items;
+
+      this.rowWidth = table._elementRef.nativeElement.clientWidth;
       this.tooltip.top = el.top;
       this.tooltip.left = el.left;
       this.tooltip.reposition(el);
+      this.tooltip.renderItems(this.gain);
     }
   }
 
