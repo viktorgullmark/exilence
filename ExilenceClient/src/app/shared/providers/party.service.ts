@@ -354,7 +354,7 @@ export class PartyService implements OnDestroy {
     this.partyUpdated.next(this.party);
     this.updatePlayerLists(this.party);
 
-    if (this.selectedPlayerObj.account === player.account) {
+    if (this.selectedPlayerObj !== undefined && this.selectedPlayerObj.account === player.account) {
 
       // select self if is player, otherwhise select the first player in the group
       if (this.currentPlayer.character !== null) {
