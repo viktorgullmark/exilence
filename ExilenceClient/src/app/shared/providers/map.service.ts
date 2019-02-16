@@ -29,10 +29,12 @@ export class MapService implements OnDestroy {
   public previousDate: Date;
   private localPlayer: Player;
   private temporaryGain: NetWorthItem[] = [];
+  private excludeGain: NetWorthItem[] = [];
 
   private playerSub: Subscription;
   private areasSub: Subscription;
-  private playerInventorySub: Subscription;
+  private playerToNeutralInventorySub: Subscription;
+  private playerToHostileInventorySub: Subscription;
 
   areasParsed: EventEmitter<any> = new EventEmitter();
 
@@ -52,16 +54,22 @@ export class MapService implements OnDestroy {
 
     this.loadAreasFromSettings();
 
-    this.playerInventorySub = this.partyService.playerInventory.subscribe(state => {
-      const inventory: Item[] = 'inventory'.split('.').reduce((o, i) => o[i], state);
+    this.playerToNeutralInventorySub = this.partyService.playerToNeutralInventory.subscribe(inventory => {
+
       let networthItems: NetWorthItem[] = [...this.temporaryGain];
       this.temporaryGain = [];
       if (inventory !== undefined) {
+
         inventory.forEach((item: Item) => {
           const priceInformation = pricingService.priceItem(item);
           const networthItem = ItemHelper.toNetworthItem(item, priceInformation);
           networthItems.push(networthItem);
         });
+
+
+        networthItems = networthItems.filter(x =>
+          TableHelper.findNetworthObj(this.excludeGain, x) === undefined
+        );
 
         if (this.areaHistory[1] !== undefined) {
           networthItems = networthItems.filter(x =>
@@ -71,6 +79,26 @@ export class MapService implements OnDestroy {
         this.areaHistory[0].items = networthItems;
         this.settingsService.set('areas', this.areaHistory);
         this.updateLocalPlayerAreas(this.areaHistory);
+      }
+    });
+
+    this.playerToHostileInventorySub = this.partyService.playerToHostileInventory.subscribe(inventory => {
+
+      if (inventory !== undefined) {
+        const networthItems: NetWorthItem[] = [];
+        inventory.forEach((item: Item) => {
+          const priceInformation = pricingService.priceItem(item);
+          const networthItem = ItemHelper.toNetworthItem(item, priceInformation);
+          networthItems.push(networthItem);
+        });
+
+        if (this.excludeGain.length === 0) {
+          this.excludeGain = networthItems;
+        }
+
+        this.temporaryGain = this.temporaryGain.filter(x =>
+          TableHelper.findNetworthObj(networthItems, x) === undefined
+        );
       }
     });
 
@@ -121,8 +149,11 @@ export class MapService implements OnDestroy {
     if (this.areasSub !== undefined) {
       this.areasSub.unsubscribe();
     }
-    if (this.playerInventorySub !== undefined) {
-      this.playerInventorySub.unsubscribe();
+    if (this.playerToNeutralInventorySub !== undefined) {
+      this.playerToNeutralInventorySub.unsubscribe();
+    }
+    if (this.playerToHostileInventorySub !== undefined) {
+      this.playerToHostileInventorySub.unsubscribe();
     }
   }
 
@@ -191,8 +222,8 @@ export class MapService implements OnDestroy {
         if (this.currentArea.timestamp < eventTimestamp) {
           diffSeconds = (eventTimestamp - this.currentArea.timestamp) / 1000;
         }
-        if (this.areaHistory[1] !== undefined) {
-          this.temporaryGain = this.temporaryGain.concat(this.areaHistory[1].items);
+        if (this.areaHistory[0] !== undefined && !nextNeutralZone) {
+          this.temporaryGain = this.temporaryGain.concat(this.areaHistory[0].items);
         }
         // if we enter the same map, add duration to previous event
         if (sameZoneAsBefore && shouldUpdateAreaHistory) {
@@ -204,6 +235,19 @@ export class MapService implements OnDestroy {
           // todo: concat gain for zones
           this.areaHistory[0] = eventArea;
         } else {
+
+          if (neutralZone && !nextNeutralZone) {
+            this.temporaryGain = [];
+            this.excludeGain = [];
+
+            // When we enter a new map, move the pricing to the right map where we gained the money
+            // if (this.areaHistory[1] !== undefined && this.areaHistory[0] !== undefined && this.areaHistory[1].items.length > 0) {
+            //   this.areaHistory[1].items = this.areaHistory[0].items;
+            //   this.areaHistory[0].items = [];
+            // }
+
+          }
+
           if (shouldUpdateAreaHistory) {
             this.areaHistory[0].duration = diffSeconds;
             // push the new object to our area-history
@@ -241,7 +285,15 @@ export class MapService implements OnDestroy {
       console.log('Neutral Zone: ', neutralZone);
       console.log('Next Neutral Zone: ', nextNeutralZone);
 
-      const reason = !neutralZone && nextNeutralZone ? 'area-change' : null;
+
+      let reason = null;
+      if (this.areaHistory.length > 1 && !neutralZone && nextNeutralZone) {
+        reason = 'area-change-to-neutral';
+      }
+      if (this.areaHistory.length > 1 && neutralZone && !nextNeutralZone) {
+        reason = 'area-change-to-hostile';
+      }
+
       this.partyService.updatePlayer(this.localPlayer, reason);
     }
   }

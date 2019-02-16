@@ -54,7 +54,8 @@ export class PartyService implements OnDestroy {
   public connectionInitiated: EventEmitter<boolean> = new EventEmitter();
 
   public serverMessageReceived: BehaviorSubject<ServerMessage> = new BehaviorSubject<ServerMessage>(undefined);
-  public playerInventory: BehaviorSubject<Item[]> = new BehaviorSubject<Item[]>(undefined);
+  public playerToNeutralInventory: BehaviorSubject<Item[]> = new BehaviorSubject<Item[]>(undefined);
+  public playerToHostileInventory: BehaviorSubject<Item[]> = new BehaviorSubject<Item[]>(undefined);
 
   private reconnectAttempts: number;
   private forceClosed: boolean;
@@ -474,9 +475,13 @@ export class PartyService implements OnDestroy {
         player = this.externalService.setCharacter(equipment, player);
         const objToSend = Object.assign({}, player);
 
-        if (reason === 'area-change') {
+        if (reason === 'area-change-to-neutral') {
           const inventoryItems = ItemHelper.getInventoryItems(player.character.items);
-          this.playerInventory.next(inventoryItems);
+          this.playerToNeutralInventory.next(inventoryItems);
+        }
+        if (reason === 'area-change-to-hostile') {
+          const inventoryItems = ItemHelper.getInventoryItems(player.character.items);
+          this.playerToHostileInventory.next(inventoryItems);
         }
 
         objToSend.pastAreas = HistoryHelper.filterAreas(objToSend.pastAreas, oneDayAgo);
