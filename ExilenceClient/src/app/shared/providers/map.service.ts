@@ -63,7 +63,7 @@ export class MapService implements OnDestroy {
 
         if (this.excludeGain.length > 0) {
           currentInventory = ItemHelper.DiffNetworthItems(currentInventory, this.excludeGain);
-          this.excludeGain = [];
+          this.excludeGain = undefined;
           console.log('after excluding: ', currentInventory);
         }
 
@@ -73,7 +73,7 @@ export class MapService implements OnDestroy {
 
     this.enteredHostileAreaSub = this.partyService.enteredHostileArea.subscribe(inventory => {
       if (inventory !== undefined) {
-        if (this.excludeGain.length === 0) {
+        if (this.excludeGain === undefined) {
           this.excludeGain = this.priceAndCombineInventory(inventory);
         }
         console.log('this.excludeGain', this.excludeGain);
