@@ -54,8 +54,8 @@ export class PartyService implements OnDestroy {
   public connectionInitiated: EventEmitter<boolean> = new EventEmitter();
 
   public serverMessageReceived: BehaviorSubject<ServerMessage> = new BehaviorSubject<ServerMessage>(undefined);
-  public playerToNeutralInventory: BehaviorSubject<Item[]> = new BehaviorSubject<Item[]>(undefined);
-  public playerToHostileInventory: BehaviorSubject<Item[]> = new BehaviorSubject<Item[]>(undefined);
+  public enteredNeutralArea: BehaviorSubject<Item[]> = new BehaviorSubject<Item[]>(undefined);
+  public enteredHostileArea: BehaviorSubject<Item[]> = new BehaviorSubject<Item[]>(undefined);
 
   private reconnectAttempts: number;
   private forceClosed: boolean;
@@ -477,11 +477,10 @@ export class PartyService implements OnDestroy {
 
         if (reason === 'area-change-to-neutral') {
           const inventoryItems = ItemHelper.getInventoryItems(player.character.items);
-          this.playerToNeutralInventory.next(inventoryItems);
-        }
-        if (reason === 'area-change-to-hostile') {
+          this.enteredNeutralArea.next(inventoryItems);
+        } else if (reason === 'area-change-to-hostile') {
           const inventoryItems = ItemHelper.getInventoryItems(player.character.items);
-          this.playerToHostileInventory.next(inventoryItems);
+          this.enteredHostileArea.next(inventoryItems);
         }
 
         objToSend.pastAreas = HistoryHelper.filterAreas(objToSend.pastAreas, oneDayAgo);

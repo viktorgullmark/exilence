@@ -125,11 +125,6 @@ export class LoginComponent implements OnInit, OnDestroy {
 
         this.logMonitorService.trackMapsOnly = this.logMonitorService.trackMapsOnly !== undefined ?
             this.logMonitorService.trackMapsOnly : true;
-
-        // reset data for parser. if we logged out we should behave as a new player, not using current data
-        this.mapService.previousInstanceServer = undefined;
-        this.mapService.previousDate = undefined;
-        this.mapService.currentArea = undefined;
     }
 
     checkPath() {

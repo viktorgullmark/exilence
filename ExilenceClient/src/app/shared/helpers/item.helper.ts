@@ -1,6 +1,7 @@
 import { Item } from '../interfaces/item.interface';
 import { NetWorthItem } from '../interfaces/income.interface';
 import { ItemPricing } from '../interfaces/item-pricing.interface';
+import { TableHelper } from './table.helper';
 
 
 export class ItemHelper {
@@ -78,11 +79,7 @@ export class ItemHelper {
         return [...items.filter(i => i.inventoryId === 'MainInventory')];
     }
 
-
-
     public static toNetworthItem(item: Item, pricing: ItemPricing): NetWorthItem {
-
-
         let icon = item.icon.indexOf('?') >= 0
             ? item.icon.substring(0, item.icon.indexOf('?')) + '?scale=1&scaleIndex=3&w=1&h=1'
             : item.icon + '?scale=1&scaleIndex=3&w=1&h=1';
@@ -120,8 +117,44 @@ export class ItemHelper {
         } as NetWorthItem;
 
         return netWorthItem;
-
     }
 
+    public static CombineNetworthItemStacks(items: NetWorthItem[]): NetWorthItem[] {
+
+        const combinedStacks: NetWorthItem[] = [];
+
+        for (let i = 0; i < items.length; i++) {
+            const item = items[i];
+            const foundStackIndex = combinedStacks.indexOf(TableHelper.findNetworthObj(combinedStacks, item));
+            if (foundStackIndex === -1) {
+                combinedStacks.push(item);
+            } else {
+                combinedStacks[foundStackIndex].stacksize += item.stacksize;
+                combinedStacks[foundStackIndex].value = combinedStacks[foundStackIndex].stacksize * item.valuePerUnit;
+            }
+        }
+
+        return combinedStacks;
+    }
+
+    public static DiffNetworthItems(current: NetWorthItem[], previous: NetWorthItem[]): NetWorthItem[] {
+        const difference: NetWorthItem[] = [];
+        current.forEach(item => {
+            const existingItem = TableHelper.findNetworthObj(previous, item);
+            if (existingItem !== undefined) {
+                item.stacksize = item.stacksize - existingItem.stacksize;
+                item.value = item.valuePerUnit * item.stacksize;
+                if (item.value !== 0 && item.stacksize !== 0) {
+                    difference.push(item);
+                }
+            } else {
+                if (item.value !== 0 && item.stacksize !== 0) {
+                    difference.push(item);
+                }
+            }
+        });
+
+        return difference;
+    }
 }
 
