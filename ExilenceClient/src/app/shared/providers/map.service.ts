@@ -28,8 +28,8 @@ export class MapService implements OnDestroy {
   public historicalInstanceServer: string;
   public previousDate: Date;
   private localPlayer: Player;
-  private temporaryGain: NetWorthItem[] = [];
-  private excludeGain: NetWorthItem[] = [];
+  public temporaryGain: NetWorthItem[] = [];
+  public excludeGain: NetWorthItem[] = [];
 
   private playerSub: Subscription;
   private areasSub: Subscription;
@@ -65,25 +65,33 @@ export class MapService implements OnDestroy {
           const networthItem = ItemHelper.toNetworthItem(item, priceInformation);
           networthItems.push(networthItem);
         });
-
-
-        networthItems = networthItems.filter(x =>
-          TableHelper.findNetworthObj(this.excludeGain, x) === undefined
-        );
-
+        networthItems = networthItems.filter(x => {
+          return TableHelper.findStack(this.excludeGain, x) === undefined;
+        });
+        for (let i = 0; i < networthItems.length; i++) {
+          const element = networthItems[i];
+          if (element.stacksize > 1) {
+            const foundExcludedItem = TableHelper.findNetworthObj(this.excludeGain, element);
+            if (foundExcludedItem !== undefined) {
+              element.stacksize -= foundExcludedItem.stacksize;
+              element.value = element.stacksize * element.valuePerUnit;
+            }
+          }
+        }
         if (this.areaHistory[1] !== undefined) {
           networthItems = networthItems.filter(x =>
             TableHelper.findNetworthObj(this.areaHistory[1].items, x) === undefined
           );
         }
-        this.areaHistory[0].items = networthItems;
+        if (this.areaHistory[0] !== undefined) {
+          this.areaHistory[0].items = networthItems;
+        }
         this.settingsService.set('areas', this.areaHistory);
         this.updateLocalPlayerAreas(this.areaHistory);
       }
     });
 
     this.playerToHostileInventorySub = this.partyService.playerToHostileInventory.subscribe(inventory => {
-
       if (inventory !== undefined) {
         const networthItems: NetWorthItem[] = [];
         inventory.forEach((item: Item) => {
@@ -222,11 +230,11 @@ export class MapService implements OnDestroy {
         if (this.currentArea.timestamp < eventTimestamp) {
           diffSeconds = (eventTimestamp - this.currentArea.timestamp) / 1000;
         }
-        if (this.areaHistory[0] !== undefined && !nextNeutralZone) {
-          this.temporaryGain = this.temporaryGain.concat(this.areaHistory[0].items);
-        }
         // if we enter the same map, add duration to previous event
         if (sameZoneAsBefore && shouldUpdateAreaHistory) {
+          if (!nextNeutralZone) {
+            this.temporaryGain = this.temporaryGain.concat(this.areaHistory[0].items);
+          }
           duration = this.areaHistory[1].duration + diffSeconds;
           // remove hideout-event from current array
           this.areaHistory.shift();
