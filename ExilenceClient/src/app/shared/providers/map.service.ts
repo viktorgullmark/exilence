@@ -28,7 +28,7 @@ export class MapService implements OnDestroy {
   public previousDate: Date;
   private localPlayer: Player;
   public temporaryGain: NetWorthItem[] = [];
-  public excludeGain: NetWorthItem[] = [];
+  public excludeGain: NetWorthItem[] = undefined;
 
   private playerSub: Subscription;
   private areasSub: Subscription;
@@ -61,7 +61,7 @@ export class MapService implements OnDestroy {
           console.log('difference: ', currentInventory);
         }
 
-        if (this.excludeGain.length > 0) {
+        if (this.excludeGain !== undefined && this.excludeGain.length > 0) {
           currentInventory = ItemHelper.DiffNetworthItems(currentInventory, this.excludeGain);
           this.excludeGain = undefined;
           console.log('after excluding: ', currentInventory);
