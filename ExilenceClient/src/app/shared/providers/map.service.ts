@@ -68,6 +68,7 @@ export class MapService implements OnDestroy {
         networthItems = networthItems.filter(x => {
           return TableHelper.findStack(this.excludeGain, x) === undefined;
         });
+
         for (let i = 0; i < networthItems.length; i++) {
           const element = networthItems[i];
           if (element.stacksize > 1) {
@@ -78,6 +79,7 @@ export class MapService implements OnDestroy {
             }
           }
         }
+
         if (this.areaHistory[1] !== undefined) {
           networthItems = networthItems.filter(x =>
             TableHelper.findNetworthObj(this.areaHistory[1].items, x) === undefined
@@ -93,20 +95,22 @@ export class MapService implements OnDestroy {
 
     this.playerToHostileInventorySub = this.partyService.playerToHostileInventory.subscribe(inventory => {
       if (inventory !== undefined) {
-        const networthItems: NetWorthItem[] = [];
+        let networthItems: NetWorthItem[] = [];
         inventory.forEach((item: Item) => {
           const priceInformation = pricingService.priceItem(item);
           const networthItem = ItemHelper.toNetworthItem(item, priceInformation);
           networthItems.push(networthItem);
         });
 
-        if (this.excludeGain.length === 0) {
-          this.excludeGain = networthItems;
-        }
-
         this.temporaryGain = this.temporaryGain.filter(x =>
           TableHelper.findNetworthObj(networthItems, x) === undefined
         );
+
+        networthItems = networthItems.filter(x =>
+          TableHelper.findNetworthObj(this.excludeGain, x) === undefined
+        );
+
+        this.excludeGain = this.excludeGain.concat(networthItems);
       }
     });
 
@@ -233,6 +237,7 @@ export class MapService implements OnDestroy {
         // if we enter the same map, add duration to previous event
         if (sameZoneAsBefore && shouldUpdateAreaHistory) {
           if (!nextNeutralZone) {
+            this.zoneWasSameMap = true;
             this.temporaryGain = this.temporaryGain.concat(this.areaHistory[0].items);
           }
           duration = this.areaHistory[1].duration + diffSeconds;
