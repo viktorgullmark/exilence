@@ -33,7 +33,8 @@
     <td mat-cell *matCellDef="let element" class="gain-cell networth-value with-icon in-table" #el (mouseenter)="updateTooltip(element, el, mainTable)"
       (mouseleave)="updateTooltip(undefined, el)">
       <ng-container *ngIf="element?.gain != 0">
-        {{element.gain.toFixed(2)}}&nbsp;<mat-icon class="neutral-arrow">subdirectory_arrow_left</mat-icon>
+        {{element.gain.toFixed(2)}}
+        <!-- &nbsp;<mat-icon class="neutral-arrow">subdirectory_arrow_left</mat-icon> -->
       </ng-container>
       <ng-container *ngIf="element == undefined || element.gain == 0">
         -

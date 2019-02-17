@@ -4,7 +4,7 @@ import { BehaviorSubject } from 'rxjs/internal/BehaviorSubject';
 
 import { HistoryHelper } from '../helpers/history.helper';
 import { ItemHelper } from '../helpers/item.helper';
-import { TableHelper } from '../helpers/table.helper';
+import { } from '../helpers/table.helper';
 import { AreaEventType, AreaInfo, EventArea, ExtendedAreaInfo } from '../interfaces/area.interface';
 import { NetWorthItem } from '../interfaces/income.interface';
 import { Item } from '../interfaces/item.interface';
@@ -54,31 +54,17 @@ export class MapService implements OnDestroy {
 
     this.enteredNeutralAreaSub = this.partyService.enteredNeutralArea.subscribe(inventory => {
       if (inventory !== undefined) {
-        let currentInventory = this.priceAndCombineInventory(inventory);
-
-        if (this.areaHistory[1] !== undefined) {
-          currentInventory = ItemHelper.DiffNetworthItems(currentInventory, this.areaHistory[1].items);
-          console.log('difference: ', currentInventory);
-        }
-
-        if (this.excludeGain !== undefined && this.excludeGain.length > 0) {
-          currentInventory = ItemHelper.DiffNetworthItems(currentInventory, this.excludeGain);
-          this.excludeGain = undefined;
-          console.log('after excluding: ', currentInventory);
-        }
-
-        this.areaHistory[0].items = currentInventory;
+        this.EnteredArea(inventory);
       }
     });
 
     this.enteredHostileAreaSub = this.partyService.enteredHostileArea.subscribe(inventory => {
       if (inventory !== undefined) {
-        if (this.excludeGain === undefined) {
-          this.excludeGain = this.priceAndCombineInventory(inventory);
-        }
-        console.log('this.excludeGain', this.excludeGain);
+        this.EnteredArea(inventory);
       }
     });
+
+
 
     this.playerSub = this.accountService.player.subscribe(player => {
       if (player !== undefined) {
@@ -107,6 +93,18 @@ export class MapService implements OnDestroy {
     this.logMonitorService.historicalAreaEvent.subscribe((e: EventArea) => {
       this.registerAreaEvent(e);
     });
+  }
+
+  EnteredArea(inventory) {
+    const currentInventory = this.priceAndCombineInventory(inventory);
+    this.areaHistory[0].inventory = currentInventory;
+    if (this.areaHistory[1] !== undefined) {
+      const diff = ItemHelper.DiffNetworthItems(currentInventory, this.areaHistory[1].inventory);
+      this.areaHistory[0].difference = diff;
+      console.log('Current Inventory: ', currentInventory);
+      console.log('Previous Inventory: ', this.areaHistory[1].inventory);
+      console.log('Difference: ', diff);
+    }
   }
 
   priceAndCombineInventory(items: Item[]): NetWorthItem[] {
@@ -148,7 +146,8 @@ export class MapService implements OnDestroy {
       timestamp: new Date(e.timestamp).getTime(),
       duration: 0,
       instanceServer: this.previousInstanceServer,
-      items: []
+      difference: [],
+      inventory: []
     } as ExtendedAreaInfo;
 
     if (this.areaHistory.length > 0) {

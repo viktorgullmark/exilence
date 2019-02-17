@@ -139,17 +139,20 @@ export class ItemHelper {
 
     public static DiffNetworthItems(current: NetWorthItem[], previous: NetWorthItem[]): NetWorthItem[] {
         const difference: NetWorthItem[] = [];
-        current.forEach(item => {
-            const existingItem = TableHelper.findNetworthObj(previous, item);
-            if (existingItem !== undefined) {
-                item.stacksize = item.stacksize - existingItem.stacksize;
-                item.value = item.valuePerUnit * item.stacksize;
-                if (item.value !== 0 && item.stacksize !== 0) {
-                    difference.push(item);
+        current.forEach(currentItem => {
+            const previousItem = TableHelper.findNetworthObj(previous, currentItem);
+            currentItem = Object.assign({}, currentItem);
+            if (previousItem !== undefined) {
+                if (previousItem.stacksize !== currentItem.stacksize) {
+                    currentItem.stacksize = currentItem.stacksize - previousItem.stacksize;
+                    currentItem.value = currentItem.valuePerUnit * currentItem.stacksize;
+                    if (currentItem.value !== 0 && currentItem.stacksize !== 0) {
+                        difference.push(currentItem);
+                    }
                 }
             } else {
-                if (item.value !== 0 && item.stacksize !== 0) {
-                    difference.push(item);
+                if (currentItem.value !== 0 && currentItem.stacksize !== 0) {
+                    difference.push(currentItem);
                 }
             }
         });

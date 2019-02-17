@@ -36,6 +36,7 @@ export interface ExtendedAreaInfo {
   type: AreaEventType;
   timestamp: number;
   duration: number;
-  items: NetWorthItem[];
+  difference: NetWorthItem[];
+  inventory: NetWorthItem[];
   instanceServer: string;
 }

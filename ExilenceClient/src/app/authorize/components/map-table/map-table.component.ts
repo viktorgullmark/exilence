@@ -167,13 +167,13 @@ export class MapTableComponent implements OnInit, OnDestroy {
   updateTable(pastAreas: ExtendedAreaInfo[]) {
     if (pastAreas !== null && pastAreas !== undefined) {
       pastAreas.forEach((area: ExtendedAreaInfo) => {
-        area.items = area.items === undefined ? [] : area.items;
+        area.difference = area.difference === undefined ? [] : area.difference;
         if (area.duration < 1800) {
           const minute = Math.floor(area.duration / 60);
           const seconds = area.duration % 60;
           const newAreaObj = {
-            items: area.items,
-            gain: area.items.map(i => i.value).reduce((a, b) => a + b, 0),
+            items: area.difference,
+            gain: area.difference.map(i => i.value).reduce((a, b) => a + b, 0),
             name: area.eventArea.name,
             tier: area.eventArea.info[0].level,
             time: ((minute < 10) ? '0' + minute.toString() : minute.toString())
