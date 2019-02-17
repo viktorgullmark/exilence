@@ -100,10 +100,7 @@ export class MapService implements OnDestroy {
     this.areaHistory[0].inventory = currentInventory;
     if (this.areaHistory[1] !== undefined) {
       const diff = ItemHelper.DiffNetworthItems(currentInventory, this.areaHistory[1].inventory);
-      this.areaHistory[0].difference = diff;
-      console.log('Current Inventory: ', currentInventory);
-      console.log('Previous Inventory: ', this.areaHistory[1].inventory);
-      console.log('Difference: ', diff);
+      this.areaHistory[1].difference = diff;
     }
   }
 
