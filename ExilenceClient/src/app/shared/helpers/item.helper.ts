@@ -1,6 +1,6 @@
-import { Item } from '../interfaces/item.interface';
 import { NetWorthItem } from '../interfaces/income.interface';
 import { ItemPricing } from '../interfaces/item-pricing.interface';
+import { Item } from '../interfaces/item.interface';
 import { TableHelper } from './table.helper';
 
 
@@ -137,27 +137,53 @@ export class ItemHelper {
         return combinedStacks;
     }
 
-    public static DiffNetworthItems(current: NetWorthItem[], previous: NetWorthItem[]): NetWorthItem[] {
-        const difference: NetWorthItem[] = [];
-        current.forEach(currentItem => {
-            const previousItem = TableHelper.findNetworthObj(previous, currentItem);
-            currentItem = Object.assign({}, currentItem);
-            if (previousItem !== undefined) {
-                if (previousItem.stacksize !== currentItem.stacksize) {
-                    currentItem.stacksize = currentItem.stacksize - previousItem.stacksize;
-                    currentItem.value = currentItem.valuePerUnit * currentItem.stacksize;
-                    if (currentItem.value !== 0 && currentItem.stacksize !== 0) {
-                        difference.push(currentItem);
-                    }
+
+    public static GetNetowrthItemDifference(currentItems: NetWorthItem[], previousItems: NetWorthItem[]): NetWorthItem[] {
+
+        const difference = [];
+
+        const removedItems = previousItems.filter(x =>
+            TableHelper.findNetworthObj(currentItems, x) === undefined
+        );
+        const changedItems = currentItems.filter(x =>
+            TableHelper.findNetworthObj(previousItems, x) !== undefined
+        );
+        const addedItems = currentItems.filter(x =>
+            TableHelper.findNetworthObj(previousItems, x) === undefined
+        );
+
+        const changedOrAdded = changedItems.concat(addedItems);
+        changedOrAdded.forEach(item => {
+            // if item exists in first snapshot
+            const existingItem = TableHelper.findNetworthObj(previousItems, item);
+
+            if (existingItem !== undefined) {
+                const recentItem = Object.assign({}, item);
+                recentItem.stacksize = recentItem.stacksize - existingItem.stacksize;
+                existingItem.value = recentItem.valuePerUnit * existingItem.stacksize;
+                recentItem.value = recentItem.value - existingItem.value;
+                if (recentItem.value !== 0 && recentItem.stacksize !== 0) {
+                    difference.push(recentItem);
                 }
             } else {
-                if (currentItem.value !== 0 && currentItem.stacksize !== 0) {
-                    difference.push(currentItem);
+                if (item.value !== 0 && item.stacksize !== 0) {
+                    difference.push(item);
                 }
+            }
+        });
+
+        removedItems.forEach(item => {
+            const recentItem = Object.assign({}, item);
+            if (recentItem.value !== 0 && recentItem.stacksize !== 0) {
+                recentItem.value = -Math.abs(recentItem.value);
+                recentItem.stacksize = -Math.abs(recentItem.stacksize);
+                difference.push(recentItem);
             }
         });
 
         return difference;
     }
+
+
 }
 

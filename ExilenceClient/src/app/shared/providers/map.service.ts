@@ -4,7 +4,6 @@ import { BehaviorSubject } from 'rxjs/internal/BehaviorSubject';
 
 import { HistoryHelper } from '../helpers/history.helper';
 import { ItemHelper } from '../helpers/item.helper';
-import { } from '../helpers/table.helper';
 import { AreaEventType, AreaInfo, EventArea, ExtendedAreaInfo } from '../interfaces/area.interface';
 import { NetWorthItem } from '../interfaces/income.interface';
 import { Item } from '../interfaces/item.interface';
@@ -15,7 +14,6 @@ import { LogMonitorService } from './log-monitor.service';
 import { PartyService } from './party.service';
 import { PricingService } from './pricing.service';
 import { SettingsService } from './settings.service';
-import { StateService } from './state.service';
 
 @Injectable()
 export class MapService implements OnDestroy {
@@ -37,7 +35,6 @@ export class MapService implements OnDestroy {
 
   areasParsed: EventEmitter<any> = new EventEmitter();
 
-  // areas specific to the local player (including the log if imported)
   public localPlayerAreaSubject: BehaviorSubject<ExtendedAreaInfo[]> = new BehaviorSubject<ExtendedAreaInfo[]>([]);
   public localPlayerAreas: ExtendedAreaInfo[];
 
@@ -52,19 +49,17 @@ export class MapService implements OnDestroy {
 
     this.loadAreasFromSettings();
 
-    this.enteredNeutralAreaSub = this.partyService.enteredNeutralArea.subscribe(inventory => {
+    this.enteredNeutralAreaSub = this.partyService.enteredNeutralArea.subscribe((inventory: Item[]) => {
       if (inventory !== undefined) {
         this.EnteredArea(inventory);
       }
     });
 
-    this.enteredHostileAreaSub = this.partyService.enteredHostileArea.subscribe(inventory => {
+    this.enteredHostileAreaSub = this.partyService.enteredHostileArea.subscribe((inventory: Item[]) => {
       if (inventory !== undefined) {
         this.EnteredArea(inventory);
       }
     });
-
-
 
     this.playerSub = this.accountService.player.subscribe(player => {
       if (player !== undefined) {
@@ -95,12 +90,12 @@ export class MapService implements OnDestroy {
     });
   }
 
-  EnteredArea(inventory) {
+  EnteredArea(inventory: Item[]) {
     const currentInventory = this.priceAndCombineInventory(inventory);
     this.areaHistory[0].inventory = currentInventory;
     if (this.areaHistory[1] !== undefined) {
-      const diff = ItemHelper.DiffNetworthItems(currentInventory, this.areaHistory[1].inventory);
-      this.areaHistory[1].difference = diff;
+      const gainedItems: NetWorthItem[] = ItemHelper.GetNetowrthItemDifference(currentInventory, this.areaHistory[1].inventory);
+      this.areaHistory[1].difference = [...gainedItems];
     }
   }
 
