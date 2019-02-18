@@ -167,23 +167,30 @@ export class MapTableComponent implements OnInit, OnDestroy {
   updateTable(pastAreas: ExtendedAreaInfo[]) {
     if (pastAreas !== null && pastAreas !== undefined) {
       pastAreas.forEach((area: ExtendedAreaInfo) => {
-        area.difference = area.difference === undefined ? [] : area.difference;
         if (area.duration < 1800) {
-          const minute = Math.floor(area.duration / 60);
-          const seconds = area.duration % 60;
-          const newAreaObj = {
-            items: area.difference,
-            gain: area.difference.map(i => i.value).reduce((a, b) => a + b, 0),
-            name: area.eventArea.name,
-            tier: area.eventArea.info[0].level,
-            time: ((minute < 10) ? '0' + minute.toString() : minute.toString())
-              + ':' + ((seconds < 10) ? '0' + seconds.toString() : seconds.toString()),
-            timestamp: area.timestamp
-          };
-          this.dataSource.push(newAreaObj);
+          this.dataSource.push(this.formatTableObject(area));
+          area.subAreas.forEach(s => {
+            this.formatTableObject(area);
+          });
         }
       });
     }
+  }
+
+  formatTableObject(area: ExtendedAreaInfo) {
+    area.difference = area.difference === undefined ? [] : area.difference;
+    const minute = Math.floor(area.duration / 60);
+    const seconds = area.duration % 60;
+    const newAreaObj = {
+      items: area.difference,
+      gain: area.difference.map(i => i.value).reduce((a, b) => a + b, 0),
+      name: area.eventArea.name,
+      tier: area.eventArea.info[0].level,
+      time: ((minute < 10) ? '0' + minute.toString() : minute.toString())
+        + ':' + ((seconds < 10) ? '0' + seconds.toString() : seconds.toString()),
+      timestamp: area.timestamp
+    };
+    return newAreaObj;
   }
 
 }

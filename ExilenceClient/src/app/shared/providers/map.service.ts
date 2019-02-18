@@ -163,14 +163,23 @@ export class MapService implements OnDestroy {
           this.areaHistory[0].duration = 0;
           this.enteredSameInstance = true;
         } else {
-          if (this.areaHistory[1].eventArea.type === 'map') {
+          if (this.areaHistory[0].eventArea.type === 'map' ||
+            this.areaHistory[0].eventArea.type === 'vaal' ||
+            this.areaHistory[0].eventArea.type === 'labyrinth') {
             this.areaHistory.shift(); // remove duplicate zone
-            const zanaArea = this.areaHistory.shift();
-            this.areaHistory[1].subAreas.push(zanaArea);
+            const subArea = this.areaHistory.shift();
+            this.areaHistory[1].subAreas.push(subArea);
           }
         }
         this.enteredSameInstance = true;
       }
+    }
+
+    // aspirants plaza
+    if (this.areaHistory[1].eventArea.name === 'Aspirants\' Plaza' &&
+        !AreaHelper.isNeutralZone(this.areaHistory[0])) {
+      const subArea = this.areaHistory.shift();
+      this.areaHistory[1].subAreas.push(subArea);
     }
 
     this.updateLocalPlayerAreas(this.areaHistory);
