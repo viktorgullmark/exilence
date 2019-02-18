@@ -14,6 +14,7 @@ import { LogMonitorService } from './log-monitor.service';
 import { PartyService } from './party.service';
 import { PricingService } from './pricing.service';
 import { SettingsService } from './settings.service';
+import { AreaHelper } from '../helpers/area.helper';
 
 @Injectable()
 export class MapService implements OnDestroy {
@@ -138,14 +139,13 @@ export class MapService implements OnDestroy {
       this.areaHistory[0].duration = diffSeconds;
     }
 
-    const neutralZone =
-      ((areaEntered.eventArea.name.endsWith('Hideout')
-        || areaEntered.eventArea.info[0].town)
-        || areaEntered.eventArea.name === ('The Templar Laboratory'));
+    const neutralZone = AreaHelper.isNeutralZone(areaEntered);
 
     // update areas and emit to group
     this.updateAreaHistory(areaEntered);
     this.incomeService.Snapshot();
+
+    this.updateLocalPlayerAreas(this.areaHistory);
 
     character.areas = this.areaHistory;
     this.settingsService.updateCharacter(character);
@@ -154,7 +154,6 @@ export class MapService implements OnDestroy {
     this.localPlayer.areaInfo = this.areaHistory[0];
     this.localPlayer.pastAreas = HistoryHelper.filterAreas(this.areaHistory, (Date.now() - (24 * 60 * 60 * 1000)));
     this.accountService.player.next(this.localPlayer);
-    this.updateLocalPlayerAreas(this.areaHistory);
     this.partyService.updatePlayer(this.localPlayer, neutralZone ? 'area-change-to-neutral' : 'area-change-to-hostile');
   }
 
