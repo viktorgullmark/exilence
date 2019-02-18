@@ -542,7 +542,7 @@ export class LoginComponent implements OnInit, OnDestroy {
             if (characters === undefined) {
                 characters = [newCharacter];
             }
-            if (characters.find(l => l.name === this.form.leagueName) === undefined) {
+            if (characters.find(l => l.name === this.form.characterName) === undefined) {
                 characters.push(newCharacter);
             }
             this.settingsService.set('characters', characters);
