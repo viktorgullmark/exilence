@@ -20,12 +20,9 @@ export class MapService implements OnDestroy {
 
   private areaHistory: ExtendedAreaInfo[] = [];
   public area: ExtendedAreaInfo;
-  public currentHistoricalArea: ExtendedAreaInfo;
   public previousInstanceServer: string;
-  public historicalInstanceServer: string;
   public previousDate: Date;
   private localPlayer: Player;
-  public temporaryGain: NetWorthItem[] = [];
   public excludeGain: NetWorthItem[] = undefined;
 
   private playerSub: Subscription;
