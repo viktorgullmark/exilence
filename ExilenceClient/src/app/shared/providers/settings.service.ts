@@ -93,7 +93,7 @@ export class SettingsService {
 
   getCurrentLeague() {
     const leagues: LeagueStore[] = this.get('leagues');
-    const profile = this.get('profile');;
+    const profile = this.get('profile');
     if (leagues !== undefined && profile !== undefined) {
       return leagues.find(c => c.name === profile.leagueName);
     } else { return undefined; }
