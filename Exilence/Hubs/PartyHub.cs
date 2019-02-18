@@ -99,9 +99,7 @@ namespace Exilence.Hubs
                 }
                 else
                 {
-                    var oldPlayer = party.Players.FirstOrDefault(x =>
-                        (x.Character != null && player.Character != null && x.Character.Name == player.Character.Name) ||
-                        x.ConnectionID == player.ConnectionID);
+                    var oldPlayer = party.Players.FirstOrDefault(x => x.ConnectionID == player.ConnectionID);
 
                     // if the party were joining doesnt have a leader, make the player leader
                     if (!party.Players.Any(x => x.IsLeader))
