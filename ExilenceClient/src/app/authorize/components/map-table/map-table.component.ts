@@ -1,15 +1,14 @@
-import { Component, EventEmitter, Input, OnInit, Output, ViewChild, OnDestroy, ElementRef } from '@angular/core';
-import { MatSort, MatTableDataSource, MatPaginator } from '@angular/material';
+import { Component, ElementRef, EventEmitter, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
+import { MatPaginator, MatSort, MatTableDataSource } from '@angular/material';
 import * as moment from 'moment';
+import { Subscription } from 'rxjs/internal/Subscription';
 
 import { ExtendedAreaInfo } from '../../../shared/interfaces/area.interface';
-import { Player } from '../../../shared/interfaces/player.interface';
-import { PartyService } from '../../../shared/providers/party.service';
-import { MapService } from '../../../shared/providers/map.service';
-import { Subscription } from 'rxjs/internal/Subscription';
-import { Party } from '../../../shared/interfaces/party.interface';
-import { GainTooltipComponent } from './gain-tooltip/gain-tooltip.component';
 import { NetWorthItem } from '../../../shared/interfaces/income.interface';
+import { Party } from '../../../shared/interfaces/party.interface';
+import { MapService } from '../../../shared/providers/map.service';
+import { PartyService } from '../../../shared/providers/party.service';
+import { GainTooltipComponent } from './gain-tooltip/gain-tooltip.component';
 
 @Component({
   selector: 'app-map-table',
@@ -169,8 +168,8 @@ export class MapTableComponent implements OnInit, OnDestroy {
       pastAreas.forEach((area: ExtendedAreaInfo) => {
         if (area.duration < 1800) {
           this.dataSource.push(this.formatTableObject(area));
-          area.subAreas.forEach(s => {
-            this.dataSource.push(this.formatTableObject(area));
+          area.subAreas.forEach(subArea => {
+            this.dataSource.push(this.formatTableObject(subArea));
           });
         }
       });

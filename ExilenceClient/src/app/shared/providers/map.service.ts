@@ -153,6 +153,14 @@ export class MapService implements OnDestroy {
     if (this.areaHistory.length > 2) {
       const diffSeconds = (this.areaHistory[0].timestamp - this.areaHistory[1].timestamp) / 1000;
       this.areaHistory[1].duration = diffSeconds;
+      if (this.areaHistory[1].subAreas.length > 0) {
+        if (this.areaHistory[1].subAreas.length === 1) {
+          this.areaHistory[1].subAreas[0].duration = diffSeconds;
+        } else {
+          const subAreaDiffSeconds = (this.areaHistory[1].subAreas[0].timestamp - this.areaHistory[1].subAreas[1].timestamp) / 1000;
+          this.areaHistory[1].subAreas[0].duration = subAreaDiffSeconds;
+        }
+      }
 
       const sameInstance = AreaHelper.isSameInstance(this.areaHistory[0], this.areaHistory[2]);
 
@@ -163,26 +171,29 @@ export class MapService implements OnDestroy {
           this.areaHistory[0].duration = 0;
           this.enteredSameInstance = true;
         } else {
-          if (this.areaHistory[0].eventArea.type === 'map' ||
-            this.areaHistory[0].eventArea.type === 'vaal' ||
-            this.areaHistory[0].eventArea.type === 'labyrinth') {
+          if (this.areaHistory[1].eventArea.type === 'map' ||
+            this.areaHistory[1].eventArea.type === 'vaal' ||
+            this.areaHistory[1].eventArea.type === 'labyrinth') {
             this.areaHistory.shift(); // remove duplicate zone
             const subArea = this.areaHistory.shift();
-            this.areaHistory[1].subAreas.push(subArea);
+            this.areaHistory[0].subAreas.unshift(subArea);
           }
         }
         this.enteredSameInstance = true;
       }
     }
 
-    // aspirants plaza
-    if (
-      this.areaHistory[1] !== undefined &&
+    if (this.areaHistory[1] !== undefined && this.areaHistory[1].eventArea.type === 'vaal') {
+      this.areaHistory.shift(); // remove duplicate zone
+      const subArea = this.areaHistory.shift(); // remove sub area
+      this.areaHistory[0].subAreas.unshift(subArea);
+    }
+
+    if (this.areaHistory[1] !== undefined &&
       this.areaHistory[1].eventArea.name === 'Aspirants\' Plaza' &&
-      !AreaHelper.isNeutralZone(this.areaHistory[0])
-    ) {
+      !AreaHelper.isNeutralZone(this.areaHistory[0])) {
       const subArea = this.areaHistory.shift();
-      this.areaHistory[0].subAreas.push(subArea);
+      this.areaHistory[0].subAreas.unshift(subArea);
     }
 
     this.updateLocalPlayerAreas(this.areaHistory);
