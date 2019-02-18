@@ -79,7 +79,6 @@ export class IncomeService implements OnDestroy {
   }
 
   loadSnapshotsFromSettings() {
-    debugger;
     const character = this.settingsService.getCurrentCharacter();
     if (character !== undefined) {
       this.netWorthHistory = character.networth;
