@@ -119,6 +119,8 @@ export class MapService implements OnDestroy {
 
   registerAreaEvent(e: EventArea) {
 
+    e.name = AreaHelper.formatName(e);
+
     const character = this.settingsService.getCurrentCharacter();
     if (character !== undefined) {
       this.areaHistory = character.areas;
@@ -134,8 +136,9 @@ export class MapService implements OnDestroy {
       inventory: []
     } as ExtendedAreaInfo;
 
+    const diffSeconds = (areaEntered.timestamp - this.areaHistory[0].timestamp) / 1000;
+
     if (this.areaHistory.length > 0) {
-      const diffSeconds = (areaEntered.timestamp - this.areaHistory[0].timestamp) / 1000;
       this.areaHistory[0].duration = diffSeconds;
     }
 
@@ -143,12 +146,21 @@ export class MapService implements OnDestroy {
 
     // update areas and emit to group
     this.updateAreaHistory(areaEntered);
-    this.incomeService.Snapshot();
+
+    const sameInstance = AreaHelper.isSameInstance(this.areaHistory, this.previousInstanceServer);
+
+    if (sameInstance) {
+      this.areaHistory.shift();
+      this.areaHistory[0].duration = this.areaHistory[1].duration + diffSeconds;
+      // todo: concat gain
+    }
 
     this.updateLocalPlayerAreas(this.areaHistory);
 
     character.areas = this.areaHistory;
     this.settingsService.updateCharacter(character);
+
+    this.incomeService.Snapshot();
 
     this.localPlayer.area = this.areaHistory[0].eventArea.name;
     this.localPlayer.areaInfo = this.areaHistory[0];
