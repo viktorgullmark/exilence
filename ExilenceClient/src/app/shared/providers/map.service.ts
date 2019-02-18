@@ -147,7 +147,7 @@ export class MapService implements OnDestroy {
     // update areas and emit to group
     this.updateAreaHistory(areaEntered);
 
-    const sameInstance = AreaHelper.isSameInstance(this.areaHistory, this.previousInstanceServer);
+    const sameInstance = AreaHelper.isSameInstance(this.areaHistory);
 
     if (sameInstance) {
       this.areaHistory.shift();
