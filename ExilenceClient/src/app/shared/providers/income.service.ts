@@ -78,17 +78,22 @@ export class IncomeService implements OnDestroy {
   }
 
   loadSnapshotsFromSettings() {
-    this.netWorthHistory = this.settingsService.get('networth');
+    const character = this.settingsService.getCurrentCharacter();
+    if (character !== undefined) {
+      this.netWorthHistory = character.networth;
+    }
   }
 
   Snapshot() {
     const oneDayAgo = (Date.now() - (24 * 60 * 60 * 1000));
     const twoWeeksAgo = (Date.now() - (1 * 60 * 60 * 24 * 14 * 1000));
 
-    this.netWorthHistory = this.settingsService.get('networth');
-    const selectedStashtabs = this.settingsService.get('selectedStashTabs');
+    this.loadSnapshotsFromSettings();
 
-    this.sessionIdValid = this.settingsService.get('account.sessionIdValid');
+    const league = this.settingsService.getCurrentLeague();
+    const selectedStashtabs = league.stashtabs;
+
+    this.sessionIdValid = this.settingsService.get('profile.sessionIdValid');
     if (
       this.netWorthHistory.lastSnapshot < (Date.now() - this.twoMinutes) &&
       this.localPlayer !== undefined &&
@@ -127,7 +132,12 @@ export class IncomeService implements OnDestroy {
 
         this.accountService.player.next(this.localPlayer);
 
-        this.settingsService.set('networth', this.netWorthHistory);
+        const character = this.settingsService.getCurrentCharacter();
+        if (character !== undefined) {
+          character.networth = this.netWorthHistory;
+          this.settingsService.updateCharacter(character);
+        }
+
         const objToSend = Object.assign({}, this.localPlayer);
         objToSend.netWorthSnapshots = historyToSend;
         this.partyService.updatePlayer(objToSend);
@@ -216,7 +226,7 @@ export class IncomeService implements OnDestroy {
 
     const accountName = this.localPlayer.account;
     const league = this.localPlayer.character.league;
-    const tradeLeague = this.settingsService.get('account.tradeLeagueName');
+    const tradeLeague = this.settingsService.get('profile.tradeLeagueName');
 
     this.playerStashTabs = [];
     this.totalNetWorthItems = [];

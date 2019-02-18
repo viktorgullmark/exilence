@@ -45,7 +45,7 @@ export class SettingsComponent implements OnInit, OnDestroy {
     });
 
     this.sessionId = this.sessionService.getSession();
-    this.sessionIdValid = this.settingsService.get('account.sessionIdValid');
+    this.sessionIdValid = this.settingsService.get('profile.sessionIdValid');
     this.itemValueTreshold =
       this.settingsService.get('itemValueTreshold') !== undefined ? this.settingsService.get('itemValueTreshold') : 1;
     this.gainHours =

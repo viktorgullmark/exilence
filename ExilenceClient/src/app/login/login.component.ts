@@ -1,14 +1,18 @@
-import { Component, Inject, OnDestroy, OnInit, ViewChild, NgZone } from '@angular/core';
+import { Location } from '@angular/common';
+import { Component, Inject, NgZone, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialog, MatStep, MatStepper } from '@angular/material';
-import { Router, ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
+import * as Sentry from '@sentry/browser';
 import { forkJoin, Subscription } from 'rxjs';
 
+import { ServerMessageDialogComponent } from '../authorize/components/server-message-dialog/server-message-dialog.component';
 import { ClearHistoryDialogComponent } from '../shared/components/clear-history-dialog/clear-history-dialog.component';
 import { HistoryHelper } from '../shared/helpers/history.helper';
 import { AccountInfo } from '../shared/interfaces/account-info.interface';
 import { ExtendedAreaInfo } from '../shared/interfaces/area.interface';
 import { Character } from '../shared/interfaces/character.interface';
+import { ErrorMessage } from '../shared/interfaces/error-message.interface';
 import { NetWorthHistory } from '../shared/interfaces/income.interface';
 import { League } from '../shared/interfaces/league.interface';
 import { Player } from '../shared/interfaces/player.interface';
@@ -18,16 +22,11 @@ import { ElectronService } from '../shared/providers/electron.service';
 import { ExternalService } from '../shared/providers/external.service';
 import { LogMonitorService } from '../shared/providers/log-monitor.service';
 import { MapService } from '../shared/providers/map.service';
+import { PartyService } from '../shared/providers/party.service';
+import { PricingService } from '../shared/providers/pricing.service';
 import { SessionService } from '../shared/providers/session.service';
 import { SettingsService } from '../shared/providers/settings.service';
-import { ErrorMessage } from '../shared/interfaces/error-message.interface';
-import { ServerMessageDialogComponent } from '../authorize/components/server-message-dialog/server-message-dialog.component';
-import { Location } from '@angular/common';
-import * as Sentry from '@sentry/browser';
-import { PartyService } from '../shared/providers/party.service';
-import { WatchService } from '../shared/providers/watch.service';
-import { NinjaService } from '../shared/providers/ninja.service';
-import { PricingService } from '../shared/providers/pricing.service';
+import { ProfileSelection, CharacterStore, LeagueStore } from '../shared/interfaces/settings-store.interface';
 
 
 @Component({
@@ -71,6 +70,8 @@ export class LoginComponent implements OnInit, OnDestroy {
     lineReader: any;
     groupNoExists = false;
     providedSpectatorCode = undefined;
+
+    private profile: ProfileSelection;
 
     @ViewChild('stepper') stepper: MatStepper;
     @ViewChild('lastStep') lastStep: MatStep;
@@ -168,25 +169,31 @@ export class LoginComponent implements OnInit, OnDestroy {
     }
 
     fetchSettings() {
-        this.characterName = this.settingsService.get('account.characterName');
-        this.sessionId = this.settingsService.get('account.sessionId');
-        this.accountName = this.settingsService.get('account.accountName');
-        this.leagueName = this.settingsService.get('account.leagueName');
-        this.tradeLeagueName = this.settingsService.get('account.tradeLeagueName');
-        this.sessionIdValid = this.settingsService.get('account.sessionIdValid');
-        this.filePath = this.settingsService.get('account.filePath');
-        this.netWorthHistory = this.settingsService.get('networth');
-        this.areaHistory = this.settingsService.get('areas');
-        this.logMonitorService.trackMapsOnly = this.settingsService.get('trackMapsOnly');
+
+        this.profile = this.settingsService.get('profile');
+        const currentCharacter = this.settingsService.getCurrentCharacter();
+
+        if (this.profile !== undefined) {
+
+            if (currentCharacter !== undefined) {
+                this.netWorthHistory = currentCharacter.networth;
+                this.areaHistory = currentCharacter.areas;
+            }
+
+            this.characterName = this.profile.characterName;
+            this.tradeLeagueName = this.profile.tradeLeagueName;
+            this.sessionId = this.profile.sessionId;
+            this.accountName = this.profile.accountName;
+            this.leagueName = this.profile.leagueName;
+            this.sessionIdValid = this.profile.sessionIdValid;
+            this.filePath = this.profile.filePath;
+        }
 
         if (this.areaHistory === undefined) {
             this.areaHistory = [];
-            this.settingsService.set('areas', this.areaHistory);
         } else {
-            // temporary limit of arealength to fix RAM-issues
             if (this.areaHistory.length > 1000) {
                 this.areaHistory = this.areaHistory.slice(0, 1000);
-                this.settingsService.set('areas', this.areaHistory);
             }
         }
 
@@ -200,7 +207,6 @@ export class LoginComponent implements OnInit, OnDestroy {
                     items: []
                 }]
             };
-            this.settingsService.set('networth', this.netWorthHistory);
         }
     }
 
@@ -290,7 +296,7 @@ export class LoginComponent implements OnInit, OnDestroy {
                 this.privateProfileError = true;
                 this.isFetchingLeagues = false;
                 // reset settings in this case
-                this.settingsService.set('account', undefined);
+                this.settingsService.set('profile', undefined);
             } else {
 
                 // map character-leagues to new array
@@ -444,34 +450,6 @@ export class LoginComponent implements OnInit, OnDestroy {
     }
 
     checkLeagueChange(event) {
-        if (event.selectedIndex === 4 &&
-            (this.settingsService.get('lastLeague') !== undefined
-                && (this.settingsService.get('lastLeague') !== this.leagueFormGroup.controls.leagueName.value)
-                ||
-                (this.settingsService.get('account.tradeLeagueName') !== undefined
-                    && this.settingsService.get('account.tradeLeagueName') !== this.leagueFormGroup.controls.tradeLeagueName.value)
-                || (this.settingsService.get('account.characterName') !== undefined
-                    && this.settingsService.get('account.characterName') !== this.charFormGroup.controls.characterName.value))) {
-            // league or character changed since last log-in
-            const dialogRef = this.dialog.open(ClearHistoryDialogComponent, {
-                width: '650px',
-                data: {
-                    icon: 'swap_horiz',
-                    title: 'League and/or character changed',
-                    // tslint:disable-next-line:max-line-length
-                    content: 'We detected that you changed league or character since your last login. Please note that your networth and area history will be mixed between the sessions if you continue without clearing the history.<br/><br/>' +
-                        'Do you want to clear the history?'
-                }
-            });
-            dialogRef.afterClosed().subscribe(result => {
-                if (result !== undefined) {
-                    this.netWorthHistory = result.networthHistory;
-                    this.areaHistory = result.areaHistory;
-                    this.player.netWorthSnapshots = this.netWorthHistory.history;
-                    this.player.pastAreas = this.areaHistory;
-                }
-            });
-        }
     }
 
     login() {
@@ -550,21 +528,39 @@ export class LoginComponent implements OnInit, OnDestroy {
             this.accountService.accountInfo.next(this.form);
 
             // if trade-league has changed since last login, we should update ninjaprices
-            if (this.settingsService.get('account.tradeLeagueName') !== this.leagueFormGroup.controls.tradeLeagueName.value) {
+            if (this.tradeLeagueName !== this.leagueFormGroup.controls.tradeLeagueName.value) {
                 this.externalService.tradeLeagueChanged = true;
             } else {
                 this.externalService.tradeLeagueChanged = false;
             }
 
+            let characters: CharacterStore[] = this.settingsService.get('characters');
+            const newCharacter = {
+                name: this.form.characterName,
+                areas: this.areaHistory, networth: this.netWorthHistory
+            } as CharacterStore;
+            if (characters === undefined) {
+                characters = [newCharacter];
+            }
+            if (characters.find(l => l.name === this.form.leagueName) === undefined) {
+                characters.push(newCharacter);
+            }
+            this.settingsService.set('characters', characters);
+
+            const newLeague = { name: this.form.leagueName, stashtabs: [] } as LeagueStore;
+            let leagues: LeagueStore[] = this.settingsService.get('leagues');
+            if (leagues === undefined) {
+                leagues = [newLeague];
+            }
+            if (leagues.find(l => l.name === this.form.leagueName) === undefined) {
+                leagues.push(newLeague);
+            }
+            this.settingsService.set('leagues', leagues);
+
             this.accountService.loggingIn = false;
-
             this.sessionService.completedLogin = true;
-
-            this.settingsService.set('account', this.form);
-
+            this.settingsService.set('profile', this.form);
             this.pricingService.retrieveExternalPrices().subscribe();
-
-            this.settingsService.set('trackMapsOnly', this.logMonitorService.trackMapsOnly);
             this.sessionService.initSession(this.form.sessionId);
             this.isLoading = false;
             this.settingsService.set('lastLeague', this.leagueFormGroup.controls.leagueName.value);

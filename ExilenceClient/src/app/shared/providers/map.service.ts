@@ -120,7 +120,11 @@ export class MapService implements OnDestroy {
   }
 
   registerAreaEvent(e: EventArea) {
-    this.areaHistory = this.settingsService.get('areas');
+
+    const character = this.settingsService.getCurrentCharacter();
+    if (character !== undefined) {
+      this.areaHistory = character.areas;
+    }
 
     const areaEntered = {
       eventArea: this.formatAreaInfo(e),
@@ -145,7 +149,10 @@ export class MapService implements OnDestroy {
     // update areas and emit to group
     this.updateAreaHistory(areaEntered);
     this.incomeService.Snapshot();
-    this.settingsService.set('areas', this.areaHistory);
+
+    character.areas = this.areaHistory;
+    this.settingsService.updateCharacter(character);
+
     this.localPlayer.area = this.areaHistory[0].eventArea.name;
     this.localPlayer.areaInfo = this.areaHistory[0];
     this.localPlayer.pastAreas = HistoryHelper.filterAreas(this.areaHistory, (Date.now() - (24 * 60 * 60 * 1000)));
@@ -162,11 +169,18 @@ export class MapService implements OnDestroy {
   }
 
   loadAreasFromSettings() {
-    this.areaHistory = this.settingsService.get('areas');
+    const character = this.settingsService.getCurrentCharacter();
+    if (character !== undefined) {
+      this.areaHistory = character.areas;
+    }
   }
   removeAreasFromSettings() {
-    this.settingsService.set('areas', []);
-    this.areaHistory = this.settingsService.get('areas');
+    const character = this.settingsService.getCurrentCharacter();
+    if (character !== undefined) {
+      character.areas = [];
+      this.settingsService.updateCharacter(character);
+      this.areaHistory = character.areas;
+    }
   }
 
   formatAreaInfo(e: EventArea) {
