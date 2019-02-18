@@ -2,6 +2,12 @@
 All notable changes to this project will be documented in this file.
 
 ## [0.9.19] - XXXX-XX-XX
+### Changed
+- Reworked how history is stored
+    - Stashtab-selection is now stored per league
+    - Area history is now stored per character
+    - Net worth history is now stored per character  
+
 ### Fixed
 - Fixed a bug where the "Remove snapshot"-option was visible for spectators (though not usable)
 - Fixed a bug where unnecessery update-events were sent to the server
