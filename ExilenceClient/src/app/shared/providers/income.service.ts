@@ -22,6 +22,7 @@ import { NinjaService } from './ninja.service';
 import { PartyService } from './party.service';
 import { PricingService } from './pricing.service';
 import { SettingsService } from './settings.service';
+import { StashStore } from '../interfaces/settings-store.interface';
 
 @Injectable()
 export class IncomeService implements OnDestroy {
@@ -78,6 +79,7 @@ export class IncomeService implements OnDestroy {
   }
 
   loadSnapshotsFromSettings() {
+    debugger;
     const character = this.settingsService.getCurrentCharacter();
     if (character !== undefined) {
       this.netWorthHistory = character.networth;
@@ -225,7 +227,7 @@ export class IncomeService implements OnDestroy {
   SnapshotPlayerNetWorth() {
 
     const accountName = this.localPlayer.account;
-    const league = this.localPlayer.character.league;
+    const localLeague = this.localPlayer.character.league;
     const tradeLeague = this.settingsService.get('profile.tradeLeagueName');
 
     this.playerStashTabs = [];
@@ -249,8 +251,11 @@ export class IncomeService implements OnDestroy {
       this.settingsService.set('characterPricing', false);
     }
 
-    const selectedStashTabs: any[] = this.settingsService.get('selectedStashTabs');
-
+    const league = this.settingsService.getCurrentLeague();
+    let selectedStashTabs: StashStore[]
+    if (league !== undefined) {
+      selectedStashTabs = league.stashtabs;
+    }
     let mapTab;
     if (selectedStashTabs !== undefined) {
       mapTab = selectedStashTabs.find(x => x.isMapTab);
@@ -258,7 +263,7 @@ export class IncomeService implements OnDestroy {
 
     return Observable.forkJoin(
       this.getPlayerPublicMaps(accountName, tradeLeague, mapTab),
-      this.getPlayerStashTabs(accountName, league),
+      this.getPlayerStashTabs(accountName, localLeague),
       this.pricingService.retrieveExternalPrices()
     ).do(() => {
       this.logService.log('Finished retriving stashhtabs');
@@ -324,12 +329,15 @@ export class IncomeService implements OnDestroy {
     }
   }
 
-  getPlayerStashTabs(accountName: string, league: string) {
+  getPlayerStashTabs(accountName: string, localLeague: string) {
 
     this.logService.log('[INFO] Retriving stashtabs from official site api');
 
-    let selectedStashTabs: any[] = this.settingsService.get('selectedStashTabs');
-
+    const league = this.settingsService.getCurrentLeague();
+    let selectedStashTabs: StashStore[];
+    if (league !== undefined) {
+      selectedStashTabs = league.stashtabs;
+    }
     if (selectedStashTabs === undefined) {
       selectedStashTabs = [];
     }
@@ -344,7 +352,7 @@ export class IncomeService implements OnDestroy {
 
     return Observable.from(selectedStashTabs)
       .mergeMap((tab: any) => {
-        return this.externalService.getStashTab(accountName, league, tab.position);
+        return this.externalService.getStashTab(accountName, localLeague, tab.position);
       }, 1)
       .do(stashTab => {
         this.playerStashTabs.push(stashTab);
