@@ -512,9 +512,7 @@ export class LoginComponent implements OnInit, OnDestroy {
 
         const oneDayAgo = (Date.now() - (24 * 60 * 60 * 1000));
 
-        this.mapService.updateLocalPlayerAreas(this.areaHistory);
-        this.player.pastAreas = HistoryHelper.filterAreas(this.areaHistory, oneDayAgo);
-
+ 
         this.externalService.validateSessionId(
             this.form.sessionId,
             this.player.account,
@@ -524,15 +522,6 @@ export class LoginComponent implements OnInit, OnDestroy {
             this.sessionIdValid = res !== false;
             this.form = this.getFormObj();
             this.player.sessionIdProvided = this.sessionIdValid;
-            this.accountService.player.next(this.player);
-            this.accountService.accountInfo.next(this.form);
-
-            // if trade-league has changed since last login, we should update ninjaprices
-            if (this.tradeLeagueName !== this.leagueFormGroup.controls.tradeLeagueName.value) {
-                this.externalService.tradeLeagueChanged = true;
-            } else {
-                this.externalService.tradeLeagueChanged = false;
-            }
 
             let characters: CharacterStore[] = this.settingsService.get('characters');
             const newCharacter = {
@@ -546,6 +535,10 @@ export class LoginComponent implements OnInit, OnDestroy {
                 characters.push(newCharacter);
             }
             this.settingsService.set('characters', characters);
+            this.settingsService.set('profile', this.form);
+            this.areaHistory = this.settingsService.getCurrentCharacter().areas;
+
+            this.mapService.updateLocalPlayerAreas(this.areaHistory);
 
             const newLeague = { name: this.form.leagueName, stashtabs: [] } as LeagueStore;
             let leagues: LeagueStore[] = this.settingsService.get('leagues');
@@ -557,9 +550,21 @@ export class LoginComponent implements OnInit, OnDestroy {
             }
             this.settingsService.set('leagues', leagues);
 
+            // if trade-league has changed since last login, we should update ninjaprices
+            if (this.tradeLeagueName !== this.leagueFormGroup.controls.tradeLeagueName.value) {
+                this.externalService.tradeLeagueChanged = true;
+            } else {
+                this.externalService.tradeLeagueChanged = false;
+            }
+
+            this.player.pastAreas = HistoryHelper.filterAreas(this.areaHistory, oneDayAgo);
+
+            this.accountService.player.next(this.player);
+            this.accountService.accountInfo.next(this.form);
+
             this.accountService.loggingIn = false;
             this.sessionService.completedLogin = true;
-            this.settingsService.set('profile', this.form);
+            
             this.pricingService.retrieveExternalPrices().subscribe();
             this.sessionService.initSession(this.form.sessionId);
             this.isLoading = false;

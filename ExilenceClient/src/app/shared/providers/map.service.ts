@@ -136,9 +136,10 @@ export class MapService implements OnDestroy {
       inventory: []
     } as ExtendedAreaInfo;
 
-    const diffSeconds = (areaEntered.timestamp - this.areaHistory[0].timestamp) / 1000;
+    let diffSeconds = 0;
 
     if (this.areaHistory.length > 0) {
+      diffSeconds = (areaEntered.timestamp - this.areaHistory[0].timestamp) / 1000;
       this.areaHistory[0].duration = diffSeconds;
     }
 
