@@ -44,7 +44,7 @@ export class PricingService {
   }
 
   retrieveExternalPrices(): Observable<any> {
-    const league = this.settingsService.get('account.tradeLeagueName');
+    const league = this.settingsService.get('profile.tradeLeagueName');
     return forkJoin(
       this.ninjaService.getValuesFromNinja(league),
       this.watchService.UpdateItemsAndPrices(league)

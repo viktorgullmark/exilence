@@ -3,6 +3,7 @@ import { Component, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { MatDialog, MatSort, MatTableDataSource } from '@angular/material';
 import { Subscription } from 'rxjs';
 
+import { StashStore } from '../../../shared/interfaces/settings-store.interface';
 import { Stash, Tab } from '../../../shared/interfaces/stash.interface';
 import { AlertService } from '../../../shared/providers/alert.service';
 import { ExternalService } from '../../../shared/providers/external.service';
@@ -30,7 +31,6 @@ export class StashtabListComponent implements OnInit, OnDestroy {
   constructor(
     private settingsService: SettingsService,
     private externalService: ExternalService,
-    private partyService: PartyService,
     private alertService: AlertService,
     private maptabDialog: MatDialog
   ) { }
@@ -43,15 +43,16 @@ export class StashtabListComponent implements OnInit, OnDestroy {
   }
 
   init() {
-    const accountName = this.settingsService.get('account.accountName');
-    const league = this.partyService.currentPlayer.character.league;
-    let selectedStashTabs: any[] = this.settingsService.get('selectedStashTabs');
+    const accountName = this.settingsService.get('profile.accountName');
+    const league = this.settingsService.getCurrentLeague();
+
+    let selectedStashTabs: StashStore[] = league.stashtabs;
 
     if (selectedStashTabs === undefined) {
       selectedStashTabs = [];
     }
 
-    this.stashTabSub = this.externalService.getStashTabs(accountName, league)
+    this.stashTabSub = this.externalService.getStashTabs(accountName, league.name)
       .subscribe((res: Stash) => {
         if (res !== null) {
           this.dataSource = res.tabs.map((tab: Tab) => {
@@ -118,11 +119,17 @@ export class StashtabListComponent implements OnInit, OnDestroy {
     this.toggleAll(selection, [row]);
   }
 
+  updateStashtabs(stashtabs: StashStore[]) {
+    const league = this.settingsService.getCurrentLeague();
+    league.stashtabs = stashtabs;
+    this.settingsService.updateLeague(league);
+  }
+
   toggleAll(selection, rows) {
     for (const row of rows) {
       this.selection.toggle(row);
     }
-    this.settingsService.set('selectedStashTabs', selection.selected);
+    this.updateStashtabs(selection.selected);
   }
 
   /** Whether the number of selected elements matches the total number of rows. */
@@ -142,7 +149,7 @@ export class StashtabListComponent implements OnInit, OnDestroy {
         } else { this.showAlert(); }
       });
 
-    this.settingsService.set('selectedStashTabs', this.selection.selected);
+      this.updateStashtabs(this.selection.selected);
   }
 
   ngOnDestroy() {

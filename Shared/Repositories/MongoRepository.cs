@@ -69,7 +69,7 @@ namespace Shared.Repositories
         public async Task UpdatePlayerInParty(string partyName, PlayerModel player)
         {
             var update = Builders<PartyModel>.Update.Set(p => p.Players[-1], player);
-            var result = await _parties.UpdateOneAsync(p => p.Name == partyName && p.Players.Any(c => c.Character.Name == player.Character.Name), update);
+            var result = await _parties.UpdateOneAsync(p => p.Name == partyName && p.Players.Any(c => c.ConnectionID == player.ConnectionID), update);
         }
 
         public async Task RemovePlayerFromParty(string partyName, string connectionId)

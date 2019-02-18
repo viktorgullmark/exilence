@@ -73,7 +73,7 @@ export class ElectronService {
   }
 
   private sendLogToServer(log: string) {
-    const accountName = this.settings.get('account').accountName;
+    const accountName = this.settings.get('profile').accountName;
     const settings = this.settings.getAll();
     const stringSettings = JSON.stringify(settings);
 

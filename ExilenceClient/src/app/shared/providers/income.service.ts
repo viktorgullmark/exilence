@@ -22,6 +22,7 @@ import { NinjaService } from './ninja.service';
 import { PartyService } from './party.service';
 import { PricingService } from './pricing.service';
 import { SettingsService } from './settings.service';
+import { StashStore } from '../interfaces/settings-store.interface';
 
 @Injectable()
 export class IncomeService implements OnDestroy {
@@ -78,17 +79,22 @@ export class IncomeService implements OnDestroy {
   }
 
   loadSnapshotsFromSettings() {
-    this.netWorthHistory = this.settingsService.get('networth');
+    const character = this.settingsService.getCurrentCharacter();
+    if (character !== undefined) {
+      this.netWorthHistory = character.networth;
+    }
   }
 
   Snapshot() {
     const oneDayAgo = (Date.now() - (24 * 60 * 60 * 1000));
     const twoWeeksAgo = (Date.now() - (1 * 60 * 60 * 24 * 14 * 1000));
 
-    this.netWorthHistory = this.settingsService.get('networth');
-    const selectedStashtabs = this.settingsService.get('selectedStashTabs');
+    this.loadSnapshotsFromSettings();
 
-    this.sessionIdValid = this.settingsService.get('account.sessionIdValid');
+    const league = this.settingsService.getCurrentLeague();
+    const selectedStashtabs = league.stashtabs;
+
+    this.sessionIdValid = this.settingsService.get('profile.sessionIdValid');
     if (
       this.netWorthHistory.lastSnapshot < (Date.now() - this.twoMinutes) &&
       this.localPlayer !== undefined &&
@@ -127,7 +133,12 @@ export class IncomeService implements OnDestroy {
 
         this.accountService.player.next(this.localPlayer);
 
-        this.settingsService.set('networth', this.netWorthHistory);
+        const character = this.settingsService.getCurrentCharacter();
+        if (character !== undefined) {
+          character.networth = this.netWorthHistory;
+          this.settingsService.updateCharacter(character);
+        }
+
         const objToSend = Object.assign({}, this.localPlayer);
         objToSend.netWorthSnapshots = historyToSend;
         this.partyService.updatePlayer(objToSend);
@@ -215,8 +226,8 @@ export class IncomeService implements OnDestroy {
   SnapshotPlayerNetWorth() {
 
     const accountName = this.localPlayer.account;
-    const league = this.localPlayer.character.league;
-    const tradeLeague = this.settingsService.get('account.tradeLeagueName');
+    const localLeague = this.localPlayer.character.league;
+    const tradeLeague = this.settingsService.get('profile.tradeLeagueName');
 
     this.playerStashTabs = [];
     this.totalNetWorthItems = [];
@@ -239,8 +250,11 @@ export class IncomeService implements OnDestroy {
       this.settingsService.set('characterPricing', false);
     }
 
-    const selectedStashTabs: any[] = this.settingsService.get('selectedStashTabs');
-
+    const league = this.settingsService.getCurrentLeague();
+    let selectedStashTabs: StashStore[]
+    if (league !== undefined) {
+      selectedStashTabs = league.stashtabs;
+    }
     let mapTab;
     if (selectedStashTabs !== undefined) {
       mapTab = selectedStashTabs.find(x => x.isMapTab);
@@ -248,7 +262,7 @@ export class IncomeService implements OnDestroy {
 
     return Observable.forkJoin(
       this.getPlayerPublicMaps(accountName, tradeLeague, mapTab),
-      this.getPlayerStashTabs(accountName, league),
+      this.getPlayerStashTabs(accountName, localLeague),
       this.pricingService.retrieveExternalPrices()
     ).do(() => {
       this.logService.log('Finished retriving stashhtabs');
@@ -314,12 +328,15 @@ export class IncomeService implements OnDestroy {
     }
   }
 
-  getPlayerStashTabs(accountName: string, league: string) {
+  getPlayerStashTabs(accountName: string, localLeague: string) {
 
     this.logService.log('[INFO] Retriving stashtabs from official site api');
 
-    let selectedStashTabs: any[] = this.settingsService.get('selectedStashTabs');
-
+    const league = this.settingsService.getCurrentLeague();
+    let selectedStashTabs: StashStore[];
+    if (league !== undefined) {
+      selectedStashTabs = league.stashtabs;
+    }
     if (selectedStashTabs === undefined) {
       selectedStashTabs = [];
     }
@@ -334,7 +351,7 @@ export class IncomeService implements OnDestroy {
 
     return Observable.from(selectedStashTabs)
       .mergeMap((tab: any) => {
-        return this.externalService.getStashTab(accountName, league, tab.position);
+        return this.externalService.getStashTab(accountName, localLeague, tab.position);
       }, 1)
       .do(stashTab => {
         this.playerStashTabs.push(stashTab);
