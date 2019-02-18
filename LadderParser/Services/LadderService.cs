@@ -105,17 +105,18 @@ namespace LadderParser.Services
 
         private List<LadderPlayerModel> CalculateStatistics(List<LadderPlayerModel> ladder)
         {
-            Log($"Started calculating ranks for ladder entries");
-            foreach (var newEntry in ladder)
+            Task.Run(() =>
             {
-                Task.Run(() =>
+                Log($"Started calculating ranks for ladder entries");
+                foreach (var newEntry in ladder)
                 {
+
                     Task.Delay(5).Wait();
                     newEntry.Depth.GroupRank = ladder.Count(t => t.Depth.Group > newEntry.Depth.Group) + 1;
                     newEntry.Depth.SoloRank = ladder.Count(t => t.Depth.Solo > newEntry.Depth.Solo) + 1;
                     newEntry.Rank.Class = ladder.Where(t => t.Class == newEntry.Class).Where(x => x.Rank.Overall < newEntry.Rank.Overall).Count() + 1;
-                });
-            }
+                };
+            });
 
             Log($"Finished calculating ranks.");
             return ladder;
