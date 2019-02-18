@@ -170,7 +170,7 @@ export class MapTableComponent implements OnInit, OnDestroy {
         if (area.duration < 1800) {
           this.dataSource.push(this.formatTableObject(area));
           area.subAreas.forEach(s => {
-            this.formatTableObject(area);
+            this.dataSource.push(this.formatTableObject(area));
           });
         }
       });
