@@ -32,8 +32,7 @@
     <th mat-header-cell *matHeaderCellDef mat-sort-header="gain"> Gain&nbsp;&nbsp;<img class="chaos-icon" /></th>
     <td mat-cell *matCellDef="let element" class="networth-value with-icon in-table" #el>
       <div *ngIf="element?.gain != 0" class="gain-cell" (mouseenter)="updateTooltip(element, el, mainTable)" (mouseleave)="updateTooltip(undefined, el)">
-        {{element.gain.toFixed(2)}}
-        <!-- &nbsp;<mat-icon class="neutral-arrow">subdirectory_arrow_left</mat-icon> -->
+        {{element.gain.toFixed(2) != '0.00' && element.gain.toFixed(2) != '-0.00' ? element.gain.toFixed(2) : '-'}}
       </div>
       <ng-container *ngIf="element == undefined || element.gain == 0">
         -
