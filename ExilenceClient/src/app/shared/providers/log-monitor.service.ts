@@ -8,10 +8,8 @@ export class LogMonitorService {
   private PathOfExileLog: any;
 
   logTail: any;
-  entireLog: any;
   filePath: string;
 
-  parsingCompleted = false;
   trackMapsOnly = true;
 
   instanceServerEvent: EventEmitter<any> = new EventEmitter();
@@ -19,13 +17,6 @@ export class LogMonitorService {
   areaJoin: EventEmitter<any> = new EventEmitter();
   areaLeft: EventEmitter<any> = new EventEmitter();
   messageEvent: EventEmitter<any> = new EventEmitter();
-
-  // when reading the entire log
-  historicalAreaEvent: EventEmitter<any> = new EventEmitter();
-  historicalInstanceServerEvent: EventEmitter<any> = new EventEmitter();
-
-  parsingStarted: EventEmitter<any> = new EventEmitter();
-  parsingComplete: EventEmitter<any> = new EventEmitter();
 
   constructor(private accountService: AccountService, private logService: LogService) {
     if (this.isElectron()) {
@@ -62,39 +53,5 @@ export class LogMonitorService {
 
   isElectron() {
     return window && window.process && window.process.type;
-  }
-
-  removeLogParser() {
-    if (this.isElectron()) {
-      this.entireLog.removeAllListeners();
-    }
-  }
-
-  instantiateLogParser(path) {
-    if (this.isElectron()) {
-      this.filePath = path;
-      // instantiate monitor that parses the entire log
-      this.entireLog = new this.PathOfExileLog({
-        logfile: this.filePath,
-        includedEvents: ['area', 'instanceServer'],
-        chunkSize: 10240 // todo: read ram-size/cpu-speed and calc based on these?
-      });
-
-      this.entireLog.on('parsingStarted', (data) => {
-        this.parsingStarted.emit(data);
-      });
-      this.entireLog.on('parsingComplete', (data) => {
-        this.parsingComplete.emit(data);
-      });
-      this.entireLog.on('area', (data) => {
-        this.historicalAreaEvent.emit(data);
-      });
-      this.entireLog.on('instanceServer', (data) => {
-        this.historicalInstanceServerEvent.emit(data);
-      });
-      this.entireLog.on('error', (data) => {
-        this.logService.log('poe-log-reader', data, true);
-      });
-    }
   }
 }

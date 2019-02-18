@@ -75,17 +75,7 @@ export class MapService implements OnDestroy {
       this.previousInstanceServer = e.address;
     });
 
-    this.logMonitorService.historicalInstanceServerEvent.subscribe(e => {
-      if (!this.logMonitorService.parsingCompleted) {
-        this.previousInstanceServer = e.address;
-      }
-    });
-
     this.logMonitorService.areaEvent.subscribe((e: EventArea) => {
-      this.registerAreaEvent(e);
-    });
-
-    this.logMonitorService.historicalAreaEvent.subscribe((e: EventArea) => {
       this.registerAreaEvent(e);
     });
   }
