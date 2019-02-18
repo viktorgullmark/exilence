@@ -2,6 +2,7 @@ import { EventEmitter, Injectable, OnDestroy } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { BehaviorSubject } from 'rxjs/internal/BehaviorSubject';
 
+import { AreaHelper } from '../helpers/area.helper';
 import { HistoryHelper } from '../helpers/history.helper';
 import { ItemHelper } from '../helpers/item.helper';
 import { AreaEventType, AreaInfo, EventArea, ExtendedAreaInfo } from '../interfaces/area.interface';
@@ -14,7 +15,6 @@ import { LogMonitorService } from './log-monitor.service';
 import { PartyService } from './party.service';
 import { PricingService } from './pricing.service';
 import { SettingsService } from './settings.service';
-import { AreaHelper } from '../helpers/area.helper';
 
 @Injectable()
 export class MapService implements OnDestroy {
@@ -176,10 +176,13 @@ export class MapService implements OnDestroy {
     }
 
     // aspirants plaza
-    if (this.areaHistory[1].eventArea.name === 'Aspirants\' Plaza' &&
-        !AreaHelper.isNeutralZone(this.areaHistory[0])) {
+    if (
+      this.areaHistory[1] !== undefined &&
+      this.areaHistory[1].eventArea.name === 'Aspirants\' Plaza' &&
+      !AreaHelper.isNeutralZone(this.areaHistory[0])
+    ) {
       const subArea = this.areaHistory.shift();
-      this.areaHistory[1].subAreas.push(subArea);
+      this.areaHistory[0].subAreas.push(subArea);
     }
 
     this.updateLocalPlayerAreas(this.areaHistory);
