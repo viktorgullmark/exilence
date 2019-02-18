@@ -2,18 +2,11 @@ import { EventArea, ExtendedAreaInfo } from '../interfaces/area.interface';
 import { areaRadial } from 'd3';
 
 export class AreaHelper {
-    public static isSameInstance(areaHistory: ExtendedAreaInfo[]): boolean {
+    public static isSameInstance(firstArea: ExtendedAreaInfo, secondArea: ExtendedAreaInfo): boolean {
+        const sameAreaAsPrevious = firstArea.eventArea.name.indexOf(secondArea.eventArea.name) > -1;
+        const sameInstanceAsPrevious = firstArea.instanceServer === secondArea.instanceServer;
 
-        if (areaHistory.length > 2) {
-            const previousZoneNeutral = this.isNeutralZone(areaHistory[0]);
-            const sameAreaAsPrevious = areaHistory[2].eventArea.name.indexOf(areaHistory[0].eventArea.name);
-            const sameInstanceAsPrevious = areaHistory[2].instanceServer === areaHistory[0].instanceServer;
-
-            return (previousZoneNeutral &&
-                sameAreaAsPrevious &&
-                sameInstanceAsPrevious);
-        }
-        return false;
+        return sameAreaAsPrevious && sameInstanceAsPrevious;
     }
 
     public static isNeutralZone(area: ExtendedAreaInfo): boolean {

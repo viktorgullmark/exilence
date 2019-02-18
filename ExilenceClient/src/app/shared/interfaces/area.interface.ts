@@ -39,4 +39,5 @@ export interface ExtendedAreaInfo {
   difference: NetWorthItem[];
   inventory: NetWorthItem[];
   instanceServer: string;
+  subAreas: ExtendedAreaInfo[];
 }

@@ -30,6 +30,7 @@ export class MapService implements OnDestroy {
   private areasSub: Subscription;
   private enteredNeutralAreaSub: Subscription;
   private enteredHostileAreaSub: Subscription;
+  private enteredSameInstance = false;
 
   areasParsed: EventEmitter<any> = new EventEmitter();
 
@@ -50,6 +51,10 @@ export class MapService implements OnDestroy {
     this.enteredNeutralAreaSub = this.partyService.enteredNeutralArea.subscribe((inventory: Item[]) => {
       if (inventory !== undefined) {
         this.EnteredArea(inventory);
+
+        if (this.enteredSameInstance) {
+
+        }
       }
     });
 
@@ -81,9 +86,13 @@ export class MapService implements OnDestroy {
   EnteredArea(inventory: Item[]) {
     const currentInventory = this.priceAndCombineInventory(inventory);
     this.areaHistory[0].inventory = currentInventory;
-    if (this.areaHistory[1] !== undefined) {
-      const gainedItems: NetWorthItem[] = ItemHelper.GetNetowrthItemDifference(currentInventory, this.areaHistory[1].inventory);
-      this.areaHistory[1].difference = [...gainedItems];
+    if (this.areaHistory[1] !== undefined && !this.enteredSameInstance) {
+      const gainedItems: NetWorthItem[] = ItemHelper.GetNetworthItemDifference(currentInventory, this.areaHistory[1].inventory);
+      if (this.areaHistory[1].difference.length > 0) {
+        this.areaHistory[1].difference = ItemHelper.CombineNetworthItemStacks(this.areaHistory[1].difference.concat(gainedItems));
+      } else {
+        this.areaHistory[1].difference = [...gainedItems];
+      }
     }
   }
 
@@ -118,7 +127,7 @@ export class MapService implements OnDestroy {
   }
 
   registerAreaEvent(e: EventArea) {
-
+    this.enteredSameInstance = false;
     e.name = AreaHelper.formatName(e);
 
     const character = this.settingsService.getCurrentCharacter();
@@ -133,27 +142,35 @@ export class MapService implements OnDestroy {
       duration: 0,
       instanceServer: this.previousInstanceServer,
       difference: [],
-      inventory: []
+      inventory: [],
+      subAreas: []
     } as ExtendedAreaInfo;
 
-    let diffSeconds = 0;
+    this.addAreaHistory(areaEntered);
 
-    if (this.areaHistory.length > 0) {
-      diffSeconds = (areaEntered.timestamp - this.areaHistory[0].timestamp) / 1000;
-      this.areaHistory[0].duration = diffSeconds;
-    }
+    const previousZoneNeutral = this.areaHistory[1] !== undefined && AreaHelper.isNeutralZone(this.areaHistory[1]);
 
-    const neutralZone = AreaHelper.isNeutralZone(areaEntered);
+    if (this.areaHistory.length > 2) {
+      const diffSeconds = (this.areaHistory[0].timestamp - this.areaHistory[1].timestamp) / 1000;
+      this.areaHistory[1].duration = diffSeconds;
 
-    // update areas and emit to group
-    this.updateAreaHistory(areaEntered);
+      const sameInstance = AreaHelper.isSameInstance(this.areaHistory[0], this.areaHistory[2]);
 
-    const sameInstance = AreaHelper.isSameInstance(this.areaHistory);
-
-    if (sameInstance) {
-      this.areaHistory.shift();
-      this.areaHistory[0].duration = this.areaHistory[1].duration + diffSeconds;
-      // todo: concat gain
+      if (sameInstance) {
+        if (previousZoneNeutral) {
+          this.areaHistory.shift(); // remove neutral zone
+          this.areaHistory.shift(); // remove duplicate zone
+          this.areaHistory[0].duration = 0;
+          this.enteredSameInstance = true;
+        } else {
+          if (this.areaHistory[1].eventArea.type === 'map') {
+            this.areaHistory.shift(); // remove duplicate zone
+            const zanaArea = this.areaHistory.shift();
+            this.areaHistory[1].subAreas.push(zanaArea);
+          }
+        }
+        this.enteredSameInstance = true;
+      }
     }
 
     this.updateLocalPlayerAreas(this.areaHistory);
@@ -167,10 +184,11 @@ export class MapService implements OnDestroy {
     this.localPlayer.areaInfo = this.areaHistory[0];
     this.localPlayer.pastAreas = HistoryHelper.filterAreas(this.areaHistory, (Date.now() - (24 * 60 * 60 * 1000)));
     this.accountService.player.next(this.localPlayer);
-    this.partyService.updatePlayer(this.localPlayer, neutralZone ? 'area-change-to-neutral' : 'area-change-to-hostile');
+    this.partyService.updatePlayer(this.localPlayer, AreaHelper.isNeutralZone(areaEntered)
+      ? 'area-change-to-neutral' : 'area-change-to-hostile');
   }
 
-  updateAreaHistory(eventArea) {
+  addAreaHistory(eventArea) {
     this.areaHistory.unshift(eventArea);
     if (this.areaHistory.length > 1000) {
       this.areaHistory.pop();

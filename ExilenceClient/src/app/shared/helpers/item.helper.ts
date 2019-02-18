@@ -138,7 +138,7 @@ export class ItemHelper {
     }
 
 
-    public static GetNetowrthItemDifference(currentItems: NetWorthItem[], previousItems: NetWorthItem[]): NetWorthItem[] {
+    public static GetNetworthItemDifference(currentItems: NetWorthItem[], previousItems: NetWorthItem[]): NetWorthItem[] {
 
         const difference = [];
 
