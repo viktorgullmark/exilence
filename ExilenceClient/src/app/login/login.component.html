@@ -159,18 +159,6 @@
               <input matInput formControlName="filePath" placeholder="{{'ACCOUNT.FILEPATH' | translate}}" (focusout)="checkPath()"
                 required>
             </mat-form-field>
-            <span class="mat-body-1">Choose which zones to track:</span><br /><br />
-            <mat-radio-group class="radio-group" [(ngModel)]="logMonitorService.trackMapsOnly" [ngModelOptions]="{standalone: true}"
-              required>
-              <mat-radio-button class="radio-button" [value]="true" [checked]="true">
-                Maps and hideouts only (recommended)
-              </mat-radio-button>
-              <mat-radio-button class="radio-button" [value]="false">
-                All areas
-              </mat-radio-button>
-            </mat-radio-group>
-            <br />
-            <br />
             <div class="btn-grp">
               <button mat-raised-button class="btn-back" matStepperPrevious>Back</button>
               <button mat-raised-button color="primary" (click)="browse()" type="button">1. Browse file</button>
