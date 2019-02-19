@@ -1,4 +1,4 @@
-import { Component, Input, OnDestroy, OnInit, ViewChild, EventEmitter, Output } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit, ViewChild, EventEmitter, Output, NgZone } from '@angular/core';
 import { MatSort, MatTableDataSource, MatPaginator } from '@angular/material';
 import { Subscription } from 'rxjs/internal/Subscription';
 
@@ -17,6 +17,7 @@ import { TableHelper } from '../../../shared/helpers/table.helper';
 export class NetworthTableComponent implements OnInit, OnDestroy {
   @Input() multiple = false;
   @Input() showOverTime = false;
+  @Input() slim = false;
   @Output() differenceChanged: EventEmitter<any> = new EventEmitter;
   @Output() filtered: EventEmitter<any> = new EventEmitter;
   // tslint:disable-next-line:max-line-length
@@ -33,13 +34,16 @@ export class NetworthTableComponent implements OnInit, OnDestroy {
 
   private partySub: Subscription;
 
-  constructor(private partyService: PartyService, private settingsService: SettingsService) { }
+  constructor(private partyService: PartyService, private settingsService: SettingsService, private ngZone: NgZone) { }
 
   ngOnInit() {
-    if (!this.showOverTime) {
+    if (!this.showOverTime && this.multiple) {
       this.displayedColumns.push('holdingPlayers');
     }
-    if (this.multiple) {
+    if (this.slim) {
+      // remove columns in slim variant
+      this.displayedColumns = this.displayedColumns.filter(x => x !== 'links' && x !== 'quality' && x !== 'gemLevel' && x !== 'corrupted');
+    } else if (this.multiple) {
       // party logic
       this.filter();
 
@@ -143,9 +147,11 @@ export class NetworthTableComponent implements OnInit, OnDestroy {
           .includes(this.searchText.toLowerCase()))
     );
 
-    this.source = new MatTableDataSource(this.filteredArr);
-    this.source.sort = this.sort;
-    this.source.paginator = this.paginator;
+    this.ngZone.run(() => {
+      this.source = new MatTableDataSource(this.filteredArr);
+      this.source.sort = this.sort;
+      this.source.paginator = this.paginator;
+    });
 
     // emit event to parentcomponent, for export etc
     this.filtered.emit(this.filteredArr);
@@ -277,6 +283,11 @@ export class NetworthTableComponent implements OnInit, OnDestroy {
         }
       }
     });
+
+    // if slim variant of the table, only show top-items
+    if (this.slim) {
+      this.dataSource = this.dataSource.sort((n1, n2) => n2.value - n1.value).slice(0, 12);
+    }
   }
 }
 

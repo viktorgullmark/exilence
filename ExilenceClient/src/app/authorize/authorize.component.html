@@ -44,7 +44,7 @@
       <img alt="Click to support us" class="patron-button" (click)="openLink('https://www.patreon.com/exilence')">
     </div>
   </mat-sidenav>
-  <mat-sidenav-content class="content-container" [ngClass]="{'in-electron': electronService.isElectron(), 'scroll': selectedGroupIndex > 0 }">
+  <mat-sidenav-content class="content-container" [ngClass]="{'in-electron': electronService.isElectron(), 'scroll': selectedGroupIndex != 0 }">
     <router-outlet></router-outlet>
     <mat-progress-bar *ngIf="partyService.joinInProgress || partyService.isEntering" class="progress-bar top-margin"
       color="primary" mode="indeterminate">

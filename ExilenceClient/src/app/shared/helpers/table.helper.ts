@@ -37,4 +37,17 @@ export class TableHelper {
             && x.frameType === itemToFind.frameType
         );
     }
+
+    public static findStack(array: any[], itemToFind: NetWorthItem) {
+        return array.find(x =>
+            x.name === itemToFind.name
+            && x.quality === itemToFind.quality
+            && x.links === itemToFind.links
+            && x.gemLevel === itemToFind.gemLevel
+            && x.corrupted === itemToFind.corrupted
+            && x.variation === itemToFind.variation
+            && x.frameType === itemToFind.frameType
+            && x.stacksize === itemToFind.stacksize
+        );
+    }
 }

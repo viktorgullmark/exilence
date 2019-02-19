@@ -21,6 +21,7 @@ export class SettingsComponent implements OnInit, OnDestroy {
   isResizable = false;
   hideTooltips = false;
   lowConfidencePricing = false;
+  inventoryPricing = false;
   characterPricing = false;
   sessionId: string;
   sessionIdValid: boolean;
@@ -45,7 +46,7 @@ export class SettingsComponent implements OnInit, OnDestroy {
     });
 
     this.sessionId = this.sessionService.getSession();
-    this.sessionIdValid = this.settingsService.get('account.sessionIdValid');
+    this.sessionIdValid = this.settingsService.get('profile.sessionIdValid');
     this.itemValueTreshold =
       this.settingsService.get('itemValueTreshold') !== undefined ? this.settingsService.get('itemValueTreshold') : 1;
     this.gainHours =
@@ -80,6 +81,11 @@ export class SettingsComponent implements OnInit, OnDestroy {
     const lowConfidencePricingSetting = this.settingsService.get('lowConfidencePricing');
     if (lowConfidencePricingSetting !== undefined) {
       this.lowConfidencePricing = lowConfidencePricingSetting;
+    }
+
+    const inventoryPricingSetting = this.settingsService.get('inventoryPricing');
+    if (inventoryPricingSetting !== undefined) {
+      this.inventoryPricing = inventoryPricingSetting;
     }
 
     const characterePricingSetting = this.settingsService.get('characterPricing');
@@ -155,6 +161,14 @@ export class SettingsComponent implements OnInit, OnDestroy {
       this.settingsService.set('lowConfidencePricing', true);
     } else {
       this.settingsService.set('lowConfidencePricing', false);
+    }
+  }
+
+  toggleInventoryPricing() {
+    if (this.lowConfidencePricing) {
+      this.settingsService.set('inventoryPricing', true);
+    } else {
+      this.settingsService.set('inventoryPricing', false);
     }
   }
 

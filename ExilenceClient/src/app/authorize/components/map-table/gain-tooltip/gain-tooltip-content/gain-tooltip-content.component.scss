@@ -1,0 +1,19 @@
+@import "./../../../../../../assets/styles/variables";
+
+hr {
+    border-color: $tooltip-separator-color;
+}
+
+.gain-tooltip-header {
+    padding: 10px;
+    background: #191919;
+    border-bottom: 2px solid $tooltip-separator-color;
+
+    h3 {
+        margin-bottom: 0;
+    }
+}
+
+.gain-tooltip-body {
+    padding: 0;
+}

@@ -37,7 +37,9 @@
         background: $item-weaponswap-bg-color;
         min-height: 171px !important;
     }
-
+    .stack-size {
+        position: absolute;
+    }
     &:hover .item-tooltip {
         display: block;
     }

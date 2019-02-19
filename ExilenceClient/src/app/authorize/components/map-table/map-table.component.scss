@@ -7,3 +7,21 @@ table {
 td {
     min-height: 48px;
 }
+
+.gain-tooltip {
+    display: block;
+}
+
+.gain-cell {
+    cursor: pointer;
+}
+
+.networth-value {
+    color: $currency-chaos-color;
+}
+
+.neutral-arrow {
+    color: $font-color;
+    transform: rotate(270deg);
+    font-size: 20px !important;
+}

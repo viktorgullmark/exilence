@@ -11,6 +11,9 @@ namespace Shared.Models
         public string InstanceServer { get; set; }
         public long Timestamp { get; set; }
         public int Duration { get; set; }
+        public List<NetWorthItem> Difference { get; set; }
+        public List<NetWorthItem> Inventory { get; set; }
+        public List<ExtenedAreaInfoModel> SubAreas { get; set; }
     }
 
     [Serializable]

@@ -1,13 +1,14 @@
-import { Component, EventEmitter, Input, OnInit, Output, ViewChild, OnDestroy } from '@angular/core';
-import { MatSort, MatTableDataSource, MatPaginator } from '@angular/material';
+import { Component, ElementRef, EventEmitter, OnDestroy, OnInit, Output, ViewChild, NgZone } from '@angular/core';
+import { MatPaginator, MatSort, MatTableDataSource } from '@angular/material';
 import * as moment from 'moment';
+import { Subscription } from 'rxjs/internal/Subscription';
 
 import { ExtendedAreaInfo } from '../../../shared/interfaces/area.interface';
-import { Player } from '../../../shared/interfaces/player.interface';
-import { PartyService } from '../../../shared/providers/party.service';
-import { MapService } from '../../../shared/providers/map.service';
-import { Subscription } from 'rxjs/internal/Subscription';
+import { NetWorthItem } from '../../../shared/interfaces/income.interface';
 import { Party } from '../../../shared/interfaces/party.interface';
+import { MapService } from '../../../shared/providers/map.service';
+import { PartyService } from '../../../shared/providers/party.service';
+import { GainTooltipComponent } from './gain-tooltip/gain-tooltip.component';
 
 @Component({
   selector: 'app-map-table',
@@ -17,19 +18,28 @@ import { Party } from '../../../shared/interfaces/party.interface';
 export class MapTableComponent implements OnInit, OnDestroy {
 
   @Output() filtered: EventEmitter<any> = new EventEmitter;
-  displayedColumns: string[] = ['timestamp', 'name', 'tier', 'time'];
+  displayedColumns: string[] = ['timestamp', 'name', 'tier', 'time', 'gain'];
   dataSource = [];
   searchText = '';
   filteredArr = [];
+  rowWidth = 0;
   source: any;
   party: Party;
+  gain: NetWorthItem[];
+  selected = {
+    name: '',
+    tier: 0,
+    time: 0,
+    timestamp: 0
+  };
   private selectedFilterValueSub: Subscription;
   private partySub: Subscription;
   public selectedPlayerValue: any;
   @ViewChild(MatSort) sort: MatSort;
   @ViewChild(MatPaginator) paginator: MatPaginator;
+  @ViewChild(GainTooltipComponent) tooltip: GainTooltipComponent;
 
-  constructor(private partyService: PartyService, private mapService: MapService) {
+  constructor(private partyService: PartyService, private mapService: MapService, public el: ElementRef, private ngZone: NgZone) {
   }
 
   ngOnInit() {
@@ -89,6 +99,30 @@ export class MapTableComponent implements OnInit, OnDestroy {
     });
   }
 
+  updateTooltip(element, el, table) {
+    if (element === undefined) {
+      element = {
+        name: '',
+        tier: 0,
+        time: 0,
+        timestamp: 0
+      };
+    }
+
+    this.selected = element;
+
+    if (this.selected.timestamp > 0) {
+
+      this.gain = element.items;
+
+      this.rowWidth = table._elementRef.nativeElement.clientWidth;
+      this.tooltip.top = el.top;
+      this.tooltip.left = el.left;
+      this.tooltip.reposition(el);
+      this.tooltip.renderItems(this.gain);
+    }
+  }
+
   getPlayers() {
     return this.party.players.filter(x => x.character !== null);
   }
@@ -117,12 +151,13 @@ export class MapTableComponent implements OnInit, OnDestroy {
             .includes(this.searchText.toLowerCase()))
       );
 
-      this.source = new MatTableDataSource(this.filteredArr);
-      this.source.paginator = this.paginator;
-      this.source.sort = this.sort;
-      this.filtered.emit({ filteredArr: this.filteredArr, dataSource: this.dataSource });
+      this.ngZone.run(() => {
+        this.source = new MatTableDataSource(this.filteredArr);
+        this.source.paginator = this.paginator;
+        this.source.sort = this.sort;
+        this.filtered.emit({ filteredArr: this.filteredArr, dataSource: this.dataSource });
+      });
     }, 0);
-
   }
 
   formatDate(timestamp) {
@@ -133,19 +168,29 @@ export class MapTableComponent implements OnInit, OnDestroy {
     if (pastAreas !== null && pastAreas !== undefined) {
       pastAreas.forEach((area: ExtendedAreaInfo) => {
         if (area.duration < 1800) {
-          const minute = Math.floor(area.duration / 60);
-          const seconds = area.duration % 60;
-          const newAreaObj = {
-            name: area.eventArea.name,
-            tier: area.eventArea.info[0].level,
-            time: ((minute < 10) ? '0' + minute.toString() : minute.toString())
-              + ':' + ((seconds < 10) ? '0' + seconds.toString() : seconds.toString()),
-            timestamp: area.timestamp
-          };
-          this.dataSource.push(newAreaObj);
+          this.dataSource.push(this.formatTableObject(area));
+          area.subAreas.forEach(subArea => {
+            this.dataSource.push(this.formatTableObject(subArea));
+          });
         }
       });
     }
+  }
+
+  formatTableObject(area: ExtendedAreaInfo) {
+    area.difference = area.difference === undefined ? [] : area.difference;
+    const minute = Math.floor(area.duration / 60);
+    const seconds = area.duration % 60;
+    const newAreaObj = {
+      items: area.difference,
+      gain: area.difference.map(i => i.value).reduce((a, b) => a + b, 0),
+      name: area.eventArea.name,
+      tier: area.eventArea.info[0].level,
+      time: ((minute < 10) ? '0' + minute.toString() : minute.toString())
+        + ':' + ((seconds < 10) ? '0' + seconds.toString() : seconds.toString()),
+      timestamp: area.timestamp
+    };
+    return newAreaObj;
   }
 
 }

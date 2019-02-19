@@ -1,3 +1,4 @@
+import { NetWorthItem } from './income.interface';
 
 export enum AreaType {
   area = 0,
@@ -35,5 +36,8 @@ export interface ExtendedAreaInfo {
   type: AreaEventType;
   timestamp: number;
   duration: number;
+  difference: NetWorthItem[];
+  inventory: NetWorthItem[];
   instanceServer: string;
+  subAreas: ExtendedAreaInfo[];
 }

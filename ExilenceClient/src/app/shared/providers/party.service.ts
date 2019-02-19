@@ -24,6 +24,8 @@ import { LeagueWithPlayers } from '../interfaces/league.interface';
 import { Subscription } from 'rxjs';
 import { ServerMessage } from '../interfaces/server-message.interface';
 import { StateService } from './state.service';
+import { ItemHelper } from '../helpers/item.helper';
+import { Item } from '../interfaces/item.interface';
 
 @Injectable()
 export class PartyService implements OnDestroy {
@@ -52,6 +54,8 @@ export class PartyService implements OnDestroy {
   public connectionInitiated: EventEmitter<boolean> = new EventEmitter();
 
   public serverMessageReceived: BehaviorSubject<ServerMessage> = new BehaviorSubject<ServerMessage>(undefined);
+  public enteredNeutralArea: BehaviorSubject<Item[]> = new BehaviorSubject<Item[]>(undefined);
+  public enteredHostileArea: BehaviorSubject<Item[]> = new BehaviorSubject<Item[]>(undefined);
 
   private reconnectAttempts: number;
   private forceClosed: boolean;
@@ -353,7 +357,7 @@ export class PartyService implements OnDestroy {
     this.partyUpdated.next(this.party);
     this.updatePlayerLists(this.party);
 
-    if (this.selectedPlayerObj.account === player.account) {
+    if (this.selectedPlayerObj !== undefined && this.selectedPlayerObj.account === player.account) {
 
       // select self if is player, otherwhise select the first player in the group
       if (this.currentPlayer.character !== null) {
@@ -463,13 +467,22 @@ export class PartyService implements OnDestroy {
     this.playerLeagues.next(leagues);
   }
 
-  public updatePlayer(player: Player) {
+  public updatePlayer(player: Player, reason: string = null) {
     const oneDayAgo = (Date.now() - (24 * 60 * 60 * 1000));
     this.updateInProgress = true;
     this.externalService.getCharacter(this.accountInfo)
       .subscribe((equipment: EquipmentResponse) => {
         player = this.externalService.setCharacter(equipment, player);
         const objToSend = Object.assign({}, player);
+
+        if (reason === 'area-change-to-neutral') {
+          const inventoryItems = ItemHelper.getInventoryItems(player.character.items);
+          this.enteredNeutralArea.next(inventoryItems);
+        } else if (reason === 'area-change-to-hostile') {
+          const inventoryItems = ItemHelper.getInventoryItems(player.character.items);
+          this.enteredHostileArea.next(inventoryItems);
+        }
+
         objToSend.pastAreas = HistoryHelper.filterAreas(objToSend.pastAreas, oneDayAgo);
         objToSend.netWorthSnapshots = HistoryHelper.filterNetworth(objToSend.netWorthSnapshots, oneDayAgo);
         if (this._hubConnection) {

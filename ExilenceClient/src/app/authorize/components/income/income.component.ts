@@ -1,4 +1,5 @@
 import { Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
+import { MatDialog } from '@angular/material';
 import { Router } from '@angular/router';
 import { colorSets as ngxChartsColorsets } from '@swimlane/ngx-charts/release/utils/color-sets';
 import * as d3 from 'd3';
@@ -14,7 +15,6 @@ import { ElectronService } from '../../../shared/providers/electron.service';
 import { PartyService } from '../../../shared/providers/party.service';
 import { SettingsService } from '../../../shared/providers/settings.service';
 import { ServerMessageDialogComponent } from '../server-message-dialog/server-message-dialog.component';
-import { MatDialog } from '@angular/material';
 
 
 @Component({
@@ -263,7 +263,11 @@ export class IncomeComponent implements OnInit, OnDestroy {
 
   deleteSnapshot(snapshot) {
     if (!this.partyService.updateInProgress && snapshot !== undefined) {
-      const netWorthHistory = this.settingsService.get('networth');
+      let netWorthHistory;
+      const character = this.settingService.getCurrentCharacter();
+      if (character !== undefined) {
+        netWorthHistory = character.networth;
+      }
       const player = Object.assign({}, this.currentPlayer);
       const foundSnapshot = player.netWorthSnapshots.find(x => x.timestamp === snapshot.name.getTime() &&
         x.value === snapshot.value);
@@ -276,10 +280,12 @@ export class IncomeComponent implements OnInit, OnDestroy {
         }
 
         if (netWorthHistory !== undefined) {
-          netWorthHistory.snapshots = player.netWorthSnapshots;
+          netWorthHistory.history = player.netWorthSnapshots;
         }
 
-        this.settingsService.set('networth', netWorthHistory);
+        character.networth = netWorthHistory;
+        this.settingsService.updateCharacter(character);
+
         this.accountService.player.next(player);
         this.partyService.updatePlayer(player);
       } else {

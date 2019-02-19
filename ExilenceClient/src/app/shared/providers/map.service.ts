@@ -1,36 +1,39 @@
-import { Injectable, EventEmitter, OnDestroy } from '@angular/core';
+import { EventEmitter, Injectable, OnDestroy } from '@angular/core';
+import { Subscription } from 'rxjs';
+import { BehaviorSubject } from 'rxjs/internal/BehaviorSubject';
 
+import { AreaHelper } from '../helpers/area.helper';
+import { HistoryHelper } from '../helpers/history.helper';
+import { ItemHelper } from '../helpers/item.helper';
 import { AreaEventType, AreaInfo, EventArea, ExtendedAreaInfo } from '../interfaces/area.interface';
+import { NetWorthItem } from '../interfaces/income.interface';
+import { Item } from '../interfaces/item.interface';
 import { Player } from '../interfaces/player.interface';
 import { AccountService } from './account.service';
 import { IncomeService } from './income.service';
 import { LogMonitorService } from './log-monitor.service';
 import { PartyService } from './party.service';
-import { NetWorthSnapshot } from '../interfaces/income.interface';
+import { PricingService } from './pricing.service';
 import { SettingsService } from './settings.service';
-import { HistoryHelper } from '../helpers/history.helper';
-import { BehaviorSubject } from 'rxjs/internal/BehaviorSubject';
-import { Subscription } from 'rxjs';
 
 @Injectable()
 export class MapService implements OnDestroy {
 
   private areaHistory: ExtendedAreaInfo[] = [];
-  public currentArea: ExtendedAreaInfo;
-  public currentHistoricalArea: ExtendedAreaInfo;
+  public area: ExtendedAreaInfo;
   public previousInstanceServer: string;
-  public historicalInstanceServer: string;
   public previousDate: Date;
-  private durationSeconds = 0;
-  private durationInterval: any;
   private localPlayer: Player;
+  public excludeGain: NetWorthItem[] = undefined;
 
   private playerSub: Subscription;
   private areasSub: Subscription;
+  private enteredNeutralAreaSub: Subscription;
+  private enteredHostileAreaSub: Subscription;
+  private enteredSameInstance = false;
 
   areasParsed: EventEmitter<any> = new EventEmitter();
 
-  // areas specific to the local player (including the log if imported)
   public localPlayerAreaSubject: BehaviorSubject<ExtendedAreaInfo[]> = new BehaviorSubject<ExtendedAreaInfo[]>([]);
   public localPlayerAreas: ExtendedAreaInfo[];
 
@@ -39,15 +42,31 @@ export class MapService implements OnDestroy {
     private accountService: AccountService,
     private partyService: PartyService,
     private incomeService: IncomeService,
-    private settingsService: SettingsService
+    private settingsService: SettingsService,
+    private pricingService: PricingService
   ) {
 
     this.loadAreasFromSettings();
 
+    this.enteredNeutralAreaSub = this.partyService.enteredNeutralArea.subscribe((inventory: Item[]) => {
+      if (inventory !== undefined) {
+        this.EnteredArea(inventory);
+
+        if (this.enteredSameInstance) {
+
+        }
+      }
+    });
+
+    this.enteredHostileAreaSub = this.partyService.enteredHostileArea.subscribe((inventory: Item[]) => {
+      if (inventory !== undefined) {
+        this.EnteredArea(inventory);
+      }
+    });
+
     this.playerSub = this.accountService.player.subscribe(player => {
       if (player !== undefined) {
         this.localPlayer = player;
-        // this.localPlayer.pastAreas = this.areaHistory;
       }
     });
 
@@ -59,30 +78,32 @@ export class MapService implements OnDestroy {
       this.previousInstanceServer = e.address;
     });
 
-    this.logMonitorService.historicalInstanceServerEvent.subscribe(e => {
-      if (!this.logMonitorService.parsingCompleted) {
-        this.previousInstanceServer = e.address;
-      }
-    });
-
-    this.logMonitorService.parsingStarted.subscribe((e: any) => {
-      this.removeAreasFromSettings();
-    });
-
-    this.logMonitorService.parsingComplete.subscribe((e: any) => {
-      this.settingsService.set('areas', this.areaHistory);
-      this.updateLocalPlayerAreas(this.areaHistory);
-      this.areasParsed.emit();
-    });
-
-    // updated versions
     this.logMonitorService.areaEvent.subscribe((e: EventArea) => {
-      this.registerAreaEvent(e, true);
+      this.registerAreaEvent(e);
+    });
+  }
+
+  EnteredArea(inventory: Item[]) {
+    const currentInventory = this.priceAndCombineInventory(inventory);
+    this.areaHistory[0].inventory = currentInventory;
+    if (this.areaHistory[1] !== undefined && !this.enteredSameInstance) {
+      const gainedItems: NetWorthItem[] = ItemHelper.GetNetworthItemDifference(currentInventory, this.areaHistory[1].inventory);
+      if (this.areaHistory[1].difference.length > 0) {
+        this.areaHistory[1].difference = ItemHelper.CombineNetworthItemStacks(this.areaHistory[1].difference.concat(gainedItems));
+      } else {
+        this.areaHistory[1].difference = [...gainedItems];
+      }
+    }
+  }
+
+  priceAndCombineInventory(items: Item[]): NetWorthItem[] {
+    const networthItems: NetWorthItem[] = [];
+    items.forEach((item: Item) => {
+      const pricedItem = ItemHelper.toNetworthItem(item, this.pricingService.priceItem(item));
+      networthItems.push(pricedItem);
     });
 
-    this.logMonitorService.historicalAreaEvent.subscribe((e: EventArea) => {
-      this.registerAreaEvent(e, false);
-    });
+    return ItemHelper.CombineNetworthItemStacks(networthItems);
   }
 
   ngOnDestroy() {
@@ -92,6 +113,12 @@ export class MapService implements OnDestroy {
     if (this.areasSub !== undefined) {
       this.areasSub.unsubscribe();
     }
+    if (this.enteredHostileAreaSub !== undefined) {
+      this.enteredHostileAreaSub.unsubscribe();
+    }
+    if (this.enteredNeutralAreaSub !== undefined) {
+      this.enteredNeutralAreaSub.unsubscribe();
+    }
   }
 
   updateLocalPlayerAreas(areas: ExtendedAreaInfo[]) {
@@ -99,102 +126,92 @@ export class MapService implements OnDestroy {
     this.localPlayerAreaSubject.next(areasToSend);
   }
 
-  registerAreaEvent(e: EventArea, live: boolean) {
-    // zone entered
-    const shouldUpdateAreaHistory = (e.type === 'map' || e.name.endsWith('Hideout') || !this.logMonitorService.trackMapsOnly);
+  registerAreaEvent(e: EventArea) {
+    this.enteredSameInstance = false;
+    e.name = AreaHelper.formatName(e);
 
-    if ((!this.logMonitorService.parsingCompleted || live)) {
-      let diffSeconds = 0;
-      let duration = 0;
+    const character = this.settingsService.getCurrentCharacter();
+    if (character !== undefined) {
+      this.areaHistory = character.areas;
+    }
 
-      if (live) {
-        this.areaHistory = this.settingsService.get('areas');
-      }
+    const areaEntered = {
+      eventArea: this.formatAreaInfo(e),
+      type: AreaEventType.Join,
+      timestamp: new Date(e.timestamp).getTime(),
+      duration: 0,
+      instanceServer: this.previousInstanceServer,
+      difference: [],
+      inventory: [],
+      subAreas: []
+    } as ExtendedAreaInfo;
 
-      const eventDate = new Date(e.timestamp);
-      const eventTimestamp = eventDate.getTime();
+    this.addAreaHistory(areaEntered);
 
-      // final object to push
-      let eventArea = {
-        eventArea: this.validateAreaInfo(e),
-        type: AreaEventType.Join,
-        timestamp: eventTimestamp,
-        duration: 0,
-        instanceServer: this.previousInstanceServer
-      } as ExtendedAreaInfo;
+    const previousZoneNeutral = this.areaHistory[1] !== undefined && AreaHelper.isNeutralZone(this.areaHistory[1]);
 
-      // If we enter a map
-      // And got atleast three zones in out history (map --> hideout --> map)
-      // And our last zone was a Hideout
-      // And the map zone before that has the same map name as this one
-      // And is located on the same instance server as this one
-      // It's probably the same map
-      const sameMapAsBefore =
-        (e.type === 'map'
-          && this.areaHistory.length > 1
-          && this.currentArea !== undefined
-          && this.currentArea.eventArea.name.endsWith('Hideout')
-          && this.areaHistory[1].eventArea.name.indexOf(e.name) > -1
-          && this.previousInstanceServer === this.areaHistory[1].instanceServer);
-
-      // player is in an area while entering this (includes history)
-      if (this.currentArea !== undefined && this.areaHistory.length > 0) {
-
-        // calculate difference using timestamps from log
-        // validate that the dates have not been tampered with in the log
-        if (this.currentArea.timestamp < eventTimestamp) {
-          diffSeconds = (eventTimestamp - this.currentArea.timestamp) / 1000;
-        }
-
-        // if we enter the same map, add duration to previous event
-        if (sameMapAsBefore && shouldUpdateAreaHistory) {
-          duration = this.areaHistory[1].duration + diffSeconds;
-          // remove hideout-event from current array
-          this.areaHistory.shift();
-          eventArea = this.areaHistory[0];
-          eventArea.duration = duration;
-          this.areaHistory[0] = eventArea;
+    if (this.areaHistory.length > 2) {
+      const diffSeconds = (this.areaHistory[0].timestamp - this.areaHistory[1].timestamp) / 1000;
+      this.areaHistory[1].duration = diffSeconds;
+      if (this.areaHistory[1].subAreas.length > 0) {
+        if (this.areaHistory[1].subAreas.length === 1) {
+          this.areaHistory[1].subAreas[0].duration = diffSeconds;
         } else {
-          if (eventArea.eventArea.type === 'map' && eventArea.eventArea.info.length > 0) {
-            eventArea.eventArea.name += ` map (T${eventArea.eventArea.info[0].tier})`;
-          }
-          if (shouldUpdateAreaHistory) {
-            this.areaHistory[0].duration = diffSeconds;
-            // push the new object to our area-history
-            this.updateAreaHistory(eventArea);
-          }
-        }
-      } else {
-        if (shouldUpdateAreaHistory) {
-          this.updateAreaHistory(eventArea);
+          const subAreaDiffSeconds = (this.areaHistory[1].subAreas[0].timestamp - this.areaHistory[1].subAreas[1].timestamp) / 1000;
+          this.areaHistory[1].subAreas[0].duration = subAreaDiffSeconds;
         }
       }
 
-      this.currentArea = eventArea;
-    }
-    // if live-parsing, update data now
-    if (live) {
-      this.incomeService.Snapshot();
+      const sameInstance = AreaHelper.isSameInstance(this.areaHistory[0], this.areaHistory[2]);
 
-      // update current player and send information to party
-      this.localPlayer.area = this.currentArea.eventArea.name;
-      this.localPlayer.areaInfo = this.currentArea;
-
-      const oneDayAgo = (Date.now() - (24 * 60 * 60 * 1000));
-
-      this.localPlayer.pastAreas = HistoryHelper.filterAreas(this.areaHistory, oneDayAgo);
-      this.accountService.player.next(this.localPlayer);
-
-      // save updated areas to settings
-      if (shouldUpdateAreaHistory) {
-        this.settingsService.set('areas', this.areaHistory);
-        this.updateLocalPlayerAreas(this.areaHistory);
+      if (sameInstance) {
+        if (previousZoneNeutral && !AreaHelper.isNeutralZone(this.areaHistory[0])) {
+          this.areaHistory.shift(); // remove neutral zone
+          this.areaHistory.shift(); // remove duplicate zone
+          this.areaHistory[0].duration = 0;
+          this.enteredSameInstance = true;
+        } else {
+          if (this.areaHistory[1].eventArea.type === 'map' ||
+            this.areaHistory[1].eventArea.type === 'vaal' ||
+            this.areaHistory[1].eventArea.type === 'labyrinth') {
+            this.areaHistory.shift(); // remove duplicate zone
+            const subArea = this.areaHistory.shift();
+            this.areaHistory[0].subAreas.unshift(subArea);
+          }
+        }
+        this.enteredSameInstance = true;
       }
-      this.partyService.updatePlayer(this.localPlayer);
     }
+
+    if (this.areaHistory[1] !== undefined && this.areaHistory[1].eventArea.type === 'vaal') {
+      this.areaHistory.shift(); // remove duplicate zone
+      const subArea = this.areaHistory.shift(); // remove sub area
+      this.areaHistory[0].subAreas.unshift(subArea);
+    }
+
+    if (this.areaHistory[1] !== undefined &&
+      this.areaHistory[1].eventArea.name === 'Aspirants\' Plaza' &&
+      this.areaHistory[0].eventArea.type === 'unknown') {
+      const subArea = this.areaHistory.shift();
+      this.areaHistory[0].subAreas.unshift(subArea);
+    }
+
+    this.updateLocalPlayerAreas(this.areaHistory);
+
+    character.areas = this.areaHistory;
+    this.settingsService.updateCharacter(character);
+
+    this.incomeService.Snapshot();
+
+    this.localPlayer.area = this.areaHistory[0].eventArea.name;
+    this.localPlayer.areaInfo = this.areaHistory[0];
+    this.localPlayer.pastAreas = HistoryHelper.filterAreas(this.areaHistory, (Date.now() - (24 * 60 * 60 * 1000)));
+    this.accountService.player.next(Object.assign({}, this.localPlayer));
+    this.partyService.updatePlayer(Object.assign({}, this.localPlayer), AreaHelper.isNeutralZone(areaEntered)
+      ? 'area-change-to-neutral' : 'area-change-to-hostile');
   }
 
-  updateAreaHistory(eventArea) {
+  addAreaHistory(eventArea) {
     this.areaHistory.unshift(eventArea);
     if (this.areaHistory.length > 1000) {
       this.areaHistory.pop();
@@ -202,14 +219,21 @@ export class MapService implements OnDestroy {
   }
 
   loadAreasFromSettings() {
-    this.areaHistory = this.settingsService.get('areas');
+    const character = this.settingsService.getCurrentCharacter();
+    if (character !== undefined) {
+      this.areaHistory = character.areas;
+    }
   }
   removeAreasFromSettings() {
-    this.settingsService.set('areas', []);
-    this.areaHistory = this.settingsService.get('areas');
+    const character = this.settingsService.getCurrentCharacter();
+    if (character !== undefined) {
+      character.areas = [];
+      this.settingsService.updateCharacter(character);
+      this.areaHistory = character.areas;
+    }
   }
 
-  validateAreaInfo(e: EventArea) {
+  formatAreaInfo(e: EventArea) {
     if (e.info.length === undefined) {
       e.info = [];
     }
