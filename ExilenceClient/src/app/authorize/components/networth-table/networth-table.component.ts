@@ -1,4 +1,4 @@
-import { Component, Input, OnDestroy, OnInit, ViewChild, EventEmitter, Output } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit, ViewChild, EventEmitter, Output, NgZone } from '@angular/core';
 import { MatSort, MatTableDataSource, MatPaginator } from '@angular/material';
 import { Subscription } from 'rxjs/internal/Subscription';
 
@@ -34,7 +34,7 @@ export class NetworthTableComponent implements OnInit, OnDestroy {
 
   private partySub: Subscription;
 
-  constructor(private partyService: PartyService, private settingsService: SettingsService) { }
+  constructor(private partyService: PartyService, private settingsService: SettingsService, private ngZone: NgZone) { }
 
   ngOnInit() {
     if (!this.showOverTime && this.multiple) {
@@ -147,9 +147,11 @@ export class NetworthTableComponent implements OnInit, OnDestroy {
           .includes(this.searchText.toLowerCase()))
     );
 
-    this.source = new MatTableDataSource(this.filteredArr);
-    this.source.sort = this.sort;
-    this.source.paginator = this.paginator;
+    this.ngZone.run(() => {
+      this.source = new MatTableDataSource(this.filteredArr);
+      this.source.sort = this.sort;
+      this.source.paginator = this.paginator;
+    });
 
     // emit event to parentcomponent, for export etc
     this.filtered.emit(this.filteredArr);

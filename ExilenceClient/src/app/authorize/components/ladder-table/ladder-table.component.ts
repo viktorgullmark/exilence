@@ -1,4 +1,4 @@
-import { Component, Input, OnDestroy, OnInit, ViewChild, EventEmitter, Output } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit, ViewChild, EventEmitter, Output, NgZone } from '@angular/core';
 import { MatSort, MatTableDataSource, MatPaginator } from '@angular/material';
 import { Subscription } from 'rxjs/internal/Subscription';
 
@@ -29,7 +29,7 @@ export class LadderTableComponent implements OnInit, OnDestroy {
   @ViewChild(MatSort) sort: MatSort;
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @Output() filtered: EventEmitter<any> = new EventEmitter;
-  constructor(private partyService: PartyService, private stateService: StateService) {
+  constructor(private partyService: PartyService, private stateService: StateService, private ngZone: NgZone) {
   }
 
   ngOnInit() {
@@ -155,20 +155,22 @@ export class LadderTableComponent implements OnInit, OnDestroy {
             .includes(this.searchText.toLowerCase()))
       );
 
-      this.source = new MatTableDataSource(this.filteredArr);
-      this.source.sortingDataAccessor = (item, property) => {
-        switch (property) {
-          case 'level': return item.experience;
-          case 'class': return item.rank.class;
-          default: return item[property];
-        }
-      };
-      this.source.sort = this.sort;
+      this.ngZone.run(() => {
+        this.source = new MatTableDataSource(this.filteredArr);
+        this.source.sortingDataAccessor = (item, property) => {
+          switch (property) {
+            case 'level': return item.experience;
+            case 'class': return item.rank.class;
+            default: return item[property];
+          }
+        };
+        this.source.sort = this.sort;
 
-      // todo : move method to appropriate place, this is just for testing
-      this.findSelectedPlayerOnLadder(this.source);
+        // todo : move method to appropriate place, this is just for testing
+        this.findSelectedPlayerOnLadder(this.source);
 
-      this.source.paginator = this.paginator;
+        this.source.paginator = this.paginator;
+      });
       this.filtered.emit({ filteredArr: this.filteredArr, dataSource: this.dataSource });
     }, 0);
 

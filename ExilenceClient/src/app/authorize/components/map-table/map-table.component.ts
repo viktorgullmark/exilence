@@ -1,4 +1,4 @@
-import { Component, ElementRef, EventEmitter, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
+import { Component, ElementRef, EventEmitter, OnDestroy, OnInit, Output, ViewChild, NgZone } from '@angular/core';
 import { MatPaginator, MatSort, MatTableDataSource } from '@angular/material';
 import * as moment from 'moment';
 import { Subscription } from 'rxjs/internal/Subscription';
@@ -39,7 +39,7 @@ export class MapTableComponent implements OnInit, OnDestroy {
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(GainTooltipComponent) tooltip: GainTooltipComponent;
 
-  constructor(private partyService: PartyService, private mapService: MapService, public el: ElementRef) {
+  constructor(private partyService: PartyService, private mapService: MapService, public el: ElementRef, private ngZone: NgZone) {
   }
 
   ngOnInit() {
@@ -151,12 +151,13 @@ export class MapTableComponent implements OnInit, OnDestroy {
             .includes(this.searchText.toLowerCase()))
       );
 
-      this.source = new MatTableDataSource(this.filteredArr);
-      this.source.paginator = this.paginator;
-      this.source.sort = this.sort;
-      this.filtered.emit({ filteredArr: this.filteredArr, dataSource: this.dataSource });
+      this.ngZone.run(() => {
+        this.source = new MatTableDataSource(this.filteredArr);
+        this.source.paginator = this.paginator;
+        this.source.sort = this.sort;
+        this.filtered.emit({ filteredArr: this.filteredArr, dataSource: this.dataSource });
+      });
     }, 0);
-
   }
 
   formatDate(timestamp) {
