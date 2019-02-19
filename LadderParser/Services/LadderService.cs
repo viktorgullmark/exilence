@@ -96,7 +96,7 @@ namespace LadderParser.Services
 
             if (ladder.Count > 0)
             {
-                ladder = CalculateStatistics(ladder);
+                ladder = await CalculateStatistics(ladder);
                 await _repository.UpdateLadder(leagueName, ladder);
             }
             Log($"Finished fetching {leagueName} ladder.");
