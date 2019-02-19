@@ -2,11 +2,20 @@
 All notable changes to this project will be documented in this file.
 
 ## [0.9.19] - XXXX-XX-XX
+### Added
+- Added gain per area
+    - Displayed as a new column in the area-table
+    - Hover-functionality to display the items changed
+
 ### Changed
 - Reworked how history is stored
     - Stashtab-selection is now stored per league
     - Area history is now stored per character
-    - Net worth history is now stored per character  
+    - Net worth history is now stored per character 
+- Reworked how areas are tracked to support the following
+    - Added support to track lab-runs
+    - Added support for zana missions
+    - Added support for vaal side-areas
 
 ### Fixed
 - Fixed a bug where the "Remove snapshot"-option was visible for spectators (though not usable)
