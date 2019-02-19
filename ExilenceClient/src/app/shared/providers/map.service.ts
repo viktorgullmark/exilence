@@ -165,7 +165,7 @@ export class MapService implements OnDestroy {
       const sameInstance = AreaHelper.isSameInstance(this.areaHistory[0], this.areaHistory[2]);
 
       if (sameInstance) {
-        if (previousZoneNeutral) {
+        if (previousZoneNeutral && !AreaHelper.isNeutralZone(this.areaHistory[0])) {
           this.areaHistory.shift(); // remove neutral zone
           this.areaHistory.shift(); // remove duplicate zone
           this.areaHistory[0].duration = 0;
@@ -206,8 +206,8 @@ export class MapService implements OnDestroy {
     this.localPlayer.area = this.areaHistory[0].eventArea.name;
     this.localPlayer.areaInfo = this.areaHistory[0];
     this.localPlayer.pastAreas = HistoryHelper.filterAreas(this.areaHistory, (Date.now() - (24 * 60 * 60 * 1000)));
-    this.accountService.player.next(this.localPlayer);
-    this.partyService.updatePlayer(this.localPlayer, AreaHelper.isNeutralZone(areaEntered)
+    this.accountService.player.next(Object.assign({}, this.localPlayer));
+    this.partyService.updatePlayer(Object.assign({}, this.localPlayer), AreaHelper.isNeutralZone(areaEntered)
       ? 'area-change-to-neutral' : 'area-change-to-hostile');
   }
 

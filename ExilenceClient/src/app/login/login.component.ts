@@ -295,8 +295,6 @@ export class LoginComponent implements OnInit, OnDestroy {
                 // profile is private
                 this.privateProfileError = true;
                 this.isFetchingLeagues = false;
-                // reset settings in this case
-                this.settingsService.set('profile', undefined);
             } else {
 
                 // map character-leagues to new array
