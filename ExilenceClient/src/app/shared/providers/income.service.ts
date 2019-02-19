@@ -33,6 +33,7 @@ export class IncomeService implements OnDestroy {
   private netWorthHistory: NetWorthHistory;
   private sessionId: string;
   private isSnapshotting = false;
+  private inventoryPricing = true;
 
   public networthSnapshots: NetWorthSnapshot[] = [];
   public localPlayer: Player;
@@ -250,6 +251,14 @@ export class IncomeService implements OnDestroy {
       this.settingsService.set('characterPricing', false);
     }
 
+    const inventoryPricing = this.settingsService.get('inventoryPricing');
+    if (inventoryPricing !== undefined) {
+      this.inventoryPricing = inventoryPricing;
+    } else {
+      this.inventoryPricing = true;
+      this.settingsService.set('inventoryPricing', true);
+    }
+
     const league = this.settingsService.getCurrentLeague();
     let selectedStashTabs: StashStore[]
     if (league !== undefined) {
@@ -269,7 +278,9 @@ export class IncomeService implements OnDestroy {
       if (this.characterPricing) { // price equipment
         this.PriceItems(this.localPlayer.character.items.filter(x => x.inventoryId !== 'MainInventory'), mapTab, undefined);
       } // price inventory
-      this.PriceItems(this.localPlayer.character.items.filter(x => x.inventoryId === 'MainInventory'), mapTab, undefined);
+      if (this.inventoryPricing) {
+        this.PriceItems(this.localPlayer.character.items.filter(x => x.inventoryId === 'MainInventory'), mapTab, undefined);
+      }
       this.playerStashTabs.forEach((tab: Stash, tabIndex: number) => {
         if (tab !== null) {
           this.PriceItems(tab.items, mapTab, tab.mapLayout);

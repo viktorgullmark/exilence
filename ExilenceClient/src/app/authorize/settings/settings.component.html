@@ -43,8 +43,8 @@
     <div class="search-form-wrapper">
       <form class="form search-form" [formGroup]="form">
         <mat-form-field>
-          <input matInput formControlName="searchText" placeholder="{{'STASH.SEARCH' | translate}}" class="search-text-input"
-            (ngModelChange)="search()">
+          <input matInput formControlName="searchText" placeholder="{{'STASH.SEARCH' | translate}}"
+            class="search-text-input" (ngModelChange)="search()">
         </mat-form-field>
       </form>
     </div>
@@ -59,16 +59,18 @@
     <h3 class="mat-h4 page-header">Misc</h3>
     <mat-divider class="divider"></mat-divider>
     <div class="setting-inner-content">
-      <p class="setting-desc-text">
-        Check this setting if you want Exilence to be on top at all times
-      </p>
+
       <mat-checkbox class="setting-checkbox" [(ngModel)]="alwaysOnTop" (ngModelChange)="toggleAlwaysOnTop()">Set window
         always on top</mat-checkbox>
       <p class="setting-desc-text">
-        Check this setting if you want Exilence to be resizable
+        Check this setting if you want Exilence to be on top at all times
       </p>
+
       <mat-checkbox class="setting-checkbox" [(ngModel)]="isResizable" (ngModelChange)="toggleResizable()">Enable
         resize of window</mat-checkbox>
+      <p class="setting-desc-text">
+        Check this setting if you want Exilence to be resizable
+      </p>
     </div>
   </div>
 </div>
@@ -78,22 +80,31 @@
     <h3 class="mat-h4 page-header">Pricing</h3>
     <mat-divider class="divider"></mat-divider>
     <div class="setting-inner-content">
+      <mat-checkbox class="setting-checkbox" [(ngModel)]="lowConfidencePricing"
+        (ngModelChange)="toggleLowConfidencePricing()">Low
+        confidence pricing</mat-checkbox>
       <p class="setting-desc-text">
         Check this setting to include low confidence prices
       </p>
-      <mat-checkbox class="setting-checkbox" [(ngModel)]="lowConfidencePricing" (ngModelChange)="toggleLowConfidencePricing()">Low
-        confidence pricing</mat-checkbox>
+      <br />
+      <mat-checkbox class="setting-checkbox" [(ngModel)]="characterPricing" (ngModelChange)="toggleCharacterPricing()">
+        Character-specific
+        pricing</mat-checkbox>
       <p class="setting-desc-text">
         Check this setting to include the inventory and equipment for net worth
       </p>
-      <mat-checkbox class="setting-checkbox" [(ngModel)]="characterPricing" (ngModelChange)="toggleCharacterPricing()">Character-specific
-        pricing</mat-checkbox>
+      <br />
+      <mat-checkbox class="setting-checkbox" [(ngModel)]="inventoryPricing" (ngModelChange)="toggleInventoryPricing()">
+        Inventory pricing</mat-checkbox>
+      <p class="setting-desc-text">
+        Check this setting to include the inventory in net worth
+      </p>
     </div>
     <h3 class="mat-h4 page-header new-section">Calculations</h3>
     <mat-divider class="divider"></mat-divider>
     <p class="setting-desc-text">
     </p>
-    <mat-form-field>
+    <mat-form-field class="dropdown-field">
       <mat-label>Item value treshold</mat-label>
       <mat-select #fontSize value="{{itemValueTreshold}}" (selectionChange)="toggleItemValueTreshold($event)">
         <mat-option value="0">Include all items</mat-option>
@@ -104,10 +115,10 @@
         <mat-option value="10">>= 10c</mat-option>
       </mat-select>
     </mat-form-field>
-    <p class="setting-desc-text">
-      Choose how many hours back in history that should be used for "Gain per hour"
+    <p class="setting-desc-text no-margin-top">
+      Sets the treshold at which items are included in the net worth calculations
     </p>
-    <mat-form-field>
+    <mat-form-field class="dropdown-field">
       <mat-label>Calculate gain over past</mat-label>
       <mat-select #fontSize value="{{gainHours}}" (selectionChange)="toggleGainHours($event)">
         <mat-option value="1">1 hour</mat-option>
@@ -118,12 +129,13 @@
         <mat-option value="24">24 hours</mat-option>
       </mat-select>
     </mat-form-field>
+    <p class="setting-desc-text no-margin-top">
+      Choose how many hours back in history that should be used for "Gain per hour"
+    </p>
     <h3 class="mat-h4 page-header new-section">History</h3>
     <mat-divider class="divider"></mat-divider>
-    <p class="setting-desc-text">
-      Choose how much days back in history the "Net worth graph" shows
-    </p>
-    <mat-form-field>
+
+    <mat-form-field class="dropdown-field">
       <mat-label>Net worth history for</mat-label>
       <mat-select #fontSize value="{{netWorthHistoryDays}}" (selectionChange)="toggleNetWorthHistoryDays($event)">
         <mat-option value="1">1 day</mat-option>
@@ -133,6 +145,9 @@
         <mat-option value="14">14 days</mat-option>
       </mat-select>
     </mat-form-field>
+    <p class="setting-desc-text no-margin-top">
+      Choose how much days back in history the "Net worth graph" shows
+    </p>
   </div>
 </div>
 
@@ -147,11 +162,12 @@
       <button mat-raised-button color="primary" (click)="resetDialogs()" type="button">{{'SETTINGS.RESET_DIALOGS' |
         translate}}</button>
       <br /><br />
-      <p class="setting-desc-text">
-        Check this setting if you want to ignore all helpful tooltips
-      </p>
+      
       <mat-checkbox class="setting-checkbox" [(ngModel)]="hideTooltips" (ngModelChange)="toggleHideTooltips()">Hide
         tooltips</mat-checkbox>
+        <p class="setting-desc-text">
+          Check this setting if you want to ignore all helpful tooltips
+        </p>
     </div>
   </div>
 </div>
@@ -160,7 +176,8 @@
   <div class="setting-tab-content">
     <h3 class="mat-h4 page-header">
       This page is aimed to help you resolve any problems you might have with Exilence.
-      Know that you can always contact us on <a class="inline-link" (click)="openLink('https://discord.gg/yxuBrPY')">Discord</a>
+      Know that you can always contact us on <a class="inline-link"
+        (click)="openLink('https://discord.gg/yxuBrPY')">Discord</a>
       if you have any questions or problems using Exilence.
     </h3>
     <mat-divider class="divider"></mat-divider>

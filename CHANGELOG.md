@@ -6,7 +6,7 @@ All notable changes to this project will be documented in this file.
 - Added gain per area
     - Displayed as a new column in the area-table
     - Hover-functionality to display the items changed
-- Added pricing of the inventory
+- Added pricing of the inventory (setting available, enabled by default)
 
 ### Changed
 - Reworked how history is stored
@@ -17,11 +17,13 @@ All notable changes to this project will be documented in this file.
     - Added support to track lab-runs
     - Added support for zana missions
     - Added support for vaal side-areas
+- Minor style-tweaks to how settings are displayed
 
 ### Fixed
 - Fixed a bug where the "Remove snapshot"-option was visible for spectators (though not usable)
 - Fixed a bug where unnecessery update-events were sent to the server
 - Fixed a bug where you sometimes could rejoin a party and see a copy of yourself
+- Fixed a bug where some settings werent displayed on smaller screens
 
 ## [0.9.18] - 2019-02-12
 ### Added
