@@ -14,7 +14,7 @@ import { StateService } from '../../../shared/providers/state.service';
 })
 export class LadderTableComponent implements OnInit, OnDestroy {
   // tslint:disable-next-line:max-line-length
-  displayedColumns: string[] = ['online', 'rank', 'level', 'challenges', 'account', 'character', 'class', 'classRank', 'depthGroup', 'depthGroupRank', 'depthSolo', 'depthSoloRank'];
+  displayedColumns: string[] = ['online', 'rank', 'level', 'challenges', 'account', 'character', 'class', 'classRank', 'depthGroup', 'depthSolo'];
   dataSource = [];
   filteredArr = [];
   searchText = '';
