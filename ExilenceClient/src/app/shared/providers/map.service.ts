@@ -191,7 +191,7 @@ export class MapService implements OnDestroy {
 
     if (this.areaHistory[1] !== undefined &&
       this.areaHistory[1].eventArea.name === 'Aspirants\' Plaza' &&
-      !AreaHelper.isNeutralZone(this.areaHistory[0])) {
+      this.areaHistory[0].eventArea.type === 'unknown') {
       const subArea = this.areaHistory.shift();
       this.areaHistory[0].subAreas.unshift(subArea);
     }
