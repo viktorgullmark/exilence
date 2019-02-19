@@ -211,6 +211,16 @@ export class LoginComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit() {
+
+        this.externalService.getLeagues('main', 1).subscribe(leagues => {
+            if (leagues.find(l => l.id === this.leagueName) === undefined ||
+                leagues.find(l => l.id === this.tradeLeagueName) === undefined) {
+                this.initSetup();
+                this.settingsService.set('profile', undefined);
+                this.stepper.selectedIndex = 0;
+            }
+        });
+
         // temporary clearing of settings if delve is still set
         if (this.leagueName === 'Delve' ||
             this.leagueName === 'Hardcore Delve' ||
@@ -510,7 +520,7 @@ export class LoginComponent implements OnInit, OnDestroy {
 
         const oneDayAgo = (Date.now() - (24 * 60 * 60 * 1000));
 
- 
+
         this.externalService.validateSessionId(
             this.form.sessionId,
             this.player.account,
@@ -562,7 +572,7 @@ export class LoginComponent implements OnInit, OnDestroy {
 
             this.accountService.loggingIn = false;
             this.sessionService.completedLogin = true;
-            
+
             this.pricingService.retrieveExternalPrices().subscribe();
             this.sessionService.initSession(this.form.sessionId);
             this.isLoading = false;

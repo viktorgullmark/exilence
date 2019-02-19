@@ -27,6 +27,7 @@ All notable changes to this project will be documented in this file.
 - Fixed a bug where stacksize wasn't shown since the latest website update
 - Fixed a bug where tables weren't updated in realtime
 - Fixed a bug where a popup was shown incorrectly when pathofexile.com went down
+- Fixed a bug where the app would crash if your settings contained a league that no longer exists
 
 ## [0.9.18] - 2019-02-12
 ### Added
