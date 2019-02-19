@@ -71,6 +71,9 @@ export class ExternalService {
           this.logService.log('Could not fetch character list, disconnecting!', null, true);
           this.router.navigate(['/disconnected', true]);
         }
+        if (e.status === 503) {
+          return Observable.of(true);
+        }
         return Observable.of(null);
       });
   }

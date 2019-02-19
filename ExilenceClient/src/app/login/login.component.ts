@@ -362,10 +362,10 @@ export class LoginComponent implements OnInit, OnDestroy {
 
         this.externalService.getCharacterList(accountName !== undefined ? accountName : this.accFormGroup.controls.accountName.value,
             (sessId !== undefined && sessId !== '') ? sessId : undefined)
-            .subscribe((res: Character[]) => {
+            .subscribe((res) => {
                 this.fetched = true;
 
-                if (res === null) {
+                if (res === true) {
                     this.openErrorMsgDialog({
                         title: 'Could not fetch characters',
                         // tslint:disable-next-line:max-line-length
