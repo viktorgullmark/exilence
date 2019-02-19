@@ -266,9 +266,10 @@ export class IncomeService implements OnDestroy {
       this.pricingService.retrieveExternalPrices()
     ).do(() => {
       this.logService.log('Finished retriving stashhtabs');
-      if (this.characterPricing) {
-        this.PriceItems(this.localPlayer.character.items, mapTab, undefined);
-      }
+      if (this.characterPricing) { // price equipment
+        this.PriceItems(this.localPlayer.character.items.filter(x => x.inventoryId !== 'MainInventory'), mapTab, undefined);
+      } // price inventory
+      this.PriceItems(this.localPlayer.character.items.filter(x => x.inventoryId === 'MainInventory'), mapTab, undefined);
       this.playerStashTabs.forEach((tab: Stash, tabIndex: number) => {
         if (tab !== null) {
           this.PriceItems(tab.items, mapTab, tab.mapLayout);

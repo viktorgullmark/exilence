@@ -6,6 +6,7 @@ All notable changes to this project will be documented in this file.
 - Added gain per area
     - Displayed as a new column in the area-table
     - Hover-functionality to display the items changed
+- Added pricing of the inventory
 
 ### Changed
 - Reworked how history is stored
