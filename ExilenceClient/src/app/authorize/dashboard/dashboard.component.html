@@ -17,38 +17,44 @@
         </div>
     </div>
     <h3 class="mat-h3">Changes included in version {{appVersion}}</h3>
-    N/A
-    <!-- <ul>
+    <ul>
         <h4>Added</h4>
         <ul>
-            <li>Added a spectator-mode, available on the web (<a class="inline-link" (click)="openLink('https://exilence.app')">https://exilence.app</a>)</li>
+            <li>Added gain per area</li>
             <ul>
-                <li>To let users spectate your group, share the link in the top-left corner</li>
+                <li>Displayed as a new column in the area-table</li>
+                <li>Hover-functionality to display the items changed</li>
             </ul>
-            <li>Added a ladder-overview tab, which replaces the smaller variant</li>
-            <li>Added a area-overview tab, which replaces the smaller variant</li>
-            <li>Added the following columns to the ladder-table</li>
-            <li>Added the following columns to the ladder-table</li>
-            <ul>
-                <li>Challenges</li>
-                <li>Class</li>
-                <li>Class rank</li>
-                <li>Depth</li>
-                <li>Depth rank</li>
-                <li>Depth solo</li>
-                <li>Depth solo rank</li>
-            </ul>
+            <li>Added pricing of the inventory (setting available, enabled by default)</li>
         </ul>
         <h4>Changed</h4>
         <ul>
-            <li>Reworked how the ladder is parsed, resulting in more frequent updates</li>
+            <li>Reworked how history is stored</li>
+            <ul>
+                <li>Stashtab-selection is now stored per league</li>
+                <li>Area history is now stored per character</li>
+                <li>Net worth history is now stored per character</li>
+            </ul>
+            <li>Reworked how areas are tracked to support the following</li>
+            <ul>
+                <li>Added support to track lab-runs</li>
+                <li>Added support for zana missions</li>
+                <li>Added support for vaal side-areas</li>
+            </ul>
+            <li>Minor style-tweaks to how settings are displayed</li>
         </ul>
-        <h4>Removed</h4>
+        <h4>Fixed</h4>
         <ul>
-            <li>Removed the smaller variant of the ladder-tab</li>
-            <li>Removed the smaller variant of the area-tab</li>
+            <li>Fixed a bug where the "Remove snapshot"-option was visible for spectators (though not usable)</li>
+            <li>Fixed a bug where unnecessery update-events were sent to the server</li>
+            <li>Fixed a bug where you sometimes could rejoin a party and see a copy of yourself</li>
+            <li>Fixed a bug where some settings werent displayed on smaller screens</li>
+            <li>Fixed a bug where stacksize wasn't shown since the latest website update</li>
+            <li>Fixed a bug where tables weren't updated in realtime</li>
+            <li>Fixed a bug where a popup was shown incorrectly when pathofexile.com went down</li>
+            <li>Fixed a bug where the app would crash if your settings contained a league that no longer exists</li>
         </ul>
-    </ul> -->
+    </ul>
     <mat-divider class="divider"></mat-divider>
     <p class="mat-body-1">
         To see the full changelog, please go to <a class="inline-link" (click)="openLink('https://github.com/viktorgullmark/exilence/blob/master/CHANGELOG.md')">this
