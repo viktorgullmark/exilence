@@ -211,7 +211,6 @@ export class LoginComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit() {
-
         this.externalService.getLeagues('main', 1).subscribe(leagues => {
             if (leagues.find(l => l.id === this.leagueName) === undefined ||
                 leagues.find(l => l.id === this.tradeLeagueName) === undefined) {
@@ -220,19 +219,6 @@ export class LoginComponent implements OnInit, OnDestroy {
                 this.stepper.selectedIndex = 0;
             }
         });
-
-        // temporary clearing of settings if delve is still set
-        if (this.leagueName === 'Delve' ||
-            this.leagueName === 'Hardcore Delve' ||
-            this.leagueName === 'SSF Delve HC' ||
-            this.leagueName === 'SSF Delve' ||
-            this.tradeLeagueName === 'Delve' ||
-            this.tradeLeagueName === 'Hardcore Delve' ||
-            this.tradeLeagueName === 'SSF Delve HC' ||
-            this.tradeLeagueName === 'SSF Delve') {
-            this.settingsService.deleteAll();
-            this.stepper.selectedIndex = 0;
-        }
 
         if (!this.electronService.isElectron()) {
             this.route.params.subscribe(params => {
