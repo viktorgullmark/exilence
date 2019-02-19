@@ -14,9 +14,13 @@ export class ItemComponent implements OnInit {
   @Input() extendHeightWith = 0;
   @ViewChild('tooltip') tooltip: ItemTooltipComponent;
 
-  constructor(public el: ElementRef) { }
+  public stackSize = '';
+
+  constructor(public el: ElementRef) {
+  }
 
   ngOnInit() {
+    this.setStackSize(this.item.properties);
   }
 
   update() {
@@ -31,6 +35,15 @@ export class ItemComponent implements OnInit {
     }
     if (item.elder) {
       return `https://www.pathofexile.com/image/inventory/ElderBackground.png?w=${item.w}&h=${item.h}`;
+    }
+  }
+
+  setStackSize(properties) {
+    if (properties !== null) {
+      const prop = properties.find(p => p.name === 'Stack Size');
+      if (prop !== undefined) {
+        this.stackSize = properties.find(p => p.name === 'Stack Size').values[0][0].split('/', 1);
+      }
     }
   }
 }
