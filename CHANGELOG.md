@@ -20,6 +20,7 @@ All notable changes to this project will be documented in this file.
 ### Fixed
 - Fixed a bug where the "Remove snapshot"-option was visible for spectators (though not usable)
 - Fixed a bug where unnecessery update-events were sent to the server
+- Fixed a bug where you sometimes could rejoin a party and see a copy of yourself
 
 ## [0.9.18] - 2019-02-12
 ### Added
