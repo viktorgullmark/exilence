@@ -24,6 +24,8 @@ All notable changes to this project will be documented in this file.
 - Fixed a bug where unnecessery update-events were sent to the server
 - Fixed a bug where you sometimes could rejoin a party and see a copy of yourself
 - Fixed a bug where some settings werent displayed on smaller screens
+- Fixed a bug where stacksize wasn't shown since the latest website update
+- Fixed a bug where tables weren't updated in realtime
 
 ## [0.9.18] - 2019-02-12
 ### Added
