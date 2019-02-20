@@ -204,15 +204,15 @@ export class AreaSummaryComponent implements OnInit, OnDestroy {
   updateAvgGain(pastAreas) {
     if (pastAreas !== null) {
       if (pastAreas[0] !== undefined) {
-        pastAreas = pastAreas.filter(x => x.gain > 0);
         let total = 0;
         pastAreas.forEach(area => {
           total = total + area.gain;
         });
 
-        const average = total / pastAreas.length;
-
-        this.averageGain = average.toFixed(2).toString();
+        if (total !== 0 && pastAreas.length > 0) {
+          const average = total / pastAreas.length;
+          this.averageGain = average.toFixed(2).toString();
+        }
       } else {
         this.averageGain = '';
       }

@@ -13,9 +13,9 @@
             <span class="title">Avg. gain per area</span>
             <br />
             <div class="stat-inner-wrapper">
-                <span class="stat-placeholder" *ngIf="filteredArr == null || filteredArr == undefined || filteredArr.length == 0">No
+                <span class="stat-placeholder" *ngIf="filteredArr == null || filteredArr == undefined || filteredArr.length == 0 || averageGain == ''">No
                     data</span>
-                <span class="networth with-icon" *ngIf="filteredArr != null && filteredArr.length > 0 && averageGain > 0">
+                <span class="networth with-icon" *ngIf="filteredArr != null && filteredArr.length > 0 && averageGain != ''">
                     <span>{{averageGain}}&nbsp;&nbsp;</span><img class="chaos-icon" />
                 </span>
             </div>
