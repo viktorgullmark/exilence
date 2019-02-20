@@ -6,6 +6,7 @@ All notable changes to this project will be documented in this file.
 - Added gain per area
     - Displayed as a new column in the area-table
     - Hover-functionality to display the items changed
+    - Calculates avg. gain per area and displays this above the table
 - Added pricing of the inventory (setting available, enabled by default)
 
 ### Changed
