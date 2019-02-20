@@ -23,6 +23,7 @@ export class StashtabListComponent implements OnInit, OnDestroy {
   filteredArr = [];
   source: any;
   dataSource: any;
+  dialogIsOpen = false;
   @ViewChild(MatSort) sort: MatSort;
   @Input() validated: boolean;
 
@@ -100,10 +101,12 @@ export class StashtabListComponent implements OnInit, OnDestroy {
   }
 
   openMaptabDialog(): void {
+    this.dialogIsOpen = true;
     const dialogRef = this.maptabDialog.open(MaptabInfoDialogComponent, {
-      width: '1100px'
+      width: '650px'
     });
     dialogRef.afterClosed().subscribe(result => {
+      this.dialogIsOpen = false;
     });
   }
 
@@ -113,7 +116,7 @@ export class StashtabListComponent implements OnInit, OnDestroy {
 
   shouldToggle(selection, row) {
     const mapTabSelected = selection.selected.find(x => x.position === row.position) !== undefined;
-    if (row.isMapTab && !mapTabSelected) {
+    if (row.isMapTab && !mapTabSelected && !this.dialogIsOpen) {
       this.openMaptabDialog();
     }
     this.toggleAll(selection, [row]);
@@ -145,6 +148,10 @@ export class StashtabListComponent implements OnInit, OnDestroy {
       this.selection.clear() :
       this.source.data.forEach(row => {
         if (this.selection.selected.length < 41) {
+          const mapTabSelected = this.selection.selected.find(x => x.position === row.position) !== undefined;
+          if (row.isMapTab && !mapTabSelected && !this.dialogIsOpen) {
+            this.openMaptabDialog();
+          }
           this.selection.select(row);
         } else { this.showAlert(); }
       });
