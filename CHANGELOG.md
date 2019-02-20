@@ -20,6 +20,7 @@ All notable changes to this project will be documented in this file.
     - Added support for vaal side-areas
 - Minor style-tweaks to how settings are displayed
 - Minor text-changes to map-tab popup
+- Added exact progress next to gem experience-bar
 
 ### Fixed
 - Fixed a bug where the "Remove snapshot"-option was visible for spectators (though not usable)
