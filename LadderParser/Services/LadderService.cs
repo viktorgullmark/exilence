@@ -59,37 +59,26 @@ namespace LadderParser.Services
 
                 foreach (int page in pages)
                 {
-                    var interval = 1250;
-                    var elapsed = 0;
+                    var fetchLadderTask = FetchLadderApiPage(leagueName, page, sortMode);                    
+                    await Task.WhenAll(fetchLadderTask, Task.Delay(1250));
+                    var result = await fetchLadderTask;
 
-                    using (var stopwatch = new DisposableStopwatch())
+                    if (result != null)
                     {
-                        LadderApiResponse result = await FetchLadderApiPage(leagueName, page, sortMode);
+                        var LadderPlayerList = result.Entries.
+                            Where(t => !ladder.Any(x => x.Name == t.Character.Name))
+                            .Select(t => new LadderPlayerModel(t)).ToList();
 
-                        if (result != null)
+                        ladder.AddRange(LadderPlayerList);
+                        if (ladder.Count == result.Total || result.Entries.Count == 0)
                         {
-                            var LadderPlayerList = result.Entries.
-                                Where(t => !ladder.Any(x => x.Name == t.Character.Name))
-                                .Select(t => new LadderPlayerModel(t)).ToList();
-
-                            ladder.AddRange(LadderPlayerList);
-                            if (ladder.Count == result.Total || result.Entries.Count == 0)
-                            {
-                                break;
-                            }
-                        }
-                        else
-                        {
-                            await _repository.RemoveLadder(leagueName);
                             break;
                         }
-
-                        elapsed = (int)stopwatch.sw.ElapsedMilliseconds;
-
-                        if (interval > elapsed)
-                        {
-                            Task.Delay(interval - elapsed).Wait();
-                        }
+                    }
+                    else
+                    {
+                        await _repository.RemoveLadder(leagueName);
+                        break;
                     }
                 }
             }
