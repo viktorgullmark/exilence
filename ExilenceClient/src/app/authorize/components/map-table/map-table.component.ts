@@ -175,6 +175,9 @@ export class MapTableComponent implements OnInit, OnDestroy {
           this.dataSource.push(this.formatTableObject(area));
           area.subAreas.forEach(subArea => {
             this.dataSource.push(this.formatTableObject(subArea));
+            subArea.subAreas.forEach(subsubArea => {
+              this.dataSource.push(this.formatTableObject(subsubArea));
+            });
           });
         }
       });

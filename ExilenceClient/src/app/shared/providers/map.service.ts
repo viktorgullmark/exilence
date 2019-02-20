@@ -173,7 +173,8 @@ export class MapService implements OnDestroy {
         } else {
           if (this.areaHistory[1].eventArea.type === 'map' ||
             this.areaHistory[1].eventArea.type === 'vaal' ||
-            this.areaHistory[1].eventArea.type === 'labyrinth') {
+            this.areaHistory[1].eventArea.type === 'labyrinth' ||
+            this.areaHistory[1].eventArea.type === 'unknown') {
             this.areaHistory.shift(); // remove duplicate zone
             const subArea = this.areaHistory.shift();
             this.areaHistory[0].subAreas.unshift(subArea);
