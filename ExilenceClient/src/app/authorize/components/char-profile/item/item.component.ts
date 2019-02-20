@@ -39,7 +39,7 @@ export class ItemComponent implements OnInit {
   }
 
   setStackSize(properties) {
-    if (properties !== null) {
+    if (properties !== null || properties !== undefined) {
       const prop = properties.find(p => p.name === 'Stack Size');
       if (prop !== undefined) {
         this.stackSize = properties.find(p => p.name === 'Stack Size').values[0][0].split('/', 1);
