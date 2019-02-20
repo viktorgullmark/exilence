@@ -10,7 +10,7 @@
         <mat-icon (click)="unmaximize()" *ngIf="maximized" class="icon-link window-icon">filter_none</mat-icon>
         <mat-icon (click)="close()" class="icon-link window-icon">close</mat-icon>
     </div>
-    <div class="right-area" *ngIf="!electronService.isElectron()">
+    <div class="right-area" *ngIf="!electronService.isElectron() && partyService.party.spectatorCode != ''">
         <a (click)="changeGroup()" class="left-link toolbar-text no-margin">
             {{ 'PARTY.CHANGE' | translate}} </a>
     </div>

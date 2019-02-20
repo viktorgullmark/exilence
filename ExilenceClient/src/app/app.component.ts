@@ -1,20 +1,19 @@
 import { Component, OnDestroy } from '@angular/core';
+import { MatSnackBar } from '@angular/material';
 import { Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import * as moment from 'moment';
-
+import { Subscription } from 'rxjs';
 
 import * as pkg from '../../package.json';
+import { AppConfig } from '../environments/environment.js';
+import { AlertMessage } from './shared/interfaces/alert-message.interface';
 import { Player } from './shared/interfaces/player.interface';
+import { AlertService } from './shared/providers/alert.service';
 import { ElectronService } from './shared/providers/electron.service';
 import { SessionService } from './shared/providers/session.service';
 import { SettingsService } from './shared/providers/settings.service';
-import { AlertService } from './shared/providers/alert.service';
-import { AlertMessage } from './shared/interfaces/alert-message.interface';
-import { MatSnackBar } from '@angular/material';
-import { Subscription } from 'rxjs';
-import { AppConfig } from '../environments/environment.js';
-import { StateService } from './shared/providers/state.service.js';
+import { PartyService } from './shared/providers/party.service';
 
 @Component({
   selector: 'app-root',
@@ -29,13 +28,13 @@ export class AppComponent implements OnDestroy {
   private alertSub: Subscription;
   constructor(
     public electronService: ElectronService,
-    private stateService: StateService,
     private translate: TranslateService,
     public sessionService: SessionService,
     private settingsService: SettingsService,
     private router: Router,
     private alertService: AlertService,
-    public snackBar: MatSnackBar
+    public snackBar: MatSnackBar,
+    public partyService: PartyService
   ) {
 
     if (AppConfig.environment === 'DEV' && this.electronService.isElectron()) {
@@ -80,6 +79,7 @@ export class AppComponent implements OnDestroy {
   }
 
   changeGroup() {
+    this.partyService.leaveParty('', this.partyService.party.spectatorCode, this.partyService.currentPlayer);
     this.router.navigate(['login']);
   }
 

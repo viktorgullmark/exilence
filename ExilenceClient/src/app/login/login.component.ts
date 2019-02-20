@@ -478,8 +478,8 @@ export class LoginComponent implements OnInit, OnDestroy {
         } as Player;
 
         this.partyService.checkIfPartyExists(spectatorCode).then(exists => {
-            this.location.go('/spectate/' + spectatorCode);
             if (exists) {
+                this.location.go('/spectate/' + spectatorCode);
                 this.partyService.joinParty('', spectatorCode, player);
                 this.router.navigate(['/authorized/party'], { skipLocationChange: true });
             } else {

@@ -44,10 +44,6 @@ export function HttpLoaderFactory(http: HttpClient) {
 }
 
 @NgModule({
-  declarations: [
-    AppComponent,
-    WebviewDirective
-  ],
   imports: [
     NotFoundModule,
     LoginModule,
@@ -72,6 +68,7 @@ export function HttpLoaderFactory(http: HttpClient) {
     }),
   ],
   providers: [
+    PartyService,
     ExternalService,
     AnalyticsService,
     ElectronService,
@@ -86,9 +83,12 @@ export function HttpLoaderFactory(http: HttpClient) {
     NinjaService,
     AlertService,
     LogMonitorService,
-    MapService,
-    PartyService
+    MapService
   ],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
+  declarations: [
+    AppComponent,
+    WebviewDirective
+  ],
 })
 export class AppModule { }

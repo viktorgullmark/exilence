@@ -265,12 +265,11 @@ export class PartyService implements OnDestroy {
           const indexOfNewLeader = this.party.players.indexOf(newLeader);
           newLeader.isLeader = true;
           this.party.players[indexOfNewLeader] = newLeader;
+          if (this.currentPlayer.account === newLeader.account) {
+            this.accountService.player.next(newLeader);
+          }
         }
-
-        // update permissions if you become the leader
-        if (this.currentPlayer.account === newLeader.account) {
-          this.accountService.player.next(newLeader);
-        } else if (this.currentPlayer.account === oldLeader.account) {
+        if (oldLeader !== undefined && this.currentPlayer.account === oldLeader.account) {
           this.accountService.player.next(oldLeader);
         }
 
@@ -587,7 +586,7 @@ export class PartyService implements OnDestroy {
     }
 
     this.initParty();
-    if (partyName !== '') {
+    if (partyName !== '' || spectatorCode !== '') {
       if (this._hubConnection) {
         this.electronService.compress(player, (data) => this._hubConnection.invoke('LeaveParty', partyName, spectatorCode, data));
       }
