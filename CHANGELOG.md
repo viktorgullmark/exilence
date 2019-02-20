@@ -19,6 +19,7 @@ All notable changes to this project will be documented in this file.
     - Added support for zana missions
     - Added support for vaal side-areas
 - Minor style-tweaks to how settings are displayed
+- Minor text-changes to map-tab popup
 
 ### Fixed
 - Fixed a bug where the "Remove snapshot"-option was visible for spectators (though not usable)
@@ -29,6 +30,7 @@ All notable changes to this project will be documented in this file.
 - Fixed a bug where tables weren't updated in realtime
 - Fixed a bug where a popup was shown incorrectly when pathofexile.com went down
 - Fixed a bug where the app would crash if your settings contained a league that no longer exists
+- Fixed a bug where the map-tab popup wasn't shown if you toggled all tabs
 
 ## [0.9.18] - 2019-02-12
 ### Added
