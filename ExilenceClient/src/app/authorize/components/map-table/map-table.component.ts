@@ -59,8 +59,9 @@ export class MapTableComponent implements OnInit, OnDestroy {
           this.selectedPlayerValue = this.getPlayers()[0].character.name;
         }
 
-        this.partyService.selectedFilterValueSub.next(this.selectedPlayerValue);
-
+        setTimeout(() => {
+          this.partyService.selectedFilterValueSub.next(this.selectedPlayerValue);
+        }, 0);
         foundPlayer = this.party.players.find(x => x.character !== null &&
           x.character.name === this.selectedPlayerValue);
 
