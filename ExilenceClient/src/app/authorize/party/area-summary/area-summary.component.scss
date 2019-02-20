@@ -51,6 +51,13 @@
                 .stat-placeholder {
                     color: $stat-placeholder-color;
                 }
+       
+                .networth {
+                    color: $currency-chaos-color;
+                    > * {
+                        color: $currency-chaos-color;
+                    }
+                }
             }
 
             .top-inner-wrapper {

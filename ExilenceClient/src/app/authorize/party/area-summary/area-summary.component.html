@@ -10,6 +10,17 @@
             </div>
         </div>
         <div class="field-wrapper">
+            <span class="title">Avg. gain per area</span>
+            <br />
+            <div class="stat-inner-wrapper">
+                <span class="stat-placeholder" *ngIf="filteredArr == null || filteredArr == undefined || filteredArr.length == 0">No
+                    data</span>
+                <span class="networth with-icon" *ngIf="filteredArr != null && filteredArr.length > 0 && averageGain > 0">
+                    <span>{{averageGain}}&nbsp;&nbsp;</span><img class="chaos-icon" />
+                </span>
+            </div>
+        </div>
+        <div class="field-wrapper">
             <span class="title">Areas entered</span>
             <br />
             <div class="stat-inner-wrapper">
@@ -17,7 +28,7 @@
                     data</span>
                 <span class="stat" *ngIf="filteredArr != null && filteredArr.length > 0">{{filteredArr.length}}</span>
             </div>
-        </div>
+        </div>  
         <div class="flex-area">
             <div class="btn-grp">
                 <button mat-raised-button color="primary" *ngIf="selfSelected" (click)="resetAreaHistory()" type="button"

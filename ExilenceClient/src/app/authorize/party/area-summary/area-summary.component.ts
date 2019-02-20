@@ -21,6 +21,7 @@ import { AccountService } from '../../../shared/providers/account.service';
 export class AreaSummaryComponent implements OnInit, OnDestroy {
   form: FormGroup;
   averageTimeSpent = '';
+  averageGain = '';
   filteredArr = [];
   selfSelected = false;
   private party: Party;
@@ -189,14 +190,34 @@ export class AreaSummaryComponent implements OnInit, OnDestroy {
           return filteredArr.some(x => x.timestamp === res.timestamp);
         });
       }
-      this.updateAvgTimeSpent(this.filteredArr);
     } else {
       if (foundPlayer.pastAreas !== null) {
         this.filteredArr = foundPlayer.pastAreas.filter(res => {
           return filteredArr.some(x => x.timestamp === res.timestamp);
         });
       }
-      this.updateAvgTimeSpent(this.filteredArr);
+    }
+    this.updateAvgTimeSpent(this.filteredArr);
+    this.updateAvgGain(this.tableData);
+  }
+
+  updateAvgGain(pastAreas) {
+    if (pastAreas !== null) {
+      if (pastAreas[0] !== undefined) {
+        pastAreas = pastAreas.filter(x => x.gain > 0);
+        let total = 0;
+        pastAreas.forEach(area => {
+          total = total + area.gain;
+        });
+
+        const average = total / pastAreas.length;
+
+        this.averageGain = average.toString();
+      } else {
+        this.averageGain = '';
+      }
+    } else {
+      this.averageGain = '';
     }
   }
 
