@@ -211,14 +211,16 @@ export class LoginComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit() {
-        this.externalService.getLeagues('main', 1).subscribe(leagues => {
-            if (leagues.find(l => l.id === this.leagueName) === undefined ||
-                leagues.find(l => l.id === this.tradeLeagueName) === undefined) {
-                this.initSetup();
-                this.settingsService.set('profile', undefined);
-                this.stepper.selectedIndex = 0;
-            }
-        });
+        if (this.electronService.isElectron) {
+            this.externalService.getLeagues('main', 1).subscribe(leagues => {
+                if (leagues.find(l => l.id === this.leagueName) === undefined ||
+                    leagues.find(l => l.id === this.tradeLeagueName) === undefined) {
+                    this.initSetup();
+                    this.settingsService.set('profile', undefined);
+                    this.stepper.selectedIndex = 0;
+                }
+            });
+        }
 
         if (!this.electronService.isElectron()) {
             this.route.params.subscribe(params => {
