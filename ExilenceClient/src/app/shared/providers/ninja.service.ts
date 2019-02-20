@@ -13,8 +13,8 @@ import { SettingsService } from './settings.service';
 
 export class NinjaService {
 
-  private itemUrl = 'http://poe.ninja/api/data/itemoverview';
-  private currencyUrl = 'http://poe.ninja/api/data/currencyoverview';
+  private itemUrl = 'https://poe.ninja/api/data/itemoverview';
+  private currencyUrl = 'https://poe.ninja/api/data/currencyoverview';
   private lastNinjaHit: number;
   public ninjaPrices: NinjaPriceInfo[] = [];
   private lowConfidencePricing = false;

@@ -80,7 +80,7 @@ export class ExternalService {
 
   getLeagues(type: string, compact: number) {
     const parameters = `?type=${type}&compact=${compact}`;
-    return this.http.get('http://api.pathofexile.com/leagues' + parameters)
+    return this.http.get('https://api.pathofexile.com/leagues' + parameters)
       .catch(e => {
         if (e.status !== 403 && e.status !== 404) {
           this.logService.log('Could not fetch leagues, disconnecting!', null, true);
