@@ -33,6 +33,7 @@ All notable changes to this project will be documented in this file.
 - Fixed a bug where a popup was shown incorrectly when pathofexile.com went down
 - Fixed a bug where the app would crash if your settings contained a league that no longer exists
 - Fixed a bug where the map-tab popup wasn't shown if you toggled all tabs
+- Fixed a bug where the selected player wasn't changed properly when players left
 
 ## [0.9.18] - 2019-02-12
 ### Added
