@@ -1,7 +1,7 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
-## [0.9.19] - XXXX-XX-XX
+## [0.9.19] - 2019-02-20
 ### Added
 - Added gain per area
     - Displayed as a new column in the area-table
