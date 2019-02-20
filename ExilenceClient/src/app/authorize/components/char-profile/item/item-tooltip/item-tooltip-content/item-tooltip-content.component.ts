@@ -1,6 +1,8 @@
 import { Component, OnInit, Input, ViewEncapsulation } from '@angular/core';
 import { Item } from '../../../../../../shared/interfaces/item.interface';
 import { Property } from '../../../../../../shared/interfaces/property.interface';
+import { formatNumber } from '@angular/common';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-item-tooltip-content',
@@ -10,7 +12,7 @@ import { Property } from '../../../../../../shared/interfaces/property.interface
 })
 export class ItemTooltipContentComponent implements OnInit {
   @Input() item: Item;
-  constructor() { }
+  constructor(private translate: TranslateService) { }
 
   ngOnInit() {
   }
@@ -75,6 +77,12 @@ export class ItemTooltipContentComponent implements OnInit {
     });
 
     return html;
+  }
+
+  formatGemXP(xp) {
+    const gemCurrentNextXP = xp.split('/');
+    return formatNumber(gemCurrentNextXP[0], this.translate.getDefaultLang()) + '/' +
+           formatNumber(gemCurrentNextXP[1], this.translate.getDefaultLang());
   }
 
   formatItemProperties(property) {

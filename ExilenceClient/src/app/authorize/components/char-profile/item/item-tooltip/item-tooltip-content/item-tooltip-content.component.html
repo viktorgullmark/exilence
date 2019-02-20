@@ -75,6 +75,7 @@
                     <mat-progress-bar class="progress-bar gem-progress"
                         color="primary" mode="determinate" [value]="prop.progress * 100">
                     </mat-progress-bar>
+                    <span>{{formatGemXP(prop.values[0][0])}}</span>
                 </ng-container>
             </ng-container>
             <hr *ngIf="item.additionalProperties != undefined">
