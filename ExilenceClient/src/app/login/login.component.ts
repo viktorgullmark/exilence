@@ -211,7 +211,7 @@ export class LoginComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit() {
-        if (this.electronService.isElectron) {
+        if (this.electronService.isElectron()) {
             this.externalService.getLeagues('main', 1).subscribe(leagues => {
                 if (leagues.find(l => l.id === this.leagueName) === undefined ||
                     leagues.find(l => l.id === this.tradeLeagueName) === undefined) {
