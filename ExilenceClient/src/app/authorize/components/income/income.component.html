@@ -11,8 +11,9 @@
     <ngx-charts-line-chart *ngIf="visible" class="chart-container" [ngClass]="{'summary-chart': player == undefined}"
       [scheme]="colorScheme" [results]="dateData" [legend]="player == undefined" legendTitle="Players"
       (legendLabelClick)="onLegendLabelClick($event)" gradient="false" xAxis="true" yAxis="true" showXAxisLabel="true"
-      showYAxisLabel="true" xAxisLabel="Time" [xAxisTickFormatting]="axisFormat" animations="true" yAxisLabel="Net worth in Chaos"
-      autoScale="true" showGridLines="true" [curve]="curve" (select)="select($event)" [contextMenu]="badgeMenu" [contextMenuSubject]="selectedSnapshot">
+      showYAxisLabel="true" xAxisLabel="Time" [xAxisTickFormatting]="axisFormat" animations="true"
+      yAxisLabel="Net worth in Chaos" autoScale="true" showGridLines="true" [curve]="curve" (select)="select($event)"
+      [contextMenu]="badgeMenu" [contextMenuSubject]="selectedSnapshot">
       <ng-template #tooltipTemplate let-model="model">
         Net worth: {{ model?.value.toFixed(2) }} chaos
         <br> Time: {{ axisFormat(model?.name) }}
@@ -44,7 +45,7 @@
 </ng-container>
 
 <context-menu [disabled]="selectedSnapshot == {} || !electronService.isElectron()">
-    <ng-template contextMenuItem let-item (execute)="markForRemoval()">
-        Remove a snapshot
-    </ng-template>
+  <ng-template contextMenuItem let-item (execute)="markForRemoval()">
+    Remove a snapshot
+  </ng-template>
 </context-menu>

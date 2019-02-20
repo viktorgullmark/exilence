@@ -8,6 +8,7 @@ All notable changes to this project will be documented in this file.
     - Hover-functionality to display the items changed
     - Calculates avg. gain per area and displays this above the table
 - Added pricing of the inventory (setting available, enabled by default)
+- Added a progress-bar to indicate when net worth is being calculated
 
 ### Changed
 - Reworked how history is stored

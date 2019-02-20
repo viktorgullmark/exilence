@@ -51,7 +51,7 @@ export class PartySummaryComponent implements OnInit, OnDestroy {
     public messageValueService: MessageValueService,
     private dialog: MatDialog,
     public partyService: PartyService,
-    private incomeService: IncomeService,
+    public incomeService: IncomeService,
     private accountService: AccountService,
     private alertService: AlertService,
     private settingsService: SettingsService,

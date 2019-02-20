@@ -16,7 +16,8 @@
             <span class="title">Gain per hour</span>
             <br />
             <div class="networth-inner-wrapper with-icon">
-                <span class="networth">{{messageValueService.partyGain.toFixed(2)}}&nbsp;&nbsp;</span><img class="chaos-icon" />
+                <span class="networth">{{messageValueService.partyGain.toFixed(2)}}&nbsp;&nbsp;</span><img
+                    class="chaos-icon" />
             </div>
         </div>
         <div *ngIf="electronService.isElectron()" class="networth-wrapper">
@@ -36,21 +37,27 @@
     <div class="flex-area">
         <div class="btn-grp">
             <ng-container *ngIf="electronService.isElectron()">
-                <button mat-raised-button color="accent" (click)="resetNetWorth()" type="button" class="right-aligned extra-margin">{{'GRAPH.RESET_SELF'
+                <button mat-raised-button color="accent" (click)="resetNetWorth()" type="button"
+                    class="right-aligned extra-margin">{{'GRAPH.RESET_SELF'
                     | translate}}</button>
-                <button mat-raised-button color="primary" (click)="popout()" type="button" class="right-aligned extra-margin">{{'GRAPH.POPOUT'
+                <button mat-raised-button color="primary" (click)="popout()" type="button"
+                    class="right-aligned extra-margin">{{'GRAPH.POPOUT'
                     | translate}}</button>
             </ng-container>
-            <button mat-raised-button color="primary" *ngIf="!isGraphHidden" (click)="hideGraph()" type="button" class="graph-btns right-aligned">{{'GRAPH.HIDE'
+            <button mat-raised-button color="primary" *ngIf="!isGraphHidden" (click)="hideGraph()" type="button"
+                class="graph-btns right-aligned">{{'GRAPH.HIDE'
                 | translate}}</button>
-            <button mat-raised-button color="primary" *ngIf="isGraphHidden" (click)="showGraph()" type="button" class="graph-btns right-aligned">{{'GRAPH.SHOW'
+            <button mat-raised-button color="primary" *ngIf="isGraphHidden" (click)="showGraph()" type="button"
+                class="graph-btns right-aligned">{{'GRAPH.SHOW'
                 | translate}}</button>
 
             <mat-form-field class="player-selection-field">
                 <mat-label>Select player</mat-label>
-                <mat-select #playerDd value="{{partyService.selectedFilterValue}}" (selectionChange)="selectPlayer($event)">
+                <mat-select #playerDd value="{{partyService.selectedFilterValue}}"
+                    (selectionChange)="selectPlayer($event)">
                     <mat-option value="All players">All players</mat-option>
-                    <mat-option *ngFor="let player of getPlayers()" value="{{player.character.name}}">{{player.character.name}}</mat-option>
+                    <mat-option *ngFor="let player of getPlayers()" value="{{player.character.name}}">
+                        {{player.character.name}}</mat-option>
                 </mat-select>
             </mat-form-field>
 
@@ -58,10 +65,15 @@
 
     </div>
     <div class="income-graph-wrapper" [hidden]="isGraphHidden">
-        <app-income (hidden)="toggleGraph($event)" (removeSnapshot)="removeSnapshot()" [view]="graphDimensions"></app-income>
+        <app-income (hidden)="toggleGraph($event)" (removeSnapshot)="removeSnapshot()" [view]="graphDimensions">
+        </app-income>
+    </div>
+    <div class="spinner-container">
+        <mat-progress-bar *ngIf="incomeService.isSnapshotting" color="primary" mode="indeterminate"></mat-progress-bar>
     </div>
     <div class="table-outer-wrapper" [ngClass]="{'full-height-table': isGraphHidden }">
-        <mat-tab-group #networthTabs id="networthTabs" [(selectedIndex)]="selectedIndex" (selectedTabChange)="handleTabEvent()">
+        <mat-tab-group #networthTabs id="networthTabs" [(selectedIndex)]="selectedIndex"
+            (selectedTabChange)="handleTabEvent()">
             <mat-tab #networthTab id="networthTab" class="active">
                 <ng-template mat-tab-label>
                     <mat-icon class="tab-icon">attach_money</mat-icon>
@@ -77,15 +89,17 @@
         </mat-tab-group>
         <div class="export-area">
             <button *ngIf="selectedIndex == 0" [disabled]="tableData == undefined || tableData.length == 0"
-                mat-raised-button color="primary" (click)="export()" type="button" class="right-aligned extra-margin">Export</button>
+                mat-raised-button color="primary" (click)="export()" type="button"
+                class="right-aligned extra-margin">Export</button>
             <button *ngIf="selectedIndex == 1" [disabled]="overtimeData == undefined || overtimeData.length == 0"
-                mat-raised-button color="primary" (click)="export()" type="button" class="right-aligned extra-margin">Export</button>
+                mat-raised-button color="primary" (click)="export()" type="button"
+                class="right-aligned extra-margin">Export</button>
         </div>
         <div class="search-form-wrapper" [hidden]="selectedIndex != 0">
             <form class="form search-form" [formGroup]="form">
                 <mat-form-field>
-                    <input matInput formControlName="searchText" placeholder="{{'CURRENCY.SEARCH' | translate}}" class="search-text-input"
-                        (ngModelChange)="search()">
+                    <input matInput formControlName="searchText" placeholder="{{'CURRENCY.SEARCH' | translate}}"
+                        class="search-text-input" (ngModelChange)="search()">
                 </mat-form-field>
             </form>
         </div>
@@ -102,8 +116,9 @@
             </form>
         </div>
         <div class="networth-table-wrapper" [hidden]="selectedIndex != 1">
-            <app-networth-table #overTimeTable (filtered)="updateOverTimeData($event)" (differenceChanged)="updateDifference($event)"
-                [multiple]="true" [showOverTime]="true"></app-networth-table>
+            <app-networth-table #overTimeTable (filtered)="updateOverTimeData($event)"
+                (differenceChanged)="updateDifference($event)" [multiple]="true" [showOverTime]="true">
+            </app-networth-table>
         </div>
 
     </div>
