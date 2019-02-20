@@ -212,7 +212,7 @@ export class AreaSummaryComponent implements OnInit, OnDestroy {
 
         const average = total / pastAreas.length;
 
-        this.averageGain = average.toString();
+        this.averageGain = average.toFixed(2).toString();
       } else {
         this.averageGain = '';
       }
