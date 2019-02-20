@@ -69,7 +69,7 @@
         </app-income>
     </div>
     <div class="spinner-container">
-        <mat-progress-bar *ngIf="incomeService.isSnapshotting" color="primary" mode="indeterminate"></mat-progress-bar>
+        <mat-progress-bar *ngIf="incomeService.isSnapshotting && (partyService.selectedFilterValue == partyService.currentPlayer.character.name || partyService.selectedFilterValue == 'All players')" color="primary" mode="indeterminate"></mat-progress-bar>
     </div>
     <div class="table-outer-wrapper" [ngClass]="{'full-height-table': isGraphHidden }">
         <mat-tab-group #networthTabs id="networthTabs" [(selectedIndex)]="selectedIndex"
