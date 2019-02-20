@@ -32,7 +32,7 @@ export class IncomeService implements OnDestroy {
   private playerStashTabs: Stash[] = [];
   private netWorthHistory: NetWorthHistory;
   private sessionId: string;
-  private isSnapshotting = false;
+  public isSnapshotting = false;
   private inventoryPricing = true;
 
   public networthSnapshots: NetWorthSnapshot[] = [];
