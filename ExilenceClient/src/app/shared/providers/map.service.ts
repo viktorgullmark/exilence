@@ -164,8 +164,8 @@ export class MapService implements OnDestroy {
 
       const sameInstance = AreaHelper.isSameInstance(this.areaHistory[0], this.areaHistory[2]);
 
-      if (sameInstance) {
-        if (previousZoneNeutral && !AreaHelper.isNeutralZone(this.areaHistory[0])) {
+      if (sameInstance && !AreaHelper.isNeutralZone(this.areaHistory[0])) {
+        if (previousZoneNeutral) {
           this.areaHistory.shift(); // remove neutral zone
           this.areaHistory.shift(); // remove duplicate zone
           this.areaHistory[0].duration = 0;
