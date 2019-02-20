@@ -184,18 +184,10 @@ export class AreaSummaryComponent implements OnInit, OnDestroy {
     const filteredArr = event.filteredArr;
     this.dataSource = event.dataSource;
     this.filteredArr = [];
-    if (foundPlayer.account === this.partyService.currentPlayer.account) {
-      if (this.mapService.localPlayerAreas !== null) {
-        this.filteredArr = this.mapService.localPlayerAreas.filter(res => {
-          return filteredArr.some(x => x.timestamp === res.timestamp);
-        });
-      }
-    } else {
-      if (foundPlayer.pastAreas !== null) {
-        this.filteredArr = foundPlayer.pastAreas.filter(res => {
-          return filteredArr.some(x => x.timestamp === res.timestamp);
-        });
-      }
+    if (foundPlayer !== undefined && foundPlayer.pastAreas !== null) {
+      this.filteredArr = foundPlayer.pastAreas.filter(res => {
+        return filteredArr.some(x => x.timestamp === res.timestamp);
+      });
     }
     this.updateAvgTimeSpent(this.filteredArr);
     this.updateAvgGain(this.tableData);
@@ -259,12 +251,12 @@ export class AreaSummaryComponent implements OnInit, OnDestroy {
       // update values for entire party, or a specific player, depending on selection
       if (this.partyService.selectedFilterValue === 'All players' || this.partyService.selectedFilterValue === undefined) {
         this.table.dataSource = [];
-        this.table.updateTable(this.mapService.localPlayerAreas);
+        this.table.updateTable(this.partyService.currentPlayer.pastAreas);
       } else if (foundPlayer !== undefined) {
         if (this.partyService.currentPlayer.character !== null &&
           foundPlayer.character.name === this.partyService.currentPlayer.character.name) {
           this.table.dataSource = [];
-          this.table.updateTable(this.mapService.localPlayerAreas);
+          this.table.updateTable(foundPlayer.pastAreas);
         } else {
           this.table.dataSource = [];
           this.table.updateTable(foundPlayer.pastAreas);

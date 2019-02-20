@@ -68,7 +68,7 @@ export class MapTableComponent implements OnInit, OnDestroy {
         if (foundPlayer !== undefined) {
           if (foundPlayer.pastAreas !== null && foundPlayer.pastAreas !== undefined) {
             if (foundPlayer.account === this.partyService.currentPlayer.account) {
-              this.updateTable(this.mapService.localPlayerAreas);
+              this.updateTable(foundPlayer.pastAreas);
             } else {
               this.updateTable(foundPlayer.pastAreas);
             }
@@ -92,7 +92,7 @@ export class MapTableComponent implements OnInit, OnDestroy {
         if (foundPlayer !== undefined) {
           if (foundPlayer.pastAreas !== null && foundPlayer.pastAreas !== undefined) {
             if (foundPlayer.account === this.partyService.currentPlayer.account) {
-              this.updateTable(this.mapService.localPlayerAreas);
+              this.updateTable(foundPlayer.pastAreas);
             } else {
               this.updateTable(foundPlayer.pastAreas);
             }
