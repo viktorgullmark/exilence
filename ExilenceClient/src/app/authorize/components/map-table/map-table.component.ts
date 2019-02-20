@@ -59,6 +59,8 @@ export class MapTableComponent implements OnInit, OnDestroy {
           this.selectedPlayerValue = this.getPlayers()[0].character.name;
         }
 
+        this.partyService.selectedFilterValueSub.next(this.selectedPlayerValue);
+
         foundPlayer = this.party.players.find(x => x.character !== null &&
           x.character.name === this.selectedPlayerValue);
 
@@ -77,13 +79,15 @@ export class MapTableComponent implements OnInit, OnDestroy {
     });
     this.selectedFilterValueSub = this.partyService.selectedFilterValueSub.subscribe(res => {
       if (res !== undefined) {
-        if (this.partyService.selectedFilterValue === 'All players') {
-          this.selectedPlayerValue = this.getPlayers()[0].character.name;
-        } else {
-          this.selectedPlayerValue = this.partyService.selectedFilterValue;
-        }
         const foundPlayer = this.party.players.find(x => x.character !== null &&
           x.character.name === this.selectedPlayerValue);
+        if (this.partyService.selectedFilterValue === 'All players') {
+          this.selectedPlayerValue = this.getPlayers()[0].character.name;
+        } else if (foundPlayer !== undefined) {
+          this.selectedPlayerValue = this.partyService.selectedFilterValue;
+        } else {
+          this.selectedPlayerValue = this.getPlayers()[0].character.name;
+        }
         this.dataSource = [];
         if (foundPlayer !== undefined) {
           if (foundPlayer.pastAreas !== null && foundPlayer.pastAreas !== undefined) {
