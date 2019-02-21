@@ -27,15 +27,11 @@ export class MapService implements OnDestroy {
   public excludeGain: NetWorthItem[] = undefined;
 
   private playerSub: Subscription;
-  private areasSub: Subscription;
   private enteredNeutralAreaSub: Subscription;
   private enteredHostileAreaSub: Subscription;
   private enteredSameInstance = false;
 
   areasParsed: EventEmitter<any> = new EventEmitter();
-
-  public localPlayerAreaSubject: BehaviorSubject<ExtendedAreaInfo[]> = new BehaviorSubject<ExtendedAreaInfo[]>([]);
-  public localPlayerAreas: ExtendedAreaInfo[];
 
   constructor(
     private logMonitorService: LogMonitorService,
@@ -68,10 +64,6 @@ export class MapService implements OnDestroy {
       if (player !== undefined) {
         this.localPlayer = player;
       }
-    });
-
-    this.areasSub = this.localPlayerAreaSubject.subscribe(res => {
-      this.localPlayerAreas = res;
     });
 
     this.logMonitorService.instanceServerEvent.subscribe(e => {
@@ -110,20 +102,12 @@ export class MapService implements OnDestroy {
     if (this.playerSub !== undefined) {
       this.playerSub.unsubscribe();
     }
-    if (this.areasSub !== undefined) {
-      this.areasSub.unsubscribe();
-    }
     if (this.enteredHostileAreaSub !== undefined) {
       this.enteredHostileAreaSub.unsubscribe();
     }
     if (this.enteredNeutralAreaSub !== undefined) {
       this.enteredNeutralAreaSub.unsubscribe();
     }
-  }
-
-  updateLocalPlayerAreas(areas: ExtendedAreaInfo[]) {
-    const areasToSend = Object.assign([], areas);
-    this.localPlayerAreaSubject.next(areasToSend);
   }
 
   registerAreaEvent(e: EventArea) {
@@ -197,8 +181,6 @@ export class MapService implements OnDestroy {
       const subArea = this.areaHistory.shift();
       this.areaHistory[0].subAreas.unshift(subArea);
     }
-
-    this.updateLocalPlayerAreas(this.areaHistory);
 
     character.areas = this.areaHistory;
     this.settingsService.updateCharacter(character);

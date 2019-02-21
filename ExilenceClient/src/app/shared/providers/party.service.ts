@@ -146,6 +146,7 @@ export class PartyService implements OnDestroy {
             party.name = this.party.name;
           }
           this.party = party;
+          this.moveSelfToFirst();
           this.updatePlayerLists(this.party);
           this.accountService.player.next(playerObj);
           const playerToSelect = !player.isSpectator ? player : this.party.players.find(x => !x.isSpectator);
@@ -178,7 +179,6 @@ export class PartyService implements OnDestroy {
 
           // update value of dropdown
           this.selectedFilter.next(this.getPlayers()[0].character.name);
-
         });
       });
     });
@@ -335,13 +335,16 @@ export class PartyService implements OnDestroy {
   }
 
   getPlayers() {
-    // move self to first in array
+    this.moveSelfToFirst();
+    return this.party.players.filter(x => x.character !== null);
+  }
+
+  moveSelfToFirst() {
     const self = this.party.players.find(x => x.connectionID === this.currentPlayer.connectionID);
     if (this.party.players.indexOf(self) > 0) {
       this.party.players.splice(this.party.players.indexOf(self), 1);
       this.party.players.unshift(self);
     }
-    return this.party.players.filter(x => x.character !== null);
   }
 
   ngOnDestroy() {

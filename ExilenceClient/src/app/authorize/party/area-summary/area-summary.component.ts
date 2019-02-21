@@ -112,7 +112,6 @@ export class AreaSummaryComponent implements OnInit, OnDestroy {
   resetAreaHistory() {
     if (this.selfSelected) {
       const emptyHistory = this.settingsService.deleteAreas();
-      this.mapService.updateLocalPlayerAreas(emptyHistory);
       this.mapService.excludeGain = undefined;
       this.partyService.currentPlayer.pastAreas = emptyHistory;
       this.mapService.loadAreasFromSettings();

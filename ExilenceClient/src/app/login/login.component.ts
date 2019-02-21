@@ -534,8 +534,6 @@ export class LoginComponent implements OnInit, OnDestroy {
             this.settingsService.set('profile', this.form);
             this.areaHistory = this.settingsService.getCurrentCharacter().areas;
 
-            this.mapService.updateLocalPlayerAreas(this.areaHistory);
-
             const newLeague = { name: this.form.leagueName, stashtabs: [] } as LeagueStore;
             let leagues: LeagueStore[] = this.settingsService.get('leagues');
             if (leagues === undefined) {
