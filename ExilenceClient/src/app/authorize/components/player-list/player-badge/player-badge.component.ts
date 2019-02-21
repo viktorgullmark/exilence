@@ -43,6 +43,7 @@ export class PlayerBadgeComponent implements OnInit, OnDestroy {
   selectPlayer() {
     if (!this.localPlayer) {
       this.partyService.selectedPlayer.next(this.player);
+      this.partyService.selectedFilter.next(this.player.character.name);
     }
     if (this.localPlayer) {
       this.partyService.selectedGenericPlayer.next(this.player);
