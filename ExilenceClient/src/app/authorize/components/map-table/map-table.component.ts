@@ -1,4 +1,4 @@
-import { Component, ElementRef, EventEmitter, OnDestroy, OnInit, Output, ViewChild, NgZone } from '@angular/core';
+import { Component, ElementRef, EventEmitter, NgZone, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
 import { MatPaginator, MatSort, MatTableDataSource } from '@angular/material';
 import * as moment from 'moment';
 import { Subscription } from 'rxjs/internal/Subscription';
@@ -18,7 +18,7 @@ import { GainTooltipComponent } from './gain-tooltip/gain-tooltip.component';
 export class MapTableComponent implements OnInit, OnDestroy {
 
   @Output() filtered: EventEmitter<any> = new EventEmitter;
-  displayedColumns: string[] = ['timestamp', 'name', 'tier', 'time', 'gain'];
+  displayedColumns: string[] = ['timestamp', 'name', 'tier', 'time', 'gain', 'events'];
   dataSource = [];
   searchText = '';
   filteredArr = [];
@@ -128,6 +128,15 @@ export class MapTableComponent implements OnInit, OnDestroy {
       this.tooltip.renderItems(this.gain);
     }
   }
+  generateEventTooltip(events: string[]) {
+    if (events !== undefined) {
+      let string = '';
+      events.forEach(event => {
+        string += `${event}\n`;
+      });
+      return string;
+    }
+  }
 
   ngOnDestroy() {
     if (this.selectedFilterValueSub !== undefined) {
@@ -193,7 +202,8 @@ export class MapTableComponent implements OnInit, OnDestroy {
       tier: area.eventArea.info[0].level,
       time: ((minute < 10) ? '0' + minute.toString() : minute.toString())
         + ':' + ((seconds < 10) ? '0' + seconds.toString() : seconds.toString()),
-      timestamp: area.timestamp
+      timestamp: area.timestamp,
+      events: area.events
     };
     return newAreaObj;
   }

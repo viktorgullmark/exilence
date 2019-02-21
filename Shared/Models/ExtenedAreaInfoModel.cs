@@ -14,6 +14,7 @@ namespace Shared.Models
         public List<NetWorthItem> Difference { get; set; }
         public List<NetWorthItem> Inventory { get; set; }
         public List<ExtenedAreaInfoModel> SubAreas { get; set; }
+        public List<string> Events { get; set; }
     }
 
     [Serializable]

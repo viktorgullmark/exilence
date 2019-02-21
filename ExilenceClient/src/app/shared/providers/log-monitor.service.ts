@@ -16,6 +16,7 @@ export class LogMonitorService {
   areaEvent: EventEmitter<any> = new EventEmitter();
   areaJoin: EventEmitter<any> = new EventEmitter();
   areaLeft: EventEmitter<any> = new EventEmitter();
+  playerEvent: EventEmitter<any> = new EventEmitter();
   messageEvent: EventEmitter<any> = new EventEmitter();
 
   constructor(private accountService: AccountService, private logService: LogService) {
@@ -42,6 +43,15 @@ export class LogMonitorService {
           });
           this.logTail.on('instanceServer', (data) => {
             this.instanceServerEvent.emit(data);
+          });
+          this.logTail.on('death', (data) => {
+            this.playerEvent.emit({ event: 'death', data });
+          });
+          this.logTail.on('level', (data) => {
+            this.playerEvent.emit({ event: 'level', data });
+          });
+          this.logTail.on('masterEncounter', (data) => {
+            this.playerEvent.emit({ event: 'masterEncounter', data });
           });
           this.logTail.on('error', (data) => {
             this.logService.log('poe-log-reader', data, true);

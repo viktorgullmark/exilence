@@ -40,4 +40,5 @@ export interface ExtendedAreaInfo {
   inventory: NetWorthItem[];
   instanceServer: string;
   subAreas: ExtendedAreaInfo[];
+  events: string[];
 }

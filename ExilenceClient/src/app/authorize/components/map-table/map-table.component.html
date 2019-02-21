@@ -27,11 +27,13 @@
     <td mat-cell *matCellDef="let element"> {{element.time == '00:00' ? 'n/a' : element.time }} </td>
   </ng-container>
 
+
   <!-- Gain Column -->
   <ng-container matColumnDef="gain">
     <th mat-header-cell *matHeaderCellDef mat-sort-header="gain"> Gain&nbsp;&nbsp;<img class="chaos-icon" /></th>
     <td mat-cell *matCellDef="let element" class="networth-value with-icon in-table" #el>
-      <div *ngIf="element?.gain != 0" class="gain-cell" (mouseenter)="updateTooltip(element, el, mainTable)" (mouseleave)="updateTooltip(undefined, el)">
+      <div *ngIf="element?.gain != 0" class="gain-cell" (mouseenter)="updateTooltip(element, el, mainTable)"
+        (mouseleave)="updateTooltip(undefined, el)">
         {{element.gain.toFixed(2) != '0.00' && element.gain.toFixed(2) != '-0.00' ? element.gain.toFixed(2) : '-'}}
       </div>
       <ng-container *ngIf="element == undefined || element.gain == 0">
@@ -40,9 +42,17 @@
     </td>
   </ng-container>
 
+  <!-- Events Column -->
+  <ng-container matColumnDef="events">
+    <th mat-header-cell *matHeaderCellDef> </th>
+    <td mat-cell *matCellDef="let element">
+      <span *ngIf="element.events?.length > 0" matTooltip="{{generateEventTooltip(element.events)}}" matTooltipPosition="after">Events</span>
+    </td>
+  </ng-container>
+
   <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
   <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
 </table>
 <mat-paginator [pageSizeOptions]="[12]" showFirstLastButtons></mat-paginator>
-<app-gain-tooltip #tooltip class="tooltip" [style.top.px]="tooltip.top" [style.left.px]="tooltip.left"
-  [width]="rowWidth" [ngClass]="{'gain-tooltip': selected.timestamp > 0 && tooltip.repositioned }"></app-gain-tooltip>
+<app-gain-tooltip #tooltip class="tooltip" [style.top.px]="tooltip.top" [style.left.px]="tooltip.left" [width]="rowWidth"
+  [ngClass]="{'gain-tooltip': selected.timestamp > 0 && tooltip.repositioned }"></app-gain-tooltip>

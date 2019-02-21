@@ -1,6 +1,5 @@
 import { EventEmitter, Injectable, OnDestroy } from '@angular/core';
 import { Subscription } from 'rxjs';
-import { BehaviorSubject } from 'rxjs/internal/BehaviorSubject';
 
 import { AreaHelper } from '../helpers/area.helper';
 import { HistoryHelper } from '../helpers/history.helper';
@@ -70,6 +69,26 @@ export class MapService implements OnDestroy {
       this.previousInstanceServer = e.address;
     });
 
+    this.logMonitorService.playerEvent.subscribe(e => {
+      console.log('Event: ', e);
+      let eventSummary = '';
+      switch (e.event) {
+        case 'death':
+          eventSummary = `${e.data.name} died`;
+          break;
+        case 'level':
+          eventSummary = `${e.data.name} reached level ${e.data.level}`;
+          break;
+        case 'masterEncounter':
+          eventSummary = `Encountered ${e.data.name}`;
+          break;
+      }
+
+      if (this.areaHistory.length > 0) {
+        this.areaHistory[0].events.push(eventSummary);
+      }
+    });
+
     this.logMonitorService.areaEvent.subscribe((e: EventArea) => {
       this.registerAreaEvent(e);
     });
@@ -127,7 +146,8 @@ export class MapService implements OnDestroy {
       instanceServer: this.previousInstanceServer,
       difference: [],
       inventory: [],
-      subAreas: []
+      subAreas: [],
+      events: []
     } as ExtendedAreaInfo;
 
     this.addAreaHistory(areaEntered);
