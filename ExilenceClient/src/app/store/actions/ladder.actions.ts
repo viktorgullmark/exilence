@@ -1,6 +1,6 @@
 import { Action } from '@ngrx/store';
 import { Update } from '@ngrx/entity/src/models';
-import { PlayerLadder } from '../shared/interfaces/player.interface';
+import { PlayerLadder } from '../../shared/interfaces/player.interface';
 
 export enum LadderActionTypes {
   ADD_LADDER = '[LADDER] Add Ladder',

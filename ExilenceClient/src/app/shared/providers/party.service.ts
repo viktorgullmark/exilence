@@ -28,8 +28,8 @@ import { ItemHelper } from '../helpers/item.helper';
 import { Item } from '../interfaces/item.interface';
 import { Store } from '@ngrx/store';
 import { LadderState } from '../../app.states';
-import * as fromActions from './../../store/ladder.actions';
-import * as fromReducer from './../../store/ladder.reducer';
+import * as fromActions from '../../store/actions/ladder.actions';
+import * as fromReducer from '../../store/reducers/ladder.reducer';
 
 @Injectable()
 export class PartyService implements OnDestroy {
@@ -552,23 +552,12 @@ export class PartyService implements OnDestroy {
     return this._hubConnection.invoke('GetLadderForLeague', league).then((response) => {
       this.electronService.decompress(response, (ladder: LadderPlayer[]) => {
 
-        // // update ladder in state (fugly)
-        // const foundLadder = this.playerLadders.find(x => x.name === league);
-        // if (foundLadder !== undefined && foundLadder !== null) {
-        //   const ladderIndex = this.playerLadders.indexOf(foundLadder);
-        //   this.playerLadders[ladderIndex] = { name: league, players: ladder } as PlayerLadder;
-        // } else {
-        //   this.playerLadders.push({ name: league, players: ladder } as PlayerLadder);
-        // }
-
         const found = this.playerLadders.find(l => l.name === league);
         if (found === undefined) {
           this.ladderStore.dispatch(new fromActions.AddLadder({ ladder: { name: league, players: ladder } }));
         } else {
           this.ladderStore.dispatch(new fromActions.UpdateLadder({ ladder: { id: league, changes: { players: ladder } } }));
         }
-
-        // this.stateService.dispatch({ key: 'playerLadders', value: this.playerLadders });
 
         if (ladder !== null) {
           // update player ranks based on fetched ladder
