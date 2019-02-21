@@ -60,11 +60,11 @@ export class LadderTableComponent implements OnInit, OnDestroy {
 
         // temporary check
         if (this.partyService.selectedFilterValue === 'All players') {
-          this.selectedPlayerValue = this.getPlayers()[0].character.name;
+          this.selectedPlayerValue = this.partyService.getPlayers()[0].character.name;
         } else if (foundPlayer !== undefined) {
           this.selectedPlayerValue = this.partyService.selectedFilterValue;
         } else {
-          this.selectedPlayerValue = this.getPlayers()[0].character.name;
+          this.selectedPlayerValue = this.partyService.getPlayers()[0].character.name;
         }
 
         setTimeout(() => {
@@ -87,7 +87,7 @@ export class LadderTableComponent implements OnInit, OnDestroy {
     this.selectedFilterValueSub = this.partyService.selectedFilter.subscribe(res => {
       if (res !== undefined) {
         if (res === 'All players') {
-          this.selectedPlayerValue = this.getPlayers()[0].character.name;
+          this.selectedPlayerValue = this.partyService.getPlayers()[0].character.name;
         } else {
           this.selectedPlayerValue = res;
         }
@@ -178,16 +178,6 @@ export class LadderTableComponent implements OnInit, OnDestroy {
       this.filtered.emit({ filteredArr: this.filteredArr, dataSource: this.dataSource });
     }, 0);
 
-  }
-
-  getPlayers() {
-    // move self to first in array
-    const self = this.partyService.party.players.find(x => x.connectionID === this.partyService.currentPlayer.connectionID);
-    if (this.partyService.party.players.indexOf(self) > 0) {
-      this.partyService.party.players.splice(this.partyService.party.players.indexOf(self), 1);
-      this.partyService.party.players.unshift(self);
-    }
-    return this.party.players.filter(x => x.character !== null);
   }
 
   updateTable(playersOnLadder: LadderPlayer[]) {

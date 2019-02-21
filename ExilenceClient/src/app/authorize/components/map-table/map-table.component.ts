@@ -52,11 +52,11 @@ export class MapTableComponent implements OnInit, OnDestroy {
 
         // temporary check
         if (this.partyService.selectedFilterValue === 'All players') {
-          this.selectedPlayerValue = this.getPlayers()[0].character.name;
+          this.selectedPlayerValue = this.partyService.getPlayers()[0].character.name;
         } else if (foundPlayer !== undefined) {
           this.selectedPlayerValue = this.partyService.selectedFilterValue;
         } else {
-          this.selectedPlayerValue = this.getPlayers()[0].character.name;
+          this.selectedPlayerValue = this.partyService.getPlayers()[0].character.name;
         }
 
         setTimeout(() => {
@@ -84,11 +84,11 @@ export class MapTableComponent implements OnInit, OnDestroy {
         const foundPlayer = this.party.players.find(x => x.character !== null &&
           x.character.name === this.selectedPlayerValue);
         if (res === 'All players') {
-          this.selectedPlayerValue = this.getPlayers()[0].character.name;
+          this.selectedPlayerValue = this.partyService.getPlayers()[0].character.name;
         } else if (foundPlayer !== undefined) {
           this.selectedPlayerValue = res;
         } else {
-          this.selectedPlayerValue = this.getPlayers()[0].character.name;
+          this.selectedPlayerValue = this.partyService.getPlayers()[0].character.name;
         }
         this.dataSource = [];
         if (foundPlayer !== undefined) {
@@ -127,16 +127,6 @@ export class MapTableComponent implements OnInit, OnDestroy {
       this.tooltip.reposition(el);
       this.tooltip.renderItems(this.gain);
     }
-  }
-
-  getPlayers() {
-    // move self to first in array
-    const self = this.partyService.party.players.find(x => x.connectionID === this.partyService.currentPlayer.connectionID);
-    if (this.partyService.party.players.indexOf(self) > 0) {
-      this.partyService.party.players.splice(this.partyService.party.players.indexOf(self), 1);
-      this.partyService.party.players.unshift(self);
-    }
-    return this.party.players.filter(x => x.character !== null);
   }
 
   ngOnDestroy() {

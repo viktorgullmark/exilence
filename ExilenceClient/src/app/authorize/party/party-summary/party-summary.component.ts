@@ -127,15 +127,7 @@ export class PartySummaryComponent implements OnInit, OnDestroy {
       }
     });
   }
-  getPlayers() {
-    // move self to first in array
-    const self = this.partyService.party.players.find(x => x.connectionID === this.partyService.currentPlayer.connectionID);
-    if (this.partyService.party.players.indexOf(self) > 0) {
-      this.partyService.party.players.splice(this.partyService.party.players.indexOf(self), 1);
-      this.partyService.party.players.unshift(self);
-    }
-    return this.partyService.party.players.filter(x => x.character !== null);
-  }
+
   ngOnDestroy() {
     if (this.partyGainSub !== undefined) {
       this.partyGainSub.unsubscribe();

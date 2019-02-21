@@ -45,7 +45,7 @@ export class LadderSummaryComponent implements OnInit, OnDestroy {
     if (this.partyService.selectedFilterValue !== 'All players') {
       this.selectedLocalValue = this.partyService.selectedFilterValue;
     } else {
-      this.selectedLocalValue = this.getPlayers()[0].character.name;
+      this.selectedLocalValue = this.partyService.getPlayers()[0].character.name;
     }
 
     this.selectedFilterValueSub = this.partyService.selectedFilter.subscribe(res => {
@@ -55,7 +55,7 @@ export class LadderSummaryComponent implements OnInit, OnDestroy {
         if (res !== 'All players') {
           this.selectedLocalValue = res;
         } else {
-          this.selectedLocalValue = this.getPlayers()[0].character.name;
+          this.selectedLocalValue = this.partyService.getPlayers()[0].character.name;
         }
 
         // update the tables whenever the value changes
@@ -77,7 +77,7 @@ export class LadderSummaryComponent implements OnInit, OnDestroy {
         // if player left or value is incorrect, update dropdown
         if (foundPlayer === undefined) {
           // force-set the value here, since the subscription wont finish in time, should be reworked
-          this.selectedLocalValue = this.getPlayers()[0].character.name;
+          this.selectedLocalValue = this.partyService.getPlayers()[0].character.name;
 
           if (this.playerDd !== undefined) {
             this.playerDd.value = this.selectedLocalValue;
@@ -85,15 +85,6 @@ export class LadderSummaryComponent implements OnInit, OnDestroy {
         }
       }
     });
-  }
-  getPlayers() {
-    // move self to first in array
-    const self = this.partyService.party.players.find(x => x.connectionID === this.partyService.currentPlayer.connectionID);
-    if (this.partyService.party.players.indexOf(self) > 0) {
-      this.partyService.party.players.splice(this.partyService.party.players.indexOf(self), 1);
-      this.partyService.party.players.unshift(self);
-    }
-    return this.partyService.party.players.filter(x => x.character !== null);
   }
   ngOnDestroy() {
     if (this.selectedFilterValueSub !== undefined) {
