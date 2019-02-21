@@ -1,6 +1,6 @@
 import { ActionReducer, ActionReducerMap, MetaReducer } from '@ngrx/store';
 
-import { AppConfig } from './../environments/environment';
+import { AppConfig } from '../environments/environment';
 import { AppState } from './app.states';
 import * as ladderReducer from './store/ladder.reducer';
 

@@ -21,11 +21,15 @@ import { NetWorthSnapshot } from '../interfaces/income.interface';
 import { MessageValueService } from './message-value.service';
 import { HistoryHelper } from '../helpers/history.helper';
 import { LeagueWithPlayers } from '../interfaces/league.interface';
-import { Subscription } from 'rxjs';
+import { Subscription, Observable } from 'rxjs';
 import { ServerMessage } from '../interfaces/server-message.interface';
 import { StateService } from './state.service';
 import { ItemHelper } from '../helpers/item.helper';
 import { Item } from '../interfaces/item.interface';
+import { Store } from '@ngrx/store';
+import { LadderState } from '../../app.states';
+import * as fromActions from './../../store/ladder.actions';
+import * as fromReducer from './../../store/ladder.reducer';
 
 @Injectable()
 export class PartyService implements OnDestroy {
@@ -73,9 +77,11 @@ export class PartyService implements OnDestroy {
   private selectedFilterSub: Subscription;
   private selectedGenPlayerSub: Subscription;
   private accountInfoSub: Subscription;
-  private stateSub: Subscription;
+  private ladderStoreSub: Subscription;
   public isConnecting = false;
   private playerLadders: Array<PlayerLadder> = [];
+
+  private allLadders$: Observable<PlayerLadder[]>;
 
   constructor(
     private router: Router,
@@ -87,8 +93,12 @@ export class PartyService implements OnDestroy {
     private electronService: ElectronService,
     private messageValueService: MessageValueService,
     private settingsService: SettingsService,
-    private stateService: StateService
+    private stateService: StateService,
+    private ladderStore: Store<LadderState>
   ) {
+
+    this.allLadders$ = this.ladderStore.select(fromReducer.selectAllLadders);
+
     this.reconnectAttempts = 0;
     this.forceClosed = false;
 
@@ -104,7 +114,6 @@ export class PartyService implements OnDestroy {
     this.playerSub = this.accountService.player.subscribe(res => {
       this.currentPlayer = res;
     });
-
     this.selectedPlayerSub = this.selectedPlayer.subscribe(res => {
       this.selectedPlayerObj = res;
     });
@@ -117,8 +126,8 @@ export class PartyService implements OnDestroy {
     this.accountInfoSub = this.accountService.accountInfo.subscribe(res => {
       this.accountInfo = res;
     });
-    this.stateSub = this.stateService.state$.subscribe(state => {
-      this.playerLadders = 'playerLadders'.split('.').reduce((o, i) => o[i], state);
+    this.ladderStoreSub = this.allLadders$.subscribe(ladders => {
+      this.playerLadders = ladders;
     });
     this.initParty();
     this._hubConnection = new signalR.HubConnectionBuilder()
@@ -356,8 +365,8 @@ export class PartyService implements OnDestroy {
       this.selectedGenPlayerSub.unsubscribe();
     } if (this.accountInfoSub !== undefined) {
       this.accountInfoSub.unsubscribe();
-    } if (this.stateSub !== undefined) {
-      this.stateSub.unsubscribe();
+    } if (this.ladderStoreSub !== undefined) {
+      this.ladderStoreSub.unsubscribe();
     }
   }
 
@@ -543,16 +552,23 @@ export class PartyService implements OnDestroy {
     return this._hubConnection.invoke('GetLadderForLeague', league).then((response) => {
       this.electronService.decompress(response, (ladder: LadderPlayer[]) => {
 
-        // update ladder in state (fugly)
-        const foundLadder = this.playerLadders.find(x => x.name === league);
-        if (foundLadder !== undefined && foundLadder !== null) {
-          const ladderIndex = this.playerLadders.indexOf(foundLadder);
-          this.playerLadders[ladderIndex] = { name: league, players: ladder } as PlayerLadder;
+        // // update ladder in state (fugly)
+        // const foundLadder = this.playerLadders.find(x => x.name === league);
+        // if (foundLadder !== undefined && foundLadder !== null) {
+        //   const ladderIndex = this.playerLadders.indexOf(foundLadder);
+        //   this.playerLadders[ladderIndex] = { name: league, players: ladder } as PlayerLadder;
+        // } else {
+        //   this.playerLadders.push({ name: league, players: ladder } as PlayerLadder);
+        // }
+
+        const found = this.playerLadders.find(l => l.name === league);
+        if (found === undefined) {
+          this.ladderStore.dispatch(new fromActions.AddLadder({ ladder: { name: league, players: ladder } }));
         } else {
-          this.playerLadders.push({ name: league, players: ladder } as PlayerLadder);
+          this.ladderStore.dispatch(new fromActions.UpdateLadder({ ladder: { id: league, changes: { players: ladder } } }));
         }
 
-        this.stateService.dispatch({ key: 'playerLadders', value: this.playerLadders });
+        // this.stateService.dispatch({ key: 'playerLadders', value: this.playerLadders });
 
         if (ladder !== null) {
           // update player ranks based on fetched ladder
