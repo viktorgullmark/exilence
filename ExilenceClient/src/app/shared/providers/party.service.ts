@@ -49,8 +49,9 @@ export class PartyService implements OnDestroy {
   public recentPrivatePlayers: string[] = [];
   public playerLeagues: BehaviorSubject<LeagueWithPlayers[]> = new BehaviorSubject<LeagueWithPlayers[]>([]);
   public genericPlayers: BehaviorSubject<Player[]> = new BehaviorSubject<Player[]>([]);
-  public selectedFilterValueSub: BehaviorSubject<string> = new BehaviorSubject<string>(undefined);
-  public selectedFilterValue = 'All players';
+  public selectedFilter: BehaviorSubject<string> = new BehaviorSubject<string>(undefined);
+  public selectedFilterDefault = 'All players';
+  public selectedFilterValue = this.selectedFilterDefault;
   public connectionInitiated: EventEmitter<boolean> = new EventEmitter();
 
   public serverMessageReceived: BehaviorSubject<ServerMessage> = new BehaviorSubject<ServerMessage>(undefined);
@@ -69,6 +70,7 @@ export class PartyService implements OnDestroy {
   public partyGain = 0;
   private playerSub: Subscription;
   private selectedPlayerSub: Subscription;
+  private selectedFilterSub: Subscription;
   private selectedGenPlayerSub: Subscription;
   private accountInfoSub: Subscription;
   private stateSub: Subscription;
@@ -108,6 +110,9 @@ export class PartyService implements OnDestroy {
     });
     this.selectedGenPlayerSub = this.selectedGenericPlayer.subscribe(res => {
       this.selectedGenericPlayerObj = res;
+    });
+    this.selectedFilterSub = this.selectedFilter.subscribe(res => {
+      this.selectedFilterValue = res;
     });
     this.accountInfoSub = this.accountService.accountInfo.subscribe(res => {
       this.accountInfo = res;

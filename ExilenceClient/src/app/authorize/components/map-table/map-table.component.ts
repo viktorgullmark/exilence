@@ -60,8 +60,9 @@ export class MapTableComponent implements OnInit, OnDestroy {
         }
 
         setTimeout(() => {
-          this.partyService.selectedFilterValueSub.next(this.selectedPlayerValue);
+          this.partyService.selectedFilter.next(this.selectedPlayerValue);
         }, 0);
+
         foundPlayer = this.party.players.find(x => x.character !== null &&
           x.character.name === this.selectedPlayerValue);
 
@@ -78,14 +79,14 @@ export class MapTableComponent implements OnInit, OnDestroy {
         }
       }
     });
-    this.selectedFilterValueSub = this.partyService.selectedFilterValueSub.subscribe(res => {
+    this.selectedFilterValueSub = this.partyService.selectedFilter.subscribe(res => {
       if (res !== undefined) {
         const foundPlayer = this.party.players.find(x => x.character !== null &&
           x.character.name === this.selectedPlayerValue);
-        if (this.partyService.selectedFilterValue === 'All players') {
+        if (res === 'All players') {
           this.selectedPlayerValue = this.getPlayers()[0].character.name;
         } else if (foundPlayer !== undefined) {
-          this.selectedPlayerValue = this.partyService.selectedFilterValue;
+          this.selectedPlayerValue = res;
         } else {
           this.selectedPlayerValue = this.getPlayers()[0].character.name;
         }
@@ -129,6 +130,12 @@ export class MapTableComponent implements OnInit, OnDestroy {
   }
 
   getPlayers() {
+    // move self to first in array
+    const self = this.partyService.party.players.find(x => x.connectionID === this.partyService.currentPlayer.connectionID);
+    if (this.partyService.party.players.indexOf(self) > 0) {
+      this.partyService.party.players.splice(this.partyService.party.players.indexOf(self), 1);
+      this.partyService.party.players.unshift(self);
+    }
     return this.party.players.filter(x => x.character !== null);
   }
 

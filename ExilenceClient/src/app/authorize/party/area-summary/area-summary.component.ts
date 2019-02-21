@@ -63,7 +63,7 @@ export class AreaSummaryComponent implements OnInit, OnDestroy {
       this.selfSelected = false;
     }
 
-    this.selectedFilterValueSub = this.partyService.selectedFilterValueSub.subscribe(res => {
+    this.selectedFilterValueSub = this.partyService.selectedFilter.subscribe(res => {
       if (res !== undefined) {
 
         if (this.partyService.currentPlayer.character &&
@@ -72,8 +72,6 @@ export class AreaSummaryComponent implements OnInit, OnDestroy {
         } else {
           this.selfSelected = false;
         }
-
-        this.partyService.selectedFilterValue = res;
 
         // TODO: remove once ladder has been reworked
         if (res !== 'All players') {
@@ -111,6 +109,12 @@ export class AreaSummaryComponent implements OnInit, OnDestroy {
     });
   }
   getPlayers() {
+    // move self to first in array
+    const self = this.partyService.party.players.find(x => x.connectionID === this.partyService.currentPlayer.connectionID);
+    if (this.partyService.party.players.indexOf(self) > 0) {
+      this.partyService.party.players.splice(this.partyService.party.players.indexOf(self), 1);
+      this.partyService.party.players.unshift(self);
+    }
     return this.partyService.party.players.filter(x => x.character !== null);
   }
 
@@ -242,7 +246,7 @@ export class AreaSummaryComponent implements OnInit, OnDestroy {
   }
 
   selectPlayer(filterValue: any) {
-    this.partyService.selectedFilterValueSub.next(filterValue.value);
+    this.partyService.selectedFilter.next(filterValue.value);
 
     if (this.party !== undefined) {
       const foundPlayer =

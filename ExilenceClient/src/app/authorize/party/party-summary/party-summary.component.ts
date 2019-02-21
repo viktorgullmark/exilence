@@ -46,6 +46,8 @@ export class PartySummaryComponent implements OnInit, OnDestroy {
   private tableData = [];
   private overtimeData = [];
 
+  public selectedFilterValue: string;
+
   constructor(
     @Inject(FormBuilder) fb: FormBuilder,
     public messageValueService: MessageValueService,
@@ -80,6 +82,7 @@ export class PartySummaryComponent implements OnInit, OnDestroy {
       if (res !== undefined) {
         this.party = res;
 
+        let valueToSelect = this.partyService.selectedFilterValue;
         // check if the current dropdown selection is a player in our party
         const foundPlayer = this.party.players.find(x =>
           x.character !== null && x.character.name === this.partyService.selectedFilterValue);
@@ -87,14 +90,14 @@ export class PartySummaryComponent implements OnInit, OnDestroy {
         // if player left or value is incorrect, update dropdown
         if (foundPlayer === undefined && this.partyService.selectedFilterValue !== 'All players') {
           // force-set the value here, since the subscription wont finish in time, should be reworked
-          this.partyService.selectedFilterValue = 'All players';
-          this.partyService.selectedFilterValueSub.next('All players');
+          valueToSelect = 'All players';
+          this.partyService.selectedFilter.next(valueToSelect);
           if (this.playerDd !== undefined) {
             this.playerDd.value = 'All players';
           }
         }
         let networth = 0;
-        if (this.partyService.selectedFilterValue === 'All players' || this.partyService.selectedFilterValue === undefined) {
+        if (valueToSelect === 'All players' || valueToSelect === undefined) {
           this.messageValueService.partyGainSubject.next(0);
           this.partyService.updatePartyGain(this.partyService.party.players);
           res.players.forEach(p => {
@@ -113,18 +116,24 @@ export class PartySummaryComponent implements OnInit, OnDestroy {
         this.messageValueService.partyValueSubject.next(networth);
       }
     });
-    this.selectedFilterValueSub = this.partyService.selectedFilterValueSub.subscribe(res => {
+    this.selectedFilterValueSub = this.partyService.selectedFilter.subscribe(res => {
       if (res !== undefined) {
-        this.partyService.selectedFilterValue = res;
+        this.selectedFilterValue = res;
         // update the tables whenever the value changes
-        this.updateFilterValue(this.partyService.selectedFilterValue);
+        this.updateFilterValue(res);
         if (this.playerDd !== undefined) {
-          this.playerDd.value = this.partyService.selectedFilterValue;
+          this.playerDd.value = res;
         }
       }
     });
   }
   getPlayers() {
+    // move self to first in array
+    const self = this.partyService.party.players.find(x => x.connectionID === this.partyService.currentPlayer.connectionID);
+    if (this.partyService.party.players.indexOf(self) > 0) {
+      this.partyService.party.players.splice(this.partyService.party.players.indexOf(self), 1);
+      this.partyService.party.players.unshift(self);
+    }
     return this.partyService.party.players.filter(x => x.character !== null);
   }
   ngOnDestroy() {
@@ -154,13 +163,13 @@ export class PartySummaryComponent implements OnInit, OnDestroy {
   }
 
   selectPlayer(filterValue: any) {
-    this.partyService.selectedFilterValueSub.next(filterValue.value);
+    this.partyService.selectedFilter.next(filterValue.value);
 
     if (this.party !== undefined) {
-      const foundPlayer = this.party.players.find(x => x.character !== null && x.character.name === this.partyService.selectedFilterValue);
+      const foundPlayer = this.party.players.find(x => x.character !== null && x.character.name === this.selectedFilterValue);
       let networth = 0;
       // update values for entire party, or a specific player, depending on selection
-      if (this.partyService.selectedFilterValue === 'All players' || this.partyService.selectedFilterValue === undefined) {
+      if (this.selectedFilterValue === 'All players' || this.selectedFilterValue === undefined) {
         this.messageValueService.partyGainSubject.next(0);
         this.partyService.updatePartyGain(this.partyService.party.players);
         this.party.players.forEach(p => {

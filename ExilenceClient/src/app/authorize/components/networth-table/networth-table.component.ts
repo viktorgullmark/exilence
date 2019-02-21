@@ -72,14 +72,13 @@ export class NetworthTableComponent implements OnInit, OnDestroy {
         }
       });
 
-      this.selectedFilterValueSub = this.partyService.selectedFilterValueSub.subscribe(res => {
+      this.selectedFilterValueSub = this.partyService.selectedFilter.subscribe(res => {
         if (res !== undefined) {
-          this.partyService.selectedFilterValue = res;
           this.dataSource = [];
           const foundPlayer = this.party.players.find(x => x.character !== null &&
-            x.character.name === this.partyService.selectedFilterValue);
+            x.character.name === res);
           // update values for entire party, or a specific player, depending on selection
-          if (this.partyService.selectedFilterValue !== 'All players' && foundPlayer !== undefined) {
+          if (res !== 'All players' && foundPlayer !== undefined) {
             this.loadPlayerData(foundPlayer);
           } else {
             this.party.players.forEach(p => {

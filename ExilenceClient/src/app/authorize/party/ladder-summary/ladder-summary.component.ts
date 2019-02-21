@@ -48,9 +48,8 @@ export class LadderSummaryComponent implements OnInit, OnDestroy {
       this.selectedLocalValue = this.getPlayers()[0].character.name;
     }
 
-    this.selectedFilterValueSub = this.partyService.selectedFilterValueSub.subscribe(res => {
+    this.selectedFilterValueSub = this.partyService.selectedFilter.subscribe(res => {
       if (res !== undefined) {
-        this.partyService.selectedFilterValue = res;
 
         // TODO: remove once ladder has been reworked
         if (res !== 'All players') {
@@ -88,6 +87,12 @@ export class LadderSummaryComponent implements OnInit, OnDestroy {
     });
   }
   getPlayers() {
+    // move self to first in array
+    const self = this.partyService.party.players.find(x => x.connectionID === this.partyService.currentPlayer.connectionID);
+    if (this.partyService.party.players.indexOf(self) > 0) {
+      this.partyService.party.players.splice(this.partyService.party.players.indexOf(self), 1);
+      this.partyService.party.players.unshift(self);
+    }
     return this.partyService.party.players.filter(x => x.character !== null);
   }
   ngOnDestroy() {
@@ -107,20 +112,11 @@ export class LadderSummaryComponent implements OnInit, OnDestroy {
   }
 
   selectPlayer(filterValue: any) {
-    this.partyService.selectedFilterValueSub.next(filterValue.value);
 
     if (this.party !== undefined) {
-      const foundPlayer = this.party.players.find(x => x.character !== null && x.character.name === this.partyService.selectedFilterValue);
+      const foundPlayer = this.party.players.find(x => x.character !== null && x.character.name === filterValue);
 
-      // update values for entire party, or a specific player, depending on selection
-      if (this.partyService.selectedFilterValue === 'All players' || this.partyService.selectedFilterValue === undefined) {
-        const ladder = this.playerLadders.find(x => this.partyService.currentPlayer.character !== null &&
-          x.name === this.partyService.currentPlayer.character.league);
-        if (ladder !== undefined) {
-          this.table.dataSource = [];
-          this.table.updateTable(ladder.players);
-        }
-      } else if (foundPlayer !== undefined) {
+      if (foundPlayer !== undefined) {
         const ladder = this.playerLadders.find(x => x.name === foundPlayer.character.league);
         if (ladder !== undefined) {
           this.table.dataSource = [];
@@ -128,6 +124,8 @@ export class LadderSummaryComponent implements OnInit, OnDestroy {
         }
       }
     }
+
+    this.partyService.selectedFilter.next(filterValue.value);
   }
 
   ladderFiltered(event) {

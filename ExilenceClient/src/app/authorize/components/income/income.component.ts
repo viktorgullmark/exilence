@@ -130,15 +130,14 @@ export class IncomeComponent implements OnInit, OnDestroy {
       }
     });
     // subscribe to dropdown for playerselection
-    this.selectedFilterValueSub = this.partyService.selectedFilterValueSub.subscribe(res => {
+    this.selectedFilterValueSub = this.partyService.selectedFilter.subscribe(res => {
       if (res !== undefined) {
-        this.partyService.selectedFilterValue = res;
         this.dateData = [];
 
         // update values for entire party, or a specific player, depending on selection
         this.foundPlayer = this.party.players.find(x => x.character !== null &&
-          x.character.name === this.partyService.selectedFilterValue);
-        if (this.partyService.selectedFilterValue !== '0' && this.foundPlayer !== undefined) {
+          x.character.name === res);
+        if (res !== '0' && this.foundPlayer !== undefined) {
           this.updateGraph(this.foundPlayer);
         } else {
           this.party.players.forEach(p => {
