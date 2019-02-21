@@ -19,6 +19,7 @@ All notable changes to this project will be documented in this file.
     - Added support to track lab-runs
     - Added support for zana missions
     - Added support for vaal side-areas
+- Minor improvements to how player-selections work
 - Minor style-tweaks to how settings are displayed
 - Minor text-changes to map-tab popup
 - Added exact progress next to gem experience-bar
