@@ -4,7 +4,7 @@
             <span class="title">Avg. time per area</span>
             <br />
             <div class="stat-inner-wrapper">
-                <span class="stat-placeholder" *ngIf="filteredArr == null || filteredArr == undefined || filteredArr.length == 0">No
+                <span class="stat-placeholder" *ngIf="filteredArr == null || filteredArr == undefined || filteredArr.length == 0 || averageTimeSpent == ''">No
                     data</span>
                 <span class="stat" *ngIf="filteredArr != null && filteredArr.length > 0">{{averageTimeSpent}}</span>
             </div>

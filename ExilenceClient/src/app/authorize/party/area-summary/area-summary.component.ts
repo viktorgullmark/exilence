@@ -198,6 +198,8 @@ export class AreaSummaryComponent implements OnInit, OnDestroy {
         if (total !== 0 && pastAreas.length > 0) {
           const average = total / pastAreas.length;
           this.averageGain = average.toFixed(2).toString();
+        } else {
+          this.averageGain = '';
         }
       } else {
         this.averageGain = '';
@@ -217,12 +219,15 @@ export class AreaSummaryComponent implements OnInit, OnDestroy {
         });
 
         const average = total / pastAreas.length;
-
-        const minute = Math.floor(average / 60);
-        let seconds = average % 60;
-        seconds = Math.floor(seconds);
-        this.averageTimeSpent = ((minute < 10) ? '0' + minute.toString() : seconds.toString())
-          + ':' + ((seconds < 10) ? '0' + seconds.toString() : seconds.toString());
+        if (total !== 0 && pastAreas.length > 0) {
+          const minute = Math.floor(average / 60);
+          let seconds = average % 60;
+          seconds = Math.floor(seconds);
+          this.averageTimeSpent = ((minute < 10) ? '0' + minute.toString() : seconds.toString())
+            + ':' + ((seconds < 10) ? '0' + seconds.toString() : seconds.toString());
+        } else {
+          this.averageTimeSpent = '';
+        }
       } else {
         this.averageTimeSpent = '';
       }
