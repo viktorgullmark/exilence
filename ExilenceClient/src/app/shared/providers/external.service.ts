@@ -49,8 +49,8 @@ export class ExternalService {
     return this.http.get('https://api.github.com/repos/viktorgullmark/exilence/releases/latest');
   }
 
-  getCharacter(data: AccountInfo): Observable<any> {
-    const parameters = `?accountName=${data.accountName}&character=${data.characterName}`;
+  getCharacterInventory(accountName: string, characterName: string): Observable<any> {
+    const parameters = `?accountName=${accountName}&character=${characterName}`;
 
     return this.RequestRateLimit.limit
       (this.http.get('https://www.pathofexile.com/character-window/get-items' + parameters, { withCredentials: true }).catch(e => {

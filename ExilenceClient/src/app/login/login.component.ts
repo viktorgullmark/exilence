@@ -454,7 +454,7 @@ export class LoginComponent implements OnInit, OnDestroy {
         this.analyticsService.startTracking(this.form.accountName);
 
         const request = forkJoin(
-            this.externalService.getCharacter(this.form),
+            this.externalService.getCharacterInventory(this.form.accountName, this.form.characterName),
         );
 
         request.subscribe(res => {

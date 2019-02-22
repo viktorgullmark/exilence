@@ -491,7 +491,7 @@ export class PartyService implements OnDestroy {
   public updatePlayer(player: Player, reason: string = null) {
     const oneDayAgo = (Date.now() - (24 * 60 * 60 * 1000));
     this.updateInProgress = true;
-    this.externalService.getCharacter(this.accountInfo)
+    this.externalService.getCharacterInventory(this.accountInfo.accountName, this.accountInfo.characterName)
       .subscribe((equipment: EquipmentResponse) => {
         player = this.externalService.setCharacter(equipment, player);
         const objToSend = Object.assign({}, player);
@@ -714,21 +714,22 @@ export class PartyService implements OnDestroy {
         filePath: '',
         sessionIdValid: false
       };
-      return this.externalService.getCharacter(info).subscribe((response: EquipmentResponse) => {
-        if (response !== null) {
-          let newPlayer = {} as Player;
-          newPlayer.account = account,
-            newPlayer.generic = true;
-          newPlayer.genericHost = this.currentPlayer.character.name;
-          newPlayer = this.externalService.setCharacter(response, newPlayer);
-          this.addGenericPlayer(newPlayer);
-        }
-      },
-        () => {
-          this.logService.log(`getCharacter failed for player: ${player.name}, account: ${account} (profile probaly private)`);
-          this.recentPrivatePlayers.unshift(player.name);
-        }
-      );
+      return this.externalService.getCharacterInventory(info.accountName, info.characterName)
+        .subscribe((response: EquipmentResponse) => {
+          if (response !== null) {
+            let newPlayer = {} as Player;
+            newPlayer.account = account,
+              newPlayer.generic = true;
+            newPlayer.genericHost = this.currentPlayer.character.name;
+            newPlayer = this.externalService.setCharacter(response, newPlayer);
+            this.addGenericPlayer(newPlayer);
+          }
+        },
+          () => {
+            this.logService.log(`getCharacter failed for player: ${player.name}, account: ${account} (profile probaly private)`);
+            this.recentPrivatePlayers.unshift(player.name);
+          }
+        );
     }
   }
   //#endregion

@@ -35,6 +35,8 @@ export class IncomeService implements OnDestroy {
   public isSnapshotting = false;
   private inventoryPricing = true;
 
+  private playerInventory: Item[];
+
   public networthSnapshots: NetWorthSnapshot[] = [];
   public localPlayer: Player;
 
@@ -164,6 +166,13 @@ export class IncomeService implements OnDestroy {
       if (item.stackSize) {
         stacksize = item.stackSize;
         totalValueForItem = (itemPriceInfoObj.chaosequiv * stacksize);
+      } else {
+          if (item.properties !== null && item.properties !== undefined) {
+            const prop = item.properties.find(p => p.name === 'Stack Size');
+            if (prop !== undefined) {
+              stacksize = +item.properties.find(p => p.name === 'Stack Size').values[0][0].split('/', 1);
+            }
+          }
       }
 
       // If item already exists in array, update existing
@@ -272,14 +281,17 @@ export class IncomeService implements OnDestroy {
     return Observable.forkJoin(
       this.getPlayerPublicMaps(accountName, tradeLeague, mapTab),
       this.getPlayerStashTabs(accountName, localLeague),
-      this.pricingService.retrieveExternalPrices()
-    ).do(() => {
+      this.pricingService.retrieveExternalPrices(),
+      this.getPlayerInventory(accountName, this.localPlayer.character.name)
+    ).do((res) => {
       this.logService.log('Finished retriving stashhtabs');
       if (this.characterPricing) { // price equipment
         this.PriceItems(this.localPlayer.character.items.filter(x => x.inventoryId !== 'MainInventory'), mapTab, undefined);
-      } // price inventory
+      } // price inventory'
+      console.log(this.inventoryPricing);
+      console.log(res[3].items);
       if (this.inventoryPricing) {
-        this.PriceItems(this.localPlayer.character.items.filter(x => x.inventoryId === 'MainInventory'), mapTab, undefined);
+        this.PriceItems(res[3].items, mapTab, undefined);
       }
       this.playerStashTabs.forEach((tab: Stash, tabIndex: number) => {
         if (tab !== null) {
@@ -368,6 +380,10 @@ export class IncomeService implements OnDestroy {
       .do(stashTab => {
         this.playerStashTabs.push(stashTab);
       });
+  }
+
+  getPlayerInventory(accountName: string, characterName: string) {
+    return this.externalService.getCharacterInventory(accountName, characterName);
   }
 
   splitIntoSubArray(arr, count) {
