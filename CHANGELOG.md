@@ -1,6 +1,11 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [0.9.20] - 2019-02-23
+### Fixed
+- Fixed a bug where the avg. gain would not update when swapping player
+- Fixed a display-bug with average time per area
+
 ## [0.9.19] - 2019-02-22
 ### Added
 - Added gain per area
