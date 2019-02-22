@@ -9,7 +9,7 @@ import { Party } from '../../../shared/interfaces/party.interface';
 import { PlayerLadder } from '../../../shared/interfaces/player.interface';
 import { PartyService } from '../../../shared/providers/party.service';
 import { LadderTableComponent } from '../../components/ladder-table/ladder-table.component';
-import * as fromReducer from '../../../store/reducers/ladder.reducer';
+import * as fromReducer from '../../../store/ladder/ladder.reducer';
 
 @Component({
   selector: 'app-ladder-summary',

@@ -1,6 +1,6 @@
 import { createFeatureSelector, createSelector } from '@ngrx/store';
-import * as fromActions from './../actions/ladder.actions';
-import * as fromAdapter from './../adapters/ladder.adapter';
+import * as fromActions from './ladder.actions';
+import * as fromAdapter from './ladder.adapter';
 import { LadderState } from '../../app.states';
 
 export const initialState: LadderState = fromAdapter.adapter.getInitialState({

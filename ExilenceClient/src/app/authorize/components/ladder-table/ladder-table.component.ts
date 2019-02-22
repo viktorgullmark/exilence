@@ -8,7 +8,7 @@ import { LadderState } from '../../../app.states';
 import { Party } from '../../../shared/interfaces/party.interface';
 import { LadderPlayer, PlayerLadder } from '../../../shared/interfaces/player.interface';
 import { PartyService } from '../../../shared/providers/party.service';
-import * as fromReducer from '../../../store/reducers/ladder.reducer';
+import * as fromReducer from '../../../store/ladder/ladder.reducer';
 
 @Component({
   selector: 'app-ladder-table',

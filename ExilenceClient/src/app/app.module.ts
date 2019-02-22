@@ -38,7 +38,7 @@ import { SessionService } from './shared/providers/session.service';
 import { SettingsService } from './shared/providers/settings.service';
 import { StateService } from './shared/providers/state.service';
 import { StoreModule } from '@ngrx/store';
-import { reducers, metaReducers } from './store/reducers/reducers';
+import { reducers, metaReducers } from './store/reducers';
 
 // AoT requires an exported function for factories
 export function HttpLoaderFactory(http: HttpClient) {

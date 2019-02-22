@@ -28,8 +28,8 @@ import { ItemHelper } from '../helpers/item.helper';
 import { Item } from '../interfaces/item.interface';
 import { Store } from '@ngrx/store';
 import { LadderState } from '../../app.states';
-import * as fromActions from '../../store/actions/ladder.actions';
-import * as fromReducer from '../../store/reducers/ladder.reducer';
+import * as fromActions from '../../store/ladder/ladder.actions';
+import * as fromReducer from '../../store/ladder/ladder.reducer';
 
 @Injectable()
 export class PartyService implements OnDestroy {
