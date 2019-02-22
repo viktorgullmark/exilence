@@ -82,10 +82,8 @@ export class PartyService implements OnDestroy {
   private specCountStoreSub: Subscription;
   public isConnecting = false;
   private playerLadders: Array<PlayerLadder> = [];
-  private spectatorCount: number;
 
   private allLadders$: Observable<PlayerLadder[]>;
-  private specCount$: Observable<number>;
 
   constructor(
     private router: Router,
@@ -102,7 +100,6 @@ export class PartyService implements OnDestroy {
   ) {
 
     this.allLadders$ = this.ladderStore.select(ladderReducer.selectAllLadders);
-    this.specCount$ = this.specCountStore.select(specCountReducer.selectSpectatorCount);
     this.reconnectAttempts = 0;
     this.forceClosed = false;
 
@@ -133,9 +130,7 @@ export class PartyService implements OnDestroy {
     this.ladderStoreSub = this.allLadders$.subscribe(ladders => {
       this.playerLadders = ladders;
     });
-    this.specCountStoreSub = this.specCount$.subscribe(count => {
-      this.spectatorCount = count;
-    });
+
     this.initParty();
     this._hubConnection = new signalR.HubConnectionBuilder()
       .withUrl(AppConfig.url + 'hubs/party')

@@ -1,21 +1,20 @@
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { MatTabGroup } from '@angular/material';
-import { Subscription, Observable } from 'rxjs';
+import { select, Store } from '@ngrx/store';
+import { Observable, Subscription } from 'rxjs';
 
+import { SpectatorCountState, AppState } from '../../app.states';
 import { Player } from '../../shared/interfaces/player.interface';
-import { AccountService } from '../../shared/providers/account.service';
 import { AnalyticsService } from '../../shared/providers/analytics.service';
 import { ElectronService } from '../../shared/providers/electron.service';
 import { MessageValueService } from '../../shared/providers/message-value.service';
 import { PartyService } from '../../shared/providers/party.service';
 import { SettingsService } from '../../shared/providers/settings.service';
 import { StateService } from '../../shared/providers/state.service';
-import { PartySummaryComponent } from './party-summary/party-summary.component';
-import { LadderSummaryComponent } from './ladder-summary/ladder-summary.component';
+import * as fromReducer from '../../store/spectator-count/spectator-count.reducer';
 import { AreaSummaryComponent } from './area-summary/area-summary.component';
-import { Store, select } from '@ngrx/store';
-import { SpectatorCountState } from '../../app.states';
-import * as specCountReducer from '../../store/spectator-count/spectator-count.reducer';
+import { LadderSummaryComponent } from './ladder-summary/ladder-summary.component';
+import { PartySummaryComponent } from './party-summary/party-summary.component';
 
 @Component({
   selector: 'app-party',
@@ -52,15 +51,12 @@ export class PartyComponent implements OnInit, OnDestroy {
     private specCountStore: Store<SpectatorCountState>
   ) {
 
-    this.specCount$ = this.specCountStore.select(specCountReducer.selectSpectatorCount);
+    this.specCount$ = this.specCountStore.select(fromReducer.selectSpectatorCount);
 
     this.selectedPlayerSub = this.partyService.selectedPlayer.subscribe(res => {
       if (res !== undefined) {
         this.player = res;
       }
-    });
-    this.spectatorCountSub = this.specCount$.subscribe(count => {
-      this.spectatorCount = count;
     });
 
     this.partySub = this.partyService.partyUpdated.subscribe(res => {
