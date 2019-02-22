@@ -185,12 +185,7 @@ export class PartyService implements OnDestroy {
 
           this.specCountStore.dispatch(new specCountActions.Update({ spectatorCount: spectators }));
 
-          if (player.character !== null && this.playerLadders.find(x => x.name === player.character.league) === undefined) {
-            this.getLadderForLeague(player.character.league);
-          } else {
-            const firstPlayer = this.party.players.find(x => x.character !== null && !x.isSpectator);
-            this.getLadderForLeague(firstPlayer.character.league);
-          }
+          this.refreshLaddersForParty();
 
           this.partyUpdated.next(this.party);
 
@@ -357,7 +352,7 @@ export class PartyService implements OnDestroy {
   }
 
   moveSelfToFirst() {
-    if (this.currentPlayer !== undefined) {
+    if (this.currentPlayer !== undefined && this.currentPlayer.character !== null) {
       const self = this.party.players.find(x => x.connectionID === this.currentPlayer.connectionID);
       if (this.party.players.indexOf(self) > 0) {
         this.party.players.splice(this.party.players.indexOf(self), 1);
@@ -511,7 +506,7 @@ export class PartyService implements OnDestroy {
   public updatePlayer(player: Player, reason: string = null) {
     const oneDayAgo = (Date.now() - (24 * 60 * 60 * 1000));
     this.updateInProgress = true;
-    this.externalService.getCharacter(this.accountInfo)
+    this.externalService.getCharacterInventory(this.accountInfo.accountName, this.accountInfo.characterName)
       .subscribe((equipment: EquipmentResponse) => {
         player = this.externalService.setCharacter(equipment, player);
         const objToSend = Object.assign({}, player);
@@ -730,21 +725,22 @@ export class PartyService implements OnDestroy {
         filePath: '',
         sessionIdValid: false
       };
-      return this.externalService.getCharacter(info).subscribe((response: EquipmentResponse) => {
-        if (response !== null) {
-          let newPlayer = {} as Player;
-          newPlayer.account = account,
-            newPlayer.generic = true;
-          newPlayer.genericHost = this.currentPlayer.character.name;
-          newPlayer = this.externalService.setCharacter(response, newPlayer);
-          this.addGenericPlayer(newPlayer);
-        }
-      },
-        () => {
-          this.logService.log(`getCharacter failed for player: ${player.name}, account: ${account} (profile probaly private)`);
-          this.recentPrivatePlayers.unshift(player.name);
-        }
-      );
+      return this.externalService.getCharacterInventory(info.accountName, info.characterName)
+        .subscribe((response: EquipmentResponse) => {
+          if (response !== null) {
+            let newPlayer = {} as Player;
+            newPlayer.account = account,
+              newPlayer.generic = true;
+            newPlayer.genericHost = this.currentPlayer.character.name;
+            newPlayer = this.externalService.setCharacter(response, newPlayer);
+            this.addGenericPlayer(newPlayer);
+          }
+        },
+          () => {
+            this.logService.log(`getCharacter failed for player: ${player.name}, account: ${account} (profile probaly private)`);
+            this.recentPrivatePlayers.unshift(player.name);
+          }
+        );
     }
   }
   //#endregion
