@@ -168,11 +168,7 @@ export class PartyService implements OnDestroy {
           const spectators = this.updateSpectatorCount(this.party.players);
           this.stateService.dispatch({ key: 'spectatorCount', value: spectators });
 
-          this.party.players.forEach(p => {
-            if (p.character !== null && this.playerLadders.find(x => x.name === p.character.league) === undefined) {
-              this.getLadderForLeague(p.character.league);
-            }
-          });
+          this.refreshLaddersForParty();
 
           this.partyUpdated.next(this.party);
 
