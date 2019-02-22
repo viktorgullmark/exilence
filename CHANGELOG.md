@@ -5,6 +5,7 @@ All notable changes to this project will be documented in this file.
 ### Fixed
 - Fixed a bug where the avg. gain would not update when swapping player
 - Fixed a display-bug with average time per area
+- Fixed a bug where ladders weren't fetched properly for your group-members
 
 ## [0.9.19] - 2019-02-22
 ### Added
