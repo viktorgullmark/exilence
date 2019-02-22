@@ -340,10 +340,12 @@ export class PartyService implements OnDestroy {
   }
 
   moveSelfToFirst() {
-    const self = this.party.players.find(x => x.connectionID === this.currentPlayer.connectionID);
-    if (this.party.players.indexOf(self) > 0) {
-      this.party.players.splice(this.party.players.indexOf(self), 1);
-      this.party.players.unshift(self);
+    if (this.currentPlayer !== undefined && this.currentPlayer.character !== null) {
+      const self = this.party.players.find(x => x.connectionID === this.currentPlayer.connectionID);
+      if (this.party.players.indexOf(self) > 0) {
+        this.party.players.splice(this.party.players.indexOf(self), 1);
+        this.party.players.unshift(self);
+      }
     }
   }
 
