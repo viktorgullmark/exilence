@@ -43,6 +43,7 @@
     "@ngrx/effects": "^6.1.2",
     "@ngrx/entity": "^6.1.2",
     "@ngrx/store": "^6.1.2",
+    "@ngrx/store-devtools": "^6.1.2",
     "@sentry/browser": "^4.5.3",
     "@swimlane/ngx-charts": "^8.1.0",
     "d3": "^5.5.0",

@@ -11,6 +11,8 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { StoreModule } from '@ngrx/store';
+import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { ContextMenuModule } from 'ngx-contextmenu';
@@ -37,8 +39,7 @@ import { PartyService } from './shared/providers/party.service';
 import { SessionService } from './shared/providers/session.service';
 import { SettingsService } from './shared/providers/settings.service';
 import { StateService } from './shared/providers/state.service';
-import { StoreModule } from '@ngrx/store';
-import { reducers, metaReducers } from './store/reducers';
+import { metaReducers, reducers } from './store/reducers';
 
 // AoT requires an exported function for factories
 export function HttpLoaderFactory(http: HttpClient) {
@@ -60,7 +61,11 @@ export function HttpLoaderFactory(http: HttpClient) {
     AppRoutingModule,
     DisconnectedModule,
     BrowserAnimationsModule,
-    StoreModule.forRoot(reducers, {metaReducers}),
+    StoreModule.forRoot(reducers, { metaReducers }),
+    StoreDevtoolsModule.instrument({
+      maxAge: 25, // Retains last 25 states
+      logOnly: false // Restrict extension to log-only mode
+    }),
     ContextMenuModule.forRoot(),
     TranslateModule.forRoot({
       loader: {
