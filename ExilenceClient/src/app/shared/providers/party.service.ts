@@ -101,8 +101,8 @@ export class PartyService implements OnDestroy {
     private specCountStore: Store<SpectatorCountState>
   ) {
 
-    this.allLadders$ = this.ladderStore.select(ladderReducer.selectAllLadders).pipe();
-    this.specCount$ = this.specCountStore.pipe(select(specCountReducer.selectSpectatorCount));
+    this.allLadders$ = this.ladderStore.select(ladderReducer.selectAllLadders);
+    this.specCount$ = this.specCountStore.select(specCountReducer.selectSpectatorCount);
     this.reconnectAttempts = 0;
     this.forceClosed = false;
 

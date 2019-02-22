@@ -52,7 +52,7 @@ export class PartyComponent implements OnInit, OnDestroy {
     private specCountStore: Store<SpectatorCountState>
   ) {
 
-    this.specCount$ = this.specCountStore.pipe(select(specCountReducer.selectSpectatorCount));
+    this.specCount$ = this.specCountStore.select(specCountReducer.selectSpectatorCount);
 
     this.selectedPlayerSub = this.partyService.selectedPlayer.subscribe(res => {
       if (res !== undefined) {
