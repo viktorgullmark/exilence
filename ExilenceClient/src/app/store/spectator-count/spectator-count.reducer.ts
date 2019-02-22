@@ -1,4 +1,4 @@
-import { createFeatureSelector } from '@ngrx/store';
+import { createFeatureSelector, createSelector } from '@ngrx/store';
 
 import { SpectatorCountState } from '../../app.states';
 import * as fromActions from './spectator-count.actions';
@@ -34,3 +34,6 @@ export function spectatorCountReducer(state = initialState, action: fromActions.
 
 export const getSpectatorCountState = createFeatureSelector<SpectatorCountState>('spectatorCountState');
 
+export const getSpectatorCount = (state: SpectatorCountState) => state.spectatorCount;
+
+export const selectSpectatorCount = createSelector(getSpectatorCountState, getSpectatorCount);

@@ -23,13 +23,14 @@ import { HistoryHelper } from '../helpers/history.helper';
 import { LeagueWithPlayers } from '../interfaces/league.interface';
 import { Subscription, Observable } from 'rxjs';
 import { ServerMessage } from '../interfaces/server-message.interface';
-import { StateService } from './state.service';
 import { ItemHelper } from '../helpers/item.helper';
 import { Item } from '../interfaces/item.interface';
-import { Store } from '@ngrx/store';
-import { LadderState } from '../../app.states';
-import * as fromActions from '../../store/ladder/ladder.actions';
-import * as fromReducer from '../../store/ladder/ladder.reducer';
+import { Store, select } from '@ngrx/store';
+import { LadderState, SpectatorCountState } from '../../app.states';
+import * as ladderActions from '../../store/ladder/ladder.actions';
+import * as ladderReducer from '../../store/ladder/ladder.reducer';
+import * as specCountActions from '../../store/spectator-count/spectator-count.actions';
+import * as specCountReducer from '../../store/spectator-count/spectator-count.reducer';
 
 @Injectable()
 export class PartyService implements OnDestroy {
@@ -78,10 +79,13 @@ export class PartyService implements OnDestroy {
   private selectedGenPlayerSub: Subscription;
   private accountInfoSub: Subscription;
   private ladderStoreSub: Subscription;
+  private specCountStoreSub: Subscription;
   public isConnecting = false;
   private playerLadders: Array<PlayerLadder> = [];
+  private spectatorCount: number;
 
   private allLadders$: Observable<PlayerLadder[]>;
+  private specCount$: Observable<number>;
 
   constructor(
     private router: Router,
@@ -93,11 +97,12 @@ export class PartyService implements OnDestroy {
     private electronService: ElectronService,
     private messageValueService: MessageValueService,
     private settingsService: SettingsService,
-    private stateService: StateService,
-    private ladderStore: Store<LadderState>
+    private ladderStore: Store<LadderState>,
+    private specCountStore: Store<SpectatorCountState>
   ) {
 
-    this.allLadders$ = this.ladderStore.select(fromReducer.selectAllLadders);
+    this.allLadders$ = this.ladderStore.pipe(select(ladderReducer.selectAllLadders));
+    this.specCount$ = this.specCountStore.pipe(select(specCountReducer.selectSpectatorCount));
 
     this.reconnectAttempts = 0;
     this.forceClosed = false;
@@ -128,6 +133,9 @@ export class PartyService implements OnDestroy {
     });
     this.ladderStoreSub = this.allLadders$.subscribe(ladders => {
       this.playerLadders = ladders;
+    });
+    this.specCountStoreSub = this.specCount$.subscribe(count => {
+      this.spectatorCount = count;
     });
     this.initParty();
     this._hubConnection = new signalR.HubConnectionBuilder()
@@ -175,7 +183,8 @@ export class PartyService implements OnDestroy {
           this.messageValueService.partyGainSubject.next(this.partyGain);
 
           const spectators = this.updateSpectatorCount(this.party.players);
-          this.stateService.dispatch({ key: 'spectatorCount', value: spectators });
+
+          this.specCountStore.dispatch(new specCountActions.Update({ spectatorCount: spectators }));
 
           if (player.character !== null && this.playerLadders.find(x => x.name === player.character.league) === undefined) {
             this.getLadderForLeague(player.character.league);
@@ -231,8 +240,8 @@ export class PartyService implements OnDestroy {
         this.partyUpdated.next(this.party);
         this.updatePlayerLists(this.party);
 
-        const spectators = this.updateSpectatorCount(this.party.players);
-        this.stateService.dispatch({ key: 'spectatorCount', value: spectators });
+        // update spectator count
+        this.specCountStore.dispatch(new specCountActions.Increment());
 
         if (player.character !== null && this.playerLadders.find(x => x.name === player.character.league) === undefined) {
           this.getLadderForLeague(player.character.league);
@@ -367,6 +376,8 @@ export class PartyService implements OnDestroy {
       this.accountInfoSub.unsubscribe();
     } if (this.ladderStoreSub !== undefined) {
       this.ladderStoreSub.unsubscribe();
+    } if (this.specCountStoreSub !== undefined) {
+      this.specCountStoreSub.unsubscribe();
     }
   }
 
@@ -401,8 +412,7 @@ export class PartyService implements OnDestroy {
     }
 
     // update spectator count
-    const spectators = this.updateSpectatorCount(this.party.players);
-    this.stateService.dispatch({ key: 'spectatorCount', value: spectators });
+    this.specCountStore.dispatch(new specCountActions.Decrement());
 
     this.logService.log('player left:', player);
   }
@@ -554,9 +564,9 @@ export class PartyService implements OnDestroy {
 
         const found = this.playerLadders.find(l => l.name === league);
         if (found === undefined) {
-          this.ladderStore.dispatch(new fromActions.AddLadder({ ladder: { name: league, players: ladder } }));
+          this.ladderStore.dispatch(new ladderActions.AddLadder({ ladder: { name: league, players: ladder } }));
         } else {
-          this.ladderStore.dispatch(new fromActions.UpdateLadder({ ladder: { id: league, changes: { players: ladder } } }));
+          this.ladderStore.dispatch(new ladderActions.UpdateLadder({ ladder: { id: league, changes: { players: ladder } } }));
         }
 
         if (ladder !== null) {

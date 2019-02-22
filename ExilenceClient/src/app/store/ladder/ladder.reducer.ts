@@ -31,7 +31,7 @@ export const selectLadderEntities = createSelector(getLadderState, fromAdapter.s
 export const selectAllLadders = createSelector(getLadderState, fromAdapter.selectAllLadders);
 export const selectCurrentLadderName = createSelector(getLadderState, getSelectedLadderName);
 
-export const selectCurrentArticle = createSelector(
+export const selectCurrentLadder = createSelector(
     selectLadderEntities,
     selectCurrentLadderName,
     (ladderEntities, ladderName) => ladderEntities[ladderName]

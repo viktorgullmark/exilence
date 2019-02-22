@@ -1,6 +1,6 @@
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { MatTabGroup } from '@angular/material';
-import { Subscription } from 'rxjs';
+import { Subscription, Observable } from 'rxjs';
 
 import { Player } from '../../shared/interfaces/player.interface';
 import { AccountService } from '../../shared/providers/account.service';
@@ -13,6 +13,9 @@ import { StateService } from '../../shared/providers/state.service';
 import { PartySummaryComponent } from './party-summary/party-summary.component';
 import { LadderSummaryComponent } from './ladder-summary/ladder-summary.component';
 import { AreaSummaryComponent } from './area-summary/area-summary.component';
+import { Store, select } from '@ngrx/store';
+import { SpectatorCountState } from '../../app.states';
+import * as specCountReducer from '../../store/spectator-count/spectator-count.reducer';
 
 @Component({
   selector: 'app-party',
@@ -35,7 +38,9 @@ export class PartyComponent implements OnInit, OnDestroy {
   private spectatorCountSub: any;
   private gainHours = 1;
   private stateSub: Subscription;
-  public spectatorCount = 0;
+  public spectatorCount: number;
+
+  private specCount$: Observable<number>;
 
   constructor(
     public partyService: PartyService,
@@ -43,15 +48,19 @@ export class PartyComponent implements OnInit, OnDestroy {
     private messageValueService: MessageValueService,
     private electronService: ElectronService,
     private settingsService: SettingsService,
-    private stateService: StateService
+    private stateService: StateService,
+    private specCountStore: Store<SpectatorCountState>
   ) {
+
+    this.specCount$ = this.specCountStore.pipe(select(specCountReducer.selectSpectatorCount));
+
     this.selectedPlayerSub = this.partyService.selectedPlayer.subscribe(res => {
       if (res !== undefined) {
         this.player = res;
       }
     });
-    this.stateSub = this.stateService.state$.subscribe(state => {
-      this.spectatorCount = 'spectatorCount'.split('.').reduce((o, i) => o[i], state);
+    this.spectatorCountSub = this.specCount$.subscribe(count => {
+      this.spectatorCount = count;
     });
 
     this.partySub = this.partyService.partyUpdated.subscribe(res => {
