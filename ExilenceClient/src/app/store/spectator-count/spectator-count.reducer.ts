@@ -10,15 +10,20 @@ export const initialState: SpectatorCountState = fromAdapter.adapter.getInitialS
 
 export function spectatorCountReducer(state = initialState, action: fromActions.SPECTATOR_COUNT_ACTIONS): SpectatorCountState {
     switch (action.type) {
-        case fromActions.SpectatorCountActionTypes.Increment:
+        case fromActions.SpectatorCountActionTypes.INCREMENT:
             state.spectatorCount += 1;
             return state;
 
-        case fromActions.SpectatorCountActionTypes.Decrement:
+        case fromActions.SpectatorCountActionTypes.DECREMENT:
             state.spectatorCount -= 1;
             return state;
 
-        case fromActions.SpectatorCountActionTypes.Reset:
+        case fromActions.SpectatorCountActionTypes.UPDATE: {
+            state.spectatorCount = action.payload.spectatorCount;
+            return state;
+        }
+
+        case fromActions.SpectatorCountActionTypes.RESET:
             state.spectatorCount = 0;
             return state;
 
