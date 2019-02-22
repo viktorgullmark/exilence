@@ -102,8 +102,7 @@ export class PartyService implements OnDestroy {
   ) {
 
     this.allLadders$ = this.ladderStore.select(ladderReducer.selectAllLadders).pipe();
-    this.specCount$ = this.specCountStore.select(specCountReducer.selectSpectatorCount).pipe();
-
+    this.specCount$ = this.specCountStore.pipe(select(specCountReducer.selectSpectatorCount));
     this.reconnectAttempts = 0;
     this.forceClosed = false;
 
@@ -135,7 +134,6 @@ export class PartyService implements OnDestroy {
       this.playerLadders = ladders;
     });
     this.specCountStoreSub = this.specCount$.subscribe(count => {
-      debugger;
       this.spectatorCount = count;
     });
     this.initParty();
