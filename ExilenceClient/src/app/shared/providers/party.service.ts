@@ -180,7 +180,11 @@ export class PartyService implements OnDestroy {
 
           this.specCountStore.dispatch(new specCountActions.Update({ spectatorCount: spectators }));
 
-          this.refreshLaddersForParty();
+          this.party.players.forEach(p => {
+            if (p.character !== null && this.playerLadders.find(x => x.name === p.character.league) === undefined) {
+              this.getLadderForLeague(p.character.league);
+            }
+          });
 
           this.partyUpdated.next(this.party);
 

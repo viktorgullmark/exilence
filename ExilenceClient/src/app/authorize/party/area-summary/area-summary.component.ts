@@ -148,6 +148,7 @@ export class AreaSummaryComponent implements OnInit, OnDestroy {
   }
 
   mapToExport(array) {
+    console.log(array);
     return array.map(x => {
       const tier = x.name.substring(
         x.name.lastIndexOf('(T') + 1,
@@ -160,12 +161,20 @@ export class AreaSummaryComponent implements OnInit, OnDestroy {
           x.name.indexOf('(') - 1
         );
       } else { name = x.name; }
+
+      let itemString = '';
+      if (x.items !== undefined) {
+        itemString = x.items.map(t => t.name).join(', ');
+      }
+
       return {
+        DATE: moment(x.timestamp).format('YYYY-MM-DD HH:MM:SS'),
         NAME: name,
         TIER: tier,
         LEVEL: x.tier,
         DURATION: x.time,
-        DATE: moment(x.timestamp).format('YYYY-MM-DD HH:MM:SS')
+        GAIN: x.gain !== undefined ? x.gain.toFixed(2) : '-',
+        ITEMS: itemString
       };
     });
   }
