@@ -1,6 +1,15 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [0.9.21] - 2019-XX-XX
+### Added
+- Added new state-management (NgRx)
+
+### Changed
+- Changed how maps are displayed in the net worth table
+    - Displays rare maps as normal (to concat)
+    - Displays magic maps as normal (to concat)
+
 ## [0.9.20] - 2019-02-22
 ### Fixed
 - Fixed a bug where the avg. gain would not update when swapping player

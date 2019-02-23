@@ -269,7 +269,9 @@ export class NetworthTableComponent implements OnInit, OnDestroy {
         // update existing item with new data
         existingItem.stacksize = existingItem.stacksize + snapshot.stacksize;
         existingItem.value = existingItem.value + snapshot.value;
-        existingItem.holdingPlayers.push(playerName);
+        if (existingItem.holdingPlayers.find(x => x === playerName) === undefined) {
+          existingItem.holdingPlayers.push(playerName);
+        }
         // fix for existing items not containing these props
         existingItem.quality = snapshot.quality;
         existingItem.links = snapshot.links;

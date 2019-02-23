@@ -26,7 +26,7 @@ export class TableHelper {
         };
     }
 
-    public static findNetworthObj(array: any[], itemToFind: NetWorthItem) {
+    public static findNetworthObj(array: any[], itemToFind: any) {
         return array.find(x =>
             x.name === itemToFind.name
             && x.quality === itemToFind.quality
@@ -34,7 +34,8 @@ export class TableHelper {
             && x.gemLevel === itemToFind.gemLevel
             && x.corrupted === itemToFind.corrupted
             && x.variation === itemToFind.variation
-            && x.frameType === itemToFind.frameType
+            // ignore frameType for all maps except unique ones
+            && (x.frameType === itemToFind.frameType || (x.name.indexOf(' Map') > -1 && x.frameType !== 3))
         );
     }
 

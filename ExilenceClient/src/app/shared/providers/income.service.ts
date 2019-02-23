@@ -23,6 +23,7 @@ import { PartyService } from './party.service';
 import { PricingService } from './pricing.service';
 import { SettingsService } from './settings.service';
 import { StashStore } from '../interfaces/settings-store.interface';
+import { TableHelper } from '../helpers/table.helper';
 
 @Injectable()
 export class IncomeService implements OnDestroy {
@@ -167,23 +168,16 @@ export class IncomeService implements OnDestroy {
         stacksize = item.stackSize;
         totalValueForItem = (itemPriceInfoObj.chaosequiv * stacksize);
       } else {
-          if (item.properties !== null && item.properties !== undefined) {
-            const prop = item.properties.find(p => p.name === 'Stack Size');
-            if (prop !== undefined) {
-              stacksize = +item.properties.find(p => p.name === 'Stack Size').values[0][0].split('/', 1);
-            }
+        if (item.properties !== null && item.properties !== undefined) {
+          const prop = item.properties.find(p => p.name === 'Stack Size');
+          if (prop !== undefined) {
+            stacksize = +item.properties.find(p => p.name === 'Stack Size').values[0][0].split('/', 1);
           }
+        }
       }
 
       // If item already exists in array, update existing
-      const existingItem = this.totalNetWorthItems.find(x =>
-        x.name === itemPriceInfoObj.name
-        && x.quality === itemPriceInfoObj.quality
-        && x.links === itemPriceInfoObj.links
-        && x.gemLevel === itemPriceInfoObj.gemlevel
-        && x.variation === itemPriceInfoObj.variation
-        && x.frameType === itemPriceInfoObj.frameType
-      );
+      const existingItem = TableHelper.findNetworthObj(this.totalNetWorthItems, itemPriceInfoObj);
       if (existingItem !== undefined) {
         const indexOfItem = this.totalNetWorthItems.indexOf(existingItem);
         // update existing item with new data
@@ -197,8 +191,14 @@ export class IncomeService implements OnDestroy {
           ? item.icon.substring(0, item.icon.indexOf('?')) + '?scale=1&scaleIndex=3&w=1&h=1'
           : item.icon + '?scale=1&scaleIndex=3&w=1&h=1';
 
-        if (item.typeLine.indexOf(' Map') > -1) {
+        const isMap = item.typeLine.indexOf(' Map') > -1;
+
+        if (isMap) {
           icon = item.icon;
+
+          if (itemPriceInfoObj.frameType !== 3) {
+            itemPriceInfoObj.frameType = 0;
+          }
         }
 
         const netWorthItem: NetWorthItem = {
