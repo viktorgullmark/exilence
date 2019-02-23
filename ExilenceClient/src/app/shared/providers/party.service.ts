@@ -168,7 +168,11 @@ export class PartyService implements OnDestroy {
           const spectators = this.updateSpectatorCount(this.party.players);
           this.stateService.dispatch({ key: 'spectatorCount', value: spectators });
 
-          this.refreshLaddersForParty();
+          this.party.players.forEach(p => {
+            if (p.character !== null && this.playerLadders.find(x => x.name === p.character.league) === undefined) {
+              this.getLadderForLeague(p.character.league);
+            }
+          });
 
           this.partyUpdated.next(this.party);
 
@@ -537,6 +541,7 @@ export class PartyService implements OnDestroy {
   }
 
   public getLadderForLeague(league: string) {
+    console.log(league);
     return this._hubConnection.invoke('GetLadderForLeague', league).then((response) => {
       this.electronService.decompress(response, (ladder: LadderPlayer[]) => {
 
