@@ -21,11 +21,16 @@ import { NetWorthSnapshot } from '../interfaces/income.interface';
 import { MessageValueService } from './message-value.service';
 import { HistoryHelper } from '../helpers/history.helper';
 import { LeagueWithPlayers } from '../interfaces/league.interface';
-import { Subscription } from 'rxjs';
+import { Subscription, Observable } from 'rxjs';
 import { ServerMessage } from '../interfaces/server-message.interface';
-import { StateService } from './state.service';
 import { ItemHelper } from '../helpers/item.helper';
 import { Item } from '../interfaces/item.interface';
+import { Store, select } from '@ngrx/store';
+import { LadderState, SpectatorCountState } from '../../app.states';
+import * as ladderActions from '../../store/ladder/ladder.actions';
+import * as ladderReducer from '../../store/ladder/ladder.reducer';
+import * as specCountActions from '../../store/spectator-count/spectator-count.actions';
+import * as specCountReducer from '../../store/spectator-count/spectator-count.reducer';
 
 @Injectable()
 export class PartyService implements OnDestroy {
@@ -73,9 +78,12 @@ export class PartyService implements OnDestroy {
   private selectedFilterSub: Subscription;
   private selectedGenPlayerSub: Subscription;
   private accountInfoSub: Subscription;
-  private stateSub: Subscription;
+  private ladderStoreSub: Subscription;
+  private specCountStoreSub: Subscription;
   public isConnecting = false;
   private playerLadders: Array<PlayerLadder> = [];
+
+  private allLadders$: Observable<PlayerLadder[]>;
 
   constructor(
     private router: Router,
@@ -87,8 +95,11 @@ export class PartyService implements OnDestroy {
     private electronService: ElectronService,
     private messageValueService: MessageValueService,
     private settingsService: SettingsService,
-    private stateService: StateService
+    private ladderStore: Store<LadderState>,
+    private specCountStore: Store<SpectatorCountState>
   ) {
+
+    this.allLadders$ = this.ladderStore.select(ladderReducer.selectAllLadders);
     this.reconnectAttempts = 0;
     this.forceClosed = false;
 
@@ -104,7 +115,6 @@ export class PartyService implements OnDestroy {
     this.playerSub = this.accountService.player.subscribe(res => {
       this.currentPlayer = res;
     });
-
     this.selectedPlayerSub = this.selectedPlayer.subscribe(res => {
       this.selectedPlayerObj = res;
     });
@@ -117,9 +127,10 @@ export class PartyService implements OnDestroy {
     this.accountInfoSub = this.accountService.accountInfo.subscribe(res => {
       this.accountInfo = res;
     });
-    this.stateSub = this.stateService.state$.subscribe(state => {
-      this.playerLadders = 'playerLadders'.split('.').reduce((o, i) => o[i], state);
+    this.ladderStoreSub = this.allLadders$.subscribe(ladders => {
+      this.playerLadders = ladders;
     });
+
     this.initParty();
     this._hubConnection = new signalR.HubConnectionBuilder()
       .withUrl(AppConfig.url + 'hubs/party')
@@ -166,7 +177,8 @@ export class PartyService implements OnDestroy {
           this.messageValueService.partyGainSubject.next(this.partyGain);
 
           const spectators = this.updateSpectatorCount(this.party.players);
-          this.stateService.dispatch({ key: 'spectatorCount', value: spectators });
+
+          this.specCountStore.dispatch(new specCountActions.Update({ spectatorCount: spectators }));
 
           this.party.players.forEach(p => {
             if (p.character !== null && this.playerLadders.find(x => x.name === p.character.league) === undefined) {
@@ -221,8 +233,8 @@ export class PartyService implements OnDestroy {
         this.partyUpdated.next(this.party);
         this.updatePlayerLists(this.party);
 
-        const spectators = this.updateSpectatorCount(this.party.players);
-        this.stateService.dispatch({ key: 'spectatorCount', value: spectators });
+        // update spectator count
+        this.specCountStore.dispatch(new specCountActions.Increment());
 
         if (player.character !== null && this.playerLadders.find(x => x.name === player.character.league) === undefined) {
           this.getLadderForLeague(player.character.league);
@@ -357,8 +369,10 @@ export class PartyService implements OnDestroy {
       this.selectedGenPlayerSub.unsubscribe();
     } if (this.accountInfoSub !== undefined) {
       this.accountInfoSub.unsubscribe();
-    } if (this.stateSub !== undefined) {
-      this.stateSub.unsubscribe();
+    } if (this.ladderStoreSub !== undefined) {
+      this.ladderStoreSub.unsubscribe();
+    } if (this.specCountStoreSub !== undefined) {
+      this.specCountStoreSub.unsubscribe();
     }
   }
 
@@ -393,8 +407,7 @@ export class PartyService implements OnDestroy {
     }
 
     // update spectator count
-    const spectators = this.updateSpectatorCount(this.party.players);
-    this.stateService.dispatch({ key: 'spectatorCount', value: spectators });
+    this.specCountStore.dispatch(new specCountActions.Decrement());
 
     this.logService.log('player left:', player);
   }
@@ -544,16 +557,12 @@ export class PartyService implements OnDestroy {
     return this._hubConnection.invoke('GetLadderForLeague', league).then((response) => {
       this.electronService.decompress(response, (ladder: LadderPlayer[]) => {
 
-        // update ladder in state (fugly)
-        const foundLadder = this.playerLadders.find(x => x.name === league);
-        if (foundLadder !== undefined && foundLadder !== null) {
-          const ladderIndex = this.playerLadders.indexOf(foundLadder);
-          this.playerLadders[ladderIndex] = { name: league, players: ladder } as PlayerLadder;
+        const found = this.playerLadders.find(l => l.name === league);
+        if (found === undefined) {
+          this.ladderStore.dispatch(new ladderActions.AddLadder({ ladder: { name: league, players: ladder } }));
         } else {
-          this.playerLadders.push({ name: league, players: ladder } as PlayerLadder);
+          this.ladderStore.dispatch(new ladderActions.UpdateLadder({ ladder: { id: league, changes: { players: ladder } } }));
         }
-
-        this.stateService.dispatch({ key: 'playerLadders', value: this.playerLadders });
 
         if (ladder !== null) {
           // update player ranks based on fetched ladder

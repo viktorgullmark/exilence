@@ -1,6 +1,8 @@
 import { app, BrowserWindow, dialog, globalShortcut } from 'electron';
+import * as os from 'os';
 import * as path from 'path';
 import * as url from 'url';
+
 const windowStateKeeper = require('electron-window-state');
 
 export interface ExileWindowEvent {
@@ -125,6 +127,8 @@ function createWindow(windowType: ExileWindowEnum = ExileWindowEnum.Main) {
     icon: path.join(__dirname, 'dist/assets/img/app-icon.png'),
   });
 
+
+
   mainWindowState.manage(windows[ExileWindowEnum.Main]);
 
   const filePath: string = null;
@@ -221,6 +225,11 @@ try {
     windows[ExileWindowEnum.Main].on('focus', () => {
       windows[ExileWindowEnum.Main].flashFrame(false);
     });
+
+    // BrowserWindow.addDevToolsExtension(
+    //   // tslint:disable-next-line:max-line-length
+    //   path.join(os.homedir(), '\\AppData\\Local\\Google\\Chrome\\User Data\\Default\\Extensions\\lmhkpmbekcpmknklioeibfkpmmfibljd\\2.17.0_0')
+    // );
 
   });
 

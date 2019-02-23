@@ -1,13 +1,15 @@
 import { Component, Inject, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { MatSelect } from '@angular/material';
-import { Subscription } from 'rxjs';
+import { Store } from '@ngrx/store';
+import { Subscription, Observable } from 'rxjs';
 
+import { LadderState } from '../../../app.states';
 import { Party } from '../../../shared/interfaces/party.interface';
+import { PlayerLadder } from '../../../shared/interfaces/player.interface';
 import { PartyService } from '../../../shared/providers/party.service';
 import { LadderTableComponent } from '../../components/ladder-table/ladder-table.component';
-import { StateService } from '../../../shared/providers/state.service';
-import { PlayerLadder } from '../../../shared/interfaces/player.interface';
+import * as fromReducer from '../../../store/ladder/ladder.reducer';
 
 @Component({
   selector: 'app-ladder-summary',
@@ -20,8 +22,9 @@ export class LadderSummaryComponent implements OnInit, OnDestroy {
   private party: Party;
   private selectedFilterValueSub: Subscription;
   private partySub: Subscription;
-  private stateSub: Subscription;
+  private ladderStoreSub: Subscription;
   private playerLadders: Array<PlayerLadder> = [];
+  private allLadders$: Observable<PlayerLadder[]>;
 
   public selectedLocalValue: string;
 
@@ -31,15 +34,17 @@ export class LadderSummaryComponent implements OnInit, OnDestroy {
   constructor(
     @Inject(FormBuilder) fb: FormBuilder,
     public partyService: PartyService,
-    private stateService: StateService
+    private ladderStore: Store<LadderState>
   ) {
     this.form = fb.group({
       searchText: ['']
     });
   }
   ngOnInit() {
-    this.stateSub = this.stateService.state$.subscribe(state => {
-      this.playerLadders = 'playerLadders'.split('.').reduce((o, i) => o[i], state);
+    this.allLadders$ = this.ladderStore.select(fromReducer.selectAllLadders);
+
+    this.ladderStoreSub = this.allLadders$.subscribe(ladders => {
+      this.playerLadders = ladders;
     });
     // TODO: remove once ladder has been reworked
     if (this.partyService.selectedFilterValue !== 'All players') {
@@ -93,8 +98,8 @@ export class LadderSummaryComponent implements OnInit, OnDestroy {
     if (this.partySub !== undefined) {
       this.partySub.unsubscribe();
     }
-    if (this.stateSub !== undefined) {
-      this.stateSub.unsubscribe();
+    if (this.ladderStoreSub !== undefined) {
+      this.ladderStoreSub.unsubscribe();
     }
   }
 
