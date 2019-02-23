@@ -226,10 +226,10 @@ try {
       windows[ExileWindowEnum.Main].flashFrame(false);
     });
 
-    BrowserWindow.addDevToolsExtension(
-      // tslint:disable-next-line:max-line-length
-      path.join(os.homedir(), '\\AppData\\Local\\Google\\Chrome\\User Data\\Default\\Extensions\\lmhkpmbekcpmknklioeibfkpmmfibljd\\2.17.0_0')
-    );
+    // BrowserWindow.addDevToolsExtension(
+    //   // tslint:disable-next-line:max-line-length
+    //   path.join(os.homedir(), '\\AppData\\Local\\Google\\Chrome\\User Data\\Default\\Extensions\\lmhkpmbekcpmknklioeibfkpmmfibljd\\2.17.0_0')
+    // );
 
   });
 
