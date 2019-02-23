@@ -1,11 +1,14 @@
-import { Component, Input, OnDestroy, OnInit, ViewChild, EventEmitter, Output, NgZone } from '@angular/core';
-import { MatSort, MatTableDataSource, MatPaginator } from '@angular/material';
+import { Component, EventEmitter, NgZone, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
+import { MatPaginator, MatSort, MatTableDataSource } from '@angular/material';
+import { Store } from '@ngrx/store';
+import { Observable } from 'rxjs';
 import { Subscription } from 'rxjs/internal/Subscription';
 
-import { LadderPlayer, Player, PlayerLadder } from '../../../shared/interfaces/player.interface';
-import { PartyService } from '../../../shared/providers/party.service';
+import { LadderState } from '../../../app.states';
 import { Party } from '../../../shared/interfaces/party.interface';
-import { StateService } from '../../../shared/providers/state.service';
+import { LadderPlayer, PlayerLadder } from '../../../shared/interfaces/player.interface';
+import { PartyService } from '../../../shared/providers/party.service';
+import * as fromReducer from '../../../store/ladder/ladder.reducer';
 
 @Component({
   selector: 'app-ladder-table',
@@ -22,20 +25,22 @@ export class LadderTableComponent implements OnInit, OnDestroy {
   party: Party;
   private selectedFilterValueSub: Subscription;
   private partySub: Subscription;
-  private stateSub: Subscription;
+  private ladderStoreSub: Subscription;
   private playerLadders: Array<PlayerLadder> = [];
+  private allLadders$: Observable<PlayerLadder[]>;
 
   public selectedPlayerValue: any;
   @ViewChild(MatSort) sort: MatSort;
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @Output() filtered: EventEmitter<any> = new EventEmitter;
-  constructor(private partyService: PartyService, private stateService: StateService, private ngZone: NgZone) {
+  constructor(private partyService: PartyService, private ladderStore: Store<LadderState>, private ngZone: NgZone) {
   }
 
   ngOnInit() {
+    this.allLadders$ = this.ladderStore.select(fromReducer.selectAllLadders);
 
-    this.stateSub = this.stateService.state$.subscribe(state => {
-      this.playerLadders = 'playerLadders'.split('.').reduce((o, i) => o[i], state);
+    this.ladderStoreSub = this.allLadders$.subscribe(ladders => {
+      this.playerLadders = ladders;
       this.dataSource = [];
       // if the selection is the right one, update table directly when state is updated
       if (this.party !== undefined) {
@@ -112,8 +117,8 @@ export class LadderTableComponent implements OnInit, OnDestroy {
     if (this.partySub !== undefined) {
       this.partySub.unsubscribe();
     }
-    if (this.stateSub !== undefined) {
-      this.stateSub.unsubscribe();
+    if (this.ladderStoreSub !== undefined) {
+      this.ladderStoreSub.unsubscribe();
     }
   }
 
