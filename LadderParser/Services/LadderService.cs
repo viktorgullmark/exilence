@@ -75,11 +75,6 @@ namespace LadderParser.Services
                             break;
                         }
                     }
-                    else
-                    {
-                        await _repository.RemoveLadder(leagueName);
-                        break;
-                    }
                 }
             }
 
