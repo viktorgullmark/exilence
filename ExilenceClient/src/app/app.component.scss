@@ -6,36 +6,72 @@
     display: flex;
     align-items: center;
     -webkit-app-region: no-drag;
+
     .window-icon {
         margin-left: 3px;
     }
-    .right-link{
+
+    .right-link {
         justify-content: end;
     }
-    .left-link{
+
+    .left-link {
         justify-content: start;
         margin-right: 15px;
         color: $link-font-color;
     }
 }
 
+.logout-link-wrapper {
+    width: 54px;
+}
+
+.middle-area {
+    margin-left: 45%;
+    position: absolute;
+
+    .status {
+        margin-left: 10px;
+        display: flex;
+        align-self: center;
+        font-size: 14px;
+        text-transform: uppercase;
+        color: $font-color;
+
+        .status-icon {
+            display: flex;
+            align-self: center;
+            margin-top: -2px;
+
+            &.online {
+                color: rgb(0, 110, 0);
+            }
+        }
+    }
+}
+
 .mat-toolbar {
     background: $toolbar-bg-color;
     height: $toolbar-height;
-    -webkit-app-region: drag; 
+    -webkit-app-region: drag;
+
     .mat-icon {
         width: 15px !important;
         height: 15px !important;
     }
+
     .material-icons {
         font-size: 15px;
     }
+
     .toolbar-text {
-        font-size: 14px;     
+        font-size: 14px;
         text-transform: uppercase;
-        &.title{
+
+        &.title {
             letter-spacing: 6px;
             color: $primary;
+
             .version {
                 color: $version-font-color;
                 letter-spacing: 3px;

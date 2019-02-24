@@ -26,6 +26,7 @@ export class AppComponent implements OnDestroy {
   public appVersion;
   maximized = false;
   private alertSub: Subscription;
+  public websiteOnline = true;
   constructor(
     public electronService: ElectronService,
     private translate: TranslateService,
