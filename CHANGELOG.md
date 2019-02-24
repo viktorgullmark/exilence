@@ -10,6 +10,9 @@ All notable changes to this project will be documented in this file.
     - Displays rare maps as normal (to concat)
     - Displays magic maps as normal (to concat)
 
+### Fixed
+- Fixed a bug where the popup saying character list hidden was shown incorrectly
+
 ## [0.9.20] - 2019-02-22
 ### Fixed
 - Fixed a bug where the avg. gain would not update when swapping player
