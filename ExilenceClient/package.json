@@ -57,8 +57,7 @@
     "ngx-contextmenu": "^5.1.1",
     "poe-log-monitor": "github:viktorgullmark/poe-log-monitor",
     "read-last-lines": "^1.6.0",
-    "rxjs-ratelimiter": "^1.0.1",
-    "universal-analytics": "^0.4.20"
+    "rxjs-ratelimiter": "^1.0.1"
   },
   "devDependencies": {
     "@angular-devkit/build-angular": "0.6.3",

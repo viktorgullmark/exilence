@@ -5,7 +5,6 @@ import { ipcRenderer, remote, shell, webFrame } from 'electron';
 import * as fs from 'fs';
 
 import { AppConfig } from '../../../environments/environment';
-import { AnalyticsService } from './analytics.service';
 import { LogService } from './log.service';
 
 // If you import a module but never use any of the imported values other than as TypeScript types,
@@ -27,7 +26,6 @@ export class ElectronService {
   clipboard: any;
 
   constructor(
-    private analyticsService: AnalyticsService, // Not used but instanciated here
     private logService: LogService,
     private http: HttpClient
   ) {

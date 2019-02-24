@@ -19,7 +19,6 @@ import { Player } from '../interfaces/player.interface';
 import { Property } from '../interfaces/property.interface';
 import { Requirement } from '../interfaces/requirement.interface';
 import { Stash } from '../interfaces/stash.interface';
-import { AnalyticsService } from './analytics.service';
 import { ElectronService } from './electron.service';
 import { LogService } from './log.service';
 import { RequestHelper } from '../helpers/request.helper';
@@ -40,7 +39,6 @@ export class ExternalService {
   constructor(
     private http: HttpClient,
     private electronService: ElectronService,
-    private analyticsService: AnalyticsService,
     private router: Router,
     private logService: LogService
   ) { }
@@ -103,7 +101,6 @@ export class ExternalService {
   }
 
   getStashTab(account: string, league: string, index: number): Observable<Stash> {
-    this.analyticsService.sendEvent('income', `GET Stashtab`);
     const parameters = `?league=${league}&accountName=${account}&tabIndex=${index}&tabs=1`;
     return this.RequestRateLimit.limit(
       this.http.get<Stash>('https://www.pathofexile.com/character-window/get-stash-items' + parameters))
