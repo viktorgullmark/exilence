@@ -71,7 +71,8 @@ export class ExternalService {
           this.logService.log('Could not fetch character list, disconnecting!', null, true);
           this.router.navigate(['/disconnected', true]);
         }
-        if (e.status === 503) {
+        // if unauthorized, most likely hidden character list
+        if (e.status === 403) {
           return Observable.of(true);
         }
         return Observable.of(null);
