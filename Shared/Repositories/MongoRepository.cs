@@ -32,7 +32,7 @@ namespace Shared.Repositories
             _connections = _database.GetCollection<ConnectionModel>("connections");
         }
 
-        public async Task<PartyModel> GetPartyByCaracterName(string characterName)
+        public async Task<PartyModel> GetPartyByCharacterName(string characterName)
         {
             var result = await _parties.FindAsync(p => p.Players.Any(c => c.Character.Name == characterName));
             return await result.FirstOrDefaultAsync();
