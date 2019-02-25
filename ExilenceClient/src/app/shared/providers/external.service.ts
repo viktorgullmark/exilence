@@ -21,10 +21,15 @@ import { Requirement } from '../interfaces/requirement.interface';
 import { Stash } from '../interfaces/stash.interface';
 import { ElectronService } from './electron.service';
 import { LogService } from './log.service';
-import { RequestHelper } from '../helpers/request.helper';
+import { Store } from '@ngrx/store';
+import * as depStatusReducer from './../../store/dependency-status/dependency-status.reducer';
+import { DependencyStatusState } from '../../app.states';
+import { DependencyStatus } from '../interfaces/dependency-status.interface';
+import { Subscription } from 'rxjs';
+import * as depStatusActions from '../../store/dependency-status/dependency-status.actions';
 
 @Injectable()
-export class ExternalService {
+export class ExternalService implements OnDestroy {
   public url: 'https://www.pathofexile.com/character-window/get-items';
 
   public leagues: BehaviorSubject<League[]> = new BehaviorSubject<League[]>([]);
@@ -36,12 +41,38 @@ export class ExternalService {
   // combined ratelimiter for stash- and character-requests (singleton)
   private RequestRateLimit = new RateLimiter(7, 10000);
 
+  private depStatusStoreSub: Subscription;
+  private poeOnline = true;
+
   constructor(
     private http: HttpClient,
     private electronService: ElectronService,
     private router: Router,
-    private logService: LogService
-  ) { }
+    private logService: LogService,
+    private depStatusStore: Store<DependencyStatusState>
+  ) {
+    this.depStatusStoreSub = this.depStatusStore.select(depStatusReducer.selectAllDepStatuses).subscribe(statuses => {
+      const status = statuses.find(s => s.name === 'pathofexile');
+      if (status !== undefined) {
+        this.poeOnline = status.online;
+      }
+    });
+
+    // check website status, and set status to online when successful
+    setInterval(() => {
+      if (!this.poeOnline) {
+        this.checkStatus().subscribe(res => {
+          this.depStatusStore.dispatch(new depStatusActions.UpdateDepStatus({ status: { id: 'pathofexile', changes: { online: true } } }));
+        });
+      }
+    }, 15 * 1000);
+  }
+
+  ngOnDestroy() {
+    if (this.depStatusStoreSub !== undefined) {
+      this.depStatusStoreSub.unsubscribe();
+    }
+  }
 
   getLatestRelease(): Observable<any> {
     return this.http.get('https://api.github.com/repos/viktorgullmark/exilence/releases/latest');
@@ -53,11 +84,15 @@ export class ExternalService {
     return this.RequestRateLimit.limit
       (this.http.get('https://www.pathofexile.com/character-window/get-items' + parameters, { withCredentials: true }).catch(e => {
         if (e.status !== 403 && e.status !== 404) {
-          this.logService.log('Could not character items, disconnecting!', null, true);
-          this.router.navigate(['/disconnected', true]);
+          this.depStatusStore.dispatch(new depStatusActions.UpdateDepStatus({ status: { id: 'pathofexile', changes: { online: false } } }));
         }
         return Observable.of(null);
       }));
+  }
+
+  checkStatus() {
+    return this.RequestRateLimit.limit
+      (this.http.get('https://www.pathofexile.com'));
   }
 
   getCharacterList(account: string, sessionId?: string) {
@@ -66,8 +101,7 @@ export class ExternalService {
     return this.http.get('https://www.pathofexile.com/character-window/get-characters' + parameters)
       .catch(e => {
         if (e.status !== 403 && e.status !== 404) {
-          this.logService.log('Could not fetch character list, disconnecting!', null, true);
-          this.router.navigate(['/disconnected', true]);
+          this.depStatusStore.dispatch(new depStatusActions.UpdateDepStatus({ status: { id: 'pathofexile', changes: { online: false } } }));
         }
         // if unauthorized, most likely hidden character list
         if (e.status === 403) {
@@ -82,8 +116,7 @@ export class ExternalService {
     return this.http.get('https://api.pathofexile.com/leagues' + parameters)
       .catch(e => {
         if (e.status !== 403 && e.status !== 404) {
-          this.logService.log('Could not fetch leagues, disconnecting!', null, true);
-          this.router.navigate(['/disconnected', true]);
+          this.depStatusStore.dispatch(new depStatusActions.UpdateDepStatus({ status: { id: 'pathofexile', changes: { online: false } } }));
         }
         return Observable.of(null);
       });
@@ -94,8 +127,7 @@ export class ExternalService {
     return this.http.get<Stash>('https://www.pathofexile.com/character-window/get-stash-items' + parameters)
       .catch(e => {
         if (e.status !== 403 && e.status !== 404) {
-          this.logService.log('Could not fetch stashtab list, disconnecting!', null, true);
-          this.router.navigate(['/disconnected', true]);
+          this.depStatusStore.dispatch(new depStatusActions.UpdateDepStatus({ status: { id: 'pathofexile', changes: { online: false } } }));
         }
         return Observable.of(null);
       });
@@ -110,8 +142,7 @@ export class ExternalService {
       })
       .catch(e => {
         if (e.status !== 403 && e.status !== 404) {
-          this.logService.log('Could not fetch stashtabs, disconnecting!', null, true);
-          this.router.navigate(['/disconnected', true]);
+          this.depStatusStore.dispatch(new depStatusActions.UpdateDepStatus({ status: { id: 'pathofexile', changes: { online: false } } }));
         }
         return Observable.of(null);
       });
@@ -125,8 +156,7 @@ export class ExternalService {
     return this.RequestRateLimit.limit(this.http.get<Stash>('https://www.pathofexile.com/character-window/get-stash-items' + parameters)
       .catch(e => {
         if (e.status === 500 || e.status === 502 || e.status === 503) {
-          this.logService.log('Could not validate, disconnecting!', null, true);
-          this.router.navigate(['/disconnected', true]);
+          this.depStatusStore.dispatch(new depStatusActions.UpdateDepStatus({ status: { id: 'pathofexile', changes: { online: false } } }));
         }
         if (e.status !== 200) {
           return Observable.of(false);
