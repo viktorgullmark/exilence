@@ -18,6 +18,7 @@ namespace Shared.Interfaces
         Task SetSpecificPlayerAsLeader(string partyName, string characterName);
         Task RemoveSpecificPlayerAsLeader(string partyName, string characterName);
         Task<PlayerModel> GetPlayerByCharacterName(string partyName, string characterName);
+        Task<PartyModel> FindPlayerParty(string characterName);
         #endregion
 
         #region Ladders

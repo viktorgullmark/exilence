@@ -31,7 +31,13 @@ namespace Shared.Repositories
             _ladders = _database.GetCollection<LadderModel>("ladders");
             _connections = _database.GetCollection<ConnectionModel>("connections");
         }
-        
+
+        public async Task<PartyModel> FindPlayerParty(string characterName)
+        {
+            var result = await _parties.FindAsync(p => p.Players.Any(c => c.Character.Name == characterName));
+            return await result.FirstOrDefaultAsync();
+        }
+
         public async Task PartyExists(string partyName)
         {
             await _parties.FindAsync(p => p.Name == partyName);
@@ -204,7 +210,6 @@ namespace Shared.Repositories
             var result = await _connections.FindAsync(c => c.ConnectionId == connectionId);
             return await result.FirstOrDefaultAsync();
         }
-
         #endregion
     }
 }
