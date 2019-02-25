@@ -3,7 +3,7 @@ import { MatSnackBar } from '@angular/material';
 import { Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import * as moment from 'moment';
-import { Subscription } from 'rxjs';
+import { Subscription, Observable } from 'rxjs';
 
 import * as pkg from '../../package.json';
 import { AppConfig } from '../environments/environment.js';
@@ -14,6 +14,10 @@ import { ElectronService } from './shared/providers/electron.service';
 import { SessionService } from './shared/providers/session.service';
 import { SettingsService } from './shared/providers/settings.service';
 import { PartyService } from './shared/providers/party.service';
+import { DependencyStatus } from './shared/interfaces/dependency-status.interface.js';
+import { DependencyStatusState } from './app.states.js';
+import { Store } from '@ngrx/store';
+import * as fromReducer from './store/dependency-status/dependency-status.reducer';
 
 @Component({
   selector: 'app-root',
@@ -26,7 +30,13 @@ export class AppComponent implements OnDestroy {
   public appVersion;
   maximized = false;
   private alertSub: Subscription;
-  public websiteOnline = true;
+
+  public statusTooltipContent = '';
+
+  private depStatusStoreSub: Subscription;
+  private depStatuses: Array<DependencyStatus> = [];
+  private allDepStatuses$: Observable<DependencyStatus[]>;
+
   constructor(
     public electronService: ElectronService,
     private translate: TranslateService,
@@ -35,8 +45,22 @@ export class AppComponent implements OnDestroy {
     private router: Router,
     private alertService: AlertService,
     public snackBar: MatSnackBar,
-    public partyService: PartyService
+    public partyService: PartyService,
+    private depStatusStore: Store<DependencyStatusState>
   ) {
+
+    this.allDepStatuses$ = this.depStatusStore.select(fromReducer.selectAllDepStatuses);
+
+    this.depStatusStoreSub = this.allDepStatuses$.subscribe(statuses => {
+      this.depStatuses = statuses;
+
+      // update tooltip-content
+      this.statusTooltipContent = ``;
+      this.depStatuses.forEach(status => {
+        const statusText = status.online ? 'up' : 'down';
+        this.statusTooltipContent += `${status.name}: ${statusText}\n`;
+      });
+    });
 
     if (AppConfig.environment === 'DEV' && this.electronService.isElectron()) {
       this.logout();
@@ -72,6 +96,14 @@ export class AppComponent implements OnDestroy {
     this.snackBar.open(message, action, {
       duration: 2000,
     });
+  }
+
+  isPoeOnline() {
+    const poe = this.depStatuses.find(s => s.name === 'pathofexile');
+    if (poe !== undefined) {
+      return poe.online;
+    }
+    return false;
   }
 
   logout() {
@@ -118,6 +150,9 @@ export class AppComponent implements OnDestroy {
   ngOnDestroy() {
     if (this.alertSub !== undefined) {
       this.alertSub.unsubscribe();
+    }
+    if (this.depStatusStoreSub !== undefined) {
+      this.depStatusStoreSub.unsubscribe();
     }
   }
 }

@@ -3,9 +3,9 @@
         <span class="version">{{appVersion}} BETA</span>
     </span>
     <div class="middle-area">
-        <span class="status">
+        <span class="status" matTooltip="{{statusTooltipContent}}" matTooltipPosition="after">
             Status&nbsp;
-            <mat-icon class="status-icon" [ngClass]="{'online': websiteOnline }">fiber_manual_record</mat-icon>
+            <mat-icon class="status-icon" [ngClass]="{'online': isPoeOnline() }">fiber_manual_record</mat-icon>
         </span>
     </div>
     <div class="right-area" *ngIf="electronService.isElectron()">
