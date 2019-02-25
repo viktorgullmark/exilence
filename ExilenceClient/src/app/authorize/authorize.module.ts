@@ -12,7 +12,6 @@ import { MatListModule } from '@angular/material/list';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { RouterModule } from '@angular/router';
 
-import { AnalyticsService } from '../shared/providers/analytics.service';
 import { IncomeService } from '../shared/providers/income.service';
 import { MessageValueService } from '../shared/providers/message-value.service';
 import { PricingService } from '../shared/providers/pricing.service';
@@ -50,7 +49,6 @@ import { SettingsModule } from './settings/settings.module';
     MessageValueService,
     PricingService,
     IncomeService,
-    AnalyticsService
   ],
   entryComponents: [ServerMessageDialogComponent]
 })

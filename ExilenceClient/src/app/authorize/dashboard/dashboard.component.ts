@@ -3,7 +3,6 @@ import { Router } from '@angular/router';
 import * as pkg from '../../../../package.json';
 import { Player } from '../../shared/interfaces/player.interface';
 import { AccountService } from '../../shared/providers/account.service';
-import { AnalyticsService } from '../../shared/providers/analytics.service';
 import { ElectronService } from '../../shared/providers/electron.service';
 import { PartyService } from '../../shared/providers/party.service';
 import { InfoDialogComponent } from '../components/info-dialog/info-dialog.component';
@@ -31,7 +30,6 @@ export class DashboardComponent implements OnInit, OnDestroy, AfterViewInit {
     private electronService: ElectronService,
     private partyService: PartyService,
     private accountService: AccountService,
-    private analyticsService: AnalyticsService,
     private settingsService: SettingsService,
     private router: Router,
     private dialog: MatDialog,
@@ -45,7 +43,6 @@ export class DashboardComponent implements OnInit, OnDestroy, AfterViewInit {
 
   ngOnInit() {
     this.appVersion = pkg['version'];
-    this.analyticsService.sendScreenview('/authorized/dashboard');
     // give the profile time to render
     this.playerSub = this.accountService.player.subscribe(res => {
       this.player = res;

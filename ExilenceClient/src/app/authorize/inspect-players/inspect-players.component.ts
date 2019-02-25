@@ -1,7 +1,6 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 
 import { Player } from '../../shared/interfaces/player.interface';
-import { AnalyticsService } from '../../shared/providers/analytics.service';
 import { ExternalService } from '../../shared/providers/external.service';
 import { LogMonitorService } from '../../shared/providers/log-monitor.service';
 import { PartyService } from '../../shared/providers/party.service';
@@ -19,13 +18,11 @@ export class InspectPlayersComponent implements OnInit, OnDestroy {
     public partyService: PartyService,
     private logMonitorService: LogMonitorService,
     private externalService: ExternalService,
-    private analyticsService: AnalyticsService
   ) {
 
 
   }
   ngOnInit() {
-    this.analyticsService.sendScreenview('/authorized/inspect-players');
     this.genPlayersSub = this.partyService.genericPlayers.subscribe(res => {
       this.genericPlayers = res;
     });

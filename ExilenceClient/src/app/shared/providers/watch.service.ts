@@ -72,7 +72,6 @@ export class WatchService {
       setTimeout(x => {
         this.cooldown = false;
       }, 1000 * 60 * 10);
-      // this.analyticsService.sendEvent('PriceService', `Items`);
       const url = `${this.poeWatchBaseUrl}/compact?league=${league}`;
       return this.http.get<ItemPrice[]>(url);
     } else {
@@ -84,7 +83,6 @@ export class WatchService {
     if (this.itemData.length !== 0) {
       return Observable.of(this.itemData);
     }
-    // this.analyticsService.sendEvent('PriceService', `Prices`);
     const url = `${this.poeWatchBaseUrl}/itemdata`;
     return this.http.get<ItemInfo[]>(url);
   }

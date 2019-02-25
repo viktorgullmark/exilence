@@ -2,7 +2,6 @@ import { Component, Inject, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 
 import { AlertService } from '../../shared/providers/alert.service';
-import { AnalyticsService } from '../../shared/providers/analytics.service';
 import { ElectronService } from '../../shared/providers/electron.service';
 import { LogService } from '../../shared/providers/log.service';
 import { SessionService } from '../../shared/providers/session.service';
@@ -34,7 +33,6 @@ export class SettingsComponent implements OnInit, OnDestroy {
 
   constructor(@Inject(FormBuilder)
   fb: FormBuilder,
-    private analyticsService: AnalyticsService,
     private electronService: ElectronService,
     private settingsService: SettingsService,
     private sessionService: SessionService,
@@ -59,7 +57,6 @@ export class SettingsComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    this.analyticsService.sendScreenview('/authorized/settings');
 
     const onTopSetting = this.settingsService.get('alwaysOnTop');
 

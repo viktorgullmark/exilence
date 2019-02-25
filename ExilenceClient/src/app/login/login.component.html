@@ -150,7 +150,7 @@
             </div>
           </form>
         </mat-step>
-        <mat-step [stepControl]="pathFormGroup">
+        <mat-step #lastStep [stepControl]="pathFormGroup">
           <form [formGroup]="pathFormGroup">
             <ng-template matStepLabel>{{'ACCOUNT.FILEPATH_INFO' | translate}}</ng-template>
             <span class="mat-body-1">To find your Client.txt-file, browse to your PoE-installation and enter the
@@ -163,26 +163,13 @@
               <button mat-raised-button class="btn-back" matStepperPrevious>Back</button>
               <button mat-raised-button color="primary" (click)="browse()" type="button">1. Browse file</button>
               <button mat-raised-button color="primary" type="button">2. Validate</button>
-              <button mat-raised-button color="primary" matStepperNext [disabled]="!pathValid">3.
+              <button mat-raised-button color="primary" (click)="login()" [disabled]="!pathValid || isLoading">3.
                 Continue</button>
+              <mat-progress-bar *ngIf="isLoading" class="progress-bar" color="primary" mode="indeterminate">
+              </mat-progress-bar>
             </div>
             <span class="form-error" *ngIf="!pathValid">{{'ERROR.PATH_NOT_VALID' | translate}}</span>
           </form>
-        </mat-step>
-        <mat-step #lastStep>
-          <ng-template matStepLabel>Complete</ng-template>
-          <span class="mat-body-1">We're using Google Analytics to track usage of our app in order to be able to
-            improve
-            it
-            further.<br />
-            This data is not shared with anyone ever, and we don't track or save any data related to your character or
-            items, only how you use Exilence.<br /><br />
-            By clicking "Continue" you agree to this.</span><br /><br />
-          <div class="btn-grp">
-            <button mat-raised-button color="primary" [disabled]="isLoading" (click)="login()">Continue</button>
-            <mat-progress-bar *ngIf="isLoading" class="progress-bar" color="primary" mode="indeterminate">
-            </mat-progress-bar>
-          </div>
         </mat-step>
       </mat-vertical-stepper>
     </div>
