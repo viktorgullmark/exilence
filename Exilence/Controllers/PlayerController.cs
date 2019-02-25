@@ -23,7 +23,7 @@ namespace Exilence.Controllers
         {
             var apiKey = _configuration["api:key"];
             if (apiKey == key)
-            {                var party = await _repository.FindPlayerParty(character);
+            {                var party = await _repository.GetPartyByCaracterName(character);
                 if (party != null)
                 {
                     return Ok(new { spectatorCode = party.SpectatorCode });
