@@ -17,5 +17,4 @@ export interface SpectatorCountState extends EntityState<number> {
     spectatorCount: number | null;
 }
 
-export interface DependencyStatusState extends EntityState<DependencyStatus> {
-}
+export interface DependencyStatusState extends EntityState<DependencyStatus> {}
