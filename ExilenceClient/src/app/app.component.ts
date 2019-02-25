@@ -1,5 +1,5 @@
 import { Component, OnDestroy } from '@angular/core';
-import { MatSnackBar } from '@angular/material';
+import { MatSnackBar, MatDialog } from '@angular/material';
 import { Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import * as moment from 'moment';
@@ -18,6 +18,8 @@ import { DependencyStatus } from './shared/interfaces/dependency-status.interfac
 import { DependencyStatusState } from './app.states.js';
 import { Store } from '@ngrx/store';
 import * as fromReducer from './store/dependency-status/dependency-status.reducer';
+import { ErrorMessage } from './shared/interfaces/error-message.interface';
+import { ErrorMessageDialogComponent } from './authorize/components/error-message-dialog/error-message-dialog.component';
 
 @Component({
   selector: 'app-root',
@@ -45,6 +47,7 @@ export class AppComponent implements OnDestroy {
     private router: Router,
     private alertService: AlertService,
     public snackBar: MatSnackBar,
+    private dialog: MatDialog,
     public partyService: PartyService,
     private depStatusStore: Store<DependencyStatusState>
   ) {
@@ -60,6 +63,18 @@ export class AppComponent implements OnDestroy {
         const statusText = status.online ? 'up' : 'down';
         this.statusTooltipContent += `${status.name}: ${statusText}\n`;
       });
+
+      const poe = this.depStatuses.find(s => s.name === 'pathofexile');
+      // pathofexile is down
+      if (poe !== undefined && !poe.online) {
+        this.openErrorMsgDialog({
+          title: 'pathofexile.com could not be reached',
+          // tslint:disable-next-line:max-line-length
+          body: '<a class="inline-link">https://pathofexile.com</a> could not be reached.<br/><br/>' +
+            'You can continue using Exilence in offline-mode, but your character wont update.<br/><br/>' +
+            'We will automatically reconnect you when the site is back up.'
+        } as ErrorMessage);
+      }
     });
 
     if (AppConfig.environment === 'DEV' && this.electronService.isElectron()) {
@@ -133,6 +148,21 @@ export class AppComponent implements OnDestroy {
   unmaximize() {
     this.maximized = false;
     this.electronService.remote.getCurrentWindow().unmaximize();
+  }
+
+  openErrorMsgDialog(data: ErrorMessage): void {
+    setTimeout(() => {
+      const dialogRef = this.dialog.open(ErrorMessageDialogComponent, {
+        width: '850px',
+        data: {
+          icon: 'error',
+          title: data.title,
+          content: data.body
+        }
+      });
+      dialogRef.afterClosed().subscribe(result => {
+      });
+    }, 0);
   }
 
   loadWindowSettings() {

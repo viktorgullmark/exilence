@@ -40,6 +40,8 @@ import { SettingsService } from './shared/providers/settings.service';
 import { StateService } from './shared/providers/state.service';
 import { metaReducers, reducers } from './store/reducers';
 import { MatTooltipModule } from '@angular/material';
+import { ErrorMessageDialogModule } from './authorize/components/error-message-dialog/error-message-dialog.module';
+import { ErrorMessageDialogComponent } from './authorize/components/error-message-dialog/error-message-dialog.component';
 
 // AoT requires an exported function for factories
 export function HttpLoaderFactory(http: HttpClient) {
@@ -62,6 +64,7 @@ export function HttpLoaderFactory(http: HttpClient) {
     DisconnectedModule,
     BrowserAnimationsModule,
     MatTooltipModule,
+    ErrorMessageDialogModule,
     StoreModule.forRoot(reducers, { metaReducers }),
     StoreDevtoolsModule.instrument({
       maxAge: 25, // Retains last 25 states
@@ -98,5 +101,6 @@ export function HttpLoaderFactory(http: HttpClient) {
     AppComponent,
     WebviewDirective
   ],
+  entryComponents: [ErrorMessageDialogComponent]
 })
 export class AppModule { }
