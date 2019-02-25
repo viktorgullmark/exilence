@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 
-import { AnalyticsService } from '../shared/providers/analytics.service';
 import { ElectronService } from '../shared/providers/electron.service';
 
 @Component({
@@ -15,7 +14,6 @@ export class DisconnectedComponent implements OnInit {
   constructor(
     public electronService: ElectronService,
     private route: ActivatedRoute,
-    private analyticsService: AnalyticsService
   ) { }
 
   ngOnInit() {
@@ -28,9 +26,6 @@ export class DisconnectedComponent implements OnInit {
       this.electronService.ipcRenderer.send('disconnect');
     }
 
-    if (this.analyticsService.isTracking) {
-      this.analyticsService.sendScreenview('/disconnected');
-    }
   }
 
   openLink(link: string) {

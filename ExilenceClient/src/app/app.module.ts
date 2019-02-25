@@ -28,7 +28,6 @@ import { WebviewDirective } from './shared/directives/webview.directive';
 import { CanActivateAuthorized } from './shared/guards/authorized.guard';
 import { AccountService } from './shared/providers/account.service';
 import { AlertService } from './shared/providers/alert.service';
-import { AnalyticsService } from './shared/providers/analytics.service';
 import { ElectronService } from './shared/providers/electron.service';
 import { ExternalService } from './shared/providers/external.service';
 import { LogMonitorService } from './shared/providers/log-monitor.service';
@@ -78,7 +77,6 @@ export function HttpLoaderFactory(http: HttpClient) {
   providers: [
     PartyService,
     ExternalService,
-    AnalyticsService,
     ElectronService,
     StateService,
     LogService,

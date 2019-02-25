@@ -17,7 +17,6 @@ import { NetWorthHistory } from '../shared/interfaces/income.interface';
 import { League } from '../shared/interfaces/league.interface';
 import { Player } from '../shared/interfaces/player.interface';
 import { AccountService } from '../shared/providers/account.service';
-import { AnalyticsService } from '../shared/providers/analytics.service';
 import { ElectronService } from '../shared/providers/electron.service';
 import { ExternalService } from '../shared/providers/external.service';
 import { LogMonitorService } from '../shared/providers/log-monitor.service';
@@ -84,7 +83,6 @@ export class LoginComponent implements OnInit, OnDestroy {
         public sessionService: SessionService,
         public partyService: PartyService,
         private settingsService: SettingsService,
-        private analyticsService: AnalyticsService,
         public logMonitorService: LogMonitorService,
         private pricingService: PricingService,
         private mapService: MapService,
@@ -451,7 +449,6 @@ export class LoginComponent implements OnInit, OnDestroy {
     login() {
         this.isLoading = true;
         this.form = this.getFormObj();
-        this.analyticsService.startTracking(this.form.accountName);
 
         const request = forkJoin(
             this.externalService.getCharacterInventory(this.form.accountName, this.form.characterName),

@@ -2,7 +2,6 @@ import { Component, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { MatTab, MatTabGroup } from '@angular/material';
 import { Router } from '@angular/router';
 import { Player } from '../../../shared/interfaces/player.interface';
-import { AnalyticsService } from '../../../shared/providers/analytics.service';
 import { ElectronService } from '../../../shared/providers/electron.service';
 import { ExternalService } from '../../../shared/providers/external.service';
 import { PartyService } from '../../../shared/providers/party.service';
@@ -35,10 +34,8 @@ export class CharProfileComponent implements OnInit, OnDestroy {
     private externalService: ExternalService,
     private router: Router,
     private electronService: ElectronService,
-    private analyticsService: AnalyticsService,
     private accountService: AccountService
   ) {
-    this.analyticsService.sendScreenview('/authorized/party/player/profile');
   }
 
 
@@ -83,7 +80,6 @@ export class CharProfileComponent implements OnInit, OnDestroy {
       // equipment
       case 0: {
         this.charEquipment.openEquipmentDialog();
-        this.analyticsService.sendScreenview('/authorized/party/player/profile');
         break;
       }
     }

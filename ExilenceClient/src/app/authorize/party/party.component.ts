@@ -5,7 +5,6 @@ import { Observable, Subscription } from 'rxjs';
 
 import { SpectatorCountState, AppState } from '../../app.states';
 import { Player } from '../../shared/interfaces/player.interface';
-import { AnalyticsService } from '../../shared/providers/analytics.service';
 import { ElectronService } from '../../shared/providers/electron.service';
 import { MessageValueService } from '../../shared/providers/message-value.service';
 import { PartyService } from '../../shared/providers/party.service';
@@ -43,7 +42,6 @@ export class PartyComponent implements OnInit, OnDestroy {
 
   constructor(
     public partyService: PartyService,
-    private analyticsService: AnalyticsService,
     private messageValueService: MessageValueService,
     private electronService: ElectronService,
     private settingsService: SettingsService,
@@ -89,7 +87,6 @@ export class PartyComponent implements OnInit, OnDestroy {
     this.tabSubscription = this.tabGroup.selectedIndexChange.subscribe(res => {
       this.stateService.dispatch({ key: 'selectedGroupIndex', value: res });
       if (res === 0) {
-        this.analyticsService.sendLastPartyPlayerScreen();
       }
       this.selectedIndex = res;
     });
@@ -127,7 +124,6 @@ export class PartyComponent implements OnInit, OnDestroy {
       }
       // summary
       case 1: {
-        this.analyticsService.sendScreenview('/authorized/party/summary');
         this.tabSummary.openSummaryDialog();
         break;
       }

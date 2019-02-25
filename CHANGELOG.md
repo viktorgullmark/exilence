@@ -13,6 +13,9 @@ All notable changes to this project will be documented in this file.
 ### Fixed
 - Fixed a bug where the popup saying character list hidden was shown incorrectly
 
+### Removed
+- Removed Google Analytics
+
 ## [0.9.20] - 2019-02-22
 ### Fixed
 - Fixed a bug where the avg. gain would not update when swapping player
