@@ -26,6 +26,7 @@ import { PricingService } from '../shared/providers/pricing.service';
 import { SessionService } from '../shared/providers/session.service';
 import { SettingsService } from '../shared/providers/settings.service';
 import { ProfileSelection, CharacterStore, LeagueStore } from '../shared/interfaces/settings-store.interface';
+import { ErrorType } from '../shared/interfaces/error.interface';
 
 
 @Component({
@@ -287,10 +288,12 @@ export class LoginComponent implements OnInit, OnDestroy {
             // filter out SSF-leagues when listing trade-leagues
             this.tradeLeagues = res[1].filter(x => x.id.indexOf('SSF') === -1);
 
-            if (res[0] === null) {
+            if (res[0].type !== undefined && res[0].type === ErrorType.Unauthorized) {
                 // profile is private
                 this.privateProfileError = true;
                 this.isFetchingLeagues = false;
+            } else if (res[0].type !== undefined && res[0].type === ErrorType.Unreachable) {
+                // todo: display error
             } else {
 
                 // map character-leagues to new array
@@ -361,7 +364,7 @@ export class LoginComponent implements OnInit, OnDestroy {
             .subscribe((res) => {
                 this.fetched = true;
 
-                if (res === true) {
+                if (res.type !== undefined && res.type === ErrorType.Unauthorized) {
                     this.openErrorMsgDialog({
                         title: 'Could not fetch characters',
                         // tslint:disable-next-line:max-line-length
@@ -370,6 +373,8 @@ export class LoginComponent implements OnInit, OnDestroy {
                             'If it still does not work, fetch a new session ID and update it in the login-settings.'
                     } as ErrorMessage);
                     this.isFetching = false;
+                } if (res.type !== undefined && res.type === ErrorType.Unreachable) {
+                    // todo: display unreachable error
                 } else {
 
                     const charactersByLeague = res.filter(x => x.league === this.leagueFormGroup.controls.leagueName.value);

@@ -9,7 +9,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
 import { Store } from '@ngrx/store';
-import { Subscription } from 'rxjs';
+import { Subscription, of } from 'rxjs';
 import RateLimiter from 'rxjs-ratelimiter';
 import { BehaviorSubject } from 'rxjs/internal/BehaviorSubject';
 import { Observable } from 'rxjs/Observable';
@@ -26,6 +26,7 @@ import { Stash } from '../interfaces/stash.interface';
 import * as depStatusReducer from './../../store/dependency-status/dependency-status.reducer';
 import { ElectronService } from './electron.service';
 import { LogService } from './log.service';
+import { RequestError, ErrorType } from '../interfaces/error.interface';
 
 @Injectable()
 export class ExternalService implements OnDestroy {
@@ -89,6 +90,7 @@ export class ExternalService implements OnDestroy {
           if (e.status !== 403 && e.status !== 404) {
             this.depStatusStore.dispatch(new depStatusActions.UpdateDepStatus(
               { status: { id: 'pathofexile', changes: { online: false } } }));
+            return of({ type: ErrorType.Unreachable } as RequestError);
           }
           return Observable.of(null);
         }));
@@ -109,12 +111,12 @@ export class ExternalService implements OnDestroy {
       .catch(e => {
         if (e.status !== 403 && e.status !== 404) {
           this.depStatusStore.dispatch(new depStatusActions.UpdateDepStatus({ status: { id: 'pathofexile', changes: { online: false } } }));
+          return of({ type: ErrorType.Unreachable } as RequestError);
         }
-        // if unauthorized, most likely hidden character list
         if (e.status === 403) {
-          return Observable.of(true);
+          return of({ type: ErrorType.Unauthorized } as RequestError);
         }
-        return Observable.of(null);
+        return of(null);
       });
   }
 
@@ -127,8 +129,9 @@ export class ExternalService implements OnDestroy {
       .catch(e => {
         if (e.status !== 403 && e.status !== 404) {
           this.depStatusStore.dispatch(new depStatusActions.UpdateDepStatus({ status: { id: 'pathofexile', changes: { online: false } } }));
+          return of({ type: ErrorType.Unreachable } as RequestError);
         }
-        return Observable.of(null);
+        return of(null);
       });
   }
 
@@ -141,6 +144,7 @@ export class ExternalService implements OnDestroy {
       .catch(e => {
         if (e.status !== 403 && e.status !== 404) {
           this.depStatusStore.dispatch(new depStatusActions.UpdateDepStatus({ status: { id: 'pathofexile', changes: { online: false } } }));
+          return of({ type: ErrorType.Unreachable } as RequestError);
         }
         return Observable.of(null);
       });
@@ -156,6 +160,7 @@ export class ExternalService implements OnDestroy {
       .catch(e => {
         if (e.status !== 403 && e.status !== 404) {
           this.depStatusStore.dispatch(new depStatusActions.UpdateDepStatus({ status: { id: 'pathofexile', changes: { online: false } } }));
+          return of({ type: ErrorType.Unreachable } as RequestError);
         }
         return Observable.of(null);
       });
@@ -173,6 +178,7 @@ export class ExternalService implements OnDestroy {
       .catch(e => {
         if (e.status === 500 || e.status === 502 || e.status === 503) {
           this.depStatusStore.dispatch(new depStatusActions.UpdateDepStatus({ status: { id: 'pathofexile', changes: { online: false } } }));
+          return of({ type: ErrorType.Unreachable } as RequestError);
         }
         if (e.status !== 200) {
           return Observable.of(false);
