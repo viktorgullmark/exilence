@@ -43,7 +43,6 @@ export class IncomeService implements OnDestroy {
   private inventoryPricing = true;
 
   private playerInventory: Item[];
-  private snapshottingFailed = false;
 
   public networthSnapshots: NetWorthSnapshot[] = [];
   public localPlayer: Player;
@@ -112,7 +111,6 @@ export class IncomeService implements OnDestroy {
     const oneDayAgo = (Date.now() - (24 * 60 * 60 * 1000));
     const twoWeeksAgo = (Date.now() - (1 * 60 * 60 * 24 * 14 * 1000));
 
-    this.snapshottingFailed = false;
     this.loadSnapshotsFromSettings();
 
     const league = this.settingsService.getCurrentLeague();
@@ -134,7 +132,7 @@ export class IncomeService implements OnDestroy {
       this.logService.log('Started snapshotting player net worth');
       this.SnapshotPlayerNetWorth().subscribe(() => {
 
-        if (!this.snapshottingFailed) {
+        if (this.poeOnline) {
           this.netWorthHistory.history = this.netWorthHistory.history
             .filter((snaphot: NetWorthSnapshot) => snaphot.timestamp > twoWeeksAgo);
 
@@ -174,7 +172,7 @@ export class IncomeService implements OnDestroy {
 
           this.logService.log(`Finished Snapshotting player net worth in ${timePassed} seconds`);
         } else {
-          this.logService.log(`Failed fetching all tabs`);
+          this.logService.log(`Website could not be reached`);
         }
         this.isSnapshotting = false;
       });
@@ -310,10 +308,8 @@ export class IncomeService implements OnDestroy {
       this.getPlayerInventory(accountName, this.localPlayer.character.name)
     ).do((res) => {
 
-      // if stash or inventory failed to be retrived, don't proceed
-      if (this.playerStashTabs.length !== selectedStashTabs.length || res[3] === null) {
-        this.snapshottingFailed = true;
-      } else {
+      // if any request failed during snapshotting, don't proceed
+      if (this.poeOnline) {
         this.logService.log('Finished retriving stashhtabs');
         if (this.characterPricing) { // price equipment
           this.PriceItems(this.localPlayer.character.items.filter(x => x.inventoryId !== 'MainInventory'), mapTab, undefined);
