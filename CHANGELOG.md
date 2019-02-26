@@ -11,6 +11,7 @@ All notable changes to this project will be documented in this file.
     - Displays magic maps as normal (to concat)
 
 ### Fixed
+- Fixed a bug where only the first 20 stash-tabs were priced, now correctly prices up to 40
 - Fixed a bug where the popup saying character list hidden was shown incorrectly
 
 ### Removed
