@@ -32,7 +32,7 @@ export class AppComponent implements OnDestroy {
   public appVersion;
   maximized = false;
   private alertSub: Subscription;
-
+  private errorShown = false;
   public statusTooltipContent = '';
 
   private depStatusStoreSub: Subscription;
@@ -66,14 +66,19 @@ export class AppComponent implements OnDestroy {
 
       const poe = this.depStatuses.find(s => s.name === 'pathofexile');
       // pathofexile is down
-      if (poe !== undefined && !poe.online) {
-        this.openErrorMsgDialog({
-          title: 'pathofexile.com could not be reached',
-          // tslint:disable-next-line:max-line-length
-          body: '<a class="inline-link">https://pathofexile.com</a> could not be reached.<br/><br/>' +
-            'You can continue using Exilence in offline-mode, but your character wont update.<br/><br/>' +
-            'We will automatically reconnect you when the site is back up.'
-        } as ErrorMessage);
+      if (poe !== undefined) {
+        if (!poe.online && !this.errorShown) {
+          this.errorShown = true;
+          this.openErrorMsgDialog({
+            title: 'pathofexile.com could not be reached',
+            // tslint:disable-next-line:max-line-length
+            body: '<a class="inline-link">https://pathofexile.com</a> could not be reached.<br/><br/>' +
+              'You can continue using Exilence in offline-mode, but your character wont update.<br/><br/>' +
+              'We will automatically reconnect you when the site is back up.'
+          } as ErrorMessage);
+        } else {
+          this.errorShown = false;
+        }
       }
     });
 
