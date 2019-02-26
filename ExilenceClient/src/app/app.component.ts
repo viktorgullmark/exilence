@@ -58,8 +58,8 @@ export class AppComponent implements OnDestroy {
       // update tooltip-content
       this.statusTooltipContent = ``;
       this.depStatuses.forEach(status => {
-        const statusText = status.online ? 'up' : 'down';
-        this.statusTooltipContent += `${status.name}: ${statusText}\n`;
+        const statusText = status.online ? 'UP' : 'DOWN';
+        this.statusTooltipContent += `${status.url}: ${statusText}\n`;
       });
 
       // pathofexile is down

@@ -5,11 +5,11 @@ import { DependencyStatusState } from '../../app.states';
 import { DependencyStatus } from '../../shared/interfaces/dependency-status.interface';
 
 export const initialState: DependencyStatusState = fromAdapter.adapter.getInitialState({
-    ids: ['pathofexile', 'poeninja', 'poewatch'],
+    ids: ['pathofexile'], // 'poeninja', 'poewatch'
     entities: {
-        pathofexile: { name: 'pathofexile', online: true },
-        poeninja: { name: 'poeninja', online: true },
-        poewatch: { name: 'poewatch', online: true }
+        pathofexile: { name: 'pathofexile', online: true, url: 'www.pathofexile.com' }
+        // poeninja: { name: 'poeninja', online: true },
+        // poewatch: { name: 'poewatch', online: true }
     }
 });
 
