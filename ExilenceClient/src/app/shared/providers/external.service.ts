@@ -6,12 +6,16 @@ import 'rxjs/add/operator/toArray';
 import 'rxjs/operators/mergeMap';
 
 import { HttpClient } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import { Injectable, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
+import { Store } from '@ngrx/store';
+import { Subscription } from 'rxjs';
 import RateLimiter from 'rxjs-ratelimiter';
 import { BehaviorSubject } from 'rxjs/internal/BehaviorSubject';
 import { Observable } from 'rxjs/Observable';
-import { AccountInfo } from '../interfaces/account-info.interface';
+
+import { DependencyStatusState } from '../../app.states';
+import * as depStatusActions from '../../store/dependency-status/dependency-status.actions';
 import { EquipmentResponse } from '../interfaces/equipment-response.interface';
 import { Item } from '../interfaces/item.interface';
 import { League } from '../interfaces/league.interface';
@@ -19,14 +23,9 @@ import { Player } from '../interfaces/player.interface';
 import { Property } from '../interfaces/property.interface';
 import { Requirement } from '../interfaces/requirement.interface';
 import { Stash } from '../interfaces/stash.interface';
+import * as depStatusReducer from './../../store/dependency-status/dependency-status.reducer';
 import { ElectronService } from './electron.service';
 import { LogService } from './log.service';
-import { Store } from '@ngrx/store';
-import * as depStatusReducer from './../../store/dependency-status/dependency-status.reducer';
-import { DependencyStatusState } from '../../app.states';
-import { DependencyStatus } from '../interfaces/dependency-status.interface';
-import { Subscription } from 'rxjs';
-import * as depStatusActions from '../../store/dependency-status/dependency-status.actions';
 
 @Injectable()
 export class ExternalService implements OnDestroy {

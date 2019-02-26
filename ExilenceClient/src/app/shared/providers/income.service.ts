@@ -24,6 +24,12 @@ import { PricingService } from './pricing.service';
 import { SettingsService } from './settings.service';
 import { StashStore } from '../interfaces/settings-store.interface';
 import { TableHelper } from '../helpers/table.helper';
+import { Store } from '@ngrx/store';
+import * as depStatusReducer from './../../store/dependency-status/dependency-status.reducer';
+import { DependencyStatusState } from '../../app.states';
+import { DependencyStatus } from '../interfaces/dependency-status.interface';
+import * as depStatusActions from '../../store/dependency-status/dependency-status.actions';
+import { catchError } from 'rxjs/operators';
 
 @Injectable()
 export class IncomeService implements OnDestroy {
@@ -50,6 +56,8 @@ export class IncomeService implements OnDestroy {
   private itemValueTreshold = 1;
 
   private playerSub: Subscription;
+  private depStatusStoreSub: Subscription;
+  private poeOnline = true;
 
   constructor(
     private ninjaService: NinjaService,
@@ -58,8 +66,15 @@ export class IncomeService implements OnDestroy {
     private externalService: ExternalService,
     private settingsService: SettingsService,
     private logService: LogService,
-    private pricingService: PricingService
+    private pricingService: PricingService,
+    private depStatusStore: Store<DependencyStatusState>
   ) {
+    this.depStatusStoreSub = this.depStatusStore.select(depStatusReducer.selectAllDepStatuses).subscribe(statuses => {
+      const status = statuses.find(s => s.name === 'pathofexile');
+      if (status !== undefined) {
+        this.poeOnline = status.online;
+      }
+    });
   }
 
   InitializeSnapshotting(sessionId: string) {
@@ -79,6 +94,9 @@ export class IncomeService implements OnDestroy {
   ngOnDestroy() {
     if (this.playerSub !== undefined) {
       this.playerSub.unsubscribe();
+    }
+    if (this.depStatusStoreSub !== undefined) {
+      this.depStatusStoreSub.unsubscribe();
     }
   }
 
@@ -100,6 +118,7 @@ export class IncomeService implements OnDestroy {
 
     this.sessionIdValid = this.settingsService.get('profile.sessionIdValid');
     if (
+      this.poeOnline &&
       this.netWorthHistory.lastSnapshot < (Date.now() - this.twoMinutes) &&
       this.localPlayer !== undefined &&
       (this.sessionId !== undefined && this.sessionId !== '' && this.sessionIdValid) &&
@@ -269,7 +288,7 @@ export class IncomeService implements OnDestroy {
     }
 
     const league = this.settingsService.getCurrentLeague();
-    let selectedStashTabs: StashStore[]
+    let selectedStashTabs: StashStore[];
     if (league !== undefined) {
       selectedStashTabs = league.stashtabs;
     }
@@ -284,6 +303,12 @@ export class IncomeService implements OnDestroy {
       this.pricingService.retrieveExternalPrices(),
       this.getPlayerInventory(accountName, this.localPlayer.character.name)
     ).do((res) => {
+
+      // todo: if inventory or stashtabs failed, return directly
+      if (res[1] === null || res[3] === null) {
+        return;
+      }
+
       this.logService.log('Finished retriving stashhtabs');
       if (this.characterPricing) { // price equipment
         this.PriceItems(this.localPlayer.character.items.filter(x => x.inventoryId !== 'MainInventory'), mapTab, undefined);
@@ -373,10 +398,12 @@ export class IncomeService implements OnDestroy {
 
     return Observable.from(selectedStashTabs)
       .mergeMap((tab: any) => {
-        return this.externalService.getStashTab(accountName, localLeague, tab.position);
+        return this.externalService.getStashTab(accountName, localLeague, tab.position).pipe(
+          catchError(_ => of(null))
+        );
       }, 1)
       .do(stashTab => {
-        this.playerStashTabs.push(stashTab);
+        return stashTab !== null ? this.playerStashTabs.push(stashTab) : Observable.of(null);
       });
   }
 
