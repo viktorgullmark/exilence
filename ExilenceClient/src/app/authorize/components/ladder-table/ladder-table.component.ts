@@ -27,7 +27,6 @@ export class LadderTableComponent implements OnInit, OnDestroy {
   private partySub: Subscription;
   private ladderStoreSub: Subscription;
   private playerLadders: Array<PlayerLadder> = [];
-  private allLadders$: Observable<PlayerLadder[]>;
 
   public selectedPlayerValue: any;
   @ViewChild(MatSort) sort: MatSort;
@@ -37,9 +36,7 @@ export class LadderTableComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    this.allLadders$ = this.ladderStore.select(fromReducer.selectAllLadders);
-
-    this.ladderStoreSub = this.allLadders$.subscribe(ladders => {
+    this.ladderStoreSub = this.ladderStore.select(fromReducer.selectAllLadders).subscribe(ladders => {
       this.playerLadders = ladders;
       this.dataSource = [];
       // if the selection is the right one, update table directly when state is updated
