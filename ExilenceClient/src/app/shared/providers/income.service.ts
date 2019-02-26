@@ -172,7 +172,7 @@ export class IncomeService implements OnDestroy {
 
           this.logService.log(`Finished Snapshotting player net worth in ${timePassed} seconds`);
         } else {
-          this.logService.log(`Website could not be reached`);
+          this.logService.log(`Website could not be reached, cancelling snapshot`);
         }
         this.isSnapshotting = false;
       });
