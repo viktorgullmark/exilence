@@ -4,10 +4,12 @@ import { AppConfig } from '../../environments/environment';
 import { AppState } from '../app.states';
 import * as ladderReducer from './ladder/ladder.reducer';
 import * as spectatorCountReducer from './spectator-count/spectator-count.reducer';
+import * as dependencyStatusReducer from './dependency-status/dependency-status.reducer';
 
 export const reducers: ActionReducerMap<AppState> = {
   ladderState: ladderReducer.ladderReducer,
-  spectatorCountState: spectatorCountReducer.spectatorCountReducer
+  spectatorCountState: spectatorCountReducer.spectatorCountReducer,
+  dependencyStatusState: dependencyStatusReducer.depStatusReducer
 };
 
 export function logger(reducer: ActionReducer<AppState>): ActionReducer<AppState> {

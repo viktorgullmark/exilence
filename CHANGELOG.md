@@ -3,12 +3,18 @@ All notable changes to this project will be documented in this file.
 
 ## [0.9.21] - 2019-XX-XX
 ### Added
+- Added offline-mode
+    - You can now continue using Exilence when pathofexile.com goes down
 - Added new state-management (NgRx)
 
 ### Changed
 - Changed how maps are displayed in the net worth table
     - Displays rare maps as normal (to concat)
     - Displays magic maps as normal (to concat)
+
+### Fixed
+- Fixed a bug where only the first 20 stash-tabs were priced, now correctly prices up to 40
+- Fixed a bug where the popup saying character list hidden was shown incorrectly
 
 ### Removed
 - Removed Google Analytics

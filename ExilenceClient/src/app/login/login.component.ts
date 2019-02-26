@@ -26,6 +26,7 @@ import { PricingService } from '../shared/providers/pricing.service';
 import { SessionService } from '../shared/providers/session.service';
 import { SettingsService } from '../shared/providers/settings.service';
 import { ProfileSelection, CharacterStore, LeagueStore } from '../shared/interfaces/settings-store.interface';
+import { ErrorType } from '../shared/interfaces/error.interface';
 
 
 @Component({
@@ -69,6 +70,7 @@ export class LoginComponent implements OnInit, OnDestroy {
     lineReader: any;
     groupNoExists = false;
     providedSpectatorCode = undefined;
+    siteUnreachable = false;
 
     private profile: ProfileSelection;
 
@@ -273,6 +275,7 @@ export class LoginComponent implements OnInit, OnDestroy {
     }
 
     getLeagues(accountName?: string, skipStep?: boolean, shouldValidate = false) {
+        this.siteUnreachable = false;
         this.isFetchingLeagues = true;
 
         const sessId = this.sessFormGroup.controls.sessionId.value;
@@ -287,10 +290,12 @@ export class LoginComponent implements OnInit, OnDestroy {
             // filter out SSF-leagues when listing trade-leagues
             this.tradeLeagues = res[1].filter(x => x.id.indexOf('SSF') === -1);
 
-            if (res[0] === null) {
+            if (res[0].errorType !== undefined && res[0].errorType === ErrorType.Unauthorized) {
                 // profile is private
                 this.privateProfileError = true;
                 this.isFetchingLeagues = false;
+            } else if (res[0].errorType !== undefined && res[0].errorType === ErrorType.Unreachable) {
+                this.siteUnreachable = true;
             } else {
 
                 // map character-leagues to new array
@@ -354,6 +359,7 @@ export class LoginComponent implements OnInit, OnDestroy {
 
     getCharacterList(accountName?: string, skipStep?: boolean) {
         this.isFetching = true;
+        this.siteUnreachable = false;
         const sessId = this.sessFormGroup.controls.sessionId.value;
 
         this.externalService.getCharacterList(accountName !== undefined ? accountName : this.accFormGroup.controls.accountName.value,
@@ -361,7 +367,7 @@ export class LoginComponent implements OnInit, OnDestroy {
             .subscribe((res) => {
                 this.fetched = true;
 
-                if (res === true) {
+                if (res.errorType !== undefined && res.errorType === ErrorType.Unauthorized) {
                     this.openErrorMsgDialog({
                         title: 'Could not fetch characters',
                         // tslint:disable-next-line:max-line-length
@@ -370,6 +376,8 @@ export class LoginComponent implements OnInit, OnDestroy {
                             'If it still does not work, fetch a new session ID and update it in the login-settings.'
                     } as ErrorMessage);
                     this.isFetching = false;
+                } if (res.errorType !== undefined && res.errorType === ErrorType.Unreachable) {
+                    this.siteUnreachable = true;
                 } else {
 
                     const charactersByLeague = res.filter(x => x.league === this.leagueFormGroup.controls.leagueName.value);

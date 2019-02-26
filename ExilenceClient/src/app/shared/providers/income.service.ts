@@ -24,6 +24,12 @@ import { PricingService } from './pricing.service';
 import { SettingsService } from './settings.service';
 import { StashStore } from '../interfaces/settings-store.interface';
 import { TableHelper } from '../helpers/table.helper';
+import { Store } from '@ngrx/store';
+import * as depStatusReducer from './../../store/dependency-status/dependency-status.reducer';
+import { DependencyStatusState } from '../../app.states';
+import { DependencyStatus } from '../interfaces/dependency-status.interface';
+import * as depStatusActions from '../../store/dependency-status/dependency-status.actions';
+import { ErrorType, RequestError } from '../interfaces/error.interface';
 
 @Injectable()
 export class IncomeService implements OnDestroy {
@@ -31,6 +37,7 @@ export class IncomeService implements OnDestroy {
   private lastNinjaHit = 0;
   private ninjaPrices: any[] = [];
   private playerStashTabs: Stash[] = [];
+  private playerStashMaps: Stash[] = [];
   private netWorthHistory: NetWorthHistory;
   private sessionId: string;
   public isSnapshotting = false;
@@ -50,6 +57,8 @@ export class IncomeService implements OnDestroy {
   private itemValueTreshold = 1;
 
   private playerSub: Subscription;
+  private depStatusStoreSub: Subscription;
+  private poeOnline = true;
 
   constructor(
     private ninjaService: NinjaService,
@@ -58,8 +67,15 @@ export class IncomeService implements OnDestroy {
     private externalService: ExternalService,
     private settingsService: SettingsService,
     private logService: LogService,
-    private pricingService: PricingService
+    private pricingService: PricingService,
+    private depStatusStore: Store<DependencyStatusState>
   ) {
+    this.depStatusStoreSub = this.depStatusStore.select(depStatusReducer.selectAllDepStatuses).subscribe(statuses => {
+      const status = statuses.find(s => s.name === 'pathofexile');
+      if (status !== undefined) {
+        this.poeOnline = status.online;
+      }
+    });
   }
 
   InitializeSnapshotting(sessionId: string) {
@@ -79,6 +95,9 @@ export class IncomeService implements OnDestroy {
   ngOnDestroy() {
     if (this.playerSub !== undefined) {
       this.playerSub.unsubscribe();
+    }
+    if (this.depStatusStoreSub !== undefined) {
+      this.depStatusStoreSub.unsubscribe();
     }
   }
 
@@ -100,6 +119,7 @@ export class IncomeService implements OnDestroy {
 
     this.sessionIdValid = this.settingsService.get('profile.sessionIdValid');
     if (
+      this.poeOnline &&
       this.netWorthHistory.lastSnapshot < (Date.now() - this.twoMinutes) &&
       this.localPlayer !== undefined &&
       (this.sessionId !== undefined && this.sessionId !== '' && this.sessionIdValid) &&
@@ -107,51 +127,55 @@ export class IncomeService implements OnDestroy {
       (selectedStashtabs === undefined || selectedStashtabs.length > 0)
     ) {
       this.isSnapshotting = true;
-      this.netWorthHistory.lastSnapshot = Date.now();
 
       const startTime = Date.now();
       this.logService.log('Started snapshotting player net worth');
       this.SnapshotPlayerNetWorth().subscribe(() => {
 
-        this.netWorthHistory.history = this.netWorthHistory.history
-          .filter((snaphot: NetWorthSnapshot) => snaphot.timestamp > twoWeeksAgo);
+        if (this.poeOnline) {
+          this.netWorthHistory.history = this.netWorthHistory.history
+            .filter((snaphot: NetWorthSnapshot) => snaphot.timestamp > twoWeeksAgo);
 
-        // We are a new player that have not parsed income before
-        // Remove the placeholder element
-        if (
-          this.netWorthHistory.history.length === 1 &&
-          this.netWorthHistory.history[0].value === 0
-        ) {
-          this.netWorthHistory.history.pop();
+          this.netWorthHistory.lastSnapshot = startTime;
+
+          // We are a new player that have not parsed income before
+          // Remove the placeholder element
+          if (
+            this.netWorthHistory.history.length === 1 &&
+            this.netWorthHistory.history[0].value === 0
+          ) {
+            this.netWorthHistory.history.pop();
+          }
+
+          const snapShot: NetWorthSnapshot = {
+            timestamp: Date.now(),
+            value: this.totalNetWorth,
+            items: this.totalNetWorthItems,
+          };
+
+          this.netWorthHistory.history.unshift(snapShot);
+
+          const historyToSend = HistoryHelper.filterNetworth(this.netWorthHistory.history, oneDayAgo);
+
+          this.accountService.player.next(this.localPlayer);
+
+          const character = this.settingsService.getCurrentCharacter();
+          if (character !== undefined) {
+            character.networth = this.netWorthHistory;
+            this.settingsService.updateCharacter(character);
+          }
+
+          const objToSend = Object.assign({}, this.localPlayer);
+          objToSend.netWorthSnapshots = historyToSend;
+          this.partyService.updatePlayer(objToSend);
+
+          const endTime = Date.now();
+          const timePassed = Math.round((endTime - startTime) / 1000);
+
+          this.logService.log(`Finished Snapshotting player net worth in ${timePassed} seconds`);
+        } else {
+          this.logService.log(`Website could not be reached, cancelling snapshot`);
         }
-
-        const snapShot: NetWorthSnapshot = {
-          timestamp: Date.now(),
-          value: this.totalNetWorth,
-          items: this.totalNetWorthItems,
-        };
-
-        this.netWorthHistory.history.unshift(snapShot);
-
-        const historyToSend = HistoryHelper.filterNetworth(this.netWorthHistory.history, oneDayAgo);
-
-        this.accountService.player.next(this.localPlayer);
-
-        const character = this.settingsService.getCurrentCharacter();
-        if (character !== undefined) {
-          character.networth = this.netWorthHistory;
-          this.settingsService.updateCharacter(character);
-        }
-
-        const objToSend = Object.assign({}, this.localPlayer);
-        objToSend.netWorthSnapshots = historyToSend;
-        this.partyService.updatePlayer(objToSend);
-
-        const endTime = Date.now();
-        const timePassed = Math.round((endTime - startTime) / 1000);
-
-        this.logService.log(`Finished Snapshotting player net worth in ${timePassed} seconds`);
-
         this.isSnapshotting = false;
       });
     }
@@ -240,6 +264,7 @@ export class IncomeService implements OnDestroy {
     const tradeLeague = this.settingsService.get('profile.tradeLeagueName');
 
     this.playerStashTabs = [];
+    this.playerStashMaps = [];
     this.totalNetWorthItems = [];
     this.totalNetWorth = 0;
 
@@ -269,7 +294,7 @@ export class IncomeService implements OnDestroy {
     }
 
     const league = this.settingsService.getCurrentLeague();
-    let selectedStashTabs: StashStore[]
+    let selectedStashTabs: StashStore[];
     if (league !== undefined) {
       selectedStashTabs = league.stashtabs;
     }
@@ -278,41 +303,54 @@ export class IncomeService implements OnDestroy {
       mapTab = selectedStashTabs.find(x => x.isMapTab);
     }
 
-    return Observable.forkJoin(
+    const requests = Observable.forkJoin(
       this.getPlayerPublicMaps(accountName, tradeLeague, mapTab),
       this.getPlayerStashTabs(accountName, localLeague),
       this.pricingService.retrieveExternalPrices(),
       this.getPlayerInventory(accountName, this.localPlayer.character.name)
     ).do((res) => {
-      this.logService.log('Finished retriving stashhtabs');
-      if (this.characterPricing) { // price equipment
-        this.PriceItems(this.localPlayer.character.items.filter(x => x.inventoryId !== 'MainInventory'), mapTab, undefined);
-      } // price inventory
-      if (this.inventoryPricing) {
-        this.PriceItems(res[3].items, mapTab, undefined);
+
+      // if any request failed during snapshotting, don't proceed
+      if (this.playerStashTabs.length === selectedStashTabs.length && res[3].type !== ErrorType.Unreachable) {
+        this.logService.log('Finished retriving stashhtabs');
+        if (this.characterPricing) { // price equipment
+          this.PriceItems(this.localPlayer.character.items.filter(x => x.inventoryId !== 'MainInventory'), mapTab, undefined);
+        } // price inventory
+        if (this.inventoryPricing) {
+          this.PriceItems(res[3].items, mapTab, undefined);
+        }
+        // price stash
+        this.playerStashTabs.forEach((tab: Stash) => {
+          if (tab !== null) {
+            this.PriceItems(tab.items, mapTab, tab.mapLayout);
+          }
+        });
+        // price maps
+        this.playerStashMaps.forEach((tab: Stash) => {
+          if (tab !== null) {
+            this.PriceItems(tab.items, mapTab, tab.mapLayout);
+          }
+        });
+
+        this.totalNetWorthItems = this.filterItems(this.totalNetWorthItems);
+
+        for (let i = 0, _len = this.totalNetWorthItems; i < this.totalNetWorthItems.length; i++) {
+          this.totalNetWorth += this.totalNetWorthItems[i].value;
+        }
+
+        this.totalNetWorthItems.sort((a: any, b: any) => {
+          if (a.value < b.value) {
+            return 1;
+          }
+          if (a.value > b.value) {
+            return -1;
+          }
+          return 0;
+        });
       }
-      this.playerStashTabs.forEach((tab: Stash, tabIndex: number) => {
-        if (tab !== null) {
-          this.PriceItems(tab.items, mapTab, tab.mapLayout);
-        }
-      });
-
-      this.totalNetWorthItems = this.filterItems(this.totalNetWorthItems);
-
-      for (let i = 0, _len = this.totalNetWorthItems; i < this.totalNetWorthItems.length; i++) {
-        this.totalNetWorth += this.totalNetWorthItems[i].value;
-      }
-
-      this.totalNetWorthItems.sort((a: any, b: any) => {
-        if (a.value < b.value) {
-          return 1;
-        }
-        if (a.value > b.value) {
-          return -1;
-        }
-        return 0;
-      });
     });
+
+    return requests;
   }
 
   getPlayerPublicMaps(accountName: string, league: string, mapTab: any) {
@@ -339,7 +377,7 @@ export class IncomeService implements OnDestroy {
                 mapLayout: {}
               } as Stash;
 
-              this.playerStashTabs.push(tab);
+              this.playerStashMaps.push(tab);
             }
           })
             .delay(1000);
@@ -363,20 +401,39 @@ export class IncomeService implements OnDestroy {
       selectedStashTabs = [];
     }
 
-    if (selectedStashTabs.length > 21) {
-      selectedStashTabs = selectedStashTabs.slice(0, 20);
-    }
-
     if (selectedStashTabs.length === 0) {
       return Observable.of(null);
     }
 
     return Observable.from(selectedStashTabs)
       .mergeMap((tab: any) => {
-        return this.externalService.getStashTab(accountName, localLeague, tab.position);
+        return this.externalService.getStashTab(accountName, localLeague, tab.position)
+          .retryWhen(err => {
+            let retries = 0;
+            return err
+              .delay(500)
+              .map(error => {
+                if (retries++ === 2) {
+                  throw error;
+                }
+                return error;
+              });
+          });
       }, 1)
+      .catch(e => {
+        if (e.status !== 403 && e.status !== 404) {
+          this.externalService.checkStatus();
+          this.depStatusStore.dispatch(
+            new depStatusActions.UpdateDepStatus({ status: { id: 'pathofexile', changes: { online: false } } })
+          );
+          return of({ errorType: ErrorType.Unreachable } as RequestError);
+        }
+        return Observable.of(null);
+      })
       .do(stashTab => {
-        this.playerStashTabs.push(stashTab);
+        if (stashTab.errorType === undefined) {
+          this.playerStashTabs.push(stashTab);
+        }
       });
   }
 

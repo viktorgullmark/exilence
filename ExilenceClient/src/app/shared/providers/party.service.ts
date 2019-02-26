@@ -31,6 +31,9 @@ import * as ladderActions from '../../store/ladder/ladder.actions';
 import * as ladderReducer from '../../store/ladder/ladder.reducer';
 import * as specCountActions from '../../store/spectator-count/spectator-count.actions';
 import * as specCountReducer from '../../store/spectator-count/spectator-count.reducer';
+import { DependencyStatusState } from '../../app.states';
+import * as depStatusActions from '../../store/dependency-status/dependency-status.actions';
+import * as depStatusReducer from './../../store/dependency-status/dependency-status.reducer';
 
 @Injectable()
 export class PartyService implements OnDestroy {
@@ -84,6 +87,8 @@ export class PartyService implements OnDestroy {
   private playerLadders: Array<PlayerLadder> = [];
 
   private allLadders$: Observable<PlayerLadder[]>;
+  private depStatusStoreSub: Subscription;
+  private poeOnline = true;
 
   constructor(
     private router: Router,
@@ -96,7 +101,8 @@ export class PartyService implements OnDestroy {
     private messageValueService: MessageValueService,
     private settingsService: SettingsService,
     private ladderStore: Store<LadderState>,
-    private specCountStore: Store<SpectatorCountState>
+    private specCountStore: Store<SpectatorCountState>,
+    private depStatusStore: Store<DependencyStatusState>
   ) {
 
     this.allLadders$ = this.ladderStore.select(ladderReducer.selectAllLadders);
@@ -112,6 +118,12 @@ export class PartyService implements OnDestroy {
     this.maskedName = this.settingsService.get('maskedGroupname') === true ? true : false;
     this.maskedSpectatorCode = this.settingsService.get('maskedSpectatorCode') === true ? true : false;
 
+    this.depStatusStoreSub = this.depStatusStore.select(depStatusReducer.selectAllDepStatuses).subscribe(statuses => {
+      const status = statuses.find(s => s.name === 'pathofexile');
+      if (status !== undefined) {
+        this.poeOnline = status.online;
+      }
+    });
     this.playerSub = this.accountService.player.subscribe(res => {
       this.currentPlayer = res;
     });
@@ -373,6 +385,8 @@ export class PartyService implements OnDestroy {
       this.ladderStoreSub.unsubscribe();
     } if (this.specCountStoreSub !== undefined) {
       this.specCountStoreSub.unsubscribe();
+    } if (this.depStatusStoreSub !== undefined) {
+      this.depStatusStoreSub.unsubscribe();
     }
   }
 
@@ -505,28 +519,39 @@ export class PartyService implements OnDestroy {
   public updatePlayer(player: Player, reason: string = null) {
     const oneDayAgo = (Date.now() - (24 * 60 * 60 * 1000));
     this.updateInProgress = true;
-    this.externalService.getCharacterInventory(this.accountInfo.accountName, this.accountInfo.characterName)
-      .subscribe((equipment: EquipmentResponse) => {
-        player = this.externalService.setCharacter(equipment, player);
-        const objToSend = Object.assign({}, player);
 
-        if (reason === 'area-change-to-neutral') {
-          const inventoryItems = ItemHelper.getInventoryItems(player.character.items);
-          this.enteredNeutralArea.next(inventoryItems);
-        } else if (reason === 'area-change-to-hostile') {
-          const inventoryItems = ItemHelper.getInventoryItems(player.character.items);
-          this.enteredHostileArea.next(inventoryItems);
-        }
+    let objToSend = Object.assign({}, player);
 
-        objToSend.pastAreas = HistoryHelper.filterAreas(objToSend.pastAreas, oneDayAgo);
-        objToSend.netWorthSnapshots = HistoryHelper.filterNetworth(objToSend.netWorthSnapshots, oneDayAgo);
-        if (this._hubConnection) {
-          this.electronService.compress(objToSend, (data) => this._hubConnection.invoke('UpdatePlayer', this.party.name, data)
-            .catch((e) => {
-              this.logService.log(e, null, true);
-            }));
-        }
-      });
+    if (this.poeOnline) {
+      this.externalService.getCharacterInventory(this.accountInfo.accountName, this.accountInfo.characterName)
+        .subscribe((equipment: EquipmentResponse) => {
+          player = this.externalService.setCharacter(equipment, player);
+          objToSend = player;
+
+          if (reason === 'area-change-to-neutral') {
+            const inventoryItems = ItemHelper.getInventoryItems(player.character.items);
+            this.enteredNeutralArea.next(inventoryItems);
+          } else if (reason === 'area-change-to-hostile') {
+            const inventoryItems = ItemHelper.getInventoryItems(player.character.items);
+            this.enteredHostileArea.next(inventoryItems);
+          }
+
+          objToSend.pastAreas = HistoryHelper.filterAreas(objToSend.pastAreas, oneDayAgo);
+          objToSend.netWorthSnapshots = HistoryHelper.filterNetworth(objToSend.netWorthSnapshots, oneDayAgo);
+          this.invokeUpdatePlayer(objToSend);
+        });
+    } else { // only invoke if we are offline, without re-setting items
+      this.invokeUpdatePlayer(objToSend);
+    }
+  }
+
+  public invokeUpdatePlayer(player: Player) {
+    if (this._hubConnection) {
+      this.electronService.compress(player, (data) => this._hubConnection.invoke('UpdatePlayer', this.party.name, data)
+        .catch((e) => {
+          this.logService.log(e, null, true);
+        }));
+    }
   }
 
   public assignLeader(characterName: string) {
