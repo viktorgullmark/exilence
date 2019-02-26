@@ -52,9 +52,7 @@ export class AppComponent implements OnDestroy {
     private depStatusStore: Store<DependencyStatusState>
   ) {
 
-    this.allDepStatuses$ = this.depStatusStore.select(fromReducer.selectAllDepStatuses);
-
-    this.depStatusStoreSub = this.allDepStatuses$.subscribe(statuses => {
+    this.depStatusStoreSub = this.depStatusStore.select(fromReducer.selectAllDepStatuses).subscribe(statuses => {
       this.depStatuses = statuses;
 
       // update tooltip-content
@@ -64,21 +62,19 @@ export class AppComponent implements OnDestroy {
         this.statusTooltipContent += `${status.name}: ${statusText}\n`;
       });
 
-      const poe = this.depStatuses.find(s => s.name === 'pathofexile');
       // pathofexile is down
-      if (poe !== undefined) {
-        if (!poe.online && !this.errorShown) {
-          this.errorShown = true;
-          this.openErrorMsgDialog({
-            title: 'pathofexile.com could not be reached',
-            // tslint:disable-next-line:max-line-length
-            body: '<a class="inline-link">https://pathofexile.com</a> could not be reached.<br/><br/>' +
-              'You can continue using Exilence in offline-mode, but your character wont update.<br/><br/>' +
-              'We will automatically reconnect you when the site is back up.'
-          } as ErrorMessage);
-        } else {
-          this.errorShown = false;
-        }
+      const poe = this.depStatuses.find(s => s.name === 'pathofexile');
+      if (!poe.online && !this.errorShown && router.url !== '/login') {
+        this.errorShown = true;
+        this.openErrorMsgDialog({
+          title: 'pathofexile.com could not be reached',
+          // tslint:disable-next-line:max-line-length
+          body: '<a class="inline-link">https://pathofexile.com</a> could not be reached.<br/><br/>' +
+            'You can continue using Exilence in offline-mode, but your character wont update.<br/><br/>' +
+            'We will automatically reconnect you when the site is back up.'
+        } as ErrorMessage);
+      } else if (poe.online) {
+        this.errorShown = false;
       }
     });
 

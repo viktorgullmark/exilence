@@ -99,7 +99,7 @@
               <button mat-raised-button color="primary" (click)="validateSessionId()" type="button" [disabled]="sessFormGroup.controls.sessionId.value == ''">Validate</button>
               <button mat-raised-button color="primary" [disabled]="(!sessionIdValid || needsValidation) && sessFormGroup.controls.sessionId.value != ''"
                 *ngIf="!isFetchingLeagues" (click)="setSessionCookie(sessFormGroup.controls.sessionId.value); getLeagues(undefined, true)">Continue</button>
-              <mat-progress-bar *ngIf="isFetchingLeagues" class="progress-bar" color="primary" mode="indeterminate">
+              <mat-progress-bar *ngIf="isFetchingLeagues && !siteUnreachable" class="progress-bar" color="primary" mode="indeterminate">
               </mat-progress-bar>
             </div>
             <span class="form-error" *ngIf="!sessionIdValid && !needsValidation && sessFormGroup.controls.sessionId.value != ''">{{'ERROR.SESSIONID_NOT_VALID'
@@ -130,9 +130,10 @@
             <div class="btn-grp">
               <button mat-raised-button class="btn-back" matStepperPrevious>Back</button>
               <button mat-raised-button color="primary" *ngIf="!isFetching" (click)="getCharacterList(undefined, true)">Continue</button>
-              <mat-progress-bar *ngIf="isFetching" class="progress-bar" color="primary" mode="indeterminate">
+              <mat-progress-bar *ngIf="isFetching && !siteUnreachable" class="progress-bar" color="primary" mode="indeterminate">
               </mat-progress-bar>
             </div>
+            <span class="form-error" *ngIf="siteUnreachable">{{'ERROR.POE_UNREACHABLE' | translate}}<br/><br/></span>
             <span class="mat-body-1">If you can't fetch your characters. Go to <a class="external-link" (click)="openLink('https://www.pathofexile.com')">pathofexile.com</a>
               and set your profile to public, <br />and make sure your character-list is set to visible</span>
           </form>

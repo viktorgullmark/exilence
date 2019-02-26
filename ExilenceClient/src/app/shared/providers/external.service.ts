@@ -87,8 +87,16 @@ export class ExternalService implements OnDestroy {
 
     return this.RequestRateLimit.limit
       (this.http.get('https://www.pathofexile.com/character-window/get-items' + parameters, { withCredentials: true })
-        .retryWhen((error) => {
-          return error.delay(500).take(2);
+        .retryWhen(err => {
+          let retries = 0;
+          return err
+            .delay(500)
+            .map(error => {
+              if (retries++ === 2) {
+                throw error;
+              }
+              return error;
+            });
         })
         .catch(e => {
           if (e.status !== 403 && e.status !== 404) {
@@ -109,11 +117,18 @@ export class ExternalService implements OnDestroy {
   }
 
   getCharacterList(account: string, sessionId?: string) {
-
     const parameters = `?accountName=${account}`;
     return this.http.get('https://www.pathofexile.com/character-window/get-characters' + parameters)
-      .retryWhen((error) => {
-        return error.delay(500).take(2);
+      .retryWhen(err => {
+        let retries = 0;
+        return err
+          .delay(500)
+          .map(error => {
+            if (retries++ === 2) {
+              throw error;
+            }
+            return error;
+          });
       })
       .catch(e => {
         if (e.status !== 403 && e.status !== 404) {
@@ -130,8 +145,16 @@ export class ExternalService implements OnDestroy {
   getLeagues(type: string, compact: number) {
     const parameters = `?type=${type}&compact=${compact}`;
     return this.http.get('https://api.pathofexile.com/leagues' + parameters)
-      .retryWhen((error) => {
-        return error.delay(500).take(2);
+      .retryWhen(err => {
+        let retries = 0;
+        return err
+          .delay(500)
+          .map(error => {
+            if (retries++ === 2) {
+              throw error;
+            }
+            return error;
+          });
       })
       .catch(e => {
         if (e.status !== 403 && e.status !== 404) {
@@ -145,8 +168,16 @@ export class ExternalService implements OnDestroy {
   getStashTabs(account: string, league: string) {
     const parameters = `?league=${league}&accountName=${account}&tabs=1`;
     return this.http.get<Stash>('https://www.pathofexile.com/character-window/get-stash-items' + parameters)
-      .retryWhen((error) => {
-        return error.delay(500).take(2);
+      .retryWhen(err => {
+        let retries = 0;
+        return err
+          .delay(500)
+          .map(error => {
+            if (retries++ === 2) {
+              throw error;
+            }
+            return error;
+          });
       })
       .catch(e => {
         if (e.status !== 403 && e.status !== 404) {
@@ -161,8 +192,16 @@ export class ExternalService implements OnDestroy {
     const parameters = `?league=${league}&accountName=${account}&tabIndex=${index}&tabs=1`;
     return this.RequestRateLimit.limit(
       this.http.get<Stash>('https://www.pathofexile.com/character-window/get-stash-items' + parameters))
-      .retryWhen((error) => {
-        return error.delay(500).take(2);
+      .retryWhen(err => {
+        let retries = 0;
+        return err
+          .delay(500)
+          .map(error => {
+            if (retries++ === 2) {
+              throw error;
+            }
+            return error;
+          });
       })
       .catch(e => {
         if (e.status !== 403 && e.status !== 404) {
@@ -179,8 +218,16 @@ export class ExternalService implements OnDestroy {
 
     const parameters = `?league=${league}&accountName=${account}&tabIndex=${index}&tabs=1`;
     return this.RequestRateLimit.limit(this.http.get<Stash>('https://www.pathofexile.com/character-window/get-stash-items' + parameters)
-      .retryWhen((error) => {
-        return error.delay(500).take(2);
+      .retryWhen(err => {
+        let retries = 0;
+        return err
+          .delay(500)
+          .map(error => {
+            if (retries++ === 2) {
+              throw error;
+            }
+            return error;
+          });
       })
       .catch(e => {
         if (e.status === 500 || e.status === 502 || e.status === 503) {
