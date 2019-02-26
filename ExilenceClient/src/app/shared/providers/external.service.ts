@@ -40,7 +40,7 @@ export class ExternalService implements OnDestroy {
 
   // combined ratelimiter for stash- and character-requests (singleton)
   private RequestRateLimit = new RateLimiter(7, 10000);
-
+  private statusCheckInterval: any;
   private depStatusStoreSub: Subscription;
   private poeOnline = true;
 
@@ -57,19 +57,6 @@ export class ExternalService implements OnDestroy {
         this.poeOnline = status.online;
       }
     });
-
-    // check website status, and set status to online when successful
-    setInterval(() => {
-      if (!this.poeOnline) {
-        this.checkStatus().subscribe(res => {
-          if (res !== null) {
-            this.depStatusStore.dispatch(
-              new depStatusActions.UpdateDepStatus({ status: { id: 'pathofexile', changes: { online: true } } })
-            );
-          }
-        });
-      }
-    }, 15 * 1000);
   }
 
   ngOnDestroy() {
@@ -100,6 +87,7 @@ export class ExternalService implements OnDestroy {
         })
         .catch(e => {
           if (e.status !== 403 && e.status !== 404) {
+            this.checkStatus();
             this.depStatusStore.dispatch(new depStatusActions.UpdateDepStatus(
               { status: { id: 'pathofexile', changes: { online: false } } }));
             return of({ errorType: ErrorType.Unreachable } as RequestError);
@@ -109,12 +97,28 @@ export class ExternalService implements OnDestroy {
   }
 
   checkStatus() {
-    const parameters = `?type=main&compact=0`;
-    return this.RequestRateLimit.limit
-      (this.http.get('https://api.pathofexile.com/leagues' + parameters)
-        .catch(e => {
-          return Observable.of(null);
-        }));
+    this.logService.log('Checking https://pathofexile.com status...');
+    if (this.statusCheckInterval) {
+      clearInterval(this.statusCheckInterval);
+    }
+    // check website status, and set status to online when successful
+    this.statusCheckInterval = setInterval(() => {
+      if (!this.poeOnline) {
+        const parameters = `?type=main&compact=0`;
+        this.RequestRateLimit.limit
+          (this.http.get('https://api.pathofexile.com/leagues' + parameters)
+            .catch(e => {
+              return Observable.of(null);
+            })).subscribe(res => {
+              if (res !== null) {
+                this.depStatusStore.dispatch(
+                  new depStatusActions.UpdateDepStatus({ status: { id: 'pathofexile', changes: { online: true } } })
+                );
+                clearInterval(this.statusCheckInterval);
+              }
+            });
+      }
+    }, 15 * 1000);
   }
 
   getCharacterList(account: string, sessionId?: string) {
@@ -133,6 +137,7 @@ export class ExternalService implements OnDestroy {
       })
       .catch(e => {
         if (e.status !== 403 && e.status !== 404) {
+          this.checkStatus();
           this.depStatusStore.dispatch(new depStatusActions.UpdateDepStatus({ status: { id: 'pathofexile', changes: { online: false } } }));
           return of({ errorType: ErrorType.Unreachable } as RequestError);
         }
@@ -159,6 +164,7 @@ export class ExternalService implements OnDestroy {
       })
       .catch(e => {
         if (e.status !== 403 && e.status !== 404) {
+          this.checkStatus();
           this.depStatusStore.dispatch(new depStatusActions.UpdateDepStatus({ status: { id: 'pathofexile', changes: { online: false } } }));
           return of({ errorType: ErrorType.Unreachable } as RequestError);
         }
@@ -182,6 +188,7 @@ export class ExternalService implements OnDestroy {
       })
       .catch(e => {
         if (e.status !== 403 && e.status !== 404) {
+          this.checkStatus();
           this.depStatusStore.dispatch(new depStatusActions.UpdateDepStatus({ status: { id: 'pathofexile', changes: { online: false } } }));
           return of({ errorType: ErrorType.Unreachable } as RequestError);
         }
@@ -192,7 +199,7 @@ export class ExternalService implements OnDestroy {
   getStashTab(account: string, league: string, index: number): Observable<Stash> {
     const parameters = `?league=${league}&accountName=${account}&tabIndex=${index}&tabs=1`;
     return this.RequestRateLimit.limit(
-      this.http.get<Stash>('https://www.pathofexile.com/character-window/get-stash-items' + parameters));
+      this.http.get<Stash>('https://httpstat.us/500')); //'https://www.pathofexile.com/character-window/get-stash-items' + parameters
   }
 
   validateSessionId(sessionId: string, account: string, league: string, index: number) {
@@ -214,6 +221,7 @@ export class ExternalService implements OnDestroy {
       })
       .catch(e => {
         if (e.status === 500 || e.status === 502 || e.status === 503) {
+          this.checkStatus();
           this.depStatusStore.dispatch(new depStatusActions.UpdateDepStatus({ status: { id: 'pathofexile', changes: { online: false } } }));
           return of({ errorType: ErrorType.Unreachable } as RequestError);
         }

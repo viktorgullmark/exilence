@@ -422,6 +422,7 @@ export class IncomeService implements OnDestroy {
       }, 1)
       .catch(e => {
         if (e.status !== 403 && e.status !== 404) {
+          this.externalService.checkStatus();
           this.depStatusStore.dispatch(
             new depStatusActions.UpdateDepStatus({ status: { id: 'pathofexile', changes: { online: false } } })
           );
