@@ -192,7 +192,7 @@ export class ExternalService implements OnDestroy {
   getStashTab(account: string, league: string, index: number): Observable<Stash> {
     const parameters = `?league=${league}&accountName=${account}&tabIndex=${index}&tabs=1`;
     return this.RequestRateLimit.limit(
-      this.http.get<Stash>('https://httpstat.us/500'));
+      this.http.get<Stash>('https://www.pathofexile.com/character-window/get-stash-items' + parameters));
   }
 
   validateSessionId(sessionId: string, account: string, league: string, index: number) {
