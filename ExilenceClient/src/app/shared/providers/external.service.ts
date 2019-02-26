@@ -62,7 +62,11 @@ export class ExternalService implements OnDestroy {
     setInterval(() => {
       if (!this.poeOnline) {
         this.checkStatus().subscribe(res => {
-          this.depStatusStore.dispatch(new depStatusActions.UpdateDepStatus({ status: { id: 'pathofexile', changes: { online: true } } }));
+          if (res !== null) {
+            this.depStatusStore.dispatch(
+              new depStatusActions.UpdateDepStatus({ status: { id: 'pathofexile', changes: { online: true } } })
+            );
+          }
         });
       }
     }, 15 * 1000);
@@ -98,7 +102,10 @@ export class ExternalService implements OnDestroy {
 
   checkStatus() {
     return this.RequestRateLimit.limit
-      (this.http.get('https://www.pathofexile.com'));
+      (this.http.get('https://www.pathofexile.com')
+        .catch(e => {
+          return Observable.of(null);
+        }));
   }
 
   getCharacterList(account: string, sessionId?: string) {
