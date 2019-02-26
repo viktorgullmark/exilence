@@ -290,11 +290,11 @@ export class LoginComponent implements OnInit, OnDestroy {
             // filter out SSF-leagues when listing trade-leagues
             this.tradeLeagues = res[1].filter(x => x.id.indexOf('SSF') === -1);
 
-            if (res[0].type !== undefined && res[0].type === ErrorType.Unauthorized) {
+            if (res[0].errorType !== undefined && res[0].errorType === ErrorType.Unauthorized) {
                 // profile is private
                 this.privateProfileError = true;
                 this.isFetchingLeagues = false;
-            } else if (res[0].type !== undefined && res[0].type === ErrorType.Unreachable) {
+            } else if (res[0].errorType !== undefined && res[0].errorType === ErrorType.Unreachable) {
                 this.siteUnreachable = true;
             } else {
 
@@ -367,7 +367,7 @@ export class LoginComponent implements OnInit, OnDestroy {
             .subscribe((res) => {
                 this.fetched = true;
 
-                if (res.type !== undefined && res.type === ErrorType.Unauthorized) {
+                if (res.errorType !== undefined && res.errorType === ErrorType.Unauthorized) {
                     this.openErrorMsgDialog({
                         title: 'Could not fetch characters',
                         // tslint:disable-next-line:max-line-length
@@ -376,7 +376,7 @@ export class LoginComponent implements OnInit, OnDestroy {
                             'If it still does not work, fetch a new session ID and update it in the login-settings.'
                     } as ErrorMessage);
                     this.isFetching = false;
-                } if (res.type !== undefined && res.type === ErrorType.Unreachable) {
+                } if (res.errorType !== undefined && res.errorType === ErrorType.Unreachable) {
                     this.siteUnreachable = true;
                 } else {
 

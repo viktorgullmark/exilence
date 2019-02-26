@@ -1,5 +1,5 @@
 export interface RequestError {
-    type: ErrorType;
+    errorType: ErrorType;
     message: string;
 }
 

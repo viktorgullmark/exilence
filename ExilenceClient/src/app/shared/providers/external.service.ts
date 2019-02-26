@@ -102,15 +102,16 @@ export class ExternalService implements OnDestroy {
           if (e.status !== 403 && e.status !== 404) {
             this.depStatusStore.dispatch(new depStatusActions.UpdateDepStatus(
               { status: { id: 'pathofexile', changes: { online: false } } }));
-            return of({ type: ErrorType.Unreachable } as RequestError);
+            return of({ errorType: ErrorType.Unreachable } as RequestError);
           }
           return Observable.of(null);
         }));
   }
 
   checkStatus() {
+    const parameters = `?type=main&compact=0`;
     return this.RequestRateLimit.limit
-      (this.http.get('https://www.pathofexile.com')
+      (this.http.get('https://api.pathofexile.com/leagues' + parameters)
         .catch(e => {
           return Observable.of(null);
         }));
@@ -133,10 +134,10 @@ export class ExternalService implements OnDestroy {
       .catch(e => {
         if (e.status !== 403 && e.status !== 404) {
           this.depStatusStore.dispatch(new depStatusActions.UpdateDepStatus({ status: { id: 'pathofexile', changes: { online: false } } }));
-          return of({ type: ErrorType.Unreachable } as RequestError);
+          return of({ errorType: ErrorType.Unreachable } as RequestError);
         }
         if (e.status === 403) {
-          return of({ type: ErrorType.Unauthorized } as RequestError);
+          return of({ errorType: ErrorType.Unauthorized } as RequestError);
         }
         return of(null);
       });
@@ -159,7 +160,7 @@ export class ExternalService implements OnDestroy {
       .catch(e => {
         if (e.status !== 403 && e.status !== 404) {
           this.depStatusStore.dispatch(new depStatusActions.UpdateDepStatus({ status: { id: 'pathofexile', changes: { online: false } } }));
-          return of({ type: ErrorType.Unreachable } as RequestError);
+          return of({ errorType: ErrorType.Unreachable } as RequestError);
         }
         return of(null);
       });
@@ -182,7 +183,7 @@ export class ExternalService implements OnDestroy {
       .catch(e => {
         if (e.status !== 403 && e.status !== 404) {
           this.depStatusStore.dispatch(new depStatusActions.UpdateDepStatus({ status: { id: 'pathofexile', changes: { online: false } } }));
-          return of({ type: ErrorType.Unreachable } as RequestError);
+          return of({ errorType: ErrorType.Unreachable } as RequestError);
         }
         return Observable.of(null);
       });
@@ -191,25 +192,7 @@ export class ExternalService implements OnDestroy {
   getStashTab(account: string, league: string, index: number): Observable<Stash> {
     const parameters = `?league=${league}&accountName=${account}&tabIndex=${index}&tabs=1`;
     return this.RequestRateLimit.limit(
-      this.http.get<Stash>('https://www.pathofexile.com/character-window/get-stash-items' + parameters))
-      .retryWhen(err => {
-        let retries = 0;
-        return err
-          .delay(500)
-          .map(error => {
-            if (retries++ === 2) {
-              throw error;
-            }
-            return error;
-          });
-      })
-      .catch(e => {
-        if (e.status !== 403 && e.status !== 404) {
-          this.depStatusStore.dispatch(new depStatusActions.UpdateDepStatus({ status: { id: 'pathofexile', changes: { online: false } } }));
-          return of({ type: ErrorType.Unreachable } as RequestError);
-        }
-        return Observable.of(null);
-      });
+      this.http.get<Stash>('https://httpstat.us/500'));
   }
 
   validateSessionId(sessionId: string, account: string, league: string, index: number) {
@@ -232,7 +215,7 @@ export class ExternalService implements OnDestroy {
       .catch(e => {
         if (e.status === 500 || e.status === 502 || e.status === 503) {
           this.depStatusStore.dispatch(new depStatusActions.UpdateDepStatus({ status: { id: 'pathofexile', changes: { online: false } } }));
-          return of({ type: ErrorType.Unreachable } as RequestError);
+          return of({ errorType: ErrorType.Unreachable } as RequestError);
         }
         if (e.status !== 200) {
           return Observable.of(false);

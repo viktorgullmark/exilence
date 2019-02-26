@@ -29,6 +29,7 @@ import * as depStatusReducer from './../../store/dependency-status/dependency-st
 import { DependencyStatusState } from '../../app.states';
 import { DependencyStatus } from '../interfaces/dependency-status.interface';
 import * as depStatusActions from '../../store/dependency-status/dependency-status.actions';
+import { ErrorType, RequestError } from '../interfaces/error.interface';
 
 @Injectable()
 export class IncomeService implements OnDestroy {
@@ -126,7 +127,6 @@ export class IncomeService implements OnDestroy {
       (selectedStashtabs === undefined || selectedStashtabs.length > 0)
     ) {
       this.isSnapshotting = true;
-      this.netWorthHistory.lastSnapshot = Date.now();
 
       const startTime = Date.now();
       this.logService.log('Started snapshotting player net worth');
@@ -135,6 +135,8 @@ export class IncomeService implements OnDestroy {
         if (this.poeOnline) {
           this.netWorthHistory.history = this.netWorthHistory.history
             .filter((snaphot: NetWorthSnapshot) => snaphot.timestamp > twoWeeksAgo);
+
+          this.netWorthHistory.lastSnapshot = startTime;
 
           // We are a new player that have not parsed income before
           // Remove the placeholder element
@@ -301,7 +303,7 @@ export class IncomeService implements OnDestroy {
       mapTab = selectedStashTabs.find(x => x.isMapTab);
     }
 
-    return Observable.forkJoin(
+    const requests = Observable.forkJoin(
       this.getPlayerPublicMaps(accountName, tradeLeague, mapTab),
       this.getPlayerStashTabs(accountName, localLeague),
       this.pricingService.retrieveExternalPrices(),
@@ -309,7 +311,7 @@ export class IncomeService implements OnDestroy {
     ).do((res) => {
 
       // if any request failed during snapshotting, don't proceed
-      if (this.poeOnline) {
+      if (this.playerStashTabs.length === selectedStashTabs.length && res[3].type !== ErrorType.Unreachable) {
         this.logService.log('Finished retriving stashhtabs');
         if (this.characterPricing) { // price equipment
           this.PriceItems(this.localPlayer.character.items.filter(x => x.inventoryId !== 'MainInventory'), mapTab, undefined);
@@ -347,6 +349,8 @@ export class IncomeService implements OnDestroy {
         });
       }
     });
+
+    return requests;
   }
 
   getPlayerPublicMaps(accountName: string, league: string, mapTab: any) {
@@ -403,10 +407,32 @@ export class IncomeService implements OnDestroy {
 
     return Observable.from(selectedStashTabs)
       .mergeMap((tab: any) => {
-        return this.externalService.getStashTab(accountName, localLeague, tab.position);
+        return this.externalService.getStashTab(accountName, localLeague, tab.position)
+          .retryWhen(err => {
+            let retries = 0;
+            return err
+              .delay(500)
+              .map(error => {
+                if (retries++ === 2) {
+                  throw error;
+                }
+                return error;
+              });
+          });
       }, 1)
+      .catch(e => {
+        if (e.status !== 403 && e.status !== 404) {
+          this.depStatusStore.dispatch(
+            new depStatusActions.UpdateDepStatus({ status: { id: 'pathofexile', changes: { online: false } } })
+          );
+          return of({ errorType: ErrorType.Unreachable } as RequestError);
+        }
+        return Observable.of(null);
+      })
       .do(stashTab => {
-        this.playerStashTabs.push(stashTab);
+        if (stashTab.errorType === undefined) {
+          this.playerStashTabs.push(stashTab);
+        }
       });
   }
 
