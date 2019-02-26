@@ -104,6 +104,7 @@
             </div>
             <span class="form-error" *ngIf="!sessionIdValid && !needsValidation && sessFormGroup.controls.sessionId.value != ''">{{'ERROR.SESSIONID_NOT_VALID'
               | translate}}</span>
+            <span class="form-error" *ngIf="siteUnreachable">{{'ERROR.POE_UNREACHABLE' | translate}}</span>
             <span class="form-error" *ngIf="privateProfileError && !(!sessionIdValid && !needsValidation && sessFormGroup.controls.sessionId.value != '')">{{'ERROR.PRIVATE_PROFILE'
               | translate}}</span>
           </form>

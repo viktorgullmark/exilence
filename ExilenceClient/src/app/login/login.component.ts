@@ -70,6 +70,7 @@ export class LoginComponent implements OnInit, OnDestroy {
     lineReader: any;
     groupNoExists = false;
     providedSpectatorCode = undefined;
+    siteUnreachable = false;
 
     private profile: ProfileSelection;
 
@@ -274,6 +275,7 @@ export class LoginComponent implements OnInit, OnDestroy {
     }
 
     getLeagues(accountName?: string, skipStep?: boolean, shouldValidate = false) {
+        this.siteUnreachable = false;
         this.isFetchingLeagues = true;
 
         const sessId = this.sessFormGroup.controls.sessionId.value;
@@ -293,7 +295,7 @@ export class LoginComponent implements OnInit, OnDestroy {
                 this.privateProfileError = true;
                 this.isFetchingLeagues = false;
             } else if (res[0].type !== undefined && res[0].type === ErrorType.Unreachable) {
-                // todo: display error
+                this.siteUnreachable = true;
             } else {
 
                 // map character-leagues to new array
@@ -357,6 +359,7 @@ export class LoginComponent implements OnInit, OnDestroy {
 
     getCharacterList(accountName?: string, skipStep?: boolean) {
         this.isFetching = true;
+        this.siteUnreachable = false;
         const sessId = this.sessFormGroup.controls.sessionId.value;
 
         this.externalService.getCharacterList(accountName !== undefined ? accountName : this.accFormGroup.controls.accountName.value,
@@ -374,7 +377,7 @@ export class LoginComponent implements OnInit, OnDestroy {
                     } as ErrorMessage);
                     this.isFetching = false;
                 } if (res.type !== undefined && res.type === ErrorType.Unreachable) {
-                    // todo: display unreachable error
+                    this.siteUnreachable = true;
                 } else {
 
                     const charactersByLeague = res.filter(x => x.league === this.leagueFormGroup.controls.leagueName.value);
