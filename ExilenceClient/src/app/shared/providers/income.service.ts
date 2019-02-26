@@ -29,7 +29,6 @@ import * as depStatusReducer from './../../store/dependency-status/dependency-st
 import { DependencyStatusState } from '../../app.states';
 import { DependencyStatus } from '../interfaces/dependency-status.interface';
 import * as depStatusActions from '../../store/dependency-status/dependency-status.actions';
-import { catchError } from 'rxjs/operators';
 
 @Injectable()
 export class IncomeService implements OnDestroy {
@@ -37,12 +36,14 @@ export class IncomeService implements OnDestroy {
   private lastNinjaHit = 0;
   private ninjaPrices: any[] = [];
   private playerStashTabs: Stash[] = [];
+  private playerStashMaps: Stash[] = [];
   private netWorthHistory: NetWorthHistory;
   private sessionId: string;
   public isSnapshotting = false;
   private inventoryPricing = true;
 
   private playerInventory: Item[];
+  private snapshottingFailed = false;
 
   public networthSnapshots: NetWorthSnapshot[] = [];
   public localPlayer: Player;
@@ -111,6 +112,7 @@ export class IncomeService implements OnDestroy {
     const oneDayAgo = (Date.now() - (24 * 60 * 60 * 1000));
     const twoWeeksAgo = (Date.now() - (1 * 60 * 60 * 24 * 14 * 1000));
 
+    this.snapshottingFailed = false;
     this.loadSnapshotsFromSettings();
 
     const league = this.settingsService.getCurrentLeague();
@@ -132,45 +134,48 @@ export class IncomeService implements OnDestroy {
       this.logService.log('Started snapshotting player net worth');
       this.SnapshotPlayerNetWorth().subscribe(() => {
 
-        this.netWorthHistory.history = this.netWorthHistory.history
-          .filter((snaphot: NetWorthSnapshot) => snaphot.timestamp > twoWeeksAgo);
+        if (!this.snapshottingFailed) {
+          this.netWorthHistory.history = this.netWorthHistory.history
+            .filter((snaphot: NetWorthSnapshot) => snaphot.timestamp > twoWeeksAgo);
 
-        // We are a new player that have not parsed income before
-        // Remove the placeholder element
-        if (
-          this.netWorthHistory.history.length === 1 &&
-          this.netWorthHistory.history[0].value === 0
-        ) {
-          this.netWorthHistory.history.pop();
+          // We are a new player that have not parsed income before
+          // Remove the placeholder element
+          if (
+            this.netWorthHistory.history.length === 1 &&
+            this.netWorthHistory.history[0].value === 0
+          ) {
+            this.netWorthHistory.history.pop();
+          }
+
+          const snapShot: NetWorthSnapshot = {
+            timestamp: Date.now(),
+            value: this.totalNetWorth,
+            items: this.totalNetWorthItems,
+          };
+
+          this.netWorthHistory.history.unshift(snapShot);
+
+          const historyToSend = HistoryHelper.filterNetworth(this.netWorthHistory.history, oneDayAgo);
+
+          this.accountService.player.next(this.localPlayer);
+
+          const character = this.settingsService.getCurrentCharacter();
+          if (character !== undefined) {
+            character.networth = this.netWorthHistory;
+            this.settingsService.updateCharacter(character);
+          }
+
+          const objToSend = Object.assign({}, this.localPlayer);
+          objToSend.netWorthSnapshots = historyToSend;
+          this.partyService.updatePlayer(objToSend);
+
+          const endTime = Date.now();
+          const timePassed = Math.round((endTime - startTime) / 1000);
+
+          this.logService.log(`Finished Snapshotting player net worth in ${timePassed} seconds`);
+        } else {
+          this.logService.log(`Failed fetching all tabs`);
         }
-
-        const snapShot: NetWorthSnapshot = {
-          timestamp: Date.now(),
-          value: this.totalNetWorth,
-          items: this.totalNetWorthItems,
-        };
-
-        this.netWorthHistory.history.unshift(snapShot);
-
-        const historyToSend = HistoryHelper.filterNetworth(this.netWorthHistory.history, oneDayAgo);
-
-        this.accountService.player.next(this.localPlayer);
-
-        const character = this.settingsService.getCurrentCharacter();
-        if (character !== undefined) {
-          character.networth = this.netWorthHistory;
-          this.settingsService.updateCharacter(character);
-        }
-
-        const objToSend = Object.assign({}, this.localPlayer);
-        objToSend.netWorthSnapshots = historyToSend;
-        this.partyService.updatePlayer(objToSend);
-
-        const endTime = Date.now();
-        const timePassed = Math.round((endTime - startTime) / 1000);
-
-        this.logService.log(`Finished Snapshotting player net worth in ${timePassed} seconds`);
-
         this.isSnapshotting = false;
       });
     }
@@ -259,6 +264,7 @@ export class IncomeService implements OnDestroy {
     const tradeLeague = this.settingsService.get('profile.tradeLeagueName');
 
     this.playerStashTabs = [];
+    this.playerStashMaps = [];
     this.totalNetWorthItems = [];
     this.totalNetWorth = 0;
 
@@ -304,39 +310,46 @@ export class IncomeService implements OnDestroy {
       this.getPlayerInventory(accountName, this.localPlayer.character.name)
     ).do((res) => {
 
-      // todo: if inventory or stashtabs failed, return directly
-      if (res[1] === null || res[3] === null) {
-        return;
-      }
-
-      this.logService.log('Finished retriving stashhtabs');
-      if (this.characterPricing) { // price equipment
-        this.PriceItems(this.localPlayer.character.items.filter(x => x.inventoryId !== 'MainInventory'), mapTab, undefined);
-      } // price inventory
-      if (this.inventoryPricing) {
-        this.PriceItems(res[3].items, mapTab, undefined);
-      }
-      this.playerStashTabs.forEach((tab: Stash, tabIndex: number) => {
-        if (tab !== null) {
-          this.PriceItems(tab.items, mapTab, tab.mapLayout);
+      // if stash or inventory failed to be retrived, don't proceed
+      if (this.playerStashTabs.length !== selectedStashTabs.length || res[3] === null) {
+        this.snapshottingFailed = true;
+      } else {
+        this.logService.log('Finished retriving stashhtabs');
+        if (this.characterPricing) { // price equipment
+          this.PriceItems(this.localPlayer.character.items.filter(x => x.inventoryId !== 'MainInventory'), mapTab, undefined);
+        } // price inventory
+        if (this.inventoryPricing) {
+          this.PriceItems(res[3].items, mapTab, undefined);
         }
-      });
+        // price stash
+        this.playerStashTabs.forEach((tab: Stash) => {
+          if (tab !== null) {
+            this.PriceItems(tab.items, mapTab, tab.mapLayout);
+          }
+        });
+        // price maps
+        this.playerStashMaps.forEach((tab: Stash) => {
+          if (tab !== null) {
+            this.PriceItems(tab.items, mapTab, tab.mapLayout);
+          }
+        });
 
-      this.totalNetWorthItems = this.filterItems(this.totalNetWorthItems);
+        this.totalNetWorthItems = this.filterItems(this.totalNetWorthItems);
 
-      for (let i = 0, _len = this.totalNetWorthItems; i < this.totalNetWorthItems.length; i++) {
-        this.totalNetWorth += this.totalNetWorthItems[i].value;
+        for (let i = 0, _len = this.totalNetWorthItems; i < this.totalNetWorthItems.length; i++) {
+          this.totalNetWorth += this.totalNetWorthItems[i].value;
+        }
+
+        this.totalNetWorthItems.sort((a: any, b: any) => {
+          if (a.value < b.value) {
+            return 1;
+          }
+          if (a.value > b.value) {
+            return -1;
+          }
+          return 0;
+        });
       }
-
-      this.totalNetWorthItems.sort((a: any, b: any) => {
-        if (a.value < b.value) {
-          return 1;
-        }
-        if (a.value > b.value) {
-          return -1;
-        }
-        return 0;
-      });
     });
   }
 
@@ -364,7 +377,7 @@ export class IncomeService implements OnDestroy {
                 mapLayout: {}
               } as Stash;
 
-              this.playerStashTabs.push(tab);
+              this.playerStashMaps.push(tab);
             }
           })
             .delay(1000);
@@ -388,22 +401,16 @@ export class IncomeService implements OnDestroy {
       selectedStashTabs = [];
     }
 
-    if (selectedStashTabs.length > 21) {
-      selectedStashTabs = selectedStashTabs.slice(0, 20);
-    }
-
     if (selectedStashTabs.length === 0) {
       return Observable.of(null);
     }
 
     return Observable.from(selectedStashTabs)
       .mergeMap((tab: any) => {
-        return this.externalService.getStashTab(accountName, localLeague, tab.position).pipe(
-          catchError(_ => of(null))
-        );
+        return this.externalService.getStashTab(accountName, localLeague, tab.position);
       }, 1)
       .do(stashTab => {
-        return stashTab !== null ? this.playerStashTabs.push(stashTab) : Observable.of(null);
+        this.playerStashTabs.push(stashTab);
       });
   }
 
