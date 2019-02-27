@@ -38,7 +38,7 @@ export class PartyComponent implements OnInit, OnDestroy {
   private stateSub: Subscription;
   public spectatorCount: number;
 
-  private specCount$: Observable<number>;
+  public specCount$: Observable<number>;
 
   constructor(
     public partyService: PartyService,
