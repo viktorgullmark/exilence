@@ -42,13 +42,16 @@ export class CharProfileComponent implements OnInit, OnDestroy {
   ngOnInit() {
     if (!this.localProfile) {
       this.selectedPlayerSub = this.partyService.selectedPlayer.subscribe(res => {
+        this.player = undefined;
         this.player = res;
       });
       this.playerSub = this.accountService.player.subscribe(res => {
+        this.currentPlayer = undefined;
         this.currentPlayer = res;
       });
     } else {
       this.selectedGenPlayerSub = this.partyService.selectedGenericPlayer.subscribe(res => {
+        this.player = undefined;
         this.player = res;
       });
     }
