@@ -109,6 +109,9 @@ export class IncomeService implements OnDestroy {
   }
 
   Snapshot() {
+
+    this.externalService.snapshottingFailed = false;
+
     const oneDayAgo = (Date.now() - (24 * 60 * 60 * 1000));
     const twoWeeksAgo = (Date.now() - (1 * 60 * 60 * 24 * 14 * 1000));
 
@@ -132,7 +135,7 @@ export class IncomeService implements OnDestroy {
       this.logService.log('Started snapshotting player net worth');
       this.SnapshotPlayerNetWorth().subscribe(() => {
 
-        if (this.poeOnline) {
+        if (!this.externalService.snapshottingFailed) {
           this.netWorthHistory.history = this.netWorthHistory.history
             .filter((snaphot: NetWorthSnapshot) => snaphot.timestamp > twoWeeksAgo);
 
@@ -311,7 +314,7 @@ export class IncomeService implements OnDestroy {
     ).do((res) => {
 
       // if any request failed during snapshotting, don't proceed
-      if (this.playerStashTabs.length === selectedStashTabs.length && res[3].type !== ErrorType.Unreachable) {
+      if (!this.externalService.snapshottingFailed) {
         this.logService.log('Finished retriving stashhtabs');
         if (this.characterPricing) { // price equipment
           this.PriceItems(this.localPlayer.character.items.filter(x => x.inventoryId !== 'MainInventory'), mapTab, undefined);
@@ -422,6 +425,7 @@ export class IncomeService implements OnDestroy {
       }, 1)
       .catch(e => {
         if (e.status !== 403 && e.status !== 404) {
+          this.externalService.snapshottingFailed = true;
           this.externalService.checkStatus();
           this.depStatusStore.dispatch(
             new depStatusActions.UpdateDepStatus({ status: { id: 'pathofexile', changes: { online: false } } })

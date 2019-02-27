@@ -44,6 +44,8 @@ export class ExternalService implements OnDestroy {
   private depStatusStoreSub: Subscription;
   private poeOnline = true;
 
+  public snapshottingFailed = false;
+
   constructor(
     private http: HttpClient,
     private electronService: ElectronService,
@@ -87,6 +89,7 @@ export class ExternalService implements OnDestroy {
         })
         .catch(e => {
           if (e.status !== 403 && e.status !== 404) {
+            this.snapshottingFailed = true;
             this.checkStatus();
             this.depStatusStore.dispatch(new depStatusActions.UpdateDepStatus(
               { status: { id: 'pathofexile', changes: { online: false } } }));
