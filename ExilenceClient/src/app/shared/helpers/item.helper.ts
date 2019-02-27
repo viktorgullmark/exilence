@@ -79,6 +79,10 @@ export class ItemHelper {
         return [...items.filter(i => i.inventoryId === 'MainInventory')];
     }
 
+    public static getEquipedItems(items: Item[]) {
+        return [...items.filter(i => i.inventoryId !== 'MainInventory' && i.frameType !== 0)];
+    }
+
     public static toNetworthItem(item: Item, pricing: ItemPricing): NetWorthItem {
         let icon = item.icon.indexOf('?') >= 0
             ? item.icon.substring(0, item.icon.indexOf('?')) + '?scale=1&scaleIndex=3&w=1&h=1'

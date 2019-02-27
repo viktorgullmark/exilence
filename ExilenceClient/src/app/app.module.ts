@@ -39,6 +39,7 @@ import { SessionService } from './shared/providers/session.service';
 import { SettingsService } from './shared/providers/settings.service';
 import { StateService } from './shared/providers/state.service';
 import { metaReducers, reducers } from './store/reducers';
+import { NotificationService } from './shared/providers/notification.service';
 
 // AoT requires an exported function for factories
 export function HttpLoaderFactory(http: HttpClient) {
@@ -89,7 +90,8 @@ export function HttpLoaderFactory(http: HttpClient) {
     NinjaService,
     AlertService,
     LogMonitorService,
-    MapService
+    MapService,
+    NotificationService
   ],
   bootstrap: [AppComponent],
   declarations: [

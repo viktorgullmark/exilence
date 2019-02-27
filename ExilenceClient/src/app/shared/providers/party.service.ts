@@ -31,6 +31,7 @@ import * as ladderActions from '../../store/ladder/ladder.actions';
 import * as ladderReducer from '../../store/ladder/ladder.reducer';
 import * as specCountActions from '../../store/spectator-count/spectator-count.actions';
 import * as specCountReducer from '../../store/spectator-count/spectator-count.reducer';
+import { NotificationService } from './notification.service';
 
 @Injectable()
 export class PartyService implements OnDestroy {
@@ -96,7 +97,8 @@ export class PartyService implements OnDestroy {
     private messageValueService: MessageValueService,
     private settingsService: SettingsService,
     private ladderStore: Store<LadderState>,
-    private specCountStore: Store<SpectatorCountState>
+    private specCountStore: Store<SpectatorCountState>,
+    private notificationService: NotificationService
   ) {
 
     this.allLadders$ = this.ladderStore.select(ladderReducer.selectAllLadders);
@@ -198,6 +200,7 @@ export class PartyService implements OnDestroy {
       this.electronService.decompress(data, (player: Player) => {
         const index = this.party.players.indexOf(this.party.players.find(x => x.account === player.account));
 
+        this.notificationService.handleNotifications(this.party.players[index], player);
         this.party.players[index] = player;
         this.updatePlayerLists(this.party);
         this.partyUpdated.next(this.party);
