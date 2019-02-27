@@ -147,6 +147,8 @@ export class LadderTableComponent implements OnInit, OnDestroy {
           this.paginator.pageIndex = pageToGoTo;
         }
 
+      } else {
+        this.paginator.pageIndex = 0;
       }
     }
   }
