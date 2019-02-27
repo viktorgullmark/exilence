@@ -205,6 +205,11 @@ export class ExternalService implements OnDestroy {
       this.http.get<Stash>('https://www.pathofexile.com/character-window/get-stash-items' + parameters));
   }
 
+  refreshCookie(sessionId: string) {
+    this.removeCookie();
+    this.setCookie(sessionId);
+  }
+
   validateSessionId(sessionId: string, account: string, league: string, index: number) {
     this.removeCookie();
     this.setCookie(sessionId);

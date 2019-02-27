@@ -1,6 +1,10 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [0.9.22] - 2019-02-27
+### Fixed
+- Fixed a bug where the inventory was not fetched correctly directly when logging in
+
 ## [0.9.21] - 2019-02-27
 ### Added
 - Added offline-mode

@@ -458,6 +458,8 @@ export class LoginComponent implements OnInit, OnDestroy {
         this.isLoading = true;
         this.form = this.getFormObj();
 
+        this.externalService.refreshCookie(this.form.sessionId);
+
         const request = forkJoin(
             this.externalService.getCharacterInventory(this.form.accountName, this.form.characterName),
         );
