@@ -1,7 +1,7 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
-## [0.9.21] - 2019-XX-XX
+## [0.9.21] - 2019-02-27
 ### Added
 - Added offline-mode
     - You can now continue using Exilence when pathofexile.com goes down
