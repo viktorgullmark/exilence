@@ -2,6 +2,7 @@
 import { EntityState } from '@ngrx/entity';
 import { PlayerLadder } from './shared/interfaces/player.interface';
 import { DependencyStatus } from './shared/interfaces/dependency-status.interface';
+import { SnapshotStatus } from './shared/interfaces/snapshot-status.interface';
 
 export interface AppState {
     ladderState: LadderState;
@@ -17,4 +18,8 @@ export interface SpectatorCountState extends EntityState<number> {
     spectatorCount: number | null;
 }
 
-export interface DependencyStatusState extends EntityState<DependencyStatus> {}
+export interface SnapshotStatusState extends EntityState<SnapshotStatus> {
+    status: SnapshotStatus | null;
+}
+
+export interface DependencyStatusState extends EntityState<DependencyStatus> { }
