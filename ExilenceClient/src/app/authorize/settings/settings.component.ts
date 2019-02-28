@@ -17,6 +17,7 @@ export class SettingsComponent implements OnInit, OnDestroy {
   form: FormGroup;
   selectedIndex = 0;
   alwaysOnTop = false;
+  neutralGain = false;
   isResizable = false;
   hideTooltips = false;
   lowConfidencePricing = false;
@@ -62,6 +63,12 @@ export class SettingsComponent implements OnInit, OnDestroy {
 
     if (onTopSetting !== undefined) {
       this.alwaysOnTop = onTopSetting;
+    }
+
+    const neutralGainSetting = this.settingsService.get('neutralGain');
+
+    if (neutralGainSetting !== undefined) {
+      this.neutralGain = neutralGainSetting;
     }
 
     const isResizableSetting = this.settingsService.get('isResizable');
@@ -129,6 +136,14 @@ export class SettingsComponent implements OnInit, OnDestroy {
       this.electronService.remote.getCurrentWindow().setAlwaysOnTop(false);
       this.electronService.remote.getCurrentWindow().setVisibleOnAllWorkspaces(false);
       this.settingsService.set('alwaysOnTop', false);
+    }
+  }
+
+  toggleNeutralGain() {
+    if (this.neutralGain) {
+      this.settingsService.set('neutralGain', true);
+    } else {
+      this.settingsService.set('neutralGain', false);
     }
   }
 

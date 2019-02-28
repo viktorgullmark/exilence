@@ -31,6 +31,8 @@ export class MapService implements OnDestroy {
   private enteredHostileAreaSub: Subscription;
   private enteredSameInstance = false;
 
+  private neutralGain = false;
+
   areasParsed: EventEmitter<any> = new EventEmitter();
 
   constructor(
@@ -41,9 +43,13 @@ export class MapService implements OnDestroy {
     private settingsService: SettingsService,
     private pricingService: PricingService
   ) {
-
     this.loadAreasFromSettings();
-
+    const neutralGainSetting = this.settingsService.get('neutralGain');
+    if (neutralGainSetting !== undefined) {
+      this.neutralGain = neutralGainSetting;
+    } else {
+      this.settingsService.set('neutralGain', false);
+    }
     this.enteredNeutralAreaSub = this.partyService.enteredNeutralArea.subscribe((inventory: Item[]) => {
       if (inventory !== undefined) {
         this.EnteredArea(inventory);
@@ -76,9 +82,13 @@ export class MapService implements OnDestroy {
   }
 
   EnteredArea(inventory: Item[]) {
+    this.neutralGain = this.settingsService.get('neutralGain');
+
     const currentInventory = this.priceAndCombineInventory(inventory);
     this.areaHistory[0].inventory = currentInventory;
-    if (this.areaHistory[1] !== undefined && !this.enteredSameInstance) {
+    if (this.areaHistory[1] !== undefined &&
+      !this.enteredSameInstance &&
+      (this.neutralGain || (!this.neutralGain && !AreaHelper.isNeutralZone(this.areaHistory[1])))) {
       const gainedItems: NetWorthItem[] = ItemHelper.GetNetworthItemDifference(currentInventory, this.areaHistory[1].inventory);
       if (this.areaHistory[1].difference.length > 0) {
         this.areaHistory[1].difference = ItemHelper.CombineNetworthItemStacks(this.areaHistory[1].difference.concat(gainedItems));
@@ -208,6 +218,7 @@ export class MapService implements OnDestroy {
       this.areaHistory = character.areas;
     }
   }
+
   removeAreasFromSettings() {
     const character = this.settingsService.getCurrentCharacter();
     if (character !== undefined) {

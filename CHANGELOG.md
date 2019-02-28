@@ -2,6 +2,9 @@
 All notable changes to this project will be documented in this file.
 
 ## [0.9.22] - 2019-02-27
+### Added
+- Added a setting for including hideouts and towns for gain per area (off by default)
+
 ### Fixed
 - Fixed a bug where the inventory was not fetched correctly directly when logging in
 - Fixed a bug where the ladder would not return to first page after filtering

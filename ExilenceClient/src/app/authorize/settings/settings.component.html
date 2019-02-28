@@ -20,6 +20,12 @@
         &nbsp;Net worth
       </ng-template>
     </mat-tab>
+    <mat-tab #networth id="areas">
+        <ng-template mat-tab-label>
+          <mat-icon class="tab-icon">map</mat-icon>
+          &nbsp;Areas
+        </ng-template>
+      </mat-tab>
     <mat-tab #general settings id="general">
       <ng-template mat-tab-label>
         <mat-icon class="tab-icon">info</mat-icon>
@@ -152,6 +158,19 @@
 </div>
 
 <div [hidden]="selectedIndex != 3">
+    <div class="setting-tab-content">
+      <h3 class="mat-h4 page-header">Gain in areas</h3>
+      <mat-divider class="divider"></mat-divider>
+      <div class="setting-inner-content">
+        <mat-checkbox class="setting-checkbox" [(ngModel)]="neutralGain" (ngModelChange)="toggleNeutralGain()">Calculate gain in town and hideouts</mat-checkbox>
+        <p class="setting-desc-text">
+          Check this setting to include net worth changes in town and hideouts
+        </p>
+      </div>
+    </div>
+  </div>
+
+<div [hidden]="selectedIndex != 4">
   <div class="setting-tab-content">
     <h3 class="mat-h4 page-header">Visibility</h3>
     <mat-divider class="divider"></mat-divider>
@@ -172,7 +191,7 @@
   </div>
 </div>
 
-<div [hidden]="selectedIndex != 4">
+<div [hidden]="selectedIndex != 5">
   <div class="setting-tab-content">
     <h3 class="mat-h4 page-header">
       This page is aimed to help you resolve any problems you might have with Exilence.

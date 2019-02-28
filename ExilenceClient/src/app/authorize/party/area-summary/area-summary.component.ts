@@ -12,6 +12,7 @@ import { MapService } from '../../../shared/providers/map.service';
 import { SettingsService } from '../../../shared/providers/settings.service';
 import { AlertService } from '../../../shared/providers/alert.service';
 import { AccountService } from '../../../shared/providers/account.service';
+import { AreaHelper } from '../../../shared/helpers/area.helper';
 
 @Component({
   selector: 'app-area-summary',
@@ -29,7 +30,7 @@ export class AreaSummaryComponent implements OnInit, OnDestroy {
   private partySub: Subscription;
   dataSource = [];
   tableData = [];
-
+;
   public selectedLocalValue: string;
 
   @ViewChild('playerDd') playerDd: MatSelect;
@@ -48,7 +49,6 @@ export class AreaSummaryComponent implements OnInit, OnDestroy {
     });
   }
   ngOnInit() {
-
     // TODO: remove once ladder has been reworked
     if (this.partyService.selectedFilterValue !== 'All players') {
       this.selectedLocalValue = this.partyService.selectedFilterValue;
@@ -199,6 +199,7 @@ export class AreaSummaryComponent implements OnInit, OnDestroy {
   updateAvgGain(pastAreas) {
     if (pastAreas !== null) {
       if (pastAreas[0] !== undefined) {
+        pastAreas = pastAreas.filter(x => x.gain !== 0);
         let total = 0;
         pastAreas.forEach(area => {
           total = total + area.gain;
