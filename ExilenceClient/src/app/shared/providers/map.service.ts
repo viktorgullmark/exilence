@@ -29,6 +29,7 @@ export class MapService implements OnDestroy {
   private playerSub: Subscription;
   private enteredNeutralAreaSub: Subscription;
   private enteredHostileAreaSub: Subscription;
+  private enteredSubAreaSub: Subscription;
   private enteredSameInstance = false;
 
   private neutralGain = false;
@@ -61,6 +62,13 @@ export class MapService implements OnDestroy {
         this.EnteredArea(inventory);
       }
     });
+    this.enteredSubAreaSub = this.partyService.enteredSubArea.subscribe((inventory: Item[]) => {
+      if (inventory !== undefined) {
+        this.EnteredArea(inventory);
+      }
+    });
+
+
 
     this.playerSub = this.accountService.player.subscribe(player => {
       if (player !== undefined) {
@@ -77,20 +85,31 @@ export class MapService implements OnDestroy {
     });
   }
 
-  EnteredArea(inventory: Item[]) {
+
+  EnteredArea(inventory: Item[], subArea: boolean = false) {
     this.neutralGain = this.settingsService.get('neutralGain');
 
     const currentInventory = this.priceAndCombineInventory(inventory);
     this.areaHistory[0].inventory = currentInventory;
-    // tslint:disable-next-line:max-line-length
-    if (this.areaHistory[1] !== undefined && !this.enteredSameInstance && (this.neutralGain || (!this.neutralGain && !AreaHelper.isNeutralZone(this.areaHistory[1])))) {
-      const gainedItems: NetWorthItem[] = ItemHelper.GetNetworthItemDifference(currentInventory, this.areaHistory[1].inventory);
-      if (this.areaHistory[1].difference.length > 0) {
-        this.areaHistory[1].difference = ItemHelper.CombineNetworthItemStacks(this.areaHistory[1].difference.concat(gainedItems));
-      } else {
-        this.areaHistory[1].difference = [...gainedItems];
+    if (!subArea) {
+      if (
+        this.areaHistory[1] !== undefined &&
+        !this.enteredSameInstance &&
+        (this.neutralGain || (!this.neutralGain && !AreaHelper.isNeutralZone(this.areaHistory[1])))
+      ) {
+        const gainedItems: NetWorthItem[] = ItemHelper.GetNetworthItemDifference(currentInventory, this.areaHistory[1].inventory);
+        if (this.areaHistory[1].difference.length > 0) {
+          this.areaHistory[1].difference = ItemHelper.CombineNetworthItemStacks(this.areaHistory[1].difference.concat(gainedItems));
+        } else {
+          this.areaHistory[1].difference = [...gainedItems];
+        }
       }
+    } else {
+      const lastIndex = this.areaHistory[1].subAreas.length;
+      const gainedItems: NetWorthItem[] = ItemHelper.GetNetworthItemDifference(currentInventory, this.areaHistory[1].subAreas[lastIndex].inventory)
+      this.areaHistory[1].difference = ItemHelper.CombineNetworthItemStacks(this.areaHistory[1].difference.concat(gainedItems));
     }
+
   }
 
   priceAndCombineInventory(items: Item[]): NetWorthItem[] {
@@ -122,10 +141,14 @@ export class MapService implements OnDestroy {
     if (this.enteredNeutralAreaSub !== undefined) {
       this.enteredNeutralAreaSub.unsubscribe();
     }
+    if (this.enteredSubAreaSub !== undefined) {
+      this.enteredSubAreaSub.unsubscribe();
+    }
   }
 
   registerAreaEvent(e: EventArea) {
     this.enteredSameInstance = false;
+    let enteredSubArea = false;
     e.name = AreaHelper.formatName(e);
 
     const character = this.settingsService.getCurrentCharacter();
@@ -177,6 +200,7 @@ export class MapService implements OnDestroy {
             this.areaHistory.shift(); // remove duplicate zone
             const subArea = this.areaHistory.shift();
             this.areaHistory[0].subAreas.unshift(subArea);
+            enteredSubArea = true;
           }
         }
         this.enteredSameInstance = true;
@@ -187,6 +211,7 @@ export class MapService implements OnDestroy {
       this.areaHistory.shift(); // remove duplicate zone
       const subArea = this.areaHistory.shift(); // remove sub area
       this.areaHistory[0].subAreas.unshift(subArea);
+      enteredSubArea = true;
     }
 
     if (this.areaHistory[1] !== undefined &&
@@ -194,6 +219,7 @@ export class MapService implements OnDestroy {
       this.areaHistory[0].eventArea.type === 'unknown') {
       const subArea = this.areaHistory.shift();
       this.areaHistory[0].subAreas.unshift(subArea);
+      enteredSubArea = true;
     }
 
     character.areas = this.areaHistory;
@@ -205,8 +231,16 @@ export class MapService implements OnDestroy {
     this.localPlayer.areaInfo = this.areaHistory[0];
     this.localPlayer.pastAreas = HistoryHelper.filterAreas(this.areaHistory, (Date.now() - (24 * 60 * 60 * 1000)));
     this.accountService.player.next(Object.assign({}, this.localPlayer));
-    this.partyService.updatePlayer(Object.assign({}, this.localPlayer), AreaHelper.isNeutralZone(areaEntered)
-      ? 'area-change-to-neutral' : 'area-change-to-hostile');
+
+    if (AreaHelper.isNeutralZone(areaEntered) && !enteredSubArea) {
+      this.partyService.updatePlayer(Object.assign({}, this.localPlayer), 'area-change-to-neutral');
+    }
+    if (!AreaHelper.isNeutralZone(areaEntered) && !enteredSubArea) {
+      this.partyService.updatePlayer(Object.assign({}, this.localPlayer), 'area-change-to-hostile');
+    }
+    if (!AreaHelper.isNeutralZone(areaEntered) && enteredSubArea) {
+      this.partyService.updatePlayer(Object.assign({}, this.localPlayer), 'area-change-to-sub');
+    }
   }
 
   addAreaHistory(eventArea) {
