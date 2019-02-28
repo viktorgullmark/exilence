@@ -209,55 +209,46 @@ export class IncomeService implements OnDestroy {
         }
       }
 
-      // If item already exists in array, update existing
-      const existingItem = TableHelper.findNetworthObj(this.totalNetWorthItems, itemPriceInfoObj);
-      if (existingItem !== undefined) {
-        const indexOfItem = this.totalNetWorthItems.indexOf(existingItem);
-        // update existing item with new data
-        existingItem.stacksize = existingItem.stacksize + stacksize;
-        existingItem.value = existingItem.value + totalValueForItem;
-        this.totalNetWorthItems[indexOfItem] = existingItem;
-      } else {
-        // Add new item
 
-        let icon = item.icon.indexOf('?') >= 0
-          ? item.icon.substring(0, item.icon.indexOf('?')) + '?scale=1&scaleIndex=3&w=1&h=1'
-          : item.icon + '?scale=1&scaleIndex=3&w=1&h=1';
+      // Add new item
 
-        const isMap = item.typeLine.indexOf(' Map') > -1;
+      let icon = item.icon.indexOf('?') >= 0
+        ? item.icon.substring(0, item.icon.indexOf('?')) + '?scale=1&scaleIndex=3&w=1&h=1'
+        : item.icon + '?scale=1&scaleIndex=3&w=1&h=1';
 
-        if (isMap) {
-          icon = item.icon;
+      const isMap = item.typeLine.indexOf(' Map') > -1;
 
-          if (itemPriceInfoObj.frameType !== 3) {
-            itemPriceInfoObj.frameType = 0;
-          }
+      if (isMap) {
+        icon = item.icon;
+
+        if (itemPriceInfoObj.frameType !== 3) {
+          itemPriceInfoObj.frameType = 0;
         }
+      }
 
-        const netWorthItem: NetWorthItem = {
-          name: itemPriceInfoObj.name,
-          value: totalValueForItem,
-          value_min: itemPriceInfoObj.chaosequiv_min,
-          value_max: itemPriceInfoObj.chaosequiv_max,
-          value_mode: itemPriceInfoObj.chaosequiv_mode,
-          value_median: itemPriceInfoObj.chaosequiv_median,
-          value_average: itemPriceInfoObj.chaosequiv_average,
-          quantity: itemPriceInfoObj.quantity,
-          valuePerUnit: itemPriceInfoObj.chaosequiv,
-          icon: icon,
-          stacksize,
-          links: itemPriceInfoObj.links,
-          gemLevel: itemPriceInfoObj.gemlevel,
-          quality: itemPriceInfoObj.quality,
-          variation: itemPriceInfoObj.variation,
-          frameType: itemPriceInfoObj.frameType,
-          corrupted: itemPriceInfoObj.corrupted,
-          totalStacksize: itemPriceInfoObj.totalStacksize
-        };
+      const netWorthItem: NetWorthItem = {
+        name: itemPriceInfoObj.name,
+        value: totalValueForItem,
+        value_min: itemPriceInfoObj.chaosequiv_min,
+        value_max: itemPriceInfoObj.chaosequiv_max,
+        value_mode: itemPriceInfoObj.chaosequiv_mode,
+        value_median: itemPriceInfoObj.chaosequiv_median,
+        value_average: itemPriceInfoObj.chaosequiv_average,
+        quantity: itemPriceInfoObj.quantity,
+        valuePerUnit: itemPriceInfoObj.chaosequiv,
+        icon: icon,
+        stacksize,
+        links: itemPriceInfoObj.links,
+        gemLevel: itemPriceInfoObj.gemlevel,
+        quality: itemPriceInfoObj.quality,
+        variation: itemPriceInfoObj.variation,
+        frameType: itemPriceInfoObj.frameType,
+        corrupted: itemPriceInfoObj.corrupted,
+        totalStacksize: itemPriceInfoObj.totalStacksize
+      };
 
-        if (netWorthItem.name.indexOf(' Map') === -1 || mapLayout || !mapTabSelected) {
-          this.totalNetWorthItems.push(netWorthItem);
-        }
+      if (netWorthItem.name.indexOf(' Map') === -1 || mapLayout || !mapTabSelected) {
+        this.totalNetWorthItems.push(netWorthItem);
       }
     });
   }
@@ -343,7 +334,7 @@ export class IncomeService implements OnDestroy {
         // price converted items (e.g 6sockets -> jewellers)
         this.PriceItems(this.convertedItems, mapTab, undefined);
 
-        ItemHelper.CombineNetworthItemStacks(this.totalNetWorthItems);
+        this.totalNetWorthItems = ItemHelper.CombineNetworthItemStacks(this.totalNetWorthItems);
 
         this.totalNetWorthItems = this.filterItems(this.totalNetWorthItems);
 
