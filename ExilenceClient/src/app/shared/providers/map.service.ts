@@ -105,7 +105,7 @@ export class MapService implements OnDestroy {
         }
       }
     } else {
-      const lastIndex = this.areaHistory[1].subAreas.length;
+      const lastIndex = this.areaHistory[1].subAreas.length - 1;
       const gainedItems: NetWorthItem[] = ItemHelper.GetNetworthItemDifference(currentInventory, this.areaHistory[1].subAreas[lastIndex].inventory)
       this.areaHistory[1].difference = ItemHelper.CombineNetworthItemStacks(this.areaHistory[1].difference.concat(gainedItems));
     }
