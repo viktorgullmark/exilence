@@ -30,6 +30,7 @@ import { DependencyStatusState } from '../../app.states';
 import { DependencyStatus } from '../interfaces/dependency-status.interface';
 import * as depStatusActions from '../../store/dependency-status/dependency-status.actions';
 import { ErrorType, RequestError } from '../interfaces/error.interface';
+import { ItemHelper } from '../helpers/item.helper';
 
 @Injectable()
 export class IncomeService implements OnDestroy {
@@ -38,6 +39,7 @@ export class IncomeService implements OnDestroy {
   private ninjaPrices: any[] = [];
   private playerStashTabs: Stash[] = [];
   private playerStashMaps: Stash[] = [];
+  private convertedItems: Item[] = [];
   private netWorthHistory: NetWorthHistory;
   private sessionId: string;
   public isSnapshotting = false;
@@ -185,9 +187,13 @@ export class IncomeService implements OnDestroy {
   }
 
   PriceItems(items: Item[], mapTabSelected: boolean = false, mapLayout: any) {
-
     // todo: base prices on this league
     items.forEach((item: Item) => {
+
+      if (ItemHelper.isSixSocket(item)) {
+        this.convertedItems.push(ItemHelper.generateJewellersOrb());
+      }
+
       const itemPriceInfoObj: ItemPricing = this.pricingService.priceItem(item);
       let stacksize = 1;
       let totalValueForItem = itemPriceInfoObj.chaosequiv;
@@ -320,7 +326,7 @@ export class IncomeService implements OnDestroy {
           this.PriceItems(this.localPlayer.character.items.filter(x => x.inventoryId !== 'MainInventory'), mapTab, undefined);
         } // price inventory
         if (this.inventoryPricing) {
-          this.PriceItems(res[3].items, mapTab, undefined);
+          this.PriceItems(res[3].items.filter(x => x.inventoryId === 'MainInventory'), mapTab, undefined);
         }
         // price stash
         this.playerStashTabs.forEach((tab: Stash) => {
@@ -334,6 +340,10 @@ export class IncomeService implements OnDestroy {
             this.PriceItems(tab.items, mapTab, tab.mapLayout);
           }
         });
+        // price converted items (e.g 6sockets -> jewellers)
+        this.PriceItems(this.convertedItems, mapTab, undefined);
+
+        ItemHelper.CombineNetworthItemStacks(this.totalNetWorthItems);
 
         this.totalNetWorthItems = this.filterItems(this.totalNetWorthItems);
 

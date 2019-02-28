@@ -24,7 +24,27 @@ export class ItemHelper {
         }
         return itemName.replace('<<set:MS>><<set:M>><<set:S>>', '').trim();
     }
-
+    public static isSixSocket(item: Item): boolean {
+        if (item.sockets !== undefined &&
+            item.sockets.length === 6 &&
+            (item.frameType === 0 ||
+            item.frameType === 1 ||
+            item.frameType === 2)
+        ) {
+            return true;
+        }
+        return false;
+    }
+    public static generateJewellersOrb(): Item {
+        return {
+            frameType: 5,
+            // tslint:disable-next-line:max-line-length
+            icon: 'https://web.poecdn.com/image/Art/2DItems/Currency/CurrencyRerollSocketNumbers.png?scale=1&w=1&h=1&v=2946b0825af70f796b8f15051d75164d',
+            name: '',
+            stackSize: 7,
+            typeLine: 'Jeweller\'s Orb'
+        } as Item;
+    }
     public static getItemVariant(item: Item): string {
 
         if (item.name === 'Impresence') {

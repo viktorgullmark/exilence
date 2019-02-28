@@ -100,7 +100,16 @@ export class MapService implements OnDestroy {
 
   priceAndCombineInventory(items: Item[]): NetWorthItem[] {
     const networthItems: NetWorthItem[] = [];
+    const convertedItems: Item[] = [];
     items.forEach((item: Item) => {
+      if (ItemHelper.isSixSocket(item)) {
+        convertedItems.push(ItemHelper.generateJewellersOrb());
+      }
+      const pricedItem = ItemHelper.toNetworthItem(item, this.pricingService.priceItem(item));
+      networthItems.push(pricedItem);
+    });
+
+    convertedItems.forEach((item: Item) => {
       const pricedItem = ItemHelper.toNetworthItem(item, this.pricingService.priceItem(item));
       networthItems.push(pricedItem);
     });
