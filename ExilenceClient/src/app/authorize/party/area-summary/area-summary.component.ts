@@ -148,7 +148,6 @@ export class AreaSummaryComponent implements OnInit, OnDestroy {
   }
 
   mapToExport(array) {
-    console.log(array);
     return array.map(x => {
       const tier = x.name.substring(
         x.name.lastIndexOf('(T') + 1,
