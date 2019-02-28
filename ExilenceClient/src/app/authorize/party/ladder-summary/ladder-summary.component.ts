@@ -24,7 +24,6 @@ export class LadderSummaryComponent implements OnInit, OnDestroy {
   private partySub: Subscription;
   private ladderStoreSub: Subscription;
   private playerLadders: Array<PlayerLadder> = [];
-  private allLadders$: Observable<PlayerLadder[]>;
 
   public selectedLocalValue: string;
 
@@ -41,9 +40,8 @@ export class LadderSummaryComponent implements OnInit, OnDestroy {
     });
   }
   ngOnInit() {
-    this.allLadders$ = this.ladderStore.select(fromReducer.selectAllLadders);
 
-    this.ladderStoreSub = this.allLadders$.subscribe(ladders => {
+    this.ladderStoreSub = this.ladderStore.select(fromReducer.selectAllLadders).subscribe(ladders => {
       this.playerLadders = ladders;
     });
     // TODO: remove once ladder has been reworked
