@@ -71,10 +71,13 @@ hr {
 }
 
 .tooltip-body {
+    max-width: 340px;
     padding: 5px;
     font-size: 12px;
     line-height: 1.35;
-
+    > * {
+        white-space: normal;
+    }
     .properties {
         .property {
             .flask-property {}
@@ -113,6 +116,7 @@ hr {
     }
 
     .mods {
+        
         color: $mod-generic-color;
 
         .crafted-mod {
