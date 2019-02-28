@@ -2,7 +2,6 @@
 
 .right-area {
     justify-content: end;
-    margin-left: auto;
     display: flex;
     align-items: center;
     -webkit-app-region: no-drag;
@@ -18,26 +17,26 @@
     .left-link {
         justify-content: start;
         margin-right: 15px;
-        color: $link-font-color;
+        color: $primary;
     }
 }
 
 .logout-link-wrapper {
     width: 54px;
+    margin-right: 10px;
 }
 
 .middle-area {
-    margin-left: 45%;
-    position: absolute;
+    margin-left: auto;
     -webkit-app-region: no-drag;
 
     .status {
         margin-left: 10px;
+        margin-right: 10px;
         cursor: pointer;
         display: flex;
         align-self: center;
         font-size: 12px;
-        text-transform: uppercase;
         color: #ccc;
 
         .status-icon {
