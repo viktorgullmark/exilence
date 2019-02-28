@@ -65,7 +65,6 @@ export class PartyService implements OnDestroy {
   public serverMessageReceived: BehaviorSubject<ServerMessage> = new BehaviorSubject<ServerMessage>(undefined);
   public enteredNeutralArea: BehaviorSubject<Item[]> = new BehaviorSubject<Item[]>(undefined);
   public enteredHostileArea: BehaviorSubject<Item[]> = new BehaviorSubject<Item[]>(undefined);
-  public enteredSubArea: BehaviorSubject<Item[]> = new BehaviorSubject<Item[]>(undefined);
 
   private reconnectAttempts: number;
   private forceClosed: boolean;
@@ -535,9 +534,6 @@ export class PartyService implements OnDestroy {
           } else if (reason === 'area-change-to-hostile') {
             const inventoryItems = ItemHelper.getInventoryItems(player.character.items);
             this.enteredHostileArea.next(inventoryItems);
-          } else if (reason === 'area-change-to-sub') {
-            const inventoryItems = ItemHelper.getInventoryItems(player.character.items);
-            this.enteredSubArea.next(inventoryItems);
           }
 
           objToSend.pastAreas = HistoryHelper.filterAreas(objToSend.pastAreas, oneDayAgo);

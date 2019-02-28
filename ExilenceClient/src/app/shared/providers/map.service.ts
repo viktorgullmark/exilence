@@ -29,8 +29,8 @@ export class MapService implements OnDestroy {
   private playerSub: Subscription;
   private enteredNeutralAreaSub: Subscription;
   private enteredHostileAreaSub: Subscription;
-  private enteredSubAreaSub: Subscription;
   private enteredSameInstance = false;
+  private enteredSubArea = false;
 
   private neutralGain = false;
 
@@ -62,11 +62,6 @@ export class MapService implements OnDestroy {
         this.EnteredArea(inventory);
       }
     });
-    this.enteredSubAreaSub = this.partyService.enteredSubArea.subscribe((inventory: Item[]) => {
-      if (inventory !== undefined) {
-        this.EnteredArea(inventory);
-      }
-    });
 
 
 
@@ -86,12 +81,12 @@ export class MapService implements OnDestroy {
   }
 
 
-  EnteredArea(inventory: Item[], subArea: boolean = false) {
+  EnteredArea(inventory: Item[], ) {
     this.neutralGain = this.settingsService.get('neutralGain');
 
     const currentInventory = this.priceAndCombineInventory(inventory);
     this.areaHistory[0].inventory = currentInventory;
-    if (!subArea) {
+    if (!this.enteredSubArea) {
       if (
         this.areaHistory[1] !== undefined &&
         !this.enteredSameInstance &&
@@ -141,14 +136,11 @@ export class MapService implements OnDestroy {
     if (this.enteredNeutralAreaSub !== undefined) {
       this.enteredNeutralAreaSub.unsubscribe();
     }
-    if (this.enteredSubAreaSub !== undefined) {
-      this.enteredSubAreaSub.unsubscribe();
-    }
   }
 
   registerAreaEvent(e: EventArea) {
     this.enteredSameInstance = false;
-    let enteredSubArea = false;
+    this.enteredSubArea = false;
     e.name = AreaHelper.formatName(e);
 
     const character = this.settingsService.getCurrentCharacter();
@@ -200,7 +192,7 @@ export class MapService implements OnDestroy {
             this.areaHistory.shift(); // remove duplicate zone
             const subArea = this.areaHistory.shift();
             this.areaHistory[0].subAreas.unshift(subArea);
-            enteredSubArea = true;
+            this.enteredSubArea = true;
           }
         }
         this.enteredSameInstance = true;
@@ -211,7 +203,7 @@ export class MapService implements OnDestroy {
       this.areaHistory.shift(); // remove duplicate zone
       const subArea = this.areaHistory.shift(); // remove sub area
       this.areaHistory[0].subAreas.unshift(subArea);
-      enteredSubArea = true;
+      this.enteredSubArea = true;
     }
 
     if (this.areaHistory[1] !== undefined &&
@@ -219,7 +211,7 @@ export class MapService implements OnDestroy {
       this.areaHistory[0].eventArea.type === 'unknown') {
       const subArea = this.areaHistory.shift();
       this.areaHistory[0].subAreas.unshift(subArea);
-      enteredSubArea = true;
+      this.enteredSubArea = true;
     }
 
     character.areas = this.areaHistory;
@@ -232,14 +224,11 @@ export class MapService implements OnDestroy {
     this.localPlayer.pastAreas = HistoryHelper.filterAreas(this.areaHistory, (Date.now() - (24 * 60 * 60 * 1000)));
     this.accountService.player.next(Object.assign({}, this.localPlayer));
 
-    if (AreaHelper.isNeutralZone(areaEntered) && !enteredSubArea) {
+    if (AreaHelper.isNeutralZone(areaEntered)) {
       this.partyService.updatePlayer(Object.assign({}, this.localPlayer), 'area-change-to-neutral');
     }
-    if (!AreaHelper.isNeutralZone(areaEntered) && !enteredSubArea) {
+    if (!AreaHelper.isNeutralZone(areaEntered)) {
       this.partyService.updatePlayer(Object.assign({}, this.localPlayer), 'area-change-to-hostile');
-    }
-    if (!AreaHelper.isNeutralZone(areaEntered) && enteredSubArea) {
-      this.partyService.updatePlayer(Object.assign({}, this.localPlayer), 'area-change-to-sub');
     }
   }
 
