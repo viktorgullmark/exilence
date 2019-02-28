@@ -6,6 +6,9 @@ All notable changes to this project will be documented in this file.
 - Added a setting for including hideouts and towns for gain per area (off by default)
 - Added pricing of 6-sockets (now converts 6-sockets to jewellers automatically)
 
+### Changed
+- Improved styling of item-tooltips (now takes up less space)
+
 ### Fixed
 - Fixed a bug where the inventory was not fetched correctly directly when logging in
 - Fixed a bug where the equipment would be priced, even without character-specific pricing
