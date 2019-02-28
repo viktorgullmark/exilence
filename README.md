@@ -23,7 +23,11 @@ Download the latest release at https://github.com/viktorgullmark/exilence/releas
 
 ## Video-preview
 
-https://www.youtube.com/watch?v=3YdWM2kS4BA&t=2s
+https://www.youtube.com/watch?v=TZmcZ-cBUMs
+
+## Spectate mode preview
+
+https://exilence.app/spectate/preview
 
 ## How to install
 
