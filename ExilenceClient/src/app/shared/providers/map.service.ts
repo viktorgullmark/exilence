@@ -53,10 +53,6 @@ export class MapService implements OnDestroy {
     this.enteredNeutralAreaSub = this.partyService.enteredNeutralArea.subscribe((inventory: Item[]) => {
       if (inventory !== undefined) {
         this.EnteredArea(inventory);
-
-        if (this.enteredSameInstance) {
-
-        }
       }
     });
 
@@ -86,9 +82,8 @@ export class MapService implements OnDestroy {
 
     const currentInventory = this.priceAndCombineInventory(inventory);
     this.areaHistory[0].inventory = currentInventory;
-    if (this.areaHistory[1] !== undefined &&
-      !this.enteredSameInstance &&
-      (this.neutralGain || (!this.neutralGain && !AreaHelper.isNeutralZone(this.areaHistory[1])))) {
+    // tslint:disable-next-line:max-line-length
+    if (this.areaHistory[1] !== undefined && !this.enteredSameInstance && (this.neutralGain || (!this.neutralGain && !AreaHelper.isNeutralZone(this.areaHistory[1])))) {
       const gainedItems: NetWorthItem[] = ItemHelper.GetNetworthItemDifference(currentInventory, this.areaHistory[1].inventory);
       if (this.areaHistory[1].difference.length > 0) {
         this.areaHistory[1].difference = ItemHelper.CombineNetworthItemStacks(this.areaHistory[1].difference.concat(gainedItems));
