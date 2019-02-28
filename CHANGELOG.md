@@ -8,6 +8,7 @@ All notable changes to this project will be documented in this file.
 
 ### Fixed
 - Fixed a bug where the inventory was not fetched correctly directly when logging in
+- Fixed a bug where the equipment would be priced, even without character-specific pricing
 - Fixed a bug where the ladder would not return to first page after filtering
 
 ## [0.9.21] - 2019-02-27
