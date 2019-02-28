@@ -1,3 +1,9 @@
+<div class="mid-text-wrapper" *ngIf="dataSource.length == 0">
+    <mat-icon class="header-icon">warning</mat-icon>
+    <h3 class="mat-h3">
+      We haven't fetched this ladder yet. It should be displayed within 10 minutes.
+    </h3>
+  </div>
 <ng-container *ngIf="dataSource.length > 0">
   <table mat-table [dataSource]="source" class="mat-elevation-z8" matSort matSortActive="rank" matSortDisableClear
     matSortDirection="asc">

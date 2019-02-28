@@ -4,6 +4,13 @@ table {
     width: 100%;
 }
 
+.mid-text-wrapper {
+    display: flex;
+    height: 350px;
+    justify-content: center;
+    align-items: center;
+}
+
 td {
     min-height: 48px;
 
