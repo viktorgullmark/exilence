@@ -61,6 +61,7 @@ export class IncomeService implements OnDestroy {
   private playerSub: Subscription;
   private depStatusStoreSub: Subscription;
   private poeOnline = true;
+  private mapPricing = true;
 
   constructor(
     private ninjaService: NinjaService,
@@ -188,8 +189,7 @@ export class IncomeService implements OnDestroy {
 
   PriceItems(items: Item[], mapTabSelected: boolean = false, mapLayout: any) {
     // todo: base prices on this league
-    items.forEach((item: Item) => {
-
+    for (const item of items) {
       if (ItemHelper.isSixSocket(item)) {
         this.convertedItems.push(ItemHelper.generateJewellersOrb());
       }
@@ -224,6 +224,10 @@ export class IncomeService implements OnDestroy {
         if (itemPriceInfoObj.frameType !== 3) {
           itemPriceInfoObj.frameType = 0;
         }
+
+        if (!this.mapPricing) {
+          break;
+        }
       }
 
       const netWorthItem: NetWorthItem = {
@@ -250,7 +254,7 @@ export class IncomeService implements OnDestroy {
       if (netWorthItem.name.indexOf(' Map') === -1 || mapLayout || !mapTabSelected) {
         this.totalNetWorthItems.push(netWorthItem);
       }
-    });
+    }
   }
 
   filterItems(items: NetWorthItem[]) {
@@ -309,10 +313,18 @@ export class IncomeService implements OnDestroy {
       this.pricingService.retrieveExternalPrices(),
       this.getPlayerInventory(accountName, this.localPlayer.character.name)
     ).do((res) => {
-
       // if any request failed during snapshotting, don't proceed
       if (!this.externalService.snapshottingFailed) {
-        this.logService.log('Finished retriving stashhtabs');
+        this.logService.log('Finished retrieving stashtabs');
+
+        const mapPricingSetting = this.settingsService.get('mapPricing');
+        if (mapPricingSetting !== undefined) {
+          this.mapPricing = mapPricingSetting;
+        } else {
+          this.mapPricing = true;
+          this.settingsService.set('mapPricing', this.mapPricing);
+        }
+
         if (this.characterPricing) { // price equipment
           this.PriceItems(this.localPlayer.character.items.filter(x => x.inventoryId !== 'MainInventory'), mapTab, undefined);
         } // price inventory

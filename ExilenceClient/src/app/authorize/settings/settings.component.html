@@ -21,11 +21,11 @@
       </ng-template>
     </mat-tab>
     <mat-tab #networth id="areas">
-        <ng-template mat-tab-label>
-          <mat-icon class="tab-icon">map</mat-icon>
-          &nbsp;Areas
-        </ng-template>
-      </mat-tab>
+      <ng-template mat-tab-label>
+        <mat-icon class="tab-icon">map</mat-icon>
+        &nbsp;Areas
+      </ng-template>
+    </mat-tab>
     <mat-tab #general settings id="general">
       <ng-template mat-tab-label>
         <mat-icon class="tab-icon">info</mat-icon>
@@ -83,7 +83,7 @@
 
 <div [hidden]="selectedIndex != 2">
   <div class="setting-tab-content">
-    <h3 class="mat-h4 page-header">Pricing</h3> 
+    <h3 class="mat-h4 page-header">Pricing</h3>
     <mat-divider class="divider"></mat-divider>
     <div class="setting-inner-content">
       <mat-checkbox class="setting-checkbox" [(ngModel)]="lowConfidencePricing"
@@ -102,6 +102,15 @@
         Inventory pricing</mat-checkbox>
       <p class="setting-desc-text">
         Check this setting to include the inventory in net worth
+      </p>
+    </div>
+    <h3 class="mat-h4 page-header">Item types</h3>
+    <mat-divider class="divider"></mat-divider>
+    <div class="setting-inner-content">
+      <mat-checkbox class="setting-checkbox" [(ngModel)]="mapPricing"
+        (ngModelChange)="toggleMapPricing()">Map pricing</mat-checkbox>
+      <p class="setting-desc-text">
+        Check this setting to include maps in net worth
       </p>
     </div>
     <h3 class="mat-h4 page-header new-section">Calculations</h3>
@@ -156,17 +165,18 @@
 </div>
 
 <div [hidden]="selectedIndex != 3">
-    <div class="setting-tab-content">
-      <h3 class="mat-h4 page-header">Gain in areas</h3>
-      <mat-divider class="divider"></mat-divider>
-      <div class="setting-inner-content">
-        <mat-checkbox class="setting-checkbox" [(ngModel)]="neutralGain" (ngModelChange)="toggleNeutralGain()">Calculate gain in town and hideouts</mat-checkbox>
-        <p class="setting-desc-text">
-          Check this setting to include net worth changes in town and hideouts
-        </p>
-      </div>
+  <div class="setting-tab-content">
+    <h3 class="mat-h4 page-header">Gain in areas</h3>
+    <mat-divider class="divider"></mat-divider>
+    <div class="setting-inner-content">
+      <mat-checkbox class="setting-checkbox" [(ngModel)]="neutralGain" (ngModelChange)="toggleNeutralGain()">Calculate
+        gain in town and hideouts</mat-checkbox>
+      <p class="setting-desc-text">
+        Check this setting to include net worth changes in town and hideouts
+      </p>
     </div>
   </div>
+</div>
 
 <div [hidden]="selectedIndex != 4">
   <div class="setting-tab-content">
@@ -179,12 +189,12 @@
       <button mat-raised-button color="primary" (click)="resetDialogs()" type="button">{{'SETTINGS.RESET_DIALOGS' |
         translate}}</button>
       <br /><br />
-      
+
       <mat-checkbox class="setting-checkbox" [(ngModel)]="hideTooltips" (ngModelChange)="toggleHideTooltips()">Hide
         tooltips</mat-checkbox>
-        <p class="setting-desc-text">
-          Check this setting if you want to ignore all helpful tooltips
-        </p>
+      <p class="setting-desc-text">
+        Check this setting if you want to ignore all helpful tooltips
+      </p>
     </div>
   </div>
 </div>

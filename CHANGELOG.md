@@ -3,11 +3,14 @@ All notable changes to this project will be documented in this file.
 
 ## [0.9.22] - 2019-XX-XX
 ### Added
-- Added a setting for including hideouts and towns for gain per area (off by default)
+- Added a setting for including hideouts and towns for gain per area (disabled by default)
 - Added pricing of 6-sockets (now converts 6-sockets to jewellers automatically)
+- Added a setting for including maps in net worth calculations (enabled by default)
 
 ### Changed
 - Improved styling of item-tooltips (now takes up less space)
+- The "Clear my history"-button is now disabled when a snapshot is in progress
+- Minor style-tweaks to settings-page
 
 ### Fixed
 - Fixed a bug where the inventory was not fetched correctly directly when logging in
