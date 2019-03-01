@@ -32,6 +32,13 @@ namespace Shared.Repositories
             _connections = _database.GetCollection<ConnectionModel>("connections");
         }
 
+
+        public async Task<List<PartyModel>> GetCharactersByLeague(string league)
+        {
+            var result = await _parties.FindAsync(p => p.Players.Any(c => c.Character.League.ToUpper() == league.ToUpper()));
+            return await result.ToListAsync();
+        }
+
         public async Task<PartyModel> GetPartyByCharacterName(string characterName)
         {
             var result = await _parties.FindAsync(p => p.Players.Any(c => c.Character.Name == characterName));
@@ -210,6 +217,7 @@ namespace Shared.Repositories
             var result = await _connections.FindAsync(c => c.ConnectionId == connectionId);
             return await result.FirstOrDefaultAsync();
         }
+
         #endregion
     }
 }
