@@ -1,7 +1,7 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
-## [0.9.22] - 2019-02-27
+## [0.9.22] - 2019-XX-XX
 ### Added
 - Added a setting for including hideouts and towns for gain per area (off by default)
 - Added pricing of 6-sockets (now converts 6-sockets to jewellers automatically)
@@ -12,6 +12,8 @@ All notable changes to this project will be documented in this file.
 ### Fixed
 - Fixed a bug where the inventory was not fetched correctly directly when logging in
 - Fixed a bug where the equipment would be priced, even without character-specific pricing
+- Fixed a bug where the net worth for some side-areas wasn't calculated
+- Fixed a bug where the duration for some side-areas was displayed incorrectly
 - Fixed a bug where the ladder would not return to first page after filtering
 
 ## [0.9.21] - 2019-02-27
