@@ -38,7 +38,7 @@
         <div class="btn-grp">
             <ng-container *ngIf="electronService.isElectron()">
                 <button mat-raised-button color="accent" (click)="resetNetWorth()" type="button"
-                    class="right-aligned extra-margin">{{'GRAPH.RESET_SELF'
+                    class="right-aligned extra-margin" [disabled]="incomeService.isSnapshotting">{{'GRAPH.RESET_SELF'
                     | translate}}</button>
                 <button mat-raised-button color="primary" (click)="popout()" type="button"
                     class="right-aligned extra-margin">{{'GRAPH.POPOUT'
