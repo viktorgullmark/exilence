@@ -203,26 +203,13 @@
         <mat-expansion-panel [expanded]="true">
           <mat-expansion-panel-header>
             <mat-panel-title>
-              <b>Step 1: </b>&nbsp; Clear all settings and saved data.
+              Clear all settings and saved data.
             </mat-panel-title>
           </mat-expansion-panel-header>
           <p class="setting-desc-text">
             This will clear all your saved data and settings including areas and networth.
           </p>
           <button mat-raised-button color="primary" (click)="clearSettings()" type="button">{{'SETTINGS.CLEAR_SETINGS_RELAUNCH'
-            | translate}}</button>
-        </mat-expansion-panel>
-        <mat-expansion-panel>
-          <mat-expansion-panel-header>
-            <mat-panel-title>
-              <b>Step 2: </b>&nbsp; Upload settings and log to Exilence server.
-            </mat-panel-title>
-          </mat-expansion-panel-header>
-          <p class="setting-desc-text">
-            This will upload all your saved data and settings to the Exilence server. Only do this if step 1 didn't
-            help you and make sure to ping us on Discord after so we can investigate your issue.
-          </p>
-          <button mat-raised-button color="primary" (click)="upload()" [disabled]="uploaded" type="button">{{'SETTINGS.UPLOAD_FILE'
             | translate}}</button>
         </mat-expansion-panel>
       </mat-accordion>
