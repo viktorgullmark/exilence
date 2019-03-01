@@ -19,6 +19,7 @@ export class SettingsComponent implements OnInit, OnDestroy {
   alwaysOnTop = false;
   neutralGain = false;
   isResizable = false;
+  timeline = false;
   hideTooltips = false;
   lowConfidencePricing = false;
   inventoryPricing = false;
@@ -70,6 +71,12 @@ export class SettingsComponent implements OnInit, OnDestroy {
 
     if (neutralGainSetting !== undefined) {
       this.neutralGain = neutralGainSetting;
+    }
+
+    const timelineSetting = this.settingsService.get('timeline');
+
+    if (timelineSetting !== undefined) {
+      this.timeline = timelineSetting;
     }
 
     const isResizableSetting = this.settingsService.get('isResizable');
@@ -150,6 +157,14 @@ export class SettingsComponent implements OnInit, OnDestroy {
       this.settingsService.set('neutralGain', true);
     } else {
       this.settingsService.set('neutralGain', false);
+    }
+  }
+
+  toggleTimeline() {
+    if (this.timeline) {
+      this.settingsService.set('timeline', true);
+    } else {
+      this.settingsService.set('timeline', false);
     }
   }
 

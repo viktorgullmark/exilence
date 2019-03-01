@@ -6,6 +6,7 @@ All notable changes to this project will be documented in this file.
 - Added a setting for including hideouts and towns for gain per area (disabled by default)
 - Added pricing of 6-sockets (now converts 6-sockets to jewellers automatically)
 - Added a setting for including maps in net worth calculations (enabled by default)
+- Added a timeline below the net worth graph, which lets you specify the timeframe to see (disabled by default)
 
 ### Changed
 - Improved styling of item-tooltips (now takes up less space)

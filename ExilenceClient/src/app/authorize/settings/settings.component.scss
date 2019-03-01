@@ -21,8 +21,8 @@
     margin-top: 25px;
 }
 
-.no-margin-top {
-    margin-top: 0px;
+.minus-margin-top {
+    margin-top: -10px !important;
 }
 
 .dropdown-field {
@@ -34,6 +34,11 @@
     font-size: 13px;
     color: #e2e2e2;
     font-style: italic;
+}
+
+.setting-header {
+    margin-bottom: 5px;
+    text-transform: uppercase;
 }
 
 .grid-header {
@@ -58,5 +63,5 @@
 }
 
 .new-section {
-    margin-top: 30px !important;
+    margin-top: 20px !important;
 }

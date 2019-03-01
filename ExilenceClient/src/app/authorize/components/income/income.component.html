@@ -12,7 +12,7 @@
       [scheme]="colorScheme" [results]="dateData" [legend]="player == undefined" legendTitle="Players"
       (legendLabelClick)="onLegendLabelClick($event)" gradient="false" xAxis="true" yAxis="true" showXAxisLabel="true"
       showYAxisLabel="true" xAxisLabel="Time" [xAxisTickFormatting]="axisFormat" animations="true"
-      yAxisLabel="Net worth in Chaos" autoScale="true" showGridLines="true" [timeline]="true" [curve]="curve" (select)="select($event)"
+      yAxisLabel="Net worth in Chaos" autoScale="true" showGridLines="true" [timeline]="timeline" [curve]="curve" (select)="select($event)"
       [contextMenu]="badgeMenu" [contextMenuSubject]="selectedSnapshot">
       <ng-template #tooltipTemplate let-model="model">
         Net worth: {{ model?.value.toFixed(2) }} chaos

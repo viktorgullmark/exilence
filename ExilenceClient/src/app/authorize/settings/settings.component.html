@@ -62,7 +62,7 @@
 
 <div [hidden]="selectedIndex != 1">
   <div class="setting-tab-content">
-    <h3 class="mat-h4 page-header">Misc</h3>
+    <h3 class="mat-h4 setting-header">Misc</h3>
     <mat-divider class="divider"></mat-divider>
     <div class="setting-inner-content">
 
@@ -83,7 +83,7 @@
 
 <div [hidden]="selectedIndex != 2">
   <div class="setting-tab-content">
-    <h3 class="mat-h4 page-header">Pricing</h3>
+    <h3 class="mat-h4 setting-header">Pricing</h3>
     <mat-divider class="divider"></mat-divider>
     <div class="setting-inner-content">
       <mat-checkbox class="setting-checkbox" [(ngModel)]="lowConfidencePricing"
@@ -104,7 +104,7 @@
         Check this setting to include the inventory in net worth
       </p>
     </div>
-    <h3 class="mat-h4 page-header">Item types</h3>
+    <h3 class="mat-h4 setting-header new-section">Item types</h3>
     <mat-divider class="divider"></mat-divider>
     <div class="setting-inner-content">
       <mat-checkbox class="setting-checkbox" [(ngModel)]="mapPricing"
@@ -113,7 +113,7 @@
         Check this setting to include maps in net worth
       </p>
     </div>
-    <h3 class="mat-h4 page-header new-section">Calculations</h3>
+    <h3 class="mat-h4 setting-header new-section">Calculations</h3>
     <mat-divider class="divider"></mat-divider>
     <p class="setting-desc-text">
     </p>
@@ -128,7 +128,7 @@
         <mat-option value="10">>= 10c</mat-option>
       </mat-select>
     </mat-form-field>
-    <p class="setting-desc-text no-margin-top">
+    <p class="setting-desc-text minus-margin-top">
       Sets the treshold at which items are included in the net worth calculations
     </p>
     <mat-form-field class="dropdown-field">
@@ -142,10 +142,10 @@
         <mat-option value="24">24 hours</mat-option>
       </mat-select>
     </mat-form-field>
-    <p class="setting-desc-text no-margin-top">
+    <p class="setting-desc-text minus-margin-top">
       Choose how many hours back in history that should be used for "Gain per hour"
     </p>
-    <h3 class="mat-h4 page-header new-section">History</h3>
+    <h3 class="mat-h4 setting-header new-section">History</h3>
     <mat-divider class="divider"></mat-divider>
 
     <mat-form-field class="dropdown-field">
@@ -158,15 +158,22 @@
         <mat-option value="14">14 days</mat-option>
       </mat-select>
     </mat-form-field>
-    <p class="setting-desc-text no-margin-top">
+    <p class="setting-desc-text minus-margin-top">
       Choose how much days back in history the "Net worth graph" shows
     </p>
+    <div class="setting-inner-content">
+      <mat-checkbox class="setting-checkbox" [(ngModel)]="timeline"
+        (ngModelChange)="toggleTimeline()">Show timeline for graph</mat-checkbox>
+      <p class="setting-desc-text">
+        Check this setting to show a timeline below the net worth graph
+      </p>
+    </div>
   </div>
 </div>
 
 <div [hidden]="selectedIndex != 3">
   <div class="setting-tab-content">
-    <h3 class="mat-h4 page-header">Gain in areas</h3>
+    <h3 class="mat-h4 setting-header">Gain in areas</h3>
     <mat-divider class="divider"></mat-divider>
     <div class="setting-inner-content">
       <mat-checkbox class="setting-checkbox" [(ngModel)]="neutralGain" (ngModelChange)="toggleNeutralGain()">Calculate
@@ -180,7 +187,7 @@
 
 <div [hidden]="selectedIndex != 4">
   <div class="setting-tab-content">
-    <h3 class="mat-h4 page-header">Visibility</h3>
+    <h3 class="mat-h4 setting-header">Visibility</h3>
     <mat-divider class="divider"></mat-divider>
     <div class="setting-inner-content">
       <p class="setting-desc-text">
@@ -201,7 +208,7 @@
 
 <div [hidden]="selectedIndex != 5">
   <div class="setting-tab-content">
-    <h3 class="mat-h4 page-header">
+    <h3 class="mat-h4">
       This page is aimed to help you resolve any problems you might have with Exilence.
       Know that you can always contact us on <a class="inline-link"
         (click)="openLink('https://discord.gg/yxuBrPY')">Discord</a>

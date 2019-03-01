@@ -45,7 +45,6 @@ export class PartySummaryComponent implements OnInit, OnDestroy {
   private player: Player;
   private tableData = [];
   private overtimeData = [];
-
   public selectedFilterValue: string;
 
   constructor(

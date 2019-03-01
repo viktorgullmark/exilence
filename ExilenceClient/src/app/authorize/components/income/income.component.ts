@@ -50,6 +50,7 @@ export class IncomeComponent implements OnInit, OnDestroy {
   private selectedFilterValueSub: Subscription;
   private party: Party;
   private interval;
+  public timeline = false;
 
   // line interpolation
   curveType = 'Linear';
@@ -71,6 +72,12 @@ export class IncomeComponent implements OnInit, OnDestroy {
     private settingsService: SettingsService,
     private dialog: MatDialog
   ) {
+    const timelineSetting = this.settingsService.get('timeline');
+    if (timelineSetting !== undefined) {
+      this.timeline = timelineSetting;
+    } else {
+      this.settingsService.set('timeline', false);
+    }
   }
 
   anyPlayerSnapshots() {
