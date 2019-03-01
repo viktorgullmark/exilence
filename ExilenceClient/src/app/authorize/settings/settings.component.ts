@@ -23,6 +23,7 @@ export class SettingsComponent implements OnInit, OnDestroy {
   lowConfidencePricing = false;
   inventoryPricing = false;
   characterPricing = false;
+  mapPricing = true;
   sessionId: string;
   sessionIdValid: boolean;
   uploaded = false;
@@ -85,6 +86,11 @@ export class SettingsComponent implements OnInit, OnDestroy {
     const lowConfidencePricingSetting = this.settingsService.get('lowConfidencePricing');
     if (lowConfidencePricingSetting !== undefined) {
       this.lowConfidencePricing = lowConfidencePricingSetting;
+    }
+
+    const mapPricingSetting = this.settingsService.get('mapPricing');
+    if (mapPricingSetting !== undefined) {
+      this.mapPricing = mapPricingSetting;
     }
 
     const inventoryPricingSetting = this.settingsService.get('inventoryPricing');
@@ -173,6 +179,14 @@ export class SettingsComponent implements OnInit, OnDestroy {
       this.settingsService.set('lowConfidencePricing', true);
     } else {
       this.settingsService.set('lowConfidencePricing', false);
+    }
+  }
+
+  toggleMapPricing() {
+    if (this.mapPricing) {
+      this.settingsService.set('mapPricing', true);
+    } else {
+      this.settingsService.set('mapPricing', false);
     }
   }
 
