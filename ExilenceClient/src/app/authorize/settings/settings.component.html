@@ -83,7 +83,7 @@
 
 <div [hidden]="selectedIndex != 2">
   <div class="setting-tab-content">
-    <h3 class="mat-h4 page-header">Pricing</h3>
+    <h3 class="mat-h4 page-header">Pricing</h3> 
     <mat-divider class="divider"></mat-divider>
     <div class="setting-inner-content">
       <mat-checkbox class="setting-checkbox" [(ngModel)]="lowConfidencePricing"
@@ -92,14 +92,12 @@
       <p class="setting-desc-text">
         Check this setting to include low confidence prices
       </p>
-      <br />
       <mat-checkbox class="setting-checkbox" [(ngModel)]="characterPricing" (ngModelChange)="toggleCharacterPricing()">
         Character-specific
         pricing</mat-checkbox>
       <p class="setting-desc-text">
         Check this setting to include the equipment in net worth
       </p>
-      <br />
       <mat-checkbox class="setting-checkbox" [(ngModel)]="inventoryPricing" (ngModelChange)="toggleInventoryPricing()">
         Inventory pricing</mat-checkbox>
       <p class="setting-desc-text">
