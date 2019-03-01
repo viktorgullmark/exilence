@@ -15,6 +15,7 @@ export interface Player {
     sessionIdProvided: boolean;
     genericHost: string;
     overallRank: number;
+    updated: number;
     isLeader: boolean;
     isSpectator: boolean;
     netWorthSnapshots: NetWorthSnapshot[];

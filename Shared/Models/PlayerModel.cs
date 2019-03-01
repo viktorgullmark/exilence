@@ -16,6 +16,7 @@ namespace Shared.Models
         public string Account { get; set; }
         public int OverallRank { get; set; }
         public bool IsSpectator { get; set; }
+        public long Updated { get; set; }
         public string GenericHost { get; set; }
         public List<string> InArea { get; set; }
         public bool SessionIdProvided { get; set; }

@@ -343,8 +343,14 @@ export class ExternalService implements OnDestroy {
   }
 
   setCharacter(data: EquipmentResponse, player: Player): Player {
+    player.updated = Date.now();
     player.character = data.character;
     player.character.items = this.mapItems(data.items);
+
+    // todo: calculate experience per hour
+    player.character.experiencePerHour = 0;
+    player.character.timeToLevel = 0;
+
     return player;
   }
 

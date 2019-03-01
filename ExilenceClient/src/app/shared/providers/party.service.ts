@@ -538,6 +538,7 @@ export class PartyService implements OnDestroy {
 
           objToSend.pastAreas = HistoryHelper.filterAreas(objToSend.pastAreas, oneDayAgo);
           objToSend.netWorthSnapshots = HistoryHelper.filterNetworth(objToSend.netWorthSnapshots, oneDayAgo);
+
           this.invokeUpdatePlayer(objToSend);
         });
     } else { // only invoke if we are offline, without re-setting items
