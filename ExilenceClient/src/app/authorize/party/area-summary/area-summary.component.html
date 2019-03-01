@@ -31,7 +31,7 @@
         </div>  
         <div class="flex-area">
             <div class="btn-grp">
-                <button mat-raised-button color="primary" *ngIf="selfSelected" (click)="resetAreaHistory()" type="button"
+                <button mat-raised-button *ngIf="selfSelected" (click)="resetAreaHistory()" type="button"
                     class="right-aligned">{{'MAPS.RESET'
                     | translate}}</button>
                 <mat-form-field class="player-selection-field">

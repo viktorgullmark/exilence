@@ -50,23 +50,32 @@
   </div>
   <ng-container *ngIf="electronService.isElectron()">
     <div *ngIf="!shouldSetup && !sessionService.completedLogin" class="form welcome-back-screen">
-      <h1 class="mat-h1">Welcome back {{accountName}}!</h1>
-      <div class="mat-body-1">
-        We detected that you've used the app before, choose an option below to proceed
-      </div>
-      <mat-divider class="divider"></mat-divider>
-      <mat-grid-list cols="4" rowHeight="40px">
-        <mat-grid-tile [colspan]="2" [rowspan]="1">
-          <button class="full-width" mat-raised-button color="primary" (click)="initSetup()">Change login-settings</button>
-        </mat-grid-tile>
-        <mat-grid-tile [colspan]="2" [rowspan]="1">
-          <button class="full-width" mat-raised-button color="primary" (click)="login()">Log me in</button>
-        </mat-grid-tile>
-        <mat-grid-tile [colspan]="4" [rowspan]="1">
-          <mat-progress-bar *ngIf="isLoading" class="progress-bar" color="primary" mode="indeterminate">
-          </mat-progress-bar>
-        </mat-grid-tile>
-      </mat-grid-list>
+     
+     
+      <mat-card class="group-selection-card">
+        <h1 class="mat-h1 welcome-back-header">Welcome back {{accountName}}!</h1>
+        <mat-card-content>
+  
+          <span class="mat-body-1">
+            We detected that you've used the app before, choose an option below to proceed
+          </span>
+  
+          <div class="group-no-exists" *ngIf="groupNoExists">
+            <span class="form-error">{{'ERROR.GROUP_DOESNT_EXIST' | translate}}</span>
+          </div>
+  
+          <mat-grid-list cols="4" rowHeight="40px" class="btn-section">
+            <mat-grid-tile [colspan]="2" [rowspan]="1">
+              <button class="full-width" mat-raised-button (click)="initSetup()">Change login-settings</button>
+            </mat-grid-tile>
+            <mat-grid-tile [colspan]="2" [rowspan]="1">
+              <button class="full-width" mat-raised-button color="primary" (click)="login()">Log me in</button>
+            </mat-grid-tile>
+          </mat-grid-list>
+        </mat-card-content>
+      </mat-card>
+      <mat-progress-bar *ngIf="isLoading" class="progress-bar" color="primary" mode="indeterminate">
+      </mat-progress-bar>
     </div>
     <div [hidden]="!shouldSetup && !sessionService.completedLogin">
       <mat-vertical-stepper #stepper linear="true" class="form login-form" (selectionChange)="checkLeagueChange($event)">
