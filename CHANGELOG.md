@@ -10,7 +10,8 @@ All notable changes to this project will be documented in this file.
 ### Changed
 - Improved styling of item-tooltips (now takes up less space)
 - The "Clear my history"-button is now disabled when a snapshot is in progress
-- Minor style-tweaks to settings-page
+- Minor style-tweaks to settings-screen
+- Minor style-tweaks to login-screen
 
 ### Fixed
 - Fixed a bug where the inventory was not fetched correctly directly when logging in
