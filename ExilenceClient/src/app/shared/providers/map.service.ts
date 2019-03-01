@@ -173,8 +173,8 @@ export class MapService implements OnDestroy {
           this.areaHistory[1].subAreas[0].duration =
             (this.areaHistory[0].timestamp - this.areaHistory[1].subAreas[0].timestamp) / 1000;
         } else {
-          const subAreaDiffSeconds = (this.areaHistory[1].subAreas[0].timestamp - this.areaHistory[1].subAreas[1].timestamp) / 1000;
-          this.areaHistory[1].subAreas[0].duration = subAreaDiffSeconds; //Should we set subareas last here?
+          const subAreaDiffSeconds = (this.areaHistory[0].timestamp - this.areaHistory[1].subAreas[0].timestamp) / 1000;
+          this.areaHistory[1].subAreas[0].duration = subAreaDiffSeconds;
         }
       }
 
