@@ -67,7 +67,7 @@ namespace LadderParser.Services
                     {
                         var LadderPlayerList = result.Entries.
                             Where(t => !ladder.Any(x => x.Name == t.Character.Name))
-                            .Select(t => new LadderPlayerModel(t)).ToList();
+                            .Select(t => new LadderPlayerModel(t, sortMode)).ToList();
 
                         ladder.AddRange(LadderPlayerList);
                         if (ladder.Count == result.Total || result.Entries.Count == 0)
@@ -94,8 +94,6 @@ namespace LadderParser.Services
             {
                 var task = Task.Run(() =>
                 {
-                    //newEntry.Depth.GroupRank = ladder.Count(t => t.Depth.Group > newEntry.Depth.Group) + 1;
-                    //newEntry.Depth.SoloRank = ladder.Count(t => t.Depth.Solo > newEntry.Depth.Solo) + 1;
                     newEntry.Rank.Class = ladder.Where(t => t.Class == newEntry.Class).Where(x => x.Rank.Overall < newEntry.Rank.Overall).Count() + 1;
 
                 });

@@ -25,7 +25,7 @@ namespace Shared.Models
 
         }
 
-        public LadderPlayerModel(LadderApiEntry entry)
+        public LadderPlayerModel(LadderApiEntry entry, string sortmode)
         {
             Name = entry.Character.Name;
             Level = entry.Character.Level;
@@ -35,10 +35,7 @@ namespace Shared.Models
             Account = entry.Account.Name;
             Experience = entry.Character.Experience;
             ExperiencePerHour = 0;
-            Rank = new LadderPlayerRankModel()
-            {
-                Overall = entry.Rank
-            };
+            Rank = new LadderPlayerRankModel();
             Depth = new LadderPlayerDepthModel()
             {
                 Solo = entry.Character.Depth != null ? entry.Character.Depth.Solo : 0,
@@ -47,6 +44,20 @@ namespace Shared.Models
             Twitch = entry.Account.Twitch?.Name;
             Class = entry.Character.Class;
             Updated = DateTime.Now;
+
+
+            switch (sortmode)
+            {
+                case null:
+                    Rank.Overall = entry.Rank;
+                    break;
+                case "depth":
+                    Depth.GroupRank = entry.Rank;
+                    break;
+                case "depthsolo":
+                    Depth.SoloRank = entry.Rank;
+                    break;
+            }
         }
     }
 
