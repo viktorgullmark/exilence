@@ -85,8 +85,8 @@ export class MapService implements OnDestroy {
     this.neutralGain = this.settingsService.get('neutralGain');
 
     const currentInventory = this.priceAndCombineInventory(inventory);
-    this.areaHistory[0].inventory = currentInventory;
     if (!this.enteredSubArea) {
+      this.areaHistory[0].inventory = currentInventory;
       if (
         this.areaHistory[1] !== undefined &&
         !this.enteredSameInstance &&
@@ -100,9 +100,10 @@ export class MapService implements OnDestroy {
         }
       }
     } else {
-      const lastIndex = this.areaHistory[1].subAreas.length - 1;
-      const gainedItems: NetWorthItem[] = ItemHelper.GetNetworthItemDifference(currentInventory, this.areaHistory[1].subAreas[lastIndex].inventory)
-      this.areaHistory[1].difference = ItemHelper.CombineNetworthItemStacks(this.areaHistory[1].difference.concat(gainedItems));
+      if (this.areaHistory[0].subAreas.length > 0) {
+        const gainedItems: NetWorthItem[] = ItemHelper.GetNetworthItemDifference(currentInventory, this.areaHistory[0].inventory)
+        this.areaHistory[0].difference = ItemHelper.CombineNetworthItemStacks(gainedItems);
+      }
     }
 
   }
@@ -127,6 +128,7 @@ export class MapService implements OnDestroy {
   }
 
   ngOnDestroy() {
+    debugger;
     if (this.playerSub !== undefined) {
       this.playerSub.unsubscribe();
     }
@@ -172,7 +174,7 @@ export class MapService implements OnDestroy {
             (this.areaHistory[0].timestamp - this.areaHistory[1].subAreas[0].timestamp) / 1000;
         } else {
           const subAreaDiffSeconds = (this.areaHistory[1].subAreas[0].timestamp - this.areaHistory[1].subAreas[1].timestamp) / 1000;
-          this.areaHistory[1].subAreas[0].duration = subAreaDiffSeconds;
+          this.areaHistory[1].subAreas[0].duration = subAreaDiffSeconds; //Should we set subareas last here?
         }
       }
 
