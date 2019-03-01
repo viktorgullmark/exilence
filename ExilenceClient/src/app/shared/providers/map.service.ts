@@ -128,7 +128,6 @@ export class MapService implements OnDestroy {
   }
 
   ngOnDestroy() {
-    debugger;
     if (this.playerSub !== undefined) {
       this.playerSub.unsubscribe();
     }
