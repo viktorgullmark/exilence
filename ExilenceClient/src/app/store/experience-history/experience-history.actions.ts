@@ -8,7 +8,7 @@ export enum ExperienceHistoryActionTypes {
 
 export class UpdateExperienceHistory implements Action {
   readonly type = ExperienceHistoryActionTypes.UPDATE_EXP_HISTORY;
-  constructor(public payload: { experienceHistory: ExperienceHistory[] }) { }
+  constructor(public payload: ExperienceHistory) { }
 }
 
 export type EXP_HISTORY_ACTIONS = UpdateExperienceHistory;

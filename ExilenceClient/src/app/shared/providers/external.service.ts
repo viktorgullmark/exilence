@@ -360,9 +360,8 @@ export class ExternalService implements OnDestroy {
     player.character.experiencePerHour = 0;
     player.character.timeToLevel = 0;
 
-    this.experienceHistory.push({ timestamp: Date.now(), experience: player.character.experience } as ExperienceHistory);
-
-    this.expHistoryStore.dispatch(new expHistoryActions.UpdateExperienceHistory({ experienceHistory: this.experienceHistory }));
+    this.expHistoryStore.dispatch(new expHistoryActions.UpdateExperienceHistory(
+      { timestamp: Date.now(), experience: player.character.experience }));
 
     return player;
   }

@@ -12,7 +12,7 @@ export function expHistoryReducer(state = initialState, action: fromActions.EXP_
         case fromActions.ExperienceHistoryActionTypes.UPDATE_EXP_HISTORY: {
             return {
                 ...state,
-                experienceHistory: action.payload.experienceHistory,
+                experienceHistory: [action.payload, ...state.experienceHistory],
             };
         }
         default: {
