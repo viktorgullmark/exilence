@@ -20,6 +20,7 @@ All notable changes to this project will be documented in this file.
 - Fixed a bug where the net worth for some side-areas wasn't calculated
 - Fixed a bug where the duration for some side-areas was displayed incorrectly
 - Fixed a bug where the ladder would not return to first page after filtering
+- Fixed a bug where you could see multiple instances of yourself in a group, if you reconnected after a DC
 
 ## [0.9.21] - 2019-02-27
 ### Added
