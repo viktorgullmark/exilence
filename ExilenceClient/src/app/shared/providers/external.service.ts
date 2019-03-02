@@ -14,7 +14,7 @@ import RateLimiter from 'rxjs-ratelimiter';
 import { BehaviorSubject } from 'rxjs/internal/BehaviorSubject';
 import { Observable } from 'rxjs/Observable';
 
-import { DependencyStatusState } from '../../app.states';
+import { DependencyStatusState, ExperienceHistoryState } from '../../app.states';
 import * as depStatusActions from '../../store/dependency-status/dependency-status.actions';
 import { EquipmentResponse } from '../interfaces/equipment-response.interface';
 import { Item } from '../interfaces/item.interface';
@@ -27,6 +27,9 @@ import * as depStatusReducer from './../../store/dependency-status/dependency-st
 import { ElectronService } from './electron.service';
 import { LogService } from './log.service';
 import { RequestError, ErrorType } from '../interfaces/error.interface';
+import * as expHistoryReducer from '../../store/experience-history/experience-history.reducer';
+import * as expHistoryActions from '../../store/experience-history/experience-history.actions';
+import { ExperienceHistory } from '../interfaces/experience-history.interface';
 
 @Injectable()
 export class ExternalService implements OnDestroy {
@@ -42,8 +45,10 @@ export class ExternalService implements OnDestroy {
   private RequestRateLimit = new RateLimiter(7, 10000);
   private statusCheckInterval: any;
   private depStatusStoreSub: Subscription;
+  private expHistorySub: Subscription;
   private poeOnline = true;
 
+  public experienceHistory: ExperienceHistory[];
   public snapshottingFailed = false;
 
   constructor(
@@ -51,13 +56,17 @@ export class ExternalService implements OnDestroy {
     private electronService: ElectronService,
     private router: Router,
     private logService: LogService,
-    private depStatusStore: Store<DependencyStatusState>
+    private depStatusStore: Store<DependencyStatusState>,
+    private expHistoryStore: Store<ExperienceHistoryState>,
   ) {
     this.depStatusStoreSub = this.depStatusStore.select(depStatusReducer.selectAllDepStatuses).subscribe(statuses => {
       const status = statuses.find(s => s.name === 'pathofexile');
       if (status !== undefined) {
         this.poeOnline = status.online;
       }
+    });
+    this.expHistorySub = this.expHistoryStore.select(expHistoryReducer.selectExperienceHistory).subscribe(history => {
+      this.experienceHistory = history.experienceHistory;
     });
   }
 
@@ -350,6 +359,10 @@ export class ExternalService implements OnDestroy {
     // todo: calculate experience per hour
     player.character.experiencePerHour = 0;
     player.character.timeToLevel = 0;
+
+    this.experienceHistory.push({ timestamp: Date.now(), experience: player.character.experience } as ExperienceHistory);
+
+    this.expHistoryStore.dispatch(new expHistoryActions.UpdateExperienceHistory({ experienceHistory: this.experienceHistory }));
 
     return player;
   }

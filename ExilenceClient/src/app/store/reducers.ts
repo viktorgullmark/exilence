@@ -5,11 +5,13 @@ import { AppState } from '../app.states';
 import * as ladderReducer from './ladder/ladder.reducer';
 import * as spectatorCountReducer from './spectator-count/spectator-count.reducer';
 import * as dependencyStatusReducer from './dependency-status/dependency-status.reducer';
+import * as experienceHistoryReducer from './experience-history/experience-history.reducer';
 
 export const reducers: ActionReducerMap<AppState> = {
   ladderState: ladderReducer.ladderReducer,
   spectatorCountState: spectatorCountReducer.spectatorCountReducer,
-  dependencyStatusState: dependencyStatusReducer.depStatusReducer
+  dependencyStatusState: dependencyStatusReducer.depStatusReducer,
+  experienceHistoryState: experienceHistoryReducer.expHistoryReducer
 };
 
 export function logger(reducer: ActionReducer<AppState>): ActionReducer<AppState> {
