@@ -18,31 +18,29 @@
     </div>
     <h3 class="mat-h3">Changes included in version {{appVersion}}</h3>
     <ul>
-        <h4>N/A</h4>
-        <!-- <ul>
-            <li>Added offline-mode</li>
-            <ul>
-                <li>You can now continue using Exilence when pathofexile.com goes down</li>
-            </ul>
-            <li>Added new state-management (NgRx)</li>
+        <h4>Added</h4>
+        <ul>
+            <li>Added a setting for including hideouts and towns for gain per area (disabled by default)</li>
+            <li>Added pricing of 6-sockets (now converts 6-sockets to jewellers automatically)</li>
+            <li>Added a setting for including maps in net worth calculations (enabled by default)</li>
+            <li>Added a timeline below the net worth graph, which lets you specify the timeframe to see (disabled by default)</li>
         </ul>
         <h4>Changed</h4>
         <ul>
-            <li>Changed how maps are displayed in the net worth table</li>
-            <ul>
-                <li>Displays rare maps as normal (to concat)</li>
-                <li>Displays magic maps as normal (to concat)</li>
-            </ul>
+            <li>Improved styling of item-tooltips (now takes up less space)</li>
+            <li>The "Clear my history"-button is now disabled when a snapshot is in progress</li>
+            <li>Minor style-tweaks to settings-screen</li>
+            <li>Minor style-tweaks to login-screen</li>
         </ul>
         <h4>Fixed</h4>
         <ul>
-            <li>Fixed a bug where only the first 20 stash-tabs were priced, now correctly prices up to 40</li>
-            <li>Fixed a bug where the popup saying character list hidden was shown incorrectly</li>
+            <li>Fixed a bug where the inventory was not fetched correctly directly when logging in</li>
+            <li>Fixed a bug where the equipment would be priced, even without character-specific pricing</li>
+            <li>Fixed a bug where the net worth for some side-areas wasn't calculated</li>
+            <li>Fixed a bug where the duration for some side-areas was displayed incorrectly</li>
+            <li>Fixed a bug where the ladder would not return to first page after filtering</li>
+            <li>Fixed a bug where you could see multiple instances of yourself in a group, if you reconnected after a DC</li>
         </ul>
-        <h4>Fixed</h4>
-        <ul>
-            <li>Removed Google Analytics</li>
-        </ul> -->
     </ul>
     <mat-divider class="divider"></mat-divider>
     <p class="mat-body-1">
