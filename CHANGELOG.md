@@ -1,7 +1,7 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
-## [0.9.22] - 2019-XX-XX
+## [0.9.22] - 2019-03-03
 ### Added
 - Added a setting for including hideouts and towns for gain per area (disabled by default)
 - Added pricing of 6-sockets (now converts 6-sockets to jewellers automatically)
