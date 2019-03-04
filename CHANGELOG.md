@@ -1,6 +1,10 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [0.9.23] - 2019-03-04
+### Fixed
+- Fixed a bug where the inventory-pricing setting would not get set properly
+
 ## [0.9.22] - 2019-03-04
 ### Added
 - Added a setting for including hideouts and towns for gain per area (disabled by default)
