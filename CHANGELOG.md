@@ -1,6 +1,10 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [0.9.24] - 2019-03-04
+### Fixed
+- Fixed a bug where net worth snapshotting would crash with certain items
+
 ## [0.9.23] - 2019-03-04
 ### Fixed
 - Fixed a bug where the inventory-pricing setting would not get set properly
