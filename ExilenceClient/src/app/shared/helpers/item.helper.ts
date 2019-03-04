@@ -26,10 +26,11 @@ export class ItemHelper {
     }
     public static isSixSocket(item: Item): boolean {
         if (item.sockets !== undefined &&
+            item.sockets !== null &&
             item.sockets.length === 6 &&
             (item.frameType === 0 ||
-            item.frameType === 1 ||
-            item.frameType === 2)
+                item.frameType === 1 ||
+                item.frameType === 2)
         ) {
             return true;
         }
@@ -46,6 +47,10 @@ export class ItemHelper {
         } as Item;
     }
     public static getItemVariant(item: Item): string {
+
+        if (item.sockets === null || item.sockets === undefined) {
+            return '';
+        }
 
         if (item.name === 'Impresence') {
             if (item.explicitMods.filter(s => s.includes('Lightning Damage'))) { return 'Lightning'; }

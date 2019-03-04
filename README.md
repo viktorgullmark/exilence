@@ -79,5 +79,6 @@ Report bugs at https://github.com/viktorgullmark/exilence/issues
 ## Acknowledgements
 
 - https://poe.ninja for providing a great API, which lets us calculate net worth of players
+- https://poe.watch for providing in-depth pricing data for items
 - https://github.com/klayveR for providing a great log-monitor to track the Client.txt
 - GGG for adding additional endpoints for us and for creating a great game!

@@ -1,7 +1,15 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
-## [0.9.22] - 2019-XX-XX
+## [0.9.24] - 2019-03-04
+### Fixed
+- Fixed a bug where net worth snapshotting would crash with certain items
+
+## [0.9.23] - 2019-03-04
+### Fixed
+- Fixed a bug where the inventory-pricing setting would not get set properly
+
+## [0.9.22] - 2019-03-04
 ### Added
 - Added a setting for including hideouts and towns for gain per area (disabled by default)
 - Added pricing of 6-sockets (now converts 6-sockets to jewellers automatically)
