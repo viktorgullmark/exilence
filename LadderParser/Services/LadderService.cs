@@ -67,7 +67,7 @@ namespace LadderParser.Services
                     {
                         var LadderPlayerList = result.Entries.
                             Where(t => !ladder.Any(x => x.Name == t.Character.Name))
-                            .Select(t => new LadderPlayerModel(t, sortMode)).Where(p => p.Rank.Overall > 0).ToList();
+                            .Select(t => new LadderPlayerModel(t, sortMode)).ToList();
 
                         ladder.AddRange(LadderPlayerList);
                         if (ladder.Count == result.Total || result.Entries.Count == 0)
