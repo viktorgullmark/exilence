@@ -206,7 +206,7 @@ export class SettingsComponent implements OnInit, OnDestroy {
   }
 
   toggleInventoryPricing() {
-    if (this.lowConfidencePricing) {
+    if (this.inventoryPricing) {
       this.settingsService.set('inventoryPricing', true);
     } else {
       this.settingsService.set('inventoryPricing', false);
