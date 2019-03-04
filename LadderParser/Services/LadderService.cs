@@ -49,7 +49,7 @@ namespace LadderParser.Services
             await _repository.SetLadderRunning(leagueName);
 
             var ladder = new List<LadderPlayerModel>();
-            var sortModes = new List<string>() { null, "depth", "depthsolo" };
+            var sortModes = new List<string>() { null }; // "depth", "depthsolo" 
             var pages = Enumerable.Range(0, 75);
 
             foreach (var sortMode in sortModes)
@@ -67,7 +67,7 @@ namespace LadderParser.Services
                     {
                         var LadderPlayerList = result.Entries.
                             Where(t => !ladder.Any(x => x.Name == t.Character.Name))
-                            .Select(t => new LadderPlayerModel(t, sortMode)).ToList();
+                            .Select(t => new LadderPlayerModel(t, sortMode)).Where(p => p.Rank.Overall > 0).ToList();
 
                         ladder.AddRange(LadderPlayerList);
                         if (ladder.Count == result.Total || result.Entries.Count == 0)
