@@ -31,6 +31,7 @@ import { DependencyStatus } from '../interfaces/dependency-status.interface';
 import * as depStatusActions from '../../store/dependency-status/dependency-status.actions';
 import { ErrorType, RequestError } from '../interfaces/error.interface';
 import { ItemHelper } from '../helpers/item.helper';
+import * as moment from 'moment';
 
 @Injectable()
 export class IncomeService implements OnDestroy {
@@ -115,8 +116,8 @@ export class IncomeService implements OnDestroy {
 
     this.externalService.snapshottingFailed = false;
 
-    const oneDayAgo = (Date.now() - (24 * 60 * 60 * 1000));
-    const twoWeeksAgo = (Date.now() - (1 * 60 * 60 * 24 * 14 * 1000));
+    const oneDayAgo = moment().utc().subtract(1, 'days');
+    const twoWeeksAgo = moment().utc().subtract(2, 'weeks');
 
     this.loadSnapshotsFromSettings();
 
@@ -140,7 +141,7 @@ export class IncomeService implements OnDestroy {
 
         if (!this.externalService.snapshottingFailed) {
           this.netWorthHistory.history = this.netWorthHistory.history
-            .filter((snaphot: NetWorthSnapshot) => snaphot.timestamp > twoWeeksAgo);
+            .filter((snaphot: NetWorthSnapshot) => moment(snaphot.timestamp).isAfter(moment(twoWeeksAgo)));
 
           this.netWorthHistory.lastSnapshot = startTime;
 
@@ -154,7 +155,7 @@ export class IncomeService implements OnDestroy {
           }
 
           const snapShot: NetWorthSnapshot = {
-            timestamp: Date.now(),
+            timestamp: moment().utc().unix(),
             value: this.totalNetWorth,
             items: this.totalNetWorthItems,
           };

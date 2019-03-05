@@ -1,7 +1,7 @@
 import { Component, Input, OnDestroy, OnInit, ViewChild, EventEmitter, Output, NgZone } from '@angular/core';
 import { MatSort, MatTableDataSource, MatPaginator } from '@angular/material';
 import { Subscription } from 'rxjs/internal/Subscription';
-
+import * as moment from 'moment';
 import { NetWorthItem, NetWorthSnapshot } from '../../../shared/interfaces/income.interface';
 import { Player } from '../../../shared/interfaces/player.interface';
 import { PartyService } from '../../../shared/providers/party.service';
@@ -160,9 +160,9 @@ export class NetworthTableComponent implements OnInit, OnDestroy {
     if (this.showOverTime) {
 
       const gainHours = this.settingsService.get('gainHours');
-      const xHoursAgo = (Date.now() - (gainHours * 60 * 60 * 1000));
+      const xHoursAgo = moment().utc().subtract(gainHours, 'hours');
       const pastHoursSnapshots = player.netWorthSnapshots
-        .filter((snaphot: NetWorthSnapshot) => snaphot.timestamp > xHoursAgo);
+        .filter((snaphot: NetWorthSnapshot) => moment(snaphot.timestamp).isAfter(xHoursAgo));
 
       if (pastHoursSnapshots.length > 1) {
         const firstSnapshot = pastHoursSnapshots[pastHoursSnapshots.length - 1];

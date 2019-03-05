@@ -13,7 +13,7 @@ import { AccountService } from './account.service';
 import { ExternalService } from './external.service';
 import { LogMonitorService } from './log-monitor.service';
 import { SettingsService } from './settings.service';
-
+import * as moment from 'moment';
 import { LogMessage } from '../interfaces/log-message.interface';
 import { LogService } from './log.service';
 import { ElectronService } from './electron.service';
@@ -444,9 +444,9 @@ export class PartyService implements OnDestroy {
 
   updatePartyGainForPlayer(player: Player) {
     const gainHours = this.settingsService.get('gainHours');
-    const xHoursAgo = (Date.now() - (gainHours * 60 * 60 * 1000));
+    const xHoursAgo = moment().utc().subtract(gainHours, 'hours');
     const pastHoursSnapshots = player.netWorthSnapshots
-      .filter((snaphot: NetWorthSnapshot) => snaphot.timestamp > xHoursAgo);
+      .filter((snapshot: NetWorthSnapshot) => moment(snapshot.timestamp).isAfter(xHoursAgo));
 
     if (pastHoursSnapshots.length > 1) {
       const lastSnapshot = pastHoursSnapshots[0];
@@ -518,6 +518,7 @@ export class PartyService implements OnDestroy {
 
   public updatePlayer(player: Player, reason: string = null) {
     const oneDayAgo = (Date.now() - (24 * 60 * 60 * 1000));
+    const oneDayAgoMoment = moment().subtract(1, 'days');
     this.updateInProgress = true;
 
     let objToSend = Object.assign({}, player);
@@ -542,7 +543,7 @@ export class PartyService implements OnDestroy {
           }
 
           objToSend.pastAreas = HistoryHelper.filterAreas(objToSend.pastAreas, oneDayAgo);
-          objToSend.netWorthSnapshots = HistoryHelper.filterNetworth(objToSend.netWorthSnapshots, oneDayAgo);
+          objToSend.netWorthSnapshots = HistoryHelper.filterNetworth(objToSend.netWorthSnapshots, oneDayAgoMoment);
           this.invokeUpdatePlayer(objToSend);
         });
     } else { // only invoke if we are offline, without re-setting items
@@ -639,7 +640,8 @@ export class PartyService implements OnDestroy {
     this.party.name = partyName;
     if (this._hubConnection) {
       const oneDayAgo = (Date.now() - (24 * 60 * 60 * 1000));
-      const historyToSend = HistoryHelper.filterNetworth(playerToSend.netWorthSnapshots, oneDayAgo);
+      const oneDayAgoMoment = moment().subtract(1, 'days');
+      const historyToSend = HistoryHelper.filterNetworth(playerToSend.netWorthSnapshots, oneDayAgoMoment);
       const areasToSend = HistoryHelper.filterAreas(playerToSend.pastAreas, oneDayAgo);
       playerToSend.netWorthSnapshots = historyToSend;
       playerToSend.pastAreas = areasToSend;
