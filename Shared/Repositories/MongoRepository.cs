@@ -7,6 +7,7 @@ using MongoDB.Driver;
 using Shared.Interfaces;
 using Shared.Models;
 using Shared.Models.Ladder;
+using Shared.Models.Log;
 using Shared.Models.SignalR;
 
 namespace Shared.Repositories
@@ -18,6 +19,7 @@ namespace Shared.Repositories
         private readonly IMongoCollection<PartyModel> _parties;
         private readonly IMongoCollection<PlayerModel> _players;
         private readonly IMongoCollection<LadderModel> _ladders;
+        private readonly IMongoCollection<PriceFluctuationModel> _fluctuations;
         private readonly IMongoCollection<ConnectionModel> _connections;
 
         private IConfiguration _configuration;
@@ -29,6 +31,7 @@ namespace Shared.Repositories
             _database = _client.GetDatabase("exilence");
             _parties = _database.GetCollection<PartyModel>("parties");
             _ladders = _database.GetCollection<LadderModel>("ladders");
+            _fluctuations = _database.GetCollection<PriceFluctuationModel>("pricefluctuations");
             _connections = _database.GetCollection<ConnectionModel>("connections");
         }
 
@@ -71,6 +74,11 @@ namespace Shared.Repositories
         public async Task CreateParty(PartyModel party)
         {
             await _parties.InsertOneAsync(party);
+        }
+
+        public async Task LogPriceFluctuations(List<PriceFluctuationModel> fluctuations)
+        {
+            await _fluctuations.InsertManyAsync(fluctuations);
         }
 
         public async Task AddPlayerToParty(string partyName, PlayerModel player)

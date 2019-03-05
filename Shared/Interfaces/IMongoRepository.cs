@@ -1,5 +1,6 @@
 ﻿using Shared.Models;
 using Shared.Models.Ladder;
+using Shared.Models.Log;
 using Shared.Models.SignalR;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -39,6 +40,10 @@ namespace Shared.Interfaces
         Task RemoveConnectionFromIndex(string connectionId);
         Task<ConnectionModel> GetPartyNameFromConnectionIndex(string connectionId);
         Task<ConnectionModel> UpdatePartyNameInConnectionIndex(string connectionId, string partyName);
+        #endregion
+
+        #region Other
+        Task LogPriceFluctuations(List<PriceFluctuationModel> fluctuations);
         #endregion
     }
 }

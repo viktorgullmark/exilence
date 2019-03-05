@@ -8,6 +8,8 @@ import { ExternalService } from './external.service';
 import { LogService } from './log.service';
 import { SettingsService } from './settings.service';
 import { Expression } from '@angular/compiler/src/output/output_ast';
+import { AppConfig } from '../../../environments/environment';
+import { PriceFluctuation } from '../interfaces/price-fluctuation.interface';
 
 @Injectable()
 
@@ -19,6 +21,8 @@ export class NinjaService {
   public previousNinjaPrices: NinjaPriceInfo[] = [];
   public ninjaPrices: NinjaPriceInfo[] = [];
   private lowConfidencePricing = false;
+
+  private priceFluctuations: PriceFluctuation[] = [];
 
   constructor(
     private http: HttpClient,
@@ -51,6 +55,13 @@ export class NinjaService {
             `Retrieved faulty price for ${price.name}:` +
             `${price.value}. Using previous price: ${previousPrice.value}`
           );
+
+          this.priceFluctuations.unshift({
+            itemName: price.name,
+            chaosEquiv: price.value,
+            totalChange: price.sparkLine.totalChange
+          } as PriceFluctuation);
+
           return previousPrice;
         }
       }
@@ -58,8 +69,17 @@ export class NinjaService {
     }
   }
 
+  sendPriceFluctuationsToServer() {
+    this.http.post(AppConfig.url + 'api/log/PriceFluctuation', this.priceFluctuations)
+      .subscribe(res => {
+        this.logService.log('Price fluctuations successfully sent to server');
+      }, (error) => {
+        this.logService.log('Could not send price fluctuations to server.', error, true);
+      });
+  }
+
   getValuesFromNinja(league: string) {
-    // todo: make sure to test that proper league is fetched here
+    this.priceFluctuations = [];
     const tenMinutesAgo = (Date.now() - (1 * 60 * 10 * 1000));
     const length = this.ninjaPrices.length;
     if (length > 0 && (this.lastNinjaHit > tenMinutesAgo && !this.externalService.tradeLeagueChanged)) {

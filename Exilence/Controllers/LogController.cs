@@ -3,6 +3,9 @@ using System.IO;
 using Shared.Helper;
 using Shared.Models.Log;
 using Microsoft.AspNetCore.Mvc;
+using Shared.Interfaces;
+using System.Threading.Tasks;
+using System.Collections.Generic;
 
 namespace Exilence.Controllers
 {
@@ -10,6 +13,13 @@ namespace Exilence.Controllers
     [ApiController]
     public class LogController : ControllerBase
     {
+        private IMongoRepository _repository;
+
+        public LogController(IMongoRepository repository)
+        {
+            _repository = repository;
+        }
+
         [HttpPost]
         [Route("")]
         public IActionResult Index([FromBody]LogModel log)
@@ -31,6 +41,15 @@ namespace Exilence.Controllers
             {
                 writer.WriteLine(decompressed);
             }
+            return Ok();
+        }
+
+        [HttpPost]
+        [Route("PriceFluctuation")]
+        public async Task<IActionResult> PriceFluctuation([FromBody]List<PriceFluctuationModel> priceFluctuations)
+        {
+            await _repository.LogPriceFluctuations(priceFluctuations);
+
             return Ok();
         }
     }

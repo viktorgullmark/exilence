@@ -348,6 +348,9 @@ export class IncomeService implements OnDestroy {
         // price converted items (e.g 6sockets -> jewellers)
         this.PriceItems(this.convertedItems, mapTab, undefined);
 
+        // send eventual price-fluctuations to server for logging
+        this.ninjaService.sendPriceFluctuationsToServer();
+
         this.totalNetWorthItems = ItemHelper.CombineNetworthItemStacks(this.totalNetWorthItems);
 
         this.totalNetWorthItems = this.filterItems(this.totalNetWorthItems);
