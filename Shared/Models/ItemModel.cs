@@ -35,6 +35,7 @@ namespace Shared.Models
         public List<string> CraftedMods { get; set; }
         public List<string> EnchantMods { get; set; }
         public List<string> UtilityMods { get; set; }
+        public List<string> FracturedMods { get; set; }
         public string DescrText { get; set; }
     }
 }

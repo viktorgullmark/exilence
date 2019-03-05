@@ -35,13 +35,16 @@
         <ng-container *ngIf="item.properties != undefined && item.properties.length > 0 && isWeapon(item.properties)">
             <div class="stats">
                 <div class="stat dps-total">
-                    <span class="stat-tag">DPS</span>&nbsp;:&nbsp;<span class="stat-value">{{getTotalDps(item.properties).toFixed(1)}}</span>
+                    <span class="stat-tag">DPS</span>&nbsp;:&nbsp;<span
+                        class="stat-value">{{getTotalDps(item.properties).toFixed(1)}}</span>
                 </div>
                 <div class="stat dps-phys">
-                    <span class="stat-tag">pDPS</span>&nbsp;:&nbsp;<span class="stat-value">{{getPhysDps(item.properties).toFixed(1)}}</span>
+                    <span class="stat-tag">pDPS</span>&nbsp;:&nbsp;<span
+                        class="stat-value">{{getPhysDps(item.properties).toFixed(1)}}</span>
                 </div>
                 <div class="stat dps-ele">
-                    <span class="stat-tag">eDPS</span>&nbsp;:&nbsp;<span class="stat-value">{{getEleDps(item.properties).toFixed(1)}}</span>
+                    <span class="stat-tag">eDPS</span>&nbsp;:&nbsp;<span
+                        class="stat-value">{{getEleDps(item.properties).toFixed(1)}}</span>
                 </div>
                 <br />
             </div>
@@ -57,7 +60,8 @@
                         </span>
                         <ng-container *ngIf="prop.values[0] != undefined">
                             :&nbsp;
-                            <span [ngClass]="{'generic-mod': prop.name == 'Quality' || prop.name == 'Energy Shield' || prop.name == 'Armour' || prop.name == 'Evasion Rating'}">{{prop.values[0][0]}}</span>
+                            <span
+                                [ngClass]="{'generic-mod': prop.name == 'Quality' || prop.name == 'Energy Shield' || prop.name == 'Armour' || prop.name == 'Evasion Rating'}">{{prop.values[0][0]}}</span>
                         </ng-container>
                     </span>
                     <br />
@@ -72,8 +76,8 @@
             <!-- properties -->
             <ng-container *ngFor="let prop of item.additionalProperties">
                 <ng-container *ngIf="prop.progress != undefined">
-                    <mat-progress-bar class="progress-bar gem-progress"
-                        color="primary" mode="determinate" [value]="prop.progress * 100">
+                    <mat-progress-bar class="progress-bar gem-progress" color="primary" mode="determinate"
+                        [value]="prop.progress * 100">
                     </mat-progress-bar>
                     <span>{{formatGemXP(prop.values[0][0])}}</span>
                 </ng-container>
@@ -87,12 +91,14 @@
                     <ng-container *ngIf="item.requirements[i+1] != undefined">, </ng-container>
                 </ng-container>
             </div>
-            <hr *ngIf="item.requirements != undefined && (item.implicitMods != undefined || item.enchantMods != undefined || item.explicitMods != undefined || item.craftedMods != undefined || !item.identified)">
+            <hr
+                *ngIf="item.requirements != undefined && (item.implicitMods != undefined || item.enchantMods != undefined || item.explicitMods != undefined || item.craftedMods != undefined || !item.identified)">
             <span *ngIf="item.identified != undefined && !item.identified" class="unidentified">Unidentified</span>
         </div>
         <ng-container *ngIf="item.secDescrText != undefined">
             <span class="descr-text descr-text-secondary mat-caption">{{item.secDescrText}}</span>
-            <hr *ngIf="item.implicitMods != undefined || item.enchantMods != undefined || item.explicitMods != undefined || item.craftedMods != undefined || !item.identified">
+            <hr
+                *ngIf="item.implicitMods != undefined || item.enchantMods != undefined || item.explicitMods != undefined || item.craftedMods != undefined || !item.identified">
         </ng-container>
         <div class="mods">
             <ng-container *ngFor="let mod of item.implicitMods">
@@ -106,7 +112,14 @@
                 </span>
                 <br />
             </ng-container>
-            <hr *ngIf="(item.implicitMods != undefined || item.enchantMods != undefined) && item.explicitMods != undefined">
+            <hr
+                *ngIf="(item.implicitMods != undefined || item.enchantMods != undefined) && item.explicitMods != undefined">
+            <ng-container *ngFor="let fracturedMod of item.fracturedMods">
+                <span class="fractured-mod">
+                    {{fracturedMod}}
+                </span>
+                <br />
+            </ng-container>
             <ng-container *ngFor="let mod of item.explicitMods">
                 <span *ngIf="item.frameType != 6" class="{{getExplicitModClass(mod)}}">{{mod}}
                     <br />

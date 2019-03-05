@@ -22,6 +22,7 @@ export interface Item {
     requirements: Array<Requirement>;
     implicitMods: Array<string>;
     explicitMods: Array<string>;
+    fracturedMods: Array<string>;
     frameType: number;
     x: number;
     y: number;
