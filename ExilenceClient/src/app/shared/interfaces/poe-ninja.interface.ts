@@ -86,6 +86,7 @@ export interface NinjaPriceInfo {
     frameType: number;
     totalStacksize: number;
     corrupted: boolean;
+    sparkLine: NinjaSparkLine;
 }
 
 export interface NinjaCurrencyDetail {

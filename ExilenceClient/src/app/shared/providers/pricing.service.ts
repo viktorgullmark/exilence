@@ -88,7 +88,7 @@ export class PricingService {
     // replace map name (price all maps as white) except for unique
     if ((item.frameType === 0 || item.frameType === 1 || item.frameType === 2) && item.typeLine.indexOf(' Map') > -1) {
       const mapTier = ItemHelper.getMapTier(item.properties);
-      const ninjaPriceInfoItem = this.ninjaService.ninjaPrices.find(
+      const ninjaPriceInfoItem = this.ninjaService.getPrice(
         x => (x.name === item.typeLine || item.typeLine.indexOf(x.name) > -1) && x.mapTier === mapTier
       );
       if (ninjaPriceInfoItem !== undefined) {
@@ -169,7 +169,7 @@ export class PricingService {
   pricecheckMap(name: string, properties: any[]): SimpleItemPricing { // (x.name === name || name.indexOf(x.name) > -1
     const mapTier = ItemHelper.getMapTier(properties);
 
-    const ninjaPriceInfoItem = this.ninjaService.ninjaPrices.find(x =>
+    const ninjaPriceInfoItem = this.ninjaService.getPrice(x =>
       (x.name === name || name.indexOf(x.name) > -1) && x.mapTier === mapTier);
 
     const watchPriceInfoItem = this.watchService.watchPrices.find(x =>
@@ -189,22 +189,22 @@ export class PricingService {
         quantity: 0
       };
     }
-    const ninjaPriceInfoItem = this.ninjaService.ninjaPrices.find(x => x.name === name);
+    const ninjaPriceInfoItem = this.ninjaService.getPrice(x => x.name === name);
     const watchPriceInfoItem = this.watchService.watchPrices.find(x => x.fullname === name);
     return this.combinePricesToSimpleObject(ninjaPriceInfoItem, watchPriceInfoItem);
   }
   priceCheckPropechy(name: string): SimpleItemPricing {
-    const ninjaPriceInfoItem = this.ninjaService.ninjaPrices.find(x => x.name === name && x.icon.indexOf('Currency') > -1);
+    const ninjaPriceInfoItem = this.ninjaService.getPrice(x => x.name === name && x.icon.indexOf('Currency') > -1);
     const watchPriceInfoItem = this.watchService.watchPrices.find(x => x.fullname === name && x.category === 'prophecy');
     return this.combinePricesToSimpleObject(ninjaPriceInfoItem, watchPriceInfoItem);
   }
   priceCheckDivinationCard(name: string): SimpleItemPricing {
-    const ninjaPriceInfoItem = this.ninjaService.ninjaPrices.find(x => x.name === name && x.icon.indexOf('Divination') > -1);
+    const ninjaPriceInfoItem = this.ninjaService.getPrice(x => x.name === name && x.icon.indexOf('Divination') > -1);
     const watchPriceInfoItem = this.watchService.watchPrices.find(x => x.fullname === name && x.category === 'card');
     return this.combinePricesToSimpleObject(ninjaPriceInfoItem, watchPriceInfoItem);
   }
   getTotalStacksize(name: string) {
-    const card = this.ninjaService.ninjaPrices.find(x => x.name === name && x.icon.indexOf('Divination') > -1);
+    const card = this.ninjaService.getPrice(x => x.name === name && x.icon.indexOf('Divination') > -1);
     let stacksize = 1;
     if (card !== undefined && card.totalStacksize !== undefined && card.totalStacksize !== 0) {
       stacksize = card.totalStacksize;
@@ -223,7 +223,7 @@ export class PricingService {
         quantity: 0
       };
     }
-    const ninjaPriceInfoItem = this.ninjaService.ninjaPrices.find(x =>
+    const ninjaPriceInfoItem = this.ninjaService.getPrice(x =>
       x.name === name &&
       x.links === links &&
       x.frameType === 3 &&
@@ -252,7 +252,7 @@ export class PricingService {
     };
   }
   pricecheckGem(name: string, level: number, quality: number, corrupted: boolean): SimpleItemPricing {
-    const ninjaPriceInfoItem = this.ninjaService.ninjaPrices.find(x => x.name === name
+    const ninjaPriceInfoItem = this.ninjaService.getPrice(x => x.name === name
       && x.gemLevel === level
       && x.corrupted === corrupted
       && x.gemQuality === quality);
@@ -278,7 +278,7 @@ export class PricingService {
       ilvl = 86;
     }
     // tslint:disable-next-line:max-line-length
-    const ninjaPriceInfoItem = this.ninjaService.ninjaPrices.find(x => x.baseType === baseType && x.itemlevel === ilvl && x.variation === variation);
+    const ninjaPriceInfoItem = this.ninjaService.getPrice(x => x.baseType === baseType && x.itemlevel === ilvl && x.variation === variation);
     const watchPriceInfoItem = this.watchService.watchPrices.find(x => x.type === baseType && x.ilvl === ilvl && x.variation === variation);
     return this.combinePricesToSimpleObject(ninjaPriceInfoItem, watchPriceInfoItem);
   }

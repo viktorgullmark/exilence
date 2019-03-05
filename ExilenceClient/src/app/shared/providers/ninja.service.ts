@@ -37,8 +37,25 @@ export class NinjaService {
   }
 
   getPrice(expression: Predicate<NinjaPriceInfo>) {
-    const price = this.ninjaPrices.find(expression);
-    // todo: decide which price-array to use, depending on likelihood-check
+    if (this.ninjaPrices.length > 0) {
+      const price = this.ninjaPrices.find(expression);
+
+      if (price !== undefined &&
+        this.previousNinjaPrices.length > 0 &&
+        price.sparkLine !== undefined &&
+        price.value > 0) {
+        // if diff by 500%, assume price received was faulty
+        if (price.sparkLine.totalChange > 500 || price.sparkLine.totalChange < -500) {
+          const previousPrice = this.previousNinjaPrices.find(expression);
+          this.logService.log(
+            `Retrieved faulty price for ${price.name}:` +
+            `${price.value}. Using previous price: ${previousPrice.value}`
+          );
+          return previousPrice;
+        }
+      }
+      return price;
+    }
   }
 
   getValuesFromNinja(league: string) {
@@ -109,6 +126,23 @@ export class NinjaService {
               if ('links' in line) {
                 links = line.links;
               }
+
+              // assign proper sparkline to price
+              let sparkLine;
+              if (this.lowConfidencePricing) {
+                if (line.lowConfidenceReceiveSparkLine !== undefined) {
+                  sparkLine = line.lowConfidenceReceiveSparkLine;
+                } else {
+                  sparkLine = line.lowConfidenceSparkLine;
+                }
+              } else {
+                if (line.receiveSparkLine !== undefined) {
+                  sparkLine = line.receiveSparkLine;
+                } else {
+                  sparkLine = line.sparkLine;
+                }
+              }
+
               if (name !== '') {
                 const ninjaPriceInfoObj = {
                   value: value,
@@ -122,7 +156,8 @@ export class NinjaService {
                   icon: line.icon,
                   mapTier: line.mapTier,
                   frameType: line.itemClass,
-                  totalStacksize: line.stackSize
+                  totalStacksize: line.stackSize,
+                  sparkLine: sparkLine
                 } as NinjaPriceInfo;
 
                 this.ninjaPrices.push(ninjaPriceInfoObj);
