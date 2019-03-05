@@ -8,6 +8,7 @@ All notable changes to this project will be documented in this file.
 - Added the calculated price from https://poe.ninja to the on-hover pricing tooltip
 - Added better pricing accuracy, to avoid net worth fluctuations
     - Some prices from poe.ninja are falsely elevated, a check has now been added that uses the previous price if this happens
+    - Logging has been added for falsely elevated prices
 
 ### Changed
 - Minor changes to the export-functionality has been done
