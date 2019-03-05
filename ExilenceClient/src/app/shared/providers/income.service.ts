@@ -141,7 +141,7 @@ export class IncomeService implements OnDestroy {
 
         if (!this.externalService.snapshottingFailed) {
           this.netWorthHistory.history = this.netWorthHistory.history
-            .filter((snaphot: NetWorthSnapshot) => moment(snaphot.timestamp).isAfter(moment(twoWeeksAgo)));
+            .filter((snaphot: NetWorthSnapshot) => moment.unix(snaphot.timestamp).utc().isAfter(moment(twoWeeksAgo)));
 
           this.netWorthHistory.lastSnapshot = startTime;
 
@@ -409,7 +409,7 @@ export class IncomeService implements OnDestroy {
 
   getPlayerStashTabs(accountName: string, localLeague: string) {
 
-    this.logService.log('[INFO] Retriving stashtabs from official site api');
+    this.logService.log('Retriving stashtabs from official site api');
 
     const league = this.settingsService.getCurrentLeague();
     let selectedStashTabs: StashStore[];

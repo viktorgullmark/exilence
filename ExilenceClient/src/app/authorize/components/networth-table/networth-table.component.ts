@@ -162,7 +162,7 @@ export class NetworthTableComponent implements OnInit, OnDestroy {
       const gainHours = this.settingsService.get('gainHours');
       const xHoursAgo = moment().utc().subtract(gainHours, 'hours');
       const pastHoursSnapshots = player.netWorthSnapshots
-        .filter((snaphot: NetWorthSnapshot) => moment(snaphot.timestamp).isAfter(xHoursAgo));
+        .filter((snaphot: NetWorthSnapshot) => moment.unix(snaphot.timestamp).utc().isAfter(xHoursAgo));
 
       if (pastHoursSnapshots.length > 1) {
         const firstSnapshot = pastHoursSnapshots[pastHoursSnapshots.length - 1];

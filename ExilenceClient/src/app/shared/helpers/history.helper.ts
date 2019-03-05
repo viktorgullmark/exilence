@@ -5,7 +5,8 @@ import * as moment from 'moment';
 export class HistoryHelper {
     public static filterNetworth(networth: NetWorthSnapshot[], timestamp: moment.Moment) {
         let history = Object.assign([], networth);
-        history = history.filter((snapshot: NetWorthSnapshot) => moment(snapshot.timestamp).isAfter(timestamp));
+
+        history = history.filter((snapshot: NetWorthSnapshot) => moment.unix(snapshot.timestamp).isAfter(timestamp));
         if (history.length === 0) {
             history = [{
                 timestamp: 0,
