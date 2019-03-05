@@ -43,23 +43,8 @@ export interface NinjaReceive {
     includes_secondary: boolean;
 }
 
-export interface NinjaPaySparkLine {
-    data: any[];
-    totalChange: number;
-}
-
-export interface NinjaReceiveSparkLine {
+export interface NinjaSparkLine {
     data: number[];
-    totalChange: number;
-}
-
-export interface NinjaLowConfidencePaySparkLine {
-    data: any[];
-    totalChange: number;
-}
-
-export interface NinjaLowConfidenceReceiveSparkLine {
-    data: any[];
     totalChange: number;
 }
 
@@ -81,6 +66,10 @@ export interface NinjaLine {
     itemClass?: number;
     stackSize?: number;
     corrupted?: boolean;
+    lowConfidenceReceiveSparkLine?: NinjaSparkLine;
+    receiveSparkLine?: NinjaSparkLine;
+    sparkLine?: NinjaSparkLine;
+    lowConfidenceSparkLine?: NinjaSparkLine;
 }
 
 export interface NinjaPriceInfo {
@@ -97,6 +86,7 @@ export interface NinjaPriceInfo {
     frameType: number;
     totalStacksize: number;
     corrupted: boolean;
+    sparkLine: NinjaSparkLine;
 }
 
 export interface NinjaCurrencyDetail {
