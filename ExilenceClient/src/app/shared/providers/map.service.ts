@@ -112,7 +112,7 @@ export class MapService implements OnDestroy {
     const networthItems: NetWorthItem[] = [];
     const convertedItems: Item[] = [];
     items.forEach((item: Item) => {
-      if (ItemHelper.isSixSocket(item)) {
+      if (ItemHelper.isNonUniqueSixSocket(item)) {
         convertedItems.push(ItemHelper.generateJewellersOrb());
       }
       const pricedItem = ItemHelper.toNetworthItem(item, this.pricingService.priceItem(item));

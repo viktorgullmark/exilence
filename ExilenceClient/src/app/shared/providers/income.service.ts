@@ -190,7 +190,7 @@ export class IncomeService implements OnDestroy {
   PriceItems(items: Item[], mapTabSelected: boolean = false, mapLayout: any) {
     // todo: base prices on this league
     for (const item of items) {
-      if (ItemHelper.isSixSocket(item)) {
+      if (ItemHelper.isNonUniqueSixSocket(item)) {
         this.convertedItems.push(ItemHelper.generateJewellersOrb());
       }
 
@@ -324,6 +324,8 @@ export class IncomeService implements OnDestroy {
           this.mapPricing = true;
           this.settingsService.set('mapPricing', this.mapPricing);
         }
+
+        this.convertedItems = [];
 
         if (this.characterPricing) { // price equipment
           this.PriceItems(this.localPlayer.character.items.filter(x => x.inventoryId !== 'MainInventory'), mapTab, undefined);

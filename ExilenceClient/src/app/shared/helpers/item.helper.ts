@@ -24,10 +24,11 @@ export class ItemHelper {
         }
         return itemName.replace('<<set:MS>><<set:M>><<set:S>>', '').trim();
     }
-    public static isSixSocket(item: Item): boolean {
+    public static isNonUniqueSixSocket(item: Item): boolean {
         if (item.sockets !== undefined &&
             item.sockets !== null &&
             item.sockets.length === 6 &&
+            this.getLinks(item.sockets) < 6 &&
             (item.frameType === 0 ||
                 item.frameType === 1 ||
                 item.frameType === 2)

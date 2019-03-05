@@ -9,6 +9,10 @@ All notable changes to this project will be documented in this file.
 - Added better pricing accuracy, to avoid net worth fluctuations
     - Some prices from poe.ninja are falsely elevated, a check has now been added that uses the previous price if this happens
 
+### Fixed
+- Fixed a bug where six-socketed items would get added to the total net worth on every snapshot
+- Fixed a bug where links were not considered when pricing six-sockets
+
 ## [0.9.24] - 2019-03-04
 ### Fixed
 - Fixed a bug where net worth snapshotting would crash with certain items
