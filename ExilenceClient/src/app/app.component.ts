@@ -34,7 +34,7 @@ export class AppComponent implements OnDestroy {
   private alertSub: Subscription;
   private errorShown = false;
   public statusTooltipContent = '';
-
+  private offlineModalOpen = false;
   private depStatusStoreSub: Subscription;
   private depStatuses: Array<DependencyStatus> = [];
   private allDepStatuses$: Observable<DependencyStatus[]>;
@@ -64,8 +64,9 @@ export class AppComponent implements OnDestroy {
 
       // pathofexile is down
       const poe = this.depStatuses.find(s => s.name === 'pathofexile');
-      if (!poe.online && !this.errorShown && router.url !== '/login') {
+      if (!poe.online && !this.errorShown && !this.offlineModalOpen && router.url !== '/login') {
         this.errorShown = true;
+        this.offlineModalOpen = true;
         this.openErrorMsgDialog({
           title: 'pathofexile.com could not be reached',
           // tslint:disable-next-line:max-line-length
@@ -162,6 +163,7 @@ export class AppComponent implements OnDestroy {
         }
       });
       dialogRef.afterClosed().subscribe(result => {
+        this.offlineModalOpen = false;
       });
     }, 0);
   }

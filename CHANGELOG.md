@@ -12,6 +12,7 @@ All notable changes to this project will be documented in this file.
 ### Fixed
 - Fixed a bug where six-socketed items would get added to the total net worth on every snapshot
 - Fixed a bug where links were not considered when pricing six-sockets
+- Fixed a bug where the offline-mode modal would open multiple times
 
 ## [0.9.24] - 2019-03-04
 ### Fixed
