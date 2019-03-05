@@ -167,7 +167,7 @@ export class AreaSummaryComponent implements OnInit, OnDestroy {
       }
 
       if (x.tier === null || x.tier === undefined) {
-        x.tier = 0;
+        x.tier = 'N/A';
       }
 
       return {

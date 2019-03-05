@@ -9,6 +9,11 @@ All notable changes to this project will be documented in this file.
 - Added better pricing accuracy, to avoid net worth fluctuations
     - Some prices from poe.ninja are falsely elevated, a check has now been added that uses the previous price if this happens
 
+### Changed
+- Minor changes to the export-functionality has been done
+    - Fields are now separated by comma instead of ";" in the exports for both areas and net worth
+    - Replaced null values with "N/A" for area-level
+
 ### Fixed
 - Fixed a bug where six-socketed items would get added to the total net worth on every snapshot
 - Fixed a bug where links were not considered when pricing six-sockets
