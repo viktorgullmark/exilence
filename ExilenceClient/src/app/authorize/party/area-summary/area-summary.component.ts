@@ -30,7 +30,7 @@ export class AreaSummaryComponent implements OnInit, OnDestroy {
   private partySub: Subscription;
   dataSource = [];
   tableData = [];
-;
+  ;
   public selectedLocalValue: string;
 
   @ViewChild('playerDd') playerDd: MatSelect;
@@ -131,7 +131,7 @@ export class AreaSummaryComponent implements OnInit, OnDestroy {
   }
   export() {
     const options = {
-      fieldSeparator: ';',
+      fieldSeparator: ',',
       quoteStrings: '"',
       decimalseparator: '.',
       showLabels: true,
@@ -164,6 +164,10 @@ export class AreaSummaryComponent implements OnInit, OnDestroy {
       let itemString = '';
       if (x.items !== undefined) {
         itemString = x.items.map(t => t.name).join(', ');
+      }
+
+      if (x.tier === null || x.tier === undefined) {
+        x.tier = 0;
       }
 
       return {

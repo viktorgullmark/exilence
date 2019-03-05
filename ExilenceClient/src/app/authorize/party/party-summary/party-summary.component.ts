@@ -197,7 +197,7 @@ export class PartySummaryComponent implements OnInit, OnDestroy {
 
   export() {
     const options = {
-      fieldSeparator: ';',
+      fieldSeparator: ',',
       quoteStrings: '"',
       decimalseparator: '.',
       showLabels: true,
