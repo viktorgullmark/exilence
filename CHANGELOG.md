@@ -1,6 +1,10 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [0.9.25] - 2019-03-XX
+### Added
+- Added the calculated price from https://poe.ninja to the on-hover pricing tooltip
+
 ## [0.9.24] - 2019-03-04
 ### Fixed
 - Fixed a bug where net worth snapshotting would crash with certain items

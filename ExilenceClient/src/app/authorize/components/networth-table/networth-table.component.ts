@@ -119,7 +119,7 @@ export class NetworthTableComponent implements OnInit, OnDestroy {
     const quantity = item.quantity !== undefined ? item.quantity.toFixed(2) : 0; // TODO: Check why quantity is 0
 
     // tslint:disable-next-line:max-line-length
-    return `Min: ${min}\nMax: ${max}\nMode: ${mode}\nMedian: ${median}\nAverage: ${average}\n`;
+    return `Min: ${min}\nMax: ${max}\nMode: ${mode}\nMedian: ${median}\nAverage: ${average}\nCalculated: ${item.valuePerUnit}`;
   }
 
   doSearch(text: string) {
