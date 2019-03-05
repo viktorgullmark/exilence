@@ -45,8 +45,8 @@ namespace Exilence.Controllers
         }
 
         [HttpPost]
-        [Route("PriceFluctuation")]
-        public async Task<IActionResult> PriceFluctuation([FromBody]List<PriceFluctuationModel> priceFluctuations)
+        [Route("PriceFluctuations")]
+        public async Task<IActionResult> PriceFluctuations([FromBody]List<PriceFluctuationModel> priceFluctuations)
         {
             await _repository.LogPriceFluctuations(priceFluctuations);
 

@@ -2,7 +2,7 @@ import { DatePipe } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { Injectable, Predicate } from '@angular/core';
 import { Observable } from 'rxjs';
-
+import * as moment from 'moment';
 import { NinjaLine, NinjaPriceInfo, NinjaResponse, NinjaTypes } from '../interfaces/poe-ninja.interface';
 import { ExternalService } from './external.service';
 import { LogService } from './log.service';
@@ -59,7 +59,8 @@ export class NinjaService {
           this.priceFluctuations.unshift({
             itemName: price.name,
             chaosEquiv: price.value,
-            totalChange: price.sparkLine.totalChange
+            totalChange: price.sparkLine.totalChange,
+            timestamp: moment().utc().unix()
           } as PriceFluctuation);
 
           return previousPrice;
@@ -70,7 +71,7 @@ export class NinjaService {
   }
 
   sendPriceFluctuationsToServer() {
-    this.http.post(AppConfig.url + 'api/log/PriceFluctuation', this.priceFluctuations)
+    this.http.post(AppConfig.url + 'api/log/PriceFluctuations', this.priceFluctuations)
       .subscribe(res => {
         this.logService.log('Price fluctuations successfully sent to server');
       }, (error) => {
