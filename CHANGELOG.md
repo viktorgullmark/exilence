@@ -6,6 +6,8 @@ All notable changes to this project will be documented in this file.
 - Added support for fractured mods to the item-display
 - Added support for the new atlas in Synthesis
 - Added the calculated price from https://poe.ninja to the on-hover pricing tooltip
+- Added better pricing accuracy, to avoid net worth fluctuations
+    - Some prices from poe.ninja are falsely elevated, a check has now been added that uses the previous price if this happens
 
 ## [0.9.24] - 2019-03-04
 ### Fixed
