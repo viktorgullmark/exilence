@@ -1,12 +1,13 @@
 import { DatePipe } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import { Injectable, Predicate } from '@angular/core';
 import { Observable } from 'rxjs';
 
 import { NinjaLine, NinjaPriceInfo, NinjaResponse, NinjaTypes } from '../interfaces/poe-ninja.interface';
 import { ExternalService } from './external.service';
 import { LogService } from './log.service';
 import { SettingsService } from './settings.service';
+import { Expression } from '@angular/compiler/src/output/output_ast';
 
 @Injectable()
 
@@ -15,6 +16,7 @@ export class NinjaService {
   private itemUrl = 'https://poe.ninja/api/data/itemoverview';
   private currencyUrl = 'https://poe.ninja/api/data/currencyoverview';
   private lastNinjaHit: number;
+  public previousNinjaPrices: NinjaPriceInfo[] = [];
   public ninjaPrices: NinjaPriceInfo[] = [];
   private lowConfidencePricing = false;
 
@@ -34,6 +36,11 @@ export class NinjaService {
     return this.http.get<NinjaResponse>(url);
   }
 
+  getPrice(expression: Predicate<NinjaPriceInfo>) {
+    const price = this.ninjaPrices.find(expression);
+    // todo: decide which price-array to use, depending on likelihood-check
+  }
+
   getValuesFromNinja(league: string) {
     // todo: make sure to test that proper league is fetched here
     const tenMinutesAgo = (Date.now() - (1 * 60 * 10 * 1000));
@@ -43,6 +50,8 @@ export class NinjaService {
     } else {
       this.logService.log('[INFO] Retrieving prices from poe.ninja');
       this.lastNinjaHit = Date.now();
+
+      this.previousNinjaPrices = [...this.ninjaPrices];
       this.ninjaPrices = [];
 
       const setting = this.settingsService.get('lowConfidencePricing');
