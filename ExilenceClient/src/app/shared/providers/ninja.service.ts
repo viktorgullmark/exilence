@@ -71,12 +71,14 @@ export class NinjaService {
   }
 
   sendPriceFluctuationsToServer() {
-    this.http.post(AppConfig.url + 'api/log/PriceFluctuations', this.priceFluctuations)
-      .subscribe(res => {
-        this.logService.log('Price fluctuations successfully sent to server');
-      }, (error) => {
-        this.logService.log('Could not send price fluctuations to server.', error, true);
-      });
+    if (this.priceFluctuations.length > 0) {
+      this.http.post(AppConfig.url + 'api/log/PriceFluctuations', this.priceFluctuations)
+        .subscribe(res => {
+          this.logService.log('Price fluctuations successfully sent to server');
+        }, (error) => {
+          this.logService.log('Could not send price fluctuations to server.', error, true);
+        });
+    }
   }
 
   getValuesFromNinja(league: string) {
