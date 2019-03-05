@@ -522,6 +522,11 @@ export class PartyService implements OnDestroy {
 
     let objToSend = Object.assign({}, player);
 
+    for (let i = 1; i < objToSend.netWorthSnapshots.length; i++) {
+      const snapshot = objToSend.netWorthSnapshots[i];
+      snapshot.items = [];
+    }
+
     if (this.poeOnline) {
       this.externalService.getCharacterInventory(this.accountInfo.accountName, this.accountInfo.characterName)
         .subscribe((equipment: EquipmentResponse) => {
@@ -622,6 +627,12 @@ export class PartyService implements OnDestroy {
 
   public joinParty(partyName: string, spectatorCode: string, player: Player) {
     const playerToSend = Object.assign({}, player);
+
+    for (let i = 1; i < playerToSend.netWorthSnapshots.length; i++) {
+      const snapshot = playerToSend.netWorthSnapshots[i];
+      snapshot.items = [];
+    }
+
     this.isEntering = true;
     this.initParty();
     this.party.players.push(player);
