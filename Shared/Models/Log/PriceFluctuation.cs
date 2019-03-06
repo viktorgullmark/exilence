@@ -3,8 +3,8 @@
     public class PriceFluctuationModel
     {
         public string ItemName { get; set; }
-        public int TotalChange { get; set; }
-        public int ChaosEquiv { get; set; }
+        public decimal TotalChange { get; set; }
+        public decimal ChaosEquiv { get; set; }
         public long Timestamp { get; set; }
     }
 }

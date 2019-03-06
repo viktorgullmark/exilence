@@ -72,7 +72,7 @@ export class NinjaService {
 
   sendPriceFluctuationsToServer() {
     if (this.priceFluctuations.length > 0) {
-      this.http.post(AppConfig.url + 'api/log/PriceFluctuations', this.priceFluctuations)
+      this.http.post(AppConfig.url + 'log/PriceFluctuations', this.priceFluctuations)
         .subscribe(res => {
           this.logService.log('Price fluctuations successfully sent to server');
         }, (error) => {

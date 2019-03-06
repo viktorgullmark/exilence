@@ -9,7 +9,7 @@ using System.Collections.Generic;
 
 namespace Exilence.Controllers
 {
-    [Route("[controller]")]
+    [Route("api/[controller]")]
     [ApiController]
     public class LogController : ControllerBase
     {
