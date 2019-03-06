@@ -394,7 +394,7 @@ export class PartyService implements OnDestroy {
     this.party.players = this.party.players.filter(x => x.connectionID !== player.connectionID);
 
     // if last player leaves, kick self to login screen
-    if (this.party.players.find(x => !x.isSpectator) === undefined) {
+    if (this.party.players.find(x => !x.isSpectator) === undefined && this.currentPlayer.isSpectator) {
       this.leaveParty(this.party.name, this.party.spectatorCode, this.currentPlayer);
       const errorMsg = {
         title: 'Information',
