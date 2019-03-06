@@ -214,7 +214,7 @@ export class IncomeComponent implements OnInit, OnDestroy {
     }
 
     const entry: ChartSeries = {
-      name: playerObj.character.name + ' (' + moment.unix(playerObj.netWorthSnapshots[0].timestamp).utc().fromNow() + ')',
+      name: playerObj.character.name + ' (' + moment.unix(playerObj.netWorthSnapshots[0].timestamp).fromNow() + ')',
       series: playerObj.netWorthSnapshots.map(snapshot => {
         const seriesEntry: ChartSeriesEntry = {
           name: moment.unix(snapshot.timestamp).toDate(),
