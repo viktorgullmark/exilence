@@ -579,7 +579,7 @@ export class PartyService implements OnDestroy {
   }
 
   public getLadderForLeague(league: string) {
-    return this._hubConnection.invoke('GetLadderForLeague', league).then((response) => {
+    this._hubConnection.invoke('GetLadderForLeague', league).then((response) => {
       this.electronService.decompress(response, (ladder: LadderPlayer[]) => {
 
         const found = this.playerLadders.find(l => l.name === league);
