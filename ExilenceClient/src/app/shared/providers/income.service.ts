@@ -31,6 +31,7 @@ import { DependencyStatus } from '../interfaces/dependency-status.interface';
 import * as depStatusActions from '../../store/dependency-status/dependency-status.actions';
 import { ErrorType, RequestError } from '../interfaces/error.interface';
 import { ItemHelper } from '../helpers/item.helper';
+import * as moment from 'moment';
 
 @Injectable()
 export class IncomeService implements OnDestroy {
@@ -116,8 +117,8 @@ export class IncomeService implements OnDestroy {
 
     this.externalService.snapshottingFailed = false;
 
-    const oneDayAgo = (Date.now() - (24 * 60 * 60 * 1000));
-    const twoWeeksAgo = (Date.now() - (1 * 60 * 60 * 24 * 14 * 1000));
+    const oneDayAgo = moment().utc().subtract(1, 'days');
+    const twoWeeksAgo = moment().utc().subtract(2, 'weeks');
 
     this.loadSnapshotsFromSettings();
 
@@ -141,7 +142,7 @@ export class IncomeService implements OnDestroy {
 
         if (!this.externalService.snapshottingFailed) {
           this.netWorthHistory.history = this.netWorthHistory.history
-            .filter((snaphot: NetWorthSnapshot) => snaphot.timestamp > twoWeeksAgo);
+            .filter((snaphot: NetWorthSnapshot) => moment.unix(snaphot.timestamp).utc().isAfter(moment(twoWeeksAgo)));
 
           this.netWorthHistory.lastSnapshot = startTime;
 
@@ -155,14 +156,12 @@ export class IncomeService implements OnDestroy {
           }
 
           const snapShot: NetWorthSnapshot = {
-            timestamp: Date.now(),
+            timestamp: moment().utc().unix(),
             value: this.totalNetWorth,
             items: this.totalNetWorthItems,
           };
 
           this.netWorthHistory.history.unshift(snapShot);
-
-          const historyToSend = HistoryHelper.filterNetworth(this.netWorthHistory.history, oneDayAgo);
 
           this.accountService.player.next(this.localPlayer);
 
@@ -173,7 +172,7 @@ export class IncomeService implements OnDestroy {
           }
 
           const objToSend = Object.assign({}, this.localPlayer);
-          objToSend.netWorthSnapshots = historyToSend;
+          objToSend.netWorthSnapshots = this.netWorthHistory.history;
           this.partyService.updatePlayer(objToSend);
 
           const endTime = Date.now();
@@ -420,7 +419,7 @@ export class IncomeService implements OnDestroy {
 
   getPlayerStashTabs(accountName: string, localLeague: string) {
 
-    this.logService.log('[INFO] Retriving stashtabs from official site api');
+    this.logService.log('Retriving stashtabs from official site api');
 
     const league = this.settingsService.getCurrentLeague();
     let selectedStashTabs: StashStore[];

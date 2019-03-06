@@ -97,7 +97,7 @@ export class NinjaService {
     if (length > 0 && (this.lastNinjaHit > tenMinutesAgo && !this.externalService.tradeLeagueChanged)) {
       return Observable.of(null);
     } else {
-      this.logService.log('[INFO] Retrieving prices from poe.ninja');
+      this.logService.log('Retrieving prices from poe.ninja');
       this.lastNinjaHit = Date.now();
 
       this.previousNinjaPrices = [...this.ninjaPrices];

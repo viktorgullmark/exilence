@@ -18,11 +18,17 @@ All notable changes to this project will be documented in this file.
     - Fields are now separated by comma instead of ";" in the exports for both areas and net worth
     - Replaced null values with "N/A" for area-level
 
+### Changed
+- Changed how timestamps are handled for net worth data
+    - Now uses moment for all comparisons
+    - Now converts to UTC when storing history (to support cross-region)
+
 ### Fixed
 - Fixed a bug where six-socketed items would get added to the total net worth on every snapshot
 - Fixed a bug where links were not considered when pricing six-sockets
 - Fixed a bug where the offline-mode modal would open multiple times
-- Fixed a bug where too much item-data was sent to the server
+- Fixed a bug where too much item-data was sent to the server (old snapshots were not cleared properly)
+- Fixed a bug where only one day of net worth history was sent to your group (instead of two weeks)
 
 ## [0.9.24] - 2019-03-04
 ### Fixed

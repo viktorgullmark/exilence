@@ -511,6 +511,13 @@ export class LoginComponent implements OnInit, OnDestroy {
 
     completeLogin() {
         this.player.account = this.form.accountName;
+
+        this.netWorthHistory.history.map(n => {
+            if (n.timestamp.toString().length === 13) {
+                n.timestamp = +n.timestamp.toString().slice(0, 10);
+            }
+        });
+
         this.player.netWorthSnapshots = this.netWorthHistory.history;
 
         const oneDayAgo = (Date.now() - (24 * 60 * 60 * 1000));

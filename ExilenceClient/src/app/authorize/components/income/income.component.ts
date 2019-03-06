@@ -203,8 +203,8 @@ export class IncomeComponent implements OnInit, OnDestroy {
       netWorthHistoryDays = 1;
     }
 
-    const daysAgo = (Date.now() - (netWorthHistoryDays * 24 * 60 * 60 * 1000));
-    playerObj.netWorthSnapshots = playerObj.netWorthSnapshots.filter(x => x.timestamp > daysAgo);
+    const daysAgo = moment().utc().subtract(netWorthHistoryDays, 'days');
+    playerObj.netWorthSnapshots = playerObj.netWorthSnapshots.filter(x => moment.unix(x.timestamp).utc().isAfter(daysAgo));
     if (playerObj.netWorthSnapshots.length === 0) {
       playerObj.netWorthSnapshots = [{
         timestamp: 0,
@@ -214,10 +214,10 @@ export class IncomeComponent implements OnInit, OnDestroy {
     }
 
     const entry: ChartSeries = {
-      name: playerObj.character.name + ' (' + moment(playerObj.netWorthSnapshots[0].timestamp).fromNow() + ')',
+      name: playerObj.character.name + ' (' + moment.unix(playerObj.netWorthSnapshots[0].timestamp).fromNow() + ')',
       series: playerObj.netWorthSnapshots.map(snapshot => {
         const seriesEntry: ChartSeriesEntry = {
-          name: new Date(snapshot.timestamp),
+          name: moment.unix(snapshot.timestamp).toDate(),
           value: snapshot.value,
           items: snapshot.items
         };
@@ -275,7 +275,7 @@ export class IncomeComponent implements OnInit, OnDestroy {
         netWorthHistory = character.networth;
       }
       const player = Object.assign({}, this.currentPlayer);
-      const foundSnapshot = player.netWorthSnapshots.find(x => x.timestamp === snapshot.name.getTime() &&
+      const foundSnapshot = player.netWorthSnapshots.find(x => x.timestamp === moment(snapshot.name).utc().unix() &&
         x.value === snapshot.value);
 
       if (foundSnapshot !== undefined) {
