@@ -1,7 +1,7 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
-## [0.9.25] - 2019-03-XX
+## [0.9.25] - 2019-03-06
 ### Added
 - Added support for fractured items
 - Added support for synthesised items
