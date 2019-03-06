@@ -109,10 +109,19 @@ export class MapService implements OnDestroy {
   }
 
   priceAndCombineInventory(items: Item[]): NetWorthItem[] {
+    let jewellerConversion;
+    const jewellerConversionSetting = this.settingsService.get('jewellerConversion');
+    if (jewellerConversionSetting !== undefined) {
+      jewellerConversion = jewellerConversionSetting;
+    } else {
+      jewellerConversion = true;
+      this.settingsService.set('jewellerConversion', jewellerConversion);
+    }
+
     const networthItems: NetWorthItem[] = [];
     const convertedItems: Item[] = [];
     items.forEach((item: Item) => {
-      if (ItemHelper.isNonUniqueSixSocket(item)) {
+      if (jewellerConversion && ItemHelper.isNonUniqueSixSocket(item)) {
         convertedItems.push(ItemHelper.generateJewellersOrb());
       }
       const pricedItem = ItemHelper.toNetworthItem(item, this.pricingService.priceItem(item));

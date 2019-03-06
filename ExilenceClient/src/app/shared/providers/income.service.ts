@@ -62,6 +62,7 @@ export class IncomeService implements OnDestroy {
   private depStatusStoreSub: Subscription;
   private poeOnline = true;
   private mapPricing = true;
+  private jewellerConversion = true;
 
   constructor(
     private ninjaService: NinjaService,
@@ -190,7 +191,7 @@ export class IncomeService implements OnDestroy {
   PriceItems(items: Item[], mapTabSelected: boolean = false, mapLayout: any) {
     // todo: base prices on this league
     for (const item of items) {
-      if (ItemHelper.isNonUniqueSixSocket(item)) {
+      if (this.jewellerConversion && ItemHelper.isNonUniqueSixSocket(item)) {
         this.convertedItems.push(ItemHelper.generateJewellersOrb());
       }
 
@@ -295,6 +296,14 @@ export class IncomeService implements OnDestroy {
     } else {
       this.inventoryPricing = true;
       this.settingsService.set('inventoryPricing', true);
+    }
+
+    const jewellerConversion = this.settingsService.get('jewellerConversion');
+    if (jewellerConversion !== undefined) {
+      this.jewellerConversion = jewellerConversion;
+    } else {
+      this.jewellerConversion = true;
+      this.settingsService.set('jewellerConversion', true);
     }
 
     const league = this.settingsService.getCurrentLeague();

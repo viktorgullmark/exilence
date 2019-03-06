@@ -11,6 +11,7 @@ All notable changes to this project will be documented in this file.
     - Logging has been added for falsely elevated prices
 - Added a new setting to disable automatic price updates
     - With automatic price updates turned off, prices will only be fetched on startup (snapshots still occurr, but with old prices)
+- Added a new setting to disable automatic 6-socket to jewellers conversion
 
 ### Changed
 - Minor changes to the export-functionality has been done

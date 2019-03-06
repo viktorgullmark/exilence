@@ -150,6 +150,11 @@
     <p class="setting-desc-text minus-margin-top">
       Choose how many hours back in history that should be used for "Gain per hour"
     </p>
+    <mat-checkbox class="setting-checkbox" [(ngModel)]="jewellerConversion" (ngModelChange)="toggleJewellerConversion()">
+        Convert 6-sockets to jewellers</mat-checkbox>
+      <p class="setting-desc-text">
+        Check this setting to automatically value 6-sockets as jeweller orbs
+      </p>
     <h3 class="mat-h4 setting-header new-section">History</h3>
     <mat-divider class="divider"></mat-divider>
 

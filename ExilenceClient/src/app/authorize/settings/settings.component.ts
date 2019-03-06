@@ -32,6 +32,7 @@ export class SettingsComponent implements OnInit, OnDestroy {
   gainHours = 1;
   netWorthHistoryDays = 14;
   automaticPricing = true;
+  jewellerConversion = true;
 
   @ViewChild('table') table: StashtabListComponent;
 
@@ -94,6 +95,11 @@ export class SettingsComponent implements OnInit, OnDestroy {
     const lowConfidencePricingSetting = this.settingsService.get('lowConfidencePricing');
     if (lowConfidencePricingSetting !== undefined) {
       this.lowConfidencePricing = lowConfidencePricingSetting;
+    }
+
+    const jewellerConversionSetting = this.settingsService.get('jewellerConversion');
+    if (jewellerConversionSetting !== undefined) {
+      this.jewellerConversion = jewellerConversionSetting;
     }
 
     const automaticPricingSetting = this.settingsService.get('automaticPricing');
@@ -200,6 +206,14 @@ export class SettingsComponent implements OnInit, OnDestroy {
       this.settingsService.set('lowConfidencePricing', true);
     } else {
       this.settingsService.set('lowConfidencePricing', false);
+    }
+  }
+
+  toggleJewellerConversion() {
+    if (this.jewellerConversion) {
+      this.settingsService.set('jewellerConversion', true);
+    } else {
+      this.settingsService.set('jewellerConversion', false);
     }
   }
 
