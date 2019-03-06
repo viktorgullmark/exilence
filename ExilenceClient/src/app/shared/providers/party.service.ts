@@ -543,7 +543,6 @@ export class PartyService implements OnDestroy {
           }
 
           objToSend.pastAreas = HistoryHelper.filterAreas(objToSend.pastAreas, oneDayAgo);
-          objToSend.netWorthSnapshots = HistoryHelper.filterNetworth(objToSend.netWorthSnapshots, oneDayAgoMoment);
           this.invokeUpdatePlayer(objToSend);
         });
     } else { // only invoke if we are offline, without re-setting items
@@ -640,10 +639,7 @@ export class PartyService implements OnDestroy {
     this.party.name = partyName;
     if (this._hubConnection) {
       const oneDayAgo = (Date.now() - (24 * 60 * 60 * 1000));
-      const oneDayAgoMoment = moment().utc().subtract(1, 'days');
-      const historyToSend = HistoryHelper.filterNetworth(playerToSend.netWorthSnapshots, oneDayAgoMoment);
       const areasToSend = HistoryHelper.filterAreas(playerToSend.pastAreas, oneDayAgo);
-      playerToSend.netWorthSnapshots = historyToSend;
       playerToSend.pastAreas = areasToSend;
       this.electronService.compress(playerToSend, (data) => this._hubConnection.invoke('JoinParty', partyName, spectatorCode, data));
     }

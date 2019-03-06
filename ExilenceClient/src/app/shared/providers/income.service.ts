@@ -162,8 +162,6 @@ export class IncomeService implements OnDestroy {
 
           this.netWorthHistory.history.unshift(snapShot);
 
-          const historyToSend = HistoryHelper.filterNetworth(this.netWorthHistory.history, oneDayAgo);
-
           this.accountService.player.next(this.localPlayer);
 
           const character = this.settingsService.getCurrentCharacter();
@@ -173,7 +171,7 @@ export class IncomeService implements OnDestroy {
           }
 
           const objToSend = Object.assign({}, this.localPlayer);
-          objToSend.netWorthSnapshots = historyToSend;
+          objToSend.netWorthSnapshots = this.netWorthHistory.history;
           this.partyService.updatePlayer(objToSend);
 
           const endTime = Date.now();
