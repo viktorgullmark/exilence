@@ -15,6 +15,8 @@ export interface Item {
     name: string;
     shaper: boolean;
     elder: boolean;
+    fractured: boolean;
+    synthesised: boolean;
     typeLine: string;
     identified: boolean;
     corrupted: boolean;

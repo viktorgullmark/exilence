@@ -21,6 +21,8 @@ namespace Shared.Models
         public bool Corrupted { get; set; }
         public bool Shaper { get; set; }
         public bool Elder { get; set; }
+        public bool Synthesised { get; set; }
+        public bool Fractured { get; set; }
         public bool LockedToCharacter { get; set; }
         public List<RequirementModel> Requirements { get; set; }
         public List<string> ImplicitMods { get; set; }

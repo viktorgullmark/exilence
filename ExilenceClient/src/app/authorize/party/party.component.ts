@@ -114,6 +114,7 @@ export class PartyComponent implements OnInit, OnDestroy {
     if (this.stateSub !== undefined) {
       this.stateSub.unsubscribe();
     }
+    this.stateService.dispatch({ key: 'selectedGroupIndex', value: 1 });
   }
 
   openDialog() {
