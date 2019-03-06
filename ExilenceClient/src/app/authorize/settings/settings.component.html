@@ -86,6 +86,11 @@
     <h3 class="mat-h4 setting-header">Pricing</h3>
     <mat-divider class="divider"></mat-divider>
     <div class="setting-inner-content">
+      <mat-checkbox class="setting-checkbox" [(ngModel)]="automaticPricing"
+        (ngModelChange)="toggleAutomaticPricing()">Automatic price-updates</mat-checkbox>
+      <p class="setting-desc-text">
+        Check this setting to update prices as often as possible, otherwhise they will only be retrieved when starting Exilence
+      </p>
       <mat-checkbox class="setting-checkbox" [(ngModel)]="lowConfidencePricing"
         (ngModelChange)="toggleLowConfidencePricing()">Low
         confidence pricing</mat-checkbox>
@@ -107,8 +112,8 @@
     <h3 class="mat-h4 setting-header new-section">Item types</h3>
     <mat-divider class="divider"></mat-divider>
     <div class="setting-inner-content">
-      <mat-checkbox class="setting-checkbox" [(ngModel)]="mapPricing"
-        (ngModelChange)="toggleMapPricing()">Map pricing</mat-checkbox>
+      <mat-checkbox class="setting-checkbox" [(ngModel)]="mapPricing" (ngModelChange)="toggleMapPricing()">Map pricing
+      </mat-checkbox>
       <p class="setting-desc-text">
         Check this setting to include maps in net worth
       </p>
@@ -162,8 +167,8 @@
       Choose how much days back in history the "Net worth graph" shows
     </p>
     <div class="setting-inner-content">
-      <mat-checkbox class="setting-checkbox" [(ngModel)]="timeline"
-        (ngModelChange)="toggleTimeline()">Show timeline for graph</mat-checkbox>
+      <mat-checkbox class="setting-checkbox" [(ngModel)]="timeline" (ngModelChange)="toggleTimeline()">Show timeline for
+        graph</mat-checkbox>
       <p class="setting-desc-text">
         Check this setting to show a timeline below the net worth graph
       </p>

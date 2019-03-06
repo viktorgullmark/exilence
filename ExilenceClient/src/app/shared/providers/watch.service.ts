@@ -6,6 +6,7 @@ import { CombinedItemPriceInfo } from '../interfaces/poe-watch/combined-item-pri
 import { ItemInfo } from '../interfaces/poe-watch/Item-info.interface';
 import { ItemPrice } from '../interfaces/poe-watch/item-price.interface';
 import { LogService } from './log.service';
+import { SettingsService } from './settings.service';
 
 @Injectable({
   providedIn: 'root'
@@ -21,10 +22,19 @@ export class WatchService {
 
   constructor(
     private http: HttpClient,
-    private logService: LogService
+    private logService: LogService,
+    private settingsService: SettingsService
   ) { }
 
   UpdateItemsAndPrices(league: string): Observable<any> {
+    let automaticPricing = this.settingsService.get('automaticPricing');
+    if (automaticPricing === undefined) {
+      automaticPricing = true;
+      this.settingsService.set('automaticPricing', automaticPricing);
+    }
+    if (!automaticPricing) {
+      return Observable.of(null);
+    }
     this.logService.log('Starting to fetch items and prices from poe.watch');
     return forkJoin([
       this.fetchPrices(league),

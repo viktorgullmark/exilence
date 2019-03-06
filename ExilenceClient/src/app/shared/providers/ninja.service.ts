@@ -82,6 +82,15 @@ export class NinjaService {
   }
 
   getValuesFromNinja(league: string) {
+    let automaticPricing = this.settingsService.get('automaticPricing');
+    if (automaticPricing === undefined) {
+      automaticPricing = true;
+      this.settingsService.set('automaticPricing', automaticPricing);
+    }
+    if (!automaticPricing) {
+      return Observable.of(null);
+    }
+
     this.priceFluctuations = [];
     const tenMinutesAgo = (Date.now() - (1 * 60 * 10 * 1000));
     const length = this.ninjaPrices.length;

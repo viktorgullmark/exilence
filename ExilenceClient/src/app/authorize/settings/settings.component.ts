@@ -31,6 +31,7 @@ export class SettingsComponent implements OnInit, OnDestroy {
   itemValueTreshold = 1;
   gainHours = 1;
   netWorthHistoryDays = 14;
+  automaticPricing = true;
 
   @ViewChild('table') table: StashtabListComponent;
 
@@ -93,6 +94,11 @@ export class SettingsComponent implements OnInit, OnDestroy {
     const lowConfidencePricingSetting = this.settingsService.get('lowConfidencePricing');
     if (lowConfidencePricingSetting !== undefined) {
       this.lowConfidencePricing = lowConfidencePricingSetting;
+    }
+
+    const automaticPricingSetting = this.settingsService.get('automaticPricing');
+    if (automaticPricingSetting !== undefined) {
+      this.automaticPricing = automaticPricingSetting;
     }
 
     const mapPricingSetting = this.settingsService.get('mapPricing');
@@ -194,6 +200,14 @@ export class SettingsComponent implements OnInit, OnDestroy {
       this.settingsService.set('lowConfidencePricing', true);
     } else {
       this.settingsService.set('lowConfidencePricing', false);
+    }
+  }
+
+  toggleAutomaticPricing() {
+    if (this.automaticPricing) {
+      this.settingsService.set('automaticPricing', true);
+    } else {
+      this.settingsService.set('automaticPricing', false);
     }
   }
 

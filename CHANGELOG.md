@@ -9,6 +9,8 @@ All notable changes to this project will be documented in this file.
 - Added better pricing accuracy, to avoid net worth fluctuations
     - Some prices from poe.ninja are falsely elevated, a check has now been added that uses the previous price if this happens
     - Logging has been added for falsely elevated prices
+- Added a new setting to disable automatic price updates
+    - With automatic price updates turned off, prices will only be fetched on startup (snapshots still occurr, but with old prices)
 
 ### Changed
 - Minor changes to the export-functionality has been done
