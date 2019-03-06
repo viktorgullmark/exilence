@@ -8,9 +8,11 @@
                 <span> (click to join)</span>
             </div>
             <div class="recent-party-badge-container" *ngFor="let party of recentParties, let i = index">
-                <mat-card class="recent-party-badge" [ngClass]="{'current-party-badge': party === partyService.party.name }"
-                    (click)="joinParty(party)" *ngIf="i < 4 && !(i > 0 && partyService.maskedName)">
-                    <mat-icon (click)="$event.stopPropagation(); removePartyFromRecent(party)" class="close-icon">close</mat-icon>
+                <mat-card class="recent-party-badge"
+                    [ngClass]="{'current-party-badge': party === partyService.party.name }" (click)="joinParty(party)"
+                    *ngIf="i < 4 && !(i > 0 && partyService.maskedName)">
+                    <mat-icon (click)="$event.stopPropagation(); removePartyFromRecent(party)" class="close-icon">close
+                    </mat-icon>
                     {{checkMask(party, i)}}
                 </mat-card>
             </div>
@@ -18,35 +20,52 @@
     </div>
     <h3 class="mat-h3">Changes included in version {{appVersion}}</h3>
     <ul>
-        <h4>n/a</h4>
-        <!-- <ul>
-            <li>Added a setting for including hideouts and towns for gain per area (disabled by default)</li>
-            <li>Added pricing of 6-sockets (now converts 6-sockets to jewellers automatically)</li>
-            <li>Added a setting for including maps in net worth calculations (enabled by default)</li>
-            <li>Added a timeline below the net worth graph, which lets you specify the timeframe to see (disabled by default)</li>
+        <h4>Added</h4>
+        <ul>
+            <li>Added support for fractured items</li>
+            <li>Added support for synthesised items</li>
+            <li>Added support for the new atlas in Synthesis</li>
+            <li>Added the calculated price from https://poe.ninja to the on-hover pricing tooltip</li>
+            <li>Added better pricing accuracy, to avoid net worth fluctuations</li>
+            <ul>
+                <li>Some prices from poe.ninja are falsely elevated, a check has now been added that uses the previous
+                    price
+                    if this happens</li>
+                <li>Logging has been added for falsely elevated prices</li>
+            </ul>
+            <li>Added a new setting to disable automatic price updates</li>
+            <ul>
+                <li>With automatic price updates turned off, prices will only be fetched on startup (snapshots still
+                    occurr,
+                    but with old prices)</li>
+                <li>Added a new setting to disable automatic 6-socket to jewellers conversion</li>
+            </ul>
+
         </ul>
         <h4>Changed</h4>
         <ul>
-            <li>Improved styling of item-tooltips (now takes up less space)</li>
-            <li>The "Clear my history"-button is now disabled when a snapshot is in progress</li>
-            <li>Minor style-tweaks to settings-screen</li>
-            <li>Minor style-tweaks to login-screen</li>
+            <li>Changed how timestamps are handled for net worth data</li>
+            <li>Now uses moment for all comparisons</li>
+            <li>Now converts to UTC when storing history (to support cross-region)</li>
+            <li>Minor changes to the export-functionality has been done</li>
+            <li>Fields are now separated by comma instead of ";" in the exports for both areas and net worth</li>
+            <li>Replaced null values with "N/A" for area-level</li>
         </ul>
         <h4>Fixed</h4>
         <ul>
-            <li>Fixed a bug where the inventory was not fetched correctly directly when logging in</li>
-            <li>Fixed a bug where the equipment would be priced, even without character-specific pricing</li>
-            <li>Fixed a bug where the net worth for some side-areas wasn't calculated</li>
-            <li>Fixed a bug where the duration for some side-areas was displayed incorrectly</li>
-            <li>Fixed a bug where the ladder would not return to first page after filtering</li>
-            <li>Fixed a bug where you could see multiple instances of yourself in a group, if you reconnected after a DC</li>
-            <li>Fixed a bug where the inventory-pricing setting would not get set properly</li>
-            <li>Fixed a bug where net worth snapshotting would crash with certain items</li>
-        </ul> -->
+            <li>Fixed a bug where six-socketed items would get added to the total net worth on every snapshot</li>
+            <li>Fixed a bug where links were not considered when pricing six-sockets</li>
+            <li>Fixed a bug where the offline-mode modal would open multiple times</li>
+            <li>Fixed a bug where too much item-data was sent to the server (old snapshots were not cleared properly)
+            </li>
+            <li>Fixed a bug where only one day of net worth history was sent to your group (instead of two weeks)</li>
+        </ul>
+
     </ul>
     <mat-divider class="divider"></mat-divider>
     <p class="mat-body-1">
-        To see the full changelog, please go to <a class="inline-link" (click)="openLink('https://github.com/viktorgullmark/exilence/blob/master/CHANGELOG.md')">this
+        To see the full changelog, please go to <a class="inline-link"
+            (click)="openLink('https://github.com/viktorgullmark/exilence/blob/master/CHANGELOG.md')">this
             link
         </a>
     </p>
