@@ -3,7 +3,8 @@ All notable changes to this project will be documented in this file.
 
 ## [0.9.25] - 2019-03-XX
 ### Added
-- Added support for fractured mods to the item-display
+- Added support for fractured items
+- Added support for synthesised items
 - Added support for the new atlas in Synthesis
 - Added the calculated price from https://poe.ninja to the on-hover pricing tooltip
 - Added better pricing accuracy, to avoid net worth fluctuations
