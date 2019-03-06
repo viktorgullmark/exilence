@@ -14,14 +14,12 @@ All notable changes to this project will be documented in this file.
 - Added a new setting to disable automatic 6-socket to jewellers conversion
 
 ### Changed
-- Minor changes to the export-functionality has been done
-    - Fields are now separated by comma instead of ";" in the exports for both areas and net worth
-    - Replaced null values with "N/A" for area-level
-
-### Changed
 - Changed how timestamps are handled for net worth data
     - Now uses moment for all comparisons
     - Now converts to UTC when storing history (to support cross-region)
+- Minor changes to the export-functionality has been done
+    - Fields are now separated by comma instead of ";" in the exports for both areas and net worth
+    - Replaced null values with "N/A" for area-level
 
 ### Fixed
 - Fixed a bug where six-socketed items would get added to the total net worth on every snapshot
