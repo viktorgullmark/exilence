@@ -34,6 +34,7 @@ import * as specCountReducer from '../../store/spectator-count/spectator-count.r
 import { DependencyStatusState } from '../../app.states';
 import * as depStatusActions from '../../store/dependency-status/dependency-status.actions';
 import * as depStatusReducer from './../../store/dependency-status/dependency-status.reducer';
+import { HttpClient } from '@angular/common/http';
 
 @Injectable()
 export class PartyService implements OnDestroy {
@@ -92,6 +93,7 @@ export class PartyService implements OnDestroy {
 
   constructor(
     private router: Router,
+    private http: HttpClient,
     private accountService: AccountService,
     private logMonitorService: LogMonitorService,
     private externalService: ExternalService,
@@ -352,9 +354,8 @@ export class PartyService implements OnDestroy {
       this.handleAreaEvent(msg);
     });
 
-    setInterval(() => {
-      this.refreshLaddersForParty();
-    }, 60 * 1000);
+    // todo: rework ladder to use proper paging instead of polling a full list
+    // this.refreshLaddersForParty();
   }
 
   getPlayers() {
@@ -579,32 +580,35 @@ export class PartyService implements OnDestroy {
   }
 
   public getLadderForLeague(league: string) {
-    this._hubConnection.invoke('GetLadderForLeague', league).then((response) => {
-      this.electronService.decompress(response, (ladder: LadderPlayer[]) => {
+    // todo: rework ladder to use proper paging instead of polling a full list
 
-        const found = this.playerLadders.find(l => l.name === league);
-        if (found === undefined) {
-          this.ladderStore.dispatch(new ladderActions.AddLadder({ ladder: { name: league, players: ladder } }));
-        } else {
-          this.ladderStore.dispatch(new ladderActions.UpdateLadder({ ladder: { id: league, changes: { players: ladder } } }));
-        }
-
-        if (ladder !== null) {
-          // update player ranks based on fetched ladder
-          const foundInParty = this.party.players.find(x => x.character !== null &&
-            x.character.league === league &&
-            this.currentPlayer.character != null &&
-            this.currentPlayer.character.name === x.character.name);
-          if (foundInParty !== undefined) {
-            const foundInLadder = ladder.find(x => x.name === foundInParty.character.name);
-            if (foundInLadder !== undefined) {
-              foundInParty.overallRank = foundInLadder.rank.overall;
-              this.accountService.player.next(foundInParty);
-            }
-          }
-        }
-      });
-    });
+    // this.http.get(AppConfig.url + 'ladder/getLadderForLeague/' + league)
+    //   .subscribe((res: any) => {
+    //     this.electronService.decompress(res.ladder, (ladder: LadderPlayer[]) => {
+    //       const found = this.playerLadders.find(l => l.name === league);
+    //       if (found === undefined) {
+    //         this.ladderStore.dispatch(new ladderActions.AddLadder({ ladder: { name: league, players: ladder } }));
+    //       } else {
+    //         this.ladderStore.dispatch(new ladderActions.UpdateLadder({ ladder: { id: league, changes: { players: ladder } } }));
+    //       }
+    //       if (ladder !== null) {
+    //         // update player ranks based on fetched ladder
+    //         const foundInParty = this.party.players.find(x => x.character !== null &&
+    //           x.character.league === league &&
+    //           this.currentPlayer.character != null &&
+    //           this.currentPlayer.character.name === x.character.name);
+    //         if (foundInParty !== undefined) {
+    //           const foundInLadder = ladder.find(x => x.name === foundInParty.character.name);
+    //           if (foundInLadder !== undefined) {
+    //             foundInParty.overallRank = foundInLadder.rank.overall;
+    //             this.accountService.player.next(foundInParty);
+    //           }
+    //         }
+    //       }
+    //     });
+    //   }, (error) => {
+    //     this.logService.log('Could not get ladder from server.', error, true);
+    //   });
   }
 
   public refreshLaddersForParty() {
@@ -613,11 +617,12 @@ export class PartyService implements OnDestroy {
     const leaguesToUpdate = activePlayers.map(x => x.character.league);
     this.playerLadders.filter(x => leaguesToUpdate.find(y => y === x.name) !== undefined);
     this.playerLadders.forEach(x => {
-      // separate requests so we dont lag the client
-      setTimeout(() => {
-        this.getLadderForLeague(x.name);
-      }, 10000);
+      this.getLadderForLeague(x.name);
     });
+
+    setTimeout(() => {
+      this.refreshLaddersForParty();
+    }, 60 * 1000);
   }
 
   public joinParty(partyName: string, spectatorCode: string, player: Player) {

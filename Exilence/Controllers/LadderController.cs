@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Exilence.Interfaces;
 using Shared.Interfaces;
+using Shared.Helper;
 
 namespace Exilence.Controllers
 {
@@ -34,6 +35,13 @@ namespace Exilence.Controllers
         {
             var statuses = await _repository.GetAllLadders();
             return Ok(new { leagues = statuses.Select(t => new { t.Name, t.Running, t.Finished, t.Started }).OrderByDescending(t => t.Started) });
+        }
+
+        [Route("getLadderForLeague/{league}")]
+        public async Task<IActionResult> GetLadderForLeague(string league)
+        {
+            var ladder = await _ladderService.GetLadderForLeague(league);
+            return Ok(new { Ladder = CompressionHelper.Compress(ladder) });
         }
     }
 }
