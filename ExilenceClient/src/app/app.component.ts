@@ -103,11 +103,7 @@ export class AppComponent implements OnDestroy {
   }
 
   getBrowserLang() {
-    if (navigator.languages !== undefined) {
-      return navigator.languages[0];
-    } else {
-      return navigator.language;
-    }
+    return (navigator.languages && navigator.languages.length) ? navigator.languages[0] : navigator.language;
   }
   displayAlert(message: string, action: string) {
     this.snackBar.open(message, action, {
