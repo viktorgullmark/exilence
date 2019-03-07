@@ -1,7 +1,7 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
-## [0.9.27] - 2019-03-07
+## [0.9.27] - 2019-XX-XX
 ### Fixed
 - Fixed a bug where the gain was not updated properly for spectators
 
