@@ -1,6 +1,10 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [0.9.27] - 2019-03-07
+### Fixed
+- Fixed a bug where the gain was not updated properly for spectators
+
 ## [0.9.26] - 2019-03-07
 ### Removed
 - Temporarily removed the ladder-tab to reduce memory usage, the tab will be re-added soon

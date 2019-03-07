@@ -444,7 +444,7 @@ export class PartyService implements OnDestroy {
   }
 
   updatePartyGainForPlayer(player: Player) {
-    const gainHours = this.settingsService.get('gainHours');
+    const gainHours = this.settingsService.get('gainHours') || 1;
     const xHoursAgo = moment().utc().subtract(gainHours, 'hours');
     const pastHoursSnapshots = player.netWorthSnapshots
       .filter((snapshot: NetWorthSnapshot) => moment.unix(snapshot.timestamp).utc().isAfter(xHoursAgo));
