@@ -25,10 +25,6 @@ Download the latest release at https://github.com/viktorgullmark/exilence/releas
 
 https://www.youtube.com/watch?v=TZmcZ-cBUMs
 
-## Spectate mode preview
-
-https://exilence.app/spectate/preview
-
 ## How to install
 
 https://imgur.com/a/cBibtoF
