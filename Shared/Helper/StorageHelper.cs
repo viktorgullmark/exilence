@@ -64,8 +64,7 @@ namespace Shared.Helper
 
         public static PartyModel FromStorageParty(PartyStorageModel input)
         {
-            var players = input.Players.Select(x => FromStoragePlayer(x))
-              .ToList();
+            var players = input.Players.ConvertAll(x => FromStoragePlayer(x));
 
             return new PartyModel
             {
