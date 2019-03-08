@@ -51,6 +51,7 @@ export interface NinjaSparkLine {
 export interface NinjaLine {
     currencyTypeName?: string;
     name?: string;
+    count?: number;
     baseType?: string;
     chaosEquivalent?: number;
     chaosValue?: number;

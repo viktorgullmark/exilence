@@ -74,8 +74,8 @@ namespace Exilence.Hubs
                 await AddToIndex(partyName);
             }
 
-            var party = await _mongoRepository.GetParty(partyName);
-            if (party == null)
+            var storageParty = await _mongoRepository.GetParty(partyName);
+            if (storageParty == null)
             {
                 if (player.IsSpectator)
                 {
@@ -84,40 +84,43 @@ namespace Exilence.Hubs
                 else
                 {
                     player.IsLeader = true;
-                    party = new PartyModel() { Name = partyName, Players = new List<PlayerModel> { player }, SpectatorCode = spectatorCode };
-                    await _mongoRepository.CreateParty(party);
+                    storageParty = new PartyStorageModel() { Name = partyName, Players = new List<PlayerStorageModel> { StorageHelper.ToStoragePlayer(player) }, SpectatorCode = spectatorCode };
+                    await _mongoRepository.CreateParty(storageParty);
 
-                    party.Name = "";
+                    storageParty.Name = "";
+                    var party = StorageHelper.FromStorageParty(storageParty);
                     await Clients.Caller.SendAsync("EnteredParty", CompressionHelper.Compress(party), CompressionHelper.Compress(player));
                 }
             }
             else
             {
-                if (player.IsSpectator && !party.Players.Any(x => !x.IsSpectator))
+                if (player.IsSpectator && !storageParty.Players.Any(x => !x.IsSpectator))
                 {
                     await Clients.Caller.SendAsync("GroupNotFoundOrEmpty");
                 }
                 else
                 {
-                    var oldPlayer = party.Players.FirstOrDefault(x => (x.ConnectionID == player.ConnectionID || (x.Character != null && player.Character != null && x.Character.Name == player.Character.Name)));
+                    var oldPlayer = storageParty.Players.FirstOrDefault(x => (x.ConnectionID == player.ConnectionID || (x.Character != null && player.Character != null && x.Character.Name == player.Character.Name)));
 
                     // if the party were joining doesnt have a leader, make the player leader
-                    if (!party.Players.Any(x => x.IsLeader))
+                    if (!storageParty.Players.Any(x => x.IsLeader))
                     {
                         player.IsLeader = true;
                     }
 
+                    var storagePlayer = StorageHelper.ToStoragePlayer(player);
                     if (oldPlayer == null)
                     {
-                        await _mongoRepository.AddPlayerToParty(partyName, player);
+                        await _mongoRepository.AddPlayerToParty(partyName, storagePlayer);
                     }
                     else
                     {
-                        await _mongoRepository.UpdatePlayerInParty(partyName, player);
+                        await _mongoRepository.UpdatePlayerInParty(partyName, storagePlayer);
                     }
 
-                    party = await _mongoRepository.GetParty(partyName);
-                    party.Name = "";
+                    storageParty = await _mongoRepository.GetParty(partyName);
+                    storageParty.Name = "";
+                    var party = StorageHelper.FromStorageParty(storageParty);
                     await Clients.Caller.SendAsync("EnteredParty", CompressionHelper.Compress(party), CompressionHelper.Compress(player));
                 }
             }
@@ -144,18 +147,18 @@ namespace Exilence.Hubs
                 partyName = SpectatorHelper.ToPartyName(spectatorCode, _key);
             }
 
-            var party = await _mongoRepository.GetParty(partyName);
-            if (party != null)
+            var storageParty = await _mongoRepository.GetParty(partyName);
+            if (storageParty != null)
             {
                 await _mongoRepository.RemovePlayerFromParty(partyName, ConnectionId);
-                party = await _mongoRepository.GetParty(partyName);
-                if (!party.Players.Any(x => !x.IsSpectator))
+                storageParty = await _mongoRepository.GetParty(partyName);
+                if (!storageParty.Players.Any(x => !x.IsSpectator))
                 {
                     await _mongoRepository.RemoveParty(partyName);
                 }
-                else if (!party.Players.Any(x => x.IsLeader))
+                else if (!storageParty.Players.Any(x => x.IsLeader))
                 {
-                    var leader = party.Players.FirstOrDefault(x => !x.IsSpectator && x.ConnectionID != player.ConnectionID);
+                    var leader = storageParty.Players.FirstOrDefault(x => !x.IsSpectator && x.ConnectionID != player.ConnectionID);
                     if (leader != null)
                     {
                         await _mongoRepository.SetSpecificPlayerAsLeader(partyName, leader.Character.Name);
@@ -169,8 +172,8 @@ namespace Exilence.Hubs
 
         public async Task AssignLeader(string partyName, string characterName)
         {
-            var party = await _mongoRepository.GetParty(partyName);
-            var currentLeader = party.Players.FirstOrDefault(x => x.IsLeader);
+            var storageParty = await _mongoRepository.GetParty(partyName);
+            var currentLeader = storageParty.Players.FirstOrDefault(x => x.IsLeader);
 
             await _mongoRepository.RemoveSpecificPlayerAsLeader(partyName, currentLeader.Character.Name);
             await _mongoRepository.SetSpecificPlayerAsLeader(partyName, characterName);
@@ -193,10 +196,10 @@ namespace Exilence.Hubs
         {
             var player = CompressionHelper.Decompress<PlayerModel>(playerObj);
 
-            var party = await _mongoRepository.GetParty(partyName);
-            if (party != null)
+            var storageParty = await _mongoRepository.GetParty(partyName);
+            if (storageParty != null)
             {
-                await _mongoRepository.UpdatePlayerInParty(partyName, player);
+                await _mongoRepository.UpdatePlayerInParty(partyName, StorageHelper.ToStoragePlayer(player));
                 await Clients.Group(partyName).SendAsync("PlayerUpdated", CompressionHelper.Compress(player));
             }
             else
@@ -215,9 +218,10 @@ namespace Exilence.Hubs
             var partyName = await GetPartynameFromIndex();
             if (partyName != null)
             {
-                var party = await _mongoRepository.GetParty(partyName);
-                if (party != null)
+                var storageParty = await _mongoRepository.GetParty(partyName);
+                if (storageParty != null)
                 {
+                    var party = StorageHelper.FromStorageParty(storageParty);
                     var player = party.Players.FirstOrDefault(t => t.ConnectionID == ConnectionId);
                     if (player != null)
                     {

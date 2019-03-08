@@ -20,47 +20,11 @@
     </div>
     <h3 class="mat-h3">Changes included in version {{appVersion}}</h3>
     <ul>
-        <h4>Added</h4>
-        <ul>
-            <li>Added support for fractured items</li>
-            <li>Added support for synthesised items</li>
-            <li>Added support for the new atlas in Synthesis</li>
-            <li>Added the calculated price from https://poe.ninja to the on-hover pricing tooltip</li>
-            <li>Added better pricing accuracy, to avoid net worth fluctuations</li>
-            <ul>
-                <li>Some prices from poe.ninja are falsely elevated, a check has now been added that uses the previous
-                    price
-                    if this happens</li>
-                <li>Logging has been added for falsely elevated prices</li>
-            </ul>
-            <li>Added a new setting to disable automatic price updates</li>
-            <ul>
-                <li>With automatic price updates turned off, prices will only be fetched on startup (snapshots still
-                    occurr,
-                    but with old prices)</li>
-                <li>Added a new setting to disable automatic 6-socket to jewellers conversion</li>
-            </ul>
-
-        </ul>
-        <h4>Changed</h4>
-        <ul>
-            <li>Changed how timestamps are handled for net worth data</li>
-            <li>Now uses moment for all comparisons</li>
-            <li>Now converts to UTC when storing history (to support cross-region)</li>
-            <li>Minor changes to the export-functionality has been done</li>
-            <li>Fields are now separated by comma instead of ";" in the exports for both areas and net worth</li>
-            <li>Replaced null values with "N/A" for area-level</li>
-        </ul>
         <h4>Fixed</h4>
         <ul>
-            <li>Fixed a bug where six-socketed items would get added to the total net worth on every snapshot</li>
-            <li>Fixed a bug where links were not considered when pricing six-sockets</li>
-            <li>Fixed a bug where the offline-mode modal would open multiple times</li>
-            <li>Fixed a bug where too much item-data was sent to the server (old snapshots were not cleared properly)
-            </li>
-            <li>Fixed a bug where only one day of net worth history was sent to your group (instead of two weeks)</li>
+            <li>Fixed a bug where some items would get valued higher than supposed to (low confidence was used inproperly)</li>
+            <li>Fixed a bug where the gain was not updated properly for spectators</li>
         </ul>
-
     </ul>
     <mat-divider class="divider"></mat-divider>
     <p class="mat-body-1">

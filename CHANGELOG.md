@@ -1,8 +1,9 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
-## [0.9.27] - 2019-XX-XX
+## [0.9.27] - 2019-03-08
 ### Fixed
+- Fixed a bug where some items would get valued higher than supposed to (low confidence was used inproperly)
 - Fixed a bug where the gain was not updated properly for spectators
 
 ## [0.9.26] - 2019-03-07
