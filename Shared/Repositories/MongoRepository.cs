@@ -16,8 +16,8 @@ namespace Shared.Repositories
     {
         private MongoClient _client;
         private readonly IMongoDatabase _database;
-        private readonly IMongoCollection<PartyModel> _parties;
-        private readonly IMongoCollection<PlayerModel> _players;
+        private readonly IMongoCollection<PartyStorageModel> _parties;
+        private readonly IMongoCollection<PlayerStorageModel> _players;
         private readonly IMongoCollection<LadderModel> _ladders;
         private readonly IMongoCollection<PriceFluctuationModel> _fluctuations;
         private readonly IMongoCollection<ConnectionModel> _connections;
@@ -29,20 +29,20 @@ namespace Shared.Repositories
             _configuration = configuration;
             _client = new MongoClient(_configuration.GetConnectionString("Mongo"));
             _database = _client.GetDatabase("exilence");
-            _parties = _database.GetCollection<PartyModel>("parties");
+            _parties = _database.GetCollection<PartyStorageModel>("parties");
             _ladders = _database.GetCollection<LadderModel>("ladders");
             _fluctuations = _database.GetCollection<PriceFluctuationModel>("pricefluctuations");
             _connections = _database.GetCollection<ConnectionModel>("connections");
         }
 
 
-        public async Task<List<PartyModel>> GetCharactersByLeague(string league)
+        public async Task<List<PartyStorageModel>> GetCharactersByLeague(string league)
         {
             var result = await _parties.FindAsync(p => p.Players.Any(c => c.Character.League.ToUpper() == league.ToUpper()));
             return await result.ToListAsync();
         }
 
-        public async Task<PartyModel> GetPartyByCharacterName(string characterName)
+        public async Task<PartyStorageModel> GetPartyByCharacterName(string characterName)
         {
             var result = await _parties.FindAsync(p => p.Players.Any(c => c.Character.Name == characterName));
             return await result.FirstOrDefaultAsync();
@@ -53,13 +53,13 @@ namespace Shared.Repositories
             await _parties.FindAsync(p => p.Name == partyName);
         }
 
-        public async Task<PartyModel> GetParty(string partyName)
+        public async Task<PartyStorageModel> GetParty(string partyName)
         {
             var party = await _parties.FindAsync(p => p.Name == partyName);
             return await party.FirstOrDefaultAsync();
         }
 
-        public async Task<PlayerModel> GetPlayerByCharacterName(string partyName, string characterName)
+        public async Task<PlayerStorageModel> GetPlayerByCharacterName(string partyName, string characterName)
         {
             var result = await _parties.FindAsync(p => p.Name == partyName);
             var party = await result.FirstAsync();
@@ -71,7 +71,7 @@ namespace Shared.Repositories
             await _parties.DeleteOneAsync(p => p.Name == partyName);
         }
 
-        public async Task CreateParty(PartyModel party)
+        public async Task CreateParty(PartyStorageModel party)
         {
             await _parties.InsertOneAsync(party);
         }
@@ -81,33 +81,33 @@ namespace Shared.Repositories
             await _fluctuations.InsertManyAsync(fluctuations);
         }
 
-        public async Task AddPlayerToParty(string partyName, PlayerModel player)
+        public async Task AddPlayerToParty(string partyName, PlayerStorageModel player)
         {
-            var update = Builders<PartyModel>.Update.AddToSet(p => p.Players, player);
+            var update = Builders<PartyStorageModel>.Update.AddToSet(p => p.Players, player);
             var result = await _parties.FindOneAndUpdateAsync(p => p.Name == partyName, update);
         }
 
-        public async Task UpdatePlayerInParty(string partyName, PlayerModel player)
+        public async Task UpdatePlayerInParty(string partyName, PlayerStorageModel player)
         {
-            var update = Builders<PartyModel>.Update.Set(p => p.Players[-1], player);
+            var update = Builders<PartyStorageModel>.Update.Set(p => p.Players[-1], player);
             var result = await _parties.UpdateOneAsync(p => p.Name == partyName && p.Players.Any(c => c.ConnectionID == player.ConnectionID), update);
         }
 
         public async Task RemovePlayerFromParty(string partyName, string connectionId)
         {
-            var update = Builders<PartyModel>.Update.PullFilter(p => p.Players, c => c.ConnectionID == connectionId);
+            var update = Builders<PartyStorageModel>.Update.PullFilter(p => p.Players, c => c.ConnectionID == connectionId);
             await _parties.FindOneAndUpdateAsync(p => p.Name == partyName, update);
         }
 
         public async Task SetSpecificPlayerAsLeader(string partyName, string characterName)
         {
-            var update = Builders<PartyModel>.Update.Set(p => p.Players[-1].IsLeader, true);
+            var update = Builders<PartyStorageModel>.Update.Set(p => p.Players[-1].IsLeader, true);
             var result = await _parties.UpdateOneAsync(p => p.Name == partyName && p.Players.Any(c => c.Character.Name == characterName), update);
         }
 
         public async Task RemoveSpecificPlayerAsLeader(string partyName, string characterName)
         {
-            var update = Builders<PartyModel>.Update.Set(p => p.Players[-1].IsLeader, false);
+            var update = Builders<PartyStorageModel>.Update.Set(p => p.Players[-1].IsLeader, false);
             var result = await _parties.UpdateOneAsync(p => p.Name == partyName && p.Players.Any(c => c.Character.Name == characterName), update);
         }
 

@@ -10,17 +10,17 @@ namespace Shared.Interfaces
     public interface IMongoRepository
     {
         #region Parties
-        Task CreateParty(PartyModel party);
+        Task CreateParty(PartyStorageModel party);
         Task RemoveParty(string partyName);
-        Task<PartyModel> GetParty(string partyName);
-        Task AddPlayerToParty(string partyName, PlayerModel player);
+        Task<PartyStorageModel> GetParty(string partyName);
+        Task AddPlayerToParty(string partyName, PlayerStorageModel player);
         Task RemovePlayerFromParty(string partyName, string connectionId);
-        Task UpdatePlayerInParty(string partyName, PlayerModel player);
+        Task UpdatePlayerInParty(string partyName, PlayerStorageModel player);
         Task SetSpecificPlayerAsLeader(string partyName, string characterName);
         Task RemoveSpecificPlayerAsLeader(string partyName, string characterName);
-        Task<PlayerModel> GetPlayerByCharacterName(string partyName, string characterName);
-        Task<PartyModel> GetPartyByCharacterName(string characterName);
-        Task<List<PartyModel>> GetCharactersByLeague(string league);
+        Task<PlayerStorageModel> GetPlayerByCharacterName(string partyName, string characterName);
+        Task<PartyStorageModel> GetPartyByCharacterName(string characterName);
+        Task<List<PartyStorageModel>> GetCharactersByLeague(string league);
         #endregion
 
         #region Ladders
