@@ -130,6 +130,10 @@ export class NinjaService {
                   if (receive.count < 10) {
                     return;
                   }
+                } else if (line.count !== undefined && line.count !== null) {
+                  if (line.count < 10) {
+                    return;
+                  }
                 }
               }
 
