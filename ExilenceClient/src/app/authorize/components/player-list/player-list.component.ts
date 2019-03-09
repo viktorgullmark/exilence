@@ -76,7 +76,6 @@ export class PlayerListComponent implements OnInit, OnDestroy {
   }
 
   showMessage(message: any) {
-    console.log(message);
   }
 
 }

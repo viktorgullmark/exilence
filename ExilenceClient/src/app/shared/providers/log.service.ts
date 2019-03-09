@@ -25,11 +25,9 @@ export class LogService {
       this.lastError = error;
       if (!error) {
         this.logger.info(message);
-        console.log(`[INFO] ${message}`, data);
       } else {
         this.logger.error(message);
         Sentry.captureException(message);
-        console.log(`[ERROR] ${message}`, data);
       }
     }
   }

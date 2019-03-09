@@ -1,6 +1,10 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [0.9.28] - 2019-03-09
+### Fixed
+- Reduced the memory usage of Exilence by a large amount
+
 ## [0.9.27] - 2019-03-08
 ### Fixed
 - Fixed a bug where some items would get valued higher than supposed to (low confidence was used inproperly)
