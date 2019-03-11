@@ -86,7 +86,8 @@ export class PartyComponent implements OnInit, OnDestroy {
     this.partyService.selectedPlayer.next(this.partyService.party.players[0]);
     this.tabSubscription = this.tabGroup.selectedIndexChange.subscribe(res => {
       this.stateService.dispatch({ key: 'selectedGroupIndex', value: res });
-      if (res === 0) {
+      if (this.electronService.isElectron()) {
+        this.electronService.clearWebFrameCache();
       }
       this.selectedIndex = res;
     });

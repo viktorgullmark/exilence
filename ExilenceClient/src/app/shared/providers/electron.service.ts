@@ -6,6 +6,7 @@ import * as fs from 'fs';
 
 import { AppConfig } from '../../../environments/environment';
 import { LogService } from './log.service';
+import { Router, Event, NavigationEnd } from '@angular/router';
 
 // If you import a module but never use any of the imported values other than as TypeScript types,
 // the resulting javascript file will look as if you never imported the module at all.
@@ -25,9 +26,11 @@ export class ElectronService {
   arch: any;
   clipboard: any;
 
+
   constructor(
     private logService: LogService,
-    private http: HttpClient
+    private http: HttpClient,
+    private router: Router
   ) {
     // Conditional imports
     if (this.isElectron()) {
@@ -42,15 +45,28 @@ export class ElectronService {
       this.arch = window.require('os').arch();
       this.lodash = window.require('lodash');
       this.clipboard = window.require('electron').clipboard;
+
+      this.router.events.subscribe((e: Event) => {
+        if (e instanceof NavigationEnd) {
+          this.clearWebFrameCache();
+        }
+      });
+
     } else {
       this.zlib = require('zlib');
       this.lodash = require('lodash');
       this.fs = require('fs');
     }
+
   }
 
   isElectron = () => {
     return window && window.process && window.process.type;
+  }
+
+  clearWebFrameCache() {
+    this.webFrame.clearCache();
+    console.log('Webframe Cache Cleared');
   }
 
 
