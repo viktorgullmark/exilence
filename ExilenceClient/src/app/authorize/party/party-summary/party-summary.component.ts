@@ -177,6 +177,14 @@ export class PartySummaryComponent implements OnInit, OnDestroy {
     }
   }
 
+  openLink(link: string) {
+    if (this.electronService.isElectron()) {
+      this.electronService.shell.openExternal(link);
+    } else {
+      window.open(link, '_blank');
+    }
+  }
+
   popout() {
     const data = {
       event: 'networth',

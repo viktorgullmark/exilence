@@ -88,6 +88,12 @@
         .search-form-wrapper {
             margin-top: 10px;
         }
+        .price-info {
+            position: absolute;
+            right: 25px;
+            margin-top: 10px;
+            z-index: 10;
+        }
     }
 }
 

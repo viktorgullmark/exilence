@@ -37,8 +37,8 @@
     <div class="flex-area">
         <div class="btn-grp">
             <ng-container *ngIf="electronService.isElectron()">
-                <button mat-raised-button (click)="resetNetWorth()" type="button"
-                    class="right-aligned extra-margin" [disabled]="incomeService.isSnapshotting">{{'GRAPH.RESET_SELF'
+                <button mat-raised-button (click)="resetNetWorth()" type="button" class="right-aligned extra-margin"
+                    [disabled]="incomeService.isSnapshotting">{{'GRAPH.RESET_SELF'
                     | translate}}</button>
                 <button mat-raised-button color="primary" (click)="popout()" type="button"
                     class="right-aligned extra-margin">{{'GRAPH.POPOUT'
@@ -69,9 +69,16 @@
         </app-income>
     </div>
     <div class="spinner-container">
-        <mat-progress-bar *ngIf="incomeService.isSnapshotting && (partyService.selectedFilterValue == partyService.currentPlayer.character.name || partyService.selectedFilterValue == 'All players')" color="primary" mode="indeterminate"></mat-progress-bar>
+        <mat-progress-bar
+            *ngIf="incomeService.isSnapshotting && (partyService.selectedFilterValue == partyService.currentPlayer.character.name || partyService.selectedFilterValue == 'All players')"
+            color="primary" mode="indeterminate"></mat-progress-bar>
     </div>
     <div class="table-outer-wrapper" [ngClass]="{'full-height-table': isGraphHidden }">
+        <div class="price-info">
+            <span class="mat-body">
+                Prices fetched from <a class="inline-link" (click)="openLink('https://poe.ninja')">https://poe.ninja</a> and <a (click)="openLink('https://poe.watch')" class="inline-link">https://poe.watch</a>
+            </span>
+        </div>
         <mat-tab-group #networthTabs id="networthTabs" [(selectedIndex)]="selectedIndex"
             (selectedTabChange)="handleTabEvent()">
             <mat-tab #networthTab id="networthTab" class="active">
