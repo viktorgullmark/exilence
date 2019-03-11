@@ -1,7 +1,7 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
-## [0.9.29] - XXXX-XX-XX
+## [0.9.29] - 2019-03-11
 ### Added
 - Added informative text that explains where prices come from
 
