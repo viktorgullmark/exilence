@@ -87,7 +87,7 @@ export class NinjaService {
       automaticPricing = true;
       this.settingsService.set('automaticPricing', automaticPricing);
     }
-    if (!automaticPricing) {
+    if (!automaticPricing && this.ninjaPrices.length > 0) {
       return Observable.of(null);
     }
 

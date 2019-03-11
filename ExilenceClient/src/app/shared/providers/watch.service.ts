@@ -32,7 +32,7 @@ export class WatchService {
       automaticPricing = true;
       this.settingsService.set('automaticPricing', automaticPricing);
     }
-    if (!automaticPricing) {
+    if (!automaticPricing && this.watchPrices.length > 0) {
       return Observable.of(null);
     }
     this.logService.log('Starting to fetch items and prices from poe.watch');

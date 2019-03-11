@@ -1,6 +1,10 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [0.9.29] - XXXX-XX-XX
+### Fixed
+- Fixed a bug where automatic pricing would only allow pricing of chaos orbs
+
 ## [0.9.28] - 2019-03-09
 ### Fixed
 - Reduced the memory usage of Exilence by a large amount
