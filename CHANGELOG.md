@@ -7,6 +7,7 @@ All notable changes to this project will be documented in this file.
 
 ### Fixed
 - Fixed a bug where automatic pricing would only allow pricing of chaos orbs
+- Fixed a bug where login-settings would sometimes get reset if you were playing in a private league
 
 ## [0.9.28] - 2019-03-09
 ### Fixed

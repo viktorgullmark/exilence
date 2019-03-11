@@ -4,7 +4,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialog, MatStep, MatStepper } from '@angular/material';
 import { ActivatedRoute, Router } from '@angular/router';
 import * as Sentry from '@sentry/browser';
-import { forkJoin, Subscription } from 'rxjs';
+import { forkJoin, Subscription, Observable, of } from 'rxjs';
 
 import { ServerMessageDialogComponent } from '../authorize/components/server-message-dialog/server-message-dialog.component';
 import { ClearHistoryDialogComponent } from '../shared/components/clear-history-dialog/clear-history-dialog.component';
@@ -210,16 +210,41 @@ export class LoginComponent implements OnInit, OnDestroy {
         }
     }
 
-    ngOnInit() {
-        if (this.electronService.isElectron()) {
-            this.externalService.getLeagues('main', 1).subscribe(leagues => {
-                if (leagues.find(l => l.id === this.leagueName) === undefined ||
-                    leagues.find(l => l.id === this.tradeLeagueName) === undefined) {
+    checkLeagues() {
+        // if the league we have selected has been removed, reset the login-stepper
+
+        const form = this.getFormObj();
+        const accountName = form.accountName;
+        const sessId = this.sessFormGroup.controls.sessionId.value;
+
+        const request = forkJoin(
+            this.externalService.getCharacterList(accountName !== undefined ? accountName :
+                this.accFormGroup.controls.accountName.value, (sessId !== undefined && sessId !== '') ? sessId : undefined),
+            this.externalService.getLeagues('main', 1)
+        );
+
+        request.subscribe(res => {
+                // map character-leagues to new array
+                const distinctLeagues = res[1];
+                res[0].forEach(char => {
+                    if (distinctLeagues.find(l => l.id === char.league) === undefined) {
+                        distinctLeagues.push({ id: char.league } as League);
+                    }
+                });
+
+                if (distinctLeagues.find(l => l.id === this.leagueName) === undefined ||
+                    distinctLeagues.find(l => l.id === this.tradeLeagueName) === undefined) {
                     this.initSetup();
                     this.settingsService.set('profile', undefined);
                     this.stepper.selectedIndex = 0;
                 }
+                this.externalService.leagues.next(distinctLeagues);
             });
+    }
+
+    ngOnInit() {
+        if (this.electronService.isElectron()) {
+            this.checkLeagues();
         }
 
         if (!this.electronService.isElectron()) {
@@ -308,6 +333,7 @@ export class LoginComponent implements OnInit, OnDestroy {
 
                 this.externalService.leagues.next(distinctLeagues);
                 this.fetchedLeagues = true;
+
                 if (skipStep) {
                     setTimeout(() => {
                         this.stepper.selectedIndex = 2;
