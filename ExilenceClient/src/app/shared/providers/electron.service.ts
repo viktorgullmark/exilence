@@ -66,7 +66,6 @@ export class ElectronService {
 
   clearWebFrameCache() {
     this.webFrame.clearCache();
-    console.log('Webframe Cache Cleared');
   }
 
 
