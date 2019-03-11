@@ -2,6 +2,9 @@
 All notable changes to this project will be documented in this file.
 
 ## [0.9.29] - XXXX-XX-XX
+### Added
+- Added informative text that explains where prices come from
+
 ### Fixed
 - Fixed a bug where automatic pricing would only allow pricing of chaos orbs
 
