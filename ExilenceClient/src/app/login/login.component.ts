@@ -224,22 +224,22 @@ export class LoginComponent implements OnInit, OnDestroy {
         );
 
         request.subscribe(res => {
-                // map character-leagues to new array
-                const distinctLeagues = res[1];
-                res[0].forEach(char => {
-                    if (distinctLeagues.find(l => l.id === char.league) === undefined) {
-                        distinctLeagues.push({ id: char.league } as League);
-                    }
-                });
-
-                if (distinctLeagues.find(l => l.id === this.leagueName) === undefined ||
-                    distinctLeagues.find(l => l.id === this.tradeLeagueName) === undefined) {
-                    this.initSetup();
-                    this.settingsService.set('profile', undefined);
-                    this.stepper.selectedIndex = 0;
+            // map character-leagues to new array
+            const distinctLeagues = res[1];
+            res[0].forEach(char => {
+                if (distinctLeagues.find(l => l.id === char.league) === undefined) {
+                    distinctLeagues.push({ id: char.league } as League);
                 }
-                this.externalService.leagues.next(distinctLeagues);
             });
+
+            if (distinctLeagues.find(l => l.id === this.leagueName) === undefined ||
+                distinctLeagues.find(l => l.id === this.tradeLeagueName) === undefined) {
+                this.initSetup();
+                this.settingsService.set('profile', undefined);
+                this.stepper.selectedIndex = 0;
+            }
+            this.externalService.leagues.next(distinctLeagues);
+        });
     }
 
     ngOnInit() {
@@ -305,60 +305,65 @@ export class LoginComponent implements OnInit, OnDestroy {
 
         const sessId = this.sessFormGroup.controls.sessionId.value;
 
-        const request = forkJoin(
-            this.externalService.getCharacterList(accountName !== undefined ? accountName :
-                this.accFormGroup.controls.accountName.value, (sessId !== undefined && sessId !== '') ? sessId : undefined),
-            this.externalService.getLeagues('main', 1)
-        );
+        const accName = accountName !== undefined ? accountName :
+            this.accFormGroup.controls.accountName.value;
 
-        request.subscribe(res => {
-            // filter out SSF-leagues when listing trade-leagues
-            this.tradeLeagues = res[1].filter(x => x.id.indexOf('SSF') === -1);
+        if (accName !== undefined && accName !== '') {
 
-            if (res[0].errorType !== undefined && res[0].errorType === ErrorType.Unauthorized) {
-                // profile is private
-                this.privateProfileError = true;
-                this.isFetchingLeagues = false;
-            } else if (res[0].errorType !== undefined && res[0].errorType === ErrorType.Unreachable) {
-                this.siteUnreachable = true;
-            } else {
+            const request = forkJoin(
+                this.externalService.getCharacterList(accName, (sessId !== undefined && sessId !== '') ? sessId : undefined),
+                this.externalService.getLeagues('main', 1)
+            );
 
-                // map character-leagues to new array
-                const distinctLeagues = [];
-                res[0].forEach(char => {
-                    if (distinctLeagues.find(l => l.id === char.league) === undefined) {
-                        distinctLeagues.push({ id: char.league } as League);
-                    }
-                });
+            request.subscribe(res => {
+                // filter out SSF-leagues when listing trade-leagues
+                this.tradeLeagues = res[1].filter(x => x.id.indexOf('SSF') === -1);
 
-                this.externalService.leagues.next(distinctLeagues);
-                this.fetchedLeagues = true;
-
-                if (skipStep) {
-                    setTimeout(() => {
-                        this.stepper.selectedIndex = 2;
-                    }, 250);
-                }
-                setTimeout(() => {
+                if (res[0].errorType !== undefined && res[0].errorType === ErrorType.Unauthorized) {
+                    // profile is private
+                    this.privateProfileError = true;
                     this.isFetchingLeagues = false;
-                }, 500);
+                } else if (res[0].errorType !== undefined && res[0].errorType === ErrorType.Unreachable) {
+                    this.siteUnreachable = true;
+                } else {
 
-                if (shouldValidate) {
-                    const form = this.getFormObj();
-                    const requests = [];
-                    distinctLeagues.forEach(league => {
-                        requests.push(this.externalService.validateSessionId(
-                            form.sessionId,
-                            form.accountName,
-                            league.id,
-                            0
-                        ));
+                    // map character-leagues to new array
+                    const distinctLeagues = [];
+                    res[0].forEach(char => {
+                        if (distinctLeagues.find(l => l.id === char.league) === undefined) {
+                            distinctLeagues.push({ id: char.league } as League);
+                        }
                     });
 
-                    this.sendValidateRequests(requests);
+                    this.externalService.leagues.next(distinctLeagues);
+                    this.fetchedLeagues = true;
+
+                    if (skipStep) {
+                        setTimeout(() => {
+                            this.stepper.selectedIndex = 2;
+                        }, 250);
+                    }
+                    setTimeout(() => {
+                        this.isFetchingLeagues = false;
+                    }, 500);
+
+                    if (shouldValidate) {
+                        const form = this.getFormObj();
+                        const requests = [];
+                        distinctLeagues.forEach(league => {
+                            requests.push(this.externalService.validateSessionId(
+                                form.sessionId,
+                                form.accountName,
+                                league.id,
+                                0
+                            ));
+                        });
+
+                        this.sendValidateRequests(requests);
+                    }
                 }
-            }
-        });
+            });
+        }
     }
 
     mapTradeLeague(event) {

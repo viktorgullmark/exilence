@@ -5,6 +5,7 @@ All notable changes to this project will be documented in this file.
 ### Fixed
 - Fixed a bug where the net worth calculation would stop working for a minority of users
 - Fixed a bug where fetching leagues was not ratelimited, and could cause errors
+- Fixed a bug where some requests were sent even when the account name was empty
 
 ## [0.9.29] - 2019-03-11
 ### Added
