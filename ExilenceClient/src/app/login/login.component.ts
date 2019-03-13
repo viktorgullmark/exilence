@@ -217,29 +217,34 @@ export class LoginComponent implements OnInit, OnDestroy {
         const accountName = form.accountName;
         const sessId = this.sessFormGroup.controls.sessionId.value;
 
-        const request = forkJoin(
-            this.externalService.getCharacterList(accountName !== undefined ? accountName :
-                this.accFormGroup.controls.accountName.value, (sessId !== undefined && sessId !== '') ? sessId : undefined),
-            this.externalService.getLeagues('main', 1)
-        );
+        const accName = accountName !== undefined ? accountName :
+            this.accFormGroup.controls.accountName.value;
 
-        request.subscribe(res => {
-            // map character-leagues to new array
-            const distinctLeagues = res[1];
-            res[0].forEach(char => {
-                if (distinctLeagues.find(l => l.id === char.league) === undefined) {
-                    distinctLeagues.push({ id: char.league } as League);
+        if (accName !== undefined && accName !== '') {
+
+            const request = forkJoin(
+                this.externalService.getCharacterList(accName, (sessId !== undefined && sessId !== '') ? sessId : undefined),
+                this.externalService.getLeagues('main', 1)
+            );
+
+            request.subscribe(res => {
+                // map character-leagues to new array
+                const distinctLeagues = res[1];
+                res[0].forEach(char => {
+                    if (distinctLeagues.find(l => l.id === char.league) === undefined) {
+                        distinctLeagues.push({ id: char.league } as League);
+                    }
+                });
+
+                if (distinctLeagues.find(l => l.id === this.leagueName) === undefined ||
+                    distinctLeagues.find(l => l.id === this.tradeLeagueName) === undefined) {
+                    this.initSetup();
+                    this.settingsService.set('profile', undefined);
+                    this.stepper.selectedIndex = 0;
                 }
+                this.externalService.leagues.next(distinctLeagues);
             });
-
-            if (distinctLeagues.find(l => l.id === this.leagueName) === undefined ||
-                distinctLeagues.find(l => l.id === this.tradeLeagueName) === undefined) {
-                this.initSetup();
-                this.settingsService.set('profile', undefined);
-                this.stepper.selectedIndex = 0;
-            }
-            this.externalService.leagues.next(distinctLeagues);
-        });
+        }
     }
 
     ngOnInit() {
