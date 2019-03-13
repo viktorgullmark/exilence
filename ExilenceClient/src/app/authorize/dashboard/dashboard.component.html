@@ -20,19 +20,15 @@
     </div>
     <h3 class="mat-h3">Changes included in version {{appVersion}}</h3>
     <ul>
-        <h4>Added</h4>
+        <h4>Changed</h4>
         <ul>
-            <li>Added informative text that explains where prices come from</li>
-            <li>Added optimizations to reduce the memory usage</li>
+            <li>Reformulated an error-message on the login-screen</li>
         </ul>
         <h4>Fixed</h4>
         <ul>
-            <li>Fixed a bug where automatic pricing would only allow pricing of chaos orbs</li>
-            <li>Fixed a bug where login-settings would sometimes get reset if you were playing in a private league</li>
-        </ul>
-        <h4>Removed</h4>
-        <ul>
-            <li>Removed obsolete text on the disconnect-page</li>
+            <li>Fixed a bug where the net worth calculation would stop working for a minority of users</li>
+            <li>Fixed a bug where fetching leagues was not ratelimited, and could cause errors</li>
+            <li>Fixed a bug where some requests were sent even when the account name was empty</li>
         </ul>
     </ul>
     <mat-divider class="divider"></mat-divider>
