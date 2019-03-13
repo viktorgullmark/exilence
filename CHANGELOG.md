@@ -1,6 +1,10 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [0.9.31] - 2019-XX-XX
+### Fixed
+- Fixed a bug where unauthorized requests weren't catched correctly
+
 ## [0.9.30] - 2019-03-13
 ### Changed
 - Reformulated an error-message on the login-screen

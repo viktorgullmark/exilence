@@ -177,6 +177,9 @@ export class ExternalService implements OnDestroy {
               { status: { id: 'pathofexile', changes: { online: false } } }));
             return of({ errorType: ErrorType.Unreachable } as RequestError);
           }
+          if (e.status === 403) {
+            return of({ errorType: ErrorType.Unauthorized } as RequestError);
+          }
           return of(null);
         }));
   }
@@ -200,6 +203,9 @@ export class ExternalService implements OnDestroy {
           this.checkStatus();
           this.depStatusStore.dispatch(new depStatusActions.UpdateDepStatus({ status: { id: 'pathofexile', changes: { online: false } } }));
           return of({ errorType: ErrorType.Unreachable } as RequestError);
+        }
+        if (e.status === 403) {
+          return of({ errorType: ErrorType.Unauthorized } as RequestError);
         }
         return Observable.of(null);
       });
