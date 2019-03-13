@@ -54,9 +54,11 @@ export class ExternalService implements OnDestroy {
     private depStatusStore: Store<DependencyStatusState>
   ) {
     this.depStatusStoreSub = this.depStatusStore.select(depStatusReducer.selectAllDepStatuses).subscribe(statuses => {
-      const status = statuses.find(s => s.name === 'pathofexile');
-      if (status !== undefined) {
-        this.poeOnline = status.online;
+      if (statuses !== undefined) {
+        const status = statuses.find(s => s.name === 'pathofexile');
+        if (status !== undefined) {
+          this.poeOnline = status.online;
+        }
       }
     });
   }
@@ -117,8 +119,8 @@ export class ExternalService implements OnDestroy {
                 this.depStatusStore.dispatch(
                   new depStatusActions.UpdateDepStatus({ status: { id: 'pathofexile', changes: { online: true } } })
                 );
-                clearInterval(this.statusCheckInterval);
               }
+              clearInterval(this.statusCheckInterval);
             });
       }
     }, 15 * 1000);
@@ -126,53 +128,57 @@ export class ExternalService implements OnDestroy {
 
   getCharacterList(account: string, sessionId?: string) {
     const parameters = `?accountName=${account}`;
-    return this.http.get('https://www.pathofexile.com/character-window/get-characters' + parameters)
-      .retryWhen(err => {
-        let retries = 0;
-        return err
-          .delay(500)
-          .map(error => {
-            if (retries++ === 2) {
-              throw error;
-            }
-            return error;
-          });
-      })
-      .catch(e => {
-        if (e.status !== 403 && e.status !== 404) {
-          this.checkStatus();
-          this.depStatusStore.dispatch(new depStatusActions.UpdateDepStatus({ status: { id: 'pathofexile', changes: { online: false } } }));
-          return of({ errorType: ErrorType.Unreachable } as RequestError);
-        }
-        if (e.status === 403) {
-          return of({ errorType: ErrorType.Unauthorized } as RequestError);
-        }
-        return of(null);
-      });
+    return this.RequestRateLimit.limit(
+      this.http.get('https://www.pathofexile.com/character-window/get-characters' + parameters)
+        .retryWhen(err => {
+          let retries = 0;
+          return err
+            .delay(500)
+            .map(error => {
+              if (retries++ === 2) {
+                throw error;
+              }
+              return error;
+            });
+        })
+        .catch(e => {
+          if (e.status !== 403 && e.status !== 404) {
+            this.checkStatus();
+            this.depStatusStore.dispatch(new depStatusActions.UpdateDepStatus(
+              { status: { id: 'pathofexile', changes: { online: false } } }));
+            return of({ errorType: ErrorType.Unreachable } as RequestError);
+          }
+          if (e.status === 403) {
+            return of({ errorType: ErrorType.Unauthorized } as RequestError);
+          }
+          return of(null);
+        }));
   }
 
   getLeagues(type: string, compact: number) {
     const parameters = `?type=${type}&compact=${compact}`;
-    return this.http.get('https://api.pathofexile.com/leagues' + parameters)
-      .retryWhen(err => {
-        let retries = 0;
-        return err
-          .delay(500)
-          .map(error => {
-            if (retries++ === 2) {
-              throw error;
-            }
-            return error;
-          });
-      })
-      .catch(e => {
-        if (e.status !== 403 && e.status !== 404) {
-          this.checkStatus();
-          this.depStatusStore.dispatch(new depStatusActions.UpdateDepStatus({ status: { id: 'pathofexile', changes: { online: false } } }));
-          return of({ errorType: ErrorType.Unreachable } as RequestError);
-        }
-        return of(null);
-      });
+    return this.RequestRateLimit.limit(
+      this.http.get('https://api.pathofexile.com/leagues' + parameters)
+        .retryWhen(err => {
+          let retries = 0;
+          return err
+            .delay(500)
+            .map(error => {
+              if (retries++ === 2) {
+                throw error;
+              }
+              return error;
+            });
+        })
+        .catch(e => {
+          if (e.status !== 403 && e.status !== 404) {
+            this.checkStatus();
+            this.depStatusStore.dispatch(new depStatusActions.UpdateDepStatus(
+              { status: { id: 'pathofexile', changes: { online: false } } }));
+            return of({ errorType: ErrorType.Unreachable } as RequestError);
+          }
+          return of(null);
+        }));
   }
 
   getStashTabs(account: string, league: string) {
