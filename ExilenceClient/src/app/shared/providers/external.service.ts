@@ -344,6 +344,7 @@ export class ExternalService implements OnDestroy {
 
   setCharacter(data: EquipmentResponse, player: Player): Player {
     player.character = data.character;
+    player.character.items = [];
     if (data.items !== undefined) {
       player.character.items = this.mapItems(data.items);
     }
