@@ -8,6 +8,7 @@ All notable changes to this project will be documented in this file.
 
 ### Changed
 - Reduced width on scrollbar
+- Changed background-color on tables to be slightly darker
 
 ## [0.9.30] - 2019-03-13
 ### Changed
