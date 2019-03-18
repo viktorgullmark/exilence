@@ -33,6 +33,7 @@ namespace Exilence
             {
                 options.Configuration = Configuration.GetConnectionString("Redis");
                 options.InstanceName = "Exilence:";
+                options.ConfigurationOptions.ConnectTimeout = 15000;
             });
 
             services.AddCors(options =>
