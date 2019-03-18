@@ -1,7 +1,7 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
-## [0.9.31] - 2019-XX-XX
+## [0.9.31] - 2019-03-18
 ### Fixed
 - Fixed a bug where unauthorized requests weren't catched correctly
 - Fixed a bug where checking leagues would crash for some users

@@ -20,15 +20,15 @@
     </div>
     <h3 class="mat-h3">Changes included in version {{appVersion}}</h3>
     <ul>
-        <h4>Changed</h4>
-        <ul>
-            <li>Reformulated an error-message on the login-screen</li>
-        </ul>
         <h4>Fixed</h4>
         <ul>
-            <li>Fixed a bug where the net worth calculation would stop working for a minority of users</li>
-            <li>Fixed a bug where fetching leagues was not ratelimited, and could cause errors</li>
-            <li>Fixed a bug where some requests were sent even when the account name was empty</li>
+            <li>Fixed a bug where unauthorized requests weren't catched correctly</li>
+            <li>Fixed a bug where checking leagues would crash for some users</li>
+        </ul>
+        <h4>Changed</h4>
+        <ul>
+            <li>Reduced width on scrollbar</li>
+            <li>Changed background-color on tables to be slightly darker</li>
         </ul>
     </ul>
     <mat-divider class="divider"></mat-divider>
