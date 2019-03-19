@@ -548,7 +548,6 @@ export class PartyService implements OnDestroy {
             const inventoryItems = ItemHelper.getInventoryItems(player.character.items);
             this.enteredHostileArea.next(inventoryItems);
           }
-
           this.invokeUpdatePlayer(objToSend);
         });
     } else { // only invoke if we are offline, without re-setting items
@@ -643,9 +642,11 @@ export class PartyService implements OnDestroy {
     this.party.players.push(player);
     this.party.name = partyName;
     if (this._hubConnection) {
-      const oneDayAgo = (Date.now() - (24 * 60 * 60 * 1000));
-      const areasToSend = HistoryHelper.filterAreas(playerToSend.pastAreas, oneDayAgo);
-      playerToSend.pastAreas = areasToSend;
+      const oneDayAgo = (Date.now() - (12 * 60 * 60 * 1000));
+      const oneDayAgoMoment = moment().utc().subtract(12, 'hours');
+      playerToSend.netWorthSnapshots = HistoryHelper.filterNetworth(playerToSend.netWorthSnapshots, oneDayAgoMoment);
+      playerToSend.pastAreas = HistoryHelper.filterAreas(playerToSend.pastAreas, oneDayAgo);
+
       this.electronService.compress(playerToSend, (data) => this._hubConnection.invoke('JoinParty', partyName, spectatorCode, data));
     }
   }
