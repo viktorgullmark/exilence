@@ -2,7 +2,7 @@
 All notable changes to this project will be documented in this file.
 
 ## [0.9.33] - 2019-03-19
-###
+### Fixed
 - Hotfix for history not being filtered properly in the latest release
 
 ## [0.9.32] - 2019-03-19
