@@ -165,6 +165,7 @@ export class PartyService implements OnDestroy {
           const playerObj = Object.assign({}, player);
           if (this.currentPlayer !== undefined && playerObj.account === this.currentPlayer.account) {
             playerObj.netWorthSnapshots = Object.assign([], this.currentPlayer.netWorthSnapshots);
+            playerObj.pastAreas = Object.assign([], this.currentPlayer.pastAreas);
           }
           // if we are a player, there should be a partyname that we can use, since we wont expose it from the server
           if (this.party.name !== undefined) {
