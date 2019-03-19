@@ -531,7 +531,7 @@ export class PartyService implements OnDestroy {
     const oneDayAgoMoment = moment().utc().subtract(12, 'hours');
     this.updateInProgress = true;
 
-    let objToSend = Object.assign({}, player);
+    const objToSend = Object.assign({}, player);
 
     objToSend.netWorthSnapshots = HistoryHelper.filterNetworth(objToSend.netWorthSnapshots, oneDayAgoMoment);
     objToSend.pastAreas = HistoryHelper.filterAreas(objToSend.pastAreas, oneDayAgo);
@@ -540,7 +540,6 @@ export class PartyService implements OnDestroy {
       this.externalService.getCharacterInventory(this.accountInfo.accountName, this.accountInfo.characterName)
         .subscribe((equipment: EquipmentResponse) => {
           player = this.externalService.setCharacter(equipment, player);
-          objToSend = player;
 
           if (reason === 'area-change-to-neutral') {
             const inventoryItems = ItemHelper.getInventoryItems(player.character.items);
