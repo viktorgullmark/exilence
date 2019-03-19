@@ -533,8 +533,8 @@ export class PartyService implements OnDestroy {
   }
 
   public updatePlayer(player: Player, reason: string = null) {
-    const oneDayAgo = (Date.now() - (1 * 60 * 60 * 1000));
-    const oneDayAgoMoment = moment().utc().subtract(1, 'hours');
+    const oneDayAgo = (Date.now() - (12 * 60 * 60 * 1000));
+    const oneDayAgoMoment = moment().utc().subtract(12, 'hours');
     this.updateInProgress = true;
 
     const objToSend = Object.assign({}, player);
@@ -648,8 +648,8 @@ export class PartyService implements OnDestroy {
     this.party.players.push(player);
     this.party.name = partyName;
     if (this._hubConnection) {
-      const oneDayAgo = (Date.now() - (1 * 60 * 60 * 1000));
-      const oneDayAgoMoment = moment().utc().subtract(1, 'hours');
+      const oneDayAgo = (Date.now() - (12 * 60 * 60 * 1000));
+      const oneDayAgoMoment = moment().utc().subtract(12, 'hours');
       playerToSend.netWorthSnapshots = HistoryHelper.filterNetworth(playerToSend.netWorthSnapshots, oneDayAgoMoment);
       playerToSend.pastAreas = HistoryHelper.filterAreas(playerToSend.pastAreas, oneDayAgo);
 
