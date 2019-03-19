@@ -220,7 +220,7 @@ export class PartyService implements OnDestroy {
         const playerObj = Object.assign({}, player);
         if (playerObj.account === this.currentPlayer.account) {
           playerObj.netWorthSnapshots = Object.assign([], this.currentPlayer.netWorthSnapshots);
-          // playerObj.pastAreas = Object.assign([], this.currentPlayer.pastAreas);
+          playerObj.pastAreas = Object.assign([], this.currentPlayer.pastAreas);
         }
         if (this.selectedPlayerObj.account === playerObj.account) {
           this.selectedPlayer.next(playerObj);
@@ -527,11 +527,14 @@ export class PartyService implements OnDestroy {
   }
 
   public updatePlayer(player: Player, reason: string = null) {
-    const oneDayAgo = (Date.now() - (24 * 60 * 60 * 1000));
-    const oneDayAgoMoment = moment().utc().subtract(1, 'days');
+    const oneDayAgo = (Date.now() - (12 * 60 * 60 * 1000));
+    const oneDayAgoMoment = moment().utc().subtract(12, 'hours');
     this.updateInProgress = true;
 
     let objToSend = Object.assign({}, player);
+
+    objToSend.netWorthSnapshots = HistoryHelper.filterNetworth(objToSend.netWorthSnapshots, oneDayAgoMoment);
+    objToSend.pastAreas = HistoryHelper.filterAreas(objToSend.pastAreas, oneDayAgo);
 
     if (this.poeOnline) {
       this.externalService.getCharacterInventory(this.accountInfo.accountName, this.accountInfo.characterName)
@@ -547,7 +550,6 @@ export class PartyService implements OnDestroy {
             this.enteredHostileArea.next(inventoryItems);
           }
 
-          objToSend.pastAreas = HistoryHelper.filterAreas(objToSend.pastAreas, oneDayAgo);
           this.invokeUpdatePlayer(objToSend);
         });
     } else { // only invoke if we are offline, without re-setting items
