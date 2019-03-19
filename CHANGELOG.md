@@ -5,6 +5,7 @@ All notable changes to this project will be documented in this file.
 ### Fixed
 - Fixed a bug where the net worth table was limited to 40 items (now shows everything correctly)
 - Fixed a bug where characters would get duplicated when they were reconnected to a group
+- Fixed a bug where net worth snapshotting would get stuck when requests failed to pathofexile.com
 
 ## [0.9.31] - 2019-03-18
 ### Fixed
