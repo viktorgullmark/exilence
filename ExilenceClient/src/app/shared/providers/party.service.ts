@@ -166,16 +166,20 @@ export class PartyService implements OnDestroy {
           if (this.currentPlayer !== undefined && playerObj.account === this.currentPlayer.account) {
             playerObj.netWorthSnapshots = Object.assign([], this.currentPlayer.netWorthSnapshots);
             playerObj.pastAreas = Object.assign([], this.currentPlayer.pastAreas);
+
+            const index = this.party.players.indexOf(this.party.players.find(x => x.account === player.account));
+            party[index] = playerObj;
           }
           // if we are a player, there should be a partyname that we can use, since we wont expose it from the server
           if (this.party.name !== undefined) {
             party.name = this.party.name;
           }
+
           this.party = party;
           this.moveSelfToFirst();
           this.updatePlayerLists(this.party);
           this.accountService.player.next(playerObj);
-          const playerToSelect = !player.isSpectator ? player : this.party.players.find(x => !x.isSpectator);
+          const playerToSelect = !playerObj.isSpectator ? playerObj : this.party.players.find(x => !x.isSpectator);
           if (playerToSelect !== undefined) {
             this.selectedPlayer.next(playerToSelect);
           }
@@ -213,16 +217,17 @@ export class PartyService implements OnDestroy {
       this.electronService.decompress(data, (player: Player) => {
         const index = this.party.players.indexOf(this.party.players.find(x => x.account === player.account));
 
-        this.party.players[index] = player;
-        this.updatePlayerLists(this.party);
-        this.partyUpdated.next(this.party);
-
         // if player is self, set history based on local data
         const playerObj = Object.assign({}, player);
         if (playerObj.account === this.currentPlayer.account) {
           playerObj.netWorthSnapshots = Object.assign([], this.currentPlayer.netWorthSnapshots);
           playerObj.pastAreas = Object.assign([], this.currentPlayer.pastAreas);
         }
+
+        this.party.players[index] = playerObj;
+        this.updatePlayerLists(this.party);
+        this.partyUpdated.next(this.party);
+
         if (this.selectedPlayerObj.account === playerObj.account) {
           this.selectedPlayer.next(playerObj);
         }
@@ -528,8 +533,8 @@ export class PartyService implements OnDestroy {
   }
 
   public updatePlayer(player: Player, reason: string = null) {
-    const oneDayAgo = (Date.now() - (12 * 60 * 60 * 1000));
-    const oneDayAgoMoment = moment().utc().subtract(12, 'hours');
+    const oneDayAgo = (Date.now() - (1 * 60 * 60 * 1000));
+    const oneDayAgoMoment = moment().utc().subtract(1, 'hours');
     this.updateInProgress = true;
 
     const objToSend = Object.assign({}, player);
@@ -643,8 +648,8 @@ export class PartyService implements OnDestroy {
     this.party.players.push(player);
     this.party.name = partyName;
     if (this._hubConnection) {
-      const oneDayAgo = (Date.now() - (12 * 60 * 60 * 1000));
-      const oneDayAgoMoment = moment().utc().subtract(12, 'hours');
+      const oneDayAgo = (Date.now() - (1 * 60 * 60 * 1000));
+      const oneDayAgoMoment = moment().utc().subtract(1, 'hours');
       playerToSend.netWorthSnapshots = HistoryHelper.filterNetworth(playerToSend.netWorthSnapshots, oneDayAgoMoment);
       playerToSend.pastAreas = HistoryHelper.filterAreas(playerToSend.pastAreas, oneDayAgo);
 
