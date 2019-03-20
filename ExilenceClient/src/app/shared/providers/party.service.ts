@@ -167,7 +167,7 @@ export class PartyService implements OnDestroy {
             playerObj.netWorthSnapshots = Object.assign([], this.currentPlayer.netWorthSnapshots);
             playerObj.pastAreas = Object.assign([], this.currentPlayer.pastAreas);
 
-            const index = this.party.players.indexOf(this.party.players.find(x => x.account === player.account));
+            const index = party.players.indexOf(party.players.find(x => x.account === player.account));
             party[index] = playerObj;
           }
           // if we are a player, there should be a partyname that we can use, since we wont expose it from the server

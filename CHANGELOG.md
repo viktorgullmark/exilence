@@ -1,6 +1,10 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [0.9.34] - 2019-XX-XX
+### Fixed
+- Fixed a bug where the history was not properly set directly upon entering a group, only after changing zones
+
 ## [0.9.33] - 2019-03-19
 ### Fixed
 - Hotfix for history not being filtered properly in the latest release
