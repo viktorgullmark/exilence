@@ -542,6 +542,8 @@ export class PartyService implements OnDestroy {
     objToSend.netWorthSnapshots = HistoryHelper.filterNetworth(objToSend.netWorthSnapshots, oneDayAgoMoment);
     objToSend.pastAreas = HistoryHelper.filterAreas(objToSend.pastAreas, oneDayAgo);
 
+    const patch  = this.electronService.generatePatch(objToSend);
+
     if (this.poeOnline) {
       this.externalService.getCharacterInventory(this.accountInfo.accountName, this.accountInfo.characterName)
         .subscribe((equipment: EquipmentResponse) => {
@@ -554,16 +556,21 @@ export class PartyService implements OnDestroy {
             const inventoryItems = ItemHelper.getInventoryItems(player.character.items);
             this.enteredHostileArea.next(inventoryItems);
           }
-          this.invokeUpdatePlayer(objToSend);
+          this.invokeUpdatePlayer(patch);
         });
     } else { // only invoke if we are offline, without re-setting items
-      this.invokeUpdatePlayer(objToSend);
+      this.invokeUpdatePlayer(patch);
     }
   }
 
-  public invokeUpdatePlayer(player: Player) {
+  public invokeUpdatePlayer(player: any) {
     if (this._hubConnection) {
-      this.electronService.compress(player, (data) => this._hubConnection.invoke('UpdatePlayer', this.party.name, data)
+      this.electronService.compress(player, (data) => this._hubConnection.invoke(
+        'UpdatePlayer',
+        this.party.name,
+        this.currentPlayer.character.name,
+        data
+       )
         .catch((e) => {
           this.logService.log(e, null, true);
         }));
@@ -653,6 +660,7 @@ export class PartyService implements OnDestroy {
       playerToSend.netWorthSnapshots = HistoryHelper.filterNetworth(playerToSend.netWorthSnapshots, oneDayAgoMoment);
       playerToSend.pastAreas = HistoryHelper.filterAreas(playerToSend.pastAreas, oneDayAgo);
 
+      this.electronService.setPlayer(playerToSend);
       this.electronService.compress(playerToSend, (data) => this._hubConnection.invoke('JoinParty', partyName, spectatorCode, data));
     }
   }

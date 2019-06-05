@@ -3,10 +3,12 @@ import { Injectable } from '@angular/core';
 import * as childProcess from 'child_process';
 import { ipcRenderer, remote, shell, webFrame } from 'electron';
 import * as fs from 'fs';
+import * as jsonPatch from 'fast-json-patch';
 
 import { AppConfig } from '../../../environments/environment';
 import { LogService } from './log.service';
 import { Router, Event, NavigationEnd } from '@angular/router';
+import { Player } from '../interfaces/player.interface';
 
 // If you import a module but never use any of the imported values other than as TypeScript types,
 // the resulting javascript file will look as if you never imported the module at all.
@@ -25,6 +27,8 @@ export class ElectronService {
   lodash: any;
   arch: any;
   clipboard: any;
+
+  oldPlayer: Player;
 
 
   constructor(
@@ -95,6 +99,16 @@ export class ElectronService {
       settings: stringSettings,
       data: log
     });
+  }
+
+  generatePatch(newPlayer) {
+      const diff = jsonPatch.compare(this.oldPlayer, newPlayer);
+      this.oldPlayer = Object.assign({}, newPlayer);
+      return diff;
+  }
+
+  setPlayer(newPlayer) {
+    this.oldPlayer = newPlayer;
   }
 
 

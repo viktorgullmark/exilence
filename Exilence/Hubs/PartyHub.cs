@@ -1,6 +1,7 @@
 ﻿using Exilence.Helper;
 using Exilence.Interfaces;
 using Microsoft.AspNetCore.Cors;
+using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.Configuration;
 using Shared.Helper;
@@ -192,9 +193,12 @@ namespace Exilence.Hubs
             await Clients.Group(partyName).SendAsync("PlayerLeft", CompressionHelper.Compress(playerToKick));
         }
 
-        public async Task UpdatePlayer(string partyName, string playerObj)
+        public async Task UpdatePlayer(string partyName, string characterName, string playerObj)
         {
-            var player = CompressionHelper.Decompress<PlayerModel>(playerObj);
+            var playerModelPatch = CompressionHelper.Decompress<JsonPatchDocument<PlayerModel>>(playerObj);
+            var playerStorageModel = await _mongoRepository.GetPlayerByCharacterName(partyName, characterName);
+            var player = StorageHelper.FromStoragePlayer(playerStorageModel);
+            playerModelPatch.ApplyTo(player);
 
             var storageParty = await _mongoRepository.GetParty(partyName);
             if (storageParty != null)
