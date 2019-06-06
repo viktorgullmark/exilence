@@ -249,7 +249,8 @@ namespace Exilence.Hubs
         {
             if (!string.IsNullOrEmpty(partyName))
             {
-                await _mongoRepository.AddToConnectionIndex(ConnectionId, partyName);
+                var backend = _configuration["Backend:Name"];
+                await _mongoRepository.AddToConnectionIndex(ConnectionId, partyName, backend);
             }
         }
     }
