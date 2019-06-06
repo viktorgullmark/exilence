@@ -537,15 +537,15 @@ export class PartyService implements OnDestroy {
     const oneDayAgoMoment = moment().utc().subtract(12, 'hours');
     this.updateInProgress = true;
 
-    const objToSend = Object.assign({}, player);
+    let playerToSend: Player = Object.assign({}, player);
 
-    objToSend.netWorthSnapshots = HistoryHelper.filterNetworth(objToSend.netWorthSnapshots, oneDayAgoMoment);
-    objToSend.pastAreas = HistoryHelper.filterAreas(objToSend.pastAreas, oneDayAgo);
+    playerToSend.netWorthSnapshots = HistoryHelper.filterNetworth(playerToSend.netWorthSnapshots, oneDayAgoMoment);
+    playerToSend.pastAreas = HistoryHelper.filterAreas(playerToSend.pastAreas, oneDayAgo);
 
     if (this.poeOnline) {
       this.externalService.getCharacterInventory(this.accountInfo.accountName, this.accountInfo.characterName)
         .subscribe((equipment: EquipmentResponse) => {
-          player = this.externalService.setCharacter(equipment, player);
+          playerToSend = this.externalService.setCharacter(equipment, playerToSend);
 
           if (reason === 'area-change-to-neutral') {
             const inventoryItems = ItemHelper.getInventoryItems(player.character.items);
@@ -554,10 +554,10 @@ export class PartyService implements OnDestroy {
             const inventoryItems = ItemHelper.getInventoryItems(player.character.items);
             this.enteredHostileArea.next(inventoryItems);
           }
-          this.invokeUpdatePlayer(objToSend);
+          this.invokeUpdatePlayer(playerToSend);
         });
     } else { // only invoke if we are offline, without re-setting items
-      this.invokeUpdatePlayer(objToSend);
+      this.invokeUpdatePlayer(playerToSend);
     }
   }
 

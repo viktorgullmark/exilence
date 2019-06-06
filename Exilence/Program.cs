@@ -15,7 +15,6 @@ namespace Exilence
         {
             var webHost = CreateWebHostBuilder(args).Build();
 
-            // Create a new scope
             using (var scope = webHost.Services.CreateScope())
             {
                 var backendService = scope.ServiceProvider.GetRequiredService<IBackendService>();

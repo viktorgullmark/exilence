@@ -17,7 +17,6 @@ namespace Shared.Repositories
         private MongoClient _client;
         private readonly IMongoDatabase _database;
         private readonly IMongoCollection<PartyStorageModel> _parties;
-        private readonly IMongoCollection<PlayerStorageModel> _players;
         private readonly IMongoCollection<LadderModel> _ladders;
         private readonly IMongoCollection<PriceFluctuationModel> _fluctuations;
         private readonly IMongoCollection<ConnectionModel> _connections;
