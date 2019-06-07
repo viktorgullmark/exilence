@@ -1,40 +1,36 @@
-import { Injectable, OnDestroy, EventEmitter } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { EventEmitter, Injectable, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
 import * as signalR from '@aspnet/signalr';
 import { HubConnection } from '@aspnet/signalr';
-import { BehaviorSubject } from 'rxjs/internal/BehaviorSubject';
-
-import { AppConfig } from '../../../environments/environment';
-import { AccountInfo } from '../interfaces/account-info.interface';
-import { EquipmentResponse } from '../interfaces/equipment-response.interface';
-import { Party } from '../interfaces/party.interface';
-import { Player, RecentPlayer, LadderPlayer, PlayerLadder } from '../interfaces/player.interface';
-import { AccountService } from './account.service';
-import { ExternalService } from './external.service';
-import { LogMonitorService } from './log-monitor.service';
-import { SettingsService } from './settings.service';
+import { Store } from '@ngrx/store';
 import * as moment from 'moment';
-import { LogMessage } from '../interfaces/log-message.interface';
-import { LogService } from './log.service';
-import { ElectronService } from './electron.service';
-import { NetWorthSnapshot } from '../interfaces/income.interface';
-import { MessageValueService } from './message-value.service';
-import { HistoryHelper } from '../helpers/history.helper';
-import { LeagueWithPlayers } from '../interfaces/league.interface';
-import { Subscription, Observable } from 'rxjs';
-import { ServerMessage } from '../interfaces/server-message.interface';
-import { ItemHelper } from '../helpers/item.helper';
-import { Item } from '../interfaces/item.interface';
-import { Store, select } from '@ngrx/store';
-import { LadderState, SpectatorCountState } from '../../app.states';
-import * as ladderActions from '../../store/ladder/ladder.actions';
+import { Observable, Subscription } from 'rxjs';
+import { BehaviorSubject } from 'rxjs/internal/BehaviorSubject';
+import { AppConfig } from '../../../environments/environment';
+import { DependencyStatusState, LadderState, SpectatorCountState } from '../../app.states';
 import * as ladderReducer from '../../store/ladder/ladder.reducer';
 import * as specCountActions from '../../store/spectator-count/spectator-count.actions';
-import * as specCountReducer from '../../store/spectator-count/spectator-count.reducer';
-import { DependencyStatusState } from '../../app.states';
-import * as depStatusActions from '../../store/dependency-status/dependency-status.actions';
+import { HistoryHelper } from '../helpers/history.helper';
+import { ItemHelper } from '../helpers/item.helper';
+import { AccountInfo } from '../interfaces/account-info.interface';
+import { EquipmentResponse } from '../interfaces/equipment-response.interface';
+import { NetWorthSnapshot } from '../interfaces/income.interface';
+import { Item } from '../interfaces/item.interface';
+import { LeagueWithPlayers } from '../interfaces/league.interface';
+import { LogMessage } from '../interfaces/log-message.interface';
+import { Party } from '../interfaces/party.interface';
+import { Player, PlayerLadder, RecentPlayer } from '../interfaces/player.interface';
+import { ServerMessage } from '../interfaces/server-message.interface';
 import * as depStatusReducer from './../../store/dependency-status/dependency-status.reducer';
-import { HttpClient } from '@angular/common/http';
+import { AccountService } from './account.service';
+import { ElectronService } from './electron.service';
+import { ExternalService } from './external.service';
+import { LogMonitorService } from './log-monitor.service';
+import { LogService } from './log.service';
+import { MessageValueService } from './message-value.service';
+import { SettingsService } from './settings.service';
+
 
 @Injectable()
 export class PartyService implements OnDestroy {
@@ -533,14 +529,14 @@ export class PartyService implements OnDestroy {
   }
 
   public updatePlayer(player: Player, reason: string = null) {
-    const oneDayAgo = (Date.now() - (12 * 60 * 60 * 1000));
-    const oneDayAgoMoment = moment().utc().subtract(12, 'hours');
+    const oneHourAgo = (Date.now() - (1 * 60 * 60 * 1000));
+    const oneHourAgoMoment = moment().utc().subtract(1, 'hours');
     this.updateInProgress = true;
 
     let playerToSend: Player = Object.assign({}, player);
 
-    playerToSend.netWorthSnapshots = HistoryHelper.filterNetworth(playerToSend.netWorthSnapshots, oneDayAgoMoment);
-    playerToSend.pastAreas = HistoryHelper.filterAreas(playerToSend.pastAreas, oneDayAgo);
+    playerToSend.netWorthSnapshots = HistoryHelper.filterNetworth(playerToSend.netWorthSnapshots, oneHourAgoMoment);
+    playerToSend.pastAreas = HistoryHelper.filterAreas(playerToSend.pastAreas, oneHourAgo);
 
     if (this.poeOnline) {
       this.externalService.getCharacterInventory(this.accountInfo.accountName, this.accountInfo.characterName)
@@ -648,10 +644,10 @@ export class PartyService implements OnDestroy {
     this.party.players.push(player);
     this.party.name = partyName;
     if (this._hubConnection) {
-      const oneDayAgo = (Date.now() - (12 * 60 * 60 * 1000));
-      const oneDayAgoMoment = moment().utc().subtract(12, 'hours');
-      playerToSend.netWorthSnapshots = HistoryHelper.filterNetworth(playerToSend.netWorthSnapshots, oneDayAgoMoment);
-      playerToSend.pastAreas = HistoryHelper.filterAreas(playerToSend.pastAreas, oneDayAgo);
+      const oneHourAgo = (Date.now() - (1 * 60 * 60 * 1000));
+      const oneHourAgoMoment = moment().utc().subtract(1, 'hours');
+      playerToSend.netWorthSnapshots = HistoryHelper.filterNetworth(playerToSend.netWorthSnapshots, oneHourAgoMoment);
+      playerToSend.pastAreas = HistoryHelper.filterAreas(playerToSend.pastAreas, oneHourAgo);
 
       this.electronService.compress(playerToSend, (data) => this._hubConnection.invoke('JoinParty', partyName, spectatorCode, data));
     }
