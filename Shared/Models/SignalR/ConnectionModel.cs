@@ -11,5 +11,6 @@ namespace Shared.Models.SignalR
         public string ConnectionId { get; set; }
         public string PartyName { get; set; }
         public DateTime ConnectedDate { get; set; }
+        public string Backend { get; set; }
     }
 }

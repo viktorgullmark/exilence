@@ -121,7 +121,8 @@ namespace Exilence.Hubs
 
                     storageParty = await _mongoRepository.GetParty(partyName);
                     storageParty.Name = "";
-                    var party = StorageHelper.FromStorageParty(storageParty);
+                    PartyModel party = StorageHelper.FromStorageParty(storageParty);
+                    player = party.Players.First(p => p.ConnectionID == ConnectionId);
                     await Clients.Caller.SendAsync("EnteredParty", CompressionHelper.Compress(party), CompressionHelper.Compress(player));
                 }
             }
@@ -253,7 +254,8 @@ namespace Exilence.Hubs
         {
             if (!string.IsNullOrEmpty(partyName))
             {
-                await _mongoRepository.AddToConnectionIndex(ConnectionId, partyName);
+                var backend = _configuration["Backend:Name"];
+                await _mongoRepository.AddToConnectionIndex(ConnectionId, partyName, backend);
             }
         }
     }

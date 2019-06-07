@@ -11,5 +11,10 @@ namespace Shared.Models
         public int DisplayMode { get; set; }
         public decimal? Progress { get; set; }
         public int Type { get; set; }
+
+        public PropertyModel()
+        {
+            Values = new List<List<string>>();
+        }
     }
 }

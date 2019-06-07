@@ -17,7 +17,7 @@ namespace Shared.Helper
             var compressedAreas = CompressionHelper.Compress(input.PastAreas);
             var compressedNetworth = CompressionHelper.Compress(input.NetWorthSnapshots);
 
-            return new PlayerStorageModel
+            var model = new PlayerStorageModel
             {
                 ConnectionID = input.ConnectionID,
                 Area = input.Area,
@@ -35,6 +35,10 @@ namespace Shared.Helper
                 NetWorthSnapshots = compressedNetworth,
                 PastAreas = compressedAreas
             };
+
+            model.Character.Items = model.Character.Items.OrderBy(i => i.Name).ToList();
+
+            return model;
         }
 
         public static PlayerModel FromStoragePlayer(PlayerStorageModel input)
@@ -42,7 +46,7 @@ namespace Shared.Helper
             var decompressedAreas = CompressionHelper.Decompress<List<ExtenedAreaInfoModel>>(input.PastAreas);
             var decompressedNetworth = CompressionHelper.Decompress<List<NetWorthSnapshot>>(input.NetWorthSnapshots);
 
-            return new PlayerModel
+            var model = new PlayerModel
             {
                 ConnectionID = input.ConnectionID,
                 Area = input.Area,
@@ -60,6 +64,10 @@ namespace Shared.Helper
                 NetWorthSnapshots = decompressedNetworth,
                 PastAreas = decompressedAreas
             };
+
+            model.Character.Items = model.Character.Items.OrderBy(i => i.Name).ToList();
+
+            return model;
         }
 
         public static PartyModel FromStorageParty(PartyStorageModel input)

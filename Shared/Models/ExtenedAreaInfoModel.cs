@@ -14,6 +14,14 @@ namespace Shared.Models
         public List<NetWorthItem> Difference { get; set; }
         public List<NetWorthItem> Inventory { get; set; }
         public List<ExtenedAreaInfoModel> SubAreas { get; set; }
+
+        public ExtenedAreaInfoModel()
+        {
+            EventArea = new EventArea();
+            Difference = new List<NetWorthItem>();
+            Inventory = new List<NetWorthItem>();
+            SubAreas = new List<ExtenedAreaInfoModel>();
+        }
     }
 
     [Serializable]
@@ -23,6 +31,10 @@ namespace Shared.Models
         public string Type { get; set; }
         public string Timestamp { get; set; }
         public List<AreaInfo> Info { get; set; }
+        public EventArea()
+        {
+            Info = new List<AreaInfo>();
+        }
     }
 
     [Serializable]
@@ -35,6 +47,11 @@ namespace Shared.Models
         public bool Trial { get; set; }
         public bool Waypoint { get; set; }
         public List<AreaBoss> Bosses { get; set; }
+
+        public AreaInfo()
+        {
+            Bosses = new List<AreaBoss>();
+        }
     }
 
     [Serializable]

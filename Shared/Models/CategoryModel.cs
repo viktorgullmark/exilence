@@ -8,5 +8,11 @@ namespace Shared.Models
     {
         public List<string> Gems { get; set; }
         public List<string> Jewels { get; set; }
+
+        public CategoryModel()
+        {
+            Gems = new List<string>();
+            Jewels = new List<string>();
+        }
     }
 }

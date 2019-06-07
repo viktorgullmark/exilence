@@ -14,6 +14,13 @@ namespace Shared.Models
         public int AscendancyClass { get; set; }
         public string Class { get; set; }
         public int Level { get; set; }
+        public long Experience { get; set; }
+        public bool LastActive { get; set; }
         public List<ItemModel> Items { get; set; }
+
+        public CharacterModel()
+        {
+            Items = new List<ItemModel>();
+        }
     }
 }

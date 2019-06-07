@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import * as childProcess from 'child_process';
 import { ipcRenderer, remote, shell, webFrame } from 'electron';
 import * as fs from 'fs';
+import * as jiff from 'jiff';
 import * as jsonPatch from 'fast-json-patch';
 
 import { AppConfig } from '../../../environments/environment';
@@ -102,8 +103,12 @@ export class ElectronService {
   }
 
   generatePatch(newPlayer) {
-      const diff = jsonPatch.compare(this.oldPlayer, newPlayer);
+      // const diff = jsonPatch.compare(this.oldPlayer, newPlayer);
+      var diff = jiff.diff(this.oldPlayer, newPlayer, { invertible: false });
       this.oldPlayer = Object.assign({}, newPlayer);
+      // diff = diff.filter(o => o.op === 'add' && o.value !== undefined );
+      console.log('Diff: ', diff);
+
       return diff;
   }
 

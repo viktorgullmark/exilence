@@ -17,7 +17,6 @@ namespace Shared.Repositories
         private MongoClient _client;
         private readonly IMongoDatabase _database;
         private readonly IMongoCollection<PartyStorageModel> _parties;
-        private readonly IMongoCollection<PlayerStorageModel> _players;
         private readonly IMongoCollection<LadderModel> _ladders;
         private readonly IMongoCollection<PriceFluctuationModel> _fluctuations;
         private readonly IMongoCollection<ConnectionModel> _connections;
@@ -195,13 +194,14 @@ namespace Shared.Repositories
 
         #region Connections
 
-        public async Task AddToConnectionIndex(string connectionId, string partyName)
+        public async Task AddToConnectionIndex(string connectionId, string partyName, string backend)
         {
             var connectionModel = new ConnectionModel()
             {
                 ConnectedDate = DateTime.UtcNow,
                 ConnectionId = connectionId,
-                PartyName = partyName
+                PartyName = partyName,
+                Backend = backend
             };
             await _connections.InsertOneAsync(connectionModel);
         }
@@ -225,6 +225,13 @@ namespace Shared.Repositories
             var result = await _connections.FindAsync(c => c.ConnectionId == connectionId);
             return await result.FirstOrDefaultAsync();
         }
+
+        public async Task<List<ConnectionModel>> GetAllConnectionForBackend(string backend)
+        {
+            var result = await _connections.FindAsync(c => c.Backend == backend);
+            return await result.ToListAsync();
+        }
+
 
         #endregion
     }

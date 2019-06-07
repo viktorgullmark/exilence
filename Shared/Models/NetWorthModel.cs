@@ -32,5 +32,10 @@ namespace Shared.Models
         public long Timestamp { get; set; }
         public double Value { get; set; }
         public List<NetWorthItem> Items { get; set; }
+
+        public NetWorthSnapshot()
+        {
+            Items = new List<NetWorthItem>();
+        }
     }
 }

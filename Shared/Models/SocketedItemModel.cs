@@ -30,5 +30,16 @@ namespace Shared.Models
         public List<PropertyModel> AdditionalProperties { get; set; }
         public string DescrText { get; set; }
         public string SecDescrText { get; set; }
+
+        public SocketedItemModel()
+        {
+            Category = new CategoryModel();
+            Requirements = new List<RequirementModel>();
+            NextLevelRequirements = new List<RequirementModel>();
+            ExplicitMods = new List<string>();
+            Properties = new List<PropertyModel>();
+            AdditionalProperties = new List<PropertyModel>();
+
+        }
     }
 }

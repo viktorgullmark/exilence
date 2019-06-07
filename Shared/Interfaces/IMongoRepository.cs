@@ -36,10 +36,11 @@ namespace Shared.Interfaces
         #endregion
 
         #region Connections
-        Task AddToConnectionIndex(string connectionId, string partyName);
+        Task AddToConnectionIndex(string connectionId, string partyName, string backend);
         Task RemoveConnectionFromIndex(string connectionId);
         Task<ConnectionModel> GetPartyNameFromConnectionIndex(string connectionId);
         Task<ConnectionModel> UpdatePartyNameInConnectionIndex(string connectionId, string partyName);
+        Task<List<ConnectionModel>> GetAllConnectionForBackend(string backend);
         #endregion
 
         #region Other

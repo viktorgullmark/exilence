@@ -23,6 +23,16 @@ namespace Shared.Models
         public List<NetWorthSnapshot> NetWorthSnapshots { get; set; }
         public ExtenedAreaInfoModel AreaInfo { get; set; }
         public List<ExtenedAreaInfoModel> PastAreas { get; set; }
+
+        public PlayerModel()
+        {
+            InArea = new List<string>();
+            Character = new CharacterModel();
+            NetWorthSnapshots = new List<NetWorthSnapshot>();
+            AreaInfo = new ExtenedAreaInfoModel();
+            PastAreas = new List<ExtenedAreaInfoModel>();
+
+        }
     }
 
     public class PlayerStorageModel

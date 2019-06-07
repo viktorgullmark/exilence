@@ -1,15 +1,27 @@
 ﻿using System.Net;
+using System.Threading.Tasks;
+using Exilence.Interfaces;
+using Exilence.Services;
 using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 
 namespace Exilence
 {
     public class Program
     {
-        public static void Main(string[] args)
+        public static async Task Main(string[] args)
         {
-            CreateWebHostBuilder(args).Build().Run();
+            var webHost = CreateWebHostBuilder(args).Build();
+
+            using (var scope = webHost.Services.CreateScope())
+            {
+                var backendService = scope.ServiceProvider.GetRequiredService<IBackendService>();
+                await backendService.clearDisconnectedPlayers();
+            }
+
+            await webHost.RunAsync();
         }
 
         public static IWebHostBuilder CreateWebHostBuilder(string[] args) =>

@@ -39,5 +39,20 @@ namespace Shared.Models
         public List<string> UtilityMods { get; set; }
         public List<string> FracturedMods { get; set; }
         public string DescrText { get; set; }
+
+        public ItemModel()
+        {
+            Sockets = new List<SocketModel>();
+            Requirements = new List<RequirementModel>();
+            ImplicitMods = new List<string>();
+            ExplicitMods = new List<string>();
+            SocketedItems = new List<SocketedItemModel>();
+            Properties = new List<PropertyModel>();
+            FlavourText = new List<string>();
+            CraftedMods = new List<string>();
+            EnchantMods = new List<string>();
+            UtilityMods = new List<string>();
+            FracturedMods = new List<string>();
+        }
     }
 }
