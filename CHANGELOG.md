@@ -7,6 +7,7 @@ All notable changes to this project will be documented in this file.
 ### Fixed
 - Fixed a bug where the history was not properly set directly upon entering a group, only after changing zones
 - Fixed a bug where inventory was not updating on zone changes.
+- Fixed removal of snapshots
 ### Changed
 - Changed how much history is sent to other clients, now only sends the past 1 hour to prevent server load during launch
 ### Added
