@@ -8,6 +8,7 @@
     <StartupObject />
     <ApplicationInsightsResourceId>/subscriptions/a05c03ff-98a1-4a2e-bf3b-7920f972beb8/resourcegroups/Default-ApplicationInsights-EastUS/providers/microsoft.insights/components/Exilence</ApplicationInsightsResourceId>
     <ApplicationInsightsAnnotationResourceId>/subscriptions/a05c03ff-98a1-4a2e-bf3b-7920f972beb8/resourceGroups/Default-ApplicationInsights-EastUS/providers/microsoft.insights/components/Exilence</ApplicationInsightsAnnotationResourceId>
+    <LangVersion>7.3</LangVersion>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
