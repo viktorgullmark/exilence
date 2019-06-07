@@ -1,42 +1,45 @@
 <h3 class="mat-h3 page-header">{{'PAGES.DASHBOARD.TITLE' | translate}}</h3>
 <mat-divider class="divider"></mat-divider>
 <div class="dashboard-content-container">
-    <div class="recent-container" *ngIf="recentParties.length > 0">
-        <div class="recent-party-container">
-            <div class="party-headline-container">
-                <h3 class="mat-h3 party-headline">Recent groups</h3>
-                <span> (click to join)</span>
-            </div>
-            <div class="recent-party-badge-container" *ngFor="let party of recentParties, let i = index">
-                <mat-card class="recent-party-badge"
-                    [ngClass]="{'current-party-badge': party === partyService.party.name }" (click)="joinParty(party)"
-                    *ngIf="i < 4 && !(i > 0 && partyService.maskedName)">
-                    <mat-icon (click)="$event.stopPropagation(); removePartyFromRecent(party)" class="close-icon">close
-                    </mat-icon>
-                    {{checkMask(party, i)}}
-                </mat-card>
-            </div>
-        </div>
+  <div class="recent-container" *ngIf="recentParties.length > 0">
+    <div class="recent-party-container">
+      <div class="party-headline-container">
+        <h3 class="mat-h3 party-headline">Recent groups</h3>
+        <span> (click to join)</span>
+      </div>
+      <div class="recent-party-badge-container" *ngFor="let party of recentParties, let i = index">
+        <mat-card class="recent-party-badge" [ngClass]="{'current-party-badge': party === partyService.party.name }"
+          (click)="joinParty(party)" *ngIf="i < 4 && !(i > 0 && partyService.maskedName)">
+          <mat-icon (click)="$event.stopPropagation(); removePartyFromRecent(party)" class="close-icon">close
+          </mat-icon>
+          {{checkMask(party, i)}}
+        </mat-card>
+      </div>
     </div>
-    <h3 class="mat-h3">Changes included in version {{appVersion}}</h3>
+  </div>
+  <h3 class="mat-h3">Changes included in version {{appVersion}}</h3>
+  <ul>
+    <h4>Fixed</h4>
     <ul>
-        <h4>Fixed</h4>
-        <ul>
-            <li>Fixed a bug where the player-list was not scrollable (guilds had problems viewing all members)</li>
-            <li>Fixed a bug where the net worth table was limited to 40 items (now shows everything correctly)</li>
-            <li>Fixed a bug where characters would get duplicated when they were reconnected to a group</li>
-            <li>Fixed a bug where net worth snapshotting would get stuck when requests failed to pathofexile.com</li>
-        </ul>
-        <h4>Changed</h4>
-        <ul>
-            <li>Changed how much history is sent to other clients, now only sends the past 12 hours</li>
-        </ul>
+      <li>Fixed a bug where the history was not properly set directly upon entering a group, only after changing zones.
+      </li>
+      <li>Fixed a bug where inventory was not updating on zone changes.</li>
     </ul>
-    <mat-divider class="divider"></mat-divider>
-    <p class="mat-body-1">
-        To see the full changelog, please go to <a class="inline-link"
-            (click)="openLink('https://github.com/viktorgullmark/exilence/blob/master/CHANGELOG.md')">this
-            link
-        </a>
-    </p>
+    <h4>Changed</h4>
+    <ul>
+      <li>Changed how much history is sent to other clients, now only sends the past 1 hour to prevent server load
+        during launch.</li>
+    </ul>
+    <h4>Added</h4>
+    <ul>
+      <li>Added check on backend startup to clear disconnected players and parties.</li>
+    </ul>
+  </ul>
+  <mat-divider class="divider"></mat-divider>
+  <p class="mat-body-1">
+    To see the full changelog, please go to <a class="inline-link"
+      (click)="openLink('https://github.com/viktorgullmark/exilence/blob/master/CHANGELOG.md')">this
+      link
+    </a>
+  </p>
 </div>
