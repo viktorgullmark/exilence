@@ -2,7 +2,10 @@
 All notable changes to this project will be documented in this file.
 
 
-
+## [0.9.35] - 2019-08-10
+### Fixed
+- Fixed a bug where area gain was not working
+- Fixed a bug where cookie information was not correctly set.
 ## [0.9.34] - 2019-06-07
 ### Fixed
 - Fixed a bug where the history was not properly set directly upon entering a group, only after changing zones

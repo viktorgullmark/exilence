@@ -329,7 +329,7 @@ export class ExternalService implements OnDestroy {
 
   setCookie(sessionId: string) {
     const cookie = {
-      url: 'http://www.pathofexile.com',
+      url: 'https://www.pathofexile.com',
       name: 'POESESSID',
       value: sessionId,
       domain: '.pathofexile.com',
@@ -344,10 +344,12 @@ export class ExternalService implements OnDestroy {
         this.logService.log('Could not set cookie', error, true);
       }
     });
+
+
   }
 
   removeCookie() {
-    this.electronService.remote.session.defaultSession.cookies.remove('http://www.pathofexile.com', 'POESESSID', (error) => {
+    this.electronService.remote.session.defaultSession.cookies.remove('https://www.pathofexile.com', 'POESESSID', (error) => {
       if (error) {
         this.logService.log('Could not set cookie', error, true);
       }

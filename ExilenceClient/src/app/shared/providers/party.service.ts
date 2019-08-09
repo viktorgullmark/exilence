@@ -542,12 +542,11 @@ export class PartyService implements OnDestroy {
       this.externalService.getCharacterInventory(this.accountInfo.accountName, this.accountInfo.characterName)
         .subscribe((equipment: EquipmentResponse) => {
           playerToSend = this.externalService.setCharacter(equipment, playerToSend);
-
           if (reason === 'area-change-to-neutral') {
-            const inventoryItems = ItemHelper.getInventoryItems(player.character.items);
+            const inventoryItems = ItemHelper.getInventoryItems(playerToSend.character.items);
             this.enteredNeutralArea.next(inventoryItems);
           } else if (reason === 'area-change-to-hostile') {
-            const inventoryItems = ItemHelper.getInventoryItems(player.character.items);
+            const inventoryItems = ItemHelper.getInventoryItems(playerToSend.character.items);
             this.enteredHostileArea.next(inventoryItems);
           }
           this.invokeUpdatePlayer(playerToSend);
