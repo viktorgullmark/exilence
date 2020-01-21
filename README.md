@@ -1,3 +1,5 @@
+⛔️ DEPRECATED: Exilence is being deprecated and all relevant functionality will be moved to [Exilence Next](https://github.com/viktorgullmark/exilence-next). We will keep Exilence running until we feel we have ported most of the popular functionality, see Discord for updates regarding this.
+
 Exilence
 [![No Maintenance Intended](http://unmaintained.tech/badge.svg)](http://unmaintained.tech/)
 [![Github All Releases](https://img.shields.io/github/downloads/viktorgullmark/exilence/total.svg)](https://github.com/viktorgullmark/exilence/releases)
