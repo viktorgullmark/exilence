@@ -2,6 +2,10 @@
 All notable changes to this project will be documented in this file.
 
 
+## [0.9.36] - 2020-02-04
+### Added
+- Added a deprecation notice modal
+
 ## [0.9.35] - 2019-08-10
 ### Fixed
 - Fixed a bug where area gain was not working

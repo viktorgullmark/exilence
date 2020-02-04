@@ -1,6 +1,6 @@
 {
   "name": "exilence",
-  "version": "0.9.35",
+  "version": "0.9.36",
   "author": {
     "name": "Viktor Gullmark",
     "email": "viktor.gullmark@hotmail.com"
@@ -29,7 +29,7 @@
     "build:prod": "npm run build -- -c production",
     "build:web": "ng build --prod",
     "ng:serve": "ng serve",
-    "electron:tsc": "tsc main.ts",
+    "electron:tsc": "tsc main.ts --lib es2015,es2016,es2017,esnext,dom",
     "electron:serve": "wait-on http-get://localhost:4200/ && npm run electron:tsc && electron . --serve",
     "electron:local": "npm run build:prod && electron .",
     "electron:linux": "npm run build:prod && npx electron-builder build --linux",
