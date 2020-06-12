@@ -1,4 +1,4 @@
-DEPRECATED: Exilence is deprecated please use [Exilence Next](https://github.com/viktorgullmark/exilence-next) instead. Exilence servers have been shut down and you wont be able to use the old version, join our Discord if you have any further questions.
+**DEPRECATED: Exilence is deprecated please use [Exilence Next](https://github.com/viktorgullmark/exilence-next) instead. Exilence servers have been shut down and you wont be able to use the old version, join our Discord if you have any further questions.**
 
 Exilence
 [![No Maintenance Intended](http://unmaintained.tech/badge.svg)](http://unmaintained.tech/)
