@@ -15,7 +15,6 @@ import { StoreModule } from '@ngrx/store';
 import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
-import { ContextMenuModule } from 'ngx-contextmenu';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -70,7 +69,6 @@ export function HttpLoaderFactory(http: HttpClient) {
       maxAge: 25, // Retains last 25 states
       logOnly: false // Restrict extension to log-only mode
     }),
-    ContextMenuModule.forRoot(),
     TranslateModule.forRoot({
       loader: {
         provide: TranslateLoader,

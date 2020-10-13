@@ -4,7 +4,6 @@ import { Router } from '@angular/router';
 import { colorSets as ngxChartsColorsets } from '@swimlane/ngx-charts/release/utils/color-sets';
 import * as d3 from 'd3';
 import * as moment from 'moment';
-import { ContextMenuComponent } from 'ngx-contextmenu';
 import { Subscription } from 'rxjs/internal/Subscription';
 
 import { ChartSeries, ChartSeriesEntry } from '../../../shared/interfaces/chart.interface';
@@ -32,8 +31,6 @@ export class IncomeComponent implements OnInit, OnDestroy {
   @Output() hidden: EventEmitter<any> = new EventEmitter;
   @Output() loadPrevious: EventEmitter<any> = new EventEmitter;
   @Output() removeSnapshot: EventEmitter<any> = new EventEmitter;
-
-  @ViewChild(ContextMenuComponent) public badgeMenu: ContextMenuComponent;
 
   public isHidden = false;
   public visible = true;

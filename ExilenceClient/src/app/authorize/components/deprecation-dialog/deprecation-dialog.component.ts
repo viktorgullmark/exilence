@@ -17,10 +17,11 @@ export class DeprecationDialogComponent implements OnInit {
     public dialogRef: MatDialogRef<DeprecationDialogComponent>,
     private electronService: ElectronService,
     @Inject(MAT_DIALOG_DATA) public data: DeprecationDialogData
-  ) {}
+  ) {
+    dialogRef.disableClose = true;
+  }
 
   onNoClick(): void {
-    this.dialogRef.close();
   }
   ngOnInit() {}
   

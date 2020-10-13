@@ -1,7 +1,7 @@
 <ng-container *ngIf="!localList">
     <ng-container *ngFor="let league of playerLeagues">
         <h3 class="mat-h3">{{league.id}}</h3>
-        <app-player-badge [contextMenu]="badgeMenu" [contextMenuSubject]="player" *ngFor="let player of league.players"
+        <app-player-badge *ngFor="let player of league.players"
             [player]="player">
         </app-player-badge>
     </ng-container>
@@ -11,13 +11,3 @@
     <app-player-badge *ngFor="let player of genericPlayers" localPlayer="true" [player]="player">
     </app-player-badge>
 </ng-container>
-
-<context-menu [disabled]="!currentPlayer?.isLeader || !electronService.isElectron()">
-    <ng-template contextMenuItem let-item (execute)="
-    assignLeader($event.item.character.name)">
-        Assign as leader
-    </ng-template>
-    <ng-template contextMenuItem let-item (execute)="kickFromGroup($event.item.character.name)">
-        Kick from group
-    </ng-template>
-</context-menu>

@@ -7,7 +7,6 @@ import { IncomeComponent } from './income.component';
 import { SharedModule } from '../../../shared/shared.module';
 import { MatButtonModule, MatIconModule } from '@angular/material';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import { ContextMenuModule } from 'ngx-contextmenu';
 import { ServerMessageDialogComponent } from '../server-message-dialog/server-message-dialog.component';
 import { ServerMessageDialogModule } from '../server-message-dialog/server-message-dialog.module';
 
@@ -19,7 +18,6 @@ import { ServerMessageDialogModule } from '../server-message-dialog/server-messa
     MatButtonModule,
     MatIconModule,
     MatTooltipModule,
-    ContextMenuModule,
     ServerMessageDialogModule
   ],
   declarations: [

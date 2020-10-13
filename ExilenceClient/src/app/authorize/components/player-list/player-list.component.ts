@@ -1,5 +1,4 @@
 import { Component, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { ContextMenuComponent } from 'ngx-contextmenu';
 import { Subscription } from 'rxjs/internal/Subscription';
 
 import { LeagueWithPlayers } from '../../../shared/interfaces/league.interface';
@@ -16,7 +15,6 @@ import { ElectronService } from '../../../shared/providers/electron.service';
 export class PlayerListComponent implements OnInit, OnDestroy {
 
   @Input() localList = false;
-  @ViewChild(ContextMenuComponent) public badgeMenu: ContextMenuComponent;
 
   private playerLeaguesSub: Subscription;
   private genericPlayersSub: Subscription;
